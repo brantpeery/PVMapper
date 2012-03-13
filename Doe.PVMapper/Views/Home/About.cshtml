@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "About";
+}
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+    <h2>@ViewBag.Message</h2>
+</hgroup>
+<article>
+    <p>
+        The goal of this project is to develop a geographic information system (GIS) based project
+planning tool to identify optimal utility-scale solar facility sites. This tool is intended to be used by
+developers, Authorities Having Jurisdiction (AHJs), and other interested parties. The objectives of the
+project have been developed with the goal and target audience in mind:
+
+    </p>
+    <li>To develop the tool on an open-source platform,</li>
+    <li>To integrate the appropriate data sets and layers,</li>
+    <li>To include a measure of social risk and public acceptance,</li>
+    <li>To enable customization of variable weights,</li>
+    <li>To provide a free and accessible platform to download the tool,</li>
+    <li>To provide a sustainability plan to ensure future relevance of the tool.</li>
+
+</article>
+<aside>
+    <h3>Aside Title</h3>
+    <p>
+        Fusce facilisis ullamcorper consequat. Vestibulum non sapien lectus. Nam 
+        mi augue, posuere at tempus vel, dignissim vitae nulla.
+    </p>
+    <ul>
+        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+        <li>@Html.ActionLink("About", "About", "Home")</li>
+        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+    </ul>
+</aside>
