@@ -108,6 +108,14 @@
       <Private>True</Private>
       <HintPath>..\packages\AspNetWebPages.Core.2.0.20126.16343\lib\net40\System.Web.WebPages.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\AspNetWebPages.Core.2.0.20126.16343\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\AspNetWebPages.Core.2.0.20126.16343\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -130,6 +138,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="!Readme.txt" />
     <Content Include="Content\img\blank.gif" />
     <Content Include="Content\img\cloud-popup-relative.png" />
     <Content Include="Content\img\drag-rectangle-off.png" />
@@ -235,24 +244,6 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
-    <None Include="_bin_deployableAssemblies\WebMatrix.WebData.xml" />
-    <None Include="_bin_deployableAssemblies\WebMatrix.WebData.dll" />
-    <None Include="_bin_deployableAssemblies\WebMatrix.Data.xml" />
-    <None Include="_bin_deployableAssemblies\WebMatrix.Data.dll" />
-    <None Include="_bin_deployableAssemblies\System.Web.WebPages.xml" />
-    <None Include="_bin_deployableAssemblies\System.Web.WebPages.Razor.xml" />
-    <None Include="_bin_deployableAssemblies\System.Web.WebPages.Razor.dll" />
-    <None Include="_bin_deployableAssemblies\System.Web.WebPages.dll" />
-    <None Include="_bin_deployableAssemblies\System.Web.WebPages.Deployment.xml" />
-    <None Include="_bin_deployableAssemblies\System.Web.WebPages.Deployment.dll" />
-    <None Include="_bin_deployableAssemblies\System.Web.WebPages.Administration.dll" />
-    <None Include="_bin_deployableAssemblies\System.Web.Razor.xml" />
-    <None Include="_bin_deployableAssemblies\System.Web.Razor.dll" />
-    <None Include="_bin_deployableAssemblies\System.Web.Helpers.xml" />
-    <None Include="_bin_deployableAssemblies\System.Web.Helpers.dll" />
-    <None Include="_bin_deployableAssemblies\NuGet.Core.dll" />
-    <None Include="_bin_deployableAssemblies\Microsoft.Web.Infrastructure.xml" />
-    <None Include="_bin_deployableAssemblies\Microsoft.Web.Infrastructure.dll" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
