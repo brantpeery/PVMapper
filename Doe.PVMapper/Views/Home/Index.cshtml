@@ -37,7 +37,7 @@
     };
     map = new OpenLayers.Map('map', options);
     var wms = new OpenLayers.Layer.WMS("OpenLayers WMS",
-            "http://vmap0.tiles.osgeo.org/wms/vmap0", { layers: 'basic', srs: "EPSG:900913" });
+            "http://vmap0.tiles.osgeo.org/wms/vmap0", { layers: 'basic' });
 
     var solar = new OpenLayers.Layer.WMS(
         "Solar Radiation",
@@ -56,7 +56,7 @@
     var slope = new OpenLayers.Layer.WMS(
         "Slope",
         "http://mapsdb.nrel.gov/jw_router/DNI_slope_3/tile",
-        { layers: "DNI_slope_3", format: "image/gif", transparent: "true", srs: "EPSG:900913" },
+        { layers: "DNI_slope_3", format: "image/gif", transparent: "true" },
         {
             isBaseLayer: false,
             wrapDateLine: true
