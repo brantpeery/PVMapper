@@ -9,7 +9,7 @@ using System.Web.Routing;
 
 namespace Doe.PVMapper
 {
-    // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
+    // Note: For instructions on enabling IIS6 or IIS7 classic mode,
     // visit http://go.microsoft.com/?LinkId=9394801
 
     public class MvcApplication : System.Web.HttpApplication
@@ -44,6 +44,31 @@ namespace Doe.PVMapper
             RegisterRoutes(RouteTable.Routes);
 
             BundleTable.Bundles.RegisterTemplateBundles();
+
+            //http://codebetter.com/johnpetersen/2012/03/06/asp-net-mvc-4-beta-bundling-and-minification-dymystified/
+            IBundleTransform jstransformer;
+            IBundleTransform csstransformer;
+
+#if DEBUG
+            jstransformer = new NoTransform("text/javascript");
+            csstransformer = new NoTransform("text/css");
+#else
+            jstransformer = new JsMinify();
+            csstransformer = new CssMinify();
+#endif
+
+            var bundle = new Bundle("~/ext-resources/files/css", csstransformer);
+            bundle.AddFile("~/ext-resources/css/ext-all.css");
+            bundle.AddFile("~/ext-resources/css/xtheme-gray.css");
+            BundleTable.Bundles.Add(bundle);
+
+            // These need to be in a particular order.
+            bundle = new Bundle("~/ext-resources/files/js", jstransformer);
+            bundle.AddFile("~/ext-resources/js/ext-base.js");
+            bundle.AddFile("~/ext-resources/js/ext-all.js");
+            bundle.AddFile("~/ext-resources/js/OpenLayers.js");
+            bundle.AddFile("~/ext-resources/js/GeoExt.js");
+            BundleTable.Bundles.Add(bundle);
         }
     }
 }
