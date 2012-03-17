@@ -1,0 +1,156 @@
+﻿@{
+    ViewBag.Title = "v3: Using tools in a toolbar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="../../theme/default/style.css" rel="stylesheet" type="text/css" />
+@section featured {
+    <section class="featured">
+    <div class="content-wrapper">
+        <hgroup class="title">
+            <h1>@ViewBag.Title.</h1>
+            <h2>@ViewBag.Message</h2>
+        </hgroup>
+    </div>
+</section>
+}
+<div class="content">
+    <div id="tbar-id">
+    </div>
+    <div id="map-id">
+    </div>
+</div>
+@*<script src="http://openlayers.org/api/OpenLayers.js"></script>*@
+<script defer="defer" type="text/javascript">
+    OpenLayers.ImgPath = "../img/"
+
+    // the panel variable is declared here for easy debugging
+    var panel;
+
+    Ext.onReady(function () {
+
+        // display tooltips for actions
+        Ext.QuickTips.init();
+
+            // http://openlayers.org/dev/examples/web-mercator.html
+            //900913
+            //102113
+  
+            var wms = new OpenLayers.Layer.WMS("OpenLayers WMS",
+                "http://vmap0.tiles.osgeo.org/wms/vmap0", { layers: 'basic' });
+
+            var solar = new OpenLayers.Layer.WMS(
+                "Solar Radiation",
+                "http://mapsdb.nrel.gov/jw_router/perezANN_mod/tile",
+                {
+                    layers: "perezANN_mod",
+                    layer_type: "polygon",
+                    transparent: "true",
+                    format: "image/gif",
+                    exceptions: "application/vnd.ogc.se_inimage"
+                },
+                { isBaseLayer: false }
+                );
+
+            // create WMS layer
+            var slope = new OpenLayers.Layer.WMS(
+                "Slope",
+                "http://mapsdb.nrel.gov/jw_router/DNI_slope_3/tile",
+                { layers: "DNI_slope_3", format: "image/gif", transparent: "true" },
+                {
+                    isBaseLayer: false,
+                    wrapDateLine: true
+                }
+            );
+            
+        panel = new GeoExt.MapPanel({
+            title: "MapPanel",
+            renderTo: "map-id",
+            height: 500,
+            width: "100%",
+            layers: [
+//                        new OpenLayers.Layer.WMS(
+//                            "Global Imagery",
+//                            "http://maps.opengeo.org/geowebcache/service/wms",
+//                            { layers: "bluemarble" }
+            //                        )
+wms, solar, slope
+                    ],
+            center: [-10723197, 4500612],           
+            zoom: 4,
+            map: {
+            projection: new OpenLayers.Projection("EPSG:900913"),
+                units: "m",
+                numZoomLevels: 18,
+                maxResolution: 156543.0339,
+                maxExtent: new OpenLayers.Bounds(-20037508, -20037508,
+                                                 20037508, 20037508.34),
+                theme: null
+                }
+        });
+
+        // create an action that zooms map to max extent (no map control needed)
+        var zoom = new Ext.Action({
+            text: "Zoom Full",
+            handler: function () {
+                panel.map.zoomToMaxExtent();
+            },
+            tooltip: "zoom to full extent"
+        });
+
+        var layerTool = new Ext.Action({
+            text: "Install LayerSwitcher",
+            handler: function () {
+                panel.map.addControl(new OpenLayers.Control.LayerSwitcher());
+            },
+            tooltip: "Install Layer Switcher"
+        });
+
+        // create an action tied to a navigation control
+        var navigate = new GeoExt.Action({
+            text: "Navigate",
+            control: new OpenLayers.Control.Navigation(),
+            map: panel.map,
+            // button options
+            toggleGroup: "group1",  // only one tool can be active in a group
+            allowDepress: false,
+            pressed: true,
+            tooltip: "navigate"
+        });
+
+        // create an action tied to a measure control
+        var measure = new GeoExt.Action({
+            text: "Measure",
+            control: new OpenLayers.Control.Measure(OpenLayers.Handler.Path, {
+                geodesic: true,
+                eventListeners: {
+                    measure: function (event) {
+                        var win = new Ext.Window({
+                            title: "Measure Resuls",
+                            modal: true,
+                            width: 180,
+                            constrain: true,
+                            bodyStyle: { padding: 10 },
+                            html: event.measure + " " + event.units
+                        });
+                        win.show();
+                    }
+                }
+            }),
+            map: panel.map,
+            // button options
+            toggleGroup: "group1",  // only one tool can be active in a group
+            allowDepress: false,
+            tooltip: "measure distance"
+        });
+
+        // add a toolbar with the above actions as buttons
+        var toolbar = new Ext.Toolbar({
+            renderTo: "tbar-id",
+            items: [zoom, "-", navigate, measure, "-", layerTool]
+        });
+
+ });
+
+ 
+   
+</script>

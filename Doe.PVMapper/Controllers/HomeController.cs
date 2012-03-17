@@ -37,5 +37,10 @@ namespace Doe.PVMapper.Controllers
 
             return View();
         }
+
+        public ActionResult v3()
+        {
+            return View();
+        }
     }
 }
