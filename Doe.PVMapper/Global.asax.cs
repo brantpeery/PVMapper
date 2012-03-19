@@ -49,7 +49,7 @@ namespace Doe.PVMapper
             IBundleTransform jstransformer;
             IBundleTransform csstransformer;
 
-#if DEBUG
+#if true// DEBUG
             jstransformer = new NoTransform("text/javascript");
             csstransformer = new NoTransform("text/css");
 #else
