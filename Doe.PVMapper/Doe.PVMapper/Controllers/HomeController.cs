@@ -12,7 +12,7 @@ namespace Doe.PVMapper.Controllers
         {
             ViewBag.Message = "PV Mapper - Find a sweet spot for your solar array.";
 
-            return View();
+            return View("v3");
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
