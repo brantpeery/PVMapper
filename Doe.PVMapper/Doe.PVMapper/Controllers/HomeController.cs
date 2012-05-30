@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Doe.PVMapper.Models;
+using DreamSongs.MongoRepository;
 
 namespace Doe.PVMapper.Controllers
 {
@@ -11,8 +13,8 @@ namespace Doe.PVMapper.Controllers
         public ActionResult Index()
         {
             ViewBag.Message = "PV Mapper - Find a sweet spot for your solar array.";
-
-            return View("v3");
+           
+            return View("v4");
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
