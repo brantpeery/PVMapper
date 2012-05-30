@@ -14,9 +14,15 @@
     </section>
 }
 <div class="content">
+    <div id="tree-id">
+    </div>
     <div id="tbar-id">
     </div>
+    <div id="tabs-id">
+    </div>
     <div id="map-id">
+    </div>
+    <div id="view">
     </div>
 </div>
 @*<script src="http://openlayers.org/api/OpenLayers.js"></script>*@
@@ -62,8 +68,8 @@
                 }
             );
 
+
         panel = new GeoExt.MapPanel({
-            title: "MapPanel",
             renderTo: "map-id",
             height: 500,
             width: "100%",
@@ -87,6 +93,8 @@ wms, solar, slope
                 theme: null
             }
         });
+
+
 
         //        // create feature store, binding it to the vector layer
         //        store = new GeoExt.data.FeatureStore({
@@ -185,31 +193,32 @@ wms, solar, slope
         var scoreTest = new Ext.Action({
             text: "Score Slope",
             handler: function () {
-                panel.map.zoomTo(9),
-                $.post(
-                "/api/SiteScore", 
-                 { score: "High", rank: Math.random(), siteId: "Arizona", ToolDescription: "Zapit" }
-                 ),
-                $.post(
-                "/api/SiteScore",
-                  { score: "Med", rank: Math.random(), siteId: "Arizona", ToolDescription: "Squishit" }
-                 ),
-                $.post(
-                "/api/SiteScore",
-                   { score: "5", rank: Math.random(), siteId: "Arizona", ToolDescription: "Scoreit" }
-                 ),
-                $.post(
-                "/api/SiteScore",
-                 { score: "High", rank: Math.random(), siteId: "Missouri", ToolDescription: "Zapit" }
-                 ),
-                $.post(
-                "/api/SiteScore",
-                  { score: "Med", rank: Math.random(), siteId: "Missouri", ToolDescription: "Squishit" }
-                 ),
-                $.post(
-                "/api/SiteScore",
-                   { score: "5", rank: Math.random(), siteId: "Missouri", ToolDescription: "Scoreit" }
-                 )
+                panel.map.zoomTo(9)
+                // ,
+                //                $.post(
+                //                "/api/SiteScore", 
+                //                 { score: "High", rank: Math.random(), siteId: "Arizona", ToolDescription: "Zapit" }
+                //                 ),
+                //                $.post(
+                //                "/api/SiteScore",
+                //                  { score: "Med", rank: Math.random(), siteId: "Arizona", ToolDescription: "Squishit" }
+                //                 ),
+                //                $.post(
+                //                "/api/SiteScore",
+                //                   { score: "5", rank: Math.random(), siteId: "Arizona", ToolDescription: "Scoreit" }
+                //                 ),
+                //                $.post(
+                //                "/api/SiteScore",
+                //                 { score: "High", rank: Math.random(), siteId: "Missouri", ToolDescription: "Zapit" }
+                //                 ),
+                //                $.post(
+                //                "/api/SiteScore",
+                //                  { score: "Med", rank: Math.random(), siteId: "Missouri", ToolDescription: "Squishit" }
+                //                 ),
+                //                $.post(
+                //                "/api/SiteScore",
+                //                   { score: "5", rank: Math.random(), siteId: "Missouri", ToolDescription: "Scoreit" }
+                //                 )
 
                 //                $("#addBook").serialize(),
                 //                function (value) {
@@ -236,7 +245,7 @@ wms, solar, slope
         });
 
         var scoreboard = new Ext.Action({
-            text: "Scoreboard",
+            text: "Add Site",
             handler: function () {
 
                 // create a new attributes store
@@ -275,12 +284,110 @@ wms, solar, slope
 
         // add a toolbar with the above actions as buttons
         var toolbar = new Ext.Toolbar({
-            renderTo: "tbar-id",
-            items: [zoom, "-", navigate, measure, "-", layerTool, "-", scoreTest, scoreboard]
+            //            renderTo: "tbar-id",
+            items: [scoreboard, "-", zoom, "-", navigate, measure, "-", layerTool, "-", scoreTest]
         });
 
-    });
+        var tabs = new Ext.TabPanel({
+            //            renderTo: "tabs-id",
+            activeTab: 0,
+            region:'center',
+            items: [{
+                title: 'Map',
+                contentEl: 'map-id'
+            }, {
+                title: 'Scoreboard',
+                html: '<div id="docbody"></div>'
+            }]
+        });
 
- 
+        // http://geoext.org/tutorials/layertree-tutorial.html
+        var layerList = new GeoExt.tree.LayerContainer({
+            text: 'All Layers',
+            layerStore: panel.layers,
+            leaf: false,
+            expanded: true
+        });
+
+        var layerTree = new Ext.tree.TreePanel({
+            title: 'Map Layers (User defined Tools)',
+//            renderTo: 'tree-id',
+            width: 250,
+            region: 'west',
+            autoScroll: true,
+            root: layerList
+        });
+
+        new Ext.Panel({
+//            title: "GeoExt LegendPanel Demo",
+            layout: 'border',
+            renderTo: 'view',
+            height: 500,
+           width: 950,
+            tbar: toolbar,
+            items: [layerTree, tabs]
+        });
+
+
+
+
+
+
+
+        var SaleRecord = Ext.data.Record.create([
+        { name: 'person', type: 'string' },
+        { name: 'product', type: 'string' },
+        { name: 'city', type: 'string' },
+        { name: 'state', type: 'string' },
+        { name: 'month', type: 'int' },
+        { name: 'quarter', type: 'int' },
+        { name: 'year', type: 'int' },
+        { name: 'quantity', type: 'int' },
+        { name: 'value', type: 'int' }
+    ]);
+
+        var myStore = new Ext.data.Store({
+            url: 'simple.json',
+            autoLoad: true,
+            reader: new Ext.data.JsonReader({
+                root: 'rows',
+                idProperty: 'id'
+            }, SaleRecord)
+        });
+
+        var pivotGrid = new Ext.grid.PivotGrid({
+            title: 'PivotGrid example',
+            width: 800,
+            height: 259,
+            renderTo: 'docbody',
+            store: myStore,
+            aggregator: 'sum',
+            measure: 'value',
+
+            viewConfig: {
+                title: 'Sales Performance'
+            },
+
+            leftAxis: [
+            {
+                width: 80,
+                dataIndex: 'person'
+            },
+            {
+                width: 90,
+                dataIndex: 'product'
+            }
+        ],
+
+            topAxis: [
+            {
+                dataIndex: 'year'
+            },
+            {
+                dataIndex: 'city'
+            }
+        ]
+        });
+    });    
    
 </script>
