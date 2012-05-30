@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "v3: Using tools in a toolbar";
+    ViewBag.Title = "v4: Tabbed Layout";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link href="../../theme/default/style.css" rel="stylesheet" type="text/css" />
@@ -24,10 +24,12 @@
     </div>
     <div id="view">
     </div>
+    <div id="scoreboard-id">
+    </div>
 </div>
 @*<script src="http://openlayers.org/api/OpenLayers.js"></script>*@
 <script defer="defer" type="text/javascript">
-    OpenLayers.ImgPath = "../img/"
+    //    OpenLayers.ImgPath = "../img/"
 
     // the panel variable is declared here for easy debugging
     var panel;
@@ -291,13 +293,15 @@ wms, solar, slope
         var tabs = new Ext.TabPanel({
             //            renderTo: "tabs-id",
             activeTab: 0,
-            region:'center',
+            region: 'center',
             items: [{
                 title: 'Map',
                 contentEl: 'map-id'
             }, {
                 title: 'Scoreboard',
-                html: '<div id="docbody"></div>'
+                listeners: { activate: handleScoreboardActivate, single: true },
+                contentEl: 'scoreboard-id'
+
             }]
         });
 
@@ -311,7 +315,7 @@ wms, solar, slope
 
         var layerTree = new Ext.tree.TreePanel({
             title: 'Map Layers (User defined Tools)',
-//            renderTo: 'tree-id',
+            //            renderTo: 'tree-id',
             width: 250,
             region: 'west',
             autoScroll: true,
@@ -319,75 +323,77 @@ wms, solar, slope
         });
 
         new Ext.Panel({
-//            title: "GeoExt LegendPanel Demo",
+            //            title: "GeoExt LegendPanel Demo",
             layout: 'border',
             renderTo: 'view',
             height: 500,
-           width: 950,
+            width: 950,
             tbar: toolbar,
             items: [layerTree, tabs]
         });
 
+       
+
+        function handleScoreboardActivate(tab) {
+
+            var SaleRecord = Ext.data.Record.create([
+            { name: 'person', type: 'string' },
+            { name: 'product', type: 'string' },
+            { name: 'city', type: 'string' },
+            { name: 'state', type: 'string' },
+            { name: 'month', type: 'int' },
+            { name: 'quarter', type: 'int' },
+            { name: 'year', type: 'int' },
+            { name: 'quantity', type: 'int' },
+            { name: 'value', type: 'int' }
+        ]);
+
+            var myStore = new Ext.data.Store({
+                url: 'json.txt',
+                autoLoad: true,
+                reader: new Ext.data.JsonReader({
+                    root: 'rows',
+                    idProperty: 'id'
+                }, SaleRecord)
+            });
+
+            var pivotGrid = new Ext.grid.PivotGrid({
+                width: 600,
+                height: 259,
+                renderTo: 'scoreboard-id',
+                store: myStore,
+                aggregator: 'sum',
+                measure: 'value',
+
+                viewConfig: {
+                    title: 'Sales Performance'
+                },
+
+                        leftAxis: [
+                    {
+                        width: 80,
+                        dataIndex: 'person'
+                    },
+                    {
+                        width: 90,
+                        dataIndex: 'product'
+                    }
+                ],
+
+                        topAxis: [
+                    {
+                        dataIndex: 'year'
+                    },
+                    {
+                        dataIndex: 'city'
+                    }
+                ]
+                    });
+                }
 
 
 
 
-
-
-        var SaleRecord = Ext.data.Record.create([
-        { name: 'person', type: 'string' },
-        { name: 'product', type: 'string' },
-        { name: 'city', type: 'string' },
-        { name: 'state', type: 'string' },
-        { name: 'month', type: 'int' },
-        { name: 'quarter', type: 'int' },
-        { name: 'year', type: 'int' },
-        { name: 'quantity', type: 'int' },
-        { name: 'value', type: 'int' }
-    ]);
-
-        var myStore = new Ext.data.Store({
-            url: 'simple.json',
-            autoLoad: true,
-            reader: new Ext.data.JsonReader({
-                root: 'rows',
-                idProperty: 'id'
-            }, SaleRecord)
-        });
-
-        var pivotGrid = new Ext.grid.PivotGrid({
-            title: 'PivotGrid example',
-            width: 800,
-            height: 259,
-            renderTo: 'docbody',
-            store: myStore,
-            aggregator: 'sum',
-            measure: 'value',
-
-            viewConfig: {
-                title: 'Sales Performance'
-            },
-
-            leftAxis: [
-            {
-                width: 80,
-                dataIndex: 'person'
-            },
-            {
-                width: 90,
-                dataIndex: 'product'
-            }
-        ],
-
-            topAxis: [
-            {
-                dataIndex: 'year'
-            },
-            {
-                dataIndex: 'city'
-            }
-        ]
-        });
     });    
    
 </script>
