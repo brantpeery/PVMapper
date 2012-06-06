@@ -27,7 +27,7 @@
     <div id="scoreboard-id">
     </div>
 </div>
-@*<script src="http://openlayers.org/api/OpenLayers.js"></script>*@
+<script src="http://openlayers.org/api/OpenLayers.js"></script>
 <script defer="defer" type="text/javascript">
     //    OpenLayers.ImgPath = "../img/"
 
@@ -70,7 +70,6 @@
                 }
             );
 
-
         panel = new GeoExt.MapPanel({
             renderTo: "map-id",
             height: 500,
@@ -82,7 +81,7 @@
             //                            { layers: "bluemarble" }
             //                        )
 wms, solar, slope
-                    ],
+            ],
             center: [-10723197, 4500612],
             zoom: 4,
             map: {
@@ -95,8 +94,6 @@ wms, solar, slope
                 theme: null
             }
         });
-
-
 
         //        // create feature store, binding it to the vector layer
         //        store = new GeoExt.data.FeatureStore({
@@ -196,11 +193,11 @@ wms, solar, slope
             text: "Score Slope",
             handler: function () {
                 panel.map.zoomTo(9)
-                // ,
-                //                $.post(
-                //                "/api/SiteScore", 
-                //                 { score: "High", rank: Math.random(), siteId: "Arizona", ToolDescription: "Zapit" }
-                //                 ),
+                //,
+                //               $.post(
+                //               "/api/SiteScore",
+                //                { score: "High", rank: Math.random(), siteId: "Arizona", ToolDescription: "Zapit1" }
+                //                ),
                 //                $.post(
                 //                "/api/SiteScore",
                 //                  { score: "Med", rank: Math.random(), siteId: "Arizona", ToolDescription: "Squishit" }
@@ -332,8 +329,6 @@ wms, solar, slope
             items: [layerTree, tabs]
         });
 
-       
-
         function handleScoreboardActivate(tab) {
 
             var SaleRecord = Ext.data.Record.create([
@@ -346,7 +341,7 @@ wms, solar, slope
             { name: 'year', type: 'int' },
             { name: 'quantity', type: 'int' },
             { name: 'value', type: 'int' }
-        ]);
+            ]);
 
             var myStore = new Ext.data.Store({
                 url: 'json.txt',
@@ -369,31 +364,28 @@ wms, solar, slope
                     title: 'Sales Performance'
                 },
 
-                        leftAxis: [
-                    {
-                        width: 80,
-                        dataIndex: 'person'
-                    },
-                    {
-                        width: 90,
-                        dataIndex: 'product'
-                    }
+                leftAxis: [
+            {
+                width: 80,
+                dataIndex: 'person'
+            },
+            {
+                width: 90,
+                dataIndex: 'product'
+            }
                 ],
 
-                        topAxis: [
-                    {
-                        dataIndex: 'year'
-                    },
-                    {
-                        dataIndex: 'city'
-                    }
+                topAxis: [
+            {
+                dataIndex: 'year'
+            },
+            {
+                dataIndex: 'city'
+            }
                 ]
-                    });
-                }
+            });
+        }
 
+    });
 
-
-
-    });    
-   
 </script>
