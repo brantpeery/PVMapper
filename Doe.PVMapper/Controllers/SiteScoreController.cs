@@ -14,6 +14,7 @@ namespace Doe.PVMapper.Controllers
     {
         private static readonly IRepository<SiteScore> _score = new MongoRepository<SiteScore>();
 
+        [Queryable]
         public IQueryable<SiteScore> Get()
         {
             return _score.All();

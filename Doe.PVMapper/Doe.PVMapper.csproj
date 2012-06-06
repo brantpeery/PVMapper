@@ -59,9 +59,6 @@
     <Reference Include="DreamSongs.MongoRepository">
       <HintPath>..\packages\MongoRepository.1.3\lib\DreamSongs.MongoRepository.dll</HintPath>
     </Reference>
-    <Reference Include="Elmah">
-      <HintPath>..\packages\elmah.corelibrary.1.2.1\lib\Elmah.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -149,8 +146,6 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
-    <Compile Include="Areas\Admin\Controllers\ElmahController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SiteScoreController.cs" />
@@ -231,29 +226,29 @@
     <Content Include="ext-resources\js\GeoExt\widgets\ZoomSlider.js" />
     <Content Include="ext-resources\js\overrides\override-ext-ajax.js" />
     <Content Include="Images\logo50.png" />
-    <Content Include="img\blank.gif" />
-    <Content Include="img\cloud-popup-relative.png" />
-    <Content Include="img\drag-rectangle-off.png" />
-    <Content Include="img\drag-rectangle-on.png" />
-    <Content Include="img\east-mini.png" />
-    <Content Include="img\layer-switcher-maximize.png" />
-    <Content Include="img\layer-switcher-minimize.png" />
-    <Content Include="img\marker-blue.png" />
-    <Content Include="img\marker-gold.png" />
-    <Content Include="img\marker-green.png" />
-    <Content Include="img\marker.png" />
-    <Content Include="img\measuring-stick-off.png" />
-    <Content Include="img\measuring-stick-on.png" />
-    <Content Include="img\north-mini.png" />
-    <Content Include="img\panning-hand-off.png" />
-    <Content Include="img\panning-hand-on.png" />
-    <Content Include="img\slider.png" />
-    <Content Include="img\south-mini.png" />
-    <Content Include="img\west-mini.png" />
-    <Content Include="img\zoom-minus-mini.png" />
-    <Content Include="img\zoom-plus-mini.png" />
-    <Content Include="img\zoom-world-mini.png" />
-    <Content Include="img\zoombar.png" />
+    <Content Include="ext-resources\js\img\blank.gif" />
+    <Content Include="ext-resources\js\img\cloud-popup-relative.png" />
+    <Content Include="ext-resources\js\img\drag-rectangle-off.png" />
+    <Content Include="ext-resources\js\img\drag-rectangle-on.png" />
+    <Content Include="ext-resources\js\img\east-mini.png" />
+    <Content Include="ext-resources\js\img\layer-switcher-maximize.png" />
+    <Content Include="ext-resources\js\img\layer-switcher-minimize.png" />
+    <Content Include="ext-resources\js\img\marker-blue.png" />
+    <Content Include="ext-resources\js\img\marker-gold.png" />
+    <Content Include="ext-resources\js\img\marker-green.png" />
+    <Content Include="ext-resources\js\img\marker.png" />
+    <Content Include="ext-resources\js\img\measuring-stick-off.png" />
+    <Content Include="ext-resources\js\img\measuring-stick-on.png" />
+    <Content Include="ext-resources\js\img\north-mini.png" />
+    <Content Include="ext-resources\js\img\panning-hand-off.png" />
+    <Content Include="ext-resources\js\img\panning-hand-on.png" />
+    <Content Include="ext-resources\js\img\slider.png" />
+    <Content Include="ext-resources\js\img\south-mini.png" />
+    <Content Include="ext-resources\js\img\west-mini.png" />
+    <Content Include="ext-resources\js\img\zoom-minus-mini.png" />
+    <Content Include="ext-resources\js\img\zoom-plus-mini.png" />
+    <Content Include="ext-resources\js\img\zoom-world-mini.png" />
+    <Content Include="ext-resources\js\img\zoombar.png" />
     <Content Include="Content\LayersTool.js" />
     <Content Include="ext-resources\js\OpenLayers.js" />
     <Content Include="ext-resources\js\ext-all.js" />
