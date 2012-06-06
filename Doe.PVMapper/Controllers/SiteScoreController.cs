@@ -24,16 +24,17 @@ namespace Doe.PVMapper.Controllers
             SiteScore score = _score.GetById(id);
             if (score == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound));
             }
 
             return score;
         }
 
-        public HttpResponseMessage<SiteScore> Post(SiteScore value)
+        public HttpResponseMessage Post(SiteScore value)
         {
             SiteScore score = _score.Add(value);
-            var response = new HttpResponseMessage<SiteScore>(score, HttpStatusCode.Created);
+
+            var response = Request.CreateResponse<SiteScore>(HttpStatusCode.Created, score);
 
             string uri = Url.Route(null, new { id = score.Id });
             response.Headers.Location = new Uri(Request.RequestUri, uri);
@@ -44,7 +45,7 @@ namespace Doe.PVMapper.Controllers
         {
             if (_score.Update(value) == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound));
             }
         }
 
