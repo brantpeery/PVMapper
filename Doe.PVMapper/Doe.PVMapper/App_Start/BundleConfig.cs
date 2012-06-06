@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.Collections.Generic;
+using System.Web;
 using System.Web.Optimization;
 
 namespace Doe.PVMapper
@@ -12,11 +13,12 @@ namespace Doe.PVMapper
                         "~/ext-resources/css/xtheme-gray.css"));
 
             // These need to be in a particular order.
-            bundles.Add(new ScriptBundle("~/bundles/extjs").Include(
-                        "~/ext-resources/js/ext-base.js",
-                        "~/ext-resources/js/ext-all.js",
-
-                        "~/ext-resources/js/GeoExt.js"));
+            Bundle bundle = new ScriptBundle("~/bundles/extjs").Include(
+                                    "~/ext-resources/js/ext-base.js",
+                                    "~/ext-resources/js/ext-all.js",
+                                    "~/ext-resources/js/OpenLayers.js",
+                                    "~/ext-resources/js/GeoExt.js");
+            bundles.Add(bundle);
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-1.*"));
