@@ -27,6 +27,8 @@ namespace Doe.PVMapper.Controllers
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound));
             }
 
+            // response.Content.Headers.Expires = new DateTimeOffset(DateTime.Now.AddSeconds(300));
+
             return score;
         }
 

@@ -4,12 +4,9 @@
     <meta charset="utf-8" />
     <title>@ViewBag.Title - PV Mapper</title>
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <link href="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/Content/css")" rel="stylesheet" type="text/css" />
-    <link href="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/Content/themes/base/css")" rel="stylesheet" type="text/css" />
-    <link href="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/ext-resources/files/css")" rel="stylesheet" type="text/css" />
-    <script src="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/ext-resources/files/js")"></script>
-    <script src="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/Scripts/js")"></script>
     <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/css", "~/Content/themes/base/css", "~/ext-resources/files/css")
+    @Scripts.Render("~/bundles/extjs")
 </head>
 <body>
     <header>
@@ -45,7 +42,8 @@
         <div class="content-wrapper">
             <div class="float-left">
                 <p>
-                    &copy; @DateTime.Now.Year - PV Mapper</p>
+                    &copy; @DateTime.Now.Year - PV Mapper
+                </p>
             </div>
             <div class="float-right">
                 <ul id="social">
