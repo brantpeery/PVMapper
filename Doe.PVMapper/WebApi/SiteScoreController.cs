@@ -8,7 +8,7 @@ using DreamSongs.MongoRepository;
 using System.Net;
 using System.Net.Http;
 
-namespace Doe.PVMapper.Controllers
+namespace Doe.PVMapper.WebApi
 {
     public class SiteScoreController : ApiController
     {
