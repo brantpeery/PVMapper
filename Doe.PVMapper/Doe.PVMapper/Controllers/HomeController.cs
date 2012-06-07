@@ -13,8 +13,8 @@ namespace Doe.PVMapper.Controllers
         public ActionResult Index()
         {
             ViewBag.Message = "PV Mapper - Find a sweet spot for your solar array.";
-           
-            return View("v4");
+
+            return View("v5");
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
@@ -22,7 +22,6 @@ namespace Doe.PVMapper.Controllers
         {
             ViewData["Message"] = "You added a tool!";
             ViewData["ToolUrl"] = ToolTextBox;
-
             return View();
         }
 
@@ -43,6 +42,19 @@ namespace Doe.PVMapper.Controllers
         public ActionResult v3()
         {
             return View();
+        }
+
+        public ActionResult v4()
+        {
+            return View();
+        }
+
+        private static readonly IRepository<WebExtension> _repository = new MongoRepository<WebExtension>();
+
+        public ActionResult v5()
+        {
+            var model = _repository.All(m => m.Url != null);
+            return View(model);
         }
     }
 }
