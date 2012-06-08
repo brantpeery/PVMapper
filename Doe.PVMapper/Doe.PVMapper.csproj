@@ -152,6 +152,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Models\TreeNode.cs" />
     <Compile Include="Models\TreeListPayload.cs" />
+    <Compile Include="WebApi\MongoHelper.cs" />
     <Compile Include="WebApi\SiteScoreController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

@@ -4,13 +4,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Doe.PVMapper.Models;
+using Doe.PVMapper.WebApi;
 using DreamSongs.MongoRepository;
 
 namespace Doe.PVMapper.Controllers
 {
     public class ExtensionsController : Controller
     {
-        private static readonly IRepository<WebExtension> _repository = new MongoRepository<WebExtension>();
+        private static readonly IRepository<WebExtension> _repository = MongoHelper.GetRepository<WebExtension>();
         //
         // GET: /Extensions/
 
