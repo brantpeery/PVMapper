@@ -12,7 +12,7 @@ namespace Doe.PVMapper.WebApi
 {
     public class ToolsController : ApiController
     {
-        private static readonly IRepository<WebExtension> _repository = new MongoRepository<WebExtension>();
+        private static readonly IRepository<WebExtension> _repository = MongoHelper.GetRepository<WebExtension>();
 
         // GET api/tools
         public IEnumerable<WebExtension> Get()
