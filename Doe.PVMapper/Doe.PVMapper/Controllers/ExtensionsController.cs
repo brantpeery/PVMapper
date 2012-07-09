@@ -64,20 +64,26 @@ namespace Doe.PVMapper.Controllers
         //
         // GET: /Extensions/Edit/5
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
-            return View();
+            var model = _repository.GetById(id);
+            if (model == null)
+            {
+                return View();
+            }
+
+            return View(model);
         }
 
         //
         // POST: /Extensions/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(string id, WebExtension model)
         {
             try
             {
-                // TODO: Add update logic here
+                _repository.Update(model);
 
                 return RedirectToAction("Index");
             }
@@ -90,20 +96,26 @@ namespace Doe.PVMapper.Controllers
         //
         // GET: /Extensions/Delete/5
 
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
-            return View();
+            var model = _repository.GetById(id);
+            if (model == null)
+            {
+                return View();
+            }
+
+            return View(model);
         }
 
         //
         // POST: /Extensions/Delete/5
 
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(string id, FormCollection collection)
         {
             try
             {
-                // TODO: Add delete logic here
+                _repository.Delete(id);
 
                 return RedirectToAction("Index");
             }
