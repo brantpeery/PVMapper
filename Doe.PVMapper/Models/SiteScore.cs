@@ -7,7 +7,7 @@ using DreamSongs.MongoRepository;
 namespace Doe.PVMapper.Models
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class SiteScore : Entity
     {
