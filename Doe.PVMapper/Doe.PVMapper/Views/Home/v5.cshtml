@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @model IEnumerable<Doe.PVMapper.Models.WebExtension>
+
 <link href="../../theme/default/style.css" rel="stylesheet" type="text/css" />
 @section featured {
     <section class="featured">
@@ -194,6 +195,7 @@
     <div id="scoreboard-id">
     </div>
 </div>
+
 <script defer="defer" type="text/javascript">
     //    OpenLayers.ImgPath = "../img/"
 
@@ -229,7 +231,11 @@
         var slope = new OpenLayers.Layer.WMS(
                 "Slope",
                 "http://mapsdb.nrel.gov/jw_router/DNI_slope_3/tile",
-                { layers: "DNI_slope_3", format: "image/gif", transparent: "true" ,}
+                {
+                    layers: "DNI_slope_3",
+                    format: "image/gif",
+                    transparent: "true"
+                },
                 {
                     isBaseLayer: false,
                     wrapDateLine: true
