@@ -1,6 +1,6 @@
 ﻿@{
     ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout2.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link href="/Content/themes/OpenLayers/default/style.css" rel="stylesheet" type="text/css" />
 <link href="/Content/themes/OpenLayers/google.css" rel="stylesheet" type="text/css" />
@@ -21,6 +21,7 @@
         width: 90%;
         height: 500px;
     }
+
     .olMapViewport
     {
         border-radius: 10px;
@@ -40,8 +41,7 @@
 </style>
 
 <!--Start page HTML -->
-<h1 id="title" style="display: none;">
-    Select your site!</h1>
+<h1 id="title" style="display: none;">Select your site!</h1>
 <div id='map'>
 </div>
 <div id='floating-toolbar' class="olControlEditingToolbar">

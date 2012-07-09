@@ -12,16 +12,12 @@
     <script type="text/javascript" src="~/ext-resources/js/ext-all.js"></script>
     <script type="text/javascript" src="~/ext-resources/js/OpenLayers.js"></script>
     <script type="text/javascript" src="~/ext-resources/js/GeoExt.js"></script>
-
 </head>
 <body>
     <header>
         <div class="content-wrapper">
             <div class="float-left">
-                <img src="~/Images/logo50.png" alt="PV Mapper Logo" />
-            </div>
-            <div class="float-left">
-                <p class="site-title">@Html.ActionLink("PV Mapper", "Index", "Home")</p>
+                <img src="~/Images/PVMapper_TopText.png" alt="PV Mapper Logo" />
             </div>
             <div class="float-right">
                 <section id="login">
@@ -59,7 +55,6 @@
             </div>
         </div>
     </footer>
-
     @Scripts.Render("~/bundles/jquery")
     @RenderSection("scripts", required: false)
 </body>
