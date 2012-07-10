@@ -11,7 +11,7 @@ namespace Doe.PVMapper.WebApi
 {
     public static class MongoHelper
     {
-        private static string GetConnectionstring()
+        private static string GetConnectionString()
         {
             var connectionstring = ConfigurationManager.AppSettings.Get("MONGOLAB_URI");
             return connectionstring;
@@ -19,7 +19,7 @@ namespace Doe.PVMapper.WebApi
 
         public static MongoDatabase GetDatabase()
         {
-            string connectionstring = GetConnectionstring();
+            string connectionstring = GetConnectionString();
             var database = MongoDatabase.Create(connectionstring);
 
             return database;
@@ -27,7 +27,10 @@ namespace Doe.PVMapper.WebApi
 
         public static MongoRepository<T> GetRepository<T>() where T : Entity
         {
-            var repository = new MongoRepository<T>(new MongoUrl(GetConnectionstring()));
+            string connectionString = GetConnectionString();
+            if (connectionString == null)
+                throw new ArgumentNullException("Connection string not found.");
+            var repository = new MongoRepository<T>(new MongoUrl(connectionString));
             return repository;
         }
     }
