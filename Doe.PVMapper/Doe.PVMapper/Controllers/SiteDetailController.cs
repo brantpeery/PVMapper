@@ -15,6 +15,5 @@ namespace Doe.PVMapper.Controllers
         {
             return View();
         }
-
     }
 }
