@@ -440,6 +440,8 @@ wms, solar, slope
             }),
             listeners: {
                 'click': function (node, ev) {
+                    // todo: add error handling
+                    // http://api.jquery.com/jQuery.getScript/
                     $.getScript(node.attributes.url);
                 }
             }
