@@ -15,5 +15,10 @@ namespace Doe.PVMapper.Controllers
         {
             return View();
         }
+
+        public ActionResult Test()
+        {
+            return View();
+        }
     }
 }
