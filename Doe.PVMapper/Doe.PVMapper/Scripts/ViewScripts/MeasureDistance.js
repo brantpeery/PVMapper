@@ -25,7 +25,7 @@ Ext.onReady(function () {
         allowDepress: false,
         tooltip: "measure distance"
     });
-
+    pvMapper.toolbar.add("-");
     pvMapper.toolbar.add(measure);
 
     // create an action tied to a navigation control
@@ -41,4 +41,5 @@ Ext.onReady(function () {
     });
 
     pvMapper.toolbar.add(navigate);
+    pvMapper.toolbar.add("-");
 });
