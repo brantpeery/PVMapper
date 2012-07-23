@@ -4,10 +4,10 @@ Ext.onReady(function () {
     var zoom = new Ext.Action({
         text: "Zoom Full",
         handler: function () {
-            panel.map.zoomToMaxExtent();
+            pvMapper.map.zoomToMaxExtent();
         },
         tooltip: "zoom to full extent"
     });
 
-    DotSpatialToolbar.add(zoom);
+    pvMapper.toolbar.add(zoom);
 });

@@ -41,13 +41,11 @@
         //
         // TODO: create an object that wraps this "DotSpatial" functionality
         //
+        var pvMapper = { map:null, toolbar:null };
 
         // This is exposed to allow extensions to interact with the map.
-        var DotSpatialMap;
-
-        // The developer needs to be able to add and remove buttons to a toolbar.
-        var DotSpatialToolbar;
-
+           // The developer needs to be able to add and remove buttons to a toolbar.
+     
         Ext.onReady(function () {
 
             // display tooltips for actions
@@ -73,13 +71,12 @@
                 }
             });
 
-            DotSpatialMap = panel.map;
-            
-            DotSpatialToolbar = new Ext.Toolbar({
+                    
+            pvMapper.map = panel.map;
+            pvMapper.toolbar = new Ext.Toolbar({
                 //            renderTo: "tbar-id",
                 //items: []
             });
-          
            
             var tabs = new Ext.TabPanel({
                 //            renderTo: "tabs-id",
@@ -92,7 +89,6 @@
                     title: 'Scoreboard',
                     listeners: { activate: handleScoreboardActivate, single: true },
                     contentEl: 'scoreboard-id'
-
                 }]
             });
 
@@ -130,7 +126,7 @@
                 renderTo: 'view',
                 height: 500,
                 width: 950,
-                tbar: DotSpatialToolbar,
+                tbar: pvMapper.toolbar,
                 items: [tree, tabs]
             });
 

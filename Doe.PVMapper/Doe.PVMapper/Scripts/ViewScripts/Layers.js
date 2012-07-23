@@ -14,7 +14,7 @@
     //102113
     var resolutions = OpenLayers.Layer.Bing.prototype.serverResolutions.slice(4, 19);
     var osm = new OpenLayers.Layer.OSM("Street", null, { zoomOffset: 4, resolutions: resolutions });
-    DotSpatialMap.addLayer(osm);
+    pvMapper.map.addLayer(osm);
 
     var solar = new OpenLayers.Layer.WMS(
             "Solar Radiation",
@@ -28,7 +28,7 @@
             },
             { isBaseLayer: false }
             );
-    DotSpatialMap.addLayer(solar);
+    pvMapper.map.addLayer(solar);
 
     var slope = new OpenLayers.Layer.WMS(
             "Slope",
@@ -44,5 +44,5 @@
             }
         );
 
-    DotSpatialMap.addLayer(slope);
+    pvMapper.map.addLayer(slope);
 });
