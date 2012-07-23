@@ -5,6 +5,7 @@ Ext.onReady(function () {
         text: "Zoom Full",
         handler: function () {
             pvMapper.map.zoomToMaxExtent();
+            pvMapper.map.setCenter(new OpenLayers.LonLat(-10723197, 4500612));
         },
         tooltip: "zoom to full extent"
     });
