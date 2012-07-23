@@ -42,10 +42,11 @@
         var pvMapper = {
             map: null,
             toolbar: null,
+            // todo: update to use ToolId and secret and token.
             postScore: function (score, rank, siteId, ToolDescription) {
                 $.post(
                         "/api/SiteScore",
-                        { score: score, rank: Math.random(), siteId: siteId, ToolDescription: ToolDescription }
+                        { score: score, rank: rank, siteId: siteId, ToolDescription: ToolDescription }
                         );
             }
         };
@@ -58,6 +59,11 @@
             // display tooltips for actions
             Ext.QuickTips.init();
 
+            // todo: the solar data we are testing seems to require specific bounds. Can we set the map to have usBounds and the WMS to use the solarBounds?
+            var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);
+            var solarBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
+
+            // default resolution 156543.0339,
             var panel = new GeoExt.MapPanel({
                 renderTo: "map-id",
                 height: 500,
@@ -68,17 +74,15 @@
                 center: [-10723197, 4500612],
                 zoom: 0, //4 would be the default for US coverage if we were using 19 zoom levels instead of the reduced extents.
                 map: {
-                    projection: new OpenLayers.Projection("EPSG:900913"),
+                    projection: new OpenLayers.Projection("EPSG:4326"), //3857
                     units: "m",
                     numZoomLevels: 18,
                     maxResolution: 156543.0339,
-                    maxExtent: new OpenLayers.Bounds(-20037508, -20037508,
-                                                     20037508, 20037508.34),
+                    maxExtent: solarBounds,
                     theme: null
                 }
             });
-
-                    
+                                
             pvMapper.map = panel.map;
             pvMapper.toolbar = new Ext.Toolbar({
                 //            renderTo: "tbar-id",

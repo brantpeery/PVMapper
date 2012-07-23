@@ -4,36 +4,17 @@
         text: "Add Site",
         handler: function () {
 
-            // create a new attributes store
-            store = new GeoExt.data.AttributeStore({
-                url: "data/describe_feature_type.xml"
-            });
-            store.load();
+            var pointLayer = new OpenLayers.Layer.Vector("Point Layer");
+            pointLayer.id = "Hola";
 
-            // create a grid to display records from the store
-            var grid = new Ext.grid.GridPanel({
+            pvMapper.map.addLayer(pointLayer);
+            var tool = new OpenLayers.Control.DrawFeature(pointLayer, OpenLayers.Handler.Point);
+            pvMapper.map.addControl(tool);
+            tool.activate();
 
-                store: store,
-                cm: new Ext.grid.ColumnModel([
-                    { id: "name", header: "Name", dataIndex: "name", sortable: true },
-                    { id: "type", header: "Type", dataIndex: "type", sortable: true }
-                ]),
-                sm: new Ext.grid.RowSelectionModel({ singleSelect: true }),
-                autoExpandColumn: "name",
-                renderTo: document.body,
-                height: 300,
-                width: 350
-            });
-
-            new Ext.Window({
-                title: "GeoExt MapPanel Window",
-                height: 400,
-                width: 600,
-                layout: "fit",
-                maximizable: true,
-                items: [grid]
-
-            }).show();
+            //var layer = pvMapper.map.getLayer("Hola");
+            //layer.features[0].geometry[0].x;
+            // view-source:http://openlayers.org/dev/examples/click.html
         }
 
     });
