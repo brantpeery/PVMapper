@@ -1,2 +1,2 @@
 ﻿       // This is a tool.
-DotSpatialMap.addControl(new OpenLayers.Control.LayerSwitcher());
+pvMapper.map.addControl(new OpenLayers.Control.LayerSwitcher());

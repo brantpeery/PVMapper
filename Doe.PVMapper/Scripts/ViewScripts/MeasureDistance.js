@@ -19,20 +19,20 @@ Ext.onReady(function () {
                 }
             }
         }),
-        map: DotSpatialMap,
+        map: pvMapper.map,
         // button options
         toggleGroup: "group1",  // only one tool can be active in a group
         allowDepress: false,
         tooltip: "measure distance"
     });
 
-    DotSpatialToolbar.add(measure);
+    pvMapper.toolbar.add(measure);
 
     // create an action tied to a navigation control
     var navigate = new GeoExt.Action({
         text: "Navigate",
         control: new OpenLayers.Control.Navigation(),
-        map: DotSpatialMap,
+        map: pvMapper.map,
         // button options
         toggleGroup: "group1",  // only one tool can be active in a group
         allowDepress: false,
@@ -40,5 +40,5 @@ Ext.onReady(function () {
         tooltip: "navigate"
     });
 
-    DotSpatialToolbar.add(navigate);
+    pvMapper.toolbar.add(navigate);
 });

@@ -4,7 +4,7 @@
     var scoreTest = new Ext.Action({
         text: "Score Slope",
         handler: function () {
-            DotSpatialMap.zoomTo(9)
+            pvMapper.map.zoomTo(9)
             //,
             //               $.post(
             //               "/api/SiteScore",
@@ -54,5 +54,5 @@
         }
         // tooltip: ""
     });
-    DotSpatialToolbar.add(scoreTest);
+    pvMapper.toolbar.add(scoreTest);
 });

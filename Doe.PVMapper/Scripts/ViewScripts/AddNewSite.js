@@ -37,5 +37,5 @@
         }
 
     });
-    DotSpatialToolbar.add(addSite);
+    pvMapper.toolbar.add(addSite);
 });
