@@ -241,6 +241,7 @@
     <Content Include="Content\DataTables-1.9.2\media\images\sort_both.png" />
     <Content Include="Content\DataTables-1.9.2\media\images\sort_desc.png" />
     <Content Include="Content\DataTables-1.9.2\media\images\sort_desc_disabled.png" />
+    <Content Include="Content\ScoreBoardDemo.css" />
     <Content Include="ext-resources\js\ext-base.js" />
     <Content Include="ext-resources\js\GeoExt\data\AttributeReader.js" />
     <Content Include="ext-resources\js\GeoExt\data\AttributeStore.js" />
@@ -1579,6 +1580,7 @@
     <Content Include="Scripts\OpenLayers\Tween.js" />
     <Content Include="Scripts\OpenLayers\Util.js" />
     <Content Include="Scripts\Tools\debug_log.js" />
+    <Content Include="Scripts\ViewScripts\Layers.js" />
     <Content Include="Scripts\ViewScripts\SiteDetail.js" />
     <Content Include="Scripts\ViewScripts\testscripts.js" />
     <Content Include="theme\default\framedCloud.css" />
