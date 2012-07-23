@@ -5,6 +5,8 @@
         text: "Score Slope",
         handler: function () {
             pvMapper.map.zoomTo(9)
+
+            //Todo: replace these calls with the pvMapper.postScore()
             //,
             //               $.post(
             //               "/api/SiteScore",
