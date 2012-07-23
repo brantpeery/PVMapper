@@ -38,15 +38,22 @@
     <script type="text/javascript">
         //    OpenLayers.ImgPath = "../img/"
 
-        // the panel variable is declared here for easy debugging
-        var panel;
+        //
+        // TODO: create an object that wraps this "DotSpatial" functionality
+        //
+
+        // This is exposed to allow extensions to interact with the map.
+        var DotSpatialMap;
+
+        // The developer needs to be able to add and remove buttons to a toolbar.
+        var DotSpatialToolbar;
 
         Ext.onReady(function () {
 
             // display tooltips for actions
             Ext.QuickTips.init();
 
-            panel = new GeoExt.MapPanel({
+            var panel = new GeoExt.MapPanel({
                 renderTo: "map-id",
                 height: 500,
                 width: "100%",
@@ -66,153 +73,14 @@
                 }
             });
 
-
-
-            // create an action that zooms map to max extent (no map control needed)
-            var zoom = new Ext.Action({
-                text: "Zoom Full",
-                handler: function () {
-                    panel.map.zoomToMaxExtent();
-                },
-                tooltip: "zoom to full extent"
-            });
-
-            // create an action tied to a navigation control
-            var navigate = new GeoExt.Action({
-                text: "Navigate",
-                control: new OpenLayers.Control.Navigation(),
-                map: panel.map,
-                // button options
-                toggleGroup: "group1",  // only one tool can be active in a group
-                allowDepress: false,
-                pressed: true,
-                tooltip: "navigate"
-            });
-
-            // create an action tied to a measure control
-            var measure = new GeoExt.Action({
-                text: "Measure",
-                control: new OpenLayers.Control.Measure(OpenLayers.Handler.Path, {
-                    geodesic: true,
-                    eventListeners: {
-                        measure: function (event) {
-                            var win = new Ext.Window({
-                                title: "Measure Resuls",
-                                modal: true,
-                                width: 180,
-                                constrain: true,
-                                bodyStyle: { padding: 10 },
-                                html: event.measure + " " + event.units
-                            });
-                            win.show();
-                        }
-                    }
-                }),
-                map: panel.map,
-                // button options
-                toggleGroup: "group1",  // only one tool can be active in a group
-                allowDepress: false,
-                tooltip: "measure distance"
-            });
-            //http://www.codeproject.com/Articles/344078/ASP-NET-WebAPI-Getting-Started-with-MVC4-and-WebAP
-            var scoreTest = new Ext.Action({
-                text: "Score Slope",
-                handler: function () {
-                    panel.map.zoomTo(9)
-                    //,
-                    //               $.post(
-                    //               "/api/SiteScore",
-                    //                { score: "High", rank: Math.random(), siteId: "Arizona", ToolDescription: "Zapit1" }
-                    //                ),
-                    //                $.post(
-                    //                "/api/SiteScore",
-                    //                  { score: "Med", rank: Math.random(), siteId: "Arizona", ToolDescription: "Squishit" }
-                    //                 ),
-                    //                $.post(
-                    //                "/api/SiteScore",
-                    //                   { score: "5", rank: Math.random(), siteId: "Arizona", ToolDescription: "Scoreit" }
-                    //                 ),
-                    //                $.post(
-                    //                "/api/SiteScore",
-                    //                 { score: "High", rank: Math.random(), siteId: "Missouri", ToolDescription: "Zapit" }
-                    //                 ),
-                    //                $.post(
-                    //                "/api/SiteScore",
-                    //                  { score: "Med", rank: Math.random(), siteId: "Missouri", ToolDescription: "Squishit" }
-                    //                 ),
-                    //                $.post(
-                    //                "/api/SiteScore",
-                    //                   { score: "5", rank: Math.random(), siteId: "Missouri", ToolDescription: "Scoreit" }
-                    //                 )
-
-                    //                $("#addBook").serialize(),
-                    //                function (value) {
-                    //                    $("#bookTemplate").tmpl(value).appendTo("#books");
-                    //                    $("#name").val("");
-                    //                    $("#price").val("");
-                    //                },
-                    //                "json"
-
-                    //                jQuery.ajax({
-                    //                    type: "POST",
-                    //                    url: 'http://localhost:1919/api/SiteScore',
-                    //                    dataType: "json",
-
-                    //                    success: function (data) {
-                    //                        alert(data);
-                    //                    },
-                    //                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    //                        alert("error");
-                    //                    }
-                    //                })
-                }
-                // tooltip: ""
-            });
-
-            var scoreboard = new Ext.Action({
-                text: "Add Site",
-                handler: function () {
-
-                    // create a new attributes store
-                    store = new GeoExt.data.AttributeStore({
-                        url: "data/describe_feature_type.xml"
-                    });
-                    store.load();
-
-                    // create a grid to display records from the store
-                    var grid = new Ext.grid.GridPanel({
-
-                        store: store,
-                        cm: new Ext.grid.ColumnModel([
-                            { id: "name", header: "Name", dataIndex: "name", sortable: true },
-                            { id: "type", header: "Type", dataIndex: "type", sortable: true }
-                        ]),
-                        sm: new Ext.grid.RowSelectionModel({ singleSelect: true }),
-                        autoExpandColumn: "name",
-                        renderTo: document.body,
-                        height: 300,
-                        width: 350
-                    });
-
-                    new Ext.Window({
-                        title: "GeoExt MapPanel Window",
-                        height: 400,
-                        width: 600,
-                        layout: "fit",
-                        maximizable: true,
-                        items: [grid]
-
-                    }).show();
-                }
-
-            });
-
-            // add a toolbar with the above actions as buttons
-            var toolbar = new Ext.Toolbar({
+            DotSpatialMap = panel.map;
+            
+            DotSpatialToolbar = new Ext.Toolbar({
                 //            renderTo: "tbar-id",
-                items: [scoreboard, "-", zoom, "-", navigate, measure, "-", scoreTest]
+                //items: []
             });
-
+          
+           
             var tabs = new Ext.TabPanel({
                 //            renderTo: "tabs-id",
                 activeTab: 0,
@@ -256,13 +124,13 @@
 
             tree.setRootNode(treeRoot);
 
-            new Ext.Panel({
+            var rootPanel = new Ext.Panel({
                 //            title: "GeoExt LegendPanel Demo",
                 layout: 'border',
                 renderTo: 'view',
                 height: 500,
                 width: 950,
-                tbar: toolbar,
+                tbar: DotSpatialToolbar,
                 items: [tree, tabs]
             });
 
@@ -315,4 +183,8 @@
 
     </script>
     <script type="text/javascript" src="../../Scripts/ViewScripts/Layers.js"></script>
+    <script type="text/javascript" src="../../Scripts/ViewScripts/TestScoreAPI.js"></script>
+    <script type="text/javascript" src="../../Scripts/ViewScripts/ZoomFull.js"></script>
+    <script type="text/javascript" src="../../Scripts/ViewScripts/MeasureDistance.js"></script>
+    <script type="text/javascript" src="../../Scripts/ViewScripts/AddNewSite.js"></script>
 }
