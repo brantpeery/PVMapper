@@ -38,10 +38,17 @@
     <script type="text/javascript">
         //    OpenLayers.ImgPath = "../img/"
 
-        //
-        // TODO: create an object that wraps this "DotSpatial" functionality
-        //
-        var pvMapper = { map:null, toolbar:null };
+        // This is a globally defined object that represents the client-side behaviors available through the PVMapper framework.
+        var pvMapper = {
+            map: null,
+            toolbar: null,
+            postScore: function (score, rank, siteId, ToolDescription) {
+                $.post(
+                        "/api/SiteScore",
+                        { score: score, rank: Math.random(), siteId: siteId, ToolDescription: ToolDescription }
+                        );
+            }
+        };
 
         // This is exposed to allow extensions to interact with the map.
            // The developer needs to be able to add and remove buttons to a toolbar.
