@@ -25,7 +25,7 @@ namespace Doe.PVMapper.WebApi
             return database;
         }
 
-        public static MongoRepository<T> GetRepository<T>() where T : Entity
+        public static MongoRepository<T> GetRepository<T>() where T : IEntity
         {
             string connectionString = GetConnectionString();
             if (connectionString == null)

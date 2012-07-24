@@ -1,50 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using Doe.PVMapper.Models;
 using DreamSongs.MongoRepository;
-using System.Net;
-using System.Net.Http;
 
 namespace Doe.PVMapper.WebApi
 {
-    public class SiteScoreController : ApiController
+    public class ProjectSiteController : ApiController
     {
-        private static readonly IRepository<SiteScore> _db = MongoHelper.GetRepository<SiteScore>();
+        private static readonly IRepository<ProjectSite> _db = MongoHelper.GetRepository<ProjectSite>();
 
         [Queryable]
-        public IQueryable<SiteScore> Get()
+        public IQueryable<ProjectSite> Get()
         {
             return _db.All();
         }
 
-        public SiteScore Get(string id)
+        public ProjectSite Get(string id)
         {
-            SiteScore score = _db.GetById(id);
-            if (score == null)
+            // todo: verify that userid is allowed to access this site.
+            ProjectSite site = _db.GetById(id);
+            if (site == null)
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound));
             }
 
             // response.Content.Headers.Expires = new DateTimeOffset(DateTime.Now.AddSeconds(300));
 
-            return score;
+            return site;
         }
 
-        public HttpResponseMessage Post(SiteScore value)
+        public HttpResponseMessage Post(ProjectSite value)
         {
-            SiteScore score = _db.Add(value);
+            ProjectSite site = _db.Add(value);
 
-            var response = Request.CreateResponse<SiteScore>(HttpStatusCode.Created, score);
+            var response = Request.CreateResponse<ProjectSite>(HttpStatusCode.Created, site);
 
-            string uri = Url.Route(null, new { id = score.Id });
+            string uri = Url.Route(null, new { id = site.Id });
             response.Headers.Location = new Uri(Request.RequestUri, uri);
             return response;
         }
 
-        public void Put(string id, SiteScore value)
+        public void Put(string id, ProjectSite value)
         {
             if (_db.Update(value) == null)
             {
