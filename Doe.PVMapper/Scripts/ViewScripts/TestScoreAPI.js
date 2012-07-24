@@ -1,4 +1,4 @@
-﻿Ext.onReady(function () {
+﻿pvMapper.onReady(function () {
 
     //http://www.codeproject.com/Articles/344078/ASP-NET-WebAPI-Getting-Started-with-MVC4-and-WebAP
     var scoreTest = new Ext.Action({

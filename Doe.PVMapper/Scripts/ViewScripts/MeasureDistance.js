@@ -1,5 +1,5 @@
 ﻿
-Ext.onReady(function () {
+pvMapper.onReady(function () {
     // create an action tied to a measure control
     var measure = new GeoExt.Action({
         text: "Measure",
