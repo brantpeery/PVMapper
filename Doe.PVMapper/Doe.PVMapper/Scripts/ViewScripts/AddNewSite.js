@@ -1,4 +1,4 @@
-﻿Ext.onReady(function () {
+﻿pvMapper.onReady(function () {
 
     var addSite = new Ext.Action({
         text: "Add Site",
