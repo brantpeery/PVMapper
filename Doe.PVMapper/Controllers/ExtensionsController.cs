@@ -11,13 +11,13 @@ namespace Doe.PVMapper.Controllers
 {
     public class ExtensionsController : Controller
     {
-        private static readonly IRepository<WebExtension> _repository = MongoHelper.GetRepository<WebExtension>();
+        private static readonly IRepository<WebExtension> _db = MongoHelper.GetRepository<WebExtension>();
         //
         // GET: /Extensions/
 
         public ActionResult Index()
         {
-            var model = _repository.All();
+            var model = _db.All();
             return View(model);
         }
 
@@ -26,7 +26,7 @@ namespace Doe.PVMapper.Controllers
 
         public ActionResult Details(string id)
         {
-            var model = _repository.GetById(id);
+            var model = _db.GetById(id);
             if (model == null)
             {
                 return View();
@@ -51,7 +51,7 @@ namespace Doe.PVMapper.Controllers
         {
             try
             {
-                _repository.Add(model);
+                _db.Add(model);
 
                 return RedirectToAction("Index");
             }
@@ -66,7 +66,7 @@ namespace Doe.PVMapper.Controllers
 
         public ActionResult Edit(string id)
         {
-            var model = _repository.GetById(id);
+            var model = _db.GetById(id);
             if (model == null)
             {
                 return View();
@@ -83,7 +83,7 @@ namespace Doe.PVMapper.Controllers
         {
             try
             {
-                _repository.Update(model);
+                _db.Update(model);
 
                 return RedirectToAction("Index");
             }
@@ -98,7 +98,7 @@ namespace Doe.PVMapper.Controllers
 
         public ActionResult Delete(string id)
         {
-            var model = _repository.GetById(id);
+            var model = _db.GetById(id);
             if (model == null)
             {
                 return View();
@@ -115,7 +115,7 @@ namespace Doe.PVMapper.Controllers
         {
             try
             {
-                _repository.Delete(id);
+                _db.Delete(id);
 
                 return RedirectToAction("Index");
             }

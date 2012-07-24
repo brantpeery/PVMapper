@@ -44,16 +44,19 @@
             toolbar: null,
             // todo: update to use ToolId and secret and token.
             postScore: function (score, rank, siteId, ToolDescription) {
-                $.post(
-                        "/api/SiteScore",
-                        { score: score, rank: rank, siteId: siteId, ToolDescription: ToolDescription }
-                        );
+                $.post("/api/SiteScore", { score: score, rank: rank, siteId: siteId, ToolDescription: ToolDescription });
+            },
+            getSite: function (siteId) {
+                return $.get("/api/ProjectSite/" + siteId);
+            },
+            postSite: function (userId, name, description, polygonGeometry) {
+                return $.post("/api/ProjectSite", { userId: userId, name: name, description: description, isActive: true, polygonGeometry: polygonGeometry });
             }
         };
 
         // This is exposed to allow extensions to interact with the map.
-           // The developer needs to be able to add and remove buttons to a toolbar.
-     
+        // The developer needs to be able to add and remove buttons to a toolbar.
+
         Ext.onReady(function () {
 
             // display tooltips for actions
@@ -82,13 +85,13 @@
                     theme: null
                 }
             });
-                                
+
             pvMapper.map = panel.map;
             pvMapper.toolbar = new Ext.Toolbar({
                 //            renderTo: "tbar-id",
                 //items: []
             });
-           
+
             var tabs = new Ext.TabPanel({
                 //            renderTo: "tabs-id",
                 activeTab: 0,
