@@ -85,7 +85,7 @@ function addSite(map, layer) {
                     $msgdiv.show();
                     $msgdiv.fadeOut(10000);
                     pvMapper.postSite("user1", name, desc, WKT);
-                    //alert (msg);
+                    deactivateDrawSite();
                 }
             }, {
                 text: 'Cancel',
@@ -119,7 +119,8 @@ function addSite(map, layer) {
         
     }
     function saveSiteInfo () { }
-    function deactivateDrawSite () { }
+    function deactivateDrawSite()
+    { self.mapControl.deactivate(); }
     function nameSiteFeature () { }
 
     function createAddSiteDialog() { }
