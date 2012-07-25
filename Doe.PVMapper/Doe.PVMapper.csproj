@@ -1587,8 +1587,8 @@
     <Content Include="Scripts\ViewScripts\Layers.js" />
     <Content Include="Scripts\ViewScripts\MeasureDistance.js" />
     <Content Include="Scripts\ViewScripts\pvMapper.js" />
+    <Content Include="Scripts\ViewScripts\SiteAreaTool.js" />
     <Content Include="Scripts\ViewScripts\SiteDetail.js" />
-    <Content Include="Scripts\ViewScripts\TestScoreAPI.js" />
     <Content Include="Scripts\ViewScripts\testscripts.js" />
     <Content Include="Scripts\ViewScripts\ZoomFull.js" />
     <Content Include="theme\default\framedCloud.css" />
