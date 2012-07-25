@@ -11,7 +11,9 @@
     <header>
         <div class="content-wrapper">
             <div class="float-left">
-                <img src="~/Images/PVMapper_TopText.png" alt="PV Mapper Logo" />
+                <a href="@Url.Action("Index", "Home")">
+                    <img src="~/Images/PVMapper_TopText.png" alt="PV Mapper Logo" />
+                </a>
             </div>
             <div class="float-right">
                 <section id="login">
@@ -42,7 +44,7 @@
             </div>
         </div>
     </footer>
-        @* @Scripts.Render("~/bundles/extjs")*@
+    @* @Scripts.Render("~/bundles/extjs")*@
     @*The bundler causes a StackOverflowException in v4 RC *@
     <script type="text/javascript" src="~/ext-resources/js/ext-base.js"></script>
     <script type="text/javascript" src="~/ext-resources/js/ext-all.js"></script>
