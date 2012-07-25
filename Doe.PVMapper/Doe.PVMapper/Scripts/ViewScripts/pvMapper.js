@@ -17,5 +17,15 @@ var pvMapper = {
     // should be passed a function that will be executed when all required scripts are fully loaded
     onReady: function (fn) {
         $("body").on("pvMapper-ready", fn)
+    },
+    getSiteLayer: function () {
+        var i = pvMapper.map.layers.length;
+        while (i--) {
+            if (pvMapper.map.layers[i].id === "SiteLayer") {
+                return pvMapper.map.layers[i];
+            }
+        }
+              
+        return "SiteLayer does not exist in the collection of layers on the map. Add a site or load sites first.";
     }
 };

@@ -64,6 +64,15 @@ Ext.onReady(function () {
                 // todo: add error handling
                 // http://api.jquery.com/jQuery.getScript/
                 $.getScript(node.attributes.url);
+
+                $.getScript(node.attributes.url)
+                    .done(function (script, textStatus) {
+                       
+                    })
+                    .fail(function (jqxhr, settings, exception) {
+                        console.log(exception);
+                        // $("div.log").text("Triggered ajaxError handler.");
+                    });
             }
         }
     });
@@ -130,6 +139,9 @@ Ext.onReady(function () {
             ]
         });
     }
+
+    // Load existing site for user from database.
+    
 
     $("body").trigger("pvMapper-ready");
 });
