@@ -8,7 +8,7 @@ pvMapper.onReady(function () {
             eventListeners: {
                 measure: function (event) {
                     var win = new Ext.Window({
-                        title: "Measure Resuls",
+                        title: "Measure Results",
                         modal: true,
                         width: 180,
                         constrain: true,
