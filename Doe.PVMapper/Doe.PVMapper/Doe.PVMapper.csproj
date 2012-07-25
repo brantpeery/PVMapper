@@ -1583,8 +1583,10 @@
     <Content Include="Scripts\OpenLayers\Util.js" />
     <Content Include="Scripts\Tools\debug_log.js" />
     <Content Include="Scripts\ViewScripts\AddNewSite.js" />
+    <Content Include="Scripts\ViewScripts\IndexView.js" />
     <Content Include="Scripts\ViewScripts\Layers.js" />
     <Content Include="Scripts\ViewScripts\MeasureDistance.js" />
+    <Content Include="Scripts\ViewScripts\pvMapper.js" />
     <Content Include="Scripts\ViewScripts\SiteDetail.js" />
     <Content Include="Scripts\ViewScripts\TestScoreAPI.js" />
     <Content Include="Scripts\ViewScripts\testscripts.js" />
