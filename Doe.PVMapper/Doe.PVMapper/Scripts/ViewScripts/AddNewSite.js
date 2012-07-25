@@ -84,7 +84,7 @@ function addSite(map, layer) {
                     $msgdiv = $('<div>' + msg + '</div>').appendTo('body').css({ 'position': 'fixed', top: '0', left: 0, width: "100%", background: 'red', color: 'white' });
                     $msgdiv.show();
                     $msgdiv.fadeOut(10000);
-
+                    pvMapper.postSite("user1", name, desc, WKT);
                     //alert (msg);
                 }
             }, {
