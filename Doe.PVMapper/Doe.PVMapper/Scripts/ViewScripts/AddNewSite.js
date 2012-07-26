@@ -7,16 +7,14 @@ Contributors: Brant Peery, Matthew Klien
 var tools=[];
 
 pvMapper.onReady(function () {
+    var thisTool = new addSite(pvMapper.map);
+    tools.push(thisTool);
 
     var addSiteTool = new Ext.Action({
         text: "Add Site",
         handler: function () {
-            var tool = new addSite(pvMapper.map);
-
-            tools.push(tool);
-
-
-            
+            if (thisTool.mapControl.active) { thisTool.mapControl.deactivate(); }
+            else { thisTool.mapControl.activate(); }
         }
 
     });
@@ -25,6 +23,9 @@ pvMapper.onReady(function () {
 
 //The main plugin object. Conforms to the plugin definition set by the framework
 function addSite(map, layer) {
+    var commonStyleMap;
+
+
     var self = this; //Makes the 'this' object accessable from the private methods
     var WKT;
     var currentSiteName;
@@ -39,14 +40,9 @@ function addSite(map, layer) {
         var control = this;
         feature = data.feature;
         
-        //Give a way to cancel the creation
+        var kml = new OpenLayers.Format.KML(); 
 
-        //This is where a save to the database might happen
-        WKT = feature.geometry.toString();
-
-        var kml = new OpenLayers.Format.KML();
-        //alert(kml.write(feature));
-        //Then continue to collect the needed form data
+        //Continue to collect the needed form data
         ///HACK: This needs to use the framework standard way of doing it. For now I am going to assume that I have access to EXTjs 3
         wiz = new Ext.Window({
             layout:'form',
@@ -77,7 +73,24 @@ function addSite(map, layer) {
                     var desc = Ext.getCmp("sitedescription").getValue();
 
                     feature.id=name;
-                    feature.name=name;
+                    feature.name = name;
+                    feature.attributes = {
+                        name: name,
+                        description: desc
+                    };
+
+                    ///HACK: For some reason the OpenLayers engine renders an extra set of labels if 
+                    ///the style is applied at the layer level. However by defining the label attribute at
+                    ///the feature, an extra label is not drawn to the screen by the engine.
+                    var myStyle = commonStyleMap.createSymbolizer(feature, 'default');
+                    myStyle.label = name;
+                    feature.style = myStyle;
+                            
+
+                    //Refresh the feature
+                    feature.layer.eraseFeatures(feature);
+                    feature.layer.drawFeature(feature);
+
                     wiz.destroy();
 
                     var msg = "The feature has been named " + name + " and it is described as " + desc + ". \n " + WKT;
@@ -101,7 +114,8 @@ function addSite(map, layer) {
         wiz.show();
         
 
-
+        //This is where a save to the database might happen
+        WKT = feature.geometry.toString();
 
         //Now save the whole thing
     });
@@ -125,10 +139,44 @@ function addSite(map, layer) {
 
     function createAddSiteDialog() { }
     function createSiteLayer(map) {
-        var sitelayer = new OpenLayers.Layer.Vector("Sites");
-        sitelayer.id = "SiteLayer";
-        map.addLayer(sitelayer);
-        return sitelayer;
+        if (layer==null) {
+
+            // allow testing of specific renderers via "?renderer=Canvas", etc
+            var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
+            renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
+
+            var sitelayer = new OpenLayers.Layer.Vector("Sites",
+                {
+                    renderers: renderer
+                });
+
+            //If a style is applied at the layer level, then 
+            //when a label is applied, the engine draws it incorrectly
+            //For this reason the style is defined here, but used only when a 
+            //feature is added
+            commonStyleMap = new OpenLayers.StyleMap({
+                'default': {
+                    strokeColor: "#00FF00",
+                    strokeOpacity: 1,
+                    strokeWidth: 3,
+                    fillColor: "#FF5500",
+                    fillOpacity: 0.5,
+                    pointRadius: 6,
+                    pointerEvents: "visiblePainted",
+                    fontColor: "blue",
+                    fontSize: "12px",
+                    fontFamily: "Courier New, monospace",
+                    fontWeight: "bold",
+                    labelAlign: "cm",
+                    labelOutlineColor: "white",
+                    labelOutlineWidth: 3
+                }
+            });
+
+            sitelayer.id = "SiteLayer";
+            map.addLayer(sitelayer);
+            return sitelayer;
+        } else { return layer; }
     }
 
     
