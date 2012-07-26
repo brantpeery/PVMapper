@@ -19,21 +19,21 @@
     var osm = new OpenLayers.Layer.OSM("Street", null, { zoomOffset: 4, resolutions: resolutions });
     pvMapper.map.addLayer(osm);
 
-    // commented out to load the page faster.
-    //var solar = new OpenLayers.Layer.WMS(
-    //        "Solar Radiation",
-    //        "http://mapsdb.nrel.gov/jw_router/perezANN_mod/tile",
-    //        {
-    //            maxExtent: solarBounds,
-    //            layers: "perezANN_mod",
-    //            layer_type: "polygon",
-    //            transparent: "true",
-    //            format: "image/gif",
-    //            exceptions: "application/vnd.ogc.se_inimage"
-    //        },
-    //        { isBaseLayer: false }
-    //        );
-    //pvMapper.map.addLayer(solar);
+    var solar = new OpenLayers.Layer.WMS(
+            "Solar Radiation",
+            "http://mapsdb.nrel.gov/jw_router/perezANN_mod/tile",
+            {
+                maxExtent: solarBounds,
+                layers: "perezANN_mod",
+                layer_type: "polygon",
+                transparent: "true",
+                format: "image/gif",
+                exceptions: "application/vnd.ogc.se_inimage"
+            },
+            { isBaseLayer: false }
+            );
+    solar.setOpacity(0.3);
+    pvMapper.map.addLayer(solar);
 
     var slope = new OpenLayers.Layer.WMS(
             "Slope",
@@ -49,7 +49,7 @@
                 wrapDateLine: true
             }
         );
-
+    slope.setOpacity(0.3);
     pvMapper.map.addLayer(slope);
 
 
