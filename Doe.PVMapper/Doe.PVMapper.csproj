@@ -244,6 +244,7 @@
     <Content Include="Content\DataTables-1.9.2\media\images\sort_desc.png" />
     <Content Include="Content\DataTables-1.9.2\media\images\sort_desc_disabled.png" />
     <Content Include="Content\ScoreBoardDemo.css" />
+    <Content Include="Content\themes\jquery.jgrowl.css" />
     <Content Include="ext-resources\js\ext-base.js" />
     <Content Include="ext-resources\js\GeoExt\data\AttributeReader.js" />
     <Content Include="ext-resources\js\GeoExt\data\AttributeStore.js" />
@@ -1298,6 +1299,7 @@
     <Content Include="Scripts\jquery.validate.min.js">
       <DependentUpon>jquery.validate.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\jQueryExtentions\jquery.jgrowl_minimized.js" />
     <Content Include="Scripts\jQueryExtentions\minimize_dialog.js" />
     <Content Include="Scripts\jQueryExtentions\popout_tab.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />

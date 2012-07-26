@@ -4,19 +4,27 @@ Add site plugin
 Contributors: Brant Peery, Matthew Klien
 */
 
-var tools=[];
+
+///TODO: Find a way to limit the use of the tool to when the user is zoomed in to something like 10 miles across
+///TODO: Switch user to map tab
+///TODO: Show help
+
+var tools = [];
 
 pvMapper.onReady(function () {
     var thisTool = new addSite(pvMapper.map);
     tools.push(thisTool);
 
-    var addSiteTool = new Ext.Action({
+    var addSiteTool = new Ext.Button({
         text: "Add Site",
         handler: function () {
             if (thisTool.mapControl.active) { thisTool.mapControl.deactivate(); }
             else { thisTool.mapControl.activate(); }
-        }
 
+
+        },
+        enableToggle: true
+        
     });
     pvMapper.toolbar.add(addSiteTool);
 });
@@ -35,18 +43,18 @@ function addSite(map, layer) {
     this.mapControl = new OpenLayers.Control.DrawFeature(this.layer, OpenLayers.Handler.Polygon);
     map.addControl(this.mapControl);
 
-    activateDrawSite();
+    //activateDrawSite();
     this.mapControl.events.register("featureadded", this.mapControl, function (data) {
         var control = this;
         feature = data.feature;
-        
-        var kml = new OpenLayers.Format.KML(); 
+
+        var kml = new OpenLayers.Format.KML();
 
         //Continue to collect the needed form data
         ///HACK: This needs to use the framework standard way of doing it. For now I am going to assume that I have access to EXTjs 3
         wiz = new Ext.Window({
-            layout:'form',
-            modal:true,
+            layout: 'form',
+            modal: true,
             collapsible: true,
             id: "siteWizard",
             frame: true,
@@ -56,14 +64,14 @@ function addSite(map, layer) {
             defaultType: 'textfield',
             items: [{
                 fieldLabel: 'Site Name',
-                hideLabel:false,
+                hideLabel: false,
                 name: 'name',
-                id:'name'
+                id: 'name'
             }, {
                 fieldLabel: 'Site Description',
-                xtype:'textarea',
+                xtype: 'textarea',
                 name: 'siteDescription',
-                id:'sitedescription'
+                id: 'sitedescription'
             }],
 
             buttons: [{
@@ -72,7 +80,7 @@ function addSite(map, layer) {
                     var name = Ext.getCmp("name").getValue();
                     var desc = Ext.getCmp("sitedescription").getValue();
 
-                    feature.id=name;
+                    feature.id = name;
                     feature.name = name;
                     feature.attributes = {
                         name: name,
@@ -85,7 +93,7 @@ function addSite(map, layer) {
                     var myStyle = commonStyleMap.createSymbolizer(feature, 'default');
                     myStyle.label = name;
                     feature.style = myStyle;
-                            
+
 
                     //Refresh the feature
                     feature.layer.eraseFeatures(feature);
@@ -93,11 +101,17 @@ function addSite(map, layer) {
 
                     wiz.destroy();
 
-                    var msg = "The feature has been named " + name + " and it is described as " + desc + ". \n " + WKT;
-                    $msgdiv = $('<div>' + msg + '</div>').appendTo('body').css({ 'position': 'fixed', top: '0', left: 0, width: "100%", background: 'red', color: 'white' });
-                    $msgdiv.show();
-                    $msgdiv.fadeOut(10000);
-                    pvMapper.postSite("user1", name, desc, WKT);
+                    var id = pvMapper.postSite("user1", name, desc, WKT);
+                    feature.id = id; //Set the id of the feature so that it is updateable
+                    
+                    var msg;
+                    if (id) {
+                        msg = "The site " + site + "has been added to your database";
+                    } else {
+                        msg = "There was a problem adding the site to the database!";
+                    }
+
+                    $.jGrowl(msg, {life:20000});
                     deactivateDrawSite();
                 }
             }, {
@@ -106,40 +120,41 @@ function addSite(map, layer) {
                     feature.destroy();
                     control.cancel();
                     wiz.destroy();
+                    deactivateDrawSite();
                 }
             }]
-     
+
         })
 
         wiz.show();
-        
+
 
         //This is where a save to the database might happen
         WKT = feature.geometry.toString();
 
         //Now save the whole thing
     });
-    
+
     function handleSave(b, e) {
         var msg;
-        
+
 
         alert(feature.geometry.toString());
     }
 
-    function createLayer () { }
+    function createLayer() { }
     function activateDrawSite() {
         self.mapControl.activate();
-        
+
     }
-    function saveSiteInfo () { }
+    function saveSiteInfo() { }
     function deactivateDrawSite()
     { self.mapControl.deactivate(); }
-    function nameSiteFeature () { }
+    function nameSiteFeature() { }
 
     function createAddSiteDialog() { }
     function createSiteLayer(map) {
-        if (layer==null) {
+        if (layer == null) {
 
             // allow testing of specific renderers via "?renderer=Canvas", etc
             var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
@@ -179,13 +194,13 @@ function addSite(map, layer) {
         } else { return layer; }
     }
 
-    
+
 };
 addSite.prototype = {
     createEditTool: function () {
-        control 
+        control
         return control;
     },
 
-        
+
 }

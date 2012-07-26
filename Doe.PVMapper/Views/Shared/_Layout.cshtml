@@ -6,6 +6,7 @@
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width" />
     @Styles.Render("~/Content/css", "~/Content/themes/base/css", "~/ext-resources/files/css")
+    <link rel="stylesheet" type="text/css" href="../../Content/themes/jquery.jgrowl.css" />
 </head>
 <body>
     <header>
@@ -51,6 +52,9 @@
     <script type="text/javascript" src="~/ext-resources/js/OpenLayers.js"></script>
     <script type="text/javascript" src="~/ext-resources/js/GeoExt.js"></script>
     @Scripts.Render("~/bundles/jquery")
+
+
+    <script type="text/javascript" src="~/Scripts/jQueryExtentions/jquery.jgrowl_minimized.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>
