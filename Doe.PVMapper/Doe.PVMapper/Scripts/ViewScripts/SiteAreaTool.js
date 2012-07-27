@@ -5,10 +5,24 @@ var sitesLayer = pvMapper.getSiteLayer();
 if (sitesLayer) {
     sitesLayer.events.on({
         'featureselected': function (feature) {
-            console.log(this.selectedFeatures.length);
+            var features = sitesLayer.selectedFeatures;
+            if (!features)
+                return;
+
+            if (!features[0])
+                return;
+
+            var selectedFeature = features[0];
+            
+            // todo: determine why this runs twice
+            //todo: use site id, not name
+            var geo = selectedFeature.geometry;
+            var area = geo.getGeodesicArea();
+            pvMapper.postScore(area, area, selectedFeature.name, "SiteAreaTool");
+            $.jGrowl("Submitted area: " + area);
         },
         'featureunselected': function (feature) {
-            console.log(this.selectedFeatures.length);
+          //  console.log(this.selectedFeatures.length);
         }
     });
 
@@ -23,10 +37,5 @@ if (sitesLayer) {
         });
 
     pvMapper.map.addControl(select);
-    select.activate();
-
-    //get selected site.
-
-    //todo: calculate area.
-    pvMapper.postScore( "High", Math.random(), "SiteName", "SiteAreaTool");
+    select.activate(); 
 }

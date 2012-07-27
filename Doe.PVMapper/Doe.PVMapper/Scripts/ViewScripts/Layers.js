@@ -17,6 +17,7 @@
     //102113
     var resolutions = OpenLayers.Layer.Bing.prototype.serverResolutions.slice(4, 19);
     var osm = new OpenLayers.Layer.OSM("Street", null, { zoomOffset: 4, resolutions: resolutions });
+    $.jGrowl("Adding Open Street Map");
     pvMapper.map.addLayer(osm);
 
     var solar = new OpenLayers.Layer.WMS(
@@ -33,6 +34,7 @@
             { isBaseLayer: false }
             );
     solar.setOpacity(0.3);
+    $.jGrowl("Adding Solar Radiation");
     pvMapper.map.addLayer(solar);
 
     var slope = new OpenLayers.Layer.WMS(
@@ -50,6 +52,7 @@
             }
         );
     slope.setOpacity(0.3);
+    $.jGrowl("Adding Slope");
     pvMapper.map.addLayer(slope);
 
 
