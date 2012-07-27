@@ -25,9 +25,26 @@ Ext.onReady(function () {
             numZoomLevels: 18,
             maxResolution: 156543.0339,
             maxExtent: solarBounds,
-            theme: null
+            theme: null,
+            controls: []
         }
     });
+   
+    // default controls to show in map.
+    panel.map.addControl(new OpenLayers.Control.PanZoomBar({ zoomWorldIcon: false, zoomStopHeight:2 }));
+    panel.map.addControl(new OpenLayers.Control.LayerSwitcher({ 'ascending': false }));
+    panel.map.addControl(new OpenLayers.Control.KeyboardDefaults());
+
+    // add the pan hand.
+    //var panelControls = [
+    // new OpenLayers.Control.Navigation()
+    //];
+    //var toolbar = new OpenLayers.Control.Panel({
+    //    displayClass: 'olControlEditingToolbar',
+    //    defaultControl: panelControls[0]
+    //});
+    //toolbar.addControls(panelControls);
+    //panel.map.addControl(toolbar);
 
     pvMapper.map = panel.map;
     pvMapper.toolbar = new Ext.Toolbar({
