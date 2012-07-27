@@ -106,7 +106,7 @@ function addSite(map, layer) {
                     
                     var msg;
                     if (id) {
-                        msg = "The site " + site + "has been added to your database";
+                        msg = "The site " + name + " has been added to your database";
                     } else {
                         msg = "There was a problem adding the site to the database!";
                     }
