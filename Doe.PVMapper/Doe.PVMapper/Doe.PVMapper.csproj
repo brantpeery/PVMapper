@@ -154,6 +154,7 @@
     <Compile Include="Controllers\ExtensionsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SiteDetailController.cs" />
+    <Compile Include="Scripts\Models\Entity2.cs" />
     <Compile Include="Scripts\Models\ProjectSite.cs" />
     <Compile Include="Scripts\Models\TreeNode.cs" />
     <Compile Include="Scripts\Models\TreeListPayload.cs" />

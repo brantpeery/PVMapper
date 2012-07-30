@@ -3,14 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using DreamSongs.MongoRepository;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Doe.PVMapper.Models
 {
+
     /// <summary>
     ///
     /// </summary>
-    public class SiteScore : Entity
+    public class SiteScore : IEntity
     {
+
+        // There seems to be a bug or change in the deserializer that prevents us from inheriting from Entity.
+        [MongoDB.Bson.Serialization.Attributes.BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+        public string Id { get; set; }
+
         /// <summary>
         /// Gets or sets the site ID.
         /// </summary>
