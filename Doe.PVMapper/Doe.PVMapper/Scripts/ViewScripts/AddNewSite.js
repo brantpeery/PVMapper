@@ -93,8 +93,7 @@ function addSite(map, layer) {
                 handler: function (b, e) {
                     var name = Ext.getCmp("name").getValue();
                     var desc = Ext.getCmp("sitedescription").getValue();
-
-                    feature.id = name;
+                  
                     feature.name = name;
                     feature.attributes = {
                         name: name,
@@ -107,7 +106,6 @@ function addSite(map, layer) {
                     var myStyle = commonStyleMap.createSymbolizer(feature, 'default');
                     myStyle.label = name;
                     feature.style = myStyle;
-
 
                     //Refresh the feature
                     feature.layer.eraseFeatures(feature);
