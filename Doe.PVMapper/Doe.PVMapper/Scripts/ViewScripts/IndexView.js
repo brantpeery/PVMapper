@@ -158,23 +158,10 @@ Ext.onReady(function () {
             ]
         });
     }
-
-    //update this function to call itself immediately
-    function createSiteLayer(map) {
-        // allow testing of specific renderers via "?renderer=Canvas", etc
-        var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
-        renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
-
-        var sitelayer = new OpenLayers.Layer.Vector("Sites",
-            {
-                renderers: renderer
-            });
-
-        sitelayer.id = "SiteLayer";
-        map.addLayer(sitelayer);
-    }
-    createSiteLayer(panel.map);
-
+  
+    var sitelayer = new OpenLayers.Layer.Vector("Sites");
+    sitelayer.id = "SiteLayer";
+    panel.map.addLayer(sitelayer);  
 
     $("body").trigger("pvMapper-ready");
 });
