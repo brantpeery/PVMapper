@@ -12,8 +12,12 @@ namespace Doe.PVMapper.Models
     /// <summary>
     /// A site that represents a potential project location.
     /// </summary>
-    public class ProjectSite : Entity
+    public class ProjectSite : IEntity
     {
+        // There seems to be a bug or change in the deserializer that prevents us from inheriting from Entity.
+        [MongoDB.Bson.Serialization.Attributes.BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+        public string Id { get; set; }
+
         /// <summary>
         /// Gets or sets the site ID.
         /// </summary>
@@ -21,7 +25,7 @@ namespace Doe.PVMapper.Models
         /// The site ID.
         /// </value>
         [BsonIgnore]
-        public string SiteId { get { return base.Id; } }
+        public string SiteId { get { return Id; } }
 
         /// <summary>
         /// Gets or sets the user id.

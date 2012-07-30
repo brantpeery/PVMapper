@@ -28,7 +28,7 @@ namespace Doe.PVMapper
 
             var json = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
             json.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-
+         
             // Firefox requests XML, which we aren't expecting, so we can default to JSON.
             GlobalConfiguration.Configuration.Formatters.XmlFormatter.SupportedMediaTypes.Clear();
         }
