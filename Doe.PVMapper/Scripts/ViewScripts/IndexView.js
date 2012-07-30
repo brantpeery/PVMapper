@@ -65,6 +65,8 @@ Ext.onReady(function () {
             contentEl: 'scoreboard-id'
         }]
     });
+    pvMapper.tabbar = tabs;
+    
 
     var tree = new Ext.tree.TreePanel({
         title: 'Tools',
