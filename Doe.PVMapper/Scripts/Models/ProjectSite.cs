@@ -62,8 +62,5 @@ namespace Doe.PVMapper.Models
         /// The polygon geometry.
         /// </value>
         public string PolygonGeometry { get; set; }
-
-
-
     }
 }
