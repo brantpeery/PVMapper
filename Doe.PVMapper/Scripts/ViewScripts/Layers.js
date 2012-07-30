@@ -54,45 +54,5 @@
     slope.setOpacity(0.3);
     $.jGrowl("Adding Slope");
     pvMapper.map.addLayer(slope);
-
-
-    polyLayer2 = new OpenLayers.Layer.Vector("Solar Bounds",
- {
-     styleMap: new OpenLayers.StyleMap({
-         'default': new OpenLayers.Style({
-             strokeColor: "blue",
-             strokeWidth: 2,
-             fillColor: "blue",
-             fillOpacity: .05,
-             pointRadius: 3
-         })
-     })
- }); //The editable poly layer for the user's site
-    pvMapper.map.addLayer(polyLayer2); //The editable layer
-
-    polyLayer2.addFeatures([
-        new OpenLayers.Feature.Vector(solarBounds.toGeometry())
-    ]);
-
-    //    polyLayer1 = new OpenLayers.Layer.Vector("US Bounds",
-    //{
-    //    styleMap: new OpenLayers.StyleMap({
-    //        'default': new OpenLayers.Style({
-    //            strokeColor: "red",
-    //            strokeWidth: 1,
-    //            fillColor: "red",
-    //            fillOpacity: .05,
-    //            pointRadius: 3
-    //        })
-    //    })
-    //}); //The editable poly layer for the user's site
-    //    pvMapper.map.addLayer(polyLayer1); //The editable layer
-    //    OpenLayers.Feature.Vector.style['default']['strokeWidth'] = '2';
-
-
-    //    polyLayer1.addFeatures([
-    //        new OpenLayers.Feature.Vector(usBounds.toGeometry())
-    //    ]);
-
-
+    
 });
