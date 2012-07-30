@@ -20,6 +20,7 @@ if (sitesLayer) {
             var area = geo.getGeodesicArea();
             pvMapper.postScore(area, area, selectedFeature.name, "SiteAreaTool");
             $.jGrowl("Submitted area: " + area);
+            select.deactivate();
         },
         'featureunselected': function (feature) {
           //  console.log(this.selectedFeatures.length);
