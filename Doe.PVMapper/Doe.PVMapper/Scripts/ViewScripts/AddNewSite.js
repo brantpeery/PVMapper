@@ -24,11 +24,13 @@ pvMapper.onReady(function () {
             }
             else {
                 if (pvMapper.map.getScale() < 60000) {
+                    //Make sure the user is seeing the map
+                    pvMapper.showMapTab();
                     thisTool.mapControl.activate();
                     thisTool.button = this;
                     this.toggle(true);
                 } else {
-                   pvMapper.DisplayMessage("The Add Site tool can only be used when the map is zoomed in");
+                   pvMapper.DisplayMessage("The Add Site tool can only be used when the map is zoomed in. Try zooming the map in more to add a site", "warning");
                     this.cancel;
                 }
             }

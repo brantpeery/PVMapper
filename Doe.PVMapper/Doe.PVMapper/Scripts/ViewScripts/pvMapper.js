@@ -4,6 +4,8 @@ var pvMapper = {
     map: null,
     // The developer needs to be able to add and remove buttons to a toolbar.
     toolbar: null,
+    tabbar: null,
+
     // todo: update to use ToolId and secret and token.
     postScore: function (score, rank, siteId, ToolDescription) {
         $.post("/api/SiteScore", { score: score, rank: rank, siteId: siteId, ToolDescription: ToolDescription });
@@ -30,7 +32,12 @@ var pvMapper = {
     },
 
     //Used for displaying small messages to the user. Things like help tips or notifications. Best for 1 to 2 paragraph messages
+    //The type parameter will simply be an additional class on the message box.
     DisplayMessage: function (msg, type) {
-        $.jGrowl(msg, { theme: type });
+        $.jGrowl(msg, { theme: type, life:7000 });
+    },
+
+    showMapTab: function () {
+        this.tabbar.setActiveTab(0);
     }
 };
