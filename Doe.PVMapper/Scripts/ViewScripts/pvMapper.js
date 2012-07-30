@@ -27,5 +27,10 @@ var pvMapper = {
         }
               
         return "SiteLayer does not exist in the collection of layers on the map. Add a site or load sites first.";
+    },
+
+    //Used for displaying small messages to the user. Things like help tips or notifications. Best for 1 to 2 paragraph messages
+    DisplayMessage: function (msg, type) {
+        $.jGrowl(msg, { theme: type });
     }
 };
