@@ -30,7 +30,7 @@ pvMapper.onReady(function () {
                     thisTool.button = this;
                     this.toggle(true);
                 } else {
-                   pvMapper.DisplayMessage("The Add Site tool can only be used when the map is zoomed in. Try zooming the map in more to add a site", "warning");
+                   pvMapper.displayMessage("The Add Site tool can only be used when the map is zoomed in. Try zooming the map in more to add a site", "warning");
                     this.cancel;
                 }
             }
@@ -125,7 +125,7 @@ function addSite(map, layer) {
                         msg = "There was a problem adding the site to the database!";
                     }
 
-                    pvMapper.DisplayMessage(msg, {life:20000});
+                    pvMapper.displayMessage(msg, "warning");
                     deactivateDrawSite();
                 }
             }, {
@@ -159,7 +159,7 @@ function addSite(map, layer) {
     function createLayer() { }
     this.activateDrawSite= function() {
         self.mapControl.activate();
-        pvMapper.DisplayMessage("Start creating your site by clicking on the map to draw the perimeter of your new site", "help");
+        pvMapper.displayMessage("Start creating your site by clicking on the map to draw the perimeter of your new site", "help");
 
     }
     function saveSiteInfo() { }

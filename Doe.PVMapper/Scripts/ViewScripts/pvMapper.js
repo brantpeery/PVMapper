@@ -33,7 +33,7 @@ var pvMapper = {
 
     //Used for displaying small messages to the user. Things like help tips or notifications. Best for 1 to 2 paragraph messages
     //The type parameter will simply be an additional class on the message box.
-    DisplayMessage: function (msg, type) {
+    displayMessage: function (msg, type) {
         $.jGrowl(msg, { theme: type, life:7000 });
     },
 
