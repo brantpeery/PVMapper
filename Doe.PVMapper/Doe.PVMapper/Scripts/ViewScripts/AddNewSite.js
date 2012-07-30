@@ -18,12 +18,23 @@ pvMapper.onReady(function () {
     var addSiteTool = new Ext.Button({
         text: "Add Site",
         handler: function () {
-            if (thisTool.mapControl.active) { thisTool.mapControl.deactivate(); }
-            else { thisTool.mapControl.activate(); }
+            if (thisTool.mapControl.active) {
+                thisTool.mapControl.deactivate();
+                this.toggle(false);
+            }
+            else {
+                if (pvMapper.map.getScale() < 60000) {
+                    thisTool.mapControl.activate();
+                    thisTool.button = this;
+                    this.toggle(true);
+                } else {
+                   pvMapper.DisplayMessage("The Add Site tool can only be used when the map is zoomed in");
+                    this.cancel;
+                }
+            }
 
 
-        },
-        enableToggle: true
+        }
         
     });
     pvMapper.toolbar.add(addSiteTool);
@@ -39,6 +50,7 @@ function addSite(map, layer) {
     var currentSiteName;
     var feature;
     var wiz;
+    this.button;
     this.layer = createSiteLayer(map);
     this.mapControl = new OpenLayers.Control.DrawFeature(this.layer, OpenLayers.Handler.Polygon);
     map.addControl(this.mapControl);
@@ -111,7 +123,7 @@ function addSite(map, layer) {
                         msg = "There was a problem adding the site to the database!";
                     }
 
-                    $.jGrowl(msg, {life:20000});
+                    pvMapper.DisplayMessage(msg, {life:20000});
                     deactivateDrawSite();
                 }
             }, {
@@ -148,8 +160,10 @@ function addSite(map, layer) {
 
     }
     function saveSiteInfo() { }
-    function deactivateDrawSite()
-    { self.mapControl.deactivate(); }
+    function deactivateDrawSite() {
+        self.mapControl.deactivate();
+        self.button.toggle(false);
+    }
     function nameSiteFeature() { }
 
     function createAddSiteDialog() { }
