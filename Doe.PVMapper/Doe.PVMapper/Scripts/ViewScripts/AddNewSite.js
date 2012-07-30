@@ -19,14 +19,14 @@ pvMapper.onReady(function () {
         text: "Add Site",
         handler: function () {
             if (thisTool.mapControl.active) {
-                thisTool.mapControl.deactivate();
+                thisTool.deactivateDrawSite();
                 this.toggle(false);
             }
             else {
                 if (pvMapper.map.getScale() < 60000) {
                     //Make sure the user is seeing the map
                     pvMapper.showMapTab();
-                    thisTool.mapControl.activate();
+                    thisTool.activateDrawSite();
                     thisTool.button = this;
                     this.toggle(true);
                 } else {
@@ -157,12 +157,13 @@ function addSite(map, layer) {
     }
 
     function createLayer() { }
-    function activateDrawSite() {
+    this.activateDrawSite= function() {
         self.mapControl.activate();
+        pvMapper.DisplayMessage("Start creating your site by clicking on the map to draw the perimeter of your new site", "help");
 
     }
     function saveSiteInfo() { }
-    function deactivateDrawSite() {
+    this.deactivateDrawSite=function() {
         self.mapControl.deactivate();
         self.button.toggle(false);
     }
@@ -216,7 +217,6 @@ addSite.prototype = {
     createEditTool: function () {
         control
         return control;
-    },
-
+    }
 
 }
