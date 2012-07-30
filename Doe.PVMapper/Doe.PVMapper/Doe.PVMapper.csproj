@@ -1587,9 +1587,10 @@
     <Content Include="Scripts\ViewScripts\AddNewSite.js" />
     <Content Include="Scripts\ViewScripts\IndexView.js" />
     <Content Include="Scripts\ViewScripts\Layers.js" />
+    <Content Include="Scripts\ViewScripts\LoadProjectSites.js" />
     <Content Include="Scripts\ViewScripts\MeasureDistance.js" />
     <Content Include="Scripts\ViewScripts\pvMapper.js" />
-    <Content Include="Scripts\ViewScripts\SiteAreaTool.js" />
+    <Content Include="Scripts\pvExtensions\SiteAreaTool.js" />
     <Content Include="Scripts\ViewScripts\SiteDetail.js" />
     <Content Include="Scripts\ViewScripts\testscripts.js" />
     <Content Include="Scripts\ViewScripts\ZoomFull.js" />
