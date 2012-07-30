@@ -44,8 +44,29 @@ pvMapper.onReady(function () {
 
 //The main plugin object. Conforms to the plugin definition set by the framework
 function addSite(map, layer) {
-    var commonStyleMap;
-
+ 
+    //If a style is applied at the layer level, then 
+    //when a label is applied, the engine draws it incorrectly
+    //For this reason the style is defined here, but used only when a 
+    //feature is added
+   var commonStyleMap = new OpenLayers.StyleMap({
+        'default': {
+            strokeColor: "#00FF00",
+            strokeOpacity: 1,
+            strokeWidth: 3,
+            fillColor: "#FF5500",
+            fillOpacity: 0.5,
+            pointRadius: 6,
+            pointerEvents: "visiblePainted",
+            fontColor: "blue",
+            fontSize: "12px",
+            fontFamily: "Courier New, monospace",
+            fontWeight: "bold",
+            labelAlign: "cm",
+            labelOutlineColor: "white",
+            labelOutlineWidth: 3
+        }
+    });
 
     var self = this; //Makes the 'this' object accessable from the private methods
     var WKT;
@@ -53,7 +74,7 @@ function addSite(map, layer) {
     var feature;
     var wiz;
     this.button;
-    this.layer = createSiteLayer(map);
+    this.layer = pvMapper.getSiteLayer();
     this.mapControl = new OpenLayers.Control.DrawFeature(this.layer, OpenLayers.Handler.Polygon);
     map.addControl(this.mapControl);
 
@@ -168,46 +189,7 @@ function addSite(map, layer) {
     function nameSiteFeature() { }
 
     function createAddSiteDialog() { }
-    function createSiteLayer(map) {
-        if (layer == null) {
-
-            // allow testing of specific renderers via "?renderer=Canvas", etc
-            var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
-            renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
-
-            var sitelayer = new OpenLayers.Layer.Vector("Sites",
-                {
-                    renderers: renderer
-                });
-
-            //If a style is applied at the layer level, then 
-            //when a label is applied, the engine draws it incorrectly
-            //For this reason the style is defined here, but used only when a 
-            //feature is added
-            commonStyleMap = new OpenLayers.StyleMap({
-                'default': {
-                    strokeColor: "#00FF00",
-                    strokeOpacity: 1,
-                    strokeWidth: 3,
-                    fillColor: "#FF5500",
-                    fillOpacity: 0.5,
-                    pointRadius: 6,
-                    pointerEvents: "visiblePainted",
-                    fontColor: "blue",
-                    fontSize: "12px",
-                    fontFamily: "Courier New, monospace",
-                    fontWeight: "bold",
-                    labelAlign: "cm",
-                    labelOutlineColor: "white",
-                    labelOutlineWidth: 3
-                }
-            });
-
-            sitelayer.id = "SiteLayer";
-            map.addLayer(sitelayer);
-            return sitelayer;
-        } else { return layer; }
-    }
+  
 
 
 };

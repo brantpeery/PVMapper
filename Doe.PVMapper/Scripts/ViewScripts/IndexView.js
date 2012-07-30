@@ -29,9 +29,9 @@ Ext.onReady(function () {
             controls: []
         }
     });
-   
+
     // default controls to show in map.
-    panel.map.addControl(new OpenLayers.Control.PanZoomBar({ zoomWorldIcon: false, zoomStopHeight:2 }));
+    panel.map.addControl(new OpenLayers.Control.PanZoomBar({ zoomWorldIcon: false, zoomStopHeight: 2 }));
     panel.map.addControl(new OpenLayers.Control.LayerSwitcher({ 'ascending': false }));
     panel.map.addControl(new OpenLayers.Control.KeyboardDefaults());
 
@@ -66,7 +66,7 @@ Ext.onReady(function () {
         }]
     });
     pvMapper.tabbar = tabs;
-    
+
 
     var tree = new Ext.tree.TreePanel({
         title: 'Tools',
@@ -86,7 +86,7 @@ Ext.onReady(function () {
 
                 $.getScript(node.attributes.url)
                     .done(function (script, textStatus) {
-                       
+
                     })
                     .fail(function (jqxhr, settings, exception) {
                         console.log(exception);
@@ -159,8 +159,22 @@ Ext.onReady(function () {
         });
     }
 
-    // Load existing site for user from database.
-    
+    //update this function to call itself immediately
+    function createSiteLayer(map) {
+        // allow testing of specific renderers via "?renderer=Canvas", etc
+        var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
+        renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
+
+        var sitelayer = new OpenLayers.Layer.Vector("Sites",
+            {
+                renderers: renderer
+            });
+
+        sitelayer.id = "SiteLayer";
+        map.addLayer(sitelayer);
+    }
+    createSiteLayer(panel.map);
+
 
     $("body").trigger("pvMapper-ready");
 });
