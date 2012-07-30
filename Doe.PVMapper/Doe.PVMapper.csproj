@@ -154,19 +154,18 @@
     <Compile Include="Controllers\ExtensionsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SiteDetailController.cs" />
-    <Compile Include="Scripts\Models\Entity2.cs" />
-    <Compile Include="Scripts\Models\ProjectSite.cs" />
-    <Compile Include="Scripts\Models\TreeNode.cs" />
-    <Compile Include="Scripts\Models\TreeListPayload.cs" />
+    <Compile Include="Models\ProjectSite.cs" />
+    <Compile Include="Models\TreeNode.cs" />
+    <Compile Include="Models\TreeListPayload.cs" />
     <Compile Include="WebApi\MongoHelper.cs" />
     <Compile Include="WebApi\ProjectSiteController.cs" />
     <Compile Include="WebApi\SiteScoreController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Scripts\Models\AccountModels.cs" />
-    <Compile Include="Scripts\Models\WebExtension.cs" />
-    <Compile Include="Scripts\Models\SiteScore.cs">
+    <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\WebExtension.cs" />
+    <Compile Include="Models\SiteScore.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
