@@ -158,10 +158,6 @@ Ext.onReady(function () {
             ]
         });
     }
-  
-    var sitelayer = new OpenLayers.Layer.Vector("Sites");
-    sitelayer.id = "SiteLayer";
-    panel.map.addLayer(sitelayer);  
 
     $("body").trigger("pvMapper-ready");
 });

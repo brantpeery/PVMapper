@@ -54,5 +54,9 @@
     slope.setOpacity(0.3);
     $.jGrowl("Adding Slope");
     pvMapper.map.addLayer(slope);
+
+    var sitelayer = new OpenLayers.Layer.Vector("Sites");
+    sitelayer.id = "SiteLayer";
+    pvMapper.map.addLayer(sitelayer);
     
 });
