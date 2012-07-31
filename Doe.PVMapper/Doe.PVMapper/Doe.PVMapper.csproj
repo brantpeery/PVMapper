@@ -1594,7 +1594,7 @@
     <Content Include="Scripts\pvExtensions\SiteAreaTool.js" />
     <Content Include="Scripts\ViewScripts\SiteDetail.js" />
     <Content Include="Scripts\ViewScripts\testscripts.js" />
-    <Content Include="Scripts\ViewScripts\ZoomFull.js" />
+    <Content Include="Scripts\ViewScripts\ZoomAction.js" />
     <Content Include="theme\default\framedCloud.css" />
     <Content Include="theme\default\google.css" />
     <Content Include="theme\default\google.tidy.css" />
