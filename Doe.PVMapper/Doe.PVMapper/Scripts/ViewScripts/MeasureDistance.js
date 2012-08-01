@@ -1,7 +1,7 @@
 ﻿
 pvMapper.onReady(function () {
-    // create an action tied to a measure control
-    var measure = new GeoExt.Action({
+
+    action = Ext.create('GeoExt.Action', {
         text: "Measure",
         control: new OpenLayers.Control.Measure(OpenLayers.Handler.Path, {
             geodesic: true,
@@ -25,11 +25,10 @@ pvMapper.onReady(function () {
         allowDepress: false,
         tooltip: "measure distance"
     });
-    pvMapper.toolbar.add("-");
-    pvMapper.toolbar.add(measure);
+    pvMapper.mapToolbar.add(Ext.create('Ext.button.Button', action));
 
-    // create an action tied to a navigation control
-    var navigate = new GeoExt.Action({
+
+    action = Ext.create('GeoExt.Action', {
         text: "Navigate",
         control: new OpenLayers.Control.Navigation(),
         map: pvMapper.map,
@@ -39,7 +38,7 @@ pvMapper.onReady(function () {
         pressed: true,
         tooltip: "navigate"
     });
+    pvMapper.mapToolbar.add(Ext.create('Ext.button.Button', action));
 
-    pvMapper.toolbar.add(navigate);
-    pvMapper.toolbar.add("-");
+    pvMapper.mapToolbar.add("-");
 });

@@ -7,9 +7,14 @@ using DreamSongs.MongoRepository;
 
 namespace Doe.PVMapper.Models
 {
-    public class WebExtension : Entity
+    public class WebExtension: IEntity
     {
-        public string Name { get; set; }
+
+        // There seems to be a bug or change in the deserializer that prevents us from inheriting from Entity.
+        [MongoDB.Bson.Serialization.Attributes.BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+        public string Id { get; set; }
+
+         public string Name { get; set; }
 
         public string Description { get; set; }
 

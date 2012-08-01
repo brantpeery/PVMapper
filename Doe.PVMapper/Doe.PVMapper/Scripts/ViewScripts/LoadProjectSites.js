@@ -1,5 +1,4 @@
-﻿Ext.onReady(function () {
-
+﻿pvMapper.onReady(function () {
     // todo: load only users's site when loading the map.
     $.get("/api/ProjectSite/")
         .done(function (sites) {
@@ -12,5 +11,4 @@
                 sitesLayer.addFeatures([poly]);
             }
         });
-
 });
