@@ -1,7 +1,6 @@
 ﻿
 pvMapper.onReady(function () {
-
-
+    
     var action;
 
     // ZoomToMaxExtent control, a "button" control
@@ -16,7 +15,7 @@ pvMapper.onReady(function () {
 
     // Navigation history - two "button" controls
     ctrl = new OpenLayers.Control.NavigationHistory();
-    map.addControl(ctrl);
+    pvMapper.map.addControl(ctrl);
 
     action = Ext.create('GeoExt.Action', {
         text: "previous",
