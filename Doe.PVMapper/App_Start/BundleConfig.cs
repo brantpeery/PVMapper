@@ -8,17 +8,17 @@ namespace Doe.PVMapper
     {
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new StyleBundle("~/ext-resources/files/css").Include(
-                        "~/ext-resources/css/ext-all.css",
-                        "~/ext-resources/css/xtheme-gray.css"));
+            //bundles.Add(new StyleBundle("~/ext-resources/files/css").Include(
+            //            "~/ext-resources/css/ext-all.css",
+            //            "~/ext-resources/css/xtheme-gray.css"));
 
             // These need to be in a particular order.
-            Bundle bundle = new ScriptBundle("~/bundles/extjs").Include(
-                                    "~/ext-resources/js/ext-base.js",
-                                    "~/ext-resources/js/ext-all.js",
-                                    "~/ext-resources/js/OpenLayers.js",
-                                    "~/ext-resources/js/GeoExt.js");
-            bundles.Add(bundle);
+            //Bundle bundle = new ScriptBundle("~/bundles/extjs").Include(
+            //                        "~/ext-resources/js/ext-base.js",
+            //                        "~/ext-resources/js/ext-all.js",
+            //                        "~/ext-resources/js/OpenLayers.js",
+            //                        "~/ext-resources/js/GeoExt.js");
+            //bundles.Add(bundle);
 
             bundles.Add(new ScriptBundle("~/bundles/jquerydatatables").Include(
             "~/Scripts/DataTables-1.9.2/media/js/jquery.dataTables.js"));

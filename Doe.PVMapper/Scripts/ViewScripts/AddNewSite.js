@@ -39,7 +39,7 @@ pvMapper.onReady(function () {
         }
         
     });
-    pvMapper.toolbar.add(addSiteTool);
+    pvMapper.mapToolbar.add(addSiteTool);
 });
 
 //The main plugin object. Conforms to the plugin definition set by the framework

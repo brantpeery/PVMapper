@@ -3,8 +3,8 @@ var pvMapper = {
     // This is exposed to allow extensions to interact with the map.
     map: null,
     // The developer needs to be able to add and remove buttons to a toolbar.
-    toolbar: null,
-    tabbar: null,
+    mapToolbar: null,
+    tabs: null,
 
     // todo: update to use ToolId and secret and token.
     postScore: function (score, rank, siteId, ToolDescription) {
@@ -38,6 +38,6 @@ var pvMapper = {
     },
 
     showMapTab: function () {
-        this.tabbar.setActiveTab(0);
+        this.tabs.setActiveTab(0);
     }
 };

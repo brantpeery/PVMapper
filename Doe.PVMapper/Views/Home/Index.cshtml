@@ -13,17 +13,14 @@
         border: #870000 2px solid;
         background-color: #AF0000;
     }
+
     div#jGrowl .jGrowl-notification.help
     {
         border: #26ADE4 2px solid;
         background-color: #C9EAF8;
-        color:black;
+        color: black;
     }
-
-    
 </style>
-
-
 
 @*@section featured {
     <section class="featured">
@@ -37,6 +34,9 @@
 }*@
 
 <div class="content">
+    <div id="rootPanel-id">
+    </div>
+
     <div id="extRoot-id">
     </div>
     @*todo: find a way to move these divs to the js related to creating the tabs.*@
@@ -47,6 +47,7 @@
 </div>
 
 @section Scripts {
+    <script type="text/javascript" src="../../Scripts/ViewScripts/Loader.js"></script>
     <script type="text/javascript" src="../../Scripts/ViewScripts/pvMapper.js"></script>
     <script type="text/javascript" src="../../Scripts/ViewScripts/IndexView.js"></script>
     <script type="text/javascript" src="../../Scripts/ViewScripts/Layers.js"></script>
