@@ -15,9 +15,25 @@ namespace Doe.PVMapper.WebApi
         private static readonly IRepository<WebExtension> _repository = MongoHelper.GetRepository<WebExtension>();
 
         // GET api/tools
-        public IEnumerable<WebExtension> Get()
+        public object Get()
         {
+            var queryString = this.Request.RequestUri.ParseQueryString();
+            var nodename = queryString.Get("node");
+            if (nodename == "root")
+                return GetNodes();
+
             return _repository.All();
+        }
+
+        private IEnumerable<TreeNode> GetNodes()
+        {
+            foreach (WebExtension webExtension in _repository.All())
+            {
+                var treeNode = new TreeNode();
+                treeNode.Text = webExtension.Name;
+                treeNode.Url = webExtension.Url;
+                yield return treeNode;
+            }
         }
 
         // GET api/tools/
@@ -27,21 +43,9 @@ namespace Doe.PVMapper.WebApi
         }
 
         // POST api/tools
-        public IEnumerable<TreeNode> Post(TreeListPayload payload)
+        public void Post(TreeListPayload payload)
         {
-            if (payload.Node != "allitems")
-            {
-                yield break;
-            }
 
-            foreach (WebExtension webExtension in Get())
-            {
-                var treeNode = new TreeNode();
-                treeNode.Id = 1;
-                treeNode.Text = webExtension.Name;
-                treeNode.Url = webExtension.Url;
-                yield return treeNode;
-            }
         }
 
         // PUT api/tools/5

@@ -9,7 +9,7 @@ Ext.Loader.setConfig({
 });
 
 Ext.Loader.setPath('Ext.ux.plugins.FitToParent', '/Scripts/extExtensions/FitToParent.js');Ext.require([    'Ext.panel.*',    'Ext.tab.*',    'Ext.ux.plugins.FitToParent',    'Ext.state.Manager',
-    'Ext.state.CookieProvider',    'Ext.container.Viewport',
+    'Ext.state.CookieProvider',    'Ext.layout.container.Border',    'Ext.container.Viewport',
     'Ext.window.MessageBox',
     'Ext.data.TreeStore',
     'Ext.tree.Panel',
@@ -37,14 +37,14 @@ Ext.application({
             restrictedExtent: usBounds
         });
         var toolbarItems = [];
-        mappanel = Ext.create('GeoExt.panel.Map', {
+        mapPanel = Ext.create('GeoExt.panel.Map', {
             id: 'map-panel-id',
             title: 'Map',
             map: map,
             zoom: 0,
             center: [-10723197, 4500612],
             stateful: true,
-            stateId: 'mappanel',
+            stateId: 'mapPanel',
 
             dockedItems: [{
                 itemId: 'map-toolbar-id',
@@ -53,9 +53,9 @@ Ext.application({
                 items: toolbarItems
             }]
         });
-        
-        pvMapper.mapToolbar = mappanel.child('#map-toolbar-id');
-       
+
+        pvMapper.mapToolbar = mapPanel.child('#map-toolbar-id');
+
         Ext.create('MyApp.RootPanel');
 
         // fire the pvMapper.onReady event
@@ -65,9 +65,10 @@ Ext.application({
     }
 });
 
+
 Ext.define('MyApp.RootPanel', {
     extend: 'Ext.Panel',
-    layout: 'fit',
+    layout: 'border',
     height: 600,
     renderTo: 'rootPanel-id',
     plugins: ['fittoparent'],
@@ -75,19 +76,72 @@ Ext.define('MyApp.RootPanel', {
     initComponent: function () {
         var me = this;
 
-        var tabPanel = Ext.create('Ext.tab.Panel',                    {
-                        autoScroll: true,                        layout: 'fit',                        items:                        [mappanel]
-                    });
-
-        this.items = [tabPanel];
+        var tabPanel = Ext.create('Ext.tab.Panel',            {
+                collapsible: false,
+                region: 'center',
+                layout: 'fit',                border: false,                items: [mapPanel]
+            });
 
         pvMapper.tabs = tabPanel;
+
+        var store = Ext.create('Ext.data.TreeStore', {
+            proxy: {
+                type: 'ajax',
+                url: '/api/Tools'
+            }
+        });
+
+        var treePanel = Ext.create('Ext.tree.Panel', {
+            border: false,
+            width: 200,
+            store: store,
+            rootVisible: false,
+            useArrows: true,
+            listeners: {
+                itemclick: {
+                    fn: function (view, record, item, index, e) {
+
+                    }
+                },
+                checkchange: {
+                    fn: function (node, check) {
+
+                        if (check) {
+
+                            $.getScript(node.raw.url)
+                                .done(function (script, textStatus) {
+                                    pvMapper.displayMessage("Ran " + node.raw.text);
+                                })
+                                .fail(function (jqxhr, settings, exception) {
+                                    console.log(exception);
+                                    pvMapper.displayMessage("Could not load tool.");
+                                });
+                        }
+
+                    }
+                }
+
+            }
+        });
+
+        this.items = [{
+            title: 'Tools',
+            region: 'west',
+            layout: 'fit',
+            width: 175,
+            minSize: 100,
+            collapsible: true,
+            collapsed: true,
+            split: true,
+            items: [treePanel]
+        }, tabPanel]
+
         pvMapper.tabs.add(
             {
                 // we use the tabs.items property to get the length of current items/tabs
                 title: 'Scoreboard',
                 layout: 'fit',
-                html:"scoreboard goes here. should it be processed client-side or on the server?",
+                html: "scoreboard goes here. should it be processed client-side or on the server?",
                 loader: {
                     url: 'ajax1.htm',
                     contentType: 'html',
