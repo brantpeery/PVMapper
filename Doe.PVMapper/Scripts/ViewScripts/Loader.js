@@ -8,13 +8,25 @@ Ext.Loader.setConfig({
     }
 });
 
-Ext.Loader.setPath('Ext.ux.plugins.FitToParent', '/Scripts/extExtensions/FitToParent.js');Ext.require([    'Ext.panel.*',    'Ext.tab.*',    'Ext.ux.plugins.FitToParent',    'Ext.state.Manager',
-    'Ext.state.CookieProvider',    'Ext.layout.container.Border',    'Ext.container.Viewport',
+Ext.Loader.setPath('Ext.ux.plugins.FitToParent', '/Scripts/extExtensions/FitToParent.js');
+Ext.require([
+    'Ext.panel.*',
+    'Ext.tab.*',
+    'Ext.ux.plugins.FitToParent',
+    'Ext.state.Manager',
+    'Ext.state.CookieProvider',
+    'Ext.layout.container.Border',
+    'Ext.container.Viewport',
     'Ext.window.MessageBox',
     'Ext.data.TreeStore',
     'Ext.tree.Panel',
     'GeoExt.panel.Map',
-    'GeoExt.Action']);
+    'GeoExt.Action',
+    'Ext.grid.Panel',
+    'Ext.data.ArrayStore',  
+    'Ext.grid.column.Action'
+]);
+
 Ext.application({
     name: 'MyApp',
     launch: function () {
@@ -76,10 +88,13 @@ Ext.define('MyApp.RootPanel', {
     initComponent: function () {
         var me = this;
 
-        var tabPanel = Ext.create('Ext.tab.Panel',            {
+        var tabPanel = Ext.create('Ext.tab.Panel',
+            {
                 collapsible: false,
                 region: 'center',
-                layout: 'fit',                border: false,                items: [mapPanel]
+                layout: 'fit',
+                border: false,
+                items: [mapPanel]
             });
 
         pvMapper.tabs = tabPanel;
@@ -136,64 +151,6 @@ Ext.define('MyApp.RootPanel', {
             items: [treePanel]
         }, tabPanel]
 
-        pvMapper.tabs.add(
-            {
-                // we use the tabs.items property to get the length of current items/tabs
-                title: 'Scoreboard',
-                layout: 'fit',
-                html: "scoreboard goes here. should it be processed client-side or on the server?",
-                loader: {
-                    url: 'ajax1.htm',
-                    contentType: 'html',
-                    loadMask: true
-                },
-                listeners: {
-                    activate: function (tab) {
-                        //tab.loader.load();
-                        //    var SaleRecord = Ext.data.Record.create([
-                        //    { name: 'person', type: 'string' },
-                        //    { name: 'product', type: 'string' },
-                        //    { name: 'city', type: 'string' },
-                        //    { name: 'state', type: 'string' },
-                        //    { name: 'month', type: 'int' },
-                        //    { name: 'quarter', type: 'int' },
-                        //    { name: 'quantity', type: 'int' },
-                        //    { name: 'value', type: 'int' }
-                        //    ]);
-
-                        //    var myStore = new Ext.data.Store({
-                        //        url: 'json.txt',
-                        //        autoLoad: true,
-                        //        reader: new Ext.data.JsonReader({
-                        //            root: 'rows',
-                        //            idProperty: 'id'
-                        //        }, SaleRecord)
-                        //    });
-
-                        //    var pivotGrid = new Ext.grid.PivotGrid({
-                        //        width: 600,
-                        //        height: 259,
-                        //        renderTo: 'scoreboard-id',
-                        //        store: myStore,
-                        //        aggregator: 'sum',
-                        //        measure: 'quarter',
-
-                        //        leftAxis: [
-                        //           {
-                        //               width: 190,
-                        //               dataIndex: 'product'
-                        //           }
-                        //        ],
-
-                        //        topAxis: [
-                        //            {
-                        //                dataIndex: 'city'
-                        //            }
-                        //        ]
-                        //    });
-                    }
-                }
-            });
         me.callParent(arguments);
     }
 });
