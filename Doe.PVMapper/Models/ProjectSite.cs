@@ -15,6 +15,7 @@ namespace Doe.PVMapper.Models
     public class ProjectSite : IEntity
     {
         // There seems to be a bug or change in the deserializer that prevents us from inheriting from Entity.
+        [BsonId]
         [MongoDB.Bson.Serialization.Attributes.BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string Id { get; set; }
 
