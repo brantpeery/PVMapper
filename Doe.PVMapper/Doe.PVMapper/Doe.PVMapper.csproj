@@ -153,6 +153,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ExtensionsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProjectSiteController.cs" />
+    <Compile Include="Controllers\RepositoryControllerBase.cs" />
     <Compile Include="Controllers\SiteDetailController.cs" />
     <Compile Include="Models\ProjectSite.cs" />
     <Compile Include="Models\TreeNode.cs" />
@@ -531,6 +533,8 @@
     <Content Include="Views\SiteDetail\Index.cshtml" />
     <Content Include="Views\Shared\_Layout2.cshtml" />
     <Content Include="Views\SiteDetail\Test.cshtml" />
+    <Content Include="Views\ProjectSite\Index.cshtml" />
+    <Content Include="Views\ProjectSite\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
