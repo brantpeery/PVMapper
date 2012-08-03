@@ -87,12 +87,12 @@ function addSite(map, layer) {
 
         //Continue to collect the needed form data
         ///HACK: This needs to use the framework standard way of doing it. For now I am going to assume that I have access to EXTjs 3
-        wiz = new Ext.Window({
-            layout: 'form',
+        wiz = new Ext.create('Ext.window.Window', {
+            layout:'auto',
             modal: true,
             collapsible: true,
             id: "siteWizard",
-            frame: true,
+            
             title: "Create a New Site",
             bodyPadding: '5 5 0',
             width: 350,
@@ -140,12 +140,14 @@ function addSite(map, layer) {
                     var msg;
                     if (id) {
                         msg = "The site " + name + " has been added to your database";
+                        pvMapper.displayMessage(msg, "info");
                     } else {
                         msg = "There was a problem adding the site to the database!";
+                        pvMapper.displayMessage(msg, "warning");
                     }
 
-                    pvMapper.displayMessage(msg, "warning");
-                    deactivateDrawSite();
+                    
+                    self.deactivateDrawSite();
                 }
             }, {
                 text: 'Cancel',
