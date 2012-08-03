@@ -23,15 +23,14 @@ var pvMapper = {
         pvMapper.displayMessage("The site has been updated.", "info");
     },
 
-
     //Deletes a site from the datastore
     deleteSite: function (siteId){
         return $.ajax("/api/ProjectSite/" + siteId, {
             data: { Id: siteId }, type: "DELETE",
-            success: function () {
-                pvMapper.displayMessage("The site was deleteded from the database.", "help");
+            done: function () {
+                pvMapper.displayMessage("The site was deleted from the database.", "help");
             },
-            error: function () {
+            fail: function () {
                 pvMapper.displayMessage("Unable to delete the site. There was an error communicating with the database.", "warning");
             }
         });
