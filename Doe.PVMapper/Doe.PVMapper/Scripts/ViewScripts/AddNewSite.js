@@ -12,7 +12,7 @@ Contributors: Brant Peery, Matthew Klien
 var tools = [];
 
 pvMapper.onReady(function () {
-    var thisTool = new addSite(pvMapper.map);
+    var thisTool = new addSite(pvMapper.map, pvMapper.getSiteLayer());
     tools.push(thisTool);
 
     var addSiteTool = new Ext.Button({

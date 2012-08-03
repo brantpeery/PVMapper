@@ -19,7 +19,7 @@ var pvMapper = {
     },
 
     updateSite: function (siteId, userId, name, description, polygonGeometry) {
-        return $.post("/api/ProjectSite", { id: siteId, value: { userId: userId, name: name, description: description, isActive: true, polygonGeometry: polygonGeometry } });
+        return $.post("/api/ProjectSite", { id: siteId, userId: userId, name: name, description: description, isActive: true, polygonGeometry: polygonGeometry});
         pvMapper.displayMessage("The site has been updated.", "info");
     },
 
