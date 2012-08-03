@@ -418,6 +418,7 @@
     <Content Include="Scripts\ViewScripts\AddNewSite.js" />
     <Content Include="Scripts\extExtensions\FitToParent.js" />
     <Content Include="Scripts\ViewScripts\IndexView.js" />
+    <Content Include="Scripts\ViewScripts\SiteManagement.js" />
     <Content Include="Scripts\ViewScripts\Layers.js" />
     <Content Include="Scripts\ViewScripts\Loader.js" />
     <Content Include="Scripts\ViewScripts\LoadProjectSites.js" />
