@@ -115,16 +115,14 @@ function addSite(map, layer) {
             buttons: [{
                 text: 'Save',
                 handler: function (b, e) {
+                    //Erase the feature so that the label and style and stuff can be modified without having any artifacts linger on the SVG
+                    feature.layer.eraseFeatures(feature);
+
                     var name = Ext.getCmp("name").getValue();
                     var desc = Ext.getCmp("sitedescription").getValue();
-                    var f = pvMapper.newFeature;
 
-                    //feature.name = name;
-                    f.attributes.name = name;
-
-                    //Refresh the feature
-                    pvMapper.siteLayer.renderer.clear();
-                    pvMapper.siteLayer.redraw();
+                    feature.attributes.name = name;
+                    feature.attributes.description = desc;
 
                     wiz.destroy();
 
@@ -142,6 +140,9 @@ function addSite(map, layer) {
 
                     
                     self.deactivateDrawSite();
+
+                    //Redraw the feature with all the changes
+                    feature.layer.drawFeature(feature);
                 }
             }, {
                 text: 'Cancel',
