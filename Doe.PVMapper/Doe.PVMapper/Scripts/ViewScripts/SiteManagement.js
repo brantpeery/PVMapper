@@ -13,7 +13,8 @@ pvMapper.onReady(function () {
     var sm = new siteManagementTool(pvMapper.map, pvMapper.getSiteLayer());
     var deltool = new Ext.Button({
         text: "Delete Site",
-        handler: function () {
+        toggleGroup: "SiteManager",
+        toggleHandler: function () {
             if (this.pressed) {
                 sm.deleteSite(true);
                 this.toggle(false);
@@ -27,7 +28,8 @@ pvMapper.onReady(function () {
     });
     var edittool = new Ext.Button({
         text: "Edit Site",
-        handler: function () {
+        toggleGroup: "SiteManager",
+        toggleHandler: function () {
             if (this.pressed) {
                 sm.editSite(true);
                 this.toggle(false);
@@ -39,9 +41,35 @@ pvMapper.onReady(function () {
             }
         }
     });
+    var editlabeltool = new Ext.Button({
+        text: "Edit Attributes",
+        toggleGroup:"SiteManager",
+        toggleHandler: function () {
+            if (this.pressed) {
+                sm.editSiteAttributes(true);
+                this.toggle(false);
+            }
+            else {
+                sm.editSiteAttributes();
+                this.toggle(true);
+                pvMapper.displayMessage("Click on a site to edit it the label and description.", "help");
+            }
+        }
 
-    pvMapper.mapToolbar.add(deltool);
-    pvMapper.mapToolbar.add(edittool);
+    });
+
+    var dropDown = new Ext.Button({
+        text:"Site Management",
+        menu: new Ext.menu.Menu({
+            items: [deltool,
+            edittool,
+            editlabeltool]
+        })
+    });
+    pvMapper.mapToolbar.add(dropDown);
+    //pvMapper.mapToolbar.add(deltool);
+    //pvMapper.mapToolbar.add(edittool);
+    //pvMapper.mapToolbar.add(editlabeltool);
 });
 
 //Creates a new siteManagement tool.
@@ -76,14 +104,14 @@ function siteManagementTool(map, layer) {
         }
         else {
             if (!editTool) {
-                editTool = new OpenLayers.Control.ModifyFeature(layer, {});
+                editTool = new OpenLayers.Control.ModifyFeature(pvMapper.getSiteLayer(), {});
                 map.addControl(editTool);
                 layer.events.register("afterfeaturemodified", editTool, function (e) {
                     //Save the modifications back to the database
                     //This is where a save to the database might happen
                     var f = e.feature;
                     var WKT = f.geometry.toString();
-                    pvMapper.updateSite(f.fid, "user1", f.name, f.attributes.desc, WKT);
+                    var ret = pvMapper.updateSite(f.fid, "user1", f.name, f.attributes.desc, WKT);
                 });
             }
             editTool.activate();
@@ -92,6 +120,96 @@ function siteManagementTool(map, layer) {
     }
 
     //Edit attributes
+    this.editSiteAttributes = function (deactivate) {
+        if (deactivate) { selectTool.deactivate(); }
+        else {
+            //Put the tool into select mode
+            //Set the select callback to rund the delete feature function
+            this.selectFeatureTool(function (f) {
+                var feature = f;
+
+                wiz = new Ext.create('Ext.window.Window', {
+                    layout: 'auto',
+                    modal: true,
+                    collapsible: true,
+                    id: "siteWizard",
+
+                    title: "Create a New Site",
+                    bodyPadding: '5 5 0',
+                    width: 350,
+                    defaultType: 'textfield',
+                    items: [{
+                        fieldLabel: 'Site Name',
+                        hideLabel: false,
+                        name: 'name',
+                        id: 'name',
+                        value:f.attributes.name
+                    }, {
+                        fieldLabel: 'Site Description',
+                        xtype: 'textarea',
+                        name: 'siteDescription',
+                        id: 'sitedescription',
+                        value:f.attributes.description
+                    }],
+
+                    buttons: [{
+                        text: 'Save',
+                        handler: function (b, e) {
+                            var name = Ext.getCmp("name").getValue();
+                            var desc = Ext.getCmp("sitedescription").getValue();
+
+                            feature.name = name;
+                            feature.attributes = {
+                                name: name,
+                                description: desc
+                            };
+
+                            ///HACK: For some reason the OpenLayers engine renders an extra set of labels if 
+                            ///the style is applied at the layer level. However by defining the label attribute at
+                            ///the feature, an extra label is not drawn to the screen by the engine.
+                            //var myStyle = commonStyleMap.createSymbolizer(feature, 'default');
+                            //myStyle.label = name;
+                            //feature.style = myStyle;
+
+                            ////Refresh the feature
+                            //feature.layer.eraseFeatures(feature);
+                            //feature.layer.drawFeature(feature);
+                            feature.layer.refresh();
+
+                            wiz.destroy();
+
+                            var WKT = feature.ge.toString();
+                            var ret = pvMapper.updateSite(feature.fid, "user1", name, desc, WKT);
+                            feature.id = id; //Set the id of the feature so that it is updateable
+
+                            var msg;
+                            if (id) {
+                                msg = "The site " + name + " has been added to your database";
+                                pvMapper.displayMessage(msg, "info");
+                            } else {
+                                msg = "There was a problem adding the site to the database!";
+                                pvMapper.displayMessage(msg, "warning");
+                            }
+
+
+                            self.deactivateDrawSite();
+                        }
+                    }, {
+                        text: 'Cancel',
+                        handler: function (b, e) {
+                            feature.destroy();
+                            control.cancel();
+                            wiz.destroy();
+                            deactivateDrawSite();
+                        }
+                    }]
+
+                })
+
+                wiz.show();
+            });
+        }
+    }
 
     //Add new
 
