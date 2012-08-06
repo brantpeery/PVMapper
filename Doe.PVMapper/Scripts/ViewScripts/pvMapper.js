@@ -7,6 +7,8 @@ var pvMapper = {
     mapToolbar: null,
     tabs: null,
 
+    siteLayer: null,
+
     // todo: update to use ToolId and secret and token.
     postScore: function (score, rank, siteId, ToolDescription) {
         $.post("/api/SiteScore", { score: score, rank: rank, siteId: siteId, ToolDescription: ToolDescription });
@@ -40,14 +42,7 @@ var pvMapper = {
         $("body").on("pvMapper-ready", fn)
     },
     getSiteLayer: function () {
-        var i = pvMapper.map.layers.length;
-        while (i--) {
-            if (pvMapper.map.layers[i].id === "SiteLayer") {
-                return pvMapper.map.layers[i];
-            }
-        }
-              
-        return "SiteLayer does not exist in the collection of layers on the map. Add a site or load sites first.";
+        return this.siteLayer || "SiteLayer does not exist in the collection of layers on the map. Add a site or load sites first.";
     },
 
     //Used for displaying small messages to the user. Things like help tips or notifications. Best for 1 to 2 paragraph messages
@@ -59,4 +54,6 @@ var pvMapper = {
     showMapTab: function () {
         this.tabs.setActiveTab(0);
     }
+
+
 };

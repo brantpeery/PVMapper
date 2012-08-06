@@ -60,8 +60,35 @@
     });
     pvMapper.map.addLayer(wms);
 
-    var sitelayer = new OpenLayers.Layer.Vector("Sites");
-    sitelayer.id = "SiteLayer";
-    pvMapper.map.addLayer(sitelayer);
+    //Set up the layer for the site polys
+    //If a style is applied at the layer level, then 
+    //when a label is applied, the engine draws it incorrectly
+    //For this reason the style is defined here, but used only when a 
+    //feature is added
+    var commonStyleMap = new OpenLayers.StyleMap({
+        'default': {
+            strokeColor: "#00FF00",
+            strokeOpacity: 1,
+            strokeWidth: 3,
+            fillColor: "#FF5500",
+            fillOpacity: 0.5,
+            pointRadius: 6,
+            pointerEvents: "visiblePainted",
+            fontColor: "blue",
+            fontSize: "12px",
+            fontFamily: "Courier New, monospace",
+            fontWeight: "bold",
+            labelAlign: "cm",
+            labelOutlineColor: "white",
+            labelOutlineWidth: 1,
+            label: "${name}"
+        }
+    });
+    pvMapper.siteLayer = new OpenLayers.Layer.Vector("Sites", { styleMap: commonStyleMap });
+    pvMapper.siteLayer.id = "SiteLayer";
+
+
+
+    pvMapper.map.addLayer(pvMapper.siteLayer);
 
 });

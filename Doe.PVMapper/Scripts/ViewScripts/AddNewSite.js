@@ -72,7 +72,7 @@ function addSite(map, layer) {
     var WKT;
     var currentSiteName;
     var feature;
-    var wiz;
+    //var wiz;
     this.button;
     this.layer = pvMapper.getSiteLayer();
     this.mapControl = new OpenLayers.Control.DrawFeature(this.layer, OpenLayers.Handler.Polygon);
@@ -84,13 +84,16 @@ function addSite(map, layer) {
         feature = data.feature;
 
         var kml = new OpenLayers.Format.KML();
+        pvMapper.newFeature = feature;
+        //feature.attributes = { name: "Brant1" };
+        //feature.layer.redraw();
 
         //Continue to collect the needed form data
         ///HACK: This needs to use the framework standard way of doing it. For now I am going to assume that I have access to EXTjs 3
-        wiz = new Ext.create('Ext.window.Window', {
+        var wiz = new Ext.create('Ext.window.Window', {
             layout:'auto',
             modal: true,
-            collapsible: true,
+            collapsible: false,
             id: "siteWizard",
             
             title: "Create a New Site",
@@ -114,23 +117,14 @@ function addSite(map, layer) {
                 handler: function (b, e) {
                     var name = Ext.getCmp("name").getValue();
                     var desc = Ext.getCmp("sitedescription").getValue();
-                  
-                    feature.name = name;
-                    feature.attributes = {
-                        name: name,
-                        description: desc
-                    };
+                    var f = pvMapper.newFeature;
 
-                    ///HACK: For some reason the OpenLayers engine renders an extra set of labels if 
-                    ///the style is applied at the layer level. However by defining the label attribute at
-                    ///the feature, an extra label is not drawn to the screen by the engine.
-                    var myStyle = commonStyleMap.createSymbolizer(feature, 'default');
-                    myStyle.label = name;
-                    feature.style = myStyle;
+                    //feature.name = name;
+                    f.attributes.name = name;
 
                     //Refresh the feature
-                    feature.layer.eraseFeatures(feature);
-                    feature.layer.drawFeature(feature);
+                    pvMapper.siteLayer.renderer.clear();
+                    pvMapper.siteLayer.redraw();
 
                     wiz.destroy();
 
@@ -162,12 +156,6 @@ function addSite(map, layer) {
         })
 
         wiz.show();
-
-
-        //This is where a save to the database might happen
-        WKT = feature.geometry.toString();
-
-        //Now save the whole thing
     });
 
     function handleSave(b, e) {
