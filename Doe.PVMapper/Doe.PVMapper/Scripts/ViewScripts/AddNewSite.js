@@ -72,7 +72,6 @@ function addSite(map, layer) {
     var WKT;
     var currentSiteName;
     var feature;
-    //var wiz;
     this.button;
     this.layer = pvMapper.getSiteLayer();
     this.mapControl = new OpenLayers.Control.DrawFeature(this.layer, OpenLayers.Handler.Polygon);
@@ -85,8 +84,6 @@ function addSite(map, layer) {
 
         var kml = new OpenLayers.Format.KML();
         pvMapper.newFeature = feature;
-        //feature.attributes = { name: "Brant1" };
-        //feature.layer.redraw();
 
         //Continue to collect the needed form data
         ///HACK: This needs to use the framework standard way of doing it. For now I am going to assume that I have access to EXTjs 3
@@ -126,6 +123,7 @@ function addSite(map, layer) {
 
                     wiz.destroy();
 
+                    WKT = feature.geometry.toString();
                     var id = pvMapper.postSite("user1", name, desc, WKT);
                     feature.id = id; //Set the id of the feature so that it is updateable
                     

@@ -14,62 +14,69 @@ pvMapper.onReady(function () {
     var deltool = new Ext.Button({
         text: "Delete Site",
         toggleGroup: "SiteManager",
-        toggleHandler: function () {
-            if (this.pressed) {
-                sm.deleteSite(true);
-                this.toggle(false);
-            }
-            else {
-                sm.deleteSite();
-                this.toggle(true);
-                pvMapper.displayMessage("Click on a site to delete it.", "help");
+        listeners: {
+            toggle: function () {
+                if (this.pressed) {
+                    sm.deleteSite(true);
+                    //this.toggle(false);
+                }
+                else {
+                    sm.deleteSite();
+                    //this.toggle(true);
+                    pvMapper.displayMessage("Click on a site to delete it.", "help");
+                }
             }
         }
     });
     var edittool = new Ext.Button({
         text: "Edit Site",
         toggleGroup: "SiteManager",
-        toggleHandler: function () {
-            if (this.pressed) {
-                sm.editSite(true);
-                this.toggle(false);
-            }
-            else {
-                sm.editSite();
-                this.toggle(true);
-                pvMapper.displayMessage("Click on a site to edit its shape.", "help");
+        listeners: {
+            toggle: function () {
+                if (this.pressed) {
+                    sm.editSite(true);
+                    this.toggle(false);
+                }
+                else {
+                    sm.editSite();
+                    this.toggle(true);
+                    pvMapper.displayMessage("Click on a site to edit its shape.", "help");
+                }
             }
         }
     });
     var editlabeltool = new Ext.Button({
         text: "Edit Attributes",
-        toggleGroup:"SiteManager",
-        toggleHandler: function () {
-            if (this.pressed) {
-                sm.editSiteAttributes(true);
-                this.toggle(false);
-            }
-            else {
-                sm.editSiteAttributes();
-                this.toggle(true);
-                pvMapper.displayMessage("Click on a site to edit it the label and description.", "help");
+        toggleGroup: "SiteManager",
+        //ui:'default-toolbar',
+        listeners: {
+            toggle: function () {
+                if (this.pressed) {
+                    sm.editSiteAttributes(true);
+                    this.toggle(false);
+                }
+                else {
+                    sm.editSiteAttributes();
+                    this.toggle(true);
+                    pvMapper.displayMessage("Click on a site to edit it the label and description.", "help");
+                }
             }
         }
 
     });
 
-    var dropDown = new Ext.Button({
-        text:"Site Management",
-        menu: new Ext.menu.Menu({
-            items: [deltool,
-            edittool,
-            editlabeltool]
-        })
-    });
-    pvMapper.mapToolbar.add(dropDown);
-    //pvMapper.mapToolbar.add(deltool);
-    //pvMapper.mapToolbar.add(edittool);
-    //pvMapper.mapToolbar.add(editlabeltool);
+    //var dropDown = new Ext.Button({
+    //    text:"Site Management",
+    //    menu: new Ext.menu.Menu({
+    //        items: [deltool,
+    //        edittool,
+    //        editlabeltool]
+    //    })
+    //});
+    //pvMapper.mapToolbar.add(dropDown);
+    pvMapper.mapToolbar.add(deltool);
+    pvMapper.mapToolbar.add(edittool);
+    pvMapper.mapToolbar.add(editlabeltool);
 });
 
 //Creates a new siteManagement tool.
@@ -104,7 +111,7 @@ function siteManagementTool(map, layer) {
         }
         else {
             if (!editTool) {
-                editTool = new OpenLayers.Control.ModifyFeature(pvMapper.getSiteLayer(), {});
+                editTool = new OpenLayers.Control.ModifyFeature(pvMapper.getSiteLayer(), {vertexRenderIntent: "select"});
                 map.addControl(editTool);
                 layer.events.register("afterfeaturemodified", editTool, function (e) {
                     //Save the modifications back to the database
@@ -124,17 +131,17 @@ function siteManagementTool(map, layer) {
         if (deactivate) { selectTool.deactivate(); }
         else {
             //Put the tool into select mode
-            //Set the select callback to rund the delete feature function
+            //Set the select callback to run the delete feature function
             this.selectFeatureTool(function (f) {
                 var feature = f;
 
-                wiz = new Ext.create('Ext.window.Window', {
+                var wiz = new Ext.create('Ext.window.Window', {
                     layout: 'auto',
                     modal: true,
                     collapsible: true,
                     id: "siteWizard",
 
-                    title: "Create a New Site",
+                    title: "Edit Site",
                     bodyPadding: '5 5 0',
                     width: 350,
                     defaultType: 'textfield',
@@ -158,29 +165,18 @@ function siteManagementTool(map, layer) {
                             var name = Ext.getCmp("name").getValue();
                             var desc = Ext.getCmp("sitedescription").getValue();
 
+                            feature.layer.eraseFeatures(feature);
+
                             feature.name = name;
                             feature.attributes = {
                                 name: name,
                                 description: desc
                             };
 
-                            ///HACK: For some reason the OpenLayers engine renders an extra set of labels if 
-                            ///the style is applied at the layer level. However by defining the label attribute at
-                            ///the feature, an extra label is not drawn to the screen by the engine.
-                            //var myStyle = commonStyleMap.createSymbolizer(feature, 'default');
-                            //myStyle.label = name;
-                            //feature.style = myStyle;
-
-                            ////Refresh the feature
-                            //feature.layer.eraseFeatures(feature);
-                            //feature.layer.drawFeature(feature);
-                            feature.layer.refresh();
-
                             wiz.destroy();
 
-                            var WKT = feature.ge.toString();
+                            var WKT = feature.toString();
                             var ret = pvMapper.updateSite(feature.fid, "user1", name, desc, WKT);
-                            feature.id = id; //Set the id of the feature so that it is updateable
 
                             var msg;
                             if (id) {
@@ -193,6 +189,9 @@ function siteManagementTool(map, layer) {
 
 
                             self.deactivateDrawSite();
+                            
+                            //Redraw the feature with all the changes
+                            feature.layer.drawFeature(feature);
                         }
                     }, {
                         text: 'Cancel',
