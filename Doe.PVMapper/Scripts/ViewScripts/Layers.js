@@ -82,8 +82,66 @@
             labelOutlineColor: "white",
             labelOutlineWidth: 1,
             label: "${name}"
-        }
-    });
+        },
+        "select": new OpenLayers.Style(null, {
+            rules: [
+            new OpenLayers.Rule({
+                symbolizer: {
+                    "Point": {
+                        pointRadius: 5,
+                        graphicName: "square",
+                        fillColor: "white",
+                        fillOpacity: 0.25,
+                        strokeWidth: 2,
+                        strokeOpacity: 1,
+                        strokeColor: "#0000ff",
+                        label:null
+                    },
+                    "Line": {
+                        strokeWidth: 3,
+                        strokeOpacity: 1,
+                        strokeColor: "#0000ff"
+                    },
+                    "Polygon": {
+                        strokeWidth: 2,
+                        strokeOpacity: 1,
+                        fillColor: "#0000ff",
+                        strokeColor: "#0000ff"
+                    }
+                }
+            })
+            ]
+        }),
+        "temporary": new OpenLayers.Style(null, {
+            rules: [
+            new OpenLayers.Rule({
+                symbolizer: {
+                    "Point": {
+                        graphicName: "square",
+                        pointRadius: 5,
+                        fillColor: "white",
+                        fillOpacity: 0.25,
+                        strokeWidth: 2,
+                        strokeColor: "#0000ff",
+                        label: null
+                    },
+                    "Line": {
+                        strokeWidth: 3,
+                        strokeOpacity: 1,
+                        strokeColor: "#0000ff"
+                    },
+                    "Polygon": {
+                        strokeWidth: 2,
+                        strokeOpacity: 1,
+                        strokeColor: "#0000ff",
+                        fillColor: "#0000ff"
+                    }
+                }
+            })
+            ]
+        })
+    }); 
+    
     pvMapper.siteLayer = new OpenLayers.Layer.Vector("Sites", { styleMap: commonStyleMap });
     pvMapper.siteLayer.id = "SiteLayer";
 
