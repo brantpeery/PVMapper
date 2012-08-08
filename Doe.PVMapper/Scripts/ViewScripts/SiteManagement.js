@@ -14,6 +14,7 @@ pvMapper.onReady(function () {
 
     var delAction = Ext.create('GeoExt.Action', {
         text: 'Delete Site',
+        tooltip:"Delete a site from the database",
         control: sm.selectFeatureTool(function (data) {
             sm.deleteSite(data);
         }),
@@ -24,6 +25,7 @@ pvMapper.onReady(function () {
 
     var editAction = Ext.create('GeoExt.Action', {
         text: 'Edit Site',
+        tooltip: "Edit the shape of a site",
         control: sm.modifyFeatureControl(function (data) {
             sm.editSite(data.feature);
         }),
@@ -34,6 +36,7 @@ pvMapper.onReady(function () {
 
     var renameAction = Ext.create('GeoExt.Action', {
         text: 'Edit Attributes',
+        tooltip: "Edit the attributes of a site. (Name, Discription, Color...)",
         control: sm.selectFeatureTool(function (data) {
             sm.editSiteAttributes(data);
         }),
@@ -45,6 +48,22 @@ pvMapper.onReady(function () {
 
     var editTools = [new Ext.Button(delAction), new Ext.Button(editAction), new Ext.Button(renameAction)];
     pvMapper.mapToolbar.add(editTools);
+
+    pvMapper.mapToolbar.add({
+        text: "Edit Menu",
+        menu: new Ext.menu.Menu({
+            items:[
+                //Delete Site
+                new Ext.menu.CheckItem(delAction),
+
+                //Edit Site
+                new Ext.menu.CheckItem(editAction),
+
+                //Edit Attributes
+                new Ext.menu.CheckItem(renameAction)
+            ]
+        })
+    });
 });
 
 
