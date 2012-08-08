@@ -21,7 +21,16 @@ var pvMapper = {
     },
 
     updateSite: function (siteId, userId, name, description, polygonGeometry) {
-        return $.post("/api/ProjectSite", { id: siteId, userId: userId, name: name, description: description, isActive: true, polygonGeometry: polygonGeometry});
+        return $.ajax("/api/ProjectSite", { 
+            data: {id: siteId, userId: userId, name: name, description: description, isActive: true, polygonGeometry: polygonGeometry},
+            type:"PUT",
+            done: function(){
+                pvMapper.displayMessage("The site changes were saved", "info");
+            },
+            fail: function(){
+                pvMapper.displayMessage("Unable to save the changes to the site. There was an error communicating with the database.", "warning");
+            }
+        });
         pvMapper.displayMessage("The site has been updated.", "info");
     },
 
