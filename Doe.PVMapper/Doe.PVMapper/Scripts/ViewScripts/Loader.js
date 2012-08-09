@@ -37,9 +37,6 @@ Ext.application({
                 expires: new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 7)) //7 days from now
             }));
 
-        // display tooltips for actions
-        // Ext.QuickTips.init();
-        var solarBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
         var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);
         var map = new OpenLayers.Map({
             // These projections are all webmercator, but the openlayers layer wants 900913 specifically

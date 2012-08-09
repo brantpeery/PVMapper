@@ -6,7 +6,7 @@
     Ext.define('Company', {
         extend: 'Ext.data.Model',
         fields: [
-           { name: 'company' },
+           { name: 'company', type: 'string' },
            { name: 'price', type: 'float', convert: null, defaultValue: undefined },
            { name: 'change', type: 'float', convert: null, defaultValue: undefined },
         ],
@@ -14,12 +14,7 @@
     });
 
     // sample static data for the store
-    var myData = [
-        ['3m Co', 71.72, 0.02, 0.03, '9/1 12:00am'],
-        ['Alcoa Inc', 29.01, 0.42, 1.47, '9/1 12:00am'],
-        ['Altria Group Inc', 83.81, 0.28, 0.34, '9/1 12:00am'],
-        ['American Express Company', 52.55, 0.01, 0.02, '9/1 12:00am'],
-    ];
+    var myData = [["3m co.", 32.3, 12.2, 23.1], ["Alcoa Inc", 32.3, 12.2, 23.1], ["Altria Group Inc", 32.3, 12.2, 23.1], ["American Express Company", 32.3, 12.2, 23.1]];
 
     /**
      * Custom function used for column renderer
@@ -37,7 +32,14 @@
     // create the data store
     var store = Ext.create('Ext.data.ArrayStore', {
         model: 'Company',
-        data: myData
+        // data: myData
+        proxy: {
+            type: 'ajax',
+            url: '/api/Scoreboard',
+            reader: 'array'
+        },
+        autoLoad: true
+
     });
 
     // create the Grid
@@ -80,13 +82,13 @@
                 renderer: change,
                 dataIndex: 'change'
             },
-                       {
+            {
                 menuDisabled: true,
                 sortable: false,
                 xtype: 'actioncolumn',
                 width: 50,
                 items: [{
-                   // icon: '../shared/icons/fam/icon.gif',  // Use a URL in the icon config
+                    // icon: '../shared/icons/fam/icon.gif',  // Use a URL in the icon config
                     tooltip: 'Sell stock',
                     handler: function (grid, rowIndex, colIndex) {
                         var rec = store.getAt(rowIndex);
@@ -95,7 +97,7 @@
                 }]
             }
         ],
-       
+
         viewConfig: {
             stripeRows: true,
             enableTextSelection: true
@@ -107,10 +109,10 @@
         // we use the tabs.items property to get the length of current items/tabs
         title: 'Scoreboard',
         layout: 'fit',
-        items:[grid],
+        items: [grid],
         listeners: {
             activate: function (tab) {
-               //load more data?
+                //load more data?
             }
         }
     });
