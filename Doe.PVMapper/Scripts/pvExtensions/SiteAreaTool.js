@@ -14,11 +14,11 @@ if (sitesLayer) {
 
             var selectedFeature = features[0];
             
-            // todo: determine why this runs twice
-            //todo: use site id, not name
+            // todo: implement global tool select feature
+            // todo: tools need a way to get their ID, or the postScore should figure it out for them.
             var geo = selectedFeature.geometry;
             var area = geo.getGeodesicArea();
-            pvMapper.postScore(area, area, selectedFeature.name, "SiteAreaTool");
+            pvMapper.postScore(area, area, selectedFeature.fid, "501062b7440aa11aa044d839");
             $.jGrowl("Submitted area: " + area);
             select.deactivate();
         },

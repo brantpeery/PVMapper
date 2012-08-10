@@ -12,40 +12,7 @@
         ],
     });
 
-    //columns: [
-    //    {
-    //        text: 'Tool',
-    //        flex: 1,
-    //        sortable: true,
-    //        dataIndex: 'company'
-    //    },
-    //    {
-    //        text: 'Site 1',
-    //        width: 75,
-    //        sortable: true,
-    //        dataIndex: 'price'
-    //    },
-    //    {
-    //        text: 'Site 2',
-    //        width: 75,
-    //        sortable: true,
-    //        renderer: change,
-    //        dataIndex: 'price'
-    //    },
-    //    {
-    //        text: 'Site 3',
-    //        width: 75,
-    //        sortable: true,
-    //        renderer: change,
-    //        dataIndex: 'price'
-    //    },
-    //    {
-    //        text: 'Site 4',
-    //        width: 75,
-    //        sortable: true,
-    //        renderer: change,
-    //        dataIndex: 'change'
-    //    },
+   
     //    {
     //        menuDisabled: true,
     //        sortable: false,
@@ -66,6 +33,8 @@
      * Custom function used for column renderer
      * @param {Object} val
      */
+    //renderer: change
+    //on the column that should use this.
     function change(val) {
         if (val > 0) {
             return '<span style="color:green;">' + val + '</span>';
@@ -104,6 +73,7 @@
         }],     
         viewConfig: {
             stripeRows: true,
+            emptyText: 'There is no data to display. Activate tools or add sites to get started.'
             // enableTextSelection: true
         }
     });

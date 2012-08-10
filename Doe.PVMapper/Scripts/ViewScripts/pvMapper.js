@@ -9,9 +9,9 @@ var pvMapper = {
 
     siteLayer: null,
 
-    // todo: update to use ToolId and secret and token.
-    postScore: function (score, rank, siteId, ToolDescription) {
-        $.post("/api/SiteScore", { score: score, rank: rank, siteId: siteId, ToolDescription: ToolDescription });
+    // todo: update to use secret and token.
+    postScore: function (score, rank, siteId, toolId) {
+        $.post("/api/SiteScore", { score: score, rank: rank, siteId: siteId, toolId: toolId });
     },
     getSite: function (siteId) {
         return $.get("/api/ProjectSite/" + siteId);
