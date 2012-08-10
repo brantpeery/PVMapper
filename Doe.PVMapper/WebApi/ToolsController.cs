@@ -43,7 +43,7 @@ namespace Doe.PVMapper.WebApi
         }
 
         // POST api/tools
-        public void Post(TreeListPayload payload)
+        public void Post(string value)
         {
 
         }
