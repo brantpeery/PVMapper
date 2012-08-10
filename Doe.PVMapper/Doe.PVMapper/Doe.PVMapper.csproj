@@ -162,6 +162,7 @@
     <Compile Include="WebApi\MongoHelper.cs" />
     <Compile Include="WebApi\ProjectSiteController.cs" />
     <Compile Include="WebApi\ScoreboardController.cs" />
+    <Compile Include="Models\Scorecard.cs" />
     <Compile Include="WebApi\SiteScoreController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -278,7 +279,6 @@
     <Content Include="Content\themes\base\jquery.ui.tabs.css" />
     <Content Include="Content\themes\base\jquery.ui.theme.css" />
     <Content Include="Images\PVMapper_TopText.png" />
-    <Content Include="json.txt" />
     <Content Include="Scripts\DataTables-1.9.2\docs\media\js\doc.js" />
     <Content Include="Scripts\DataTables-1.9.2\docs\media\js\jquery.js" />
     <Content Include="Scripts\DataTables-1.9.2\docs\media\js\shBrushJScript.js" />

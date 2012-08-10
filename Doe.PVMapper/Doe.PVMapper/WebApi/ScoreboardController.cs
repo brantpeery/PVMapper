@@ -9,10 +9,24 @@ using DreamSongs.MongoRepository;
 using Newtonsoft.Json.Linq;
 
 namespace Doe.PVMapper.WebApi
-{// could have used traditional json instead, but the array will be less verbose
+{
+    public class JField
+    {
+        public string Name { get; set; }
+        public string Type { get; set; }
+    }
+
+    public class JColumn
+    {
+        public string Text { get; set; }
+        public string DataIndex { get; set; }
+    }
+
+    // could have used traditional json instead, but the array will be less verbose
     // http://www.sencha.com/forum/showthread.php?229630-Simple-question-on-getting-JSON-data-through-REST-using-Ext.data.ArrayStore
     public class ScoreboardController : ApiController
     {
+        // this would use Scorecards
         private static JArray GetArray(string name)
         {
             JArray array = new JArray();
@@ -24,8 +38,55 @@ namespace Doe.PVMapper.WebApi
             return array;
         }
         // GET api/scoreboard
-        public JArray Get()
+        public object Get()
         {
+            // add some linq http://james.newtonking.com/projects/json/help/index.html?topic=html/LINQtoJSON.htm
+            JObject result = new JObject(
+                new JProperty("metaData",
+                    new JObject(
+                        new JProperty("root", "records"),
+                        new JProperty("fields",
+                            new JArray(
+                                new JObject(
+                                    new JProperty("name", "id"),
+                                    new JProperty("type", "int")
+                                ),
+                                new JObject(
+                                    new JProperty("name", "name"),
+                                    new JProperty("type", "string")
+                                )
+                            )
+                        ),
+
+                        new JProperty("columns",
+                            new JArray(
+                                new JObject(
+                                    new JProperty("text", "#"),
+                                    new JProperty("dataIndex", "id")
+                                ),
+                                new JObject(
+                                    new JProperty("text", "User"),
+                                    new JProperty("dataIndex", "name")
+                                )
+                            )
+                        )
+                    )
+                ),
+                new JProperty("records",
+                    new JArray(
+                        new JObject(
+                            new JProperty("id", 1),
+                            new JProperty("name", "aaa")
+                        ),
+                            new JObject(
+                                new JProperty("id", 2),
+                                new JProperty("name", "bbb")
+                            )
+                    )
+                )
+            );
+
+            return result;
             JArray arrays = new JArray();
             //IRepository<ProjectSite> sites = MongoHelper.GetRepository<ProjectSite>();
             //foreach (var site in sites.All())
@@ -45,13 +106,6 @@ namespace Doe.PVMapper.WebApi
             arrays.Add(GetArray("American Express Company"));
 
             return arrays;
-            //return new ScoreboardRow[] { 
-            //    new ScoreboardRow("3m co", 32, 0.3),
-            //    new ScoreboardRow("Alcoa Inc", 32, 0.3),
-            //    new ScoreboardRow("Altria Group Inc", 32, 0.3),
-            //    new ScoreboardRow("American Express Company", 32, 0.3)
-
-            //};
         }
 
         // GET api/scoreboard/5
@@ -74,21 +128,5 @@ namespace Doe.PVMapper.WebApi
         public void Delete(int id)
         {
         }
-    }
-
-    public class ScoreboardRow
-    {
-        /// <summary>
-        /// Initializes a new instance of the ScoreboardRow class.
-        /// </summary>
-        public ScoreboardRow(string tool, double rank, double score)
-        {
-            Tool = tool;
-            Rank = rank;
-            Score = score;
-        }
-        public string Tool { get; set; }
-        public double Rank { get; set; }
-        public double Score { get; set; }
     }
 }
