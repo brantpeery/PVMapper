@@ -42,7 +42,7 @@ namespace Doe.PVMapper.Models
         /// <value>
         /// The tool description.
         /// </value>
-        public string ToolDescription { get; set; }
+        public string ToolId { get; set; }
 
         /// <summary>
         /// Gets or sets the rank. This is a hidden field from 0-1 that we use to rank the sites.

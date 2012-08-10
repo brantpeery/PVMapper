@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using Doe.PVMapper.Models;
 using DreamSongs.MongoRepository;
@@ -10,17 +8,6 @@ using Newtonsoft.Json.Linq;
 
 namespace Doe.PVMapper.WebApi
 {
-    public class JField
-    {
-        public string Name { get; set; }
-        public string Type { get; set; }
-    }
-
-    public class JColumn
-    {
-        public string Text { get; set; }
-        public string DataIndex { get; set; }
-    }
 
     // could have used traditional json instead, but the array will be less verbose
     // http://www.sencha.com/forum/showthread.php?229630-Simple-question-on-getting-JSON-data-through-REST-using-Ext.data.ArrayStore
@@ -40,7 +27,13 @@ namespace Doe.PVMapper.WebApi
         // GET api/scoreboard
         public object Get()
         {
+            IRepository<ProjectSite> sites = MongoHelper.GetRepository<ProjectSite>();
+            IRepository<WebExtension> tools = MongoHelper.GetRepository<WebExtension>();
+            IRepository<SiteScore> scores = MongoHelper.GetRepository<SiteScore>();
+
             // add some linq http://james.newtonking.com/projects/json/help/index.html?topic=html/LINQtoJSON.htm
+            IQueryable<ProjectSite> userSites = sites.All();
+
             JObject result = new JObject(
                 new JProperty("metaData",
                     new JObject(
@@ -48,11 +41,17 @@ namespace Doe.PVMapper.WebApi
                         new JProperty("fields",
                             new JArray(
                                 new JObject(
-                                    new JProperty("name", "id"),
-                                    new JProperty("type", "int")
+                                    new JProperty("name", "id"), // tool id
+                                    new JProperty("type", "string")
                                 ),
                                 new JObject(
-                                    new JProperty("name", "name"),
+                                    new JProperty("name", "tool"), // tool name
+                                    new JProperty("type", "string")
+                                ),
+                                from s in userSites
+                                orderby s.Name
+                                select new JObject(
+                                    new JProperty("name", s.Id), // site id
                                     new JProperty("type", "string")
                                 )
                             )
@@ -60,13 +59,22 @@ namespace Doe.PVMapper.WebApi
 
                         new JProperty("columns",
                             new JArray(
+                //new JObject(
+                //    new JProperty("text", "#"),
+                //    new JProperty("dataIndex", "id")
+                //),
                                 new JObject(
-                                    new JProperty("text", "#"),
-                                    new JProperty("dataIndex", "id")
+                                    new JProperty("text", "Tool"),
+                                    new JProperty("dataIndex", "tool"),
+                                    new JProperty("flex", 1)
                                 ),
-                                new JObject(
-                                    new JProperty("text", "User"),
-                                    new JProperty("dataIndex", "name")
+                                from s in userSites
+                                orderby s.Name
+                                select new JObject(
+                                    new JProperty("text", s.Name),
+                                    new JProperty("dataIndex", s.Id),
+                                    new JProperty("width", 75),
+                                    new JProperty("sortable", false)
                                 )
                             )
                         )
@@ -74,40 +82,31 @@ namespace Doe.PVMapper.WebApi
                 ),
                 new JProperty("records",
                     new JArray(
-                        new JObject(
-                            new JProperty("id", 1),
-                            new JProperty("name", "aaa")
-                        ),
-                            new JObject(
-                                new JProperty("id", 2),
-                                new JProperty("name", "bbb")
-                            )
+                        from t in tools.All()
+                        orderby t.Name
+                        select new JObject(
+                            new JProperty("id", t.Id),
+                            new JProperty("tool", t.Name),
+                            from s in userSites
+                            orderby s.Name
+                            select new JProperty(s.Id,
+                                GetScoreAtCell(scores, t.Id, s.Id))
+                        )
                     )
                 )
             );
 
             return result;
-            JArray arrays = new JArray();
-            //IRepository<ProjectSite> sites = MongoHelper.GetRepository<ProjectSite>();
-            //foreach (var site in sites.All())
-            //{
-            //    arrays.Add(GetArray(site.Name));
-            //}
-
-            IRepository<WebExtension> extensions = MongoHelper.GetRepository<WebExtension>();
-            foreach (var extension in extensions.All())
-            {
-                arrays.Add(GetArray(extension.Name));
-            }
-
-            arrays.Add(GetArray("3m co."));
-            arrays.Add(GetArray("Alcoa Inc"));
-            arrays.Add(GetArray("Altria Group Inc"));
-            arrays.Add(GetArray("American Express Company"));
-
-            return arrays;
         }
 
+        private static string GetScoreAtCell(IRepository<SiteScore> scores, string toolId, string siteId)
+        {
+            var query = from ss in scores.All()
+                        where ss.ToolId == toolId
+                        where ss.SiteId == siteId
+                        select ss.Score;
+            return query.FirstOrDefault() ?? String.Empty;
+        }
         // GET api/scoreboard/5
         public string Get(int id)
         {
