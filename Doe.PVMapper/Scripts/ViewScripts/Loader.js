@@ -143,7 +143,6 @@ Ext.define('MyApp.RootPanel', {
             width: 175,
             minSize: 100,
             collapsible: true,
-            collapsed: true,
             split: true,
             items: [treePanel]
         }, tabPanel]
