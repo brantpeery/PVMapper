@@ -125,7 +125,7 @@ function addSite(map, layer) {
 
                     WKT = feature.geometry.toString();
                     var id = pvMapper.postSite("user1", name, desc, WKT);
-                    feature.id = id; //Set the id of the feature so that it is updateable
+                    feature.fid = id; //Set the id of the feature so that it is updateable
                     
                     var msg;
                     if (id) {
