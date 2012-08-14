@@ -21,7 +21,7 @@ pvMapper.onReady(function () {
         }),
         map: pvMapper.map,
         // button options
-        toggleGroup: "group1",  // only one tool can be active in a group
+        toggleGroup: "mapNavGroup1",  // only one tool can be active in a group
         allowDepress: false,
         tooltip: "measure distance"
     });
@@ -33,7 +33,7 @@ pvMapper.onReady(function () {
         control: new OpenLayers.Control.Navigation(),
         map: pvMapper.map,
         // button options
-        toggleGroup: "group1",  // only one tool can be active in a group
+        toggleGroup: "mapNavGroup1",  // only one tool can be active in a group
         allowDepress: false,
         pressed: true,
         tooltip: "navigate"

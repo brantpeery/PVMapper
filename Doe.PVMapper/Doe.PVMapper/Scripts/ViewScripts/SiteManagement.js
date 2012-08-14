@@ -17,7 +17,7 @@ pvMapper.onReady(function () {
     });
     var delAction = Ext.create('GeoExt.Action', {
         text: 'Delete Site',
-        tooltip:"Delete a site from the database",
+        tooltip: "Delete a site from the database",
         control: st1,
         map: pvMapper.map,
         enableToggle: true,
@@ -29,7 +29,7 @@ pvMapper.onReady(function () {
         tooltip: "Edit the shape of a site",
         control: sm.modifyFeatureControl(function (data) {
             sm.editSite(data.feature);
-            
+
         }),
         map: pvMapper.map,
         enableToggle: true,
@@ -49,14 +49,38 @@ pvMapper.onReady(function () {
         toggleGroup: "editToolbox"
     });
 
+    var action = Ext.create('GeoExt.Action', {
+        text: "Select Site",
+        control: new OpenLayers.Control.SelectFeature(
+         pvMapper.getSiteLayer(),
+         {
+             clickout: false, toggle: true,
+             multiple: false, hover: false,
+             toggleKey: "ctrlKey", // ctrl key removes from selection
+             multipleKey: "shiftKey", // shift key adds to selection
+             //box: true,
+             eventListeners: {
+                 featurehighlighted: function (event) {
+                     pvMapper.map.zoomToExtent(pvMapper.getSelectedSite().geometry.getBounds());
+                 }
+             }
+         }),
+        map: pvMapper.map,
+      //  enableToggle: true,
+        toggleGroup: "mapNavGroup1",  // only one tool can be active in a group
+        allowDepress: false,
+        tooltip: "Select a site that tools can act upon."
+    });
+    pvMapper.mapToolbar.add(Ext.create('Ext.button.Button', action));
 
-    var editTools = [new Ext.Button(delAction), new Ext.Button(editAction), new Ext.Button(renameAction)];
-    pvMapper.mapToolbar.add(editTools);
+    // instead of commented code we tuck these in the edit menu.
+    //var editTools = [new Ext.Button(delAction), new Ext.Button(editAction), new Ext.Button(renameAction)];
+    //pvMapper.mapToolbar.add(editTools);
 
     pvMapper.mapToolbar.add({
         text: "Edit Menu",
         menu: new Ext.menu.Menu({
-            items:[
+            items: [
                 //Delete Site
                 new Ext.menu.CheckItem(delAction),
 
@@ -68,6 +92,7 @@ pvMapper.onReady(function () {
             ]
         })
     });
+
 });
 
 

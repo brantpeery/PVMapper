@@ -92,5 +92,5 @@
     });
 
     // Activate the Scoreboard by default.
-    pvMapper.tabs.setActiveTab(1);
+    // pvMapper.tabs.setActiveTab(1);
 });

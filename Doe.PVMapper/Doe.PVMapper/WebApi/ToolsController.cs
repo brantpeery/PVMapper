@@ -32,6 +32,7 @@ namespace Doe.PVMapper.WebApi
                 var treeNode = new TreeNode();
                 treeNode.Text = webExtension.Name;
                 treeNode.Url = webExtension.Url;
+                treeNode.ToolId = webExtension.Id;
                 yield return treeNode;
             }
         }

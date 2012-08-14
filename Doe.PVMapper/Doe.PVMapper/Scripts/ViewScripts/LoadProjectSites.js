@@ -5,12 +5,28 @@
             var sitesLayer = pvMapper.getSiteLayer();
 
             for (var i = 0; i < sites.length; i++) {
-                var poly = new OpenLayers.Format.WKT().read(sites[i].polygonGeometry);
+
+                var site = sites[i];
+                var poly = new OpenLayers.Format.WKT().read(site.polygonGeometry);
+             
+                // buffer tool prototype
+                var reader = new jsts.io.WKTReader();
+                var parser = new jsts.io.OpenLayersParser();
+
+                var input = reader.read(site.polygonGeometry);
+                var buffer = input.buffer(-20);
+                buffer = parser.write(buffer);
+                var innerPolygon = new OpenLayers.Feature.Vector(buffer, null, { fillColor: 'blue', fillOpacity: 0, strokeWidth: 3, strokeColor: "purple" });
+                sitesLayer.addFeatures([innerPolygon]);
+                // buffer tool prototype
+
                 if (poly) { //Make sure the poly was created before trying to set properties
-                    poly.fid = sites[i].siteId;
+                    poly.fid = site.siteId;
                     poly.attributes = {
-                        name: sites[i].name,
-                        description: sites[i].description
+                        name: site.name,
+                        description: site.description,
+                        // buffer tool prototype
+                        innerGeometry: innerPolygon.geometry
                     };
 
                     sitesLayer.addFeatures([poly], {});

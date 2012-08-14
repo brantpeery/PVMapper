@@ -24,6 +24,8 @@ namespace Doe.PVMapper.Models
             Text = text;
         }
 
+        public string ToolId { get; set; }
+
         public string Text { get; set; }
 
         public bool Leaf { get; set; }
