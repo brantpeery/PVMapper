@@ -12,12 +12,13 @@ pvMapper.onReady(function () {
     var self = this;
     var sm = new siteManagementTool(pvMapper.map, pvMapper.getSiteLayer());
 
+    var st1 = sm.selectFeatureTool(function (data) {
+        sm.deleteSite(data);
+    });
     var delAction = Ext.create('GeoExt.Action', {
         text: 'Delete Site',
         tooltip:"Delete a site from the database",
-        control: sm.selectFeatureTool(function (data) {
-            sm.deleteSite(data);
-        }),
+        control: st1,
         map: pvMapper.map,
         enableToggle: true,
         toggleGroup: "editToolbox"
@@ -28,18 +29,21 @@ pvMapper.onReady(function () {
         tooltip: "Edit the shape of a site",
         control: sm.modifyFeatureControl(function (data) {
             sm.editSite(data.feature);
+            
         }),
         map: pvMapper.map,
         enableToggle: true,
         toggleGroup: "editToolbox"
     });
 
+    var st2 = sm.selectFeatureTool(function (data) {
+        sm.editSiteAttributes(data);
+        this.unselect(data);
+    });
     var renameAction = Ext.create('GeoExt.Action', {
         text: 'Edit Attributes',
         tooltip: "Edit the attributes of a site. (Name, Discription, Color...)",
-        control: sm.selectFeatureTool(function (data) {
-            sm.editSiteAttributes(data);
-        }),
+        control: st2,
         map: pvMapper.map,
         enableToggle: true,
         toggleGroup: "editToolbox"
@@ -137,9 +141,7 @@ function siteManagementTool(map, layer) {
                     wiz.destroy();
 
                     var WKT = feature.toString();
-                    var ret = pvMapper.updateSite(feature.fid, "user1", name, desc, WKT);
-
-                    self.deactivateDrawSite();
+                    var ret = pvMapper.updateSite(feature.fid, "user1", name, desc);
 
                     //Redraw the feature with all the changes
                     feature.layer.drawFeature(feature);
@@ -165,7 +167,7 @@ function siteManagementTool(map, layer) {
     this.selectFeatureTool = function (callback, options) {
         //if (!selectTool) {
         var defaults = { onSelect: callback };
-        selectTool = new OpenLayers.Control.SelectFeature(layer, defaults);
+        var selectTool = new OpenLayers.Control.SelectFeature(layer, defaults);
         map.addControl(selectTool);
         //} else {
         //    selectTool.onSelect = callback;
