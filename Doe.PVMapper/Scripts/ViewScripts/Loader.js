@@ -24,7 +24,9 @@ Ext.require([
     'GeoExt.Action',
     'Ext.grid.Panel',
     'Ext.data.ArrayStore',  
-    'Ext.grid.column.Action'
+    'Ext.grid.column.Action',
+    'Ext.form.field.Number',
+    'Ext.form.Label'
 ]);
 
 Ext.application({
@@ -122,7 +124,7 @@ Ext.define('MyApp.RootPanel', {
 
                             $.getScript(node.raw.url)
                                 .done(function (script, textStatus) {
-                                    pvMapper.displayMessage("Ran " + node.raw.text);
+                                    pvMapper.displayMessage("Started " + node.raw.text);
                                 })
                                 .fail(function (jqxhr, settings, exception) {
                                     console.log(exception);

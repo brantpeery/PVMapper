@@ -1,6 +1,6 @@
 ﻿// This is a globally defined object that represents the client-side behaviors available through the PVMapper framework.
 var pvMapper = {
-    self:this,
+    self: this,
     // This is exposed to allow extensions to interact with the map.
     map: null,
     // The developer needs to be able to add and remove buttons to a toolbar.
@@ -19,7 +19,6 @@ var pvMapper = {
     postSite: function (userId, name, description, polygonGeometry) {
         return $.post("/api/ProjectSite", { userId: userId, name: name, description: description, isActive: true, polygonGeometry: polygonGeometry });
     },
-
     updateSite: function (siteId, userId, name, description, polygonGeometry) {
 
         //Only send the stuff that was passed into this function.
@@ -28,21 +27,20 @@ var pvMapper = {
         if (description) { data.description = description; }
         if (polygonGeometry) { data.polygonGeometry = polygonGeometry; }
 
-        return $.ajax("/api/ProjectSite", { 
+        return $.ajax("/api/ProjectSite", {
             data: data,
-            type:"PUT",
-            done: function(){
+            type: "PUT",
+            done: function () {
                 pvMapper.displayMessage("The site changes were saved", "info");
             },
-            fail: function(){
+            fail: function () {
                 pvMapper.displayMessage("Unable to save the changes to the site. There was an error communicating with the database.", "warning");
             }
         });
         pvMapper.displayMessage("The site has been updated.", "info");
     },
-
     //Deletes a site from the datastore
-    deleteSite: function (siteId){
+    deleteSite: function (siteId) {
         return $.ajax("/api/ProjectSite/" + siteId, {
             data: { Id: siteId }, type: "DELETE",
             done: function () {
@@ -60,11 +58,25 @@ var pvMapper = {
     getSiteLayer: function () {
         return this.siteLayer || "SiteLayer does not exist in the collection of layers on the map. Add a site or load sites first.";
     },
+    getSelectedSite: function () {
+        var sitesLayer = pvMapper.getSiteLayer();
+
+        if (sitesLayer.selectedFeatures.length < 1) {
+            $.jGrowl("Select the site you would like to work with.");
+            return;
+        } else {
+            var features = sitesLayer.selectedFeatures;
+            if (!features)
+                return;
+
+            return features[0];
+        }
+    },
 
     //Used for displaying small messages to the user. Things like help tips or notifications. Best for 1 to 2 paragraph messages
     //The type parameter will simply be an additional class on the message box.
     displayMessage: function (msg, type) {
-        $.jGrowl(msg, { theme: type, life:7000 });
+        $.jGrowl(msg, { theme: type, life: 7000 });
     },
 
     showMapTab: function () {

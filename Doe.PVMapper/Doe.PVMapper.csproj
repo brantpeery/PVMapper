@@ -413,7 +413,10 @@
     <Content Include="Scripts\jQueryExtentions\jquery.jgrowl_minimized.js" />
     <Content Include="Scripts\jQueryExtentions\minimize_dialog.js" />
     <Content Include="Scripts\jQueryExtentions\popout_tab.js" />
+    <Content Include="Scripts\jsts\javascript.util.js" />
+    <Content Include="Scripts\jsts\jsts.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Scripts\pvExtensions\PanelAreaTool.js" />
     <Content Include="Scripts\Tools\debug_log.js" />
     <Content Include="Scripts\ViewScripts\AddNewSite.js" />
     <Content Include="Scripts\extExtensions\FitToParent.js" />

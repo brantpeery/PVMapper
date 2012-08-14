@@ -8,22 +8,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Doe.PVMapper.WebApi
 {
-
-    // could have used traditional json instead, but the array will be less verbose
-    // http://www.sencha.com/forum/showthread.php?229630-Simple-question-on-getting-JSON-data-through-REST-using-Ext.data.ArrayStore
     public class ScoreboardController : ApiController
     {
-        // this would use Scorecards
-        private static JArray GetArray(string name)
-        {
-            JArray array = new JArray();
 
-            array.Add(new JValue(name));
-            array.Add(new JValue(32.3));
-            array.Add(new JValue(12.2));
-            array.Add(new JValue(23.1));
-            return array;
-        }
         // GET api/scoreboard
         public object Get()
         {
@@ -31,9 +18,9 @@ namespace Doe.PVMapper.WebApi
             IRepository<WebExtension> tools = MongoHelper.GetRepository<WebExtension>();
             IRepository<SiteScore> scores = MongoHelper.GetRepository<SiteScore>();
 
-            // add some linq http://james.newtonking.com/projects/json/help/index.html?topic=html/LINQtoJSON.htm
             IQueryable<ProjectSite> userSites = sites.All();
 
+            // the structure of the code is probably easier to understand if you look at the output JSON
             JObject result = new JObject(
                 new JProperty("metaData",
                     new JObject(
@@ -59,10 +46,10 @@ namespace Doe.PVMapper.WebApi
 
                         new JProperty("columns",
                             new JArray(
-                //new JObject(
-                //    new JProperty("text", "#"),
-                //    new JProperty("dataIndex", "id")
-                //),
+                                //new JObject(
+                                //    new JProperty("text", "#"),
+                                //    new JProperty("dataIndex", "id")
+                                //),
                                 new JObject(
                                     new JProperty("text", "Tool"),
                                     new JProperty("dataIndex", "tool"),
@@ -73,7 +60,7 @@ namespace Doe.PVMapper.WebApi
                                 select new JObject(
                                     new JProperty("text", s.Name),
                                     new JProperty("dataIndex", s.Id),
-                                    new JProperty("width", 75),
+                                    new JProperty("width", 120),
                                     new JProperty("sortable", false)
                                 )
                             )
