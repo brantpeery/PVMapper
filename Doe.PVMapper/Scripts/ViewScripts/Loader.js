@@ -124,7 +124,6 @@ Ext.define('MyApp.RootPanel', {
 
                             $.getScript(node.raw.url)
                                 .done(function (script, textStatus) {
-                                    pvMapper.displayMessage("Started " + node.raw.text);
                                 })
                                 .fail(function (jqxhr, settings, exception) {
                                     console.log(exception);

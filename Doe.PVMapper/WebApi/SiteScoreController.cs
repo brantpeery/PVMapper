@@ -14,7 +14,6 @@ namespace Doe.PVMapper.WebApi
     {
         private static readonly IRepository<SiteScore> _db = MongoHelper.GetRepository<SiteScore>();
 
-        [Queryable]
         public IQueryable<SiteScore> Get()
         {
             return _db.All();

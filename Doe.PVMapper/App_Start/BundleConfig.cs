@@ -24,11 +24,8 @@ namespace Doe.PVMapper
             "~/Scripts/DataTables-1.9.2/media/js/jquery.dataTables.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-1.7.2.js",
-                        "~/Scripts/jquery-ui-1.8.21.full.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
-                        "~/Scripts/jquery-ui-1.8.21.full.js"));
+                        "~/Scripts/jquery-1.*",
+                        "~/Scripts/jquery-ui-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.unobtrusive*",
