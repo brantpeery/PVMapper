@@ -1,6 +1,4 @@
-﻿/// <reference path="../jquery-1.7.2.js" />
-
-var consoleDiv = $("<div id='log'></div>").appendTo('body');
+﻿var consoleDiv = $("<div id='log'></div>").appendTo('body');
 
 var debug = {
     write: function (message) {

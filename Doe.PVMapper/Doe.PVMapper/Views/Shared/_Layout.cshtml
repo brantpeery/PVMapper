@@ -13,7 +13,7 @@
 <body>
     <header>
         <div class="content-wrapper">
-            <div class="float-left">
+            <div class="float-left" id="Logo">
                 <a href="@Url.Action("Index", "Home")">
                     <img src="~/Images/PVMapper_TopText.png" alt="PV Mapper Logo" />
                 </a>
@@ -56,10 +56,10 @@
 
     <!-- definitely consider using a custom single-file version of OpenLayers -->
     <script src="http://openlayers.org/api/2.12-rc3/OpenLayers.js"></script>
-     <!-- These scripts would be loaded by Ext, but placing them here makes them easier to debug. -->
+    <!-- These scripts would be loaded by Ext, but placing them here makes them easier to debug. -->
     <script src="../../Scripts/GeoExt/GeoExt.js"></script>
-    
+
     @RenderSection("scripts", required: false)
-    
+
 </body>
 </html>

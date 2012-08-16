@@ -13,7 +13,6 @@ namespace Doe.PVMapper.WebApi
     {
         private static readonly IRepository<ProjectSite> _db = MongoHelper.GetRepository<ProjectSite>();
 
-        [Queryable(ResultLimit = 10)]
         public IQueryable<ProjectSite> Get()
         {
             return _db.All().Where(c=> c.IsActive);
