@@ -19,7 +19,10 @@ namespace Doe.PVMapper
             //                        "~/ext-resources/js/OpenLayers.js",
             //                        "~/ext-resources/js/GeoExt.js");
             //bundles.Add(bundle);
-
+            
+            // todo: add the cnd links for jquery etc. as the second parameter to each scriptbundle.
+            // bundles.UseCdn = true;   //enable CDN support
+            
             bundles.Add(new ScriptBundle("~/bundles/jquerydatatables").Include(
             "~/Scripts/DataTables-1.9.2/media/js/jquery.dataTables.js"));
 

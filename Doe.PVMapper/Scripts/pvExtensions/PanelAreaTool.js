@@ -14,7 +14,23 @@
             width: 350,
             defaultType: 'textfield',
             items: [{
-                fieldLabel: 'Ground Area Available',
+                fieldLabel: 'Property setback in meters',
+                xtype: 'numberfield',
+                //http://www.mysamplecode.com/2011/12/extjs-4-set-decimal-precision-using.html
+                value: 9,
+                minValue: 0,
+                name: 'setbackBuffer',
+                id: 'setbackBuffer',
+                listeners: {
+                    render: function (c) {
+                        Ext.QuickTips.register({
+                            target: c.getEl(),
+                            text: 'This is the minimum required distance for construction from the site property boundary in meters. The total buildable area is contingent on this setback.'
+                        });
+                    }
+                }
+            }, {
+                fieldLabel: 'Fraction of buildable area which can support panels',
                 xtype: 'numberfield',
                 //http://www.mysamplecode.com/2011/12/extjs-4-set-decimal-precision-using.html
                 value: .85,
@@ -27,12 +43,15 @@
                 //keyNavEnabled: false,
                 //mouseWheelEnabled: false,
                 name: 'areaPercent',
-                id: 'areaPercent'
-            }, {
-                xtype: 'label',
-                forId: 'areaPercent',
-                text: 'The figure provided will be multiplied by the buffered site area.',
-                margins: '0 0 0 10'
+                id: 'areaPercent',
+                listeners: {
+                    render: function (c) {
+                        Ext.QuickTips.register({
+                            target: c.getEl(),
+                            text: 'This is a value between 0 and 1 that is the fraction of the buildable that will actually be covered with solar panels (not used for equipment, space between panels, etc.).'
+                        });
+                    }
+                }
             }],
 
             buttons: [{
