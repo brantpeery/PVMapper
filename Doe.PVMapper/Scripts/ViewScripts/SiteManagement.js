@@ -21,7 +21,9 @@ pvMapper.onReady(function () {
         control: st1,
         map: pvMapper.map,
         enableToggle: true,
-        toggleGroup: "editToolbox"
+        toggleGroup: "editToolbox", 
+        group:"editToolbox"
+
     });
 
     var editAction = Ext.create('GeoExt.Action', {
@@ -33,12 +35,13 @@ pvMapper.onReady(function () {
         }),
         map: pvMapper.map,
         enableToggle: true,
-        toggleGroup: "editToolbox"
+        toggleGroup: "editToolbox",
+        group: "editToolbox"
     });
 
     var st2 = sm.selectFeatureTool(function (data) {
         sm.editSiteAttributes(data);
-        this.unselect(data);
+        //this.unselect(data);
     });
     var renameAction = Ext.create('GeoExt.Action', {
         text: 'Edit Attributes',
@@ -46,7 +49,8 @@ pvMapper.onReady(function () {
         control: st2,
         map: pvMapper.map,
         enableToggle: true,
-        toggleGroup: "editToolbox"
+        toggleGroup: "editToolbox",
+        group: "editToolbox"
     });
 
     var action = Ext.create('GeoExt.Action', {
@@ -78,7 +82,7 @@ pvMapper.onReady(function () {
     //pvMapper.mapToolbar.add(editTools);
 
     pvMapper.mapToolbar.add({
-        text: "Edit Menu",
+        text: "Site Tools",
         menu: new Ext.menu.Menu({
             items: [
                 //Delete Site
