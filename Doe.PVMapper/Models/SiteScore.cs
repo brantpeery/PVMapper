@@ -5,6 +5,7 @@ using System.Web;
 using DreamSongs.MongoRepository;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 
 namespace Doe.PVMapper.Models
 {
@@ -12,14 +13,9 @@ namespace Doe.PVMapper.Models
     /// <summary>
     ///
     /// </summary>
-    public class SiteScore : IEntity
+    [JsonObject(MemberSerialization.OptOut)]
+    public class SiteScore : Entity
     {
-
-        // There seems to be a bug or change in the deserializer that prevents us from inheriting from Entity.
-        [BsonId]
-        [MongoDB.Bson.Serialization.Attributes.BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string Id { get; set; }
-
         /// <summary>
         /// Gets or sets the site ID.
         /// </summary>
