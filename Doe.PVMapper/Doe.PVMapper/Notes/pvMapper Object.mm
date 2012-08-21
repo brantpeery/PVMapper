@@ -11,7 +11,7 @@
 <node CREATED="1344973249631" ID="ID_570940929" MODIFIED="1344983151033" TEXT="toolDeactivate"/>
 <node CREATED="1344973256632" ID="ID_815765165" MODIFIED="1344983143337" TEXT="toolActivate"/>
 </node>
-<node COLOR="#cc6600" CREATED="1344972861966" ID="ID_1058868502" MODIFIED="1344984114342" POSITION="right" TEXT="Variables">
+<node COLOR="#cc6600" CREATED="1344972861966" ID="ID_1058868502" MODIFIED="1345564926048" POSITION="right" TEXT="Variables">
 <node CREATED="1344981943570" ID="ID_499460468" MODIFIED="1344983768359" TEXT="scoreboard(object)">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -25,8 +25,7 @@
       The tool will fire the event to post a score to it's appropriate cell for the appropriate site.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <icon BUILTIN="folder"/>
 <node COLOR="#996600" CREATED="1344981963362" ID="ID_1673601201" MODIFIED="1344985336186" TEXT="Variables">
 <node CREATED="1344985578264" ID="ID_881223134" MODIFIED="1344985795765" TEXT="scoreLines[]">
@@ -39,8 +38,7 @@
       A public array of score lines that will be maintained by the scorecard. The update function for each scoreline will be called when the scorecard needs the line information to be updated.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 </node>
 <node COLOR="#996600" CREATED="1344981968089" ID="ID_1450572615" MODIFIED="1344985336187" TEXT="Events">
@@ -59,8 +57,7 @@
       Tools will need to call this if they want to participate in the scoreboard. The tool is resposible for attaching to the update events so they can use their custom functions to update the scores when needed. The tool will generally save the return scoreLine object as an instance variable so it can call the methods at will for the particular line it has created.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <node CREATED="1344984225904" ID="ID_1545616146" MODIFIED="1344986509728" TEXT="returns: scoreLine object">
 <font NAME="SansSerif" SIZE="12"/>
 <node COLOR="#996600" CREATED="1344984950639" ID="ID_975108013" MODIFIED="1344985937757" TEXT="Events">
@@ -84,8 +81,7 @@
       Updates the scores value for the feature in the scores hash
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <node CREATED="1344985986178" ID="ID_1809985469" MODIFIED="1344985993885" TEXT="featureID"/>
 <node CREATED="1344985994806" ID="ID_665068671" MODIFIED="1344986003493" TEXT="scoreValue"/>
 <node CREATED="1344986089978" ID="ID_1073697456" MODIFIED="1344986102241" TEXT="[popupMessage]"/>
@@ -100,8 +96,7 @@
       Called when the scores need to be updated. This will fire the requestToUpdateScores event for this scoreLine object
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 <node CREATED="1344986530027" ID="ID_198075919" MODIFIED="1344986638437" TEXT="onSiteChanged">
 <richcontent TYPE="NOTE"><html>
@@ -113,8 +108,7 @@
       Gets attached to the pvMapper.site events (changed, added, deleted) so that it can properly maintain the scores hash
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 </node>
 <node COLOR="#996600" CREATED="1344984963622" ID="ID_1355482438" MODIFIED="1344985321438" TEXT="Variables">
@@ -124,6 +118,7 @@
 <node CREATED="1344985111573" ID="ID_1661872723" MODIFIED="1344985118052" TEXT="featureID"/>
 <node CREATED="1344985119133" ID="ID_1292216793" MODIFIED="1344985121347" TEXT="score"/>
 <node CREATED="1344985124270" ID="ID_881719404" MODIFIED="1344985153225" TEXT="popupMessage"/>
+<node CREATED="1345564912943" ID="ID_1341608627" MODIFIED="1345564917849" TEXT="shortValue"/>
 <node CREATED="1344986710483" ID="ID_949918614" MODIFIED="1344986784001" TEXT="valid">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -134,8 +129,7 @@
       used by the object to know if it should fire the requestToUpdateScore for this site. This allows the tool to update all scores at once if it chooses to.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 </node>
 </node>
@@ -145,6 +139,13 @@
 </node>
 </node>
 </node>
+<node CREATED="1345564932153" ID="ID_1033273676" MODIFIED="1345564934928" TEXT="map"/>
+<node CREATED="1345564935768" ID="ID_806447424" MODIFIED="1345564938778" TEXT="toolbar"/>
+<node CREATED="1345564939583" ID="ID_353006408" MODIFIED="1345564946399" TEXT="extensions[]"/>
+<node CREATED="1345564947174" ID="ID_1117577264" MODIFIED="1345564956762" TEXT="toolBox[]"/>
+<node CREATED="1345564965911" ID="ID_1366168342" MODIFIED="1345564970313" TEXT="selectedSite"/>
+<node CREATED="1345564971030" ID="ID_759937197" MODIFIED="1345564973694" TEXT="sites[]"/>
+<node CREATED="1345564976510" ID="ID_1454696929" MODIFIED="1345564987799" TEXT="sitelayer"/>
 </node>
 <node COLOR="#cc6600" CREATED="1344972868759" ID="ID_261169770" MODIFIED="1344973080099" POSITION="right" TEXT="Methods">
 <node CREATED="1344973377317" ID="ID_1297104472" MODIFIED="1344973381274" TEXT="getTools"/>
