@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -803,6 +803,11 @@
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\pvExtensions\PanelAreaTool.js" />
+    <Content Include="Scripts\pvMapper\events.js" />
+    <Content Include="Scripts\pvMapper\pvMapper.js" />
+    <Content Include="Scripts\pvMapper\score.js" />
+    <Content Include="Scripts\pvMapper\scoreboard.js" />
+    <Content Include="Scripts\pvMapper\scoreline.js" />
     <Content Include="Scripts\Tools\debug_log.js" />
     <Content Include="Scripts\ViewScripts\AddNewSite.js" />
     <Content Include="Scripts\extExtensions\FitToParent.js" />
