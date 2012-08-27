@@ -11,7 +11,11 @@ var pvMapper = {
 
     // todo: update to use secret and token.
     postScore: function (score, rank, siteId, toolId) {
-        $.post("/api/SiteScore", { score: score, rank: rank, siteId: siteId, toolId: toolId });
+        $.post("/api/SiteScore", { score: score, rank: rank, siteId: siteId, toolId: toolId },
+           function (data) {
+               Ext.getCmp('scoreboard-grid-id').store.load();
+               Ext.getCmp('scoreboard-grid-id').getView().refresh();
+           });
     },
     getSite: function (siteId) {
         return $.get("/api/ProjectSite/" + siteId);
