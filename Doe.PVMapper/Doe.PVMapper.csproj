@@ -714,9 +714,6 @@
     </Content>
     <Content Include="Scripts\DataTables-1.9.2\media\js\jquery.js" />
     <Content Include="Notes\pvMapper Object.mm" />
-    <None Include="Scripts\jquery-1.7.2.intellisense.js">
-      <DependentUpon>jquery-1.7.2.js</DependentUpon>
-    </None>
     <Content Include="Scripts\GeoExt\Action.js" />
     <Content Include="Scripts\GeoExt\container\LayerLegend.js" />
     <Content Include="Scripts\GeoExt\container\UrlLegend.js" />
