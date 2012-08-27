@@ -64,6 +64,7 @@
 
     // create the Grid
     grid = Ext.create('Ext.grid.Panel', {
+        id: 'scoreboard-grid-id',
         store: store,
         //stateful: true,
         multiSelect: true,
