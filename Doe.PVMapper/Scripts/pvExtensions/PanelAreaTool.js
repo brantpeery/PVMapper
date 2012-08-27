@@ -64,7 +64,7 @@
                     var areaPercent = Ext.getCmp("areaPercent").getValue();
                     var panelArea = area * areaPercent;
                     var kmArea = panelArea / 1000000;
-                    pvMapper.postScore(kmArea, kmArea, site.fid, "TODO:PanelAreaID");
+                    pvMapper.postScore(kmArea, kmArea, site.fid, "501062b7440aa11aa044d111");
                     $.jGrowl("Submitted panel area: " + kmArea);
                     // todo: destroy only on done, not on fail (so user can resubmit)
                     wiz.destroy();

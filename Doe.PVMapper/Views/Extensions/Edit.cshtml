@@ -1,12 +1,12 @@
 ﻿@model Doe.PVMapper.Models.WebExtension
+
 @{
     ViewBag.Title = "Edit";
 }
 
 <h2>Edit</h2>
 
-@using (Html.BeginForm())
-{
+@using (Html.BeginForm()) {
     @Html.ValidationSummary(true)
 
     <fieldset>
@@ -50,6 +50,14 @@
         <div class="editor-field">
             @Html.EditorFor(model => model.HelpUrl)
             @Html.ValidationMessageFor(model => model.HelpUrl)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.UniqueIdentifier)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.UniqueIdentifier)
+            @Html.ValidationMessageFor(model => model.UniqueIdentifier)
         </div>
 
         @Html.HiddenFor(model => model.Id)

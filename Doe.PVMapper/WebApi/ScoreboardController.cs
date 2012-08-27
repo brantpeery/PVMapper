@@ -77,7 +77,7 @@ namespace Doe.PVMapper.WebApi
                             from s in userSites
                             orderby s.Name
                             select new JProperty(s.Id,
-                                GetScoreAtCell(scores, t.Id, s.Id))
+                                GetScoreAtCell(scores, t.UniqueIdentifier, s.Id))
                         )
                     )
                 )
