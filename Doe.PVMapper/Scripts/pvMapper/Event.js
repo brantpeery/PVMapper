@@ -32,4 +32,3 @@ Event.prototype.fire = function (context, eventArgs) {
         this.apply(context, eventArgs);
     });
 }
-Event.prototype.getBeans = function () { console.log(beans); }
