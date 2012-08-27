@@ -923,6 +923,9 @@
     <Content Include="Views\SiteDetail\Test.cshtml" />
     <Content Include="Views\ProjectSite\Index.cshtml" />
     <Content Include="Views\ProjectSite\Delete.cshtml" />
+    <Content Include="Views\Extensions\Edit.cshtml" />
+    <Content Include="Views\Extensions\Create.cshtml" />
+    <Content Include="Views\Extensions\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -940,9 +943,6 @@
     <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\psd\copy document.psd" />
     <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\psd\collection.psd" />
     <Content Include="Views\Extensions\Index.cshtml" />
-    <Content Include="Views\Extensions\Create.cshtml" />
-    <Content Include="Views\Extensions\Details.cshtml" />
-    <Content Include="Views\Extensions\Edit.cshtml" />
     <Content Include="Scripts\DataTables-1.9.2\extras\TableTools\media\js\TableTools.min.js.gz" />
     <Content Include="Scripts\DataTables-1.9.2\extras\Scroller\media\js\dataTables.scroller.min.js.gz" />
     <Content Include="Scripts\DataTables-1.9.2\extras\FixedColumns\media\js\FixedColumns.min.js.gz" />

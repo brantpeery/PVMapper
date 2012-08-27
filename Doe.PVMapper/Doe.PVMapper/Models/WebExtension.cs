@@ -24,5 +24,10 @@ namespace Doe.PVMapper.Models
         public string Author { get; set; }
 
         public string HelpUrl { get; set; }
+
+        /// <summary>
+        /// This is a unique id that the tool is using to post back its scores.
+        /// </summary>
+        public string UniqueIdentifier { get; set; }
     }
 }

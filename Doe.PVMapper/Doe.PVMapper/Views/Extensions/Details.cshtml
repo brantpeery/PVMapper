@@ -43,6 +43,13 @@
     <div class="display-field">
         @Html.DisplayFor(model => model.HelpUrl)
     </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.UniqueIdentifier)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.UniqueIdentifier)
+    </div>
 </fieldset>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
