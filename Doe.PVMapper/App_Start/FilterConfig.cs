@@ -14,10 +14,10 @@ namespace Doe.PVMapper
             // if you want SSL during debug on IIS Express.
 
             // A custom RequireHttpsAttribute is needed to get across the load balancer at Appharbor.
-            // filters.Add(new RequireHttpsAttribute());
-
-            filters.Add(new AppHarbor.Web.RequireHttpsAttribute());
+            // filters.Add(new RequireHttpsAttribute());                      
 #endif
+            // this custom attribute will not require SSL on the desktop. You would need to use the default implementation (above)
+            filters.Add(new AppHarbor.Web.RequireHttpsAttribute());
 
             // Consider API Key Authorization Through Query String In ASP.NET Web API AuthorizationFilterAttribute
             //http://www.tugberkugurlu.com/archive/api-key-authorization-through-query-string-in-asp-net-web-api-authorizationfilterattribute
