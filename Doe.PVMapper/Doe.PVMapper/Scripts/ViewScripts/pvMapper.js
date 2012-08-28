@@ -13,6 +13,7 @@ var pvMapper = {
     postScore: function (score, rank, siteId, toolId) {
         $.post("/api/SiteScore", { score: score, rank: rank, siteId: siteId, toolId: toolId },
            function (data) {
+               // refresh scoreboard.
                Ext.getCmp('scoreboard-grid-id').store.load();
                Ext.getCmp('scoreboard-grid-id').getView().refresh();
            });
@@ -20,13 +21,13 @@ var pvMapper = {
     getSite: function (siteId) {
         return $.get("/api/ProjectSite/" + siteId);
     },
-    postSite: function (userId, name, description, polygonGeometry) {
-        return $.post("/api/ProjectSite", { userId: userId, name: name, description: description, isActive: true, polygonGeometry: polygonGeometry });
+    postSite: function (name, description, polygonGeometry) {
+        return $.post("/api/ProjectSite", { name: name, description: description, isActive: true, polygonGeometry: polygonGeometry });
     },
-    updateSite: function (siteId, userId, name, description, polygonGeometry) {
+    updateSite: function (siteId, name, description, polygonGeometry) {
 
         //Only send the stuff that was passed into this function.
-        var data = { id: siteId, userId: userId, isActive: true };
+        var data = { id: siteId, isActive: true };
         if (name) { data.name = name; }
         if (description) { data.description = description; }
         if (polygonGeometry) { data.polygonGeometry = polygonGeometry; }
