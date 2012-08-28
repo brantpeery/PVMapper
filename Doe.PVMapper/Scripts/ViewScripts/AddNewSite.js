@@ -124,13 +124,16 @@ function addSite(map, layer) {
                     wiz.destroy();
 
                     WKT = feature.geometry.toString();
-                    var id = pvMapper.postSite("user1", name, desc, WKT);
+                    var id = pvMapper.postSite(name, desc, WKT);
                     feature.fid = id; //Set the id of the feature so that it is updateable
                     
                     var msg;
                     if (id) {
                         msg = "The site " + name + " has been added to your database";
                         pvMapper.displayMessage(msg, "info");
+                        // refresh scoreboard.
+                        Ext.getCmp('scoreboard-grid-id').store.load();
+                        Ext.getCmp('scoreboard-grid-id').getView().refresh();
                     } else {
                         msg = "There was a problem adding the site to the database!";
                         pvMapper.displayMessage(msg, "warning");

@@ -18,7 +18,8 @@ namespace Doe.PVMapper.WebApi
             IRepository<WebExtension> tools = MongoHelper.GetRepository<WebExtension>();
             IRepository<SiteScore> scores = MongoHelper.GetRepository<SiteScore>();
 
-            IQueryable<ProjectSite> userSites = sites.All();
+            IQueryable<ProjectSite> userSites = sites.All().Where(c => c.IsActive && c.UserId == User.Identity.Name);
+            if (!userSites.Any()) return String.Empty;
 
             // the structure of the code is probably easier to understand if you look at the output JSON
             JObject result = new JObject(
@@ -93,26 +94,6 @@ namespace Doe.PVMapper.WebApi
                         where ss.SiteId == siteId
                         select ss.Score;
             return query.FirstOrDefault() ?? String.Empty;
-        }
-        // GET api/scoreboard/5
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/scoreboard
-        public void Post(string value)
-        {
-        }
-
-        // PUT api/scoreboard/5
-        public void Put(int id, string value)
-        {
-        }
-
-        // DELETE api/scoreboard/5
-        public void Delete(int id)
-        {
         }
     }
 }

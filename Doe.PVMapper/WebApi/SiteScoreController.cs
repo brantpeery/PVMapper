@@ -14,10 +14,10 @@ namespace Doe.PVMapper.WebApi
     {
         private static readonly IRepository<SiteScore> _db = MongoHelper.GetRepository<SiteScore>();
 
-        public IQueryable<SiteScore> Get()
-        {
-            return _db.All();
-        }
+        //public IQueryable<SiteScore> Get()
+        //{
+        //    return _db.All();
+        //}
 
         public SiteScore Get(string id)
         {

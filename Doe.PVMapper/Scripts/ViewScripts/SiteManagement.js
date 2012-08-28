@@ -119,7 +119,7 @@ function siteManagementTool(map, layer) {
         //Save the modifications back to the database
         //This is where a save to the database might happen
         var WKT = feature.geometry.toString();
-        var ret = pvMapper.updateSite(feature.fid, "user1", feature.attributes.name, feature.attributes.desc, WKT);
+        var ret = pvMapper.updateSite(feature.fid, feature.attributes.name, feature.attributes.desc, WKT);
     }
 
     //Edit attributes
@@ -170,7 +170,7 @@ function siteManagementTool(map, layer) {
                     wiz.destroy();
 
                     var WKT = feature.toString();
-                    var ret = pvMapper.updateSite(feature.fid, "user1", name, desc);
+                    var ret = pvMapper.updateSite(feature.fid, name, desc);
 
                     //Redraw the feature with all the changes
                     feature.layer.drawFeature(feature);
