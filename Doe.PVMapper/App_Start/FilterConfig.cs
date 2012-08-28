@@ -12,7 +12,11 @@ namespace Doe.PVMapper
 #if !DEBUG
             // Modify the project properties and check the SSL Enabled to True and under SSL URL set the SSL url port 443 
             // if you want SSL during debug on IIS Express.
-            filters.Add(new RequireHttpsAttribute());
+
+            // A custom RequireHttpsAttribute is needed to get across the load balancer at Appharbor.
+            // filters.Add(new RequireHttpsAttribute());
+
+            filters.Add(new AppHarbor.Web.RequireHttpsAttribute());
 #endif
 
             // Consider API Key Authorization Through Query String In ASP.NET Web API AuthorizationFilterAttribute
