@@ -9,7 +9,6 @@ namespace Doe.PVMapper.Controllers
 {
     public class ProjectSiteController : RepositoryControllerBase<ProjectSite>
     {
-     
-      
+
     }
 }
