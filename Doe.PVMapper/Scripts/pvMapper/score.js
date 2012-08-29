@@ -1,4 +1,4 @@
-﻿(function (pvMapper) {
+﻿(function (pvM) {
     pvM.score = function (site) {
         //Events
         this.valueChangeEvent = new Event();

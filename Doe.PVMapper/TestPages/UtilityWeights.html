@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Hierarchial Decision Set Weighting</title>
+    <link rel="stylesheet" type="text/css" href="../Content/themes/ui-lightness/jquery-ui-1.8.21.custom.css" />
+    <link rel="stylesheet" type="text/css" href="../Scripts/jQueryExtentions/jquery.treeview.css" />
+    <script type="text/javascript" src="../Scripts/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../Scripts/jquery-ui-1.8.22.min.js"></script>
+    <script type="text/javascript" src="../Scripts/jQueryExtentions/jquery.treeview.js"></script>
+
+    <script type="text/javascript">
+        $().ready(function () {
+            $("ul.toolHierarchy").treeview();
+            $("<div></div>").appendTo("p").slider()
+            .on("slide", function (event, ui) {
+                $(event.target).siblings("input").val(ui.value);
+            }).css("width", 300);
+
+            $("p, div").css("display", "inline-block");
+            //$("input").hide();
+            
+            $("li:not(li:has(li))").addClass("leaf");
+
+        });
+
+    </script>
+
+    <style type="text/css">
+        div
+        {
+            margin-left: 20px;
+        }
+        input
+        {
+            width: 50px;
+            margin-left: 2px;
+        }
+
+        span.label
+        {
+            font-size: 75%;
+            padding: 0 2px 0 10px;
+        }
+
+        p
+        {
+            position: absolute;
+            left: 230px; top:-.9em;
+        }
+
+        li
+        {
+            position: relative;
+        }
+    </style>
+
+
+
+</head>
+<body>
+    <ul clss="toolHierarchy">
+        <li>Cost
+            <p><span class="label">Weight</span><input type="text" /></p>
+            <ul>
+                <li>Land Cost<p><span class="label">Weight</span><input type="text" /></p>
+                    <ul>
+                        <li>Site Area
+                            <p><span class="label">Weight</span><input type="text" /></p>
+                        </li>
+                        <li>Offset Area<p><span class="label">Weight</span><input type="text" /></p>
+                        </li>
+                        <li>Zone Type<p><span class="label">Weight</span><input type="text" /></p>
+                        </li>
+                    </ul>
+                </li>
+                <li>Facility Cost<p><span class="label">Weight</span><input type="text" /></p>
+                    <ul>
+                        <li >Solar Panel System Cost<p><span class="label">Weight</span><input type="text" value="0" /></p>
+                        </li>
+                        <li >Buildings<p><span class="label">Weight</span><input type="text" /></p>
+                        </li>
+                        <li >Physical Security<p><span class="label">Weight</span><input type="text" /></p>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>Transmission Connection Cost<p><span class="label">Weight</span><input type="text" /></p>
+                    <ul>
+                        <li >Right of Way Lease Cost<p><span class="label">Weight</span><input type="text" /></p>
+                        </li>
+                        <li >Transmission Line Cost<p><span class="label">Weight</span><input type="text" /></p>
+                        </li>
+                        <li >Terminating Equipment Cost<p><span class="label">Weight</span><input type="text" /></p>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>Permitting Cost<p><span class="label">Weight</span><input type="text" /></p>
+                </li>
+
+            </ul>
+        </li>
+        <li>Energy
+            <p><span class="label">Weight</span><input type="text" /></p>
+            <ul>
+                <li >Power Output MW
+                </li>
+                <li >Intermitancy<p><span class="label">Weight</span><input type="text" /></p>
+                </li>
+                <li >Power Purchase Contract Risk<p><span class="label">Weight</span><input type="text" /></p>
+                </li>
+            </ul>
+
+        </li>
+        <li>Environment
+            <p><span class="label">Weight</span><input type="text" /></p>
+            <ul>
+                <li >Endangered Species<p><span class="label">Weight</span><input type="text" /></p>
+                </li>
+                <li >Water Quality<p><span class="label">Weight</span><input type="text" /></p>
+                </li>
+                <li >Air Emissions<p><span class="label">Weight</span><input type="text" /></p>
+                </li>
+                <li >Viewshed<p><span class="label">Weight</span><input type="text" /></p>
+                </li>
+            </ul>
+        </li>
+        <li>Social
+            <p><span class="label">Weight</span><input type="text" /></p>
+            <ul>
+                <li >Public Acceptablitiy Risk<p><span class="label">Weight</span><input type="text" /></p>
+                </li>
+                <li >Housing Proximity<p><span class="label">Weight</span><input type="text" /></p>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+</body>
+</html>
