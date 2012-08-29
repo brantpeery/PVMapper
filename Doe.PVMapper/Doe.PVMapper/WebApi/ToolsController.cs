@@ -35,6 +35,16 @@ namespace Doe.PVMapper.WebApi
                 treeNode.ToolId = webExtension.Id;
                 yield return treeNode;
             }
+
+            // Add a few demo tools.
+            var sampleTools = new string[] { "Connection Costs", "Data Quality", "Ecological resources", "Incentives", "Land Use", "Offset Rules", "Planned Transmission", "Power Purchasers", "Slope"};
+            foreach (var item in sampleTools)
+            {
+                var node = new TreeNode();
+                node.Text = item;
+               
+                yield return node;
+            }
         }
 
         // GET api/tools/
