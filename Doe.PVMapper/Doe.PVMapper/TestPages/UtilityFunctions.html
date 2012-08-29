@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Utility Functions</title>
+    <link rel="stylesheet" type="text/css" href="../Content/themes/ui-lightness/jquery-ui-1.8.21.custom.css" />
+    <link rel="stylesheet" type="text/css" href="http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css" />
+    <link rel="stylesheet" type="text/css" href="../Scripts/jQueryExtentions/jquery.treeview.css" />
+    <script type="text/javascript" src="../Scripts/jquery-1.8.0.js"></script>
+    <script type="text/javascript" src="../Scripts/jquery-ui-1.8.22.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js"></script>
+
+    <script type="text/javascript">
+        var currentFunction, board, f2; //Variables to run the board
+
+        $().ready(function () {
+            $("<div></div>").insertAfter("input.slider")
+            .slider({
+                "create": function (event, ui) {
+                    $(this).slider("value", $(this).prev("input.slider").val());
+                }
+            })
+            .on("slide", function (event, ui) {
+                $(event.target).prev("input.slider").val(ui.value);
+            }).css({ "width": 300, display: "inline-block" });
+
+            //Set the selector
+            $("#FunctionSelector option").on("click", function (event, ui) {
+                currentFunction = window.UtilityFunctions[this.value];
+                if (currentFunction) {
+                    f2.Y = currentFunction;
+                    board.update();
+                }
+            });
+        });
+
+
+        $().ready(function () {
+            board = JXG.JSXGraph.initBoard('box', { boundingbox: [0, 1.05, 100, -.05], axis: true, showCopyright: false, showNavigation: false });
+            var p = [];
+            //p[0] = board.create('point', [0, 0], { size: 2, face: 'o' });
+            //p[1] = board.create('point', [100, 1], { size: 2, face: 'o' });
+            //p[2] = board.create('point', [50, 0.5], { size: 2, face: 'o', });
+
+            //var c = board.create('spline', p, { strokeWidth: 3 });
+            //var f = board.create('functiongraph', [utilityFunction1], { strokeWidth: 3 })
+            f2 = board.create('functiongraph', [UtilityFunctions.utilityFunction1], { strokeWidth: 3, strokeColor: "red" })
+
+            //var g = board.create('glider', [1.5, 0, c], { name: '', style: 8 });
+            //var t = board.create('tangent', [g], { dash: 2, strokeColor: '#aa0000' });
+        });
+
+        function addPoint() {
+            p.push(board.create('point', [(Math.random() - 0.5) * 10, (Math.random() - 0.5) * 3], { size: 4, face: 'o' }));
+            board.update();
+        }
+
+        UtilityFunctions = {
+            utilityFunction1: function (x) {
+                var l = parseInt($("#MinValue").val());
+                var b = parseInt($("#TargetValue").val());
+                var h = parseInt($("#MaxValue").val());
+                var s = parseInt($("#SlopeValue").val());
+                var y = 0;
+
+                if (x >= h) y = 1;
+                else if (x <= l) y = 0;
+                else y = 1 / (1 + Math.pow((b - l) / (x - l), (2 * (1 / s) * (b + x - 2 * l))));
+
+                if (y >= 1) y = 1;
+                if (y <= 0) y = 0;
+                return 1 - y;
+            },
+
+            utilityFunction2: function (x) {
+                var l = parseInt($("#MinValue").val());
+                var b = parseInt($("#TargetValue").val());
+                var h = parseInt($("#MaxValue").val());
+                var s = 1 / parseInt($("#SlopeValue").val());
+                var y = 0;
+
+                if (x >= h) y = 1;
+                else if (x <= l) y = 0;
+                else y = (x < b) ? 1 / (1 + Math.pow((b - l) / (x - l), (2 * s * (b + x - 2 * l)))) :
+                    1 - (1 / (1 + Math.pow((b - (2 * b - h)) / ((2 * b - x) - (2 * b - h)), (2 * s * (b + (2 * b - x) - 2 * (2 * b - h))))));
+                if (y >= 1) y = 1;
+                if (y <= 0) y = 0;
+                return y;
+            },
+            UtilityFunction3: function (x) {
+
+            }
+        }
+
+    </script>
+
+    <style type="text/css">
+        input
+        {
+            width: 25px;
+        }
+
+        .ui-slider
+        {
+            width: 200;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+    </style>
+
+</head>
+<body>
+
+
+    <div>
+        <h1>Tool: Site Area Cost</h1>
+
+        <p>Min Value<input id="MinValue" type="text" value="10" /></p>
+        <p>
+            Target Value<input id="TargetValue" type="text" value="50" />
+        </p>
+        <p>
+            Max Value<input id="MaxValue" type="text" value="100" />
+        </p>
+        <p>
+            Slope Value
+        <input id="SlopeValue" type="text" value="50" class="slider" />
+        </p>
+        <p>
+            <select id="FunctionSelector">
+                <option value="utilityFunction1">Less is better</option>
+                <option value="utilityFunction2">More is better</option>
+            </select>
+        </p>
+
+
+    </div>
+    <div id="box" class="jxgbox" style="width: 400px; height: 400px;"></div>
+
+</body>
+</html>
