@@ -29,8 +29,11 @@
                         // buffer tool prototype
                         innerGeometry: innerPolygon.geometry
                     };
-
                     sitesLayer.addFeatures([poly], {});
+
+                    s = new pvMapper.site(poly);
+                    pvMapper.sites.push(s);
+                    
                 }
 
             }
