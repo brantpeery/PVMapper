@@ -2,9 +2,9 @@
 
 //Site object 
 (function (pvM) {
-    pvM.site = function (/*OpenLayers.Feature*/ feature) {
+    pvM.Site = function (/*OpenLayers.Feature*/ feature) {
         //Check the parameters
-        if ($(feature).isPrototypeOf(OpenLayers.Feature)) { throw ('The parameter "feature" must be an OpenLayers.Feature'); }
+        if (!$(feature).isPrototypeOf(OpenLayers.Feature)) { throw ('The parameter "feature" must be an OpenLayers.Feature'); }
 
         this.id = feature.fid;
         this.feature = feature;
