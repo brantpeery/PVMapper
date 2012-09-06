@@ -99,7 +99,7 @@
     height: '100%',
     renderTo: document.body,
     items: [{
-      title: 'Weights'
+      title: 'Scoreboard'
       
     }, {
       title: 'Two',
@@ -111,7 +111,7 @@
   });
 
   pvMapper.tabs.add( {
-    title: 'Weighting',
+    title: 'Scoreboard',
     items: [tPanel],
     listeners: {
       activate: function (tab) {
