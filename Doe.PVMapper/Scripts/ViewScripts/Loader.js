@@ -50,7 +50,7 @@ Ext.application({
         var toolbarItems = [];
         mapPanel = Ext.create('GeoExt.panel.Map', {
             id: 'map-panel-id',
-            title: 'Map',
+            title: 'Site',
             map: map,
             zoom: 0,
             center: [-10723197, 4500612],
@@ -138,7 +138,7 @@ Ext.define('MyApp.RootPanel', {
         });
 
         this.items = [{
-            title: 'Tools',
+            title: 'Properties',
             region: 'west',
             layout: 'fit',
             width: 175,
