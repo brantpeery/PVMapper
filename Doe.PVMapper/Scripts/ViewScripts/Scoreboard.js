@@ -94,34 +94,5 @@
   });
 
 
-  var tPanel = Ext.create('Ext.tab.Panel', {
-    width: '100%',
-    height: '100%',
-    renderTo: document.body,
-    items: [{
-      title: 'Scoreboard'
-      
-    }, {
-      title: 'Two',
-      tabConfig: {
-        title:'properties',
-        tooltip: 'Score function'
-      }
-    }]
-  });
 
-  pvMapper.tabs.add( {
-    title: 'Scoreboard',
-    items: [tPanel],
-    listeners: {
-      activate: function (tab) {
-      }
-    }
-  });
-    
-  //addTab('Weighting', "http://localhost:1919/testpages/UtilityWeights.html");
-  //addTab('Properties', "http://localhost:1919/testpages/UtilityFunctions.html");
-
-    // Activate the Scoreboard by default.
-    // pvMapper.tabs.setActiveTab(1);
 });

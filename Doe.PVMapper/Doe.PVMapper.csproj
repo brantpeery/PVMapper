@@ -790,6 +790,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jQueryExtentions\getScriptOverride.js" />
     <Content Include="Scripts\jQueryExtentions\images\ajax-loader.gif" />
     <Content Include="Scripts\jQueryExtentions\images\file.gif" />
     <Content Include="Scripts\jQueryExtentions\images\folder-closed.gif" />
@@ -837,6 +838,12 @@
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Scripts\pvExtensions\scoreBoard\loader.js" />
+    <Content Include="Scripts\pvExtensions\scoreBoard\Utility.css" />
+    <Content Include="Scripts\pvExtensions\scoreBoard\UtilityFunctions.html" />
+    <Content Include="Scripts\pvExtensions\scoreBoard\UtilityFunctions.js" />
+    <Content Include="Scripts\pvExtensions\scoreBoard\UtilityWeights.html" />
+    <Content Include="Scripts\pvExtensions\scoreBoard\UtilityWeights.js" />
     <Content Include="Scripts\pvMapper\Module.js" />
     <Content Include="Scripts\pvExtensions\moduleTest.js" />
     <Content Include="Scripts\pvExtensions\PanelAreaTool.js" />

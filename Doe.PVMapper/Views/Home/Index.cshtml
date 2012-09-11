@@ -6,6 +6,8 @@
 
 <link href="../../theme/default/style.css" rel="stylesheet" type="text/css" />
 
+
+
 <style type="text/css">
     div#jGrowl .jGrowl-notification.warning
     {
@@ -50,6 +52,8 @@
     </div>
 </div>
 
+@*These all need moved to the top of the file so that the scripts are available to inline code. 
+Anything that needs to be defered to the end needs to wait for the $().ready or body.load events.*@
 @section Scripts {
     <script type="text/javascript" src="../../Scripts/ViewScripts/Loader.js"></script>
     <script type="text/javascript" src="../../Scripts/ViewScripts/pvMapper.js"></script>
@@ -63,4 +67,22 @@
     <script type="text/javascript" src="../../Scripts/ViewScripts/SiteManagement.js"></script>
     <script type="text/javascript" src="../../Scripts/jsts/javascript.util.js"></script>
     <script type="text/javascript" src="../../Scripts/jsts/jsts.js"></script>
+
+    @*jQuery extentions*@
+    <link rel="stylesheet" type="text/css" href="../../Scripts/jQueryExtentions/jquery.treeview.css" />
+    <script type="text/javascript" src="../../Scripts/jQueryExtentions/jquery.treeview.js"></script>
+
+    @*Debugging scripts*@
+    <script type="text/javascript" src="../../Scripts/jQueryExtentions/getScriptOverride.js"></script>
+
+    @*API and related tests*@
+    <script type="text/javascript" src="../../Scripts/pvMapper/Event.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/pvMapper.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/Score.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/Scoreboard.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/ScoreLine.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/Site.js"></script>
+
+    @*New ScoreBoard Utility Config -- Mockup only*@ 
+    <script type="text/javascript" src="../../Scripts/pvExtensions/scoreBoard/loader.js"></script>
 }

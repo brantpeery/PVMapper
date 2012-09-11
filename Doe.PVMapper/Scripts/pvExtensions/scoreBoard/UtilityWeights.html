@@ -1,53 +1,4 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>Hierarchial Decision Set Weighting</title>
-    <link rel="stylesheet" type="text/css" href="../Scripts/jQueryExtentions/themes/classic/style.css" />
-    <link rel="stylesheet" type="text/css" href="../Scripts/jQueryExtentions/jquery.treeview.css" />
-    <script type="text/javascript" src="../Scripts/jQueryExtentions/jquery.treeview.js"></script>
-
-
-    <style type="text/css">
-        .toolHierarchy div
-        {
-            margin-left: 20px;
-        }
-
-        .toolHierarchy input
-        {
-            width: 50px;
-            margin-left: 2px;
-        }
-
-        .toolHierarchy span.label
-        {
-            font-size: 75%;
-            padding: 0 2px 0 10px;
-        }
-
-        .toolHierarchy p
-        {
-            position: absolute;
-            left: 230px;
-            top: -.9em;
-        }
-
-        .toolHierarchy li
-        {
-            position: relative;
-        }
-
-        .toolHierarchy .invalid-value
-        {
-            color: red;
-        }
-    </style>
-
-
-
-</head>
-<body>
-    <ul class="toolHierarchy">
+﻿    <ul class="toolHierarchy">
         <li>Cost <span class="totalBranchValue"></span>
             <p><span class="label">Weight</span><input class="slider" type="text" /></p>
             <ul>
@@ -128,5 +79,27 @@
         </li>
     </ul>
 
-</body>
-</html>
+    <div class="utilityFunctions">
+        <h1>Tool: Site Area Cost</h1>
+
+        <p>Min Value<input id="MinValue" type="text" value="10" class="slider" /></p>
+        <p>
+            Target Value<input id="TargetValue" type="text" value="50"  class="slider"/>
+        </p>
+        <p>
+            Max Value<input id="MaxValue" type="text" value="100"  class="slider"/>
+        </p>
+        <p>
+            Slope Value
+        <input id="SlopeValue" type="text" value="50" class="slider" />
+        </p>
+        <p>
+            <select id="FunctionSelector">
+                <option value="utilityFunction1">Less is better</option>
+                <option value="utilityFunction2">More is better</option>
+            </select>
+        </p>
+
+   <div id="box" class="jxgbox" style="height:250px; width:250px;"></div>
+    </div>
+ 
