@@ -34,7 +34,45 @@
 
                 $(".toolHierarchy p, .toolHierarchy div").css("display", "inline-block");
 
-                $(".toolHierarchy li:not(li:has(li))").addClass("leaf");
+                $(".toolHierarchy li:not(li:has(li))").addClass("leaf")
+                    .append("<img class='funcButton' src='http://localhost:1919/Images/line_chart_24.png'></img>")
+                    .children(".funcButton")
+                    .click(function (e, ui) {
+                        var target = this;
+                        var title = $(this).parent().clone().children().remove().end().text();
+                        $("#FunctionToolTitle").text(title);
+
+                        //Load the values from the LI
+                        var data = $(target).attr('data');
+                        if (data) { data = JSON.parse(data); }
+
+                        var dfaults = { min: 10, max: 100, target: 50, slope: 50 };
+                        $.extend(dfaults, data);
+                        $(".utilityFunctions #MinValue").val(dfaults.min);
+                        $(".utilityFunctions #MaxValue").val(dfaults.max);
+                        $(".utilityFunctions #TargetValue").val(dfaults.target);
+                        $(".utilityFunctions #SlopeValue").val(dfaults.slope);
+
+                        //Save the values to the LI
+
+                        $('.utilityFunctions input').add('select').off("change.uw").on("change.uw",function (e, ui) {
+                            var data = {};
+                            data.min = $(".utilityFunctions #MinValue").val();
+                            data.max = $(".utilityFunctions #MaxValue").val();
+                            data.target = $(".utilityFunctions #TargetValue").val();
+                            data.slope = $(".utilityFunctions #SlopeValue").val();
+                            
+                            data = JSON.stringify(data);
+
+                            $(target).attr('data', data);
+                        });
+                        //setUpUtilityFunction($(this).parent())
+                    })
+                .hover(function () {
+
+                },
+                    function () { }
+                   );
 
                 $(".toolHierarchy ul.toolHierarchy li").each(function (idx, elem) { updateParentBranch(elem) });
             }

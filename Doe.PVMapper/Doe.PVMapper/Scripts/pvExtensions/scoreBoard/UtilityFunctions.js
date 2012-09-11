@@ -18,7 +18,7 @@
                     }
                 })
                 .on("slide", function (event, ui) {
-                    $(event.target).prev("input.slider").val(ui.value);
+                    $(event.target).prev("input.slider").val(ui.value).change();
                 });
 
                 //Set the selector

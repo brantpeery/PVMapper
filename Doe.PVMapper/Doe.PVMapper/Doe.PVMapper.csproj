@@ -642,6 +642,7 @@
     <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\themes\base\jquery.ui.base.css" />
     <Content Include="Content\themes\jquery.jgrowl.css" />
+    <Content Include="Images\line_chart_24.png" />
     <Content Include="Images\logo50.png" />
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
     <Content Include="Content\themes\base\jquery.ui.all.css" />
