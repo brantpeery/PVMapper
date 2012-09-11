@@ -5,8 +5,8 @@
         this.scoreChangeEvent = new Event();
         this.updatingScoresEvent = new Event();
 
-        //Make sure we have the correct parameters 
-        scoreboard = (scoreboard.prototype == pvM.ScoreBoard) ? scoreboard : pvM.scoreBoard;
+        //Make sure we have the correct parameters, default to the main scoreboard.
+        scoreboard = (scoreboard.prototype == pvM.Scoreboard) ? scoreboard : pvM.mainScoreboard;
 
         //name = (name) ? name : "Module scoring tool" + scoreboard.scoreLines.count;
         updateScoreCallBack = ($.isFunction(updateScoreCallBack)) ? updateScoreCallBack : null;

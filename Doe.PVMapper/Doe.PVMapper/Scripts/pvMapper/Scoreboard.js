@@ -1,5 +1,5 @@
 ﻿(function (pvM) {
-    pvM.scoreBoard = function () {
+    pvM.Scoreboard = function () {
         this.scoreChangedEvent = new Event();
         this.scoresInvalidatedEvent = new Event();
 
@@ -35,5 +35,5 @@
     }
 
     //Create a scoreboard instance on the pvMapper object
-    pvM.mainScoreBoard = new pvM.scoreBoard();
+    pvM.mainScoreboard = new pvM.Scoreboard();
 })(pvMapper);
