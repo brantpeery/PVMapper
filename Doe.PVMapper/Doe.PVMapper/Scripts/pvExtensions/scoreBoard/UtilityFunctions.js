@@ -7,8 +7,10 @@
     $.extend(pvM.ScoringUtilities, {
         UtilityFunctionsManager: function () {
             var currentFunction, board, f2; //Variables to run the board
+            var self = this;
 
             this.init = function () {
+                
                 console.log("Init utilities functions");
                 $(".utilityFunctions input.slider").wrap("<div class='slide-wrapper'/>");
                 $("<div></div>").insertAfter(".utilityFunctions input.slider")
@@ -23,11 +25,7 @@
 
                 //Set the selector
                 $("#FunctionSelector option").on("click", function (event, ui) {
-                    currentFunction = UtilityFunctions[this.value];
-                    if (currentFunction) {
-                        f2.Y = currentFunction;
-                        board.update();
-                    }
+                    self.updateBoard();
                 });
 
                 if (typeof (JXG) == "undefined") {
@@ -43,8 +41,25 @@
                 }
             };
 
+            this.updateBoard = function () {
+                var currentFunction = UtilityFunctions[$(".utilityFunctions #FunctionSelector").val()];
+                if (currentFunction) {
+                    f2.Y = currentFunction;
+                    board.update();
+                }
+            }
 
+            this.loadValues = function () {
 
+            };
+
+            this.saveValues=function(id, data){
+
+            }
+
+            this.getValue=function(x){
+                return f2.Y(x);
+            }
 
             function loadBoard() {
 
