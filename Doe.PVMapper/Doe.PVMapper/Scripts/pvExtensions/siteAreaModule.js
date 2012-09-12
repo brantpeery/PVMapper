@@ -13,13 +13,12 @@
 //As always, the scoreboard will be responsible for writing the values to it's own datastorage
 
 (function (pvM) {
-    var me = new pvM.Module(
-        {
+    var me = new pvM.Module({
             id: "doe.siteAreaModule", //This will come in handy if we want to make these tools singletons
             author: "",
             version: "",
 
-            nonScoringTools:{}, //Tools that are for user convenience. Things like measuring tools, information tools, drawing tools, ...
+            nonScoringTools: {}, //Tools that are for user convenience. Things like measuring tools, information tools, drawing tools, ...
             scoringTools: { //These objects are turned into scoreLines. The tools use the site changed event to update the scores for all of the sites
                 siteArea: {
                     title: "Site Gross Area",
@@ -64,10 +63,7 @@
             activate: function () { },      //Called when the tool is checkmarked or activated by the system or user
             deactivate: function () { }     //Called when the tool is unchecked or deactivated by the system or user
 
-        }
-
-
-        )
+        });
 
     //All private functions and varables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
     var offsetFeature;
@@ -92,3 +88,11 @@
     }
 
 })(pvMapper);
+myclass = function(){
+    var priv="Secret";
+    this.setPriv = function(s){priv===s;};
+}
+
+var b = "bla";
+myc.setPriv(b);
+b = "foo";
