@@ -29,29 +29,31 @@
 
             var settings = $.extend({}, defaults, options);
 
-            this.id = settings.id;
-            this.author = settings.author;
-            this.version = settings.version;
-            this.init = setting.init;
-            this.destroy = settings.destroy;
-            this.activate = settings.activate;
-            this.deactivate = settings.deactivate;
+            this.id = settings.id instanceof String && settings.id;
+            this.author = settings.author instanceof String && settings.author;
+            this.version = settings.version instanceof String && settings.version;
+            this.init = setting.init instanceof String && setting.init;
+            this.destroy = settings.destroy instanceof String && settings.destroy;
+            this.activate = settings.activate instanceof String && settings.activate;
+            this.deactivate = settings.deactivate instanceof String && settings.deactivate;
 
-            if (settings["scoringTools"]){
-                for(tool in settings["scoringTools"]){
-                    var newline = pvM.Scoreboard.addLine(
+            if (settings["scoringTools"]) {
+                for (tool in settings["scoringTools"]) {
+                    var newline = pvM.Scoreboard.addLine(tool);
 
                 }
 
 
+            }
+
         }
 
+
+        //pvM.registerModule();
+        //pvM.registerSiteTool();
+
+
     }
-
-
-    pvM.registerModule();
-    pvM.registerSiteTool();
-    pvM.register
-
-
 })(pvMapper);
+
+

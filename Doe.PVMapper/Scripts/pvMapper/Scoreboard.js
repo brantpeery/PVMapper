@@ -4,8 +4,13 @@
         this.scoresInvalidatedEvent = new Event();
 
         this.addLine = function (scoreLine) {
-            score.scoreChangedEvent.addHandler(onScoreChanged);
-            score.scoresInvalidatedEvent.addHandler(onScoresInvalidated);
+            if (scoreLine.constructor == pvM.ScpreLine) {
+                score.scoreChangedEvent.addHandler(onScoreChanged);
+                score.scoresInvalidatedEvent.addHandler(onScoresInvalidated);
+            } else {
+                //Try to parse the options
+
+            }
         };
 
         this.removeLine = function (idx) {
@@ -27,11 +32,7 @@
             //Create an event that holds the information about score and utility that changed it
 
             Error("Function not implemented yet!");
-
         };
-
-
-
     }
 
     //Create a scoreboard instance on the pvMapper object
