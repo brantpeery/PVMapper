@@ -21,18 +21,18 @@
                     //this.target.show();
                     console.log("Loading the utility weight scripts. The panel is rendered? " + this.target.rendered);
 
-                    //Load in the script file for the function manager
-                    $.getScript(path + "UtilityWeights.js", function () {
-                        //Now that we have the script loaded, lets instanciate the objects
-                        var weightManager = new pvM.ScoringUtilities.UtilityWeightsManager();
-                        weightManager.init();
-                    });
-
                     console.log("Loading the utility function scripts. The panel is rendered? " + this.target.rendered);
                     $.getScript(path + "UtilityFunctions.js", function () {
                         //Now that we have the script loaded, lets instanciate the objects
-                        var functionManager = new pvM.ScoringUtilities.UtilityFunctionsManager();
-                        functionManager.init();
+                        var utilityFunctionManager = new pvM.ScoringUtilities.UtilityFunctionsManager();
+                        utilityFunctionManager.init();
+
+                        //Load in the script file for the weight manager
+                        $.getScript(path + "UtilityWeights.js", function () {
+                            //Now that we have the script loaded, lets instanciate the objects
+                            var weightManager = new pvM.ScoringUtilities.UtilityWeightsManager();
+                            weightManager.init(utilityFunctionManager); //send in the UFM that should be used by this manager
+                        });
 
                     })
 

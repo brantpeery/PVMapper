@@ -5,7 +5,8 @@
     if (!pvM.ScoringUtilities) { pvM.ScoringUtilities = {}; }
     $.extend(pvM.ScoringUtilities, {
         UtilityWeightsManager: function () {
-            this.init = function () {
+            //@Parameter ufm: the UtilityFunctionsManager that coexists with the weighting heirarchy
+            this.init = function (ufm) {
                 console.log("Init for UtilityWeightsManager");
                 $("ul.toolHierarchy").treeview({
                     animated: "fast",
@@ -46,12 +47,15 @@
                         var data = $(target).attr('data');
                         if (data) { data = JSON.parse(data); }
 
-                        var dfaults = { min: 10, max: 100, target: 50, slope: 50 };
+                        var dfaults = { min: 10, max: 100, target: 50, slope: 50, func:"utilityFunction1" };
                         $.extend(dfaults, data);
                         $(".utilityFunctions #MinValue").val(dfaults.min);
                         $(".utilityFunctions #MaxValue").val(dfaults.max);
                         $(".utilityFunctions #TargetValue").val(dfaults.target);
                         $(".utilityFunctions #SlopeValue").val(dfaults.slope);
+                        $(".utilityFunctions #FunctionSelector").val(dfaults.func);
+
+                        ufm.updateBoard();
 
                         //Save the values to the LI
 
@@ -61,6 +65,7 @@
                             data.max = $(".utilityFunctions #MaxValue").val();
                             data.target = $(".utilityFunctions #TargetValue").val();
                             data.slope = $(".utilityFunctions #SlopeValue").val();
+                            data.func = $(".utilityFunctions #FunctionSelector").val();
                             
                             data = JSON.stringify(data);
 
@@ -94,7 +99,6 @@
                     var $x = $p.find(".totalBranchValue").first();
                     if (val != 100) { $x.addClass("invalid-value"); }
                     else { $x.removeClass("invalid-value"); }
-
 
                     $x.html(val);
                 }
