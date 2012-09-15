@@ -59,8 +59,10 @@
                 activate: function (tab) {
                 }
             }
-        });
+        } );
 
-        
-    });
+        $( '#Cost_Land-Cost_Site-Area' ).bind( { click: function () { alert( 'Woo!!!' ) } } );
+        $( '#Cost_Land-Cost_Offset-Area' ).bind( { click: function () { alert( 'Wee!!!' ) } } );
+        $( '#Cost_Land-Cost_Zone-Type' ).bind( { click: function () { alert( 'Hey!!!' ) } } );
+    } );
 })(pvMapper);
