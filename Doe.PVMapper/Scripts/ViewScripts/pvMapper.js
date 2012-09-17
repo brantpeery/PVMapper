@@ -63,6 +63,19 @@ var pvMapper = {
     getSiteLayer: function () {
         return this.siteLayer || "SiteLayer does not exist in the collection of layers on the map. Add a site or load sites first.";
     },
+
+    //Used to set the site layer and attach all the events that are needed for site management 
+    setSiteLayer: function(layer){
+        this.siteLayer = layer;
+        layer.events.register("featuremodified", function(object, element){
+            if (object.feature && object.feature.site) {
+                object.feature.site.onFeatuerChanged(object);
+            }
+        });
+
+        
+    },
+
     getSelectedSite: function () {
         var sitesLayer = pvMapper.getSiteLayer();
 

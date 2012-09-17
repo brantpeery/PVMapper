@@ -31,11 +31,16 @@
                     };
                     sitesLayer.addFeatures([poly], {});
 
-                    s = new pvMapper.site(poly);
-                    pvMapper.sites.push(s);
-                    
+                    s = new pvMapper.Site(poly);
+                    pvMapper.sites.push(s); 
                 }
 
             }
+
+            sitesLayer.events.on("featuremodified", function (param1, param2, param3) {
+                var a = 1;
+
+            });
+
         });
 });

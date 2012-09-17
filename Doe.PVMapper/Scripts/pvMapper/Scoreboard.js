@@ -4,7 +4,7 @@
         this.scoresInvalidatedEvent = new Event();
 
         this.addLine = function (scoreLine) {
-            if (scoreLine.constructor == pvM.ScpreLine) {
+            if (scoreLine.constructor == pvM.ScoreLine) {
                 score.scoreChangedEvent.addHandler(onScoreChanged);
                 score.scoresInvalidatedEvent.addHandler(onScoresInvalidated);
             } else {
