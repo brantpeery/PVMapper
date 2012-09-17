@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Score Object Test (pvMapper.Score)</title>
+    <script type="text/javascript" src="http://openlayers.org/api/2.12-rc3/OpenLayers.js"></script>
+
+    <script type="text/javascript">
+        var pvMapper = {}
+
+
+    </script>
+
+    <script type="text/javascript" src="../Scripts/pvMapper/Site.js"></script>
+
+
+</head>
+<body>
+    <div id="map" style="height: 300px; width: 300px;"></div>
+
+
+    <script type="text/javascript">
+        var map = {};
+        map = new OpenLayers.Map('map');
+
+        var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);
+        var resolutions = OpenLayers.Layer.Bing.prototype.serverResolutions.slice(4, 19);
+        var osm = new OpenLayers.Layer.OSM("Open Street", null, { zoomOffset: 4, resolutions: resolutions });
+        map.addLayer(osm);
+
+        //Create a map with a poly layer
+
+        var layer = new OpenLayers.Layer.Vector("test");
+        map.addLayer(layer);
+
+        var toolbar = new OpenLayers.Control.EditingToolbar(layer);
+        map.addControl(toolbar);
+
+        //Create a feature
+        var feature = new OpenLayers.Feature(layer, {});
+        feature.attributes = { name: "TestFeature", description: "Test Description" };
+
+        //Create a score for the feature
+        site = new pvMapper.Site(feature);
+
+        //Fire feature change event
+        layer.events.triggerEvent(new OpenLayers.Event());
+
+        //Assert that the score change event is fired
+    </script>
+</body>
+
+</html>

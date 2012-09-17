@@ -779,6 +779,7 @@
     <Content Include="Scripts\GeoExt\tree\Panel.js" />
     <Content Include="Scripts\GeoExt\tree\View.js" />
     <Content Include="Scripts\GeoExt\window\Popup.js" />
+    <Content Include="Notes\FeatureChange Event Pipeline.mm" />
     <None Include="Scripts\jquery-1.8.0.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.0.js" />
     <Content Include="Scripts\jquery-1.8.0.min.js" />
@@ -871,6 +872,7 @@
     <Content Include="Scripts\ViewScripts\SiteDetail.js" />
     <Content Include="Scripts\ViewScripts\testscripts.js" />
     <Content Include="Scripts\ViewScripts\ZoomAction.js" />
+    <Content Include="TestPages\SiteObjectTest.html" />
     <Content Include="TestPages\UtilityFunctions.html" />
     <Content Include="TestPages\UtilityWeights.html" />
     <Content Include="theme\default\framedCloud.css" />
