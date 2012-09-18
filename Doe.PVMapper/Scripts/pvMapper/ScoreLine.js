@@ -1,53 +1,68 @@
-﻿/// <reference path="../_references.js" />
+﻿/// <reference path="Event.js" />
+/// <reference path="Score.js" />
+/// <reference path="../_references.js" />
 
-(function (pvM){
-    pvM.ScoreLine = function (scoreboard, name, updateScoreCallBack) {
+(function (pvM) {
+    pvM.ScoreLine = function (options) {
+        //Events
         this.scoreChangeEvent = new Event();
         this.updatingScoresEvent = new Event();
+        this.siteChangeEvent = new Event();
 
-        //Make sure we have the correct parameters, default to the main scoreboard.
-        scoreboard = (scoreboard.prototype == pvM.Scoreboard) ? scoreboard : pvM.mainScoreboard;
-
-        //name = (name) ? name : "Module scoring tool" + scoreboard.scoreLines.count;
-        updateScoreCallBack = ($.isFunction(updateScoreCallBack)) ? updateScoreCallBack : null;
+        //Check to make sure the siteChangeHandler is a function
+        var siteChangeHandler = ($.isFunction(options.onSiteChange)) ? siteChangeHandler : null;
 
         this.getUtilityScore = function () { };
         this.getWeight = function () { };
         this.getWeightedUtilityScore = function () { };
+        this.addScore=function(site){
+            var score = new pvM.Score(site);
+            site.onSiteChange.addHandler(this.siteChange); //Attach our handler directly to the site.
+            this.scores.push(score);
+            return score;
+        };
 
         this.name; //The name that will show up in the row
         this.description; //The popup information that will show up on mouse hover
-        this.scores; //A collection of scores that store all the information for the colums of this line
-        this.updateScoreCallback = updateScoreCallBack;
+        this.scores=new Array(); //A collection of scores that store all the information for the colums of this line
+        for (site in pvM.sites) {
+            this.addScore(site);
+        }
+
+
 
         //Observes the siteChanged event for the sites that this line cares about 
-        this.onSiteChanged = function (event) {
+        this.onSiteChange = function (event) {
             //Pass the event on to the module that created the line
             //change the context to this line
             var e = (event) ? event : {};
-            if (!e.site) {
-                ///TODO:Check to make sure the this var is a site
-                e.site = this; //Set the site to the current context (should be a site)
-            }
-            
-            this.updateScoreCallback.apply(this, e);
+            e.type = "ScoreLine.siteChange"
+            this.siteChangeEvent.fire(this, e);
         }
 
-        //Access to private members
-        //Give read only access to the scoreboard object 
-        this.getScoreBoard = function () { return scoreboard };
-    }
+        //Observes any sites being removed to the site manager
+        this.onSiteRemoved;
 
-    //Depreciated
-    //pvM.ScoreLine.prototype.setScore = function (featureId, options) {
-    //    //use jQuery to merge the options object into the score object
-    //};
+        //Observers any sites being added to the site manager
+        this.onSiteAdded = function (e) {
+            var site = e.site;
+            
+            //Create a new score for the site
+            this.addScore(site);
+            
+        }
 
-    //Used to force the module to update all the scores for this line 
-    pvM.ScoreLine.prototype.updateScores = function () {
-        for (idx = 0; idx > this.scores.length - 1; idx++) {
 
-            this.updateScoreCallback.apply(this, this.scores[idx].site)
+        //Used to force the module to update all the scores for this line 
+        this.updateScores = function () {
+            for (idx = 0; idx > this.scores.length - 1; idx++) {
+                var e = {
+                    site: this.scores[idx].site,
+                    score: this.scores[idx],
+                    type: "ScoreLine.updateScores"
+                }
+                this.siteChangeEvent.fire(this, e)
+            }
         }
     }
 })(pvMapper);

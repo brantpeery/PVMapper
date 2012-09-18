@@ -99,7 +99,8 @@ var pvMapper = {
 
     showMapTab: function () {
         this.tabs.setActiveTab(0);
-    }
+    },
 
-
+    //All the sites that are managed by pvMapper  
+    sites:new Array()
 };
