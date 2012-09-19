@@ -1,4 +1,5 @@
-﻿/// <reference path="../_references.js" />
+﻿/// <reference path="../pvMapper/Module.js" />
+/// <reference path="../_references.js" />
 
 //Tool that uses the pvMapper event pipeline to know when to update it's score. 
 //Create the scoreline
