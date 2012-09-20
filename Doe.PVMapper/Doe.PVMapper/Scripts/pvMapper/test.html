@@ -10,55 +10,28 @@
     <script type="text/javascript" src="score.js"></script>
     <script type="text/javascript" src="scoreline.js"></script>
     <script type="text/javascript" src="scoreboard.js"></script>
-    
-    <script type="text/javascript">
-        //var shoePhone = function () { console.log("Spy is dead X_x");}; //Hopefully will have access to spy
-        var shoePhone = { call: function () { console.log("Spy is dead X_x"); } };
+    <script type="text/javascript" src="Renderer.js"></script>
 
-       (function (spyChannel) {
-            
-
-            //This refers to the window object as from the AEAF's point of view. Using 'this' to add members to the window object will not work  
-            var insideAEAF_Private = "Inside and private";
-
-            //Doesn't make sense here as once outside the AEAF the public vars are stored in memory, but not accessable; not even in internal functions
-            //JavaScript doesn't complain because it gets created, it is just that there is no way to reference it.
-            //To make it referenceable, a new keyword must be used BEFORE the AEAF to cause an instance of an anonymous object to be created (not very usefull by the way)
-            this.insideAEAF_Public="We attack from the left!"; 
-            this.spy = function (callFrom) { console.log("Call from: " + callFrom + " >> Public member on the inside. Documents spied on say: '" + insideAEAF_Private + "'") };
-
-            (function () {
-                console.log("--Inside the vault (private AEAF function)--");
-                console.log("Top Secret secret: " + insideAEAF_Private);
-                console.log("Throw off the enemy: " + this.insideAEAF_Public);
-            })();
-
-            function secrataryTellsAll() {
-                console.log("--Inside the office (private function)--");
-                console.log("Top Secret secret: " + insideAEAF_Private);
-                console.log("Throw off the enemy: " + this.insideAEAF_Public);
-            };
-
-            this.insideJob = function () {
-                console.log("--Now from outside the vault but inside the compound (this.function)--");
-                console.log("Top Secret secret (shhh): " + insideAEAF_Private);
-                console.log("Throw off the enemy: " + this.insideAEAF_Public);
-            };
-
-            secrataryTellsAll();
-            this.insideJob();
-
-            spyChannel.call = this.spy; //Set up the communication into the AEAF
-            spyChannel.call("Inside stronghold");
-            //spyChannel = function () { console.log("I am in sir, but I only know that!"); }
-        })(shoePhone);
-
-        shoePhone.call("Outside");
-
-        console.log("::End Transmission::");
-    </script>
 </head>
 <body>
-
 </body>
+<script type="text/javascript">
+    $().ready(function () {
+        var table = new pvMapper.Renderer.HTML.Table();
+        var row = new pvMapper.Renderer.HTML('row');
+        table.children.push(row);
+        var cell = new pvMapper.Renderer.HTML('td');
+        row.children.push(cell);
+        cell.text = "I am a cell";
+        cell.attributes = { style: 'border:1px solid black;', 'class': 'cellClass' };
+        cell = new pvMapper.Renderer.HTML('td', 'I am cell 2');
+        row.children.push(cell);
+
+        var html = table.draw();
+        $('body').append(html);
+
+    });
+        
+</script>
+
 </html>
