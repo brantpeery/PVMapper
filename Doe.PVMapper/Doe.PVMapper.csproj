@@ -658,7 +658,10 @@
     <Content Include="Content\themes\base\jquery.ui.tabs.css" />
     <Content Include="Content\themes\base\jquery.ui.theme.css" />
     <Content Include="Images\PVMapper_TopText.png" />
+    <Content Include="Notes\Module Factory handwritten notes.jpg" />
+    <Content Include="Notes\PVMapper Object.jpg" />
     <Content Include="Notes\pvMapper Object.png" />
+    <Content Include="Notes\SiteManager object.jpg" />
     <Content Include="Scripts\DataTables-1.9.2\docs\media\js\doc.js" />
     <Content Include="Scripts\DataTables-1.9.2\docs\media\js\jquery.js" />
     <Content Include="Scripts\DataTables-1.9.2\docs\media\js\shBrushJScript.js" />
@@ -780,6 +783,7 @@
     <Content Include="Scripts\GeoExt\tree\View.js" />
     <Content Include="Scripts\GeoExt\window\Popup.js" />
     <Content Include="Notes\FeatureChange Event Pipeline.mm" />
+    <Content Include="Notes\FeatureChanged event and update score.pdf" />
     <None Include="Scripts\jquery-1.8.0.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.0.js" />
     <Content Include="Scripts\jquery-1.8.0.min.js" />
@@ -846,6 +850,7 @@
     <Content Include="Scripts\pvExtensions\scoreBoard\UtilityFunctions.js" />
     <Content Include="Scripts\pvExtensions\scoreBoard\UtilityWeights.html" />
     <Content Include="Scripts\pvExtensions\scoreBoard\UtilityWeights.js" />
+    <Content Include="Scripts\pvMapper\Common.js" />
     <Content Include="Scripts\pvMapper\Module.js" />
     <Content Include="Scripts\pvExtensions\moduleTest.js" />
     <Content Include="Scripts\pvExtensions\PanelAreaTool.js" />
