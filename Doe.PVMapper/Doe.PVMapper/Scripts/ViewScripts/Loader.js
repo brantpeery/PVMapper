@@ -262,173 +262,260 @@ Ext.define( 'Ext.PopupWindow', {
     Ext.create( 'Ext.form.Panel', {
       bodyStyle: 'padding:5px 5px 0',
       width: 400,
-      height: 400,
+      height: 500,
       renderTo: Ext.getBody(),
-      defaultType: 'textfield',
+      defaultType: 'numberfield',
       defaults: {
         anchor: '100%'
       },
       fieldDefaults: { labelWidth: 70 },
-      items: [
-        {
-          fieldLabel: 'Min',
+
+      items: [{
+        xtype: 'panel',
+        border: false,
+        layout: {
+          type: 'hbox',
+          align: 'middle'
+        },
+        items: [{
+          xtype: 'numberfield',
+          fieldLabel: 'Target Min',
           minWidth: 70,
           maxWidth: 150,
-          value: 10,
-          id: 'minValue'
+          value: Math.floor(Math.random()*11),
+          flex: 1,
+          id: 'target-MinValue',
+          listeners: {
+            change: function ( me, newVal, oldVal, op ) {
+              var slider = Ext.getCmp( 'target-slider' );
+              var target = Ext.getCmp( 'target' );
+              slider.setMinValue( newVal );
+              if ( slider.value < newVal ) {
+                slider.setValue(newVal);
+              }
+              if ( target.getValue() != slider.getValue() ) {
+                target.setValue( slider.getValue() );
+
+              }
+              target.setMinValue( newVal );
+            }
+          }
+
         },
         {
-          fieldLabel: 'Max',
+          padding: '0 0 0 10',
+          xtype: 'numberfield',
+          fieldLabel: 'Target Max',
           minWidth: 70,
           maxWidth: 150,
-          value: 10,
-          id: 'maxValue'
+          value: Math.floor(Math.random()*91)+10,
+          flex: 1,
+          id: 'target-MaxValue',
+          listeners: {
+            change: function ( me, newVal, oldVal, op ) {
+              var slider = Ext.getCmp( 'target-slider' );
+              var target = Ext.getCmp( 'target' );
+              slider.setMaxValue( newVal );
+              if ( slider.value > newVal ) {
+                slider.setValue(newVal);
+              }
+              if ( target.getValue() != slider.getValue() ) {
+                target.setValue( slider.getValue() );
+              }
+              target.setMaxValue( newValue );
+            }
+          }
+
+        }]
+      },
+      {
+        xtype: 'panel',
+        border: false,
+        layout: {
+          type: 'hbox',
+          align: 'middle'
+        },
+        items: [
+        //  {
+        //  xtype: 'combo',
+        //  fieldLabel: 'Precision',
+        //  value: 2,
+        //  minWidth: 60,
+        //  maxWidth: 150,
+        //  id: 'target-Precision',
+        //  mode: 'local',
+        //  flex: 2,
+        //  triggerAction: 'all',
+        //  store: [0, 1, 2, 3, 4],
+        //  listeners: {
+        //    change: function ( me, newVal, oldVal, op ) {
+        //      var slider = Ext.getCmp( 'target-slider' );
+        //      slider.decimalPrecision = newVal;
+        //    }
+        //  }
+
+        //},
+        {
+          //padding: '0 0 0 10',
+          xtype: 'combo',
+          fieldLabel: 'Increment',
+          flex: 2,
+          minWidth: 70,
+          maxWidth: 150,
+          value: 1,
+          id: 'target-Incremental',
+          mode: 'local',
+          triggerAction: 'all',
+          store: [0.0001, 0.001, 0.01, 0.1, 1, 2, 5],
+          listeners: {
+            change: function ( me, newVal, oldVal, op ) {
+              var slider = Ext.getCmp( 'target-slider' );
+              var target = Ext.getCmp( 'function-target' );
+              slider.increment = newVal;
+              switch ( newVal ) {
+                case 0.0001: slider.decimalPrecision = 4; target.decimalPrecision = 4; break;
+                case 0.001: slider.decimalPrecision = 3; target.decimalPrecision = 3; break;
+                case 0.01: slider.decimalPrecision = 2; target.decimalPrecision = 2; break;
+                case 0.1: slider.decimalPrecision = 1; target.decimalPrecision = 1; break;
+                default: slider.decimalPrecision = 0; target.decimalPrecision = 0; break;
+              }
+            }
+          }
+        }]
+      },
+      {
+        xtype: 'panel',
+        border: false,
+        layout: {
+          type: 'hbox',
+          align: 'middle'
+        },
+        defaultType: 'numberfield',
+        items: [{
+          fieldLabel: 'Target',
+          id: 'function-target',
+          flex: 3,
+          minWidth: 100,
+          maxWidth: 150,
+          value: 0,
+          allowBlank: false,
+          listeners: {
+            change: function ( me, newVal, oldVal, op ) {
+              Ext.getCmp( 'target-slider' ).setValue( newVal );
+            }
+          }
         },
         {
-          xtype: 'panel',
-          border: false,
-          layout: {
-            type: 'hbox',
-            align: 'middle'
+          id: 'target-slider',
+          decimalPrecision: 0,
+          xtype: 'slider',
+          flex: 3,
+          minValue: 0,
+          maxValue: 100,
+          increment: 1,
+          listeners: {
+            change: function ( me, newval, thumb, op ) {
+              Ext.getCmp( 'function-target' ).setValue( newval );
+            }
+          }
+        }]
+      },
+      {
+        xtype: 'panel',
+        border: false,
+        layout: {
+          type: 'hbox',
+          align: 'middle'
+        },
+        defaultType: 'numberfield',
+        items: [{
+          fieldLabel: 'Slope',
+          decimalPrecision: 4,
+          id: 'function-slope',
+          flex: 4,
+          minWidth: 100,
+          maxWidth: 150,
+          value: 0,
+          minValue: 0,
+          maxValue: 1,
+          allowBlank: false,
+          listeners: {
+            change: function ( me, newVal, oldVal, op ) {
+              Ext.getCmp( 'slope-slider' ).setValue( newVal );
+            }
+          }
+
+        },
+        {
+          xtype: 'slider',
+          decimalPrecision: 4,
+          id: 'slope-slider',
+          flex: 4,
+          minValue: 0.00,
+          maxValue: 1.00,
+          increment: 0.0001,
+          value: Math.random(),
+          listeners: {
+            change: function ( select, newval, thumb, op ) {
+              Ext.getCmp( 'function-slope' ).setValue( newval );
+            }
+          }
+        }]
+      },
+      { //Weight panel
+        xtype: 'panel',
+        border: false,
+        layout: {
+          type: 'hbox',
+          align: 'middle'
+        },
+        defaultType: 'numberfield',
+        items: [{
+          fieldLabel: 'Weights(%)',
+          id: 'function-weight',
+          flex: 5,
+          minWidth: 100,
+          maxWidth: 150,
+          minValue: 0,
+          maxValue: 100,
+          value: Math.floor(Math.random()*100),
+          allowBlank: false,
+          listeners: {
+            change: function ( me, newVal, oldVal, op ) {
+              Ext.getCmp( 'weight-slider' ).setValue( newVal );
+            }
+          }
+        },
+        {
+          id: 'weight-slider',
+          xtype: 'slider',
+          flex: 5,
+          minValue: 0,
+          maxValue: 100,
+          increment: 1,
+          tipText: function(thumb) {
+            return Ext.String.format('{0}%',thumb.value);
           },
-          items: [{
-            xtype: 'combo',
-            fieldLabel: 'Precision',
-            value: '2',
-            minWidth: 60,
-            maxWidth: 150,
-            id: 'PrecisionValue',
-            mode: 'local',
-            flex: 1,
-            triggerAction: 'all',
-            store: ['0','1','2','3','4']
-          },
+          listeners: {
+            change: function ( select, newval, thumb, op ) {
+              Ext.getCmp( 'function-weight' ).setValue( newval );
+            }
+          }
+        }]
+      },
+      {
+        //padding: '10 0 0 0',
+        xtype: 'panel',
+        layout:'anchor',
+        border: true,
+        width: 200,
+        height: 200,
+        items: [
           {
-            padding: 10,
-            xtype: 'combo',
-            fieldLabel: 'Increment',
-            flex: 1,
-            minWidth: 70,
-            maxWidth: 150,
-            value: 1,
-            id: 'incrementation',
-            mode: 'local',
-            triggerAction: 'all',
-            store: ['0.001','0.01','0.1','1','2','5']
 
           }
-        ]},
-        {
-          xtype: 'panel',
-          border: false,
-          layout: {
-            type: 'hbox',
-            align: 'middle'
-          },
-          defaultType: 'textfield',
-          items: [{
-            fieldLabel: 'Target',
-            id: 'target',
-            flex: 1,
-            minWidth: 50,
-            maxWidth: 110,
-            value: 10,
-            allowBlank: false,
-            listeners: {
-              change: function ( me, newVal, oldVal, op ) {
-                Ext.getCmp( "target-slider" ).setValue( newVal );
-              }
-            }
-          },
-          {
-            id: 'target-slider',
-            decimalPrecision: 2,
-            xtype: 'slider',
-            flex: 1,
-            minValue: 0,
-            maxValue: 5,
-            increment: 0.01,
-            listeners: {
-              change: function ( select, newval, thumb, op ) {
-                Ext.getCmp( "target" ).setValue( newval );
-              }
-            }
-          }]
-        },
-        {
-          xtype: 'panel',
-          border: false,
-          layout: {
-            type: 'hbox',
-            align: 'middle'
-          },
-          defaultType: 'textfield',
-          items: [{
-            fieldLabel: 'Slope',
-            id: 'slope',
-            flex: 1,
-            minWidth: 50,
-            maxWidth: 110,
-            value: 10,
-            allowBlank: false,
-            listeners: {
-              change: function ( me, newVal, oldVal, op ) {
-                Ext.getCmp( "slope-slider" ).setValue( newVal );
-              }
-            }
-
-          },
-          {
-            id: 'slope-slider',
-            xtype: 'slider',
-            flex: 1,
-            minValue: 0,
-            maxValue: 100,
-            increment: 1,
-            listeners: {
-              change: function ( select, newval, thumb, op ) {
-                Ext.getCmp( "slope" ).setValue( newval );
-              }
-            }
-          }]
-        },
-        { //Weight panel
-          xtype: 'panel',
-          border: false,
-          layout: {
-            type: 'hbox',
-            align: 'middle'
-          },
-          defaultType: 'textfield',
-          items: [{
-            fieldLabel: 'Weights',
-            id: 'weight',
-            flex: 1,
-            minWidth: 50,
-            maxWidth: 110,
-            value: 33,
-            allowBlank: false,
-            listeners: {
-              change: function ( me, newVal, oldVal, op ) {
-                Ext.getCmp( "weight-slider" ).setValue( newVal );
-              }
-            }
-          },
-          {
-            id: 'weight-slider',
-            xtype: 'slider',
-
-            flex: 1,
-            minValue: 0,
-            maxValue: 100,
-            increment: 1,
-            listeners: {
-              change: function ( select, newval, thumb, op ) {
-                Ext.getCmp( "weight" ).setValue( newval );
-              }
-            }
-          }]
-        }
+        ]
+      }
       ],
 
       buttons: [{
@@ -448,9 +535,10 @@ Ext.define( 'Ext.PopupWindow', {
           puWin.hide();
         }
       }]
-    } )],
+    }
+  )],
 
-    me.callParent( arguments );
+  me.callParent( arguments );
   },
   showing: function ( aTitle ) {
     this.title = aTitle + ' functions ';
@@ -468,11 +556,26 @@ var puWin = Ext.create( 'Ext.PopupWindow' );
       }
     }, '.funcButton' )
 
-    Ext.getCmp( 'slope-slider' ).setValue( Ext.getCmp( 'slope' ).value );
-    Ext.getCmp( 'target-slider' ).setValue( Ext.getCmp( 'target' ).value );
-    Ext.getCmp( 'weight-slider' ).setValue( Ext.getCmp( 'weight' ).value );
+    var target = Ext.getCmp( 'function-target' );
+    Ext.getCmp( 'function-slope' ).setValue( Math.random() );
+    Ext.getCmp( 'slope-slider' ).setValue( Ext.getCmp( 'function-slope' ).getValue() );
+    Ext.getCmp( 'weight-slider' ).setValue( Ext.getCmp( 'function-weight' ).getValue() );
+    var tslider = Ext.getCmp( 'target-slider' );
+    tslider.setMinValue(Ext.getCmp( 'target-MinValue' ).getValue());
+    tslider.setMaxValue(Ext.getCmp( 'target-MaxValue' ).getValue());
+    tslider.increment = Ext.getCmp( 'target-Incremental' ).getValue();
+    switch ( tslider.increment ) {
+      case 0.0001: tslider.decimalPrecision = 4; target.decimalPrecision = 4; break;
+      case 0.001: tslider.decimalPrecision = 3; target.decimalPrecision = 3; break;
+      case 0.01: tslider.decimalPrecision = 2; target.decimalPrecision = 2; break;
+      case 0.1: tslider.decimalPrecision = 1; target.decimalPrecision = 1; break;
+      default: tslider.decimalPrecision = 0; target.decimalPrecision = 0; break;
+    }
+    tslider.setValue(Math.floor( Math.random() * tslider.maxValue ));
+    target.setValue( tslider.getValue() );
+    target.setMinValue( tslider.minValue );
+    target.setMaxValue( tslider.maxValue );
 
-    //$( '#ToolTree' ).on( { click: function () { alert( $( this ).parent().text() ) } }, ".funcButton" );
-    //console.log( "Added the click events to the images" );
+
   } );
 } )( pvMapper );
