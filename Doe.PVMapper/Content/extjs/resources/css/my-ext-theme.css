@@ -1176,6 +1176,10 @@ tr.x-container:before {
   font-size: 1px;
 }
 
+.x-splitter-vertical:hover {
+  cursor: col-resize;
+}
+
 /* line 86, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/util/_splitter.scss */
 .x-splitter-collapsed, .x-splitter-horizontal-noresize, .x-splitter-vertical-noresize {
   cursor: default;
