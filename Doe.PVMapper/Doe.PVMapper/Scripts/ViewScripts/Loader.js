@@ -3,7 +3,7 @@
 /// <reference path="UtilityWeights.js" />
 /// <reference path="UtilityFunctions.js" />
 
-
+//#region Configuration
 
 Ext.Loader.setConfig( {
   enabled: true,
@@ -34,6 +34,7 @@ Ext.require( [
     'Ext.form.field.Number',
     'Ext.form.Label'
 ] );
+//#endregion
 
 Ext.application( {
   name: 'MyApp',
@@ -82,7 +83,73 @@ Ext.application( {
   }
 } );
 
+// create the function graph
+var board, f2;
+function loadBoard() {
+  JXG.Options.ticks.majorHeight = 20;
+  JXG.Options.ticks.minorTicks = 5;
+  JXG.Options.ticks.insertTicks = false;
+  JXG.Options.ticks.minorHeight = 5;
+  JXG.Options.ticks.ticksDistance = 10;
+  board = JXG.JSXGraph.initBoard( 'FunctionBox-body', { boundingbox: [0, 1.05, 100, -.05], axis: true, showCopyright: false, showNavigation: false } );
+  f2 = board.create( 'functiongraph', [UtilityFunctions.utilityFunction1], { strokeWidth: 3, strokeColor: "red" } );
+};
 
+function updateBoard() {
+  var target = Ext.getCmp( 'function-target' );
+  board = JXG.JSXGraph.freeBoard( board );
+  JXG.Options.ticks.majorHeight = 20;
+  JXG.Options.ticks.minorTicks = 5;
+  JXG.Options.ticks.insertTicks = false;
+  JXG.Options.ticks.minorHeight = 5;
+  //JXG.Options.ticks.ticksDistance = 2;
+  JXG.Options.ticks.ticksDistance = ( target.maxValue - target.minValue ) / 10;
+  board = JXG.JSXGraph.initBoard( 'FunctionBox-body', { boundingbox: [target.minValue, 1.15, target.maxWidth, -0.15], axis: true, showCopyright: false, showNavigation: false } );
+  var mode = Ext.getCmp( 'function-mode' );
+  if ( mode.value == 'Less is better' )
+    f2 = board.create( 'functiongraph', [UtilityFunctions.utilityFunction1], { strokeWidth: 3, strokeColor: "red" } );
+  else
+    f2 = board.create( 'functiongraph', [UtilityFunctions.utilityFunction2], { strokeWidth: 3, strokeColor: "red" } );
+}
+
+var UtilityFunctions = {
+  utilityFunction1: function ( x ) {
+    var l = parseInt( $( "#target-MinValue-inputEl" ).val() );
+    var b = parseInt( $( "#function-target-inputEl" ).val() );
+    var h = parseInt( $( "#target-MaxValue-inputEl" ).val() );
+    var s = parseInt( $( "#function-slope-inputEl" ).val() );
+    var y = 0;
+
+    if ( x >= h ) y = 1;
+    else if ( x <= l ) y = 0;
+    else y = 1 / ( 1 + Math.pow(( b - l ) / ( x - l ), ( 2 * ( 1 / s ) * ( b + x - 2 * l ) ) ) );
+
+    if ( y >= 1 ) y = 1;
+    if ( y <= 0 ) y = 0;
+    return 1 - y;
+  },
+
+  utilityFunction2: function ( x ) {
+    var l = parseInt( $( "#target-MinValue-inputEl" ).val() );
+    var b = parseInt( $( "#function-target-inputEl" ).val() );
+    var h = parseInt( $( "#target-MaxValue-inputEl" ).val() );
+    var s = 1 / parseInt( $( "#function-slope-inputEl" ).val() );
+    var y = 0;
+
+    if ( x >= h ) y = 1;
+    else if ( x <= l ) y = 0;
+    else y = ( x < b ) ? 1 / ( 1 + Math.pow(( b - l ) / ( x - l ), ( 2 * s * ( b + x - 2 * l ) ) ) ) :
+        1 - ( 1 / ( 1 + Math.pow(( b - ( 2 * b - h ) ) / ( ( 2 * b - x ) - ( 2 * b - h ) ), ( 2 * s * ( b + ( 2 * b - x ) - 2 * ( 2 * b - h ) ) ) ) ) );
+    if ( y >= 1 ) y = 1;
+    if ( y <= 0 ) y = 0;
+    return y;
+  },
+
+  UtilityFunction3: function ( x ) {
+  }
+}
+
+//#region RootPanel
 Ext.define( 'MyApp.RootPanel', {
   id: 'MyApp-RootPanel-id',
   extend: 'Ext.Panel',
@@ -105,81 +172,72 @@ Ext.define( 'MyApp.RootPanel', {
 
     pvMapper.tabs = tabPanel;
 
+    //#region Data Store From Server
     //var store = Ext.create( 'Ext.data.TreeStore', {
     //  proxy: {
     //    type: 'ajax',
     //    url: '/api/Tools'                                                                                        
     //  }                                                                                                              
-    //} );                                                                                                             
+    //} );                     
+    //#endregion
 
-    var imgLink = "<img class='funcButton' src='http://localhost:1919/Images/line_chart_24.png'/>"
+    //#region   DataStore
+    var imgLink = "   <img class='funcButton' src='http://localhost:1919/Images/line_chart_24.png'/>  <label class='funcWeight'> 0.00 </label>"
+    var catLink = "   <img class='funcCategory' src='http://localhost:1919/Images/Pie Chart.png'/>  <label class='funcWeight'> 0.00 </label>"
     var navMenu = Ext.create( 'Ext.data.TreeStore', {
       root: {
+        text: 'Overall ' + catLink,
         expanded: true,
         children: [{
           checked: false,
-          text: "Cost",
+          text: "Cost " + catLink,
           expanded: true,
-          children: [{
-            checked: false,
-            text: "Land Cost",
-            expanded: true,
-            children: [
-              { text: "Site Area" + imgLink, leaf: true, checked: true, },
-              { text: "Offset Area" + imgLink, leaf: true, checked: false },
-              { text: "Zone Type" + imgLink, leaf: true, checked: false }]
-          }, {
-            text: "Facility Cost", checked: false,
-            children: [
-              { text: "Solar Panel System Cost" + imgLink, leaf: true, checked: false },
-              { text: "Buildings" + imgLink, leaf: true, checked: false },
-              { text: "Physical Security" + imgLink, leaf: true, checked: false }]
-          }, {
-            checked: false,
-            text: "Transmission Connection Cost",
-            children: [
-              { text: "Right of Way Lease Cost" + imgLink, leaf: true, checked: false },
-              { text: "Transmission Lines Cost" + imgLink, leaf: true, checked: false },
-              { text: "Terminating Equipment Cost" + imgLink, leave: true, checked: false }
-            ]
-          }, { text: "Permitting Cost" + imgLink, leaf: true, checked: false }
+          children: [
+            { text: "LCOE         " + imgLink, cls: 'menuItem', qtip: 'Levelized Cost of Energy.', leaf: true, checked: true },
+            { text: "IRR          " + imgLink, cls: 'menuItem', qtip: 'After-tax Internal Rate of Return.', leaf: true, checked: true },
+            { text: "DSCR         " + imgLink, cls: 'menuItem', qtip: 'Pre-tax min Debt Service Coverage Ratio.', leaf: true, checked: true },
+            { text: "NPV          " + imgLink, cls: 'menuItem', qtip: 'After-Tax Net Present Value.', leaf: true, checked: true },
+            { text: "Transmission " + imgLink, cls: 'menuItem', qtip: 'Cost to connect to preferred transmission line.', leaf: true, checked: true },
+            { text: "Incentives   " + imgLink, cls: 'menuItem', qtip: 'Index of tax and other incentives offered to promote development.', leaf: true, checked: true }
           ]
         }, {
           checked: false,
-          text: "Energy",
+          text: "Energy " + catLink,
           children: [
-            { text: "Power Output MW" + imgLink, leaf: true, checked: false },
-            { text: "Intermittncy" + imgLink, leaf: true, checked: false },
-          { text: "Power Purchase Contract Risk" + imgLink, leaf: true, checked: false }
+            { text: "Net Annual Energy " + imgLink, cls: 'menuItem', qtip: 'Annual expected kWh generation.', leaf: true, checked: true },
+            { text: "Intermittency     " + imgLink, cls: 'menuItem', qtip: 'Index of solar radiation intermittency.', leaf: true, checked: true },
+            { text: "Contract Risk     " + imgLink, cls: 'menuItem', qtip: 'Power Purchase Agreement Risk.', leaf: true, checked: true }
           ]
         }, {
           checked: false,
-          text: "Environment",
+          text: "Environment " + catLink,
           children: [
-            { text: "Endangered Species " + imgLink, leaf: true, checked: false },
-            { text: "Water Quality      " + imgLink, leaf: true, checked: false },
-            { text: "Air Emissions      " + imgLink, leaf: true, checked: false },
-            { text: "Viewshed           " + imgLink, leaf: true, checked: false }
+            { text: "Endangered Species " + imgLink, cls: 'menuItem', qtip: 'Index of presence of endangered species.', leaf: true, checked: false },
+            { text: "Cultural Resources " + imgLink, cls: 'menuItem', qtip: 'Index of presence of cultural resources.', leaf: true, checked: false },
+            { text: "Zoning             " + imgLink, cls: 'menuItem', qtip: 'Index of zoning risk.', leaf: true, checked: false },
+            { text: "Soil               " + imgLink, cls: 'menuItem', qtip: 'Index of soil type appropriate for development.', leaf: true, checked: false },
+            { text: "Geology            " + imgLink, cls: 'menuItem', qtip: 'Index of geology appropriate for development.', leaf: true, checked: false },
+            { text: "Water              " + imgLink, cls: 'menuItem', qtip: 'Index of adequate water is available for development.', leaf: true, checked: false }
           ]
         }, {
           checked: false,
-          text: "Social",
+          text: "Social " + catLink,
           children: [
-            { text: "Public Acceptablity " + imgLink, leaf: true, checked: false },
-            { text: "Housing Proximity   " + imgLink, leaf: true, checked: false }
+            { text: "Public Perception " + imgLink, cls: 'menuItem', qtip: 'Index of public perception adequately positive for development.', leaf: true, checked: false }
           ]
         }
         ]
       }
     } );
+    //#endregion 
 
-
-    var treePanel = Ext.create( 'Ext.tree.Panel', {
+    //#region treePanel
+    var treePanel = Ext.create( 'Ext.tree.TreePanel', {
       id: "ToolTree",
       border: false,
-      width: 200,
+      //width: 300,
       store: navMenu,
-      rootVisible: false,
+      rootVisible: true,
       useArrows: true,
       buttons: [
         {
@@ -199,9 +257,7 @@ Ext.define( 'MyApp.RootPanel', {
         },
         checkchange: {
           fn: function ( node, check ) {
-
             if ( check ) {
-
               $.getScript( node.raw.url )
                   .done( function ( script, textStatus ) {
                   } )
@@ -212,16 +268,16 @@ Ext.define( 'MyApp.RootPanel', {
             }
 
           }
-        },
+        }
       }
     } );
-
+    //#endregion
 
     this.items = [{
       title: 'Properties',
       region: 'west',
       layout: 'fit',
-      width: 175,
+      width: 200,
       minSize: 100,
       collapsible: true,
       split: true,
@@ -231,45 +287,72 @@ Ext.define( 'MyApp.RootPanel', {
     me.callParent( arguments );
   }
 } );
+//#endregion
+
+//#region TestingChart
+//Ext.define( 'UtilityFunction', {
+//  extend: 'Ext.data.Model',
+//  fields: ['slopeTicks', 'targetTicks']
+//} );
+
+//var funcStore = Ext.create( 'Ext.data.Store', {
+//  model: 'UtilityFunction',
+//  data: []
+//} );
+
+//function GenerateSeries() {
+//}
 
 
+//var lineChart = Ext.create( 'Ext.chart.Chart', {
+//  animate: true,
+//  widht: 200,
+//  height: 200,
+//  store: funcStore,
+//  axes: [{
+//    title: 'Slope',
+//    type: 'numeric',
+//    position: 'left',
+//    fields: ['slopeTicks']
+//  }, {
+//    title: 'Target Range',
+//    type: 'numeric',
+//    position: 'bottom',
+//    fields: 'targetTicks'
+//  }],
+//  series: [{
+//    type: 'line',
+//    xField: 'targetTicks',
+//    yField: 'slopeTicks'
+//  }]
+//} );
+//#endregion
+
+//#region Function Window
 Ext.define( 'Ext.PopupWindow', {
   extend: 'Ext.window.Window',
   title: 'Functions',
-  height: 400,
+  height: 500,
   width: 400,
+  floating: true,
   layout: 'fit',
-  resizable: false,
   closeAction: 'hide',
   draggable: true,
-  modal: true,
-  items: [],
+  modal: false,
   //  data: { bar: 'foo' },
   // tpl: Ext.create( 'Ext.XTemplate', '<div class="tooltip"><h1>{bar}</h1><div>{form}</div></div>', { compiled: true } ),
   initComponent: function () {
     var me = this;
-
-    //Create items
-    //var progressBar = Ext.create( 'Ext.ProgressBar', {
-    //  text: 'Progress...',
-    //  width: 250,
-    //  animate: true,
-    //  hidden: true,
-    //  id: 'widget-progressbar'
-    //} );
-
     me.items = [
     Ext.create( 'Ext.form.Panel', {
       bodyStyle: 'padding:5px 5px 0',
-      width: 400,
-      height: 500,
       renderTo: Ext.getBody(),
       defaultType: 'numberfield',
       defaults: {
         anchor: '100%'
       },
       fieldDefaults: { labelWidth: 70 },
-
+      //#region MinValue
       items: [{
         xtype: 'panel',
         border: false,
@@ -282,52 +365,58 @@ Ext.define( 'Ext.PopupWindow', {
           fieldLabel: 'Target Min',
           minWidth: 70,
           maxWidth: 150,
-          value: Math.floor(Math.random()*11),
+          value: Math.floor( Math.random() * 11 ),
           flex: 1,
           id: 'target-MinValue',
           listeners: {
             change: function ( me, newVal, oldVal, op ) {
               var slider = Ext.getCmp( 'target-slider' );
-              var target = Ext.getCmp( 'target' );
+              var target = Ext.getCmp( 'function-target' );
               slider.setMinValue( newVal );
               if ( slider.value < newVal ) {
-                slider.setValue(newVal);
+                slider.setValue( newVal );
               }
               if ( target.getValue() != slider.getValue() ) {
                 target.setValue( slider.getValue() );
 
               }
               target.setMinValue( newVal );
+              updateBoard();
             }
           }
 
         },
-        {
-          padding: '0 0 0 10',
-          xtype: 'numberfield',
-          fieldLabel: 'Target Max',
-          minWidth: 70,
-          maxWidth: 150,
-          value: Math.floor(Math.random()*91)+10,
-          flex: 1,
-          id: 'target-MaxValue',
-          listeners: {
-            change: function ( me, newVal, oldVal, op ) {
-              var slider = Ext.getCmp( 'target-slider' );
-              var target = Ext.getCmp( 'target' );
-              slider.setMaxValue( newVal );
-              if ( slider.value > newVal ) {
-                slider.setValue(newVal);
-              }
-              if ( target.getValue() != slider.getValue() ) {
-                target.setValue( slider.getValue() );
-              }
-              target.setMaxValue( newValue );
+        //#endregion
+      //#region Max Value
+      {
+        padding: '0 0 0 10',
+        xtype: 'numberfield',
+        fieldLabel: 'Target Max',
+        minWidth: 70,
+        maxWidth: 150,
+        value: Math.floor( Math.random() * 91 ) + 10,
+        flex: 1,
+        id: 'target-MaxValue',
+        listeners: {
+          change: function ( me, newVal, oldVal, op ) {
+            var slider = Ext.getCmp( 'target-slider' );
+            var target = Ext.getCmp( 'function-target' );
+            slider.setMaxValue( newVal );
+            if ( slider.value > newVal ) {
+              slider.setValue( newVal );
             }
+            if ( target.getValue() != slider.getValue() ) {
+              target.setValue( slider.getValue() );
+            }
+            target.setMaxValue( newVal );
+            updateBoard();
           }
+        }
 
-        }]
+      }]
       },
+      //#endregion
+      //#region Increment
       {
         xtype: 'panel',
         border: false,
@@ -336,28 +425,9 @@ Ext.define( 'Ext.PopupWindow', {
           align: 'middle'
         },
         items: [
-        //  {
-        //  xtype: 'combo',
-        //  fieldLabel: 'Precision',
-        //  value: 2,
-        //  minWidth: 60,
-        //  maxWidth: 150,
-        //  id: 'target-Precision',
-        //  mode: 'local',
-        //  flex: 2,
-        //  triggerAction: 'all',
-        //  store: [0, 1, 2, 3, 4],
-        //  listeners: {
-        //    change: function ( me, newVal, oldVal, op ) {
-        //      var slider = Ext.getCmp( 'target-slider' );
-        //      slider.decimalPrecision = newVal;
-        //    }
-        //  }
-
-        //},
         {
-          //padding: '0 0 0 10',
           xtype: 'combo',
+          editable: false,
           fieldLabel: 'Increment',
           flex: 2,
           minWidth: 70,
@@ -383,6 +453,8 @@ Ext.define( 'Ext.PopupWindow', {
           }
         }]
       },
+      //#endregion
+      //#region function target
       {
         xtype: 'panel',
         border: false,
@@ -420,6 +492,8 @@ Ext.define( 'Ext.PopupWindow', {
           }
         }]
       },
+      //#endregion
+      //#region  function slope
       {
         xtype: 'panel',
         border: false,
@@ -430,31 +504,32 @@ Ext.define( 'Ext.PopupWindow', {
         defaultType: 'numberfield',
         items: [{
           fieldLabel: 'Slope',
-          decimalPrecision: 4,
+          decimalPrecision: 0,
           id: 'function-slope',
           flex: 4,
           minWidth: 100,
           maxWidth: 150,
-          value: 0,
-          minValue: 0,
-          maxValue: 1,
+          //value: Math.floor(Math.random() * 100),
+          minValue: 1,
+          maxValue: 100,
           allowBlank: false,
           listeners: {
             change: function ( me, newVal, oldVal, op ) {
               Ext.getCmp( 'slope-slider' ).setValue( newVal );
+              if ( board ) board.update();
             }
           }
 
         },
         {
           xtype: 'slider',
-          decimalPrecision: 4,
+          decimalPrecision: 0,
           id: 'slope-slider',
           flex: 4,
-          minValue: 0.00,
-          maxValue: 1.00,
-          increment: 0.0001,
-          value: Math.random(),
+          minValue: 1,
+          maxValue: 100,
+          increment: 1,
+          value: Math.floor( Math.random() * 100 ),
           listeners: {
             change: function ( select, newval, thumb, op ) {
               Ext.getCmp( 'function-slope' ).setValue( newval );
@@ -462,6 +537,36 @@ Ext.define( 'Ext.PopupWindow', {
           }
         }]
       },
+      //#endregion
+      //#region Fuction Mode
+      {
+        xtype: 'panel',
+        border: false,
+        layout: {
+          type: 'hbox',
+          align: 'middle'
+        },
+        items: [
+        {
+          xtype: 'combo',
+          fieldLabel: 'Mode',
+          flex: 2,
+          minWidth: 70,
+          maxWidth: 250,
+          value: 'Less is better',
+          id: 'function-mode',
+          mode: 'local',
+          triggerAction: 'all',
+          store: ['Less is better', 'More is better'],
+          listeners: {
+            change: function ( me, newVal, oldVal, op ) {
+              updateBoard();
+            }
+          }
+        }]
+      },
+      //#endregion
+      //#region Weight
       { //Weight panel
         xtype: 'panel',
         border: false,
@@ -478,7 +583,7 @@ Ext.define( 'Ext.PopupWindow', {
           maxWidth: 150,
           minValue: 0,
           maxValue: 100,
-          value: Math.floor(Math.random()*100),
+          value: Math.floor( Math.random() * 100 ),
           allowBlank: false,
           listeners: {
             change: function ( me, newVal, oldVal, op ) {
@@ -493,8 +598,8 @@ Ext.define( 'Ext.PopupWindow', {
           minValue: 0,
           maxValue: 100,
           increment: 1,
-          tipText: function(thumb) {
-            return Ext.String.format('{0}%',thumb.value);
+          tipText: function ( thumb ) {
+            return Ext.String.format( '{0}%', thumb.value );
           },
           listeners: {
             change: function ( select, newval, thumb, op ) {
@@ -503,21 +608,24 @@ Ext.define( 'Ext.PopupWindow', {
           }
         }]
       },
+      //#endregion
+      //#region Function Graph
+      {
+        xtype: 'panel',
+        border: false,
+        height: 10
+      },
       {
         //padding: '10 0 0 0',
+        id: 'FunctionBox',
         xtype: 'panel',
-        layout:'anchor',
+        layout: 'anchor',
         border: true,
         width: 200,
-        height: 200,
-        items: [
-          {
-
-          }
-        ]
-      }
-      ],
-
+        height: 250
+      }],
+      //#endregion
+      //#region Buttons
       buttons: [{
         xtype: 'button',
         text: 'OK',
@@ -535,6 +643,7 @@ Ext.define( 'Ext.PopupWindow', {
           puWin.hide();
         }
       }]
+      //#endregion
     }
   )],
 
@@ -545,24 +654,140 @@ Ext.define( 'Ext.PopupWindow', {
     return this;
   }
 } );
+//#endregion
 
+
+Ext.define( 'Ext.PieWindow', {
+  extend: 'Ext.window.Window',
+  title: 'Category',
+  height: 450,
+  widht: 450,
+  floating: true,
+  layout: 'fit',
+  closeAction: 'hide',
+  draggable: true,
+  model: false,
+  initComponent: function () {
+    var me = this;
+    me.items = [
+      Ext.create( 'Ext.form.Panel', {
+        //width: 400,
+        //height: 400,
+        bodyStyle: 'padding: 5px 5px 0',
+        renderTo: Ext.getBody(),
+        //defaults: {
+        //    anchor: '100%'
+        //},
+        items: [{
+          xtype: 'chart',
+          animate: true,
+          width: 400,
+          height: 400,
+          insetPadding: 5,
+          legend: {
+              position: 'right'
+          },
+          shadow: true,
+          //#region Store data
+          store: {
+            fields: [
+              { name: 'Category', type: 'string' },
+              { name: 'Data', type: 'int'}
+            ],
+            data: [
+              { Category: 'LOCE', Data: 10 },
+              { Category: 'IRR', Data: 20 },
+              { Category: 'DSCR', Data: 30 },
+              { Category: 'NPV', Data: 5 },
+              { Category: 'Transmision', Data: 10 },
+              { Category: 'Incentives', Data: 25 }
+            ]
+          },
+          //#endregion
+          series: [{
+            type: 'pie',
+            field: 'Data',
+            showInLegend: true,
+            highLight: {
+              segment: {
+                margin: 20
+              }
+            },
+            label: {
+              field: 'Category',
+              display: 'rotate',
+              contrast: true,
+              font: '18px Arial'
+            }
+          }]
+          //,extraStyle: {
+          //  legend: {
+          //    display: 'right',
+          //    padding: 10,
+          //    border: {
+          //      color: 'gray',
+          //      size: 1
+          //    }
+          //  }
+          //}
+        }],
+        buttons: [{
+          xtype: 'button',
+          text: 'OK',
+          handler: function () {
+            //TODO: execute update function here.
+
+
+            pieWin.hide();
+          }
+        },
+        {
+          xtype: 'button',
+          text: 'Cancel',
+          handler: function () {
+            puWin.hide();
+          }
+        }]
+      } )
+    ]
+    ,this.callParent( arguments );
+  }
+} );
+
+
+var pieWin = Ext.create( 'Ext.PieWindow' );
 var puWin = Ext.create( 'Ext.PopupWindow' );
 
 ( function ( pvM ) {
   pvM.onReady( function () {
     $( '#ToolTree' ).on( {
       click: function () {
+        //if ( ev.target != this ) return true;
+        alert( 'Value is: ' + this.textContent );
+      }
+    }, '.funcWeight' );
+
+    $( '#ToolTree' ).on( {
+      click: function ( ev ) {
+        ev.stopPropagation();
         puWin.showing( $( this ).parent().text() ).show();
       }
-    }, '.funcButton' )
+    }, '.funcButton' );
+
+    $( '#ToolTree' ).on( {
+      click: function ( ev ) {
+        ev.stopPropagation();
+        pieWin.show();
+      }
+    }, '.funcCategory' );
 
     var target = Ext.getCmp( 'function-target' );
-    Ext.getCmp( 'function-slope' ).setValue( Math.random() );
+    Ext.getCmp( 'function-slope' ).setValue( Math.random() * 100 );
     Ext.getCmp( 'slope-slider' ).setValue( Ext.getCmp( 'function-slope' ).getValue() );
     Ext.getCmp( 'weight-slider' ).setValue( Ext.getCmp( 'function-weight' ).getValue() );
     var tslider = Ext.getCmp( 'target-slider' );
-    tslider.setMinValue(Ext.getCmp( 'target-MinValue' ).getValue());
-    tslider.setMaxValue(Ext.getCmp( 'target-MaxValue' ).getValue());
+    tslider.setMinValue( Ext.getCmp( 'target-MinValue' ).getValue() );
+    tslider.setMaxValue( Ext.getCmp( 'target-MaxValue' ).getValue() );
     tslider.increment = Ext.getCmp( 'target-Incremental' ).getValue();
     switch ( tslider.increment ) {
       case 0.0001: tslider.decimalPrecision = 4; target.decimalPrecision = 4; break;
@@ -571,11 +796,21 @@ var puWin = Ext.create( 'Ext.PopupWindow' );
       case 0.1: tslider.decimalPrecision = 1; target.decimalPrecision = 1; break;
       default: tslider.decimalPrecision = 0; target.decimalPrecision = 0; break;
     }
-    tslider.setValue(Math.floor( Math.random() * tslider.maxValue ));
+    tslider.setValue( Math.floor( Math.random() * tslider.maxValue ) );
     target.setValue( tslider.getValue() );
     target.setMinValue( tslider.minValue );
     target.setMaxValue( tslider.maxValue );
 
-
+    if ( typeof ( JXG ) == "undefined" ) {
+      console.log( "Loading in the JXG Graph script" );
+      $( "<link/>" )
+          .appendTo( "head" )
+          .attr( { rel: "stylesheet", type: "text/css", href: "http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css" } );
+      $.getScript( "http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js", function () {
+        loadBoard();
+      } );
+    } else {
+      loadBoard();
+    }
   } );
 } )( pvMapper );
