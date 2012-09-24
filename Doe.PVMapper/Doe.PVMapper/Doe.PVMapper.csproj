@@ -657,6 +657,7 @@
     <Content Include="Content\themes\base\jquery.ui.slider.css" />
     <Content Include="Content\themes\base\jquery.ui.tabs.css" />
     <Content Include="Content\themes\base\jquery.ui.theme.css" />
+    <Content Include="Images\Pie Chart.png" />
     <Content Include="Images\PVMapper_TopText.png" />
     <Content Include="Notes\Module Factory handwritten notes.jpg" />
     <Content Include="Notes\PVMapper Object.jpg" />
