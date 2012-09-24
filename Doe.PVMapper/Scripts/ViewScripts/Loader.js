@@ -149,6 +149,57 @@ var UtilityFunctions = {
   }
 }
 
+
+//#region   DataStore
+var imgLink = "   <img class='funcButton' src='http://localhost:1919/Images/line_chart_24.png'/>  <label class='funcWeight'> 0.00 </label>"
+var catLink = "   <img class='funcCategory' src='http://localhost:1919/Images/Pie Chart.png'/>  <label class='funcWeight'> 0.00 </label>"
+var navMenu = Ext.create( 'Ext.data.TreeStore', {
+  root: {
+    text: 'Overall ' + catLink,
+    expanded: true,
+    children: [{
+      checked: false,
+      text: "Cost " + catLink,
+      expanded: true,
+      children: [
+        { text: "LCOE         " + imgLink, cls: 'menuItem', qtip: 'Levelized Cost of Energy.', leaf: true, checked: true },
+        { text: "IRR          " + imgLink, cls: 'menuItem', qtip: 'After-tax Internal Rate of Return.', leaf: true, checked: true },
+        { text: "DSCR         " + imgLink, cls: 'menuItem', qtip: 'Pre-tax min Debt Service Coverage Ratio.', leaf: true, checked: true },
+        { text: "NPV          " + imgLink, cls: 'menuItem', qtip: 'After-Tax Net Present Value.', leaf: true, checked: true },
+        { text: "Transmission " + imgLink, cls: 'menuItem', qtip: 'Cost to connect to preferred transmission line.', leaf: true, checked: true },
+        { text: "Incentives   " + imgLink, cls: 'menuItem', qtip: 'Index of tax and other incentives offered to promote development.', leaf: true, checked: true }
+      ]
+    }, {
+      checked: false,
+      text: "Energy " + catLink,
+      children: [
+        { text: "Net Annual Energy " + imgLink, cls: 'menuItem', qtip: 'Annual expected kWh generation.', leaf: true, checked: true },
+        { text: "Intermittency     " + imgLink, cls: 'menuItem', qtip: 'Index of solar radiation intermittency.', leaf: true, checked: true },
+        { text: "Contract Risk     " + imgLink, cls: 'menuItem', qtip: 'Power Purchase Agreement Risk.', leaf: true, checked: true }
+      ]
+    }, {
+      checked: false,
+      text: "Environment " + catLink,
+      children: [
+        { text: "Endangered Species " + imgLink, cls: 'menuItem', qtip: 'Index of presence of endangered species.', leaf: true, checked: false },
+        { text: "Cultural Resources " + imgLink, cls: 'menuItem', qtip: 'Index of presence of cultural resources.', leaf: true, checked: false },
+        { text: "Zoning             " + imgLink, cls: 'menuItem', qtip: 'Index of zoning risk.', leaf: true, checked: false },
+        { text: "Soil               " + imgLink, cls: 'menuItem', qtip: 'Index of soil type appropriate for development.', leaf: true, checked: false },
+        { text: "Geology            " + imgLink, cls: 'menuItem', qtip: 'Index of geology appropriate for development.', leaf: true, checked: false },
+        { text: "Water              " + imgLink, cls: 'menuItem', qtip: 'Index of adequate water is available for development.', leaf: true, checked: false }
+      ]
+    }, {
+      checked: false,
+      text: "Social " + catLink,
+      children: [
+        { text: "Public Perception " + imgLink, cls: 'menuItem', qtip: 'Index of public perception adequately positive for development.', leaf: true, checked: false }
+      ]
+    }
+    ]
+  }
+} );
+//#endregion 
+
 //#region RootPanel
 Ext.define( 'MyApp.RootPanel', {
   id: 'MyApp-RootPanel-id',
@@ -180,57 +231,6 @@ Ext.define( 'MyApp.RootPanel', {
     //  }                                                                                                              
     //} );                     
     //#endregion
-
-    //#region   DataStore
-    var imgLink = "   <img class='funcButton' src='http://localhost:1919/Images/line_chart_24.png'/>  <label class='funcWeight'> 0.00 </label>"
-    var catLink = "   <img class='funcCategory' src='http://localhost:1919/Images/Pie Chart.png'/>  <label class='funcWeight'> 0.00 </label>"
-    var navMenu = Ext.create( 'Ext.data.TreeStore', {
-      root: {
-        text: 'Overall ' + catLink,
-        expanded: true,
-        children: [{
-          checked: false,
-          text: "Cost " + catLink,
-          expanded: true,
-          children: [
-            { text: "LCOE         " + imgLink, cls: 'menuItem', qtip: 'Levelized Cost of Energy.', leaf: true, checked: true },
-            { text: "IRR          " + imgLink, cls: 'menuItem', qtip: 'After-tax Internal Rate of Return.', leaf: true, checked: true },
-            { text: "DSCR         " + imgLink, cls: 'menuItem', qtip: 'Pre-tax min Debt Service Coverage Ratio.', leaf: true, checked: true },
-            { text: "NPV          " + imgLink, cls: 'menuItem', qtip: 'After-Tax Net Present Value.', leaf: true, checked: true },
-            { text: "Transmission " + imgLink, cls: 'menuItem', qtip: 'Cost to connect to preferred transmission line.', leaf: true, checked: true },
-            { text: "Incentives   " + imgLink, cls: 'menuItem', qtip: 'Index of tax and other incentives offered to promote development.', leaf: true, checked: true }
-          ]
-        }, {
-          checked: false,
-          text: "Energy " + catLink,
-          children: [
-            { text: "Net Annual Energy " + imgLink, cls: 'menuItem', qtip: 'Annual expected kWh generation.', leaf: true, checked: true },
-            { text: "Intermittency     " + imgLink, cls: 'menuItem', qtip: 'Index of solar radiation intermittency.', leaf: true, checked: true },
-            { text: "Contract Risk     " + imgLink, cls: 'menuItem', qtip: 'Power Purchase Agreement Risk.', leaf: true, checked: true }
-          ]
-        }, {
-          checked: false,
-          text: "Environment " + catLink,
-          children: [
-            { text: "Endangered Species " + imgLink, cls: 'menuItem', qtip: 'Index of presence of endangered species.', leaf: true, checked: false },
-            { text: "Cultural Resources " + imgLink, cls: 'menuItem', qtip: 'Index of presence of cultural resources.', leaf: true, checked: false },
-            { text: "Zoning             " + imgLink, cls: 'menuItem', qtip: 'Index of zoning risk.', leaf: true, checked: false },
-            { text: "Soil               " + imgLink, cls: 'menuItem', qtip: 'Index of soil type appropriate for development.', leaf: true, checked: false },
-            { text: "Geology            " + imgLink, cls: 'menuItem', qtip: 'Index of geology appropriate for development.', leaf: true, checked: false },
-            { text: "Water              " + imgLink, cls: 'menuItem', qtip: 'Index of adequate water is available for development.', leaf: true, checked: false }
-          ]
-        }, {
-          checked: false,
-          text: "Social " + catLink,
-          children: [
-            { text: "Public Perception " + imgLink, cls: 'menuItem', qtip: 'Index of public perception adequately positive for development.', leaf: true, checked: false }
-          ]
-        }
-        ]
-      }
-    } );
-    //#endregion 
-
     //#region treePanel
     var treePanel = Ext.create( 'Ext.tree.TreePanel', {
       id: "ToolTree",
@@ -289,44 +289,6 @@ Ext.define( 'MyApp.RootPanel', {
 } );
 //#endregion
 
-//#region TestingChart
-//Ext.define( 'UtilityFunction', {
-//  extend: 'Ext.data.Model',
-//  fields: ['slopeTicks', 'targetTicks']
-//} );
-
-//var funcStore = Ext.create( 'Ext.data.Store', {
-//  model: 'UtilityFunction',
-//  data: []
-//} );
-
-//function GenerateSeries() {
-//}
-
-
-//var lineChart = Ext.create( 'Ext.chart.Chart', {
-//  animate: true,
-//  widht: 200,
-//  height: 200,
-//  store: funcStore,
-//  axes: [{
-//    title: 'Slope',
-//    type: 'numeric',
-//    position: 'left',
-//    fields: ['slopeTicks']
-//  }, {
-//    title: 'Target Range',
-//    type: 'numeric',
-//    position: 'bottom',
-//    fields: 'targetTicks'
-//  }],
-//  series: [{
-//    type: 'line',
-//    xField: 'targetTicks',
-//    yField: 'slopeTicks'
-//  }]
-//} );
-//#endregion
 
 //#region Function Window
 Ext.define( 'Ext.PopupWindow', {
@@ -657,6 +619,24 @@ Ext.define( 'Ext.PopupWindow', {
 //#endregion
 
 
+pvMapper.pieStore = Ext.create( 'Ext.data.Store', {
+  fields: [
+    { name: 'Category', type: 'string' },
+    { name: 'Data', type: 'int' },
+    { name: 'Quality', type: 'int' }
+  ],
+  data: [
+    { Category: 'LOCE', Data: 10, Quality: 100 },
+    { Category: 'IRR', Data: 20, Quality: 100 },
+    { Category: 'DSCR', Data: 30, Quality: 100 },
+    { Category: 'NPV', Data: 5, Quality: 100 },
+    { Category: 'Transmision', Data: 10, Quality: 100 },
+    { Category: 'Incentives', Data: 25, Quality: 100 }
+  ]
+} );
+
+
+
 Ext.define( 'Ext.PieWindow', {
   extend: 'Ext.window.Window',
   title: 'Category',
@@ -671,46 +651,54 @@ Ext.define( 'Ext.PieWindow', {
     var me = this;
     me.items = [
       Ext.create( 'Ext.form.Panel', {
-        //width: 400,
-        //height: 400,
+        width: 400,
+        height: 400,
         bodyStyle: 'padding: 5px 5px 0',
         renderTo: Ext.getBody(),
-        //defaults: {
-        //    anchor: '100%'
-        //},
+        defaults: {
+          anchor: '100%'
+        },
         items: [{
           xtype: 'chart',
           animate: true,
           width: 400,
           height: 400,
+          //resizable: true,
+          //resizeHandles: 'all',
+          theme: 'Base:gradients',
+
           insetPadding: 5,
           legend: {
-              position: 'right'
+            position: 'right'
           },
           shadow: true,
           //#region Store data
-          store: {
-            fields: [
-              { name: 'Category', type: 'string' },
-              { name: 'Data', type: 'int'}
-            ],
-            data: [
-              { Category: 'LOCE', Data: 10 },
-              { Category: 'IRR', Data: 20 },
-              { Category: 'DSCR', Data: 30 },
-              { Category: 'NPV', Data: 5 },
-              { Category: 'Transmision', Data: 10 },
-              { Category: 'Incentives', Data: 25 }
-            ]
-          },
+          store: pvMapper.pieStore,
           //#endregion
           series: [{
             type: 'pie',
-            field: 'Data',
+            //field: 'Data',
+            angleField: 'Data',
+            lengthField: 'Quality',
             showInLegend: true,
-            highLight: {
+            highlight: {
               segment: {
                 margin: 20
+              }
+            },
+
+            tips: {
+              trackMouse: true,
+              width: 140,
+              height: 20,
+              renderer: function ( storeItem, item ) {
+                //calculate and display percentage on hover
+                var total = 0;
+                pvMapper.pieStore.each( function ( rec ) {
+                  total += rec.get( 'Data' );
+                } );
+                this.setTitle( storeItem.get( 'Category' ) + ': ' + Math.round( storeItem.get( 'Data' ) / total * 100 ) + '%' );
+
               }
             },
             label: {
@@ -720,16 +708,6 @@ Ext.define( 'Ext.PieWindow', {
               font: '18px Arial'
             }
           }]
-          //,extraStyle: {
-          //  legend: {
-          //    display: 'right',
-          //    padding: 10,
-          //    border: {
-          //      color: 'gray',
-          //      size: 1
-          //    }
-          //  }
-          //}
         }],
         buttons: [{
           xtype: 'button',
@@ -745,16 +723,138 @@ Ext.define( 'Ext.PieWindow', {
           xtype: 'button',
           text: 'Cancel',
           handler: function () {
-            puWin.hide();
+            pieWin.hide();
           }
         }]
       } )
     ]
-    ,this.callParent( arguments );
+    , this.callParent( arguments );
   }
 } );
 
 
+Ext.define( 'MyApp.FunctionUtils', {
+  extend: 'Ext.data.Model',
+  fields: [
+    { name: 'functionName', type: 'string' },
+    { name: 'minValue', type: 'float' },
+    { name: 'maxValue', type: 'float' },
+    { name: 'increment', type: 'float' },
+    { name: 'target', type: 'float' },
+    { name: 'slope', type: 'float' },
+    { name: 'mode', type: 'string' },
+    { name: 'weight', type: 'int' }
+  ]
+} );
+
+var funcStore = Ext.create( 'Ext.data.Store', {
+  model: 'MyApp.FunctionUtils',
+  data:[]
+
+} );
+
+if ( !String.prototype.trim ) {
+  String.prototype.trim = function () {
+    return this.replace( /^\s+|\s+$/g, '' );
+  }
+}
+
+function loadData() {
+  var LOCE = Ext.create('MyApp.FunctionUtils', {
+    functionName: 'LOCE',
+    minValue: 0,
+    maxValue: 100,
+    increment: 1,
+    target: 50,
+    mode: 'Less is better',
+    weight: 20
+  });
+
+  var unknownFunc = Ext.create('MyApp.FunctionUtils', {
+    functionName: 'Unknown',
+    minValue: 0,
+    maxValue: 50,
+    increment: 1,
+    target: 20,
+    mode: 'More is better',
+    weight: 70
+  });
+
+
+  funcStore.insert(0, LOCE );
+  funcStore.insert( 1, unknownFunc );
+
+  var root = navMenu.tree.root;
+  pushChildNodes( root );
+
+
+  var done = false;
+  var cNode = root.childNodes;
+  var tStr = '';
+  var func, cnt = 0;
+  var min;
+  var max;
+
+  while ( !done ) {
+    if ( cNode.data.leaf ) {
+      tStr = cNode.data.text.indexOf('<').trim();
+      min = Math.floor( Math.random() * 11 );
+      max = Math.floor( Math.random() * 90 ) + 10;
+
+      func = Ext.create( 'MyApp.FunctionUtils', {
+        functionName: tStr,
+        minValue: min,
+        maxValue: max,
+        increment: 1,
+        target: Math.floor( Math.random() * max ),
+        slope: Math.floor( Math.random() * 100 ),
+        mode: 'Less is better',
+        weight: Math.floor( Math.random() * 100 )
+      } );
+      funcStore.insert( cnt, func );
+      cnt = cnt + 1;
+    }
+  }
+}
+
+function pushChildNodes( pNode ) {
+  var done = false;
+  var cNode = pNode.childNodes;
+  var tStr = '';
+  var func, cnt = 0;
+  var min;
+  var max;
+
+  //add to store "group node"
+
+
+  //insert to store "leaf node"
+  cNode.forEach();
+  while ( !done ) {
+    if ( cNode.data.leaf ) {
+      tStr = cNode.data.text.indexOf( '<' ).trim();
+      min = Math.floor( Math.random() * 11 );
+      max = Math.floor( Math.random() * 90 ) + 10;
+
+      func = Ext.create( 'MyApp.FunctionUtils', {
+        functionName: tStr,
+        minValue: min,
+        maxValue: max,
+        increment: 1,
+        target: Math.floor( Math.random() * max ),
+        slope: Math.floor( Math.random() * 100 ),
+        mode: 'Less is better',
+        weight: Math.floor( Math.random() * 100 )
+      } );
+      funcStore.insert( cnt, func );
+      cnt = cnt + 1;
+    }
+    cNode = cNode.nextSibling();
+
+  }
+}
+
+//#region onReady
 var pieWin = Ext.create( 'Ext.PieWindow' );
 var puWin = Ext.create( 'Ext.PopupWindow' );
 
@@ -813,4 +913,5 @@ var puWin = Ext.create( 'Ext.PopupWindow' );
       loadBoard();
     }
   } );
+  //#endregion
 } )( pvMapper );
