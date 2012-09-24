@@ -14,7 +14,9 @@
 //As always, the scoreboard will be responsible for writing the values to it's own datastorage
 
 (function (pvM) {
-    var me = new pvM.Module({
+    pvM.onReady(function () {
+        console.log("Loading in site area module");
+        var me = new pvM.Module({
             id: "doe.siteAreaModule", //This will come in handy if we want to make these tools singletons
             author: "",
             version: "",
@@ -34,7 +36,7 @@
                 },
                 innerBoundry: {
                     title: "Site Gross Area",
-                    description: "Calculates the gross area of the site in quare kilometers.",
+                    description: "Calculates the gross area of the site in square kilometers.",
                     onSiteChange: function (event, score) { }
                 }
 
@@ -49,12 +51,12 @@
             buttons: {
                 mainMapToolBar: {
                     group: "attributes",
-                    activate: buttonClicked,
+                    activate: onButtonClicked,
                     deactivate: null,
                 },
                 siteRightClick: {
                     group: "attributes",
-                    activate: buttonClicked
+                    activate: onButtonClicked
                 }
             },
 
@@ -65,6 +67,7 @@
             deactivate: function () { }     //Called when the tool is unchecked or deactivated by the system or user
 
         });
+    });
 
     //All private functions and varables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
     var offsetFeature;
@@ -88,12 +91,12 @@
         return kmArea;
     }
 
+    //Handles the button click for the buttons for this tool
+    function onButtonClicked(event) {
+    };
+
 })(pvMapper);
 myclass = function(){
     var priv="Secret";
     this.setPriv = function(s){priv===s;};
 }
-
-var b = "bla";
-myc.setPriv(b);
-b = "foo";

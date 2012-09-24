@@ -55,8 +55,10 @@
 @*These all need moved to the top of the file so that the scripts are available to inline code. 
 Anything that needs to be defered to the end needs to wait for the $().ready or body.load events.*@
 @section Scripts {
-    <script type="text/javascript" src="../../Scripts/ViewScripts/Loader.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/Event.js"></script>
     <script type="text/javascript" src="../../Scripts/ViewScripts/pvMapper.js"></script>
+    <script type="text/javascript" src="../../Scripts/ViewScripts/Loader.js"></script>
+
     <script type="text/javascript" src="../../Scripts/ViewScripts/IndexView.js"></script>
     <script type="text/javascript" src="../../Scripts/ViewScripts/Layers.js"></script>
     <script type="text/javascript" src="../../Scripts/ViewScripts/ZoomAction.js"></script>
@@ -76,13 +78,18 @@ Anything that needs to be defered to the end needs to wait for the $().ready or 
     <script type="text/javascript" src="../../Scripts/jQueryExtentions/getScriptOverride.js"></script>
 
     @*API and related tests*@
-    <script type="text/javascript" src="../../Scripts/pvMapper/Event.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/Renderer.js"></script>
+    
     <script type="text/javascript" src="../../Scripts/pvMapper/pvMapper.js"></script>
     <script type="text/javascript" src="../../Scripts/pvMapper/Score.js"></script>
     <script type="text/javascript" src="../../Scripts/pvMapper/Scoreboard.js"></script>
     <script type="text/javascript" src="../../Scripts/pvMapper/ScoreLine.js"></script>
     <script type="text/javascript" src="../../Scripts/pvMapper/Site.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/Module.js"></script>
 
-    @*New ScoreBoard Utility Config -- Mockup only*@ 
+    @*New ScoreBoard Utility Config -- Mockup only*@
     <script type="text/javascript" src="../../Scripts/pvExtensions/scoreBoard/loader.js"></script>
+
+    @*Testing of modules*@
+    <script type="text/javascript" src="../../Scripts/pvExtensions/siteAreaModule.js"></script>
 }

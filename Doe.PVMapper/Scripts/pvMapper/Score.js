@@ -6,7 +6,7 @@
         this.siteChanged = new Event();
 
         //Validate input
-        if (site.prototype != pvM.Site) { throw ("Parameter 'site' is not a pvMapper.Site object"); }
+        if (!site instanceof pvM.Site) { throw ("Parameter 'site' is not a pvMapper.Site object"); }
 
         //Private members
         
@@ -15,9 +15,8 @@
         this.site;                  //A reference to the site this score represents
         this.popupMessage = null;   //The long message formated in HTML that explains the value or score
         this.value = "";            //The textual value of the evaluation along with the units and anything else that makes the value meaningfull (ex. Light Industrial Zoning or 3 Turtle Nests)
-        this.utility = {}           //The utility object that is used to calculate the utility value
-        this.calculateUtility(value) //Calculates the utility score for the value passed in or if no value is passed in it uses the current value property
-        
+        this.utility = {};           //The utility object that is used to calculate the utility value
+        this.calculateUtility = function (value) { }; //Calculates the utility score for the value passed in or if no value is passed in it uses the current value property
     }
 
 

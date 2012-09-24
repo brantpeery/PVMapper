@@ -4,6 +4,8 @@
 
 (function (pvM) {
     pvM.ScoreLine = function (options) {
+        var self = this;
+
         //Events
         this.scoreChangeEvent = new Event();
         this.updatingScoresEvent = new Event();
@@ -11,16 +13,19 @@
 
         //Check to make sure the siteChangeHandler is a function
         var siteChangeHandler = ($.isFunction(options.onSiteChange)) ? siteChangeHandler : null;
+        this.siteChangeEvent.addHandler(siteChangeHandler);
+        
 
         this.getUtilityScore = function () { };
         this.getWeight = function () { };
         this.getWeightedUtilityScore = function () { };
         this.addScore=function(site){
             var score = new pvM.Score(site);
-            site.onSiteChange.addHandler(this.siteChange); //Attach our handler directly to the site.
+            site.changeEvent.addHandler(this.siteChange); //Attach our handler directly to the site.
             this.scores.push(score);
             return score;
         };
+
 
         this.name; //The name that will show up in the row
         this.description; //The popup information that will show up on mouse hover
@@ -28,8 +33,7 @@
         for (site in pvM.sites) {
             this.addScore(site);
         }
-
-
+        this.tool; //The tool that manages this line.
 
         //Observes the siteChanged event for the sites that this line cares about 
         this.onSiteChange = function (event) {
@@ -41,15 +45,19 @@
         }
 
         //Observes any sites being removed to the site manager
-        this.onSiteRemoved;
+        this.onSiteRemoved = function (event) {
+            //Remove the reference to the site. 
+            
+
+        };
 
         //Observers any sites being added to the site manager
         this.onSiteAdded = function (e) {
             var site = e.site;
             
             //Create a new score for the site
-            this.addScore(site);
-            
+            self.addScore(site);
+                
         }
 
 
@@ -61,8 +69,25 @@
                     score: this.scores[idx],
                     type: "ScoreLine.updateScores"
                 }
-                this.siteChangeEvent.fire(this, e)
+                this.siteChangeEvent.fire(this, e);
             }
+        }
+
+
+        //Init logic
+        loadAllSites();
+
+        //Watch all the events from the site manager
+        pvM.siteManager.siteAdded.addHandler(this.onSiteAdded);
+        pvM.siteManager.siteRemoved.addHandler(this.onSiteRemoved);
+
+        //Private functions        
+        function loadAllSites() {
+            var self = this; //Give access back to the public members within the inner scopes
+            var allSites = pvM.siteManager.getSites();
+            $.each(allSites, function(idx, site){
+                self.addSite(site);
+            });
         }
     }
 })(pvMapper);

@@ -1,12 +1,16 @@
-﻿(function (pvM) {
+﻿/// <reference path="Renderer.js" />
+
+(function (pvM) {
     pvM.Scoreboard = function () {
         this.scoreChangedEvent = new Event();
         this.scoresInvalidatedEvent = new Event();
 
         this.addLine = function (scoreLine) {
-            if (scoreLine.constructor == pvM.ScoreLine) {
-                score.scoreChangedEvent.addHandler(onScoreChanged);
-                score.scoresInvalidatedEvent.addHandler(onScoresInvalidated);
+            if (scoreLine instanceof pvM.ScoreLine) {
+                scoreLine.scoreChangeEvent.addHandler(onScoreChanged);
+                //scoreLine.scoresInvalidatedEvent.addHandler(onScoresInvalidated);
+
+                this.scoreLines.push(scoreLine);
             } else {
                 //Try to parse the options
 
@@ -17,8 +21,17 @@
             throw("Function not yet implemented!");
         };
         this.removeLine;
-        this.scoreLines;
-
+        this.scoreLines=[];
+        this.render = function () {
+            var r = new pvM.Renderer.HTML.Table();
+            $.each(this.scoreLines, function (idx, r) {
+                var row = r.addRow();
+                row.addCell(sl.name).attr({ title: sl.description, 'class': 'toolName' });
+                for (var s in sl.scores) {
+                    row.addCell(s.value);
+                }
+            });
+        }
 
         //Private functions
         function onScoreChanged() {
@@ -33,6 +46,9 @@
 
             Error("Function not implemented yet!");
         };
+        var tableRenderer = new pvM.Renderer.HTML.Table();
+
+        
     }
 
     //Create a scoreboard instance on the pvMapper object

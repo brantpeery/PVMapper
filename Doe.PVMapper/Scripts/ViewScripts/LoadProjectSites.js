@@ -32,15 +32,15 @@
                     sitesLayer.addFeatures([poly], {});
 
                     s = new pvMapper.Site(poly);
-                    pvMapper.sites.push(s); 
+                    pvMapper.siteManager.addSite(s);
+
+                    console.log('Added ' + s.name + ' to the site manager');
                 }
 
             }
 
-            sitesLayer.events.on("featuremodified", function (param1, param2, param3) {
-                var a = 1;
-
-            });
+            //Add the event for the sitesLayer to the site manager 
+            sitesLayer.events.register("featuremodified", sitesLayer, pvMapper.siteManager.featureChangedHandler);
 
         });
 });
