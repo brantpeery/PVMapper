@@ -1,64 +1,75 @@
-﻿//EXTENSIONS
+﻿/// <reference path="Common.js" />
+//EXTENSIONS
 
-// This is the function to allow str.format(variables). It will replace
-//    all tokens with the arguments ex. {0} with first arg.
-String.prototype.format = function (args) {
-    var str = this;
-    return str.replace(String.prototype.format.regex, function (item) {
-        var intVal = parseInt(item.substring(1, item.length - 1));
-        var replace;
-        if (intVal >= 0) {
-            replace = args[intVal];
-        } else if (intVal === -1) {
-            replace = "{";
-        } else if (intVal === -2) {
-            replace = "}";
-        } else {
-            replace = "";
-        }
-        return replace;
-    });
-};
-String.prototype.format.regex = new RegExp("{-?[0-9]+}", "g");
-//END EXTENSIONS
-
-var pvMapper = {};
-pvMapper.Renderer = function (text) {
-    this.draw = function () {
-        var s = '';
-        for (c in this.children) {
-            s += this.children[c].draw();
-            //console.log(this.children.length);
-        }
-
-        var html = this.template.format(this.getTemplateArgs(s));
-        return html;
-    };
-    this.getTemplateArgs = function (childrenRenderText) { return [this.text + childrenRenderText]; };
-    this.updateElement = function (element) { };
-    this.removeElement = function (element) { };
-    this.clear = function () { };
-    this.text = (text)?text:'';
-    this.template = '{0}';
-    this.children=new Array();
-};
-
-pvMapper.Renderer.HTML = function (tag, text) {
-    this.__proto__ = new pvMapper.Renderer(text);
-    this.template = '<{1} {2}>{0}</{1}>';
-    this.getTemplateArgs = function (childrenRenderText) {
-        var attributesHTML = '';
-        if (this.attributes) {
-            for (var a in this.attributes){
-                attributesHTML += a + '="' + this.attributes[a] + '" ';
+(function (pvM) {
+    pvMapper.Renderer = function (text) {
+        this.render = function () {
+            var s = '';
+            for (c in this.children) {
+                s += this.children[c].render();
             }
-        }
-        return [this.text + childrenRenderText, this.tag, attributesHTML];
-    };
-    this.attributes = {};
-    this.tag = (tag) ? tag : 'div';
-};
 
-pvMapper.Renderer.HTML.Table = function () {
-    this.__proto__ = new pvMapper.Renderer.HTML('table');
-};
+            var html = this.template.format(this.getTemplateArgs(s));
+            return html;
+        };
+
+        //Returns a list of arguments that is meant to be used with the 
+        //  template during the render
+        this.getTemplateArgs = function (childrenRenderText) {
+            return { text: this.text + childrenRenderText };
+        };
+        this.updateElement = function (element) { };
+        this.removeElement = function (element) { };
+        this.clear = function () { };
+        this.text = (text) ? text : '';
+        this.template = '{text}';
+        this.children = new Array();
+    };
+
+    pvMapper.Renderer.HTML = function (tag, text) {
+        this.__proto__ = new pvMapper.Renderer(text);
+        this.template = '<{tag} {attributes}>{text}</{tag}>';
+        this.getTemplateArgs = function (childrenRenderText) {
+            var attributesHTML = '';
+            if (this.attributes) {
+                for (var a in this.attributes) {
+                    attributesHTML += a + '="' + this.attributes[a] + '" ';
+                }
+            }
+            return { text: this.text + childrenRenderText, tag: this.tag, attributes: attributesHTML };
+        };
+        this.attributes = {};
+        this.tag = (tag) ? tag : 'div';
+        this.attr = function () {
+            if (arguments.length = 2 && arguments[0].isPrototypeOf(String)) {
+                this.attributes[arguments[0]] = arguments[1];
+            } else this.attributes = arguments[0];
+            return this;
+        }
+    };
+
+    pvMapper.Renderer.HTML.Table = function () {
+        this.__proto__ = new pvMapper.Renderer.HTML('table');
+        this.addRow = function () {
+            var newRow = new pvMapper.Renderer.HTML.Table.Row();
+            this.children.push(newRow);
+            return newRow;
+        }
+    };
+
+    pvMapper.Renderer.HTML.Table.Row = function () {
+        this.__proto__ = new pvMapper.Renderer.HTML('row');
+        /*Adds a cell to the row. Passing in a cell will add that cell, passing in text will add a cell with text */
+        this.addCell = function () {
+            if (arguments[0] && arguments[0]['tag'] && (arguments[0]['tag'] == 'td' || arguments[0]['tag'] == 'th')) {
+                this.children.push(arguments[0]);
+                return arguments[0];
+            } else {
+                var text = (arguments[0])?arguments[0].toString():'';
+                var newCell = new pvMapper.Renderer.HTML('td', text);
+                this.children.push(newCell);
+                return newCell;
+            }
+        };
+    };
+})(pvMapper);

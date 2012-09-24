@@ -7,7 +7,7 @@
     //This is a factory  
 
     /**
-    Module Class
+    Module Object
     Creates a module that is automatically wired up to the rest of the pvMapper objects according to the options passed in. 
     @param {Object} options The constructor options to be used to set the Module up. If the proper options are provided the Module will have all 
         the appropriate wireing to scores, buttons, and managers, etc...
@@ -32,20 +32,22 @@
 
         var settings = $.extend({}, defaults, options);
 
-        this.id = settings.id instanceof String && settings.id;
-        this.author = settings.author instanceof String && settings.author;
-        this.version = settings.version instanceof String && settings.version;
-        this.init = setting.init instanceof String && setting.init;
-        this.destroy = settings.destroy instanceof String && settings.destroy;
-        this.activate = settings.activate instanceof String && settings.activate;
-        this.deactivate = settings.deactivate instanceof String && settings.deactivate;
+        this.id = (typeof(settings.id) === 'string') ? settings.id: '';
+        this.author = (typeof(settings.author ) === 'string') ? settings.author:'';
+        this.version = (typeof(settings.version ) === 'string') ? settings.version:'';
+        this.init = (typeof(settings.init ) === 'function') ? settings.init: null;
+        this.destroy = (typeof(settings.destroy)  === 'function') ? settings.destroy: null;
+        this.activate = (typeof(settings.activate) === 'function') ? settings.activate: null;
+        this.deactivate = (typeof(settings.deactivate) === 'function') ? settings.deactivate : null;
 
         if (settings["scoringTools"]) {
-            for (toolOptions in settings["scoringTools"]) {
+            console.log("Loading scoring tools for module: " + this.id);
+            $.each(settings["scoringTools"], function (idx, toolOptions) {
+                console.log('Adding a line for ' + toolOptions.title);
                 //TODO: Update this so it doesn't need a dependancy of pvM to contain a mainScoreboard object
-                var newline = new pvM.ScoreLine(toolOptions)
+                var tool = new pvM.ScoreLine(toolOptions)
                 pvM.mainScoreboard.addLine(tool);
-            }
+            });
         }
 
         //pvM.registerModule();
