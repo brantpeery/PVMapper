@@ -3,7 +3,7 @@
 /// <reference path="UtilityWeights.js" />
 /// <reference path="UtilityFunctions.js" />
 
-//#region Configuration
+//#region Configuration 
 
 Ext.Loader.setConfig( {
   enabled: true,
@@ -36,6 +36,7 @@ Ext.require( [
 ] );
 //#endregion
 
+//#region Application launch
 Ext.application( {
   name: 'MyApp',
   launch: function () {
@@ -82,8 +83,9 @@ Ext.application( {
 
   }
 } );
+//#endregion
 
-// create the function graph
+//#region function graph
 var board, f2;
 function loadBoard() {
   JXG.Options.ticks.majorHeight = 20;
@@ -148,11 +150,11 @@ var UtilityFunctions = {
   UtilityFunction3: function ( x ) {
   }
 }
+//#endregion
 
-
-//#region   DataStore
-var imgLink = "   <img class='funcButton' src='http://localhost:1919/Images/line_chart_24.png'/>  <label class='funcWeight'> 0.00 </label>"
-var catLink = "   <img class='funcCategory' src='http://localhost:1919/Images/Pie Chart.png'/>  <label class='funcWeight'> 0.00 </label>"
+//#region   Menu DataStore
+var imgLink = "   <img class='funcButton' src='http://localhost:1919/Images/line_chart_24.png'/>  <label class='funcWeight'>[0.00] </label>"
+var catLink = "   <img class='funcCategory' src='http://localhost:1919/Images/Pie Chart.png'/>  <label class='funcWeight'>[0.00] </label>"
 var navMenu = Ext.create( 'Ext.data.TreeStore', {
   root: {
     text: 'Overall ' + catLink,
@@ -291,6 +293,8 @@ Ext.define( 'MyApp.RootPanel', {
 
 
 //#region Function Window
+var currentMenu = null;
+
 Ext.define( 'Ext.PopupWindow', {
   extend: 'Ext.window.Window',
   title: 'Functions',
@@ -395,7 +399,7 @@ Ext.define( 'Ext.PopupWindow', {
           minWidth: 70,
           maxWidth: 150,
           value: 1,
-          id: 'target-Incremental',
+          id: 'target-Increment',
           mode: 'local',
           triggerAction: 'all',
           store: [0.0001, 0.001, 0.01, 0.1, 1, 2, 5],
@@ -593,10 +597,24 @@ Ext.define( 'Ext.PopupWindow', {
         text: 'OK',
         handler: function () {
           //TODO: execute update function here.
-
-
+          var tmpStr = me.title;
+          tmpStr = tmpStr.substring(0,tmpStr.indexOf('function')-1).trim();
+          var funcRec = funcStore.findRecord( 'functionName', tmpStr );
+          if ( funcRec != null ) {
+            var target = Ext.getCmp( 'function-target' );
+            funcRec.data.minValue = Ext.getCmp( 'target-MinValue' ).getValue();
+            funcRec.data.maxValue = Ext.getCmp( 'target-MaxValue' ).getValue();
+            funcRec.data.slope = Ext.getCmp( 'function-slope' ).getValue();
+            funcRec.data.weight = Ext.getCmp( 'function-weight' ).getValue();
+            funcRec.data.target = Ext.getCmp( 'function-target' ).getValue();
+            funcRec.data.increment = Ext.getCmp( 'target-Increment' ).getValue();
+            funcRec.data.mode = Ext.getCmp( 'function-mode' ).getValue();
+            funcRec.commit( true );
+          }
+          currentMenu.children( '.funcWeight' ).text('['+ Ext.getCmp('function-weight').getValue() + ']' );
           puWin.hide();
-        }
+
+          }
       },
       {
         xtype: 'button',
@@ -613,30 +631,59 @@ Ext.define( 'Ext.PopupWindow', {
   },
   showing: function ( aTitle ) {
     this.title = aTitle + ' functions ';
+
+    var funcRec = funcStore.findRecord( 'functionName', aTitle );
+    if ( funcRec != null) {
+      var target = Ext.getCmp( 'function-target' );
+      Ext.getCmp( 'target-MinValue' ).setValue( funcRec.data.minValue );
+      Ext.getCmp( 'target-MaxValue' ).setValue( funcRec.data.maxValue );
+      Ext.getCmp( 'function-slope' ).setValue( funcRec.data.slope );
+      Ext.getCmp( 'slope-slider' ).setValue( funcRec.data.slope );
+      Ext.getCmp( 'function-weight' ).setValue( funcRec.data.weight );
+      Ext.getCmp( 'weight-slider' ).setValue( funcRec.data.weight );
+      Ext.getCmp( 'target-Increment' ).setValue( funcRec.data.increment );
+      Ext.getCmp( 'function-mode' ).setValue( funcRec.data.mode );
+
+      var tslider = Ext.getCmp( 'target-slider' );
+      tslider.setMinValue( funcRec.data.minValue );
+      tslider.setMaxValue( funcRec.data.maxValue );
+      tslider.increment = funcRec.data.increment;
+      switch ( tslider.increment ) {
+        case 0.0001: tslider.decimalPrecision = 4; target.decimalPrecision = 4; break;
+        case 0.001: tslider.decimalPrecision = 3; target.decimalPrecision = 3; break;
+        case 0.01: tslider.decimalPrecision = 2; target.decimalPrecision = 2; break;
+        case 0.1: tslider.decimalPrecision = 1; target.decimalPrecision = 1; break;
+        default: tslider.decimalPrecision = 0; target.decimalPrecision = 0; break;
+      }
+      tslider.setValue( funcRec.data.target );
+      target.setValue( funcRec.data.target );
+      target.setMinValue( funcRec.data.minValue );
+      target.setMaxValue( funcRec.data.maxValue );
+    }
+
     return this;
   }
 } );
 //#endregion
 
-
-pvMapper.pieStore = Ext.create( 'Ext.data.Store', {
+//#region PieStore
+Ext.define( 'MyApp.PieModel', {
+  extend: 'Ext.data.Model',
   fields: [
     { name: 'Category', type: 'string' },
     { name: 'Data', type: 'int' },
     { name: 'Quality', type: 'int' }
-  ],
-  data: [
-    { Category: 'LOCE', Data: 10, Quality: 100 },
-    { Category: 'IRR', Data: 20, Quality: 100 },
-    { Category: 'DSCR', Data: 30, Quality: 100 },
-    { Category: 'NPV', Data: 5, Quality: 100 },
-    { Category: 'Transmision', Data: 10, Quality: 100 },
-    { Category: 'Incentives', Data: 25, Quality: 100 }
   ]
 } );
 
+var pieStore = Ext.create( 'Ext.data.Store', {
+  model: 'MyApp.PieModel',
+  data: [
+  ]
+} );
+//#endregion
 
-
+//#region PieWindow
 Ext.define( 'Ext.PieWindow', {
   extend: 'Ext.window.Window',
   title: 'Category',
@@ -673,20 +720,19 @@ Ext.define( 'Ext.PieWindow', {
           },
           shadow: true,
           //#region Store data
-          store: pvMapper.pieStore,
+          store: pieStore,
           //#endregion
           series: [{
             type: 'pie',
             //field: 'Data',
             angleField: 'Data',
-            lengthField: 'Quality',
+           // lengthField: 'Quality',
             showInLegend: true,
             highlight: {
               segment: {
                 margin: 20
               }
             },
-
             tips: {
               trackMouse: true,
               width: 140,
@@ -694,7 +740,7 @@ Ext.define( 'Ext.PieWindow', {
               renderer: function ( storeItem, item ) {
                 //calculate and display percentage on hover
                 var total = 0;
-                pvMapper.pieStore.each( function ( rec ) {
+                pieStore.each( function ( rec ) {
                   total += rec.get( 'Data' );
                 } );
                 this.setTitle( storeItem.get( 'Category' ) + ': ' + Math.round( storeItem.get( 'Data' ) / total * 100 ) + '%' );
@@ -708,6 +754,7 @@ Ext.define( 'Ext.PieWindow', {
               font: '18px Arial'
             }
           }]
+          ,interactions: ['rotate']
         }],
         buttons: [{
           xtype: 'button',
@@ -730,8 +777,14 @@ Ext.define( 'Ext.PieWindow', {
     ]
     , this.callParent( arguments );
   }
+  ,
+  showing: function ( aTitle ) {
+    pieStore.data.clear();
+    loadPieData( aTitle );
+    return this;
+  }
 } );
-
+//#endregion
 
 Ext.define( 'MyApp.FunctionUtils', {
   extend: 'Ext.data.Model',
@@ -744,7 +797,8 @@ Ext.define( 'MyApp.FunctionUtils', {
     { name: 'slope', type: 'float' },
     { name: 'mode', type: 'string' },
     { name: 'weight', type: 'int' }
-  ]
+  ],
+  idProperty: 'functionName'
 } );
 
 var funcStore = Ext.create( 'Ext.data.Store', {
@@ -753,153 +807,139 @@ var funcStore = Ext.create( 'Ext.data.Store', {
 
 } );
 
+//just in case IE8 or earlier.
 if ( !String.prototype.trim ) {
   String.prototype.trim = function () {
-    return this.replace( /^\s+|\s+$/g, '' );
+    return this.replace(/^\s+|\s+$/g, '' );
   }
 }
-
+//#region load Function Data
 function loadData() {
-  var LOCE = Ext.create('MyApp.FunctionUtils', {
-    functionName: 'LOCE',
-    minValue: 0,
-    maxValue: 100,
-    increment: 1,
-    target: 50,
-    mode: 'Less is better',
-    weight: 20
-  });
+  var cNode = navMenu.getRootNode();
+  if ( cNode.hasChildNodes() ) {
+    var totalWeight = pushChildNodes( cNode.firstChild );
+    fromCh = cNode.data.text.indexOf( '[' ) + 1;
+    toCh = cNode.data.text.indexOf( ']' );
+    cNode.data.text = cNode.data.text.substring( 0, fromCh ) + totalWeight + cNode.data.text.substring( toCh, cNode.data.lenth );
+  }
+}
 
-  var unknownFunc = Ext.create('MyApp.FunctionUtils', {
-    functionName: 'Unknown',
-    minValue: 0,
-    maxValue: 50,
-    increment: 1,
-    target: 20,
-    mode: 'More is better',
-    weight: 70
-  });
+var cnt = 0;
+function pushChildNodes( fNode) {
+  var nodeName, fromCh, toCh, tmpStr, func, weights, totalWeight = 0.00;
+  var min,max;
+  var maxWeight = 0.00;
+  var cNode = fNode;
 
-
-  funcStore.insert(0, LOCE );
-  funcStore.insert( 1, unknownFunc );
-
-  var root = navMenu.tree.root;
-  pushChildNodes( root );
-
-
-  var done = false;
-  var cNode = root.childNodes;
-  var tStr = '';
-  var func, cnt = 0;
-  var min;
-  var max;
-
-  while ( !done ) {
+  while ( cNode ) {
     if ( cNode.data.leaf ) {
-      tStr = cNode.data.text.indexOf('<').trim();
+      toCh = cNode.data.text.indexOf( '<' ) - 1;
+      if ( toCh <= 0 ) toCh = cNode.data.text.lenth - 1;
+      nodeName = cNode.data.text.substring( 0, toCh ).trim();
+
       min = Math.floor( Math.random() * 11 );
       max = Math.floor( Math.random() * 90 ) + 10;
+      
+      if ( !cNode.nextSibling )
+        weights = 100.00 - totalWeight;
+      else 
+        weights = Math.floor( Math.random() * 30 ) + 1;
+
+      totalWeight = totalWeight + weights;
 
       func = Ext.create( 'MyApp.FunctionUtils', {
-        functionName: tStr,
+        functionName: nodeName,
         minValue: min,
         maxValue: max,
         increment: 1,
         target: Math.floor( Math.random() * max ),
         slope: Math.floor( Math.random() * 100 ),
         mode: 'Less is better',
-        weight: Math.floor( Math.random() * 100 )
+        weight: weights
       } );
       funcStore.insert( cnt, func );
+      
+      fromCh = cNode.data.text.indexOf( '[' )+1;
+      toCh = cNode.data.text.indexOf(']');
+      cNode.data.text = cNode.data.text.substring( 0, fromCh ) + weights + cNode.data.text.substring(toCh,cNode.data.lenth);
       cnt = cnt + 1;
+    } else if ( cNode.hasChildNodes() ) {
+      var total = pushChildNodes( cNode.firstChild );
+     
+      fromCh = cNode.data.text.indexOf( '[' ) + 1;
+      toCh = cNode.data.text.indexOf( ']' );
+      cNode.data.text = cNode.data.text.substring( 0, fromCh ) + total + cNode.data.text.substring( toCh, cNode.data.lenth );
+      totalWeight = totalWeight + total;
+    }
+    cNode = cNode.nextSibling;
+  }
+  return totalWeight;
+}
+//#endregion
+//#region load Pie Data
+
+function loadPieData(aTitle) {
+  var cNode = navMenu.getRootNode().findChildBy( function () {
+    var toCh, nodeName = '';
+    if ( !this.data.leaf ) {
+      toCh = this.data.text.indexOf( '<' ) - 1;
+      if ( toCh <= 0 ) toCh = this.data.text.lenth - 1;
+      nodeName = this.data.text.substring( 0, toCh ).trim();
+    }
+    return nodeName == aTitle;
+  }, null, true );
+  if ( cNode != null && cNode.hasChildNodes() ) {
+    var toCh, nodeName;
+    cNode = cNode.firstChild;
+    while ( cNode ) {
+      toCh = cNode.data.text.indexOf( '<' ) - 1;
+      nodeName = cNode.data.text.substring( 0, toCh ).trim();
+
+      fromCh = cNode.data.text.indexOf( '[' ) + 1;
+      toCh = cNode.data.text.indexOf( ']' );
+      weight = cNode.data.text.substring( fromCh, toCh );
+      pieStore.add( { Category: nodeName, Data: weight, Quality: 100 } );
+      cNode = cNode.nextSibling;
     }
   }
 }
 
-function pushChildNodes( pNode ) {
-  var done = false;
-  var cNode = pNode.childNodes;
-  var tStr = '';
-  var func, cnt = 0;
-  var min;
-  var max;
-
-  //add to store "group node"
-
-
-  //insert to store "leaf node"
-  cNode.forEach();
-  while ( !done ) {
-    if ( cNode.data.leaf ) {
-      tStr = cNode.data.text.indexOf( '<' ).trim();
-      min = Math.floor( Math.random() * 11 );
-      max = Math.floor( Math.random() * 90 ) + 10;
-
-      func = Ext.create( 'MyApp.FunctionUtils', {
-        functionName: tStr,
-        minValue: min,
-        maxValue: max,
-        increment: 1,
-        target: Math.floor( Math.random() * max ),
-        slope: Math.floor( Math.random() * 100 ),
-        mode: 'Less is better',
-        weight: Math.floor( Math.random() * 100 )
-      } );
-      funcStore.insert( cnt, func );
-      cnt = cnt + 1;
-    }
-    cNode = cNode.nextSibling();
-
-  }
-}
+//#endregion
 
 //#region onReady
 var pieWin = Ext.create( 'Ext.PieWindow' );
 var puWin = Ext.create( 'Ext.PopupWindow' );
+loadData();
 
 ( function ( pvM ) {
   pvM.onReady( function () {
-    $( '#ToolTree' ).on( {
-      click: function () {
-        //if ( ev.target != this ) return true;
-        alert( 'Value is: ' + this.textContent );
-      }
-    }, '.funcWeight' );
+   
+    //$( '#ToolTree' ).on( {
+    //  click: function () {
+    //    //if ( ev.target != this ) return true;
+    //    alert( 'Value is: ' + this.textContent );
+    //  }
+    //}, '.funcWeight' );
 
     $( '#ToolTree' ).on( {
       click: function ( ev ) {
         ev.stopPropagation();
-        puWin.showing( $( this ).parent().text() ).show();
+        currentMenu = $( this ).parent();
+        var tmpStr = $( this ).parent().text();
+        tmpStr = tmpStr.substring( 0, tmpStr.indexOf( '[' ) ).trim();
+        puWin.showing(tmpStr ).show();
       }
     }, '.funcButton' );
 
     $( '#ToolTree' ).on( {
       click: function ( ev ) {
         ev.stopPropagation();
-        pieWin.show();
+                
+        var tmpStr = $( this ).parent().text();
+        tmpStr = tmpStr.substring( 0, tmpStr.indexOf( '[' ) ).trim();
+        pieWin.showing(tmpStr).show();
       }
     }, '.funcCategory' );
-
-    var target = Ext.getCmp( 'function-target' );
-    Ext.getCmp( 'function-slope' ).setValue( Math.random() * 100 );
-    Ext.getCmp( 'slope-slider' ).setValue( Ext.getCmp( 'function-slope' ).getValue() );
-    Ext.getCmp( 'weight-slider' ).setValue( Ext.getCmp( 'function-weight' ).getValue() );
-    var tslider = Ext.getCmp( 'target-slider' );
-    tslider.setMinValue( Ext.getCmp( 'target-MinValue' ).getValue() );
-    tslider.setMaxValue( Ext.getCmp( 'target-MaxValue' ).getValue() );
-    tslider.increment = Ext.getCmp( 'target-Incremental' ).getValue();
-    switch ( tslider.increment ) {
-      case 0.0001: tslider.decimalPrecision = 4; target.decimalPrecision = 4; break;
-      case 0.001: tslider.decimalPrecision = 3; target.decimalPrecision = 3; break;
-      case 0.01: tslider.decimalPrecision = 2; target.decimalPrecision = 2; break;
-      case 0.1: tslider.decimalPrecision = 1; target.decimalPrecision = 1; break;
-      default: tslider.decimalPrecision = 0; target.decimalPrecision = 0; break;
-    }
-    tslider.setValue( Math.floor( Math.random() * tslider.maxValue ) );
-    target.setValue( tslider.getValue() );
-    target.setMinValue( tslider.minValue );
-    target.setMaxValue( tslider.maxValue );
 
     if ( typeof ( JXG ) == "undefined" ) {
       console.log( "Loading in the JXG Graph script" );
