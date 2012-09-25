@@ -13,7 +13,7 @@
         the appropriate wireing to scores, buttons, and managers, etc...
     @return {pvMapper.Module} A new module object that is wired up to the PVMapper system according to the options passed in
     */
-    pvM.Module = function (options) {          
+    pvM.Module = function (options) {
         this.init = function () { };          //Called when the tool is loaded as a module.
         this.destroy = function () { };       //Called when the tool needs to completely remove itself from the interface and object tree
         this.activate = function () { };      //Called when the tool is checkmarked or activated by the system or user
@@ -32,27 +32,29 @@
 
         var settings = $.extend({}, defaults, options);
 
-        this.id = (typeof(settings.id) === 'string') ? settings.id: '';
-        this.author = (typeof(settings.author ) === 'string') ? settings.author:'';
-        this.version = (typeof(settings.version ) === 'string') ? settings.version:'';
-        this.init = (typeof(settings.init ) === 'function') ? settings.init: null;
-        this.destroy = (typeof(settings.destroy)  === 'function') ? settings.destroy: null;
-        this.activate = (typeof(settings.activate) === 'function') ? settings.activate: null;
-        this.deactivate = (typeof(settings.deactivate) === 'function') ? settings.deactivate : null;
+        this.id = (typeof (settings.id) === 'string') ? settings.id : '';
+        this.author = (typeof (settings.author) === 'string') ? settings.author : '';
+        this.version = (typeof (settings.version) === 'string') ? settings.version : '';
+        this.init = (typeof (settings.init) === 'function') ? settings.init : null;
+        this.destroy = (typeof (settings.destroy) === 'function') ? settings.destroy : null;
+        this.activate = (typeof (settings.activate) === 'function') ? settings.activate : null;
+        this.deactivate = (typeof (settings.deactivate) === 'function') ? settings.deactivate : null;
 
         if (settings["scoringTools"]) {
             console.log("Loading scoring tools for module: " + this.id);
             $.each(settings["scoringTools"], function (idx, toolOptions) {
-                console.log('Adding a line for ' + toolOptions.title);
+
+                /*debug*/console.log('Adding a line for ' + toolOptions.title);
+
                 //TODO: Update this so it doesn't need a dependancy of pvM to contain a mainScoreboard object
                 var tool = new pvM.ScoreLine(toolOptions)
                 pvM.mainScoreboard.addLine(tool);
             });
-        }
+        };
 
         //pvM.registerModule();
         //pvM.registerSiteTool();
-    }
+    };
 })(pvMapper);
 
 

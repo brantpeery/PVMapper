@@ -32,11 +32,13 @@
 
                         //Update the score
                         score.updateValue(val); //Do it this way so the score can manage getting itself refreshed on the screen and in the DB
+
+                        pvM.displayMessage("Recalulated the area.");
                     }
                 },
                 innerBoundry: {
-                    title: "Site Gross Area",
-                    description: "Calculates the gross area of the site in square kilometers.",
+                    title: "Site Net Area",
+                    description: "Calculates the net area of the site subtracting the setback (sqkm).",
                     onSiteChange: function (event, score) { }
                 }
 
@@ -85,10 +87,10 @@
             offsetFeature.geometry = buffer; //This probably wont work
         }
 
-        var area = geo.getGeodesicArea();
+        var area = geometry.getGeodesicArea();
         var kmArea = area / 1000000;
 
-        return kmArea;
+        return Math.round(kmArea*100)/100;
     }
 
     //Handles the button click for the buttons for this tool

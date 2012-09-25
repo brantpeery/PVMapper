@@ -58,14 +58,14 @@
     };
 
     pvMapper.Renderer.HTML.Table.Row = function () {
-        this.__proto__ = new pvMapper.Renderer.HTML('row');
+        this.__proto__ = new pvMapper.Renderer.HTML('tr');
         /*Adds a cell to the row. Passing in a cell will add that cell, passing in text will add a cell with text */
         this.addCell = function () {
             if (arguments[0] && arguments[0]['tag'] && (arguments[0]['tag'] == 'td' || arguments[0]['tag'] == 'th')) {
                 this.children.push(arguments[0]);
                 return arguments[0];
             } else {
-                var text = (arguments[0])?arguments[0].toString():'';
+                var text = (arguments[0]) ? arguments[0].toString() : '';
                 var newCell = new pvMapper.Renderer.HTML('td', text);
                 this.children.push(newCell);
                 return newCell;

@@ -20,7 +20,7 @@ String.prototype.format = function (args) {
         var key = item.substr(1, item.length - 2);
         //console.log('key=' + key + " item=" + item);
         var replace;
-        if (values[key]) {
+        if (typeof (values[key]) != 'undefined') {
             replace = values[key];
         } else if (item == '{\\') {
             replace = "{"; //Replace {\ with just {
