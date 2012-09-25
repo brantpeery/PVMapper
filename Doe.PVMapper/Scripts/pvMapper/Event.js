@@ -28,7 +28,9 @@ Event.prototype.removeHandler = function (handler) {
 }
 Event.prototype.fire = function (context, eventArgs) {
     var self = this;
-    if (!eventArgs instanceof Array) eventArgs = [eventArgs]
+    if (!(eventArgs instanceof Array)) {
+        eventArgs = [eventArgs];
+    }
     $.each(self.eventHandlers, function (idx, func) {
         if (typeof(func)!='undefined')
             func.apply(context, eventArgs);

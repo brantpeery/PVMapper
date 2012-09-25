@@ -4,6 +4,8 @@
 //Site object 
 (function (pvM) {
     pvM.Site = function (/*OpenLayers.Feature*/ feature) {
+        var self = this;
+
         //Check the parameters
         if (!feature instanceof(OpenLayers.Feature)) { throw ('The parameter "feature" must be an OpenLayers.Feature'); }
 
@@ -22,7 +24,7 @@
             this.selectEvent.fire(event);
         };
         this.onFeatureChanged = function (event) {
-            this.changeEvent.fire(event);
+            self.changeEvent.fire(self, event);
         };
         this.select = function () {
             //Deselect the currently selected feature

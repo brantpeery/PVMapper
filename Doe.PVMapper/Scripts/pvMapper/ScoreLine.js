@@ -9,40 +9,45 @@
         //Events
         this.scoreChangeEvent = new Event();
         this.updatingScoresEvent = new Event();
-        this.siteChangeEvent = new Event();
+        //this.siteChangeEvent = new Event();
 
         //Check to make sure the siteChangeHandler is a function
-        var siteChangeHandler = ($.isFunction(options.onSiteChange)) ? siteChangeHandler : null;
-        this.siteChangeEvent.addHandler(siteChangeHandler);
+        var siteChangeHandler = ($.isFunction(options.onSiteChange)) ? options.onSiteChange : null;
+        //this.siteChangeEvent.addHandler(siteChangeHandler);
         
 
         this.getUtilityScore = function () { };
-        this.getWeight = function () { };
+        this.getWeight = function () { ;}
         this.getWeightedUtilityScore = function () { };
         this.addScore=function(site){
             var score = new pvM.Score(site);
-            site.changeEvent.addHandler(this.siteChange); //Attach our handler directly to the site.
-            this.scores.push(score);
+            score.siteChangeEvent.addHandler(siteChangeHandler); //Attach the tool's handler directly to the score.
+
+            //Subscribe to the score updated event
+            score.valueChangeEvent.addHandler(function (event) {
+                self.scoreChangeEvent.fire(self, event); //Just pass the event on while setting the context
+            });
+            self.scores.push(score);
             return score;
         };
 
 
-        this.name; //The name that will show up in the row
-        this.description; //The popup information that will show up on mouse hover
+        this.name = (typeof(options.title)==='string')?options.title:"Unnamed Tool"; //The name that will show up in the row
+        this.description = (typeof (options.description) === 'string') ? options.description : "Unnamed Tool";; //The popup information that will show up on mouse hover
         this.scores=new Array(); //A collection of scores that store all the information for the colums of this line
         for (site in pvM.sites) {
-            this.addScore(site);
+            self.addScore(site);
         }
         this.tool; //The tool that manages this line.
 
         //Observes the siteChanged event for the sites that this line cares about 
-        this.onSiteChange = function (event) {
-            //Pass the event on to the module that created the line
-            //change the context to this line
-            var e = (event) ? event : {};
-            e.type = "ScoreLine.siteChange"
-            this.siteChangeEvent.fire(this, e);
-        }
+        //this.onSiteChange = function (event) {
+        //    //Pass the event on to the module that created the line
+        //    //change the context to this line
+        //    var e = (event) ? event : {};
+        //    e.type = "ScoreLine.siteChange"
+        //    this.siteChangeEvent.fire(this, e);
+        //}
 
         //Observes any sites being removed to the site manager
         this.onSiteRemoved = function (event) {
@@ -69,7 +74,7 @@
                     score: this.scores[idx],
                     type: "ScoreLine.updateScores"
                 }
-                this.siteChangeEvent.fire(this, e);
+                self.siteChangeEvent.fire(this, e);
             }
         }
 

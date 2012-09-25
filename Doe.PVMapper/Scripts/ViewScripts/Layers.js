@@ -149,15 +149,4 @@
 
     pvMapper.map.addLayer(pvMapper.siteLayer);
 
-    //This belongs in a centeral location. Testing from here
-    //Watch the sitelayer for events and wire the events to the appropriate pvMapper API objects
-    pvMapper.siteLayer.events.on({
-        "afterfeaturemodified": function (event) {
-            feature = event.feature;
-            if (feature.site) { //Fire the site's changed event if this feature is managed by a site
-                feature.site.changeEvent.fire(feature.site); //Fire the event and set the context to site
-            }
-        }
-    });
-
 });
