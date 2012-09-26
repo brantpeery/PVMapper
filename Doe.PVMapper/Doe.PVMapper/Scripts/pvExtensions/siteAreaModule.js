@@ -87,7 +87,9 @@
             offsetFeature.geometry = buffer; //This probably wont work
         }
 
-        var area = geometry.getGeodesicArea();
+        var proj = new OpenLayers.Projection('EPSG:900913');
+
+        var area = geometry.getGeodesicArea(proj);
         var kmArea = area / 1000000;
 
         return Math.round(kmArea*100)/100;
