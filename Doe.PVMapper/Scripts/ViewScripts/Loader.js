@@ -614,7 +614,7 @@ Ext.define( 'Ext.PopupWindow', {
           currentMenu.children( '.funcWeight' ).text('['+ Ext.getCmp('function-weight').getValue() + ']' );
           puWin.hide();
 
-          }
+        }
       },
       {
         xtype: 'button',
@@ -630,8 +630,7 @@ Ext.define( 'Ext.PopupWindow', {
   me.callParent( arguments );
   },
   showing: function ( aTitle ) {
-    this.title = aTitle + ' functions ';
-
+    this.setTitle(aTitle + ' functions ');
     var funcRec = funcStore.findRecord( 'functionName', aTitle );
     if ( funcRec != null) {
       var target = Ext.getCmp( 'function-target' );
@@ -661,6 +660,7 @@ Ext.define( 'Ext.PopupWindow', {
       target.setMaxValue( funcRec.data.maxValue );
     }
 
+    this.update();
     return this;
   }
 } );
@@ -726,7 +726,7 @@ Ext.define( 'Ext.PieWindow', {
             type: 'pie',
             //field: 'Data',
             angleField: 'Data',
-           // lengthField: 'Quality',
+            // lengthField: 'Quality',
             showInLegend: true,
             highlight: {
               segment: {
@@ -823,12 +823,70 @@ function loadData() {
     cNode.data.text = cNode.data.text.substring( 0, fromCh ) + totalWeight + cNode.data.text.substring( toCh, cNode.data.lenth );
   }
 }
+function randomNormal() {
+  return Math.cos( 2 * Math.PI * Math.random() ) * Math.sqrt( -2 * Math.log( Math.random() ) )
+}
+
+function normalDistribution(min, max, mean, std) {
+
+  var norm = 0;
+  if ( !mean || mean == 0.0 ) {
+    var X = 0;
+    for ( var i = 0; i < 10; i++ ) {
+      X = randomNormal() * ( max - min );
+      norm = norm + X;
+    }
+    norm = norm / 10;
+    mean = norm + min;
+  }
+
+  if (!std || std == 0.0) {
+    //we don't have std, calculate it: a sample of 10 point.
+    var Y = 0.0;
+    var norm2 = 0;
+    for ( var i = 0; i < 10; i++ ) {
+      norm2 = Math.pow(( randomNormal() * ( max - min ) - mean ), 2 )
+      Y = Y + norm2;
+    }
+    norm2 = Math.sqrt( Y / 10 ) ;
+    std = norm2;
+  }
+  var ND = norm / std + mean;
+  console.log('min: '+min+', max: '+max+', mean: ' + mean + ', std: ' + std+ ', Norm: ' + norm + ', ND: ' + ND);
+  return ND;
+}
+
+function getMode( id ) {
+  if ( id == 0 ) return 'Less is better';
+  else return 'More is better';
+}
+
+function createUtilsRecord( aName ) {
+  switch (aName) {
+    case 'LCOE': return Ext.create( 'MyApp.FunctionUtils', { functionName: aName, minValue: 100, maxValue: 200, increment: 1, target: 144, slope: 50, mode: getMode(0), weight: Math.random() * 100 } );
+    case 'IRR': return Ext.create( 'MyApp.FunctionUtils', { functionName: aName, minValue: 0, maxValue: 35, increment: 1, target: 10, slope: 20, mode: getMode( 1 ), weight: Math.random() * 100 } );
+    case 'DSCR': return Ext.create( 'MyApp.FunctionUtils', { functionName: aName, minValue: 1, maxValue: 5, increment: 1, target: 2, slope: 50, mode: getMode( 1 ), weight: Math.random() * 100 } );
+    case 'NPV': return Ext.create( 'MyApp.FunctionUtils', { functionName: aName, minValue: 1000000, maxValue: 50000000, increment: 100, target: 20000000, slope: 50, mode: getMode( 1 ), weight: Math.random() * 100 } );
+    case 'Transmission': return Ext.create( 'MyApp.FunctionUtils', { functionName: aName, minValue: 0, maxValue: 3000000, increment: 1, target: 500000, slope: 30, mode: getMode( 0 ), weight: Math.random() * 100 } );
+    case 'Incentives': return Ext.create( 'MyApp.FunctionUtils', { functionName: aName, minValue: 0, maxValue: 100, increment: 1, target: 50, slope: 50, mode: getMode( 1 ), weight: Math.random() * 100 } );
+    case 'Net Annual Energy': return Ext.create( 'MyApp.FunctionUtils', { functionName: aName, minValue: 1000000, maxValue: 400000000, increment: 100, target: 40000000, slope: 30, mode: getMode( 1 ), weight: Math.random() * 100 } );
+    case 'Intermittency': return Ext.create( 'MyApp.FunctionUtils', { functionName: aName, minValue: 0, maxValue: 1, increment: 0.01, target: 0.85, slope: 20, mode: getMode( 1 ), weight: Math.random() * 100 } );
+    case 'Contract Risk': return Ext.create( 'MyApp.FunctionUtils', { functionName: aName, minValue: 0, maxValue: 1, increment: 0.01, target: 0.20, slope: 20, mode: getMode( 0 ), weight: Math.random() * 100 } );
+    case 'Endangered Species': return Ext.create( 'MyApp.FunctionUtils', { functionName: aName, minValue: 0, maxValue: 1, increment: 0.01, target: 0.1, slope: 10, mode: getMode( 0 ), weight: Math.random() * 100 } );
+    case 'Cultural Resources': return Ext.create( 'MyApp.FunctionUtils', { functionName: aName, minValue: 0, maxValue: 1, increment: 0.01, target: 0.1, slope: 10, mode: getMode( 0 ), weight: Math.random() * 100 } );
+    case 'Zoning': return Ext.create( 'MyApp.FunctionUtils', { functionName: aName, minValue: 0, maxValue: 1, increment: 0.01, target: 0.80, slope: 20, mode: getMode( 1 ), weight: Math.random() * 100 } );
+    case 'Soil': return Ext.create( 'MyApp.FunctionUtils', { functionName: aName, minValue: 0, maxValue: 1, increment: 0.01, target: 0.80, slope: 20, mode: getMode( 1 ), weight: Math.random() * 100 } );
+    case 'Geology': return Ext.create( 'MyApp.FunctionUtils', { functionName: aName, minValue: 0, maxValue: 1, increment: 0.01, target: 0.80, slope: 20, mode: getMode( 1 ), weight: Math.random() * 100 } );
+    case 'Water': return Ext.create( 'MyApp.FunctionUtils', { functionName: aName, minValue: 0, maxValue: 1, increment: 0.01, target: 0.80, slope: 20, mode: getMode( 1 ), weight: Math.random() * 100 } );
+    case 'Public Perception': return Ext.create( 'MyApp.FunctionUtils', { functionName: aName, minValue: 0, maxValue: 1, increment: 0.01, target: 0.5, slope: 20, mode: getMode( 1 ), weight: Math.random() * 100 } );
+  }
+}
 
 var cnt = 0;
 function pushChildNodes( fNode) {
-  var nodeName, fromCh, toCh, tmpStr, func, weights, totalWeight = 0.00;
+  var nodeName, fromCh, toCh, tmpStr, weights, totalWeight = 0.00;
   var min,max;
-  var maxWeight = 0.00;
+  //var maxWeight = 0.00;
   var cNode = fNode;
 
   while ( cNode ) {
@@ -836,27 +894,32 @@ function pushChildNodes( fNode) {
       toCh = cNode.data.text.indexOf( '<' ) - 1;
       if ( toCh <= 0 ) toCh = cNode.data.text.lenth - 1;
       nodeName = cNode.data.text.substring( 0, toCh ).trim();
-
-      min = Math.floor( Math.random() * 11 );
-      max = Math.floor( Math.random() * 90 ) + 10;
       
-      if ( !cNode.nextSibling )
-        weights = 100.00 - totalWeight;
-      else 
-        weights = Math.floor( Math.random() * 30 ) + 1;
+      //min = getMin( nodeName );
+      //max = getMax( nodeName );
 
+      //min = Math.floor( Math.random() * 11 );
+      //max = Math.floor( Math.random() * 90 ) + 10;
+      
+      //if ( !cNode.nextSibling )
+      //  weights = 100.00 - totalWeight;
+      //else 
+      //  weights = Math.floor( Math.random() * 30 ) + 1;
+
+      var func = createUtilsRecord( nodeName );
+      weights = func.data.weight;
       totalWeight = totalWeight + weights;
 
-      func = Ext.create( 'MyApp.FunctionUtils', {
-        functionName: nodeName,
-        minValue: min,
-        maxValue: max,
-        increment: 1,
-        target: Math.floor( Math.random() * max ),
-        slope: Math.floor( Math.random() * 100 ),
-        mode: 'Less is better',
-        weight: weights
-      } );
+      //func = Ext.create( 'MyApp.FunctionUtils', {
+      //  functionName: nodeName,
+      //  minValue: min,
+      //  maxValue: max,
+      //  increment: 1,
+      //  target: Math.floor( Math.random() * max ),
+      //  slope: Math.floor( Math.random() * 100 ),
+      //  mode: 'Less is better',
+      //  weight: weights
+      //} );
       funcStore.insert( cnt, func );
       
       fromCh = cNode.data.text.indexOf( '[' )+1;
