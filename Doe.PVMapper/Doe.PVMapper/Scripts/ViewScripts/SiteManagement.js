@@ -206,7 +206,22 @@ function siteManagementTool(map, layer) {
     }
 
     this.modifyFeatureControl = function (callback) {
-        var mft = new OpenLayers.Control.ModifyFeature(layer, { vertexRenderIntent: "select" });
+        var mft = new OpenLayers.Control.ModifyFeature(layer, {
+            vertexRenderIntent: "select" ,
+            clickout: true, toggle: false,
+            multiple: false, hover: false,
+            toggleKey: "ctrlKey", // ctrl key removes from selection
+            multipleKey: "shiftKey", // shift key adds to selection
+            box: false
+            //eventListeners: {
+            //    beforefeaturemodified: function (event) {
+            //        alert(event.feature);
+            //    },
+            //    featurehighlighted: function (event) {
+            //        pvMapper.map.zoomToExtent(pvMapper.getSelectedSite().geometry.getBounds());
+            //    }
+            //}
+        });
         layer.events.on({ "afterfeaturemodified": callback });
         return mft;
     }
