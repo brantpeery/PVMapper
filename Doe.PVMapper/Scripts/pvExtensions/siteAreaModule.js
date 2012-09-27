@@ -17,6 +17,7 @@
     pvM.onReady(function () {
         console.log("Loading in site area module");
         var me = new pvM.Module({
+            self: this,
             id: "doe.siteAreaModule", //This will come in handy if we want to make these tools singletons
             author: "",
             version: "",
@@ -26,22 +27,34 @@
                 siteArea: {
                     title: "Site Gross Area",
                     description: "Calculates the gross area of the site in quare kilometers.",
+                    calculateValueCallback: calculateSiteArea,
                     onSiteChange: function (event, score) { //Fires when a score has been notified that it's site has changed
-                        //Use the geometry of the OpenLayers feature to get the area
-                        var val = calculateArea(score.site.feature.geometry);
 
-                        //Update the score
-                        score.updateValue(val); //Do it this way so the score can manage getting itself refreshed on the screen and in the DB
-
-                        pvM.displayMessage("Recalulated the area.");
+                        //Update the property (only do this if this is a very fast calculation)
+                        score.updateValue(calculateSiteArea(score.site)); //Do it this way so the score can manage getting itself refreshed on the screen and in the DB
+                    },
+                    onScoreAdded: function (event, score) { //This will be called when a score is added to the scoreline that represents this tool
+                        //Really don't need to do anything here as the framework will be asking for the updated value later
                     }
                 },
-                innerBoundry: {
+                innerBoundry: { //This tool calculates the setback area and draws the setback polygon on the site
                     title: "Site Net Area",
                     description: "Calculates the net area of the site subtracting the setback (sqkm).",
-                    onSiteChange: function (event, score) { }
-                }
+                    calculateValueCallback: calculateSetbackArea,
+                    onSiteChange: function (event, score) {
+                        //Update the offset feature, redraw it correctly, and then recalculate the area for it
+                        updateSetbackFeature(score.site);
 
+                        //Update the property (only do this if this is a very fast calculation)
+                        score.updateValue(calculateSetbackArea(score.site, setbackLength));
+                    },
+                    onScoreAdded: function (event, score) {
+                        //Create the offset and add that property to the site
+                        updateSetbackFeature(score.site);
+
+                        //The framework will ask for a value update, so don't automatically do it here.
+                    }
+                }
             },
 
             intents: {
@@ -72,35 +85,68 @@
     });
 
     //All private functions and varables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
-    var offsetFeature;
+    var offsetFeature, setbackLength, setbackLayer;
+    setbackLength = 30; 
 
     function calculateArea(geometry, offset) {
-        if ($.isNumeric(offset)) {
-            var reader = new jsts.io.WKTReader();
-            var parser = new jsts.io.OpenLayersParser();
-
-            var input = reader.read(geometry);
-            var buffer = input.buffer(offset);
-            buffer = parser.write(buffer);
-
-            //Redraw the polygon
-            offsetFeature.geometry = buffer; //This probably wont work
-        }
 
         var proj = new OpenLayers.Projection('EPSG:900913');
 
         var area = geometry.getGeodesicArea(proj);
         var kmArea = area / 1000000;
 
-        return Math.round(kmArea*100)/100;
+        return Math.round(kmArea * 100) / 100;
     }
 
     //Handles the button click for the buttons for this tool
     function onButtonClicked(event) {
     };
 
+
+
+    function updateSetbackFeature(site, setback) {
+        if (!$.isNumeric(setback)) {
+            setback = setbackLength;
+        }
+        var reader = new jsts.io.WKTReader();
+        var parser = new jsts.io.OpenLayersParser();
+
+        var input = parser.read(site.feature.geometry);
+        var buffer = input.buffer(-1*setback); //Inset the feature
+        var newGeometry = parser.write(buffer);
+
+        if (!setbackLayer) {
+            setbackLayer = new OpenLayers.Layer.Vector("Site Setback");
+            pvM.map.addLayer(setbackLayer);
+        }
+
+        if (site.offsetFeature) {
+            //Redraw the polygon
+            setbackLayer.removeFeatures(site.offsetFeature);
+            site.offsetFeature.geometry = newGeometry; //This probably wont work
+        } else {
+            var style = { fillColor: 'blue', fillOpacity: 0, strokeWidth: 3, strokeColor: "purple" };
+            site.offsetFeature = new OpenLayers.Feature.Vector(newGeometry, { parentFID: site.feature.fid }, style);
+        }
+        setbackLayer.addFeatures(site.offsetFeature);
+
+
+
+    };
+
+    function calculateSetbackArea(site) {
+        if (site.offsetFeature) {
+            return calculateArea(site.offsetFeature.geometry);
+        }
+
+        return 0;
+    }
+
+    function calculateSiteArea(site) {
+        //Use the geometry of the OpenLayers feature to get the area
+        var val = calculateArea(site.feature.geometry);
+
+        return val;
+    }
+
 })(pvMapper);
-myclass = function(){
-    var priv="Secret";
-    this.setPriv = function(s){priv===s;};
-}

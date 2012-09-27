@@ -5,21 +5,22 @@
             var sitesLayer = pvMapper.getSiteLayer();
 
             for (var i = 0; i < sites.length; i++) {
+                console.log("Adding site " + sites[i].fid + " to the map");
 
                 var site = sites[i];
                 var poly = new OpenLayers.Format.WKT().read(site.polygonGeometry);
                 if (poly) { //Make sure the poly was created before trying to set properties    
 
-                    // buffer tool prototype
-                    var reader = new jsts.io.WKTReader();
-                    var parser = new jsts.io.OpenLayersParser();
+                    //// buffer tool prototype
+                    //var reader = new jsts.io.WKTReader();
+                    //var parser = new jsts.io.OpenLayersParser();
 
-                    var input = reader.read(site.polygonGeometry);
-                    var buffer = input.buffer(-20);
-                    buffer = parser.write(buffer);
-                    var innerPolygon = new OpenLayers.Feature.Vector(buffer, null, { fillColor: 'blue', fillOpacity: 0, strokeWidth: 3, strokeColor: "purple" });
-                    sitesLayer.addFeatures([innerPolygon]);
-                    // buffer tool prototype
+                    //var input = reader.read(site.polygonGeometry);
+                    //var buffer = input.buffer(-20);
+                    //buffer = parser.write(buffer);
+                    //var innerPolygon = new OpenLayers.Feature.Vector(buffer, null, { fillColor: 'blue', fillOpacity: 0, strokeWidth: 3, strokeColor: "purple" });
+                    //sitesLayer.addFeatures([innerPolygon]);
+                    //// buffer tool prototype
 
 
                     poly.fid = site.siteId;
@@ -27,7 +28,7 @@
                         name: site.name,
                         description: site.description,
                         // buffer tool prototype
-                        innerGeometry: innerPolygon.geometry
+                        //innerGeometry: innerPolygon.geometry
                     };
                     sitesLayer.addFeatures([poly], {});
 
@@ -35,8 +36,9 @@
                     pvMapper.siteManager.addSite(s);
 
                     console.log('Added ' + s.name + ' to the site manager');
+                } else {
+                    console.log("Unable to add the site. Unable to create the openlayers feature");
                 }
-
             }
 
             //Add the event for the sitesLayer to the site manager 

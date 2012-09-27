@@ -14,6 +14,7 @@
     @return {pvMapper.Module} A new module object that is wired up to the PVMapper system according to the options passed in
     */
     pvM.Module = function (options) {
+        var self = this;
         this.init = function () { };          //Called when the tool is loaded as a module.
         this.destroy = function () { };       //Called when the tool needs to completely remove itself from the interface and object tree
         this.activate = function () { };      //Called when the tool is checkmarked or activated by the system or user
@@ -40,6 +41,8 @@
         this.activate = (typeof (settings.activate) === 'function') ? settings.activate : null;
         this.deactivate = (typeof (settings.deactivate) === 'function') ? settings.deactivate : null;
 
+        this.scoringTools = {};
+
         if (settings["scoringTools"]) {
             console.log("Loading scoring tools for module: " + this.id);
             $.each(settings["scoringTools"], function (idx, toolOptions) {
@@ -47,8 +50,11 @@
                 /*debug*/console.log('Adding a line for ' + toolOptions.title);
 
                 //TODO: Update this so it doesn't need a dependancy of pvM to contain a mainScoreboard object
-                var tool = new pvM.ScoreLine(toolOptions)
+                var tool = new pvM.ScoreLine(toolOptions);
                 pvM.mainScoreboard.addLine(tool);
+
+                //Add the scoring line to the scoring tools collection
+                self.scoringTools[idx] = tool;
             });
         };
 

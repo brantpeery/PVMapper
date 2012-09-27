@@ -78,7 +78,33 @@ function addSite(map, layer) {
     map.addControl(this.mapControl);
 
     //activateDrawSite();
-    this.mapControl.events.register("featureadded", this.mapControl, function (data) {
+    
+
+    function handleSave(b, e) {
+        var msg;
+
+
+        alert(feature.geometry.toString());
+    }
+
+    function createLayer() { }
+    this.activateDrawSite= function() {
+        self.mapControl.activate();
+        self.mapControl.events.register("featureadded", this.mapControl, onFeatureAdded);
+        pvMapper.displayMessage("Start creating your site by clicking on the map to draw the perimeter of your new site", "help");
+
+    }
+    function saveSiteInfo() { }
+    this.deactivateDrawSite = function () {
+        self.mapControl.events.unregister("featureadded", this.mapControl, onFeatureAdded);
+        self.mapControl.deactivate();
+        self.button.toggle(false);
+    }
+    function nameSiteFeature() { }
+
+    function createAddSiteDialog() { }
+  
+    function onFeatureAdded(data) {
         var control = this;
         feature = data.feature;
 
@@ -158,31 +184,7 @@ function addSite(map, layer) {
         })
 
         wiz.show();
-    });
-
-    function handleSave(b, e) {
-        var msg;
-
-
-        alert(feature.geometry.toString());
     }
-
-    function createLayer() { }
-    this.activateDrawSite= function() {
-        self.mapControl.activate();
-        pvMapper.displayMessage("Start creating your site by clicking on the map to draw the perimeter of your new site", "help");
-
-    }
-    function saveSiteInfo() { }
-    this.deactivateDrawSite=function() {
-        self.mapControl.deactivate();
-        self.button.toggle(false);
-    }
-    function nameSiteFeature() { }
-
-    function createAddSiteDialog() { }
-  
-
 
 };
 addSite.prototype = {
