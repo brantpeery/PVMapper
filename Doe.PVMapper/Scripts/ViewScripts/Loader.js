@@ -153,8 +153,8 @@ var UtilityFunctions = {
 //#endregion
 
 //#region   Menu DataStore
-var imgLink = "   <img class='funcButton' src='http://localhost:1919/Images/line_chart_24.png'/>  <label class='funcWeight'>[0.00] </label>"
-var catLink = "   <img class='funcCategory' src='http://localhost:1919/Images/Pie Chart.png'/>  <label class='funcWeight'>[0.00] </label>"
+var imgLink = "   <img class='funcButton' src='/Images/line_chart_24.png'/>  <label class='funcWeight'>[0.00] </label>"
+var catLink = "   <img class='funcCategory' src='/Images/Pie Chart.png'/>  <label class='funcWeight'>[0.00] </label>"
 var navMenu = Ext.create( 'Ext.data.TreeStore', {
   root: {
     text: 'Overall ' + catLink,
