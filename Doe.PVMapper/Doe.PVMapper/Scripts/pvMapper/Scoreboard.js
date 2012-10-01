@@ -26,9 +26,11 @@
         this.scoreLines = [];
         this.render = function () {
             var r = new pvM.Renderer.HTML.Table();
+            r.attr({ class: 'propertyBoard' });
             //Make the header row
             var row = r.addRow();
-            row.addCell("Tool Name").attr({ 'class': 'scoreboardHeader' });
+            row.attr({'class':'header'})
+            row.addCell("Tool Name").attr({ 'class': 'header' });
             var sites = pvM.siteManager.getSites();
             $.each(sites, function (idx, s) {
                 row.addCell(s.name);
@@ -61,7 +63,7 @@
             Error("Function not implemented yet!");
         };
         var tableRenderer = new pvM.Renderer.HTML.Table();
-
+        
 
     }
 
@@ -72,7 +74,7 @@
 
         if (!pvM.floatingScoreboard) {
             pvM.floatingScoreboard = Ext.create('Ext.window.Window', {
-                title: 'Floating Scoreboard',
+                title: 'Site Properties',
                 width: 400,
                 height: 400,
                 html: html,
@@ -81,6 +83,7 @@
                 modal: false,
                 draggable: true,
                 layout: 'fit'
+                
             });
         } else {
             pvM.floatingScoreboard.update(html);

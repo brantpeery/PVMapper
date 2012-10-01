@@ -14,7 +14,9 @@
 
         //Check to make sure the siteChangeHandler is a function
         var siteChangeHandler = ($.isFunction(options.onSiteChange)) ? options.onSiteChange : null;
+        if ($.isFunction(options.onScoreAdded)) { this.scoreAddedEvent.addHandler(options.onScoreAdded); }
         //this.siteChangeEvent.addHandler(siteChangeHandler);
+
 
 
         this.getUtilityScore = function () { };
@@ -23,17 +25,16 @@
         this.addScore = function (site) {
             var score = new pvM.Score(site);
             score.siteChangeEvent.addHandler(siteChangeHandler); //Attach the tool's handler directly to the score.
-
             //Subscribe to the score updated event
             score.valueChangeEvent.addHandler(function (event) {
                 self.scoreChangeEvent.fire(self, event); //Just pass the event on while setting the context
             });
             self.scores.push(score);
+            self.scoreAddedEvent.fire(score, [{ score: score, site: site }, score]);
 
             //Set the initial value from the tool
             score.updateValue(self.getValue(site));
 
-            self.scoreAddedEvent.fire(score, [{ score: score, site: site }, score]);
             return score;
         };
 
