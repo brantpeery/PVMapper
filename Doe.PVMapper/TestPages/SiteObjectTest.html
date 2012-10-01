@@ -19,33 +19,11 @@
 
 
     <script type="text/javascript">
-        var map = {};
-        map = new OpenLayers.Map('map');
 
-        var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);
-        var resolutions = OpenLayers.Layer.Bing.prototype.serverResolutions.slice(4, 19);
-        var osm = new OpenLayers.Layer.OSM("Open Street", null, { zoomOffset: 4, resolutions: resolutions });
-        map.addLayer(osm);
 
-        //Create a map with a poly layer
-
-        var layer = new OpenLayers.Layer.Vector("test");
-        map.addLayer(layer);
-
-        var toolbar = new OpenLayers.Control.EditingToolbar(layer);
-        map.addControl(toolbar);
-
-        //Create a feature
-        var feature = new OpenLayers.Feature(layer, {});
-        feature.attributes = { name: "TestFeature", description: "Test Description" };
-
-        //Create a score for the feature
-        site = new pvMapper.Site(feature);
-
-        //Fire feature change event
-        layer.events.triggerEvent(new OpenLayers.Event());
-
-        //Assert that the score change event is fired
+        let p=1, l=2, z=3;
+        var moo ={bar:0};
+        Object.defineProperty(moo, "foo",{get: function(){return "always watching"},set: function(value){this.bar=value}});
     </script>
 </body>
 
