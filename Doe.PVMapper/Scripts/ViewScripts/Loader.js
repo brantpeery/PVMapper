@@ -77,14 +77,15 @@ Ext.application( {
 
     var rootPanel = Ext.create( 'MyApp.RootPanel');
 
-    rootPanel.dockedItems = Ext.create('Ext.panel.Panel', {
-      dockedItems: [{
-        itemId: 'navDockingArea',
-        xtype: 'panel',
-        dock: 'right',
-        items:[pieWin]
-      }]
-    });
+    rootPanel.dockedItems = Ext.create('Ext.panel.Panel'); 
+    //, {
+    //  dockedItems: [{
+    //    itemId: 'navDockingArea',
+    //    xtype: 'panel',
+    //    dock: 'right',
+    //    items:[pieWin]
+    //  }]
+    //});
 
     // fire the pvMapper.onReady event
     pvMapper.map = map;
