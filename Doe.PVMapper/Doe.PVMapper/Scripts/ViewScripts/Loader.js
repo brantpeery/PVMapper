@@ -75,7 +75,16 @@ Ext.application( {
 
     pvMapper.mapToolbar = mapPanel.child( '#map-toolbar-id' );
 
-    Ext.create( 'MyApp.RootPanel' );
+    var rootPanel = Ext.create( 'MyApp.RootPanel');
+
+    rootPanel.dockedItems = Ext.create('Ext.panel.Panel', {
+      dockedItems: [{
+        itemId: 'navDockingArea',
+        xtype: 'panel',
+        dock: 'right',
+        items:[pieWin]
+      }]
+    });
 
     // fire the pvMapper.onReady event
     pvMapper.map = map;
