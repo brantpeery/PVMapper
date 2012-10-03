@@ -32,6 +32,8 @@ Ext.define( 'Ext.PieWindow', {
   draggable: true,
   model: false,
   initComponent: function () {
+    
+    //if ( !stateWindowWidth ) console.log( 'stateWindowWidth is not defined... WHAT??????' );
     var me = this;
     me.items = [
       Ext.create( 'Ext.form.Panel', {
