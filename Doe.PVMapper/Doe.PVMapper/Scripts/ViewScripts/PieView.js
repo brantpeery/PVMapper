@@ -24,7 +24,7 @@ Ext.define( 'Ext.PieWindow', {
   minHeigh: 0,
   title: 'Category',
   height: 500,
-  widht: stateWindowWidth,
+  width: stateWindowWidth,
   floating: true,
   collapsible: true,
   layout: 'fit',
@@ -33,7 +33,7 @@ Ext.define( 'Ext.PieWindow', {
   model: false,
   initComponent: function () {
     
-    //if ( !stateWindowWidth ) console.log( 'stateWindowWidth is not defined... WHAT??????' );
+
     var me = this;
     me.items = [
       Ext.create( 'Ext.form.Panel', {
@@ -109,62 +109,27 @@ Ext.define( 'Ext.PieWindow', {
           }
         }]
       } )
-    ]
+    ] 
     , this.callParent( arguments );
   }
   , collapse: function ( d, a ) {
-    var c = this, e = d || c.collapseDirection, b = c.ownerCt;
-    stateWindowWidth = c.width;
-    c.setWidth( 40 );
-    if ( c.isCollapsingOrExpanding ) {
-      return c
-    }
-    if ( arguments.length < 2 ) {
-      a = c.animCollapse
-    }
-    if ( c.collapsed || c.fireEvent( "beforecollapse", c, d, a ) === false ) {
-      return c
-    }
-    if ( b && c.isPlaceHolderCollapse() ) {
-      return c.placeholderCollapse( d, a )
-    }
-    c.collapsed = e;
-    c.beginCollapse();
-    c.fireHierarchyEvent( "collapse" );
-    return c.doCollapseExpand( 1, a )
 
-  //  this.toggleCollapse();
-  //  this.setWidth( 40 );
-  //  return false;
+    stateWindowWidth = this.getWidth();
+    this.setWidth( 40 );
+    var c = this.callParent( arguments );
+    return c;
+
   }
   , expand: function ( a ) {
-    var b = this;
-    if (b.isCollapsingOrExpanding) {
-      return b
-    }
-    if (!arguments.length) {
-      a = b.animCollapse
-    }
-    if (!b.collapsed && !b.floatedFromCollapse) {
-      return b
-    }
-    if (b.fireEvent("beforeexpand", b, a) === false) {
-      return b
-    }
-    if (b.isPlaceHolderCollapse()) {
-      return b.placeholderExpand(a)
-    }
-    b.restoreHiddenDocked();
-    b.beginExpand();
-    b.collapsed = false;
-    b.fireHierarchyEvent("expand");
-    var c = b.doCollapseExpand( 2, a )
-    b.setWidth( stateWindowWidth );
+    var c = this.callParent( arguments );
+    c.setWidth( stateWindowWidth );
     return c;
+
   }
   , showing: function ( aTitle ) {
     pieStore.data.clear();
     loadPieData( aTitle );
+    this.setTitle( aTitle );
     return this;
   },
   
@@ -202,7 +167,7 @@ function loadPieData( aTitle ) {
 }
 
 //#endregion
-pieWin = Ext.create( 'Ext.PieWindow' );
+var pieWin = Ext.create( 'Ext.PieWindow' );
 
 //#region onReady
 
