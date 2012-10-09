@@ -5,54 +5,162 @@
     <title>@ViewBag.Title - PV Mapper</title>
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" type="text/css" href="../../Content/extjs/resources/css/my-ext-theme.css" />
     @Styles.Render("~/Content/css", "~/Content/themes/ui-lightness/jquery-ui-1.8.21.custom.css", "~/ext-resources/files/css")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryui")
-    @* @Scripts.Render("~/bundles/extjs")*@ @*The bundler causes a StackOverflowException in v4 RC *@
-    <script type="text/javascript" src="~/ext-resources/js/OpenLayers.js"></script>
+    <script type="text/javascript" src="~/Scripts/jQueryExtentions/jquery.jgrowl_minimized.js"></script>
+
+    @*<script type="text/javascript" charset="utf-8" src="http://cdn.sencha.io/ext-4.1.0-gpl/ext-dev.js"></script>*@
+        <script type="text/javascript" charset="utf-8" src="http://cdn.sencha.io/ext-4.1.0-gpl/ext-all.js"></script>
+
+    <!-- definitely consider using a custom single-file version of OpenLayers -->
+    <script src="http://openlayers.org/api/2.12-rc3/OpenLayers.js"></script>
+    <!-- These scripts would be loaded by Ext, but placing them here makes them easier to debug. -->
+    <script src="../../Scripts/GeoExt/GeoExt.js"></script>
+
+
+    <script type="text/javascript">
+        pvMapper = {};
+
+        Ext.Loader.setConfig({
+            enabled: true,
+            disableCaching: false,
+            paths: {
+                GeoExt: "/Scripts/GeoExt",
+                Ext: "http://cdn.sencha.io/ext-4.1.0-gpl/src"
+            }
+        });
+
+
+        Ext.define('pvMapper.view.Viewport', {
+            extend: 'Ext.container.Viewport',
+            layout: 'fit',
+            items: [{
+                xtype: 'panel',
+                layout: 'border',
+                items: [{
+                    region: 'north',
+                    xtype: 'panel',
+                    height: 65,
+                    items: [{
+                        xtype: 'panel',
+                        contentEl: 'Header',
+                    }]
+                },
+                //{
+                //    region: 'west',
+                //    title: 'Dock Container',
+                //    width: '20%',
+                //    minSize: 150
+                //},
+                {
+                    collapsible: false,
+                    xtype: 'panel',
+                    layout: 'border',
+                    id: 'main-body',
+                    region: 'center',
+                    margins: '0',
+                    padding: '0',
+                    items: [{
+                        collapsible: false,
+                        xtype: 'toolbar',
+                        id: 'main-toolbar',
+                        region: 'north',
+                        margins: '0',
+                        padding: '0',
+                        items: [
+                             {
+                                 // xtype: 'button', // default for Toolbars
+                                 text: 'Button'
+                             },
+                            {
+                                xtype: 'splitbutton',
+                                text: 'Split Button'
+                            }
+                        ]
+                    },
+                    {
+                        collapsible: false,
+                        xtype: 'toolbar',
+                        id: 'main-taskbar',
+                        region: 'south',
+                        margins: '0',
+                        padding: '0',
+                        items: [
+                             {
+                                 // xtype: 'button', // default for Toolbars
+                                 text: 'Button'
+                             },
+                            {
+                                xtype: 'splitbutton',
+                                text: 'Split Button'
+                            }
+                        ]
+                    },
+                    {
+                        collapsible: false,
+                        xtype: 'panel',
+                        id: 'maincontent',
+                        region: 'center',
+                        margins: '0',
+                        padding: '5,5,5,5',
+                        contentEl: 'Content',
+                        items: [],
+                        weight: .7
+                    }]
+                }],
+            }]
+        });
+
+        Ext.define('pvMapper.Window', {
+            extend: 'Ext.window.Window',
+            layout: 'fit',
+            title: null,
+           //constrain: true,
+            //renderTo: 'maincontent-body',
+            autoShow: false,
+            collapseMode: 'header',
+            collapsible:true,
+            bodyStyle: 'opacity: 1;',
+            titleCollapse: true,
+            collapse: function () {
+                this.callParent(arguments);
+                this.setWidth(this.getHeader().titleCmp.textEl.getWidth());
+            }
+        }).callParent();
+
+        var app = Ext.application({
+            name: 'pvMapper',
+            launch: function () {
+                //alert('Viewport Ready');
+                pvMapper.mainToolbar = Ext.create('pvMapper.Window', {
+                    title: 'Test Window On Launch',
+                    height: 200,
+                    width: 400,
+                    layout: 'fit',
+                    items: [],
+                }).show();
+
+            },
+            autoCreateViewport: true,
+        });
+
+
+
+        //------------------------------
+  
+    </script>
 </head>
 <body>
-    <header>
-        <div class="content-wrapper">
-            <div class="float-left">
-                <img src='~/Images/PVMapper_TopText.png' />
-            </div>
-            <div class="float-right">
-                <section id="login">
-                    @Html.Partial("_LoginPartial")
-                </section>
-                <nav>
-                    <ul id="menu">
-                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>@Html.ActionLink("v3", "v3", "Home")</li>
-                        <li>@Html.ActionLink("About", "About", "Home")</li>
-                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </header>
-    <div id="body">
-        @RenderSection("featured", required: false)
-        <section class="content-wrapper main-content clear-fix">
-            @RenderBody()
-        </section>
+    <div id="Header" class="float-left" id="Logo">
+        <a href="@Url.Action("Index", "Home")">
+            <img src="~/Images/PVMapper_TopText.png" alt="PV Mapper Logo" height="50" />
+        </a>
     </div>
-    <footer>
-        <div class="content-wrapper">
-            <div class="float-left">
-                <p>
-                    &copy; @DateTime.Now.Year - PV Mapper
-                </p>
-            </div>
-            <div class="float-right">
-                <ul id="social">
-                    <li><a href="http://facebook.com" class="facebook">Facebook</a></li>
-                    <li><a href="http://twitter.com" class="twitter">Twitter</a></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
+    <div id="Content">
+        @RenderBody()
+    </div>
     @RenderSection("scripts", required: false)
 </body>
 </html>

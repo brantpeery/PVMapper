@@ -19,6 +19,14 @@ namespace Doe.PVMapper.Controllers
             return View(model);
         }
 
+        public ActionResult layout2()
+        {
+            ViewBag.Message = "PV Mapper - Find a sweet spot for your solar array.";
+
+            var model = _repository.All(m => m.Url != null);
+            return View();
+        }
+
         public ActionResult About()
         {
             ViewBag.Message = "Locate places favorable to the installation of solar panels.";

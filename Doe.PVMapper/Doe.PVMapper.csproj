@@ -785,6 +785,8 @@
     <Content Include="Scripts\GeoExt\window\Popup.js" />
     <Content Include="Notes\FeatureChange Event Pipeline.mm" />
     <Content Include="Notes\FeatureChanged event and update score.pdf" />
+    <None Include="Properties\PublishProfiles\Defualt.pubxml" />
+    <None Include="Properties\PublishProfiles\PVMAPPER.pubxml" />
     <None Include="Scripts\jquery-1.8.0.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.0.js" />
     <Content Include="Scripts\jquery-1.8.0.min.js" />
@@ -866,6 +868,15 @@
     <Content Include="Scripts\pvMapper\test.html" />
     <Content Include="Scripts\pvMapper\Utility.js" />
     <Content Include="Scripts\Tools\debug_log.js" />
+    <Content Include="Scripts\UI\controller\WeightFunction.js" />
+    <Content Include="Scripts\UI\view\Functions.js" />
+    <Content Include="Scripts\UI\view\Header.js" />
+    <Content Include="Scripts\UI\view\MainContent.js" />
+    <Content Include="Scripts\UI\view\MainToolbar.js" />
+    <Content Include="Scripts\UI\view\Taskbar.js" />
+    <Content Include="Scripts\UI\view\UserLogin.js" />
+    <Content Include="Scripts\UI\view\Viewport.js" />
+    <Content Include="Scripts\UI\view\Window.js" />
     <Content Include="Scripts\ViewScripts\AddNewSite.js" />
     <Content Include="Scripts\extExtensions\FitToParent.js" />
     <Content Include="Scripts\ViewScripts\IndexView.js" />
@@ -987,9 +998,11 @@
     <Content Include="Views\Extensions\Create.cshtml" />
     <Content Include="Views\Extensions\Details.cshtml" />
     <Content Include="Views\ProjectSite\Edit.cshtml" />
+    <Content Include="Views\Home\layout2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Scripts\UI\view\weightFunctions\" />
     <Folder Include="theme\NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
