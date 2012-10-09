@@ -869,6 +869,7 @@
     <Content Include="Scripts\pvMapper\Utility.js" />
     <Content Include="Scripts\Tools\debug_log.js" />
     <Content Include="Scripts\UI\controller\WeightFunction.js" />
+    <Content Include="Scripts\UI\view\Application.js" />
     <Content Include="Scripts\UI\view\Functions.js" />
     <Content Include="Scripts\UI\view\Header.js" />
     <Content Include="Scripts\UI\view\MainContent.js" />
@@ -891,6 +892,7 @@
     <Content Include="Scripts\ViewScripts\SiteDetail.js" />
     <Content Include="Scripts\ViewScripts\testscripts.js" />
     <Content Include="Scripts\ViewScripts\ZoomAction.js" />
+    <Content Include="TestPages\LayoutTest.html" />
     <Content Include="TestPages\SiteObjectTest.html" />
     <Content Include="TestPages\UtilityFunctions.html" />
     <Content Include="TestPages\UtilityWeights.html" />
