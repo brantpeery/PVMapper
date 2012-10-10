@@ -219,6 +219,7 @@ Ext.define( 'Ext.PopupWindow', {
           listeners: {
             change: function ( me, newVal, oldVal, op ) {
               Ext.getCmp( 'target-slider' ).setValue( newVal );
+              if ( board ) board.update();
             }
           }
         },
@@ -233,6 +234,7 @@ Ext.define( 'Ext.PopupWindow', {
           listeners: {
             change: function ( me, newval, thumb, op ) {
               Ext.getCmp( 'function-target' ).setValue( newval );
+              if ( board ) board.update();
             }
           }
         }]
@@ -278,6 +280,7 @@ Ext.define( 'Ext.PopupWindow', {
           listeners: {
             change: function ( select, newval, thumb, op ) {
               Ext.getCmp( 'function-slope' ).setValue( newval );
+              if ( board ) board.update();
             }
           }
         }]
@@ -470,6 +473,7 @@ Ext.define( 'Ext.PopupWindow', {
       target.setValue( funcRec.data.target );
       target.setMinValue( funcRec.data.minValue );
       target.setMaxValue( funcRec.data.maxValue );
+      updateBoard();
     }
 
     this.update();
@@ -478,3 +482,4 @@ Ext.define( 'Ext.PopupWindow', {
 } );
 //#endregion
 pvMapper.functionWin = Ext.create( 'Ext.PopupWindow' );
+loadBoard();

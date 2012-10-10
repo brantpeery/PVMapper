@@ -48,6 +48,7 @@ Ext.define( 'pvMapper.NavigateWindow', {
 
 
 var navWin = Ext.create( 'pvMapper.NavigateWindow' );
+
 navWin.show();
 
 ( function ( pvM ) {
