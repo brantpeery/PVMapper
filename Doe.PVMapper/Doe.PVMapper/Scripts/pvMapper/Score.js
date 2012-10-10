@@ -4,9 +4,9 @@
         var myvalue = "";            //The textual value of the evaluation along with the units and anything else that makes the value meaningfull (ex. Light Industrial Zoning or 3 Turtle Nests)
 
         //Events
-        this.valueChangeEvent = new Event();
-        this.invalidateEvent = new Event();
-        this.siteChangeEvent = new Event();
+        this.valueChangeEvent = new pvM.Event();
+        this.invalidateEvent = new pvM.Event();
+        this.siteChangeEvent = new pvM.Event();
 
         //Validate input
         if (!site instanceof pvM.Site) { throw ("Parameter 'site' is not a pvMapper.Site object"); };
@@ -40,7 +40,7 @@
         function onSiteChanged(event) {
             //Change the context, add this score to the event and pass the event on
             event.score = self;
-            /*debug*/console.log('The score ' + self.site.name + ' has detected a site change event. Firing its own event now');
+            /*debug*/console.log('The score ' + self.site.name + ' has detected a site change pvM.Event.Firing its own event now');
             self.siteChangeEvent.fire(self, [event, self]);
         };
     };

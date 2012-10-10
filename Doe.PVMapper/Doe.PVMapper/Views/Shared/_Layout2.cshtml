@@ -1,14 +1,14 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <title>@ViewBag.Title - PV Mapper</title>
   <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
   <meta name="viewport" content="width=device-width" />
-  <link rel="stylesheet" type="text/css" href="../../Content/extjs/resources/css/my-ext-theme.css" />
-  @Styles.Render("~/Content/css", "~/Content/themes/ui-lightness/jquery-ui-1.8.21.custom.css", "~/ext-resources/files/css")
+    <link rel="stylesheet" type="text/css" href="/Content/extjs/resources/css/my-ext-theme.css" />
+    @Styles.Render("~/Content/css", "~/Content/themes/ui-lightness/jquery-ui-1.8.21.custom.css")
   @Scripts.Render("~/bundles/jquery")
-  @Scripts.Render("~/bundles/jqueryui")
+    
   <script type="text/javascript" src="~/Scripts/jQueryExtentions/jquery.jgrowl_minimized.js"></script>
 
   @*<script type="text/javascript" charset="utf-8" src="http://cdn.sencha.io/ext-4.1.0-gpl/ext-dev.js"></script>*@
@@ -19,7 +19,6 @@
   <!-- These scripts would be loaded by Ext, but placing them here makes them easier to debug. -->
   <script src="../../Scripts/GeoExt/GeoExt.js"></script>
   <script src="~/Scripts/UI/view/MainContent.js"></script>
-
 </head>
 <body>
   <div id="Header" class="float-left" id="Logo">
@@ -31,5 +30,6 @@
     @RenderBody()
   </div>
   @RenderSection("scripts", required: false)
+
 </body>
 </html>

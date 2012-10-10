@@ -3,14 +3,22 @@
     Layout = "~/Views/Shared/_Layout2.cshtml";
 }
 
-<div id="map" style="height:100%; width:100%;">
-    there should be a map here
-</div>
+
 
 @section scripts{
-  <script src="~/Scripts/UI/controller/WeightFunction.js"></script>
+    <script type="text/javascript" src="../Scripts/ViewScripts/pvMapper.js"></script>
+    <script type="text/javascript" src="../Scripts/pvMapper/Event.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/pvMapper.js"></script>
+    
+    <script type="text/javascript" src="../Scripts/UI/view/Application.js"></script>
+
+    //Load the layers for the map
+    <script type="text/javascript" src="../../Scripts/ViewScripts/Layers.js"></script>
+    @* 
+ 
+ 
+ <script src="~/Scripts/UI/controller/WeightFunction.js"></script>
   <script src="~/Scripts/UI/view/Modules/NavigateView.js"></script>
   <script src="~/Scripts/UI/view/weightFunctions/FunctionView.js"></script>
-  <script src="~/Scripts/UI/view/Modules/PieView.js"></script>
+  <script src="~/Scripts/UI/view/Modules/PieView.js"></script>*@
 }
-

@@ -89,7 +89,8 @@ Ext.application( {
 
     // fire the pvMapper.onReady event
     pvMapper.map = map;
-    $( "body" ).trigger( "pvMapper-ready" );
+    pvMapper.readyEvent.fire();
+    //$( "body" ).trigger( "pvMapper-ready" );
 
   }
 } );
