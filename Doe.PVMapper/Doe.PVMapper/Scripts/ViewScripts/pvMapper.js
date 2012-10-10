@@ -59,9 +59,13 @@ var pvMapper = {
         });
     },
     // should be passed a function that will be executed when all required scripts are fully loaded
+    readyEvent: new Event(),
     onReady: function (fn) {
-        $("body").on("pvMapper-ready", fn)
+        this.readyEvent.addHandler(fn);
+       // $('body').on("pvMapper-ready", fn);
     },
+    
+
     getSiteLayer: function () {
         return this.siteLayer || "SiteLayer does not exist in the collection of layers on the map. Add a site or load sites first.";
     },

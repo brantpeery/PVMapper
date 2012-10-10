@@ -14,12 +14,6 @@
                 contentEl: 'Header',
             }]
         },
-        //{
-        //    region: 'west',
-        //    title: 'Dock Container',
-        //    width: '20%',
-        //    minSize: 150
-        //},
         {
             collapsible: false,
             xtype: 'panel',

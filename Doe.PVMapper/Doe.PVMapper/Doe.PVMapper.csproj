@@ -854,6 +854,7 @@
     <Content Include="Scripts\pvExtensions\scoreBoard\UtilityWeights.html" />
     <Content Include="Scripts\pvExtensions\scoreBoard\UtilityWeights.js" />
     <Content Include="Scripts\pvMapper\Common.js" />
+    <Content Include="Scripts\pvMapper\DataManager.js" />
     <Content Include="Scripts\pvMapper\Module.js" />
     <Content Include="Scripts\pvExtensions\moduleTest.js" />
     <Content Include="Scripts\pvExtensions\PanelAreaTool.js" />
