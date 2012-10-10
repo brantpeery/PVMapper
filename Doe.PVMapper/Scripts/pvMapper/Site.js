@@ -32,11 +32,11 @@
             //Change the state of this feature to selected
         };
 
-        this.changeEvent = new Event();
-        this.destroyEvent = new Event();
-        this.labelChangeEvent = new Event();
-        this.selectEvent = new Event();
-        this.unselectEvent = new Event();
+        this.changeEvent = new pvM.Event();
+        this.destroyEvent = new pvM.Event();
+        this.labelChangeEvent = new pvM.Event();
+        this.selectEvent = new pvM.Event();
+        this.unselectEvent = new pvM.Event();
 
 
 

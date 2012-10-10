@@ -7,6 +7,7 @@
     var osm = new OpenLayers.Layer.OSM("Open Street", null, { isBaseLayer:true, zoomOffset: 4, resolutions: resolutions });
     $.jGrowl("Adding Open Street Map");
     pvMapper.map.addLayer(osm);
+    pvMapper.map.zoomToMaxExtent();
 
     var solar = new OpenLayers.Layer.WMS(
             "Solar Radiation",

@@ -1,10 +1,17 @@
 ﻿(function (pvM) {
-    pvM.sites = new Array();
+    $.extend(pvM, {
+        // should be passed a function that will be executed when all required scripts are fully loaded
+        readyEvent: new pvM.Event(),
+        onReady: function (fn) {
+            this.readyEvent.addHandler(fn);
+        },
 
-    //All the sites that are managed by pvMapper  
-    pvM.siteManager = {
-            siteAdded: new Event(),
-            siteRemoved: new Event(),
+        sites: new Array(),
+
+        //All the sites that are managed by pvMapper  
+        siteManager: {
+            siteAdded: new pvM.Event(),
+            siteRemoved: new pvM.Event(),
 
             sites: [],
             getSites: function () {
@@ -20,10 +27,10 @@
             removeSite: function (site) {
             },
 
-        //Handles the change event for the features on the sitelayer. Will fire the sites change event if the 
-        //  feature that changed is a project site
-        //@Parameter event {OpenLayers.Event object with a feature property that is a reference to the feature that changed
-        //@See http://dev.openlayers.org/apidocs/files/OpenLayers/Layer/Vector-js.html#OpenLayers.Layer.Vector.events
+            //Handles the change event for the features on the sitelayer. Will fire the sites change event if the 
+            //  feature that changed is a project site
+            //@Parameter event {OpenLayers.Event object with a feature property that is a reference to the feature that changed
+            //@See http://dev.openlayers.org/apidocs/files/OpenLayers/Layer/Vector-js.html#OpenLayers.Layer.Vector.events
             featureChangedHandler: function (event) {
                 console.log("Feature change detected by the site manager");
                 if (event.feature && event.feature.site) {
@@ -36,6 +43,6 @@
                     }
                 }
             }
-    }
-
+        }
+    })
 })(pvMapper);

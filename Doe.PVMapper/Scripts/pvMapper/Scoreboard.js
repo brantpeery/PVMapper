@@ -4,8 +4,8 @@
     pvM.Scoreboard = function () {
         var self = this;
 
-        this.changedEvent = new Event();
-        this.scoresInvalidatedEvent = new Event();
+        this.changedEvent = new pvM.Event();
+        this.scoresInvalidatedEvent = new pvM.Event();
 
         this.addLine = function (scoreLine) {
             if (scoreLine instanceof pvM.ScoreLine) {

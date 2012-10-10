@@ -7,10 +7,10 @@
         var self = this;
 
         //Events
-        this.scoreAddedEvent = new Event();  //Signature is (EVENT = {score, site}, score)
-        this.scoreChangeEvent = new Event(); //Signature is (EVENT = {score, site}, score)
-        this.updatingScoresEvent = new Event(); //Signature is ??
-        //this.siteChangeEvent = new Event();
+        this.scoreAddedEvent = new pvM.Event();  //Signature is (EVENT = {score, site}, score)
+        this.scoreChangeEvent = new pvM.Event(); //Signature is (EVENT = {score, site}, score)
+        this.updatingScoresEvent = new pvM.Event(); //Signature is ??
+        //this.siteChangeEvent = new pvM.Event();
 
         //Check to make sure the siteChangeHandler is a function
         var siteChangeHandler = ($.isFunction(options.onSiteChange)) ? options.onSiteChange : null;

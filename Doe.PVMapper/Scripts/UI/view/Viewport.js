@@ -1,4 +1,4 @@
-﻿Ext.define('pvMapper.view.Viewport', {
+﻿Ext.define('MainApp.view.Viewport', {
     extend: 'Ext.container.Viewport',
     layout: 'fit',
     items: [{
@@ -62,6 +62,7 @@
                 collapsible: false,
                 xtype: 'panel',
                 id: 'maincontent',
+                layout:'fit',
                 region: 'center',
                 margins: '0',
                 padding: '5,5,5,5',
