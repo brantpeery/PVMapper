@@ -4,7 +4,7 @@
     var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);
 
     var resolutions = OpenLayers.Layer.Bing.prototype.serverResolutions.slice(4, 19);
-    var osm = new OpenLayers.Layer.OSM("Open Street", null, { zoomOffset: 4, resolutions: resolutions });
+    var osm = new OpenLayers.Layer.OSM("Open Street", null, { isBaseLayer:true, zoomOffset: 4, resolutions: resolutions });
     $.jGrowl("Adding Open Street Map");
     pvMapper.map.addLayer(osm);
 
