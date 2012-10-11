@@ -145,8 +145,15 @@ function loadPieData( aTitle ) {
     }
   }
 }
-
-
 //#endregion
+( function ( pvM ) {
+  pvM.onReady(function() {
+    pvMapper.pieWin = Ext.create( 'MainApp.view.PieWindow' );
+  } );
+
+} )( pvMapper );
+
+
+
 //pvMapper.pieWin = Ext.create( 'pvMapper.PieWindow' );
 
