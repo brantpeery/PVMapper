@@ -407,21 +407,19 @@ Ext.define( 'MainApp.view.functionWindow', {
           var treeMenu = Ext.getCmp( 'ToolTree' );
           treeMenu.setRootNode( navMenu.getRootNode() );  // by resetting root node to the treepanel, forces it to reload and update view.
 
-          puWin.hide();
+          pvMapper.functionWin.hide();
         }
       },
       {
         xtype: 'button',
         text: 'Cancel',
         handler: function () {
-          puWin.hide();
+          pvMapper.functionWin.hide();
         }
       }]
       //#endregion
     }
-  )],
-
-  me.callParent( arguments );
+  )], me.callParent( arguments );
   },
   showing: function ( aTitle ) {
     this.setTitle( aTitle + ' functions ' );
@@ -452,24 +450,26 @@ Ext.define( 'MainApp.view.functionWindow', {
       target.setValue( funcRec.data.target );
       target.setMinValue( funcRec.data.minValue );
       target.setMaxValue( funcRec.data.maxValue );
-      updateBoard();
+
     }
 
-    this.update();
+
     return this;
   }
 } );
 //#endregion
 
-//( function ( pvM ) {
-//  pvM.onReady( function () {
-//    loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
-//    loadExternalScript("http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js");
+( function ( pvM ) {
+  pvM.onReady( function () {
+    pvMapper.functionWin = Ext.create( 'MainApp.view.functionWindow' );
+    if ( typeof ( JXG ) == "undefined" ) {
+      console.log( "Loading in the JXG Graph script" );
+      loadExternalCSS( "http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css" );
+      $.getScript( "http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js", function () {
+        loadBoard();
+      } );
+    }
+    else loadBoard();
+  } )
+} )( pvMapper );
 
-//    pvMapper.functionWin = Ext.create( 'MainApp.view.functionWindow' );
-//    loadBoard();
-//  })
-//} )(pvMapper);
-
-//pvMapper.functionWin = Ext.create( 'Ext.PopupWindow' );
-//loadBoard();

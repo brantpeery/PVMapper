@@ -12,6 +12,8 @@
   titleCollapse: true,
   collapse: function () {
     this.callParent( arguments );
-    this.setWidth( this.getHeader().titleCmp.textEl.getWidth() );
+    var w = this.getHeader().titleCmp.textEl.getWidth();
+    w = w < 120 ? 120 : w;
+    this.setWidth(w);
   }
 } ).callParent();

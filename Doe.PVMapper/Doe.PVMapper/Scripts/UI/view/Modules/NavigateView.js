@@ -48,24 +48,10 @@ Ext.define( 'MainApp.view.NavigateWindow', {
 } );
 //#endregion
 
-
-
-
 ( function ( pvM ) {
   //  var pieWin;
   pvM.onReady( function () {
     console.log( 'Application ready state' );
-
-    pvMapper.functionWin = Ext.create( 'MainApp.view.functionWindow' );
-
-    if ( typeof ( JXG ) == "undefined" ) {
-      console.log( "Loading in the JXG Graph script" );
-      loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
-      $.getScript( "http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js", function () {
-        loadBoard();
-      } );
-    }
-    else loadBoard();
 
     funcStore.load( {
       scope: this,
@@ -76,10 +62,6 @@ Ext.define( 'MainApp.view.NavigateWindow', {
 
     pvMapper.navigateWin = Ext.create( 'MainApp.view.NavigateWindow' );
     pvMapper.navigateWin.show();
-
-
-    pvMapper.pieWin = Ext.create( 'MainApp.view.PieWindow' );
-
 
     $( '#ToolTree' ).on( {
       click: function ( ev ) {
@@ -98,8 +80,11 @@ Ext.define( 'MainApp.view.NavigateWindow', {
         currentMenu = $( this ).parent();
         var tmpStr = $( this ).parent().text();
         tmpStr = tmpStr.substring( 0, tmpStr.indexOf( '[' ) ).trim();
-        if ( pvMapper.functionWin )
+        if ( pvMapper.functionWin ) {
           pvMapper.functionWin.showing( tmpStr ).show();
+          updateBoard();
+        }
+
       }
     }, '.funcButton' );
 
