@@ -1,13 +1,14 @@
 ﻿
 //#region RootPanel
-Ext.define( 'pvMapper.NavigateWindow', {
-  extend: 'pvMapper.Window',
+Ext.define( 'MainApp.view.NavigateWindow', {
+  extend: 'MainApp.view.Window',
   title: 'Properties',
   height: 600,
   Width: 300,
   x: 100,
   y: 100,
   closeAction: 'hide',
+  renderTo: 'maincontent-body',
   initComponent: function () {
     var me = this;
     me.items = [Ext.create( 'Ext.tree.TreePanel', {
@@ -47,14 +48,30 @@ Ext.define( 'pvMapper.NavigateWindow', {
 //#endregion
 
 
-var navWin = Ext.create( 'pvMapper.NavigateWindow' );
 
-navWin.show();
 
 ( function ( pvM ) {
   //  var pieWin;
   pvM.onReady( function () {
+    console.log( 'Application ready state' );
+
     //display the Pie popup window
+    //funcStore.load( {
+    //  scope: this,
+    //  callback: function ( records, operation, success ) {
+    //    loadData();
+    //  }
+    //} );
+
+    pvMapper.navigateWin = Ext.create( 'pvMapper.NavigateWindow' );
+    pvMapper.navigateWin.show();
+    
+    //pvMapper.functionWin = Ext.create( 'Ext.PopupWindow' );
+    //loadBoard();
+
+    //pvMapper.pieWin = Ext.create( 'pvMapper.PieWindow' );
+
+
     $( '#ToolTree' ).on( {
       click: function ( ev ) {
         ev.stopPropagation();
@@ -64,13 +81,6 @@ navWin.show();
         pvMapper.pieWin.showing( tmpStr ).show();
       }
     }, '.funcCategory' );
-
-  } );
-
-} )( Ext );
-
-( function ( pvM ) {
-  pvM.onReady( function () {
 
     //display the function utilities window.
     $( '#ToolTree' ).on( {
@@ -83,6 +93,8 @@ navWin.show();
       }
     }, '.funcButton' );
 
+
   } );
-} )( Ext );
+
+} )( pvMapper );
 

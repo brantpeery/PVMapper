@@ -147,5 +147,5 @@ function loadPieData( aTitle ) {
 
 
 //#endregion
-pvMapper.pieWin = Ext.create( 'pvMapper.PieWindow' );
+//pvMapper.pieWin = Ext.create( 'pvMapper.PieWindow' );
 

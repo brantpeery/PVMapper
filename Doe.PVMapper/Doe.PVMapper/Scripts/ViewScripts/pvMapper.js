@@ -1,5 +1,8 @@
 ﻿// This is a globally defined object that represents the client-side behaviors available through the PVMapper framework.
 console.log("Loading pvMapper object");
+if ( typeof pvMapper == 'undefined' ) {
+  this.pvMapper = {};
+}
 
 (function (pvM) {
     $.extend(pvM, { //Extend the existing pvMapper object
@@ -101,8 +104,9 @@ console.log("Loading pvMapper object");
             this.tabs.setActiveTab(0);
         }
 
-    }); //End the $.extend
+    } ); //End the $.extend
 
-})(pvMapper);
+    console.log("pvMapper: " + pvMapper);
+} )(pvMapper );
 
-console.log("pvMapper: " + pvMapper);
+

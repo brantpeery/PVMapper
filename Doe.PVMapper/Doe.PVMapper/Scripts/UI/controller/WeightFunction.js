@@ -259,12 +259,12 @@ function createUtilsRecord( aName ) {
   }
 }
 //#endregion
-funcStore.load( {
-  scope: this,
-  callback: function ( records, operation, success ) {
-    loadData();
-  }
-} );
+//funcStore.load( {
+//  scope: this,
+//  callback: function ( records, operation, success ) {
+//    loadData();
+//  }
+//} );
 
 
 
