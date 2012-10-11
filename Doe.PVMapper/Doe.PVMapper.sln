@@ -13,30 +13,29 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doe.PVMapper.Tests", "Doe.P
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccLocalPath0 = .
-		SccLocalPath1 = Doe.PVMapper.Tests
-		SccLocalPath2 = Doe.PVMapper
 		SccNumberOfProjects = 3
-		SccProjectName1 = Doe.PVMapper.Tests
-		SccProjectName2 = Doe.PVMapper
-		SccProjectUniqueName1 = Doe.PVMapper.Tests\\Doe.PVMapper.Tests.csproj
-		SccProjectUniqueName2 = Doe.PVMapper\\Doe.PVMapper.csproj
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs03
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Doe.PVMapper.Tests\\Doe.PVMapper.Tests.csproj
+		SccProjectName1 = Doe.PVMapper.Tests
+		SccLocalPath1 = Doe.PVMapper.Tests
+		SccProjectUniqueName2 = Doe.PVMapper\\Doe.PVMapper.csproj
+		SccProjectName2 = Doe.PVMapper
+		SccLocalPath2 = Doe.PVMapper
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A946216C-3EC8-40ED-B47C-DB5F6145C8E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A946216C-3EC8-40ED-B47C-DB5F6145C8E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A946216C-3EC8-40ED-B47C-DB5F6145C8E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A946216C-3EC8-40ED-B47C-DB5F6145C8E2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B3EC1F3C-6B25-41F4-8278-1E5FF3E89BAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B3EC1F3C-6B25-41F4-8278-1E5FF3E89BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3EC1F3C-6B25-41F4-8278-1E5FF3E89BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3EC1F3C-6B25-41F4-8278-1E5FF3E89BAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A946216C-3EC8-40ED-B47C-DB5F6145C8E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A946216C-3EC8-40ED-B47C-DB5F6145C8E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A946216C-3EC8-40ED-B47C-DB5F6145C8E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
