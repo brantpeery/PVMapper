@@ -19,19 +19,7 @@ function loadBoard() {
 
 function updateBoard() {
   var target = Ext.getCmp( 'function-target' );
-  board = JXG.JSXGraph.freeBoard( board );
-  JXG.Options.ticks.majorHeight = 20;
-  JXG.Options.ticks.minorTicks = 5;
-  JXG.Options.ticks.insertTicks = false;
-  JXG.Options.ticks.minorHeight = 5;
-  //JXG.Options.ticks.ticksDistance = 2;
-  JXG.Options.ticks.ticksDistance = ( target.maxValue - target.minValue ) / 10;
-  board = JXG.JSXGraph.initBoard( 'FunctionBox-body', { boundingbox: [target.minValue, 1.15, target.maxWidth, -0.15], axis: true, showCopyright: false, showNavigation: false } );
-  var mode = Ext.getCmp( 'function-mode' );
-  if ( mode.value == 'Less is better' )
-    f2 = board.create( 'functiongraph', [UtilityFunctions.utilityFunction1], { strokeWidth: 3, strokeColor: "red" } );
-  else
-    f2 = board.create( 'functiongraph', [UtilityFunctions.utilityFunction2], { strokeWidth: 3, strokeColor: "red" } );
+  board.setBoundingBox([target.min-target.minValue*.1, 1.1, target.maxValue *1.1, -.1]);
 }
 
 var UtilityFunctions = {
@@ -481,5 +469,5 @@ Ext.define( 'Ext.PopupWindow', {
   }
 } );
 //#endregion
-pvMapper.functionWin = Ext.create( 'Ext.PopupWindow' );
-loadBoard();
+//pvMapper.functionWin = Ext.create( 'Ext.PopupWindow' );
+//loadBoard();

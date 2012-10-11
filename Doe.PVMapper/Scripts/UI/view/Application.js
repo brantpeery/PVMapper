@@ -13,7 +13,7 @@ var app = Ext.application({
 
     launch: function () {
         Ext.Loader.setPath('GeoExt', "/Scripts/GeoExt");
-
+        Ext.Loader.setPath( 'MainApp', '/Scripts/UI' );
 
         console.log('launching application');
 
