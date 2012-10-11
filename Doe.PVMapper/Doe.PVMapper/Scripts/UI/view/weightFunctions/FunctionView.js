@@ -25,21 +25,6 @@ function updateBoard() {
 
 var UtilityFunctions = {
   utilityFunction1: function ( x ) {
-    //var l = parseInt( $( "#target-MinValue-inputEl" ).val() );
-    //var b = parseInt( $( "#function-target-inputEl" ).val() );
-    //var h = parseInt( $( "#target-MaxValue-inputEl" ).val() );
-    //var sRatio = ( parseInt( $( "#function-slope-inputEl" ).val() ) / 5 ) + .3;
-    //var y = 0;
-
-    //var s = Math.max( 2 / ( b - l ), 2 / ( h - b ) );
-    ////s = s * ( sRatio );
-
-    //if ( x >= h ) y = 1;
-    //else if ( x <= l ) y = 0;
-    //else y = 1 / ( 1 + Math.pow(( b - l ) / ( x - l ), ( 2 * ( 1 / s ) * ( b + x - 2 * l ) ) ) );
-
-    //if ( y >= 1 ) y = 1;
-    //if ( y <= 0 ) y = 0;
     return 1 - UtilityFunctions.utilityFunction2( x );
   },
 
@@ -69,8 +54,8 @@ var UtilityFunctions = {
 
 //#region Function Window
 var currentMenu = null;
-Ext.define( 'Ext.PopupWindow', {
-  extend: 'pvMapper.Window',
+Ext.define( 'MainApp.view.functionWindow', {
+  extend: 'MainApp.view.Window',
   title: 'Functions',
   height: 500,
   width: 400,
@@ -78,9 +63,8 @@ Ext.define( 'Ext.PopupWindow', {
   layout: 'fit',
   closeAction: 'hide',
   draggable: true,
-  modal: false,
-  //  data: { bar: 'foo' },
-  // tpl: Ext.create( 'Ext.XTemplate', '<div class="tooltip"><h1>{bar}</h1><div>{form}</div></div>', { compiled: true } ),
+  renderTo: 'maincontent-body',
+  constrainHeader: true,
   initComponent: function () {
     var me = this;
     me.items = [
@@ -476,5 +460,16 @@ Ext.define( 'Ext.PopupWindow', {
   }
 } );
 //#endregion
+
+//( function ( pvM ) {
+//  pvM.onReady( function () {
+//    loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
+//    loadExternalScript("http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js");
+
+//    pvMapper.functionWin = Ext.create( 'MainApp.view.functionWindow' );
+//    loadBoard();
+//  })
+//} )(pvMapper);
+
 //pvMapper.functionWin = Ext.create( 'Ext.PopupWindow' );
 //loadBoard();
