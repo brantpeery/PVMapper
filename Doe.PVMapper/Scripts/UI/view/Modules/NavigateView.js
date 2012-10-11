@@ -3,19 +3,20 @@
 Ext.define( 'MainApp.view.NavigateWindow', {
   extend: 'MainApp.view.Window',
   title: 'Properties',
-  height: 600,
+  height: 400,
   Width: 300,
-  x: 100,
+  x: 10,
   y: 100,
   closeAction: 'hide',
   renderTo: 'maincontent-body',
+  constrainHeader: true,
   initComponent: function () {
     var me = this;
     me.items = [Ext.create( 'Ext.tree.TreePanel', {
       id: "ToolTree",
       border: false,
       width: 300,
-      height: 600,
+      height: 400,
       store: navMenu,
       rootVisible: true,
       useArrows: true,
@@ -55,21 +56,29 @@ Ext.define( 'MainApp.view.NavigateWindow', {
   pvM.onReady( function () {
     console.log( 'Application ready state' );
 
-    //display the Pie popup window
-    //funcStore.load( {
-    //  scope: this,
-    //  callback: function ( records, operation, success ) {
-    //    loadData();
-    //  }
-    //} );
+    pvMapper.functionWin = Ext.create( 'MainApp.view.functionWindow' );
 
-    pvMapper.navigateWin = Ext.create( 'pvMapper.NavigateWindow' );
+    if ( typeof ( JXG ) == "undefined" ) {
+      console.log( "Loading in the JXG Graph script" );
+      loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
+      $.getScript( "http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js", function () {
+        loadBoard();
+      } );
+    }
+    else loadBoard();
+
+    funcStore.load( {
+      scope: this,
+      callback: function ( records, operation, success ) {
+        loadData();
+      }
+    } );
+
+    pvMapper.navigateWin = Ext.create( 'MainApp.view.NavigateWindow' );
     pvMapper.navigateWin.show();
-    
-    //pvMapper.functionWin = Ext.create( 'Ext.PopupWindow' );
-    //loadBoard();
 
-    //pvMapper.pieWin = Ext.create( 'pvMapper.PieWindow' );
+
+    pvMapper.pieWin = Ext.create( 'MainApp.view.PieWindow' );
 
 
     $( '#ToolTree' ).on( {
@@ -89,7 +98,8 @@ Ext.define( 'MainApp.view.NavigateWindow', {
         currentMenu = $( this ).parent();
         var tmpStr = $( this ).parent().text();
         tmpStr = tmpStr.substring( 0, tmpStr.indexOf( '[' ) ).trim();
-        pvMapper.functionWin.showing( tmpStr ).show();
+        if ( pvMapper.functionWin )
+          pvMapper.functionWin.showing( tmpStr ).show();
       }
     }, '.funcButton' );
 

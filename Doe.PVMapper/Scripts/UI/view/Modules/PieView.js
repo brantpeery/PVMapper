@@ -1,5 +1,5 @@
 //#region PieStore
-Ext.define( 'MyApp.PieModel', {
+Ext.define( 'MainApp.data.PieModel', {
   extend: 'Ext.data.Model',
   fields: [
     { name: 'Category', type: 'string' },
@@ -9,15 +9,15 @@ Ext.define( 'MyApp.PieModel', {
 } );
 
 var pieStore = Ext.create( 'Ext.data.Store', {
-  model: 'MyApp.PieModel',
+  model: 'MainApp.data.PieModel',
   data: [
   ]
 } );
 //#endregion
 
 //#region PieWindow
-Ext.define( 'pvMapper.PieWindow', {
-  extend: 'pvMapper.Window',
+Ext.define( 'MainApp.view.PieWindow', {
+  extend: 'MainApp.view.Window',
   minWidth: 200,
   minHeigh: 0,
   title: 'Category',
@@ -25,7 +25,8 @@ Ext.define( 'pvMapper.PieWindow', {
   width: 550,
   floating: true,
   closeAction: 'hide',
-  model: false,
+  constrainHeader: true,
+  renderTo: 'maincontent-body',
   initComponent: function () {
     var me = this;
     me.items = [
