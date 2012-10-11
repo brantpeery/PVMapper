@@ -164,9 +164,11 @@
     <Compile Include="Controllers\RepositoryControllerBase.cs" />
     <Compile Include="Controllers\SiteDetailController.cs" />
     <Compile Include="Models\ProjectSite.cs" />
+    <Compile Include="Models\Properties.cs" />
     <Compile Include="Models\TreeNode.cs" />
     <Compile Include="WebApi\MongoHelper.cs" />
     <Compile Include="WebApi\ProjectSiteController.cs" />
+    <Compile Include="WebApi\PropertiesController.cs" />
     <Compile Include="WebApi\ScoreboardController.cs" />
     <Compile Include="Models\Scorecard.cs" />
     <Compile Include="WebApi\SiteScoreController.cs" />
@@ -875,13 +877,19 @@
     <Content Include="Scripts\UI\view\Header.js" />
     <Content Include="Scripts\UI\view\MainContent.js" />
     <Content Include="Scripts\UI\view\MainToolbar.js" />
+    <Content Include="Scripts\UI\view\Modules\NavigateView.js" />
+    <Content Include="Scripts\UI\view\Modules\PieView.js" />
     <Content Include="Scripts\UI\view\Taskbar.js" />
     <Content Include="Scripts\UI\view\UserLogin.js" />
     <Content Include="Scripts\UI\view\Viewport.js" />
+    <Content Include="Scripts\UI\view\weightFunctions\FunctionView.js" />
     <Content Include="Scripts\UI\view\Window.js" />
     <Content Include="Scripts\ViewScripts\AddNewSite.js" />
     <Content Include="Scripts\extExtensions\FitToParent.js" />
+    <Content Include="Scripts\ViewScripts\FunctionView.js" />
     <Content Include="Scripts\ViewScripts\IndexView.js" />
+    <Content Include="Scripts\ViewScripts\NavigateMenu.js" />
+    <Content Include="Scripts\ViewScripts\PieView.js" />
     <Content Include="Scripts\ViewScripts\SiteManagement.js" />
     <Content Include="Scripts\ViewScripts\Layers.js" />
     <Content Include="Scripts\ViewScripts\Loader.js" />
@@ -1005,7 +1013,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Scripts\UI\view\weightFunctions\" />
     <Folder Include="theme\NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
