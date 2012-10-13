@@ -8,7 +8,7 @@ Ext.define( 'MainApp.view.NavigateWindow', {
   x: 10,
   y: 100,
   closeAction: 'hide',
-  renderTo: 'maincontent-body',
+  //renderTo: 'maincontent-body',
   constrainHeader: true,
   initComponent: function () {
     var me = this;
