@@ -1,16 +1,14 @@
-﻿if ( typeof pvMapper == 'undefined' ) {
-  this.pvMapper = {};
+﻿if (typeof pvMapper == 'undefined') {
+    this.pvMapper = {};
 }
 
-( function ( pvM ) {
+(function (pvM) {
     $.extend(pvM, {
         // should be passed a function that will be executed when all required scripts are fully loaded
         readyEvent: new pvM.Event(),
         onReady: function (fn) {
             this.readyEvent.addHandler(fn);
         },
-
-        sites: new Array(),
 
         //All the sites that are managed by pvMapper  
         siteManager: {
@@ -48,5 +46,6 @@
                 }
             }
         }
+        
     })
-} )(pvMapper);
+})(pvMapper);

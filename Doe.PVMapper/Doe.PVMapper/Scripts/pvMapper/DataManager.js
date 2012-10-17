@@ -30,7 +30,7 @@
                     pvMapper.displayMessage("The site changes were saved", "info");
                 },
                 fail: function () {
-                    pvMapper.displayMessage("Unable to save the changes to the site. There was an error communicating with the database.", "warning";)
+                    pvMapper.displayMessage("Unable to save the changes to the site. There was an error communicating with the database.", "warning");
             }
             });
             pvMapper.displayMessage("The site has been updated.", "info");

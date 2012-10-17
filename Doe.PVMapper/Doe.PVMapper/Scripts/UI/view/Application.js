@@ -55,7 +55,7 @@ var app = Ext.application({
         ///--------------------------END Set the map stuff up--------------------------------------------
 
         ///--------------------------Set the toolbar stuff up--------------------------------------------
-        pvMapper.mapToolbar = Ext.ComponentQuery.query('#maintoolbar');
+        pvMapper.mapToolbar = Ext.ComponentQuery.query('#maintoolbar')[0];
         //Ext.ComponentQuery.query('#maincontent').add(mapPanel);
 
         console.log('Signaling that the pvMapper object is ready to go');

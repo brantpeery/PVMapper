@@ -5,9 +5,9 @@
     pvMapper.Renderer = function (text) {
         this.render = function () {
             var s = '';
-            for (c in this.children) {
-                s += this.children[c].render();
-            }
+            $.each(this.children, function (idx, val) {
+                s += val.render();
+            });
 
             var html = this.template.format(this.getTemplateArgs(s));
             return html;
@@ -32,9 +32,9 @@
         this.getTemplateArgs = function (childrenRenderText) {
             var attributesHTML = '';
             if (this.attributes) {
-                for (var a in this.attributes) {
-                    attributesHTML += a + '="' + this.attributes[a] + '" ';
-                }
+                $.each(this.attributes, function (idx, val) {
+                    attributesHTML += idx + '="' + val + '" ';
+                });
             }
             return { text: this.text + childrenRenderText, tag: this.tag, attributes: attributesHTML };
         };
