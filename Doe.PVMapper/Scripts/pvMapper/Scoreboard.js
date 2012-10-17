@@ -73,18 +73,12 @@
         var html = this.render();
 
         if (!pvM.floatingScoreboard) {
-            pvM.floatingScoreboard = Ext.create('Ext.window.Window', {
+            pvM.floatingScoreboard = Ext.create('MainApp.view.Window', {
                 title: 'Site Properties',
                 width: 400,
                 height: 400,
-                html: html,
-                floating: true,
-                renderTo: Ext.getBody(),
-                modal: false,
-                draggable: true,
-                layout: 'fit'
-                
-            });
+                html: html
+            }).show();
         } else {
             pvM.floatingScoreboard.update(html);
         }

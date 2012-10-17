@@ -42,9 +42,9 @@
         this.name = (typeof (options.title) === 'string') ? options.title : "Unnamed Tool"; //The name that will show up in the row
         this.description = (typeof (options.description) === 'string') ? options.description : "Unnamed Tool";; //The popup information that will show up on mouse hover
         this.scores = new Array(); //A collection of scores that store all the information for the colums of this line
-        for (site in pvM.sites) {
-            self.addScore(site);
-        }
+        //for (site in pvM.siteManger.sites) {
+        //    self.addScore(site);
+        //}
         this.getValue = options.calculateValueCallback;
 
         //Observes the siteChanged event for the sites that this line cares about 
@@ -94,10 +94,10 @@
 
         //Private functions        
         function loadAllSites() {
-            var self = this; //Give access back to the public members within the inner scopes
+            //var self = this; //Give access back to the public members within the inner scopes
             var allSites = pvM.siteManager.getSites();
             $.each(allSites, function (idx, site) {
-                self.addSite(site);
+                self.addScore(site);
             });
         }
     }
