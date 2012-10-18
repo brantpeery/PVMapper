@@ -75,7 +75,7 @@ Ext.define( 'MainApp.view.Viewport', {
                     click: function() {
                       if ( this.associate && this.associate.type == 'Window' && typeof ( this.associate.viewState ) != 'undefined' ) {
                         switch ( this.associate.viewState ) {
-                          case Ext.view.ViewState.MINIMIZED: this.associate.restore(); this.associate.viewState = Ext.view.ViewState.NORMAL; break;
+                          case Ext.view.ViewState.MINIMIZED: this.associate.show(); this.associate.viewState = Ext.view.ViewState.NORMAL; break;
                           case Ext.view.ViewState.NORMAL: this.associate.hide(); this.associate.viewState = Ext.view.ViewState.HIDDEN; break;
                           case Ext.view.ViewState.HIDDEN: this.associate.show(); this.associate.viewState = Ext.view.ViewState.NORMAL; break;
                           default: {
