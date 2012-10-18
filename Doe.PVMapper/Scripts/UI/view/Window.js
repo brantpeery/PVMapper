@@ -18,6 +18,7 @@ Ext.define( 'MainApp.view.Window', {
   renderTo: 'maincontent-body',
   autoShow: false,
   collapseMode: 'header',
+  minimizable: true,
   collapsible: true,
   bodyStyle: 'opacity: 1;',
   titleCollapse: true,
@@ -46,6 +47,10 @@ Ext.define( 'MainApp.view.Window', {
       if ( taskBar )
         taskBar.removeButton( win );
       return true;
+    },
+    minimize: function ( win, op ) {
+      this.viewState = Ext.view.ViewState.MINIMIZED;
+      this.hide();
     }
   }
 } );
