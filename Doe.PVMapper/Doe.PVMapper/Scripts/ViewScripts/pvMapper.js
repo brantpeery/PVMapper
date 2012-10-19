@@ -101,7 +101,7 @@ if ( typeof pvMapper == 'undefined' ) {
         },
 
         showMapTab: function () {
-            this.tabs.setActiveTab(0);
+            //this.tabs.setActiveTab(0);
         }
 
     } ); //End the $.extend

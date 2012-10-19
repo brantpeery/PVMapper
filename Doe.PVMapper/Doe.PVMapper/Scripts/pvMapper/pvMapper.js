@@ -23,6 +23,13 @@
                 return this.sites[index];
             },
             addSite: function (site) {
+                if (site instanceof OpenLayers.Feature){ //Convert the feature to a site
+                    site = new pvMapper.Site(site);
+                } else if (site instanceof siteOptions){
+
+                } else if (!site instanceof pvM.Site) { //If the site was not one of the above and also is not a site then error
+                    console.log("Cannot create a site from a type : " + typeof (site) + " Site not created.");
+                }
                 this.sites.push(site);
                 this.siteAdded.fire(site, [{ site: site }, site]);
             },
