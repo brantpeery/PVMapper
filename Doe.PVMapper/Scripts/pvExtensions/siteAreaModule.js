@@ -25,7 +25,7 @@
             nonScoringTools: {}, //Tools that are for user convenience. Things like measuring tools, information tools, drawing tools, ...
             scoringTools: { //These objects are turned into scoreLines. The tools use the site changed event to update the scores for all of the sites
                 siteArea: {
-                    title: "Site Gross Area",
+                    title: "Site Gross Area (km2)",
                     description: "Calculates the gross area of the site in quare kilometers.",
                     calculateValueCallback: calculateSiteArea,
                     onSiteChange: function (event, score) { //Fires when a score has been notified that it's site has changed
@@ -38,7 +38,7 @@
                     }
                 },
                 innerBoundry: { //This tool calculates the setback area and draws the setback polygon on the site
-                    title: "Site Net Area",
+                    title: "Site Net Area (km2)",
                     description: "Calculates the net area of the site subtracting the setback (sqkm).",
                     calculateValueCallback: calculateSetbackArea,
                     onSiteChange: function (event, score) {
