@@ -1,34 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>@ViewBag.Title - PV Mapper</title>
-  <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-  <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - PV Mapper</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
     <link rel="stylesheet" type="text/css" href="/Content/extjs/resources/css/my-ext-theme.css" />
     @Styles.Render("~/Content/css", "~/Content/themes/ui-lightness/jquery-ui-1.8.21.custom.css")
-  @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jquery")
+
+    <script type="text/javascript" src="~/Scripts/jQueryExtentions/jquery.jgrowl_minimized.js"></script>
+
+    @*<script type="text/javascript" charset="utf-8" src="http://cdn.sencha.io/ext-4.1.0-gpl/ext-dev.j"s></script>
+      <script type="text/javascript" charset="utf-8" src="http://cdn.sencha.io/ext-4.1.0-gpl/ext-all.js"></script>*@
     
-  <script type="text/javascript" src="~/Scripts/jQueryExtentions/jquery.jgrowl_minimized.js"></script>
+    @*<script type="text/javascript" src="../../Scripts/ext-dev.js"></script>*@
+    <script type="text/javascript" src="../../Scripts/ext-all.js"></script>
 
-  @*<script type="text/javascript" charset="utf-8" src="http://cdn.sencha.io/ext-4.1.0-gpl/ext-dev.js"></script>*@
-  <script type="text/javascript" charset="utf-8" src="http://cdn.sencha.io/ext-4.1.0-gpl/ext-all.js"></script>
-
-  <!-- definitely consider using a custom single-file version of OpenLayers -->
-  <script src="http://openlayers.org/api/2.12-rc3/OpenLayers.js"></script>
-  <!-- These scripts would be loaded by Ext, but placing them here makes them easier to debug. -->
-  <script src="../../Scripts/GeoExt/GeoExt.js"></script>
+    <!-- definitely consider using a custom single-file version of OpenLayers -->
+    <script src="http://openlayers.org/api/2.12-rc3/OpenLayers.js"></script>
+    <!-- These scripts would be loaded by Ext, but placing them here makes them easier to debug. -->
+    <script src="../../Scripts/GeoExt/GeoExt.js"></script>
 </head>
 <body>
-  <div id="Header" class="float-left" id="Logo">
-    <a href="@Url.Action("Index", "Home")">
-      <img src="~/Images/PVMapper_TopText.png" alt="PV Mapper Logo" height="50" />
-    </a>
-  </div>
-  <div id="Content">
-    @RenderBody()
-  </div>
-  @RenderSection("scripts", required: false)
-
+    <div id="Header" class="float-left" id="Logo">
+        <a href="@Url.Action("Index", "Home")">
+            <img src="~/Images/PVMapper_TopText.png" alt="PV Mapper Logo" height="50" />
+        </a>
+    </div>
+    <div id="Content">
+        @RenderBody()
+    </div>
+    @RenderSection("scripts", required: false)
 </body>
 </html>
