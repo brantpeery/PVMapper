@@ -36,7 +36,7 @@
                 $(".toolHierarchy p, .toolHierarchy div").css("display", "inline-block");
 
                 $(".toolHierarchy li:not(li:has(li))").addClass("leaf")
-                    .append("<img class='funcButton' src='http://localhost:1919/Images/line_chart_24.png'></img>")
+                    .append("<img class='funcButton' src='/Images/line_chart_24.png'></img>")
                     .children(".funcButton")
                     .click(function (e, ui) {
                         var target = this;
