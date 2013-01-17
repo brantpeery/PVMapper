@@ -1,3 +1,4 @@
+//This is a test comment
 var DataRecord = (function () {
     function DataRecord() { }
     return DataRecord;
