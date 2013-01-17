@@ -163,9 +163,92 @@
     <Compile Include="Controllers\ProjectSiteController.cs" />
     <Compile Include="Controllers\RepositoryControllerBase.cs" />
     <Compile Include="Controllers\SiteDetailController.cs" />
+    <Compile Include="Models\GroupPropertyContext.cs" />
     <Compile Include="Models\ProjectSite.cs" />
     <Compile Include="Models\Properties.cs" />
     <Compile Include="Models\TreeNode.cs" />
+    <Content Include="Scripts\jquery.d.ts" />
+    <Content Include="Scripts\pvMapper\TS Versions\Event.js">
+      <DependentUpon>Event.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TS Versions\Event.min.js">
+      <DependentUpon>Event.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TS Versions\Event.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\OpenLayers.d.ts" />
+    <Content Include="Scripts\pvMapper\TS Versions\pvMapper.js">
+      <DependentUpon>pvMapper.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TS Versions\pvMapper.min.js">
+      <DependentUpon>pvMapper.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TS Versions\pvMapper.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreLine.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\common.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\common.d.js">
+      <DependentUpon>common.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\common.js">
+      <DependentUpon>common.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Event.js">
+      <DependentUpon>Event.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Event.min.js">
+      <DependentUpon>Event.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Event.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Options.d.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Module.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\Module.js">
+      <DependentUpon>Module.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Options.d.js">
+      <DependentUpon>Options.d.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\pvMapper.js">
+      <DependentUpon>SiteManager.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\pvMapper.min.js">
+      <DependentUpon>SiteManager.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Scoreboard.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Renderer.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\Renderer.js">
+      <DependentUpon>Renderer.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Scoreboard.js">
+      <DependentUpon>Scoreboard.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\siteAreaModule.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\siteAreaModule.js">
+      <DependentUpon>siteAreaModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Sitemanager.js">
+      <DependentUpon>SiteManager.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\SiteManager.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\Score.js">
+      <DependentUpon>Score.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Score.ts" />
+    <Content Include="Scripts\pvMapper\TS Versions\SiteManager.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\ScoreLine.js">
+      <DependentUpon>ScoreLine.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Site.js">
+      <DependentUpon>Site.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Site.min.js">
+      <DependentUpon>Site.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Site.ts" />
+    <Content Include="Scripts\pvMapper\Utility.min.js">
+      <DependentUpon>Utility.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\UI\controller\UtilModel.js" />
+    <Content Include="Scripts\_frameworkobjects.d.ts" />
+    <Compile Include="WebApi\GroupPropertyController.cs" />
     <Compile Include="WebApi\MongoHelper.cs" />
     <Compile Include="WebApi\ProjectSiteController.cs" />
     <Compile Include="WebApi\PropertiesController.cs" />
@@ -871,10 +954,19 @@
     <Content Include="Scripts\pvMapper\Score.js" />
     <Content Include="Scripts\pvMapper\Scoreboard.js" />
     <Content Include="Scripts\pvMapper\ScoreLine.js" />
+    <Content Include="Scripts\pvMapper\TS Versions\Site.js">
+      <DependentUpon>Site.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TS Versions\Site.min.js">
+      <DependentUpon>Site.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\Site.js" />
     <Content Include="Scripts\pvMapper\test.html" />
     <Content Include="Scripts\pvMapper\Utility.js" />
+    <Content Include="Scripts\pvMapper\TS Versions\Site.ts" />
+    <Content Include="Scripts\pvMapper\Utility.ts" />
     <Content Include="Scripts\Tools\debug_log.js" />
+    <Content Include="Scripts\UI\controller\UtilModel.ts" />
     <Content Include="Scripts\UI\controller\WeightFunction.js" />
     <Content Include="Scripts\UI\view\Application.js" />
     <Content Include="Scripts\UI\view\Functions.js" />
@@ -1037,6 +1129,14 @@
     <Content Include="Scripts\DataTables-1.9.2\extras\ColReorder\media\js\ColReorder.min.js.gz" />
     <Content Include="Scripts\DataTables-1.9.2\extras\AutoFill\media\js\AutoFill.min.js.gz" />
   </ItemGroup>
+  <!--============ This to allow TypeScript code to be compile by tsc.======== -->
+  <ItemGroup>
+    <AvailableItemName Include="TypeScriptCompile" />
+  </ItemGroup>
+  <Target Name="BeforeBuild">
+    <Exec Command="'$(PROGRAMFILES)\Microsoft SDKs\TypeScript\0.8.0.0\tsc' -c @(TypeScriptCompile -&gt;''%(fullpath)'', ' ')" IgnoreExitCode="false" />
+  </Target>
+  <!-- ===================================================================== -->
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
