@@ -36,6 +36,11 @@ var app = Ext.application({
             center: '-10723197, 4500612' 
         });
 
+        //Add PanZoom controls
+        var controls = [new OpenLayers.Control.PanPanel(),
+                        new OpenLayers.Control.ZoomPanel()]
+        map.addControls(controls);
+
         //Create the panel the map lives in
         var mapPanel = Ext.create('GeoExt.panel.Map', {
             id: 'mapPanel',
