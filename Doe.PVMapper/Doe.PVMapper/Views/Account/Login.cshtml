@@ -107,36 +107,35 @@
     @Html.ValidationSummary(true, "Log in was unsuccessful. Please correct the errors and try again.")
 
     <div id="LoginForm">
-        <fieldset>
+    <fieldset>
             <legend>PVMapper Login</legend>
             <div id="LoginBody">
-                <ol>
-                    <li>
+        <ol>
+            <li>
                         <p class="error">
                             @Html.ValidationMessageFor(m => m.UserName)
                         </p>
-                        @Html.LabelFor(m => m.UserName)
-                        @Html.TextBoxFor(m => m.UserName)
+                @Html.LabelFor(m => m.UserName)
+                @Html.TextBoxFor(m => m.UserName)
 
-                    </li>
-                    <li>
+            </li>
+            <li>
                         <p class="error">@Html.ValidationMessageFor(m => m.Password)</p>
-                        @Html.LabelFor(m => m.Password)
-                        @Html.PasswordFor(m => m.Password)
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password)
 
-                    </li>
-                    <li>
-                        @Html.CheckBoxFor(m => m.RememberMe)
-                        @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
-                    </li>
-                </ol>
+            </li>
+            <li>
+                @Html.CheckBoxFor(m => m.RememberMe)
+                @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
+            </li>
+        </ol>
                 <input id="SubmitButton" type="submit" value="Log In" />
             </div>
-        </fieldset>
+    </fieldset>
         <p class="register-link">
             <span>@Html.ActionLink("Register", "Register")</span> if you don't have an account. Its free!
-        </p>
-
+    </p>
 
     </div>
 }
