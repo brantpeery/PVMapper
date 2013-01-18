@@ -163,7 +163,6 @@
     <Compile Include="Controllers\ProjectSiteController.cs" />
     <Compile Include="Controllers\RepositoryControllerBase.cs" />
     <Compile Include="Controllers\SiteDetailController.cs" />
-    <Compile Include="Models\GroupPropertyContext.cs" />
     <Compile Include="Models\ProjectSite.cs" />
     <Compile Include="Models\Properties.cs" />
     <Compile Include="Models\TreeNode.cs" />
@@ -248,7 +247,6 @@
     </Content>
     <Content Include="Scripts\UI\controller\UtilModel.js" />
     <Content Include="Scripts\_frameworkobjects.d.ts" />
-    <Compile Include="WebApi\GroupPropertyController.cs" />
     <Compile Include="WebApi\MongoHelper.cs" />
     <Compile Include="WebApi\ProjectSiteController.cs" />
     <Compile Include="WebApi\PropertiesController.cs" />
@@ -963,8 +961,6 @@
     <Content Include="Scripts\pvMapper\Site.js" />
     <Content Include="Scripts\pvMapper\test.html" />
     <Content Include="Scripts\pvMapper\Utility.js" />
-    <Content Include="Scripts\pvMapper\TS Versions\Site.ts" />
-    <Content Include="Scripts\pvMapper\Utility.ts" />
     <Content Include="Scripts\Tools\debug_log.js" />
     <Content Include="Scripts\UI\controller\UtilModel.ts" />
     <Content Include="Scripts\UI\controller\WeightFunction.js" />
@@ -1000,47 +996,6 @@
     <Content Include="TestPages\SiteObjectTest.html" />
     <Content Include="TestPages\UtilityFunctions.html" />
     <Content Include="TestPages\UtilityWeights.html" />
-    <Content Include="theme\default\framedCloud.css" />
-    <Content Include="theme\default\google.css" />
-    <Content Include="theme\default\google.tidy.css" />
-    <Content Include="theme\default\ie6-style.css" />
-    <Content Include="theme\default\ie6-style.tidy.css" />
-    <Content Include="theme\default\img\add_point_off.png" />
-    <Content Include="theme\default\img\add_point_on.png" />
-    <Content Include="theme\default\img\blank.gif" />
-    <Content Include="theme\default\img\close.gif" />
-    <Content Include="theme\default\img\drag-rectangle-off.png" />
-    <Content Include="theme\default\img\drag-rectangle-on.png" />
-    <Content Include="theme\default\img\draw_line_off.png" />
-    <Content Include="theme\default\img\draw_line_on.png" />
-    <Content Include="theme\default\img\draw_point_off.png" />
-    <Content Include="theme\default\img\draw_point_on.png" />
-    <Content Include="theme\default\img\draw_polygon_off.png" />
-    <Content Include="theme\default\img\draw_polygon_on.png" />
-    <Content Include="theme\default\img\editing_tool_bar.png" />
-    <Content Include="theme\default\img\move_feature_off.png" />
-    <Content Include="theme\default\img\move_feature_on.png" />
-    <Content Include="theme\default\img\navigation_history.png" />
-    <Content Include="theme\default\img\overview_replacement.gif" />
-    <Content Include="theme\default\img\pan-panel-NOALPHA.png" />
-    <Content Include="theme\default\img\pan-panel.png" />
-    <Content Include="theme\default\img\panning-hand-off.png" />
-    <Content Include="theme\default\img\panning-hand-on.png" />
-    <Content Include="theme\default\img\pan_off.png" />
-    <Content Include="theme\default\img\pan_on.png" />
-    <Content Include="theme\default\img\remove_point_off.png" />
-    <Content Include="theme\default\img\remove_point_on.png" />
-    <Content Include="theme\default\img\ruler.png" />
-    <Content Include="theme\default\img\save_features_off.png" />
-    <Content Include="theme\default\img\save_features_on.png" />
-    <Content Include="theme\default\img\view_next_off.png" />
-    <Content Include="theme\default\img\view_next_on.png" />
-    <Content Include="theme\default\img\view_previous_off.png" />
-    <Content Include="theme\default\img\view_previous_on.png" />
-    <Content Include="theme\default\img\zoom-panel-NOALPHA.png" />
-    <Content Include="theme\default\img\zoom-panel.png" />
-    <Content Include="theme\default\style.css" />
-    <Content Include="theme\default\style.tidy.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\themes\ui-lightness\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
@@ -1108,7 +1063,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="theme\NewFolder1\" />
+    <Folder Include="Scripts\theme\NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
