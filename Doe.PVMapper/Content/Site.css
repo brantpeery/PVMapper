@@ -24,7 +24,7 @@ body
     width:100%;
     -moz-box-sizing:border-box;
     box-sizing:border-box;
-    height:100%;
+    /*height:100%;*/
 }
 .main-content
 {
