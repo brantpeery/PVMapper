@@ -5,37 +5,138 @@
 }
 
 <hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Enter your user name and password below.</h2>
 </hgroup>
 
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 
-@using (Html.BeginForm((string)ViewBag.FormAction, "Account")) {
+<style type="text/css">
+    .main-content form
+    {
+        position: relative;
+        margin-left: 50%;
+        left: -150px;
+        width: 300px;
+    }
+
+        .main-content form #LoginForm
+        {
+            border: 2px solid darkorange;
+            border-radius: 5px;
+            moz-border-radius: 5px;
+            width: 100%;
+        }
+
+    #LoginBody li input
+    {
+        display: inline-block;
+        position: absolute;
+        left: 100px;
+    }
+
+    #LoginBody li label
+    {
+        display: inline-block;
+        height: 2em;
+    }
+
+    .main-content form legend
+    {
+        width: 100%;
+        font-size: 1.5em;
+        text-align: center;
+        font-weight: bold;
+        background-color: orange;
+        padding: 5px;
+        margin-bottom: 1em;
+    }
+
+    #LoginBody li
+    {
+        margin-left: 5px;
+    }
+
+    .register-link
+    {
+        padding: .5em;
+    }
+
+    #LoginBody
+    {
+        margin: 5px;
+    }
+
+    #SubmitButton
+    {
+        width: 100%;
+        border-color: darkorange;
+        border-width: 2px;
+        border-style: solid;
+        -moz-border-radius: 1em 4em 1em 4em;
+        border-radius: 1em 4em 1em 4em;
+        background: orange;
+        font-size: 1.5em;
+    }
+
+    .register-link span
+    {
+        font-size: 1.2em;
+        color: orange;
+        font-weight: bold;
+    }
+
+        .register-link span a
+        {
+            color: orange;
+        }
+
+    .error, .validation-summary-errors
+    {
+        color: red;
+    }
+
+    .validation-summary-errors
+    {
+        margin: 3px;
+    }
+</style>
+
+
+@using (Html.BeginForm((string)ViewBag.FormAction, "Account"))
+{
     @Html.ValidationSummary(true, "Log in was unsuccessful. Please correct the errors and try again.")
 
-    <fieldset>
-        <legend>Log in Form</legend>
-        <ol>
-            <li>
-                @Html.LabelFor(m => m.UserName)
-                @Html.TextBoxFor(m => m.UserName)
-                @Html.ValidationMessageFor(m => m.UserName)
-            </li>
-            <li>
-                @Html.LabelFor(m => m.Password)
-                @Html.PasswordFor(m => m.Password)
-                @Html.ValidationMessageFor(m => m.Password)
-            </li>
-            <li>
-                @Html.CheckBoxFor(m => m.RememberMe)
-                @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
-            </li>
-        </ol>
-        <input type="submit" value="Log in" />
-    </fieldset>
-    <p>
-        @Html.ActionLink("Register", "Register") if you don't have an account.
-    </p>
+    <div id="LoginForm">
+        <fieldset>
+            <legend>PVMapper Login</legend>
+            <div id="LoginBody">
+                <ol>
+                    <li>
+                        <p class="error">
+                            @Html.ValidationMessageFor(m => m.UserName)
+                        </p>
+                        @Html.LabelFor(m => m.UserName)
+                        @Html.TextBoxFor(m => m.UserName)
+
+                    </li>
+                    <li>
+                        <p class="error">@Html.ValidationMessageFor(m => m.Password)</p>
+                        @Html.LabelFor(m => m.Password)
+                        @Html.PasswordFor(m => m.Password)
+
+                    </li>
+                    <li>
+                        @Html.CheckBoxFor(m => m.RememberMe)
+                        @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
+                    </li>
+                </ol>
+                <input id="SubmitButton" type="submit" value="Log In" />
+            </div>
+        </fieldset>
+        <p class="register-link">
+            <span>@Html.ActionLink("Register", "Register")</span> if you don't have an account. Its free!
+        </p>
+
+
+    </div>
 }
