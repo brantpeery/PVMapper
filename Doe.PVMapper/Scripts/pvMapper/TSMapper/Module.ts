@@ -1,3 +1,5 @@
+/// <reference path="Options.d.ts" />
+/// <reference path="OpenLayers.d.ts" />
 /// <reference path="siteAreaModule.ts" />
 /// <reference path="../../jquery.d.ts" />
 
@@ -14,13 +16,16 @@ module pvMapper {
       this.self = this;
       this.id = (typeof (this.self.settings.id) === 'string') ? this.self.settings.id : '';
       this.author = (typeof (this.self.settings.author) === 'string') ? this.self.settings.author : '';
-      this.ScoringTools = new ScoringTool[]();
+      this.scoringTools = new ScoringTool[]();
       var st: ScoringTool = new ScoringTool();
       st.calculateCallback = this.calculateSiteArea;
       st.updateCallback = this.updateSetbackFeature;
 
-      this.ScoringTools.push(st);
+      this.scoringTools.push(st);
     }
+
+
+    
 
     public self: Module;
     public defaults: Module;
@@ -40,7 +45,15 @@ module pvMapper {
     public settings: Module; // = $.extend({}, this.defaults, options);
 
     public nonScoringTools: any[];
-    public ScoringTools: ScoringTool[];
+    public scoringTools: ScoringTool[];
+    public addScoringTool(scoreTool : ScoringTool) {
+      this.scoringTools.push(scoreTool);
+    }
+    public removeScoringTool(scoreTool : ScoringTool) {
+      var idx : number = this.scoringTools.indexOf(scoreTool, 0);
+      if (idx >= 0)
+        this.scoringTools.splice(idx, 1);
+    }
 
     public calculateArea(polygon: OpenLayers.Polygon): number {
 
@@ -60,33 +73,35 @@ module pvMapper {
 
     public setbackLayer: any;
 
-    public updateSetbackFeature(site: Site, setback: number) {
+    public updateSetbackFeature (site: pvMapper.Site, setbackLength?: number):any {
       var reader = new jsts.io.WKTReader();
       var parser = new jsts.io.OpenLayersParser();
 
       var input = parser.read(site.feature.geometry);
-      var buffer = input.buffer(-1 * setback); //Inset the feature
+      var buffer = input.buffer(-1 * setbackLength); //Inset the feature
       var newGeometry = parser.write(buffer);
 
       if (!this.setbackLayer) {
         this.setbackLayer = new OpenLayers.Layer.Vector("Site Setback");
-        pvM.map.addLayer(setbackLayer);
+        pvMapper.map.addLayer(this.setbackLayer);
       }
 
       if (site.offsetFeature) {
         //Redraw the polygon
-        setbackLayer.removeFeatures(site.offsetFeature);
+        this.setbackLayer.removeFeatures(site.offsetFeature);
         site.offsetFeature.geometry = newGeometry; //This probably wont work
       } else {
         var style = { fillColor: 'blue', fillOpacity: 0, strokeWidth: 3, strokeColor: "purple" };
         site.offsetFeature = new OpenLayers.Feature.Vector(newGeometry, { parentFID: site.feature.fid }, style);
       }
-      setbackLayer.addFeatures(site.offsetFeature);
+      this.setbackLayer.addFeatures(site.offsetFeature);
 
-
+      return 0;
     }
 
-  }
+  };
+
+  export var map: any = new OpenLayers.Map();
 
 }
 

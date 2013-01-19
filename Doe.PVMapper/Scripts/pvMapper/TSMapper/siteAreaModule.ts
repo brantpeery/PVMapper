@@ -4,10 +4,10 @@
 /// <reference path="Options.d.ts" />
 
 interface ISiteCallback {
-  (site: pvMapper.Site, setbackLength?: number):any;
+  (site: pvMapper.Site, setbackLength?: number): any;
 }
 
-interface ICalculateAreaCallback{
+interface ICalculateAreaCallback {
   (geometry: OpenLayers.Geometry, offset?: number): number;
 }
 
@@ -15,11 +15,13 @@ interface IScoringTool {
   calculateCallback: ISiteCallback;
 }
 
+
+
 // Module
 module pvMapper {
   export class ScoreEvent extends Event {
 
-  }
+}
 
 
   // Class
@@ -39,7 +41,7 @@ module pvMapper {
         score.updateValue(this.calculateCallback(score.site));  //Do it this way so the score can manage getting itself refreshed on the screen and in the DB
     }
     public onScoreAdded(event: ScoreEvent, score: Score) {
-      
+
       //This will be called when a score is added to the scoreline that represents this tool
       //Really don't need to do anything here as the framework will be asking for the updated value later
     }
@@ -50,16 +52,16 @@ module pvMapper {
 
 
   export class Intent {
-    public Area (geometry : OpenLayers.Geometry):number {
-      if (this.calculateArea != null) 
+    public Area(geometry: OpenLayers.Geometry): number {
+      if (this.calculateArea != null)
         return this.calculateArea(geometry);
-      else 
+      else
         return null;
-    } 
-    public OffsetArea(geometry : OpenLayers.Geometry, offset : number) : number{
+    }
+    public OffsetArea(geometry: OpenLayers.Geometry, offset: number): number {
       if (this.calculateArea != null)
         return this.calculateArea(geometry, offset);
-      else 
+      else
         return null;
     }
     public calculateArea: ICalculateAreaCallback = null;

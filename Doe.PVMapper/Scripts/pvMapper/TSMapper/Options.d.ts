@@ -4,7 +4,7 @@ module pvMapper {
   
   //A dynamic callback signature.
   interface ICallBack {
-     (...args: any[]);
+     (...args: any[]):any;
   }
 
   export class Options {
