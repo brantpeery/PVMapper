@@ -52,6 +52,9 @@ var app = Ext.application({
             stateful: true,
             stateId: 'mapPanel',
         });
+
+        map.addControl(new OpenLayers.Control.PanZoomBar());
+
         this.mainContent = Ext.ComponentQuery.query('#maincontent')[0];
         this.mainContent.add(mapPanel);
         pvMapper.mapPanel = mapPanel;

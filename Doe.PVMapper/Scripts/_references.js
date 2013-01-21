@@ -5,3 +5,5 @@
 /// <reference path="modernizr-2.0.6-development-only.js" />
 /// <reference path="ViewScripts/pvMapper.js" />
 /// <reference path="http://openlayers.org/api/2.12-rc3/OpenLayers.js"/>
+/// <reference path="OpenLayers.js" />
+/// <reference path="ext-dev.js" />
