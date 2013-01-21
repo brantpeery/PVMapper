@@ -16,7 +16,7 @@
         this.name = feature.attributes.name;
         this.description = feature.attributes.description;
         this.popupHTML;
-
+                                                 
         //The events are fired by the layer. These events are fired by the pvMapper layer manager as it watches the layer for events
         //Ex. when the layer manager gets a feature change event, it uses the feature.site property
         //of the feature in the event to fire the feature.site.changeEvent of the site that manages that feature
