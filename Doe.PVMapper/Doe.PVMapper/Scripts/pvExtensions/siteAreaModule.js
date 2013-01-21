@@ -63,15 +63,25 @@
 
             },
 
+            //Adds buttons to the toolbars
             buttons: {
-                mainMapToolBar: {
+                mainMapToolBar: { //The main toolbar across the top of the screen
                     group: "attributes",
                     activate: onButtonClicked,
                     deactivate: null,
                 },
-                siteRightClick: {
+                siteRightClick: { //The option list that displays when a right click action is performed on a site
                     group: "attributes",
                     activate: onButtonClicked
+                }
+            },
+
+            siteAttributes: { //Used to add attributes to the site. These will show up when a site is created or edited.
+                offset:{
+                    type: 'text',   //Set the type so the system knows how to display the input. (Possible types are text, checkbox, listbox, textarea)
+                    value: 30,      //The default value
+                    validationExpr:null, //the regular expression to use to check validity of the input
+                    validValues:{} //An array of possible values. Used in a listbox.
                 }
             },
 
