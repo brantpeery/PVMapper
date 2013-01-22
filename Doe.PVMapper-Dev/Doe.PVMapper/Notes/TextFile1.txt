@@ -1,0 +1,6 @@
+﻿pvMapper1.apphb.com
+https://appharbor.com:443/applications/pvmapper-1/builds?authorization=JmPGOhq5ME2IqA0om%2bOUDuRyeu84e9VKnRNXl0iuVq8%3d
+
+
+pvMapper.apphb.com
+https://appharbor.com:443/applications/pvmapper/builds?authorization=E43CE7JXSkGU5obrePTqqK98EHZkJtNKrH5da7ALk2Y%3d
