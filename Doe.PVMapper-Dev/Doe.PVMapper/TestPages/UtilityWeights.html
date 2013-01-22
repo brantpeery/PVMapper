@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Hierarchial Decision Set Weighting</title>
+    <link rel="stylesheet" type="text/css" href="../Scripts/jQueryExtentions/themes/classic/style.css" />
+    <link rel="stylesheet" type="text/css" href="../Scripts/jQueryExtentions/jquery.treeview.css" />
+    <script type="text/javascript" src="../Scripts/jQueryExtentions/jquery.treeview.js"></script>
+
+
+    <style type="text/css">
+        .toolHierarchy div
+        {
+            margin-left: 20px;
+        }
+
+        .toolHierarchy input
+        {
+            width: 50px;
+            margin-left: 2px;
+        }
+
+        .toolHierarchy span.label
+        {
+            font-size: 75%;
+            padding: 0 2px 0 10px;
+        }
+
+        .toolHierarchy p
+        {
+            position: absolute;
+            left: 230px;
+            top: -.9em;
+        }
+
+        .toolHierarchy li
+        {
+            position: relative;
+        }
+
+        .toolHierarchy .invalid-value
+        {
+            color: red;
+        }
+    </style>
+
+
+
+</head>
+<body>
+    <ul class="toolHierarchy">
+        <li>Cost <span class="totalBranchValue"></span>
+            <p><span class="label">Weight</span><input class="slider" type="text" /></p>
+            <ul>
+                <li><a href="#">Land Cost</a><span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                    <ul>
+                        <li>Site Area<span class="totalBranchValue"></span>
+                            <p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                        </li>
+                        <li>Offset Area<span class="totalBranchValue"></span><span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                        </li>
+                        <li>Zone Type<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                        </li>
+                    </ul>
+                </li>
+                <li>Facility Cost<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                    <ul>
+                        <li>Solar Panel System Cost<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" value="0" /></p>
+                        </li>
+                        <li>Buildings<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                        </li>
+                        <li>Physical Security<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>Transmission Connection Cost<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                    <ul>
+                        <li>Right of Way Lease Cost<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                        </li>
+                        <li>Transmission Line Cost<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                        </li>
+                        <li>Terminating Equipment Cost<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>Permitting Cost<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                </li>
+
+            </ul>
+        </li>
+        <li>Energy
+            <span class="totalBranchValue"></span>
+            <p><span class="label">Weight</span><input class="slider" type="text" /></p>
+            <ul>
+                <li>Power Output MW<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                </li>
+                <li>Intermitancy<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                </li>
+                <li>Power Purchase Contract Risk<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                </li>
+            </ul>
+
+        </li>
+        <li>Environment
+            <span class="totalBranchValue"></span>
+            <p><span class="label">Weight</span><input class="slider" type="text" /></p>
+            <ul>
+                <li>Endangered Species<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                </li>
+                <li>Water Quality<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                </li>
+                <li>Air Emissions<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                </li>
+                <li>Viewshed<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                </li>
+            </ul>
+        </li>
+        <li>Social
+            <span class="totalBranchValue"></span>
+            <p><span class="label">Weight</span><input class="slider" type="text" /></p>
+            <ul>
+                <li>Public Acceptablitiy Risk<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                </li>
+                <li>Housing Proximity<span class="totalBranchValue"></span><p><span class="label">Weight</span><input class="slider" type="text" /></p>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+</body>
+</html>
