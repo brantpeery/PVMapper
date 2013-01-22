@@ -235,6 +235,7 @@
     <Content Include="Scripts\pvMapper\Utility.min.js">
       <DependentUpon>Utility.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\Utility.ts" />
     <Content Include="Scripts\UI\controller\UtilModel.js" />
     <Content Include="Scripts\_frameworkobjects.d.ts" />
     <Compile Include="WebApi\MongoHelper.cs" />
@@ -1075,9 +1076,6 @@
     <Content Include="Scripts\DataTables-1.9.2\extras\AutoFill\media\js\AutoFill.min.js.gz" />
   </ItemGroup>
   <!--============ This to allow TypeScript code to be compile by tsc.======== -->
-  <ItemGroup>
-    <AvailableItemName Include="TypeScriptCompile" />
-  </ItemGroup>
   <Target Name="BeforeBuild">
     <Exec Command="'$(PROGRAMFILES)\Microsoft SDKs\TypeScript\0.8.0.0\tsc' -c @(TypeScriptCompile -&gt;''%(fullpath)'', ' ')" IgnoreExitCode="false" />
   </Target>
