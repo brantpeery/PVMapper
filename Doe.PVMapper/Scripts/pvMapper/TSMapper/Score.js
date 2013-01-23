@@ -1,14 +1,9 @@
+/// <reference path="common.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="../../ext-4.1.1a.d.ts" />
 // Module
 var pvMapper;
 (function (pvMapper) {
-    var pvM = pvMapper;
-    ; ;
-    function displayMessage(value) {
-        pvM.displayMessage(value);
-    }
-    pvMapper.displayMessage = displayMessage;
     /***
     * A PVMapper.Score object. Tracks the score for a site. Ties a site to a scoring line and represents a line's value cell for a site.
     *
@@ -51,7 +46,7 @@ var pvMapper;
             //Change the context, add this score to the event and pass the event on
             var oldvalue = this.myvalue;
             this.myvalue = value;
-            pvMapper.displayMessage(this.myvalue);
+            pvMapper.displayMessage(this.myvalue, "Info");
             //fire the value updated event
             this.valueChangeEvent.fire(this.self, {
                 oldvalue: oldvalue,

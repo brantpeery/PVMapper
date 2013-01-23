@@ -186,6 +186,13 @@
     <Content Include="Scripts\pvMapper\TS Versions\pvMapper.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreLine.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\common.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\DataManager.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\common.js">
+      <DependentUpon>common.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\DataManager.js">
+      <DependentUpon>DataManager.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Event.js">
       <DependentUpon>Event.ts</DependentUpon>
     </Content>

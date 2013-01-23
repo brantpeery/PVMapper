@@ -1,15 +1,10 @@
-var __extends = this.__extends || function (d, b) {
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-}
+/*    /  /  <reference path="Ext-all-src.js"/> */
 ///<reference path="C:\Workspace\Dotnet\WebDev\pvmapper\Doe.PVMapper\Doe.PVMapper\Scripts\pvMapper\Utility.ts" />
-//This is a test of comment to be kept in the JS Code.
 if(typeof Ext == 'undefined') {
     var Ext = Ext || {
     };
 }
-/* Interface */
+// Interface
 Ext.define('MyApp.data.UtilConfig', {
     extend: 'Ext.data.Model',
     fields: [
@@ -75,7 +70,6 @@ if(typeof (Ext.data.JsonStore) == 'undefined') {
         }
     });
 }
-//communication back to service on server using json object.
 var configStore = Ext.Create('Ext.data.JsonStore', {
     model: 'MyApp.data.UtilConfig',
     autoLoad: false,
@@ -88,8 +82,8 @@ var configStore = Ext.Create('Ext.data.JsonStore', {
     }
 });
 // Module
-var Utility;
-(function (Utility) {
+var UtilityModel;
+(function (UtilityModel) {
     var UtilFunction = (function () {
         function UtilFunction(functionName, functionPtr) {
             this.functionName = functionName;
@@ -135,20 +129,6 @@ var Utility;
         };
         return DictionaryCollection;
     })();    
-    var FunctionProperty = (function (_super) {
-        __extends(FunctionProperty, _super);
-        function FunctionProperty() {
-            _super.apply(this, arguments);
-
-        }
-        return FunctionProperty;
-    })(UtilConfig);
-    Utility.FunctionProperty = FunctionProperty;    
-    var FunctionCategory = (function () {
-        function FunctionCategory() { }
-        return FunctionCategory;
-    })();
-    Utility.FunctionCategory = FunctionCategory;    
     // Class
     var UtilModel = (function () {
         //configDict: DictionaryCollection = new DictionaryCollection();
@@ -188,12 +168,6 @@ var Utility;
                 configStore.add(cfg);
             }
             configStore.save();
-        };
-        UtilModel.prototype.getTarget = function (id) {
-            var cd = configStore.findRecord('functionName', id);
-            if(cd) {
-                return cd.data.target;
-            }
         }// Instance member
         ;
         UtilModel.prototype.setFunction = function (id, func) {
@@ -225,17 +199,14 @@ var Utility;
         ;
         return UtilModel;
     })();
-    Utility.UtilModel = UtilModel;    
-})(Utility || (Utility = {}));
-
-var utilModel = new Utility.UtilModel();
-utilModel.setFunction('More is better', UtilityFunctions.MoreIsBetter);
-utilModel.setFunction('Less is better', UtilityFunctions.LessIsBetter);
-utilModel.setFunction('Normal', UtilityFunctions.NDBalance);
-var x;
-var y = utilModel.executeFunction('More is better', x);
-var t = utilModel.getTarget('Energy');
+    UtilityModel.UtilModel = UtilModel;    
+    var utilModel = new UtilModel();
+    utilModel.setFunction('More is better', UtilityFunctions.MoreIsBetter);
+    utilModel.setFunction('Less is better', UtilityFunctions.LessIsBetter);
+    utilModel.setFunction('Normal', UtilityFunctions.NDBalance);
+})(UtilityModel || (UtilityModel = {}));
 //var Ext: any;
 //Ext.create("Ext.panel.Panel", {
 //    title: "Hello"
 //});
+
