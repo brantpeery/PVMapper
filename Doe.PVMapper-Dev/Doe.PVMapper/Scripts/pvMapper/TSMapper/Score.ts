@@ -1,13 +1,10 @@
+/// <reference path="common.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="../../ext-4.1.1a.d.ts" />
 
 
 // Module
 module pvMapper {
-  import pvM = pvMapper;
-  export function displayMessage(value : string) {
-    pvM.displayMessage(value);
-  }
 
   /***
   * A PVMapper.Score object. Tracks the score for a site. Ties a site to a scoring line and represents a line's value cell for a site.
@@ -59,7 +56,7 @@ module pvMapper {
       //Change the context, add this score to the event and pass the event on
       var oldvalue : string = this.myvalue;
       this.myvalue = value;
-      pvMapper.displayMessage(this.myvalue);
+      pvMapper.displayMessage(this.myvalue,"Info");
       
       //fire the value updated event
       this.valueChangeEvent.fire(this.self, { oldvalue: oldvalue, newvalue: value });
