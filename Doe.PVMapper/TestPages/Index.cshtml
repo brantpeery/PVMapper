@@ -1,0 +1,47 @@
+﻿@{
+  ViewBag.Title = "PVMapper";
+  Layout = "~/Views/Shared/_MapLayout.cshtml";
+}
+
+
+
+@section scripts{
+    <script type="text/javascript" src="../Scripts/ViewScripts/pvMapper.js"></script>
+    <script type="text/javascript" src="../Scripts/pvMapper/Event.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/pvMapper.js"></script>
+    <script type="text/javascript" src="../TestPages/Application.js"></script>
+    <script src="~/Scripts/UI/view/Functions.js"></script>
+  
+
+    <script type="text/javascript" src="../../Scripts/pvMapper/Utility.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/Common.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/DataManager.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/Module.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/Renderer.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/Score.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/Scoreboard.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/ScoreLine.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvMapper/Site.js"></script>
+
+  @*Load the layers for the map*@
+    <script type="text/javascript" src="../../Scripts/ViewScripts/LoadProjectSites.js"></script>
+
+    <script src="~/Scripts/UI/view/Window.js"></script>
+    <script type="text/javascript" src="../../Scripts/ViewScripts/Layers.js"></script>
+    <script src="~/Scripts/UI/controller/WeightFunction.js"></script>
+    <script src="~/Scripts/UI/view/weightFunctions/FunctionView.js"></script>
+    <script src="~/Scripts/UI/view/Modules/PieView.js"></script>
+    <script src="~/Scripts/UI/view/Modules/NavigateView.js"></script>
+
+    <script type="text/javascript" src="../../Scripts/jsts/javascript.util.js"></script>
+    <script type="text/javascript" src="../../Scripts/jsts/jsts.js"></script>
+    
+    <script type="text/javascript" src="../../Scripts/ViewScripts/SiteManagement.js"></script>
+    <script type="text/javascript" src="../../Scripts/ViewScripts/AddNewSite.js"></script>
+    <script type="text/javascript" src="../../Scripts/pvExtensions/siteAreaModule.js"></script>
+  @*
+ 
+ 
+  <script src="~/Scripts/UI/view/weightFunctions/FunctionView.js"></script>
+  <script src="~/Scripts/UI/view/Modules/PieView.js"></script>*@
+}

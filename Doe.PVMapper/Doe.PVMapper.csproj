@@ -983,6 +983,7 @@
     <Content Include="Scripts\ViewScripts\SiteDetail.js" />
     <Content Include="Scripts\ViewScripts\testscripts.js" />
     <Content Include="Scripts\ViewScripts\ZoomAction.js" />
+    <Content Include="TestPages\Application.js" />
     <Content Include="TestPages\LayoutTest.html" />
     <Content Include="TestPages\SiteObjectTest.html" />
     <Content Include="TestPages\UtilityFunctions.html" />
@@ -1051,6 +1052,7 @@
     <Content Include="Views\Extensions\Details.cshtml" />
     <Content Include="Views\ProjectSite\Edit.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="TestPages\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
