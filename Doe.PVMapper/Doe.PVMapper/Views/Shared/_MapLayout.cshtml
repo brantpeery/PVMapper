@@ -26,10 +26,24 @@
 
 </head>
 <body>
-    <div id="Header" class="float-left" id="Logo">
-        <a href="@Url.Action("Index", "Home")">
-            <img src="~/Images/PVMapper_TopText.png" alt="PV Mapper Logo" height="50" />
-        </a>
+    <div id="Header">
+        <div class="float-left">
+            <a href="@Url.Action("Index", "Home")">
+                <img src="~/Images/PVMapper_TopText.png" alt="PV Mapper Logo" height="50" />
+            </a>
+        </div>
+        <div class="float-right">
+            <section id="login">
+                @Html.Partial("_LoginPartial")
+            </section>
+            <nav>
+                <ul id="menu">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                </ul>
+            </nav>
+        </div>
     </div>
     <div id="Content">
         @RenderBody()
