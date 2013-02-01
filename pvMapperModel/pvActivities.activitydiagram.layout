@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<activityDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="pvActivities">
+  <activityRootModelMoniker Id="6baaa009-8098-4abd-bd7b-81ca93127f36" />
+  <nestedChildShapes>
+    <initialNodeShape Id="5a445ca6-f10f-4678-91a0-80cc9b592783" absoluteBounds="1.375, 1, 0.125, 0.125" customColor="89, 89, 89">
+      <initialNodeMoniker Id="d9aeb935-95ec-4d21-8d11-ecc607aa93c9" LastKnownName="Initial1" />
+    </initialNodeShape>
+  </nestedChildShapes>
+</activityDiagram>

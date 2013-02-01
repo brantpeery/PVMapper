@@ -190,6 +190,9 @@
     <Content Include="Scripts\pvMapper\TSMapper\common.js">
       <DependentUpon>common.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\common.min.js">
+      <DependentUpon>common.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\DataManager.js">
       <DependentUpon>DataManager.ts</DependentUpon>
     </Content>
@@ -1058,6 +1061,9 @@
     <Content Include="Views\Extensions\Details.cshtml" />
     <Content Include="Views\ProjectSite\Edit.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Scripts\pvMapper\TSMapper\common.js.map">
+      <DependentUpon>common.ts</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
