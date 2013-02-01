@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm5="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm9="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ComponentDesigner"
+  dslVersion="1.0.0.0"
+  Id="c48cc10c-d973-42e6-83bc-9be2c4b74fdc"
+  name="DataLayer" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <packagedElements>
+    <packageHasNamedElement>
+      <Interface
+        Id="32d1a29d-cec4-481c-b96d-c81a8ed1405e"
+        name="DataManager"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="29cfb28b-0d31-4009-985e-ad1b394463ae"
+        name="UtilModel"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <interfaceRealization
+            Id="74963a28-9f1a-4999-9aa8-f95f548c7150">
+            <interfaceMoniker
+              Id="32d1a29d-cec4-481c-b96d-c81a8ed1405e"
+              LastKnownName="DataManager"
+              LastKnownLocation="Package_1807.uml" />
+          </interfaceRealization>
+          <dependency
+            Id="ce69f72d-db94-44cd-8c17-2d0d073933d2">
+            <classMoniker
+              Id="bf80fda9-b22a-4463-b2c4-750512be668a"
+              LastKnownName="Utility"
+              LastKnownLocation="Package_1836.uml" />
+          </dependency>
+        </suppliersInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="499360f1-745f-428f-aeb2-8900589abbc9"
+        name="PrefModel"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <interfaceRealization
+            Id="40bf1f27-6fc7-44f0-99b6-8fc7f219374c">
+            <interfaceMoniker
+              Id="32d1a29d-cec4-481c-b96d-c81a8ed1405e"
+              LastKnownName="DataManager"
+              LastKnownLocation="Package_1807.uml" />
+          </interfaceRealization>
+          <dependency
+            Id="8f5744fa-e500-4ffe-add8-2b9e2242723e">
+            <classMoniker
+              Id="d80c5bb3-46be-4c0d-b1ee-13e83e1ed6f5"
+              LastKnownName="UserPreferrence"
+              LastKnownLocation="Package_1836.uml" />
+          </dependency>
+        </suppliersInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="43641b3e-31f8-4fff-b963-89f3e80d8e62"
+        name="ScoreModel"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <interfaceRealization
+            Id="ccca044a-cbac-4ccb-89d6-d2e4f12feab0">
+            <interfaceMoniker
+              Id="32d1a29d-cec4-481c-b96d-c81a8ed1405e"
+              LastKnownName="DataManager"
+              LastKnownLocation="Package_1807.uml" />
+          </interfaceRealization>
+          <dependency
+            Id="6da6d704-9edc-4459-8d7f-9a700de10d7d">
+            <classMoniker
+              Id="e842223e-89c3-4de3-b3ef-6a816e3c2fb5"
+              LastKnownName="ScoreBoard"
+              LastKnownLocation="Package_1836.uml" />
+          </dependency>
+        </suppliersInternal>
+      </class>
+    </packageHasNamedElement>
+  </packagedElements>
+</package>
