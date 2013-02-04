@@ -116,6 +116,11 @@
               <elementDefinition Id="f56078e7-3815-4ae0-9c13-93732d9c0283" />
             </Interface>
           </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="b69dfe68-763d-4ed3-a671-fef0e4d5a5c1" name="ModuleLoader" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="fa836d71-70a3-46ae-8374-198bbe6db8d6" />
+            </class>
+          </packageHasNamedElement>
         </packagedElements>
       </package>
     </logicalClassDesignerModelHasPackages>
