@@ -1,13 +1,6 @@
-/// <reference path="Options.d.ts" />
-/// <reference path="OpenLayers.d.ts" />
-/// <reference path="siteAreaModule.ts" />
-/// <reference path="../../jquery.d.ts" />
-// Module
 var pvMapper;
 (function (pvMapper) {
-    // Class
     var Module = (function () {
-        // Constructor
         function Module(options) {
             this.id = "";
             this.author = "";
@@ -21,17 +14,13 @@ var pvMapper;
             st.updateCallback = this.updateSetbackFeature;
             this.scoringTools.push(st);
         }
-        Module.prototype.init = //Called when the tool is loaded as a module.
-        function () {
+        Module.prototype.init = function () {
         };
-        Module.prototype.destroy = //Called when the tool needs to completely remove itself from the interface and object tree
-        function () {
+        Module.prototype.destroy = function () {
         };
-        Module.prototype.activate = //Called when the tool is checkmarked or activated by the system or user
-        function () {
+        Module.prototype.activate = function () {
         };
-        Module.prototype.deactivate = //Called when the tool is unchecked or deactivated by the system or user
-        function () {
+        Module.prototype.deactivate = function () {
         };
         Module.prototype.addScoringTool = function (scoreTool) {
             this.scoringTools.push(scoreTool);
@@ -49,7 +38,6 @@ var pvMapper;
             return Math.round(kmArea * 100) / 100;
         };
         Module.prototype.calculateSiteArea = function (site) {
-            //Use the geometry of the OpenLayers feature to get the area
             var val = this.calculateArea(site.feature.geometry);
             return val;
         };
@@ -57,18 +45,15 @@ var pvMapper;
             var reader = new jsts.io.WKTReader();
             var parser = new jsts.io.OpenLayersParser();
             var input = parser.read(site.feature.geometry);
-            var buffer = input.buffer(-1 * setbackLength);//Inset the feature
-            
+            var buffer = input.buffer(-1 * setbackLength);
             var newGeometry = parser.write(buffer);
             if(!this.setbackLayer) {
                 this.setbackLayer = new OpenLayers.Layer.Vector("Site Setback");
                 pvMapper.map.addLayer(this.setbackLayer);
             }
             if(site.offsetFeature) {
-                //Redraw the polygon
                 this.setbackLayer.removeFeatures(site.offsetFeature);
-                site.offsetFeature.geometry = newGeometry//This probably wont work
-                ;
+                site.offsetFeature.geometry = newGeometry;
             } else {
                 var style = {
                     fillColor: 'blue',
@@ -89,4 +74,3 @@ var pvMapper;
     ; ;
     pvMapper.map = new OpenLayers.Map();
 })(pvMapper || (pvMapper = {}));
-

@@ -1064,6 +1064,9 @@
     <Content Include="Scripts\pvMapper\TSMapper\common.js.map">
       <DependentUpon>common.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TS Versions\Site.min.js.map">
+      <DependentUpon>Site.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
