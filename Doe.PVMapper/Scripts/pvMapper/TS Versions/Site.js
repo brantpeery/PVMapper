@@ -1,7 +1,6 @@
 var pvMapper;
 (function (pvMapper) {
     var pvM = pvMapper;
-    ; ;
     var Site = (function () {
         function Site(feature) {
             this.changeEvent = new pvM.Event();

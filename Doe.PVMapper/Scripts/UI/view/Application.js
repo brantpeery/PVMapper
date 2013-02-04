@@ -38,7 +38,7 @@ var app = Ext.application({
 
         //Add PanZoom controls
         var controls = [new OpenLayers.Control.PanPanel(),
-                        new OpenLayers.Control.ZoomPanel()]
+                        new OpenLayers.Control.ZoomPanel()];
         map.addControls(controls);
 
         //Create the panel the map lives in
