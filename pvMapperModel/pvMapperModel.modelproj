@@ -69,6 +69,13 @@
       <SubType>Content</SubType>
       <DependentUpon>pvMapperComponents.componentdiagram</DependentUpon>
     </Content>
+    <Content Include="register.sequencediagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="register.sequencediagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>register.sequencediagram</DependentUpon>
+    </Content>
     <Folder Include="ModelDefinition\" />
     <Content Include="ModelDefinition\pvMapperModel.uml">
       <SubType>Content</SubType>

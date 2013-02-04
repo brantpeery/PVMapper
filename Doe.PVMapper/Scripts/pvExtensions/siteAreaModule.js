@@ -14,7 +14,7 @@
 //As always, the scoreboard will be responsible for writing the values to it's own datastorage
 
 (function (pvM) {
-    pvM.onReady(function () {
+    pvM.onReady(function () { //use only for direct page insertion for testing module
         console.log("Loading in site area module");
         var me = new pvM.Module({
             self: this,
