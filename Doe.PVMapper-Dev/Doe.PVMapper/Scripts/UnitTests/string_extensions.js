@@ -1,4 +1,5 @@
 ﻿/// <reference path="../pvMapper/TSMapper/common.ts" />
+/// <reference path="../pvMapper/TSMapper/common.js" />
 
 describe("String.format using named tags", function () {
 	it("formats a string using a template", function () {
@@ -8,7 +9,7 @@ describe("String.format using named tags", function () {
 			attributes: 'style="background:blue"',
 			text: "What a wonderful WORLD!"
 		});
-
+        
 		expect(sf).toBe('<div style="background:blue" src="{c3po}">What a wonderful WORLD!{nope}</div>');
 	});
 });
