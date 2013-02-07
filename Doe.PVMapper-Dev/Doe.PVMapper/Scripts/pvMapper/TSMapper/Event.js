@@ -1,3 +1,5 @@
+/// <reference path="Site.ts" />
+/// <reference path="Site.ts" />
 /// <reference path="../../jquery.d.ts" />
 var pvMapper;
 (function (pvMapper) {

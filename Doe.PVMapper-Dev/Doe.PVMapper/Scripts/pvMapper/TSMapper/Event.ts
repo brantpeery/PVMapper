@@ -1,4 +1,6 @@
-﻿/// <reference path="../../jquery.d.ts" />
+﻿/// <reference path="Site.ts" />
+/// <reference path="Site.ts" />
+/// <reference path="../../jquery.d.ts" />
 
 module pvMapper {
   /*
