@@ -208,12 +208,18 @@
     <Content Include="Scripts\pvMapper\TSMapper\Module.js">
       <DependentUpon>Module.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Module.min.js">
+      <DependentUpon>Module.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Options.d.js">
       <DependentUpon>Options.d.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Scoreboard.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Renderer.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\Renderer.js">
+      <DependentUpon>Renderer.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Renderer.min.js">
       <DependentUpon>Renderer.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Scoreboard.js">
@@ -247,6 +253,8 @@
     </Content>
     <Content Include="Scripts\pvMapper\Utility.ts" />
     <Content Include="Scripts\UI\controller\UtilModel.js" />
+    <Content Include="Scripts\UnitTests\jasmine.js" />
+    <Content Include="Scripts\UnitTests\PVMapper.Site.js" />
     <Content Include="Scripts\_frameworkobjects.d.ts" />
     <Compile Include="WebApi\MongoHelper.cs" />
     <Compile Include="WebApi\ProjectSiteController.cs" />
@@ -1061,8 +1069,10 @@
     <Content Include="Views\Extensions\Details.cshtml" />
     <Content Include="Views\ProjectSite\Edit.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Scripts\pvMapper\TSMapper\common.js.map">
-      <DependentUpon>common.ts</DependentUpon>
+    <Content Include="Scripts\UnitTests\string_extensions.js" />
+    <Content Include="Scripts\UnitTests\pvMapper.Event.js" />
+    <Content Include="Scripts\pvMapper\TSMapper\Event.min.js.map">
+      <DependentUpon>Event.js</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TS Versions\Site.min.js.map">
       <DependentUpon>Site.js</DependentUpon>
