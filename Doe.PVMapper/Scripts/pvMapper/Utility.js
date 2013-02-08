@@ -15,10 +15,10 @@ var UtilityFunctions = (function () {
     }
     UtilityFunctions.setConfig = function setConfig(obj) {
         this.currentConfig = obj;
-    }
+    };
     UtilityFunctions.MoreIsBetter = function MoreIsBetter(x) {
         return 1 - this.LessIsBetter(x);
-    }
+    };
     UtilityFunctions.LessIsBetter = function LessIsBetter(x) {
         if(!currentConfig) {
             console.log('No configuration setup.');
@@ -33,12 +33,10 @@ var UtilityFunctions = (function () {
         s = s * (sRatio);
         if(x >= h) {
             y = 0;
+        } else if(x <= l) {
+            y = 1;
         } else {
-            if(x <= l) {
-                y = 1;
-            } else {
-                y = (x < b) ? 1 / (1 + Math.pow((b - l) / (x - l), (2 * s * (b + x - 2 * l)))) : 1 - (1 / (1 + Math.pow((b - (2 * b - h)) / ((2 * b - x) - (2 * b - h)), (2 * s * (b + (2 * b - x) - 2 * (2 * b - h))))));
-            }
+            y = (x < b) ? 1 / (1 + Math.pow((b - l) / (x - l), (2 * s * (b + x - 2 * l)))) : 1 - (1 / (1 + Math.pow((b - (2 * b - h)) / ((2 * b - x) - (2 * b - h)), (2 * s * (b + (2 * b - x) - 2 * (2 * b - h))))));
         }
         if(y >= 1) {
             y = 1;
@@ -47,7 +45,7 @@ var UtilityFunctions = (function () {
             y = 0;
         }
         return y;
-    }
+    };
     UtilityFunctions.NDBalance = function NDBalance(x, r) {
         if(!currentConfig) {
             console.log('No configuration setup.');
@@ -57,7 +55,7 @@ var UtilityFunctions = (function () {
         var r = this.currentConfig.data.slope / 5 + 0.3;
         var y = 1 / (r * Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * Math.pow((x - u) / r, 2));
         return y;
-    }
+    };
     UtilityFunctions.prototype.NDLeft = function (x) {
         var y = 0;
         return y;
@@ -76,3 +74,4 @@ var UtilityFunctions = (function () {
     };
     return UtilityFunctions;
 })();
+//@ sourceMappingURL=Utility.js.map

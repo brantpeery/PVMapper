@@ -2,7 +2,7 @@ var __extends = this.__extends || function (d, b) {
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
-}
+};
 /// <reference path="common.ts" />
 /// <reference path="../../jquery.d.ts" />
 /// <reference path="C:\Program Files (x86)\Microsoft SDKs\TypeScript\0.8.0.0\lib.d.ts" />
@@ -44,7 +44,7 @@ var pvMapper;
         __extends(HTML, _super);
         function HTML(tag, text) {
                 _super.call(this, text);
-            this.attributes = new Array();
+            this.attributes = new any();
             _super.prototype.template = '<{tag} {attributes}>{text}</{tag}>';
             this.tag = (tag) ? tag : 'div';
         }
@@ -94,8 +94,8 @@ var pvMapper;
             if (typeof tag === "undefined") { tag = 'tr'; }
                 _super.call(this, tag);
         }
-        /*Adds a cell to the row. Passing in a cell will add that cell, passing in text will add a cell with text */
-                Row.prototype.addCell = function (args) {
+        Row.prototype.addCell = /*Adds a cell to the row. Passing in a cell will add that cell, passing in text will add a cell with text */
+        function (args) {
             if(arguments[0] && arguments[0]['tag'] && (arguments[0]['tag'] == 'td' || arguments[0]['tag'] == 'th')) {
                 this.children.push(arguments[0]);
                 return arguments[0];
@@ -110,4 +110,4 @@ var pvMapper;
     })(Table);
     pvMapper.Row = Row;    
 })(pvMapper || (pvMapper = {}));
-
+//@ sourceMappingURL=Renderer.js.map

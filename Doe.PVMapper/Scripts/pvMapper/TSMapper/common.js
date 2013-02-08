@@ -36,3 +36,12 @@ String.prototype.format = function (args) {
         return replace;
     });
 };
+String.prototype.IsNullOrEmpty = function () {
+    var value = this;
+    if((typeof (value) === 'undefined') || (value.length == 0)) {
+        return true;
+    } else {
+        return false;
+    }
+};
+//@ sourceMappingURL=common.js.map

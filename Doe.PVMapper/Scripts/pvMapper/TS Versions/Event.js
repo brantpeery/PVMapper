@@ -14,8 +14,8 @@ var pvMapper;
             this.allowDuplicateHandler = allowDuplicateHandler;
             this.eventHandlers = new Array();
         }
-        ///
-                Event.prototype.addHandler = function (callBack) {
+        Event.prototype.addHandler = ///
+        function (callBack) {
             if(this.eventHandlers.indexOf(callBack) == -1 || this.allowDuplicateHandler) {
                 this.eventHandlers.push(callBack);
             }
@@ -47,4 +47,4 @@ var pvMapper;
     })();
     pvMapper.Event = Event;    
 })(pvMapper || (pvMapper = {}));
-
+//@ sourceMappingURL=Event.js.map

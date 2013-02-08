@@ -1243,22 +1243,22 @@
             </covered>
           </messageOccurrenceSpecification>
           <messageOccurrenceSpecification
-            Id="bf01252b-5850-44a6-a10a-6a0b91c71caf"
-            name="MessageOccurrenceSpecification50">
-            <covered>
-              <lifelineMoniker
-                Id="2ff1a214-37b1-422d-a44c-af7bb852fea9"
-                LastKnownName="ScoreLine"
-                LastKnownLocation="pvMapperModel.uml" />
-            </covered>
-          </messageOccurrenceSpecification>
-          <messageOccurrenceSpecification
             Id="a9dc9395-076d-47c2-835f-eba42b1e5caf"
             name="MessageOccurrenceSpecification49">
             <covered>
               <lifelineMoniker
                 Id="f6d53737-4a06-4c68-a022-6230919c7c86"
                 LastKnownName="Score"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="bf01252b-5850-44a6-a10a-6a0b91c71caf"
+            name="MessageOccurrenceSpecification50">
+            <covered>
+              <lifelineMoniker
+                Id="2ff1a214-37b1-422d-a44c-af7bb852fea9"
+                LastKnownName="ScoreLine"
                 LastKnownLocation="pvMapperModel.uml" />
             </covered>
           </messageOccurrenceSpecification>
@@ -2376,6 +2376,1259 @@
     <packageHasNamedElement>
       <executionEvent
         Id="80285e6c-86fb-41c4-9f0d-4825a570e842"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <interaction
+        Id="56c12d5b-89ee-4979-b91e-37397dc26218"
+        name="register"
+        collapseFragmentsFlag="false"
+        isActiveClass="false"
+        isAbstract="false"
+        isLeaf="false"
+        isReentrant="false">
+        <fragments>
+          <behaviorExecutionSpecification
+            Id="b7f183ca-fefe-4ef2-82a6-16d1570df5aa"
+            name="BehaviorExecutionSpecification1">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="0a5cb77e-dfd7-40d6-b43d-7d367a637693"
+                LastKnownName="UserTool"
+                LastKnownLocation="pvMapperModel.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="3ed1abbc-556a-44de-aa62-197b458b30c4"
+                LastKnownName="ExecutionOccurrenceSpecification2"
+                LastKnownLocation="pvMapperModel.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="8a9e7972-14df-4da2-b0a2-d76f08a6bf0a"
+                LastKnownName="ExecutionOccurrenceSpecification1"
+                LastKnownLocation="pvMapperModel.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="8888ec1a-aad1-43fa-8839-0a29cf2d5126"
+                LastKnownName="MessageOccurrenceSpecification2"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="f7748d38-4c47-479e-8f53-81b2364b8043"
+                LastKnownName="MessageOccurrenceSpecification5"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="f1130399-c997-4165-9126-ac506d3315ac"
+                LastKnownName="MessageOccurrenceSpecification8"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="5c0bf47d-83bc-43a9-9f0c-9e65608feca0"
+                LastKnownName="MessageOccurrenceSpecification3"
+                LastKnownLocation="pvMapperModel.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="8a9e7972-14df-4da2-b0a2-d76f08a6bf0a"
+            name="ExecutionOccurrenceSpecification1">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="2918d2c8-17ae-4f08-946b-e754ee395549"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="pvMapperModel.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="0a5cb77e-dfd7-40d6-b43d-7d367a637693"
+                LastKnownName="UserTool"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="1f800e1a-ca77-4401-9be1-b7808802ea73"
+            name="MessageOccurrenceSpecification1">
+            <covered>
+              <lifelineMoniker
+                Id="0c47697b-d637-4ecb-aa36-7be46437d28b"
+                LastKnownName="ModuleLoader"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="8888ec1a-aad1-43fa-8839-0a29cf2d5126"
+            name="MessageOccurrenceSpecification2">
+            <covered>
+              <lifelineMoniker
+                Id="0a5cb77e-dfd7-40d6-b43d-7d367a637693"
+                LastKnownName="UserTool"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="8e0447bd-1763-4007-8884-eb48793d1f51"
+            name="BehaviorExecutionSpecification2">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="8cb2d485-9b7d-454b-a32e-baf2e158a32d"
+                LastKnownName="InfoTool"
+                LastKnownLocation="pvMapperModel.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="3824f9cb-8e70-4cfb-9272-50143e8837e6"
+                LastKnownName="ExecutionOccurrenceSpecification4"
+                LastKnownLocation="pvMapperModel.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="e2cff0e1-cd60-4387-b7de-ec5cbda635d4"
+                LastKnownName="ExecutionOccurrenceSpecification3"
+                LastKnownLocation="pvMapperModel.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="9a3d72b4-0eca-427b-8418-b23409907eba"
+                LastKnownName="MessageOccurrenceSpecification6"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="40921d41-5c27-44d3-a6eb-f02041ab1c6e"
+                LastKnownName="MessageOccurrenceSpecification9"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="045174b0-fdb3-4576-b8f1-59ed4d52885d"
+                LastKnownName="MessageOccurrenceSpecification12"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="0530d3f6-a498-4bb6-88f7-4702aaecd5e7"
+                LastKnownName="MessageOccurrenceSpecification7"
+                LastKnownLocation="pvMapperModel.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="e2cff0e1-cd60-4387-b7de-ec5cbda635d4"
+            name="ExecutionOccurrenceSpecification3">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="1032535c-4c10-47ef-869e-b5b430070eb9"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="pvMapperModel.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="8cb2d485-9b7d-454b-a32e-baf2e158a32d"
+                LastKnownName="InfoTool"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="f7748d38-4c47-479e-8f53-81b2364b8043"
+            name="MessageOccurrenceSpecification5">
+            <covered>
+              <lifelineMoniker
+                Id="0a5cb77e-dfd7-40d6-b43d-7d367a637693"
+                LastKnownName="UserTool"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="9a3d72b4-0eca-427b-8418-b23409907eba"
+            name="MessageOccurrenceSpecification6">
+            <covered>
+              <lifelineMoniker
+                Id="8cb2d485-9b7d-454b-a32e-baf2e158a32d"
+                LastKnownName="InfoTool"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="23858c60-096d-4fc2-8d1d-dd832f21f98a"
+            name="BehaviorExecutionSpecification3">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="a45beed9-5d59-4d24-8a3a-ef4e7669bdae"
+                LastKnownName="ToolUIManager"
+                LastKnownLocation="pvMapperModel.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="041ceef1-2812-45f1-9f5d-8f91d26269a2"
+                LastKnownName="ExecutionOccurrenceSpecification6"
+                LastKnownLocation="pvMapperModel.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="73e1d730-603e-462b-9f2d-921ca7b68c32"
+                LastKnownName="ExecutionOccurrenceSpecification5"
+                LastKnownLocation="pvMapperModel.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="fcd8c3cb-3b09-403e-9f9a-f58d7bcfe9c0"
+                LastKnownName="MessageOccurrenceSpecification10"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="b5d81f96-c6b5-41a9-ac6c-856ded8216e6"
+                LastKnownName="MessageOccurrenceSpecification17"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="e5f9f80d-7444-4bdc-b329-5d2326ddada3"
+                LastKnownName="MessageOccurrenceSpecification20"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="db364dca-e7bf-47d6-8439-3c6409e5ba3c"
+                LastKnownName="MessageOccurrenceSpecification11"
+                LastKnownLocation="pvMapperModel.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="73e1d730-603e-462b-9f2d-921ca7b68c32"
+            name="ExecutionOccurrenceSpecification5">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="6b1d0be1-a3c5-4ae2-a7c8-64e9465b62f1"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="pvMapperModel.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="a45beed9-5d59-4d24-8a3a-ef4e7669bdae"
+                LastKnownName="ToolUIManager"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="fcd8c3cb-3b09-403e-9f9a-f58d7bcfe9c0"
+            name="MessageOccurrenceSpecification10">
+            <covered>
+              <lifelineMoniker
+                Id="a45beed9-5d59-4d24-8a3a-ef4e7669bdae"
+                LastKnownName="ToolUIManager"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="40921d41-5c27-44d3-a6eb-f02041ab1c6e"
+            name="MessageOccurrenceSpecification9">
+            <covered>
+              <lifelineMoniker
+                Id="8cb2d485-9b7d-454b-a32e-baf2e158a32d"
+                LastKnownName="InfoTool"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="afe97d0c-2f67-49b3-a207-5949a0cd5eeb"
+            name="BehaviorExecutionSpecification5">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="406d6c8e-26c7-4ff9-bb52-4a0385e5d795"
+                LastKnownName="MainApp"
+                LastKnownLocation="pvMapperModel.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="a120812d-09ad-4087-8b0b-31c44c96ae00"
+                LastKnownName="ExecutionOccurrenceSpecification10"
+                LastKnownLocation="pvMapperModel.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="162d6533-d7b5-456a-a760-bb0e05df0350"
+                LastKnownName="ExecutionOccurrenceSpecification9"
+                LastKnownLocation="pvMapperModel.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="6154dfd6-16c5-4b6d-a465-811419170df1"
+                LastKnownName="MessageOccurrenceSpecification18"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="ad47f5cd-6668-436a-bcb0-c81cd24b1a70"
+                LastKnownName="MessageOccurrenceSpecification25"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="1bab7149-99d0-4f23-90ec-55100b9a4f06"
+                LastKnownName="MessageOccurrenceSpecification28"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="e902a09c-72c4-4070-bc5c-3677bff3e4ef"
+                LastKnownName="MessageOccurrenceSpecification29"
+                LastKnownLocation="pvMapperModel.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="5374b03e-b371-4d2c-9d8a-261f0af4306a"
+                LastKnownName="ExecutionOccurrenceSpecification15"
+                LastKnownLocation="pvMapperModel.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="da7d2e98-4bde-444f-a7df-496751b6ee64"
+                LastKnownName="ExecutionOccurrenceSpecification16"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="5c332755-616b-4346-8480-043f78806a40"
+                LastKnownName="MessageOccurrenceSpecification19"
+                LastKnownLocation="pvMapperModel.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="162d6533-d7b5-456a-a760-bb0e05df0350"
+            name="ExecutionOccurrenceSpecification9">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="3bf45a72-bf69-47cc-98ca-2bdbf61baae7"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="pvMapperModel.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="406d6c8e-26c7-4ff9-bb52-4a0385e5d795"
+                LastKnownName="MainApp"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="6154dfd6-16c5-4b6d-a465-811419170df1"
+            name="MessageOccurrenceSpecification18">
+            <covered>
+              <lifelineMoniker
+                Id="406d6c8e-26c7-4ff9-bb52-4a0385e5d795"
+                LastKnownName="MainApp"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="b5d81f96-c6b5-41a9-ac6c-856ded8216e6"
+            name="MessageOccurrenceSpecification17">
+            <covered>
+              <lifelineMoniker
+                Id="a45beed9-5d59-4d24-8a3a-ef4e7669bdae"
+                LastKnownName="ToolUIManager"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="4d6cc7c8-7df0-4517-9d9b-b1dc2830e939"
+            name="BehaviorExecutionSpecification7">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="e9a8e512-a5d7-486c-94d5-9d4f4b10f3ba"
+                LastKnownName="ToolComponent"
+                LastKnownLocation="pvMapperModel.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="ae1a6781-c090-4209-9336-8191f08d6a6f"
+                LastKnownName="ExecutionOccurrenceSpecification14"
+                LastKnownLocation="pvMapperModel.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="d0a69c58-bbce-42ab-8f94-ad9256768e07"
+                LastKnownName="ExecutionOccurrenceSpecification13"
+                LastKnownLocation="pvMapperModel.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="5a95d2dc-fb8e-4fea-98b0-bf82e141b7ef"
+                LastKnownName="MessageOccurrenceSpecification26"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="ea595cf0-b169-4dce-824a-77de9fa471f6"
+                LastKnownName="MessageOccurrenceSpecification27"
+                LastKnownLocation="pvMapperModel.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="d0a69c58-bbce-42ab-8f94-ad9256768e07"
+            name="ExecutionOccurrenceSpecification13">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="784a91b9-4921-463e-91ab-a3328d19e491"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="pvMapperModel.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="e9a8e512-a5d7-486c-94d5-9d4f4b10f3ba"
+                LastKnownName="ToolComponent"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="5a95d2dc-fb8e-4fea-98b0-bf82e141b7ef"
+            name="MessageOccurrenceSpecification26">
+            <covered>
+              <lifelineMoniker
+                Id="e9a8e512-a5d7-486c-94d5-9d4f4b10f3ba"
+                LastKnownName="ToolComponent"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="ad47f5cd-6668-436a-bcb0-c81cd24b1a70"
+            name="MessageOccurrenceSpecification25">
+            <covered>
+              <lifelineMoniker
+                Id="406d6c8e-26c7-4ff9-bb52-4a0385e5d795"
+                LastKnownName="MainApp"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="ea595cf0-b169-4dce-824a-77de9fa471f6"
+            name="MessageOccurrenceSpecification27">
+            <covered>
+              <lifelineMoniker
+                Id="e9a8e512-a5d7-486c-94d5-9d4f4b10f3ba"
+                LastKnownName="ToolComponent"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="1bab7149-99d0-4f23-90ec-55100b9a4f06"
+            name="MessageOccurrenceSpecification28">
+            <covered>
+              <lifelineMoniker
+                Id="406d6c8e-26c7-4ff9-bb52-4a0385e5d795"
+                LastKnownName="MainApp"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="ae1a6781-c090-4209-9336-8191f08d6a6f"
+            name="ExecutionOccurrenceSpecification14">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="5a152a16-1b11-4aec-be63-2ad424376c57"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="pvMapperModel.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="e9a8e512-a5d7-486c-94d5-9d4f4b10f3ba"
+                LastKnownName="ToolComponent"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="e902a09c-72c4-4070-bc5c-3677bff3e4ef"
+            name="MessageOccurrenceSpecification29">
+            <covered>
+              <lifelineMoniker
+                Id="406d6c8e-26c7-4ff9-bb52-4a0385e5d795"
+                LastKnownName="MainApp"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="255e926a-37b7-4ee5-93a2-9e591097c088"
+            name="BehaviorExecutionSpecification8">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="406d6c8e-26c7-4ff9-bb52-4a0385e5d795"
+                LastKnownName="MainApp"
+                LastKnownLocation="pvMapperModel.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="da7d2e98-4bde-444f-a7df-496751b6ee64"
+                LastKnownName="ExecutionOccurrenceSpecification16"
+                LastKnownLocation="pvMapperModel.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="5374b03e-b371-4d2c-9d8a-261f0af4306a"
+                LastKnownName="ExecutionOccurrenceSpecification15"
+                LastKnownLocation="pvMapperModel.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="e56435f6-68be-4d19-b354-488552fa06c9"
+                LastKnownName="MessageOccurrenceSpecification30"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="f5039351-9173-4008-a21c-00de9b786b6a"
+                LastKnownName="MessageOccurrenceSpecification21"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="95deeb00-fd04-41f7-84ce-0d7d5af1b72a"
+                LastKnownName="MessageOccurrenceSpecification24"
+                LastKnownLocation="pvMapperModel.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="5374b03e-b371-4d2c-9d8a-261f0af4306a"
+            name="ExecutionOccurrenceSpecification15">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="c2d0404a-b0cb-4ea1-9d80-37371f87d60f"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="pvMapperModel.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="406d6c8e-26c7-4ff9-bb52-4a0385e5d795"
+                LastKnownName="MainApp"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="e56435f6-68be-4d19-b354-488552fa06c9"
+            name="MessageOccurrenceSpecification30">
+            <covered>
+              <lifelineMoniker
+                Id="406d6c8e-26c7-4ff9-bb52-4a0385e5d795"
+                LastKnownName="MainApp"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="d57165cc-18a6-4a36-9d1a-39e73c666d79"
+            name="BehaviorExecutionSpecification6">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="39bfafb1-e987-48e0-9479-6b0982d74ea3"
+                LastKnownName="ToolWindow"
+                LastKnownLocation="pvMapperModel.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="a299ed71-e5e5-437e-b3ce-37d25c760718"
+                LastKnownName="ExecutionOccurrenceSpecification12"
+                LastKnownLocation="pvMapperModel.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="332f8913-c15e-4dbc-8bfd-b282e094dc7d"
+                LastKnownName="ExecutionOccurrenceSpecification11"
+                LastKnownLocation="pvMapperModel.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="e54c3e2f-293c-4435-bcb9-7a657936df9c"
+                LastKnownName="MessageOccurrenceSpecification22"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="ef20759f-c051-425a-9ffd-1336098c5bea"
+                LastKnownName="MessageOccurrenceSpecification23"
+                LastKnownLocation="pvMapperModel.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="332f8913-c15e-4dbc-8bfd-b282e094dc7d"
+            name="ExecutionOccurrenceSpecification11">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="e7eddb49-5195-495e-a7af-86f7de638e4b"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="pvMapperModel.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="39bfafb1-e987-48e0-9479-6b0982d74ea3"
+                LastKnownName="ToolWindow"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="e54c3e2f-293c-4435-bcb9-7a657936df9c"
+            name="MessageOccurrenceSpecification22">
+            <covered>
+              <lifelineMoniker
+                Id="39bfafb1-e987-48e0-9479-6b0982d74ea3"
+                LastKnownName="ToolWindow"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="f5039351-9173-4008-a21c-00de9b786b6a"
+            name="MessageOccurrenceSpecification21">
+            <covered>
+              <lifelineMoniker
+                Id="406d6c8e-26c7-4ff9-bb52-4a0385e5d795"
+                LastKnownName="MainApp"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="ef20759f-c051-425a-9ffd-1336098c5bea"
+            name="MessageOccurrenceSpecification23">
+            <covered>
+              <lifelineMoniker
+                Id="39bfafb1-e987-48e0-9479-6b0982d74ea3"
+                LastKnownName="ToolWindow"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="95deeb00-fd04-41f7-84ce-0d7d5af1b72a"
+            name="MessageOccurrenceSpecification24">
+            <covered>
+              <lifelineMoniker
+                Id="406d6c8e-26c7-4ff9-bb52-4a0385e5d795"
+                LastKnownName="MainApp"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="a299ed71-e5e5-437e-b3ce-37d25c760718"
+            name="ExecutionOccurrenceSpecification12">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="ffdd24ee-221e-4d8f-a28e-3030055b6f49"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="pvMapperModel.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="39bfafb1-e987-48e0-9479-6b0982d74ea3"
+                LastKnownName="ToolWindow"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="da7d2e98-4bde-444f-a7df-496751b6ee64"
+            name="ExecutionOccurrenceSpecification16">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="886231e6-3038-46b4-bb99-2f636fa0a283"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="pvMapperModel.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="406d6c8e-26c7-4ff9-bb52-4a0385e5d795"
+                LastKnownName="MainApp"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="5c332755-616b-4346-8480-043f78806a40"
+            name="MessageOccurrenceSpecification19">
+            <covered>
+              <lifelineMoniker
+                Id="406d6c8e-26c7-4ff9-bb52-4a0385e5d795"
+                LastKnownName="MainApp"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="e5f9f80d-7444-4bdc-b329-5d2326ddada3"
+            name="MessageOccurrenceSpecification20">
+            <covered>
+              <lifelineMoniker
+                Id="a45beed9-5d59-4d24-8a3a-ef4e7669bdae"
+                LastKnownName="ToolUIManager"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="a120812d-09ad-4087-8b0b-31c44c96ae00"
+            name="ExecutionOccurrenceSpecification10">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="2a876496-f50a-4d10-9601-2805d072afeb"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="pvMapperModel.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="406d6c8e-26c7-4ff9-bb52-4a0385e5d795"
+                LastKnownName="MainApp"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="db364dca-e7bf-47d6-8439-3c6409e5ba3c"
+            name="MessageOccurrenceSpecification11">
+            <covered>
+              <lifelineMoniker
+                Id="a45beed9-5d59-4d24-8a3a-ef4e7669bdae"
+                LastKnownName="ToolUIManager"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="045174b0-fdb3-4576-b8f1-59ed4d52885d"
+            name="MessageOccurrenceSpecification12">
+            <covered>
+              <lifelineMoniker
+                Id="8cb2d485-9b7d-454b-a32e-baf2e158a32d"
+                LastKnownName="InfoTool"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="041ceef1-2812-45f1-9f5d-8f91d26269a2"
+            name="ExecutionOccurrenceSpecification6">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="a0d781e9-c500-45ad-9219-c63ceaf18e40"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="pvMapperModel.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="a45beed9-5d59-4d24-8a3a-ef4e7669bdae"
+                LastKnownName="ToolUIManager"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="f1130399-c997-4165-9126-ac506d3315ac"
+            name="MessageOccurrenceSpecification8">
+            <covered>
+              <lifelineMoniker
+                Id="0a5cb77e-dfd7-40d6-b43d-7d367a637693"
+                LastKnownName="UserTool"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="0530d3f6-a498-4bb6-88f7-4702aaecd5e7"
+            name="MessageOccurrenceSpecification7">
+            <covered>
+              <lifelineMoniker
+                Id="8cb2d485-9b7d-454b-a32e-baf2e158a32d"
+                LastKnownName="InfoTool"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="3824f9cb-8e70-4cfb-9272-50143e8837e6"
+            name="ExecutionOccurrenceSpecification4">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="fdfda7be-3bc8-4e3c-a398-cbd2dc23f445"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="pvMapperModel.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="8cb2d485-9b7d-454b-a32e-baf2e158a32d"
+                LastKnownName="InfoTool"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="5c0bf47d-83bc-43a9-9f0c-9e65608feca0"
+            name="MessageOccurrenceSpecification3">
+            <covered>
+              <lifelineMoniker
+                Id="0a5cb77e-dfd7-40d6-b43d-7d367a637693"
+                LastKnownName="UserTool"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="f1ce5d23-b409-4d2a-9e3d-b5e3b245173b"
+            name="MessageOccurrenceSpecification4">
+            <covered>
+              <lifelineMoniker
+                Id="0c47697b-d637-4ecb-aa36-7be46437d28b"
+                LastKnownName="ModuleLoader"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="3ed1abbc-556a-44de-aa62-197b458b30c4"
+            name="ExecutionOccurrenceSpecification2">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="f7542db6-9207-407e-8723-4cb8949c3ad7"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="pvMapperModel.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="0a5cb77e-dfd7-40d6-b43d-7d367a637693"
+                LastKnownName="UserTool"
+                LastKnownLocation="pvMapperModel.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+        </fragments>
+        <lifelines>
+          <lifeline
+            Id="0c47697b-d637-4ecb-aa36-7be46437d28b"
+            name="ModuleLoader"
+            isActor="false"
+            lifelineDisplayName="ModuleLoader">
+            <topLevelOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="1f800e1a-ca77-4401-9be1-b7808802ea73"
+                LastKnownName="MessageOccurrenceSpecification1"
+                LastKnownLocation="pvMapperModel.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="f1ce5d23-b409-4d2a-9e3d-b5e3b245173b"
+                LastKnownName="MessageOccurrenceSpecification4"
+                LastKnownLocation="pvMapperModel.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline
+            Id="0a5cb77e-dfd7-40d6-b43d-7d367a637693"
+            name="UserTool"
+            isActor="false"
+            lifelineDisplayName="UserTool">
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker
+                Id="8a9e7972-14df-4da2-b0a2-d76f08a6bf0a"
+                LastKnownName="ExecutionOccurrenceSpecification1"
+                LastKnownLocation="pvMapperModel.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="3ed1abbc-556a-44de-aa62-197b458b30c4"
+                LastKnownName="ExecutionOccurrenceSpecification2"
+                LastKnownLocation="pvMapperModel.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline
+            Id="8cb2d485-9b7d-454b-a32e-baf2e158a32d"
+            name="InfoTool"
+            isActor="false"
+            lifelineDisplayName="InfoTool">
+            <represents>
+              <propertyMoniker
+                Id="0b97c59e-a897-4614-8975-18ace2e30513"
+                LastKnownLocation="pvMapperModel.uml" />
+            </represents>
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker
+                Id="e2cff0e1-cd60-4387-b7de-ec5cbda635d4"
+                LastKnownName="ExecutionOccurrenceSpecification3"
+                LastKnownLocation="pvMapperModel.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="3824f9cb-8e70-4cfb-9272-50143e8837e6"
+                LastKnownName="ExecutionOccurrenceSpecification4"
+                LastKnownLocation="pvMapperModel.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline
+            Id="a45beed9-5d59-4d24-8a3a-ef4e7669bdae"
+            name="ToolUIManager"
+            isActor="false"
+            lifelineDisplayName="ToolUIManager">
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker
+                Id="73e1d730-603e-462b-9f2d-921ca7b68c32"
+                LastKnownName="ExecutionOccurrenceSpecification5"
+                LastKnownLocation="pvMapperModel.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="041ceef1-2812-45f1-9f5d-8f91d26269a2"
+                LastKnownName="ExecutionOccurrenceSpecification6"
+                LastKnownLocation="pvMapperModel.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline
+            Id="406d6c8e-26c7-4ff9-bb52-4a0385e5d795"
+            name="MainApp"
+            isActor="false"
+            lifelineDisplayName="MainApp">
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker
+                Id="162d6533-d7b5-456a-a760-bb0e05df0350"
+                LastKnownName="ExecutionOccurrenceSpecification9"
+                LastKnownLocation="pvMapperModel.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="a120812d-09ad-4087-8b0b-31c44c96ae00"
+                LastKnownName="ExecutionOccurrenceSpecification10"
+                LastKnownLocation="pvMapperModel.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline
+            Id="39bfafb1-e987-48e0-9479-6b0982d74ea3"
+            name="ToolWindow"
+            isActor="false"
+            lifelineDisplayName="ToolWindow">
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker
+                Id="332f8913-c15e-4dbc-8bfd-b282e094dc7d"
+                LastKnownName="ExecutionOccurrenceSpecification11"
+                LastKnownLocation="pvMapperModel.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="a299ed71-e5e5-437e-b3ce-37d25c760718"
+                LastKnownName="ExecutionOccurrenceSpecification12"
+                LastKnownLocation="pvMapperModel.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline
+            Id="e9a8e512-a5d7-486c-94d5-9d4f4b10f3ba"
+            name="ToolComponent"
+            isActor="false"
+            lifelineDisplayName="ToolComponent">
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker
+                Id="d0a69c58-bbce-42ab-8f94-ad9256768e07"
+                LastKnownName="ExecutionOccurrenceSpecification13"
+                LastKnownLocation="pvMapperModel.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="ae1a6781-c090-4209-9336-8191f08d6a6f"
+                LastKnownName="ExecutionOccurrenceSpecification14"
+                LastKnownLocation="pvMapperModel.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+        </lifelines>
+        <messages>
+          <message
+            Id="006b4376-612a-43f2-bb44-89e55dd4f41c"
+            name="&lt;&lt;create&gt;&gt;"
+            messageKind="Complete"
+            messageSort="CreateMessage"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="1f800e1a-ca77-4401-9be1-b7808802ea73"
+                LastKnownName="MessageOccurrenceSpecification1"
+                LastKnownLocation="pvMapperModel.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="8888ec1a-aad1-43fa-8839-0a29cf2d5126"
+                LastKnownName="MessageOccurrenceSpecification2"
+                LastKnownLocation="pvMapperModel.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="d8ff19e7-454d-421d-8f5a-22cfb605c859"
+            name="super()"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="f7748d38-4c47-479e-8f53-81b2364b8043"
+                LastKnownName="MessageOccurrenceSpecification5"
+                LastKnownLocation="pvMapperModel.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="9a3d72b4-0eca-427b-8418-b23409907eba"
+                LastKnownName="MessageOccurrenceSpecification6"
+                LastKnownLocation="pvMapperModel.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="195a0fbb-3f92-4536-a364-69e3fbd3a6c4"
+            name="register(userTool)"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="40921d41-5c27-44d3-a6eb-f02041ab1c6e"
+                LastKnownName="MessageOccurrenceSpecification9"
+                LastKnownLocation="pvMapperModel.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="fcd8c3cb-3b09-403e-9f9a-f58d7bcfe9c0"
+                LastKnownName="MessageOccurrenceSpecification10"
+                LastKnownLocation="pvMapperModel.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="84ceaddd-e483-41a1-a260-902e67e6b136"
+            name="register(Component)"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="b5d81f96-c6b5-41a9-ac6c-856ded8216e6"
+                LastKnownName="MessageOccurrenceSpecification17"
+                LastKnownLocation="pvMapperModel.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="6154dfd6-16c5-4b6d-a465-811419170df1"
+                LastKnownName="MessageOccurrenceSpecification18"
+                LastKnownLocation="pvMapperModel.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="7233028b-80c9-4ace-8637-f50a5af088c7"
+            name="&lt;&lt;create&gt;&gt;"
+            messageKind="Complete"
+            messageSort="CreateMessage"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="ad47f5cd-6668-436a-bcb0-c81cd24b1a70"
+                LastKnownName="MessageOccurrenceSpecification25"
+                LastKnownLocation="pvMapperModel.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="5a95d2dc-fb8e-4fea-98b0-bf82e141b7ef"
+                LastKnownName="MessageOccurrenceSpecification26"
+                LastKnownLocation="pvMapperModel.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="4aa90c62-99bd-4f60-8585-9017b2478a2c"
+            name="&lt;&lt;UIComponent&gt;&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="ea595cf0-b169-4dce-824a-77de9fa471f6"
+                LastKnownName="MessageOccurrenceSpecification27"
+                LastKnownLocation="pvMapperModel.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="1bab7149-99d0-4f23-90ec-55100b9a4f06"
+                LastKnownName="MessageOccurrenceSpecification28"
+                LastKnownLocation="pvMapperModel.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="440913d2-f666-4162-ad7c-2530da0eb4cb"
+            name="If window needed"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="true">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="e902a09c-72c4-4070-bc5c-3677bff3e4ef"
+                LastKnownName="MessageOccurrenceSpecification29"
+                LastKnownLocation="pvMapperModel.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="e56435f6-68be-4d19-b354-488552fa06c9"
+                LastKnownName="MessageOccurrenceSpecification30"
+                LastKnownLocation="pvMapperModel.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="1d43bf29-3234-40ae-98bd-6acb00d9b1ef"
+            name="&lt;&lt;create&gt;&gt;"
+            messageKind="Complete"
+            messageSort="CreateMessage"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="f5039351-9173-4008-a21c-00de9b786b6a"
+                LastKnownName="MessageOccurrenceSpecification21"
+                LastKnownLocation="pvMapperModel.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="e54c3e2f-293c-4435-bcb9-7a657936df9c"
+                LastKnownName="MessageOccurrenceSpecification22"
+                LastKnownLocation="pvMapperModel.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="77061dd3-4964-47e0-b161-5c88955c34c9"
+            name="&lt;&lt;UIWindow&gt;&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="ef20759f-c051-425a-9ffd-1336098c5bea"
+                LastKnownName="MessageOccurrenceSpecification23"
+                LastKnownLocation="pvMapperModel.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="95deeb00-fd04-41f7-84ce-0d7d5af1b72a"
+                LastKnownName="MessageOccurrenceSpecification24"
+                LastKnownLocation="pvMapperModel.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="eed1c8c2-0089-451c-837e-a234a9a09fe4"
+            name="&lt;&lt;return&gt;&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="5c332755-616b-4346-8480-043f78806a40"
+                LastKnownName="MessageOccurrenceSpecification19"
+                LastKnownLocation="pvMapperModel.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="e5f9f80d-7444-4bdc-b329-5d2326ddada3"
+                LastKnownName="MessageOccurrenceSpecification20"
+                LastKnownLocation="pvMapperModel.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="d18b6297-4a14-4e7a-b486-1f4e807a08d7"
+            name="&lt;&lt;return&gt;&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="db364dca-e7bf-47d6-8439-3c6409e5ba3c"
+                LastKnownName="MessageOccurrenceSpecification11"
+                LastKnownLocation="pvMapperModel.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="045174b0-fdb3-4576-b8f1-59ed4d52885d"
+                LastKnownName="MessageOccurrenceSpecification12"
+                LastKnownLocation="pvMapperModel.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="398a9827-cacc-4a89-aef7-0759e5e5ed1a"
+            name="&lt;&lt;return&gt;&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="0530d3f6-a498-4bb6-88f7-4702aaecd5e7"
+                LastKnownName="MessageOccurrenceSpecification7"
+                LastKnownLocation="pvMapperModel.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="f1130399-c997-4165-9126-ac506d3315ac"
+                LastKnownName="MessageOccurrenceSpecification8"
+                LastKnownLocation="pvMapperModel.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="8800aaed-83d9-41b1-afd5-24374e0a2e28"
+            name="&lt;&lt;return&gt;&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="5c0bf47d-83bc-43a9-9f0c-9e65608feca0"
+                LastKnownName="MessageOccurrenceSpecification3"
+                LastKnownLocation="pvMapperModel.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="f1ce5d23-b409-4d2a-9e3d-b5e3b245173b"
+                LastKnownName="MessageOccurrenceSpecification4"
+                LastKnownLocation="pvMapperModel.uml" />
+            </receiveEvent>
+          </message>
+        </messages>
+        <ownedAttributesInternal>
+          <property
+            Id="0b97c59e-a897-4614-8975-18ace2e30513"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false">
+            <type_NamedElement>
+              <interfaceMoniker
+                Id="836d003d-bee5-423d-a99e-0fd39e95c78a"
+                LastKnownName="InfoTool"
+                LastKnownLocation="pvMapperModel.uml" />
+            </type_NamedElement>
+          </property>
+        </ownedAttributesInternal>
+      </interaction>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="2918d2c8-17ae-4f08-946b-e754ee395549"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="f7542db6-9207-407e-8723-4cb8949c3ad7"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="1032535c-4c10-47ef-869e-b5b430070eb9"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="fdfda7be-3bc8-4e3c-a398-cbd2dc23f445"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="6b1d0be1-a3c5-4ae2-a7c8-64e9465b62f1"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="a0d781e9-c500-45ad-9219-c63ceaf18e40"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="3bf45a72-bf69-47cc-98ca-2bdbf61baae7"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="2a876496-f50a-4d10-9601-2805d072afeb"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="784a91b9-4921-463e-91ab-a3328d19e491"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="5a152a16-1b11-4aec-be63-2ad424376c57"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="c2d0404a-b0cb-4ea1-9d80-37371f87d60f"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="886231e6-3038-46b4-bb99-2f636fa0a283"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="e7eddb49-5195-495e-a7af-86f7de638e4b"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="ffdd24ee-221e-4d8f-a28e-3030055b6f49"
         name="ExecutionEvent" />
     </packageHasNamedElement>
   </packagedElements>

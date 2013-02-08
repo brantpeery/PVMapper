@@ -83,4 +83,4 @@ var pvMapper;
         pvMapper.floatingScoreboard.show();
     });
 })(pvMapper || (pvMapper = {}));
-
+//@ sourceMappingURL=Scoreboard.js.map
