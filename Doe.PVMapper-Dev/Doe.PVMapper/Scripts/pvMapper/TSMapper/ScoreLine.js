@@ -53,9 +53,9 @@ var pvMapper;
                     };
         ScoreLine.prototype.valueChangeHandler = function (event) {
             this.scoreChangeEvent.fire(self, event);
-        }//The name that will show up in the row
-        ;
-        ScoreLine.prototype.updateScore = function (site) {
+        };
+        ScoreLine.prototype.updateScore = //The name that will show up in the row
+        function (site) {
         };
         ScoreLine.prototype.onSiteRemove = function (event) {
             if(event.data instanceof pvMapper.Site) {
@@ -83,4 +83,4 @@ var pvMapper;
     })();
     pvMapper.ScoreLine = ScoreLine;    
 })(pvMapper || (pvMapper = {}));
-
+//@ sourceMappingURL=ScoreLine.js.map

@@ -70,9 +70,9 @@ var pvMapper;
                 }
             });
             pvMapper.displayMessage("The site has been updated.", "Info");
-        }//Deletes a site from the datastore
-        ;
-        dataManager.prototype.deleteSite = function (siteId) {
+        };
+        dataManager.prototype.deleteSite = //Deletes a site from the datastore
+        function (siteId) {
             return $.ajax("/api/ProjectSite/" + siteId, {
                 data: {
                     Id: siteId,
@@ -90,4 +90,4 @@ var pvMapper;
     })();
     pvMapper.dataManager = dataManager;    
 })(pvMapper || (pvMapper = {}));
-
+//@ sourceMappingURL=DataManager.js.map

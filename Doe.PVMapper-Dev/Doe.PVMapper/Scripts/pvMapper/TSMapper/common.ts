@@ -29,6 +29,13 @@ interface String {
     */
     format(args: { [key: string]: (val: string) => string; }): string;
 
+  /**
+  Indicates whether the specified string is null or an Empty string.
+  @param value:string The string to test.
+  @returns Boolean true if the value parameter is null or an empty string(""); otherwise, false.
+  */
+    IsNullOrEmpty(): Boolean;
+
 };
 
 
@@ -70,4 +77,12 @@ String.prototype.format = function (args) {
 }
         return replace;
     });
+};
+
+String.prototype.IsNullOrEmpty = function (): bool {
+  var value: string = this;
+  if ((typeof (value) === 'undefined') || (value.length == 0))
+    return true;
+  else 
+    return false;
 };

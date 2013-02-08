@@ -168,22 +168,22 @@ var UtilityModel;
                 configStore.add(cfg);
             }
             configStore.save();
-        }// Instance member
-        ;
-        UtilModel.prototype.setFunction = function (id, func) {
+        };
+        UtilModel.prototype.setFunction = // Instance member
+        function (id, func) {
             this.fDict.add(id, func);
-        }//just return a function pointer address.
-        ;
-        UtilModel.prototype.getFunction = function (id) {
+        };
+        UtilModel.prototype.getFunction = //just return a function pointer address.
+        function (id) {
             var fd = this.fDict.valueOf(id);
             if(fd) {
                 return fd.functionPtr;
             } else {
                 return null;
             }
-        }//invoking the function name in 'id' with parameters in 'args'
-        ;
-        UtilModel.prototype.executeFunction = function (id) {
+        };
+        UtilModel.prototype.executeFunction = //invoking the function name in 'id' with parameters in 'args'
+        function (id) {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 1); _i++) {
                 args[_i] = arguments[_i + 1];
@@ -195,11 +195,11 @@ var UtilityModel;
             } else {
                 return null;
             }
-        }// Static member
-        ;
+        };
         return UtilModel;
     })();
     UtilityModel.UtilModel = UtilModel;    
+    // Static member
     var utilModel = new UtilModel();
     utilModel.setFunction('More is better', UtilityFunctions.MoreIsBetter);
     utilModel.setFunction('Less is better', UtilityFunctions.LessIsBetter);
@@ -209,4 +209,8 @@ var UtilityModel;
 //Ext.create("Ext.panel.Panel", {
 //    title: "Hello"
 //});
-
+//var Ext: any;
+//Ext.create("Ext.panel.Panel", {
+//    title: "Hello"
+//});
+//@ sourceMappingURL=UtilModel.js.map
