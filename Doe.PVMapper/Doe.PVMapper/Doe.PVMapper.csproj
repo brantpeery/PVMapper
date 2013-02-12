@@ -1052,7 +1052,6 @@
     <Content Include="Views\Extensions\Details.cshtml" />
     <Content Include="Views\ProjectSite\Edit.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="TestPages\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
