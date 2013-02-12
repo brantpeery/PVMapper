@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using Doe.PVMapper.Models;
-using DreamSongs.MongoRepository;
+using MongoRepository;
 using Newtonsoft.Json.Linq;
 
 namespace Doe.PVMapper.WebApi

@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Doe.PVMapper.Models;
-using DreamSongs.MongoRepository;
+using MongoRepository;
 
 namespace Doe.PVMapper.WebApi
 {
