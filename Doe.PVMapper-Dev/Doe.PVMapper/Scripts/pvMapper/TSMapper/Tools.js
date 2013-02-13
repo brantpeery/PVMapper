@@ -3,10 +3,14 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-/// <reference path="pvMapper.d.ts" />
+/// <reference path="ModuleManager.d.ts" />
 /// <reference path="common.ts" />
 var pvMapper;
 (function (pvMapper) {
+    if(typeof (moduleManager) === 'undefined') {
+        var moduleManager = new ModuleManager();
+    }
+    //#region ToolInfo
     /**
     A helper class stores tool module information.
     */
@@ -22,9 +26,8 @@ var pvMapper;
         return ToolInfo;
     })();
     pvMapper.ToolInfo = ToolInfo;    
-    if(typeof (moduleManager) === 'undefined') {
-        var moduleManager = new ModuleManager();
-    }
+    //#endregion
+    //#region ScoreTool
     /**
     A base class for creating scoring tool module. This class is for loading module using the ToolInfo helper class.
     */
@@ -57,9 +60,31 @@ var pvMapper;
         function (args) {
             return 0;
         };
+        ScoreTool.prototype.onClick = /**
+        Fire when a user interface has a mouse clicked, if the module has user interface implementation.  Decendant class must override
+        to subscribe to the onclick event.
+        @param sender: any - the UI being clicked.
+        @event: EventArg - event information about the event.
+        */
+        function (sender, event) {
+        };
+        ScoreTool.prototype.onChange = /**
+        Fire when a user interface has requested something to be updated.  Decendant class must override
+        to subscribe to this onChange event.
+        @param sender: any - the UI being clicked.
+        @event: EventArg - event information about the event.
+        */
+        function (sender, event) {
+        };
+        ScoreTool.prototype.onActivate = function (sender, event) {
+        };
+        ScoreTool.prototype.onDeactivate = function (sender, event) {
+        };
         return ScoreTool;
     })();
     pvMapper.ScoreTool = ScoreTool;    
+    //#endregion
+    //#region ScoreToolGeneric
     /**
     A base class for creating scoring tool module. This class loads module using the individual parameters.
     */
@@ -81,7 +106,7 @@ var pvMapper;
             if (typeof description === "undefined") { description = ''; }
             if (typeof isVisible === "undefined") { isVisible = false; }
             var aToolInfo = null;
-            if(!name.IsNullOrEmpty() && !url.IsNullOrEmpty()) {
+            if(!name.isNullOrEmpty() && !url.isNullOrEmpty()) {
                 aToolInfo = new ToolInfo(name, url, owner, isPublic, description, isVisible);
             }
                 _super.call(this, aToolInfo);
@@ -89,6 +114,8 @@ var pvMapper;
         return ScoreToolGeneric;
     })(ScoreTool);
     pvMapper.ScoreToolGeneric = ScoreToolGeneric;    
+    //#endregion
+    //#region InfoTool
     /**
     A base class for creating information tool module. This class is for loading module using the ToolInfo helper class.
     */
@@ -121,9 +148,31 @@ var pvMapper;
         function (args) {
             return 0;
         };
+        InfoTool.prototype.onClick = /**
+        Fire when a user interface has a mouse clicked, if the module has user interface implementation.  Decendant class must override
+        to subscribe to the onclick event.
+        @param sender: any - the UI being clicked.
+        @event: EventArg - event information about the event.
+        */
+        function (sender, event) {
+        };
+        InfoTool.prototype.onChange = /**
+        Fire when a user interface has requested something to be updated.  Decendant class must override
+        to subscribe to this onChange event.
+        @param sender: any - the UI being clicked.
+        @event: EventArg - event information about the event.
+        */
+        function (sender, event) {
+        };
+        InfoTool.prototype.onActivate = function (sender, event) {
+        };
+        InfoTool.prototype.onDeactivate = function (sender, event) {
+        };
         return InfoTool;
     })();
     pvMapper.InfoTool = InfoTool;    
+    //#endregion
+    //#region InfoToolGeneric
     /**
     A base class for creating information tool module. This class loads module using the individual parameters.
     */
@@ -145,7 +194,7 @@ var pvMapper;
             if (typeof description === "undefined") { description = ''; }
             if (typeof isVisible === "undefined") { isVisible = true; }
             var aToolInfo = null;
-            if(!name.IsNullOrEmpty() && !url.IsNullOrEmpty()) {
+            if(!name.isNullOrEmpty() && !url.isNullOrEmpty()) {
                 aToolInfo = new ToolInfo(name, url, owner, isPublic, description, isVisible);
             }
                 _super.call(this, aToolInfo);
@@ -153,5 +202,6 @@ var pvMapper;
         return InfoToolGeneric;
     })(InfoTool);
     pvMapper.InfoToolGeneric = InfoToolGeneric;    
-})(pvMapper || (pvMapper = {}));
+    //#endregion
+    })(pvMapper || (pvMapper = {}));
 //@ sourceMappingURL=Tools.js.map
