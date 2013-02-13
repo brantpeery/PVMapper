@@ -1,5 +1,20 @@
 ﻿/// <reference path="../../jquery.d.ts" />
 
+
+/**
+ An alias to browser's Event object.  Use this class for passing event object into event function.  The pvMapper.Event class is for creating
+event delegate pair.
+*/
+interface EventArg extends Event {
+  data: any;
+}
+
+declare var EventArg: {
+  new (data?: any): EventArg;
+  prototype: EventArg;
+}
+
+
 module pvMapper {
   /*
   Is a publish point. Uses the handlers and fire method to publish events
@@ -40,4 +55,5 @@ module pvMapper {
     //for event parameter data tag 
     public data: any = null;
   }
+
 }
