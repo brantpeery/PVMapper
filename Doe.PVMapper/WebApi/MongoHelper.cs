@@ -4,7 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using Doe.PVMapper.Models;
-using DreamSongs.MongoRepository;
+using MongoRepository;
 using MongoDB.Driver;
 
 namespace Doe.PVMapper.WebApi
