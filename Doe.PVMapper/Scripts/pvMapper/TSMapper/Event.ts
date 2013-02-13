@@ -1,16 +1,22 @@
-﻿/// <reference path="../../jquery.d.ts" />
+﻿/// <reference path="common.ts" />
+/// <reference path="../../jquery.d.ts" />
 
 
 /**
  An alias to browser's Event object.  Use this class for passing event object into event function.  The pvMapper.Event class is for creating
 event delegate pair.
 */
-interface EventArg extends Event {
+interface EventArg {
+  parent: EventArg;
   data: any;
+  timeStamp: number;
+  target: pvMapper.Event;
+  type: string;
+  cancelable: bool;
 }
 
 declare var EventArg: {
-  new (data?: any): EventArg;
+  new (data?: any, parent?: any ): EventArg;
   prototype: EventArg;
 }
 
@@ -27,13 +33,13 @@ module pvMapper {
       this.eventHandlers = new Array();
     }
     ///
-    public addHandler(callBack) {
+    public addHandler(callBack:EventCallback) {
       if (this.eventHandlers.indexOf(callBack) == -1 || this.allowDuplicateHandler) {
         this.eventHandlers.push(callBack);
       }
     }
 
-    public removeHandler(handler) {
+    public removeHandler(handler:EventCallback) {
       var idx: number;
       while (this.eventHandlers) {
         idx = this.eventHandlers.indexOf(handler)

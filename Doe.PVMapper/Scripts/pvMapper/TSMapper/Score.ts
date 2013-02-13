@@ -42,9 +42,9 @@ module pvMapper {
     public myvalue: string;
     public popupMessage: string;
 
-    public valueChangeEvent: Event = new Event();
-    public invalidateEvent: Event = new Event();
-    public siteChangeEvent: Event = new Event();
+    public valueChangeEvent: pvMapper.Event = new pvMapper.Event();
+    public invalidateEvent: pvMapper.Event = new pvMapper.Event();
+    public siteChangeEvent: pvMapper.Event = new pvMapper.Event();
 
     //Calculates the utility score for the value passed in or if no value is passed in it uses the current value property
     public calculateUtility(value : string):string {

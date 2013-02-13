@@ -18,8 +18,8 @@ module pvMapper {
     private self: ScoreBoard;
     public scoreLines: ScoreLine[] = new ScoreLine[]();
 
-    public changedEvent: Event = new Event();
-    public scoresInvalidatedEvent: Event = new Event();
+    public changedEvent: pvMapper.Event = new pvMapper.Event();
+    public scoresInvalidatedEvent: pvMapper.Event = new pvMapper.Event();
     public tableRenderer: Table = new Table();
 
     public addLine(scoreline: ScoreLine) {

@@ -78,7 +78,7 @@ module pvMapper {
     public calculate(args?: NameValueArray): number {
       return 0;
     }
-  
+
     public name: string;
     public description: string;
     public url: string;

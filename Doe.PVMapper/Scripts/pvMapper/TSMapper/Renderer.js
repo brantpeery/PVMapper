@@ -5,7 +5,6 @@ var __extends = this.__extends || function (d, b) {
 };
 /// <reference path="common.ts" />
 /// <reference path="../../jquery.d.ts" />
-/// <reference path="C:\Program Files (x86)\Microsoft SDKs\TypeScript\0.8.0.0\lib.d.ts" />
 // Module
 var pvMapper;
 (function (pvMapper) {

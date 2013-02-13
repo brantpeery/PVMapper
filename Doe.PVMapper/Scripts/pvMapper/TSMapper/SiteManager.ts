@@ -11,8 +11,8 @@ module pvMapper {
     }
 
     export class SiteManager {
-        public siteAdded: Event = new Event();
-        public siteRemoved: Event = new Event();
+        public siteAdded: pvMapper.Event = new pvMapper.Event();
+        public siteRemoved: pvMapper.Event = new pvMapper.Event();
 
         sites: Site[] = [];
         public getSites() {

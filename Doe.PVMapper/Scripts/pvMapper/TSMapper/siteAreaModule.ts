@@ -19,7 +19,7 @@ interface IScoringTool {
 
 // Module
 module pvMapper {
-  export class ScoreEvent extends Event {
+  export class ScoreEvent extends pvMapper.Event {
 
 }
 
@@ -32,7 +32,7 @@ module pvMapper {
     public title: string;
     public description: string;
     public calculateCallback: ISiteCallback = null;
-    public onSiteChange(event: Event, score: Score) { //Fires when a score has been notified that it's site has changed
+    public onSiteChange(event: pvMapper.Event, score: Score) { //Fires when a score has been notified that it's site has changed
       if (this.updateCallback != null)
         this.updateCallback(score.site);
 

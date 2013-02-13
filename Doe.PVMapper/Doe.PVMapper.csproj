@@ -169,6 +169,7 @@
     <Content Include="Scripts\ext-4.1.1a.d.ts" />
     <Content Include="Scripts\jquery.d.ts" />
     <Content Include="Scripts\lib.d.ts" />
+    <Content Include="Scripts\pvMapper\tests\scoreline_test.html" />
     <Content Include="Scripts\pvMapper\TS Versions\Event.js">
       <DependentUpon>Event.ts</DependentUpon>
     </Content>
@@ -213,6 +214,13 @@
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Module.min.js">
       <DependentUpon>Module.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ModuleManager.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\ModuleManager.js">
+      <DependentUpon>ModuleManager.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\ModuleManager.min.js">
+      <DependentUpon>ModuleManager.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Options.d.js">
       <DependentUpon>Options.d.ts</DependentUpon>
@@ -285,6 +293,10 @@
     <Content Include="Scripts\UI\controller\UtilModel.min.js">
       <DependentUpon>UtilModel.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\UnitTests\jasmine.js" />
+    <Content Include="Scripts\UnitTests\pvMapper.Event.js" />
+    <Content Include="Scripts\UnitTests\PVMapper.Site.js" />
+    <Content Include="Scripts\UnitTests\string_extensions.js" />
     <Content Include="Scripts\_frameworkobjects.d.ts" />
     <Compile Include="WebApi\MongoHelper.cs" />
     <Compile Include="WebApi\ProjectSiteController.cs" />
@@ -1114,9 +1126,6 @@
     <Content Include="Scripts\pvMapper\TSMapper\DataManager.js.map">
       <DependentUpon>DataManager.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Event.js.map">
-      <DependentUpon>Event.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Module.js.map">
       <DependentUpon>Module.ts</DependentUpon>
     </Content>
@@ -1146,6 +1155,12 @@
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Renderer.js.map">
       <DependentUpon>Renderer.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Event.js.map">
+      <DependentUpon>Event.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\ModuleManager.js.map">
+      <DependentUpon>ModuleManager.ts</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>

@@ -20,6 +20,11 @@ interface NameValueArray {
   nameValues: NameValue[];
 }
 
+declare var NameValueArray: {
+  new (nameValues?: NameValue[]): NameValueArray;
+  prototype: NameValueArray;
+}
+
 /**
 A module contractual interface for all scoring and none scoring modules.
 */

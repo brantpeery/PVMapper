@@ -3,6 +3,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+// Module
 var pvMapper;
 (function (pvMapper) {
     var ScoreEvent = (function (_super) {
@@ -12,23 +13,31 @@ var pvMapper;
 
         }
         return ScoreEvent;
-    })(pvMapper.Event);
+    })(Event);
     pvMapper.ScoreEvent = ScoreEvent;    
+    // Class
     var ScoringTool = (function () {
+        // Constructor
         function ScoringTool() {
             this.calculateCallback = null;
+            //these are delegate function place holders.
             this.updateCallback = null;
         }
         ScoringTool.prototype.onSiteChange = function (event, score) {
+            //Fires when a score has been notified that it's site has changed
             if(this.updateCallback != null) {
                 this.updateCallback(score.site);
             }
+            //Update the property (only do this if this is a very fast calculation)
             if(this.calculateCallback != null) {
                 score.updateValue(this.calculateCallback(score.site));
-            }
+            }//Do it this way so the score can manage getting itself refreshed on the screen and in the DB
+            
         };
         ScoringTool.prototype.onScoreAdded = function (event, score) {
-        };
+            //This will be called when a score is added to the scoreline that represents this tool
+            //Really don't need to do anything here as the framework will be asking for the updated value later
+                    };
         return ScoringTool;
     })();
     pvMapper.ScoringTool = ScoringTool;    
@@ -54,3 +63,4 @@ var pvMapper;
     })();
     pvMapper.Intent = Intent;    
 })(pvMapper || (pvMapper = {}));
+//@ sourceMappingURL=siteAreaModule.js.map
