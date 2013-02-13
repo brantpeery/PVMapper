@@ -2,7 +2,13 @@
 /// <reference path="OpenLayers.d.ts" />
 /// <reference path="Event.ts" />
 
+interface SiteChangeEventArg extends EventArg {
+  site: pvMapper.Site;
+}
+
+
 module pvMapper {
+
   export class Site {
     //The parameter list:
     // site = the feature object from Open Layers that represents this siet
@@ -34,6 +40,7 @@ module pvMapper {
     public unselectEvent: pvMapper.Event = new pvMapper.Event();
 
     public onFeatureSelected(event: any) {
+
       this.selectEvent.fire(this.self, event);
     };
         

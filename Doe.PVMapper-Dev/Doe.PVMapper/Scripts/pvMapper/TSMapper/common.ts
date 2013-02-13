@@ -1,5 +1,12 @@
 
-// Module
+interface ICallback {
+  (...args: any[]): any;
+}
+
+interface EventCallback {
+  (context: Object, ...args: any[]): any;
+}
+
 interface String {
     /**
       Replace all tokens with values passed in using the order the value is found in args. 
@@ -34,7 +41,7 @@ interface String {
   @param value:string The string to test.
   @returns Boolean true if the value parameter is null or an empty string(""); otherwise, false.
   */
-    IsNullOrEmpty(): Boolean;
+    isNullOrEmpty(): Boolean;
 
 };
 
@@ -59,7 +66,7 @@ interface String {
 String.prototype.format = function (args) {
     var values: string = (arguments.length > 1) ? arguments : args;
     var str = this;
-
+     //Test
     //The regular expression for the formatter to separate terms from the string.
     //    The default expression will parse to variables named inside brackets.
     //    Has to be a RegExp
@@ -79,7 +86,7 @@ String.prototype.format = function (args) {
     });
 };
 
-String.prototype.IsNullOrEmpty = function (): bool {
+String.prototype.isNullOrEmpty = function (): bool {
   var value: string = this;
   if ((typeof (value) === 'undefined') || (value.length == 0))
     return true;

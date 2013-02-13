@@ -285,15 +285,15 @@ module OpenLayers {
   }
 
   interface Function {
-    bind(func: pvMapper.ICallBack, object: Object): pvMapper.ICallBack;
-    bindAsEventListener(func: pvMapper.ICallBack, object: Object): pvMapper.ICallBack;
+    bind(func: ICallBack, object: Object): ICallBack;
+    bindAsEventListener(func: ICallBack, object: Object): ICallBack;
     False(): Boolean;
     True(): Boolean;
     Void(): void;
   }
 
   interface Array {
-    filter(array: any[], callback: pvMapper.ICallBack, caller: Object): any[];
+    filter(array: any[], callback: ICallBack, caller: Object): any[];
   }
 
   interface Date{
@@ -380,15 +380,15 @@ module OpenLayers {
     activate(): Boolean;
     deactivate(): Boolean;
     callback(name: string, args: any[]);
-    register(name: string, method: pvMapper.ICallBack);
+    register(name: string, method: ICallBack);
     setEvent(evt: Event);
     destroy();
 
     
   }
   declare var Handler: {
-    new (control: Control, callbacks: pvMapper.ICallBack, options: any): Handler;
-    (control: Control, callbacks: pvMapper.ICallBack, options: any): Handler;
+    new (control: Control, callbacks: ICallBack, options: any): Handler;
+    (control: Control, callbacks: ICallBack, options: any): Handler;
     prototype: Handler;
   }
 
@@ -1129,7 +1129,7 @@ module OpenLayers {
     registerImageListeners();
     getSafeContentSize(size: Size): Size;
     getContentDivPadding(): Bounds;
-    addCloseBox(callback: pvMapper.ICallBack);
+    addCloseBox(callback: ICallBack);
     panIntoView();
     registerEvents();
     onmouseDown:(evt: Event) => any;
@@ -1143,8 +1143,8 @@ module OpenLayers {
   declare var Popup: {
     new (value?: any): Popup;
     (value?: any): Popup;
-    new (id: string, lonlat: LonLat, contentSize: Size, contentHTML: string, closeBox: Boolean, closeBoxCallback: pvMapper.ICallBack);
-    (id: string, lonlat: LonLat, contentSize: Size, contentHTML: string, closeBox: Boolean, closeBoxCallback: pvMapper.ICallBack);
+    new (id: string, lonlat: LonLat, contentSize: Size, contentHTML: string, closeBox: Boolean, closeBoxCallback: ICallBack);
+    (id: string, lonlat: LonLat, contentSize: Size, contentHTML: string, closeBox: Boolean, closeBoxCallback: ICallBack);
   }
 
 

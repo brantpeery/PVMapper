@@ -3,7 +3,7 @@
 var pvMapper;
 (function (pvMapper) {
     //import pvM = pvMapper;
-    pvMapper.readyEvent = new pvMapper.Event(false);
+    pvMapper.readyEvent = new Event(false);
     function onReady(fn) {
         this.readyEvent.addHandler(fn);
         return pvMapper;
@@ -11,8 +11,8 @@ var pvMapper;
     pvMapper.onReady = onReady;
     var SiteManager = (function () {
         function SiteManager() {
-            this.siteAdded = new pvMapper.Event();
-            this.siteRemoved = new pvMapper.Event();
+            this.siteAdded = new Event();
+            this.siteRemoved = new Event();
             this.sites = [];
         }
         SiteManager.prototype.getSites = function () {

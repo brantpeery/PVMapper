@@ -1,8 +1,7 @@
+/// <reference path="common.ts" />
 /// <reference path="Event.ts" />
 //A dynamic callback signature.
-interface ICallBack {
-  (...args: any[]): any;
-}
+
 
 module pvMapper {
   
