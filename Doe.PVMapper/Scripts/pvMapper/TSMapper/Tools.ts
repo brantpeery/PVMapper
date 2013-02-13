@@ -1,7 +1,12 @@
-/// <reference path="pvMapper.d.ts" />
+/// <reference path="ModuleManager.d.ts" />
 /// <reference path="common.ts" />
 
 module pvMapper {
+
+  if (typeof (moduleManager) === 'undefined')
+    var moduleManager: ModuleManager = new ModuleManager();
+
+  //#region ToolInfo
   /**
   A helper class stores tool module information.
   */
@@ -35,9 +40,9 @@ module pvMapper {
     Indicates whether  a particular module has user interface and allow user interraction.
     */public isVisible: bool;
   }
+  //#endregion
 
-  if (typeof (moduleManager) === 'undefined')
-    var moduleManager: ModuleManager = new ModuleManager();
+  //#region ScoreTool
 
   /**
   A base class for creating scoring tool module. This class is for loading module using the ToolInfo helper class.
@@ -81,8 +86,28 @@ module pvMapper {
     public isPublic: bool;
     public isVisible: bool;
     
+    /**
+    Fire when a user interface has a mouse clicked, if the module has user interface implementation.  Decendant class must override
+    to subscribe to the onclick event.
+    @param sender: any - the UI being clicked.
+    @event: EventArg - event information about the event.
+    */
+    public onClick(sender: any, event: EventArg) { }
+    /**
+    Fire when a user interface has requested something to be updated.  Decendant class must override
+    to subscribe to this onChange event.
+    @param sender: any - the UI being clicked.
+    @event: EventArg - event information about the event.
+    */
+    public onChange(sender: any, event: EventArg) { }
+
+    public onActivate(sender: any, event: EventArg) { }
+    public onDeactivate(sender: any, event: EventArg) { }
   }
 
+  //#endregion
+
+  //#region ScoreToolGeneric
   /**
   A base class for creating scoring tool module. This class loads module using the individual parameters.
   */
@@ -99,13 +124,16 @@ module pvMapper {
     */
     constructor(name: string, url: string,owner?:string='unknown',isPublic?:bool=false,description?:string = '',isVisible?: bool = false) {
       var aToolInfo: ToolInfo = null;
-      if (!name.IsNullOrEmpty() && !url.IsNullOrEmpty()) {
+      if (!name.isNullOrEmpty() && !url.isNullOrEmpty()) {
         aToolInfo = new ToolInfo(name,url,owner,isPublic,description,isVisible);
       }
       super(aToolInfo);
     }
   }
 
+  //#endregion
+
+  //#region InfoTool
   /**
   A base class for creating information tool module. This class is for loading module using the ToolInfo helper class.
   */
@@ -145,8 +173,29 @@ module pvMapper {
     public owner: string;
     public isPublic: bool;
     public isVisible: bool;
-  }
 
+    /**
+    Fire when a user interface has a mouse clicked, if the module has user interface implementation.  Decendant class must override
+    to subscribe to the onclick event.
+    @param sender: any - the UI being clicked.
+    @event: EventArg - event information about the event.
+    */
+    public onClick(sender: any, event: EventArg) { }
+    /**
+    Fire when a user interface has requested something to be updated.  Decendant class must override
+    to subscribe to this onChange event.
+    @param sender: any - the UI being clicked.
+    @event: EventArg - event information about the event.
+    */
+    public onChange(sender: any, event: EventArg) { }
+    public onActivate(sender: any, event: EventArg) { }
+    public onDeactivate(sender: any, event: EventArg) { }
+
+
+  }
+  //#endregion
+
+  //#region InfoToolGeneric
   /**
   A base class for creating information tool module. This class loads module using the individual parameters.
   */
@@ -163,12 +212,13 @@ module pvMapper {
     */
     constructor(name: string, url: string, owner?: string='unknown', isPublic?: bool=false, description?: string='',isVisible?:bool=true) {
       var aToolInfo: ToolInfo = null;
-      if (!name.IsNullOrEmpty() && !url.IsNullOrEmpty()) {
+      if (!name.isNullOrEmpty() && !url.isNullOrEmpty()) {
         aToolInfo = new ToolInfo(name, url, owner, isPublic, description, isVisible);
       }
       super(aToolInfo);
     }
   }
+  //#endregion
 }
 
 
