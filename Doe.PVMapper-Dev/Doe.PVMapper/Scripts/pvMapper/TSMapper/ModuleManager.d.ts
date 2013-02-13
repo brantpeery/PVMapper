@@ -53,7 +53,10 @@ interface ITool {
   @param args:NameValueArray optional parameter contains arrays of name/value pair.
   */
   calculate(args?: NameValueArray): number;
-  onClick(event: Event);
+  onClick(sender: any, event: EventArg);
+  onChange(sender: any, event: EventArg);
+  onActivate(sender: any, event: EventArg);
+  onDeactivate(sender: any, event: EventArg);
 }
 
 /**
