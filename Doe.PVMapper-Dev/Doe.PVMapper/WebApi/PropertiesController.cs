@@ -10,7 +10,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using Doe.PVMapper.Models;
-using DreamSongs.MongoRepository;
+using MongoRepository;
 using Doe.PVMapper.WebApi;
 using MongoDB.Driver;
 
