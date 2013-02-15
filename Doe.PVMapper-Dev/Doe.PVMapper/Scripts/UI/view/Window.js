@@ -6,7 +6,7 @@
   COLLAPSED: 'ViewState_Collapsed'
 }
 
-Ext.define( 'MainApp.view.Window', {
+Ext.define('MainApp.view.Window', {
   extend: 'Ext.window.Window',
   //uses: 'MainApp.view.Viewport',
   alias: "pvWindow",
@@ -22,35 +22,43 @@ Ext.define( 'MainApp.view.Window', {
   collapsible: true,
   bodyStyle: 'opacity: 1;',
   titleCollapse: true,
-  taskBar: null,
   viewState: Ext.view.ViewState.NORMAL,
   collapse: function () {
-    this.callParent( arguments );
+    this.callParent(arguments);
     var w = this.getHeader().titleCmp.textEl.getWidth();
     w = w < 120 ? 120 : w;
-    this.setWidth( w );
+    this.setWidth(w);
     this.viewState = Ext.view.ViewState.COLLAPSED;
   },
   expand: function () {
-    this.callParent( arguments );
+    this.callParent(arguments);
     this.viewState = Ext.view.ViewState.NORMAL;
   },
   listeners: {
-    beforeshow: function ( win, op ) {
-      var taskBar = Ext.getCmp( 'maintaskbar' );
-      if ( taskBar )
-        taskBar.addButton( win );
+    beforerender: function (win, op) {
+      var taskBar = Ext.getCmp('maintaskbar');
+
+    },
+    beforeshow: function (win, op) {
+      var taskBar = Ext.getCmp('maintaskbar');
+      if (taskBar)
+        taskBar.addButton(win);
       return true;
     },
-    beforedestroy: function ( win, op ) {
-      var taskBar = Ext.getCmp( 'maintaskbar' );
-      if ( taskBar )
-        taskBar.removeButton( win );
+    beforedestroy: function (win, op) {
+      var taskBar = Ext.getCmp('maintaskbar');
+      if (taskBar)
+        taskBar.removeButton(win);
       return true;
     },
-    minimize: function ( win, op ) {
+    minimize: function (win, op) {
       this.viewState = Ext.view.ViewState.MINIMIZED;
       this.hide();
+    },
+    titlechange: function (p, newTitle, oldTitle, ops) {
+      var taskBar = Ext.getCmp('maintaskbar');
+      if (taskBar)
+        taskBar.updateButtonText(oldTitle, newTitle);
     }
   }
-} );
+});
