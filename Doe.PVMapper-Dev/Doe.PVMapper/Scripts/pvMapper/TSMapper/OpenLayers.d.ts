@@ -1,8 +1,8 @@
-/// <reference path="Options.d.ts" />
-//C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\Extensions\msfz1qy5.oca\~IC\IT\CSharp\1033\f.zip
-
 // Module
 module OpenLayers {
+    interface ICallback extends Function{
+
+    }
 
   export class Attributes {
     name: string;
@@ -237,7 +237,7 @@ module OpenLayers {
     destroy();
     transforms: any;
     defaults: any;
-    addTransform(from: string, to: string, method: pvMapper.ICallBack);
+    addTransform(from: string, to: string, method: ICallback);
     transorm(point: Point, source: Projection, dest: Projection): Point;
     nullTransform(point: Point);
   }
@@ -285,15 +285,15 @@ module OpenLayers {
   }
 
   interface Function {
-    bind(func: ICallBack, object: Object): ICallBack;
-    bindAsEventListener(func: ICallBack, object: Object): ICallBack;
+    bind(func: ICallback, object: Object): ICallback;
+    bindAsEventListener(func: ICallback, object: Object): ICallback;
     False(): Boolean;
     True(): Boolean;
     Void(): void;
   }
 
   interface Array {
-    filter(array: any[], callback: ICallBack, caller: Object): any[];
+    filter(array: any[], callback: ICallback, caller: Object): any[];
   }
 
   interface Date{
@@ -349,13 +349,13 @@ module OpenLayers {
     stop(event: Event, allowDefault: Boolean);
     preventDefault(event: Event);
     findElement(event: Event, tagName: string): DOMElement;
-    observe(elementParam: DOMElement, name: string, observer: pvMapper.ICallBack, useCapture: Boolean);
-    observe(elementParam: string, name: string, observer: pvMapper.ICallBack, useCapture: Boolean);
+    observe(elementParam: DOMElement, name: string, observer: ICallback, useCapture: Boolean);
+    observe(elementParam: string, name: string, observer: ICallback, useCapture: Boolean);
     stopObservingElement(elementParam: DOMElement);
     stopObservingElement(elementParam: string);
     _removeElementObservers(elementObservers: any[]);
-    stopObserving(elementParam: DOMElement, name: string, observer: pvMapper.ICallBack, useCapture: Boolean): Boolean;
-    stopObserving(elementParam: string, name: string, observer: pvMapper.ICallBack, useCapture: Boolean): Boolean;
+    stopObserving(elementParam: DOMElement, name: string, observer: ICallback, useCapture: Boolean): Boolean;
+    stopObserving(elementParam: string, name: string, observer: ICallback, useCapture: Boolean): Boolean;
     unloadCache();
   }
 
@@ -380,15 +380,15 @@ module OpenLayers {
     activate(): Boolean;
     deactivate(): Boolean;
     callback(name: string, args: any[]);
-    register(name: string, method: ICallBack);
+    register(name: string, method: ICallback);
     setEvent(evt: Event);
     destroy();
 
     
   }
   declare var Handler: {
-    new (control: Control, callbacks: ICallBack, options: any): Handler;
-    (control: Control, callbacks: ICallBack, options: any): Handler;
+    new (control: Control, callbacks: ICallback, options: any): Handler;
+    (control: Control, callbacks: ICallback, options: any): Handler;
     prototype: Handler;
   }
 
@@ -580,7 +580,7 @@ module OpenLayers {
     autoUpdateSize: Boolean;
     panTween: Tween;
     eventListeners: any;
-    panMethod: pvMapper.ICallBack;
+    panMethod: ICallback;
     panDuration: number;
     paddingForPopups: Bounds;
     layerContainerOriginPx: any;
@@ -671,8 +671,8 @@ module OpenLayers {
     getLayerPxFromLonLat(lonlat: LonLat): Pixel;
 
     //delegate
-    unloadDestroy: pvMapper.ICallBack;
-    updateSizeDestroy: pvMapper.ICallBack;
+    unloadDestroy: ICallback;
+    updateSizeDestroy: ICallback;
   }
 
   declare var Map: {
@@ -695,7 +695,7 @@ module OpenLayers {
     listeners: any;
     object: any;
     element: DOMElement;
-    eventHandler: pvMapper.ICallBack;
+    eventHandler: ICallback;
     fallThrough: Boolean;
     includeXY: Boolean;
     extensions: any;
@@ -704,10 +704,10 @@ module OpenLayers {
     addEventType(eventName: string);
     attachToElement(element: HTMLDOMElement);
     on(object: any);
-    register(type: string, obj: any, func: pvMapper.ICallBack, priority: Boolean);
-    registerPriority(type: string, obj: any, func: pvMapper.ICallBack);
+    register(type: string, obj: any, func: ICallback, priority: Boolean);
+    registerPriority(type: string, obj: any, func: ICallback);
     un(object: any);
-    unregister(type: string, obj: any, func: pvMapper.ICallBack);
+    unregister(type: string, obj: any, func: ICallback);
     remove(type: string);
     triggerEvent(type: string, evt: Event):Boolean;
     triggerEvent(type: string, evt: any):Boolean;
@@ -895,7 +895,7 @@ module OpenLayers {
     delete(features: FVector[], options: any): Response;
     commit(features: FVector[], options: any): Response;
     abort(response: Response);
-    createCallback(method: pvMapper.ICallBack, response: Response, options: any);
+    createCallback(method: ICallback, response: Response, options: any);
 
 
   }
@@ -1028,7 +1028,7 @@ module OpenLayers {
     url: string;
     size: Size;
     offset: Pixel;
-    calculateOffset: pvMapper.ICallBack;
+    calculateOffset: ICallback;
     imageDiv: DOMElement;
     px: Pixel;
     //functions
@@ -1047,8 +1047,8 @@ module OpenLayers {
   declare var Icon:{
     new (value?: any): Icon;
     (value?: any): Icon;
-    new (url: string, size: Size, offset: Pixel, calculateOffset: pvMapper.ICallBack): Icon;
-    (url: string, size: Size, offset: Pixel, calculateOffset: pvMapper.ICallBack): Icon;
+    new (url: string, size: Size, offset: Pixel, calculateOffset: ICallback): Icon;
+    (url: string, size: Size, offset: Pixel, calculateOffset: ICallback): Icon;
     prototype: Icon;
 
   }
@@ -1129,7 +1129,7 @@ module OpenLayers {
     registerImageListeners();
     getSafeContentSize(size: Size): Size;
     getContentDivPadding(): Bounds;
-    addCloseBox(callback: ICallBack);
+    addCloseBox(callback: ICallback);
     panIntoView();
     registerEvents();
     onmouseDown:(evt: Event) => any;
@@ -1143,8 +1143,8 @@ module OpenLayers {
   declare var Popup: {
     new (value?: any): Popup;
     (value?: any): Popup;
-    new (id: string, lonlat: LonLat, contentSize: Size, contentHTML: string, closeBox: Boolean, closeBoxCallback: ICallBack);
-    (id: string, lonlat: LonLat, contentSize: Size, contentHTML: string, closeBox: Boolean, closeBoxCallback: ICallBack);
+    new (id: string, lonlat: LonLat, contentSize: Size, contentHTML: string, closeBox: Boolean, closeBoxCallback: ICallback);
+    (id: string, lonlat: LonLat, contentSize: Size, contentHTML: string, closeBox: Boolean, closeBoxCallback: ICallback);
   }
 
 
