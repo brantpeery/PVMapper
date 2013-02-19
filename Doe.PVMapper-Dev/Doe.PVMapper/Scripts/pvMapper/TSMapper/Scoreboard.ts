@@ -71,8 +71,8 @@ module pvMapper {
   //to by pass development time compiler
   if (typeof(Ext) === 'undefined') var Ext: Ext;
 
-  export var floatingScoreboard: any;
-  export var mainScoreboard = new ScoreBoard();
+  export var floatingScoreboard: any; //The EXTjs window
+  export var mainScoreboard = new ScoreBoard(); //API Element
   mainScoreboard.changedEvent.addHandler(function () {
     var html: HTML = this.render();
     if (!pvMapper.floatingScoreboard) {
