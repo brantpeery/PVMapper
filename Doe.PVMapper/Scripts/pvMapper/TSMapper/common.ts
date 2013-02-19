@@ -66,7 +66,6 @@ interface String {
 String.prototype.format = function (args) {
     var values: string = (arguments.length > 1) ? arguments : args;
     var str = this;
-     //Test
     //The regular expression for the formatter to separate terms from the string.
     //    The default expression will parse to variables named inside brackets.
     //    Has to be a RegExp

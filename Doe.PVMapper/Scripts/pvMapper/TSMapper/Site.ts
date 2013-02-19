@@ -1,5 +1,4 @@
-﻿
-/// <reference path="OpenLayers.d.ts" />
+﻿/// <reference path="OpenLayers.d.ts" />
 /// <reference path="Event.ts" />
 
 interface SiteChangeEventArg extends EventArg {
@@ -10,10 +9,10 @@ interface SiteChangeEventArg extends EventArg {
 module pvMapper {
 
   export class Site {
-    //The parameter list:
+    //The parameter list:    //test
     // site = the feature object from Open Layers that represents this siet
 
-    constructor (public feature: OpenLayers.SiteFeature) {
+        constructor(public feature: OpenLayers.SiteFeature) {
       //if (!feature instanceof(OpenLayers.Feature)) 
       //  throw ('The parameter "feature" must be an OpenLayers.Feature');
       this.self = this;
@@ -29,10 +28,13 @@ module pvMapper {
     public geometry: OpenLayers.Polygon; //The site boundry 
     public name: string; //The saved name of the site
     public description: string; //The long description of the site
-    public offsetFeature: OpenLayers.FVector=null; //The offset Open Layers feature (depreciated)
-    public popupHTML: string =''; //The short description in HTML that will show as a tooltip or popup bubble
+        public offsetFeature: OpenLayers.FVector = null; //The offset Open Layers feature (depreciated)
+        public popupHTML: string = ''; //The short description in HTML that will show as a tooltip or popup bubble
  
 
+
+        //Events that fire when appropriate
+        //The select/change events are fired when the feature changes. They are fired by the site manager
     public selectEvent: pvMapper.Event = new pvMapper.Event();
     public changeEvent: pvMapper.Event = new pvMapper.Event();
     public destroyEvent: pvMapper.Event = new pvMapper.Event();
@@ -44,16 +46,21 @@ module pvMapper {
       this.selectEvent.fire(this.self, event);
     };
         
-    public onFeatureChange(event : any) {
-    //This was declare originally to use ...fire(self,event) where self=this at instantiation, but using 'this' in TS is more direct but will it work?
+        public onFeatureChange(event: any) {
+
+            ///TODO: update the event object to reflect THIS event, add in a sub event that refers to the original event object.
       this.changeEvent.fire(this.self, event);
     }
 
-    public select() {
-
+        public onFeatureUnselected(event: any) {
+            this.unselectEvent.fire(this.self, event);
     }
 
+        public destroy() {
 
+            var event = {};
+            this.destroyEvent.fire(this.self, event);
+        }
   }
 }
 

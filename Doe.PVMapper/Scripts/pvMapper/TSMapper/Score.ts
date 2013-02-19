@@ -20,8 +20,7 @@ module pvMapper {
   * @param {PVMapper.Site}  site The site that this score will track
   * @return {PVMapper.Score} New Score object
   */
-    constructor(site:any) { 
-      if(!site instanceof (pvMapper.Site)) { throw ("Parameter 'site' is not a pvMapper.Site object"); }
+    constructor(site:pvMapper.Site) { 
       this.self = this;
       this.myvalue = "";
       //A reference to the site this score represents
@@ -56,14 +55,14 @@ module pvMapper {
       //Change the context, add this score to the event and pass the event on
       var oldvalue : string = this.myvalue;
       this.myvalue = value;
-      pvMapper.displayMessage(this.myvalue,"Info");
+      //TODO: pvMapper.displayMessage(this.myvalue,"Info");
       
       //fire the value updated event
       this.valueChangeEvent.fire(this.self, { oldvalue: oldvalue, newvalue: value });
       return this.myvalue;
     }
 
-    public onSiteChanged(event: pvMapper.Event) {
+    public onSiteChanged(event: EventArg) {
       event.data = this.self;
       /*debug*/ console.log('The score ' + this.self.name + ' has detected a site change pvMapper.Event.fire its own event now.');
       this.siteChangeEvent.fire(this.self, [event, this.self]);
@@ -75,7 +74,6 @@ module pvMapper {
         return this.popupMessage;
       } else { return this.value; }
     }
-
   }
 
 }
