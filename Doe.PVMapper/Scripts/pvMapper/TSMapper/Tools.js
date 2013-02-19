@@ -1,6 +1,3 @@
-var pvMapper;
-(function (pvMapper) {
-    })(pvMapper || (pvMapper = {}));
 /**
 An example of how to create a tool using the ITool interface
 

@@ -2,7 +2,7 @@
 /// <reference path="Site.ts" />
 /// <reference path="common.ts" />
 
-module pvMapper.Tools {
+module pvMapper {
     export interface ITool {
         /**
          The title of the tool that will be used in the scoreboard
