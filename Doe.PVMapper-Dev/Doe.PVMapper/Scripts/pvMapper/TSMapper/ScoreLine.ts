@@ -11,7 +11,7 @@ module pvMapper {
     // Class
     export class ScoreLine {
         // Constructor
-        constructor(options: ScoreLineOptions) {
+        constructor(options: IScoreTool) {
             this.self = this;
             this.name = (typeof (options.title) === 'string') ? options.title : 'Unnamed Tool';
             this.description = (typeof (options.description) === 'string') ? options.description : 'Unname Tool';
