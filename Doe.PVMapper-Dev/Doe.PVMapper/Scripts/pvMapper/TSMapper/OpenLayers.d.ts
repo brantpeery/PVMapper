@@ -383,8 +383,6 @@ module OpenLayers {
     register(name: string, method: ICallback);
     setEvent(evt: Event);
     destroy();
-
-    
   }
   declare var Handler: {
     new (control: Control, callbacks: ICallback, options: any): Handler;
