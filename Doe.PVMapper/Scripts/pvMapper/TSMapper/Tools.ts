@@ -42,40 +42,44 @@ module pvMapper.Tools {
 
     }
 
-    //export class ScoreTool implements IScoreTool {
-    //    constructor(scoreTool: IScoreTool) {
-    //        if (scoreTool !== undefined) {
-    //            //Load up the object
-    //            this.title = scoreTool.title;
-    //            this.description = scoreTool.description;
-    //            this.init = scoreTool.init;
-    //            this.destroy = scoreTool.destroy;
-    //            this.activate = scoreTool.activate;
-    //            this.deactivate = scoreTool.deactivate;
-    //            this.calculateValueCallback = scoreTool.calculateValueCallback;
-    //            this.onSiteChange = scoreTool.onSiteChange;
-    //            this.onScoreAdded = scoreTool.onScoreAdded;
-    //        }
+
+    /* *************************************
+    //This block of code is slated to be deleted after code review.Keeping it here just in case reviewers want a concrete class
+    
+    export class ScoreTool implements IScoreTool {
+        constructor(scoreTool: IScoreTool) {
+            if (scoreTool !== undefined) {
+                //Load up the object
+                this.title = scoreTool.title;
+                this.description = scoreTool.description;
+                this.init = scoreTool.init;
+                this.destroy = scoreTool.destroy;
+                this.activate = scoreTool.activate;
+                this.deactivate = scoreTool.deactivate;
+                this.calculateValueCallback = scoreTool.calculateValueCallback;
+                this.onSiteChange = scoreTool.onSiteChange;
+                this.onScoreAdded = scoreTool.onScoreAdded;
+            }
 
 
-    //    }
+        }
 
-        //public title: string;
-        //public description: string;
-        //public init: ICallback;
-        //public destroy: ICallback;
-        //public activate: ICallback;
-        //public deactivate: ICallback;
+    public title: string;
+    public description: string;
+    public init: ICallback;
+    public destroy: ICallback;
+    public activate: ICallback;
+    public deactivate: ICallback;
 
-        //public calculateValueCallback: (site: Site) => number;
-        //public onSiteChange: (context: any, event: EventArg, score: Score) => void;
-        //public onScoreAdded: (context: any, event: EventArg, score: Score) => void;
-    //}
+    public calculateValueCallback: (site: Site) => number;
+    public onSiteChange: (context: any, event: EventArg, score: Score) => void;
+    public onScoreAdded: (context: any, event: EventArg, score: Score) => void;
+    }
+    *****************************************/
 
 
 
     
-
 }
 
 
@@ -83,7 +87,7 @@ module pvMapper.Tools {
 An example of how to create a tool using the ITool interface
 
     var mytool: IScoreTool = {
-        title:"ThisTool",
+        title: "ThisTool",
         description: "My super sweet score thingy",
         init: null,
         destroy: null,
@@ -95,5 +99,19 @@ An example of how to create a tool using the ITool interface
         onSiteChange: null,
         onScoreAdded: function (context: any, event: EventArg, score: pvMapper.Score) => void {}
     };
+
+An example of loading the tool after creating it
+
+    var myothertool: IScoreTool;
+    myothertool.title = "Other Tool";
+    myothertool.calculateValueCallback = (site: Site) => {
+        return 1;
+    }
+    myothertool.description = "Some cool tool that does stuff";
+    //Finish fleshing out all members of the interface...
+
 */
+
+
+
 
