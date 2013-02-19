@@ -169,22 +169,7 @@
     <Content Include="Scripts\ext-4.1.1a.d.ts" />
     <Content Include="Scripts\jquery.d.ts" />
     <Content Include="Scripts\lib.d.ts" />
-    <Content Include="Scripts\pvMapper\tests\scoreline_test.html" />
-    <Content Include="Scripts\pvMapper\TS Versions\Event.js">
-      <DependentUpon>Event.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TS Versions\Event.min.js">
-      <DependentUpon>Event.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TS Versions\Event.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\OpenLayers.d.ts" />
-    <Content Include="Scripts\pvMapper\TS Versions\pvMapper.js">
-      <DependentUpon>pvMapper.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TS Versions\pvMapper.min.js">
-      <DependentUpon>pvMapper.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TS Versions\pvMapper.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreLine.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\common.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\DataManager.ts" />
@@ -228,9 +213,6 @@
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Scoreboard.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Renderer.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ModuleManager.d.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\pvMapper.d.js">
-      <DependentUpon>ModuleManager.d.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Renderer.js">
       <DependentUpon>Renderer.ts</DependentUpon>
     </Content>
@@ -267,7 +249,6 @@
       <DependentUpon>Score.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Score.ts" />
-    <Content Include="Scripts\pvMapper\TS Versions\SiteManager.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\ScoreLine.js">
       <DependentUpon>ScoreLine.ts</DependentUpon>
     </Content>
@@ -1004,12 +985,6 @@
     <Content Include="Scripts\pvMapper\Score.js" />
     <Content Include="Scripts\pvMapper\Scoreboard.js" />
     <Content Include="Scripts\pvMapper\ScoreLine.js" />
-    <Content Include="Scripts\pvMapper\TS Versions\Site.js">
-      <DependentUpon>Site.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TS Versions\Site.min.js">
-      <DependentUpon>Site.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\Site.js" />
     <Content Include="Scripts\pvMapper\test.html" />
     <Content Include="Scripts\pvMapper\Utility.js" />
@@ -1117,12 +1092,6 @@
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Tools.js.map">
       <DependentUpon>Tools.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TS Versions\Event.js.map">
-      <DependentUpon>Event.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TS Versions\pvMapper.js.map">
-      <DependentUpon>pvMapper.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\DataManager.js.map">
       <DependentUpon>DataManager.ts</DependentUpon>

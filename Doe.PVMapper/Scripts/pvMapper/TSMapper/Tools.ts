@@ -40,46 +40,7 @@ module pvMapper {
 
     export interface IToolAction {
 
-    }
-
-
-    /* *************************************
-    //This block of code is slated to be deleted after code review.Keeping it here just in case reviewers want a concrete class
-    
-    export class ScoreTool implements IScoreTool {
-        constructor(scoreTool: IScoreTool) {
-            if (scoreTool !== undefined) {
-                //Load up the object
-                this.title = scoreTool.title;
-                this.description = scoreTool.description;
-                this.init = scoreTool.init;
-                this.destroy = scoreTool.destroy;
-                this.activate = scoreTool.activate;
-                this.deactivate = scoreTool.deactivate;
-                this.calculateValueCallback = scoreTool.calculateValueCallback;
-                this.onSiteChange = scoreTool.onSiteChange;
-                this.onScoreAdded = scoreTool.onScoreAdded;
-            }
-
-
-        }
-
-    public title: string;
-    public description: string;
-    public init: ICallback;
-    public destroy: ICallback;
-    public activate: ICallback;
-    public deactivate: ICallback;
-
-    public calculateValueCallback: (site: Site) => number;
-    public onSiteChange: (context: any, event: EventArg, score: Score) => void;
-    public onScoreAdded: (context: any, event: EventArg, score: Score) => void;
-    }
-    *****************************************/
-
-
-
-    
+    }    
 }
 
 
@@ -111,6 +72,7 @@ An example of loading the tool after creating it
     //Finish fleshing out all members of the interface...
 
 */
+
 
 
 
