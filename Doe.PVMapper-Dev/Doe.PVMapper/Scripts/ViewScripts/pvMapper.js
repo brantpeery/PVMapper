@@ -32,14 +32,14 @@ if ( typeof pvMapper == 'undefined' ) {
         updateSite: function (siteId, name, description, polygonGeometry) {
 
             //Only send the stuff that was passed into this function.
-            var data = { id: siteId, isActive: true };
+            var data = {isActive: true};
             if (name) { data.name = name; }
             if (description) { data.description = description; }
             if (polygonGeometry) { data.polygonGeometry = polygonGeometry; }
 
-            return $.ajax("/api/ProjectSite", {
+            return $.ajax("/api/ProjectSite/"+siteId, {
                 data: data,
-                type: "POST",
+                type: "PUT",
                 done: function () {
                     pvMapper.displayMessage("The site changes were saved", "info");
                 },
