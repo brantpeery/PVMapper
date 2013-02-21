@@ -19,9 +19,9 @@ namespace Doe.PVMapper.Controllers
             return View(model);
         }
 
-        public ActionResult layout2()
+        public ActionResult tsindex()
         {
-            ViewBag.Message = "PV Mapper - Find a sweet spot for your solar array.";
+            ViewBag.Message = "PV Mapper - Test of the TS js files.";
 
             var model = _repository.All(m => m.Url != null);
             return View();

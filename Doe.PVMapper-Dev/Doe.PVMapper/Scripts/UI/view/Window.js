@@ -12,7 +12,7 @@ Ext.define('MainApp.view.Window', {
   alias: "pvWindow",
   layout: 'fit',
   type: 'Window',
-  title: null,
+  //title: "Super fun title",
   taskBar: null,
   //constrain: true,
   renderTo: 'maincontent-body',

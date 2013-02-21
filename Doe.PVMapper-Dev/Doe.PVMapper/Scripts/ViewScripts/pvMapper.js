@@ -7,8 +7,7 @@ if ( typeof pvMapper == 'undefined' ) {
 (function (pvM) {
     $.extend(pvM, { //Extend the existing pvMapper object
         self: this,
-        // This is exposed to allow extensions to interact with the map.
-        map: null,
+        
         // The developer needs to be able to add and remove buttons to a toolbar.
         mapToolbar: null,
         tabs: null,

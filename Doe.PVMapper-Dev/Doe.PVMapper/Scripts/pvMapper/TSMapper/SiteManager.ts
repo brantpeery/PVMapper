@@ -2,13 +2,6 @@
 /// <reference path="Event.ts" />
 
 module pvMapper {
-    //import pvM = pvMapper;
-
-    export var readyEvent = new Event(false); //Belongs in the PVMapper class
-    export function onReady(fn: () => void ) {
-        this.readyEvent.addHandler(fn);
-        return pvMapper;
-    }
 
     export class SiteManager {
         public siteAdded: pvMapper.Event = new pvMapper.Event();
@@ -26,9 +19,11 @@ module pvMapper {
 
         public addSite(site: pvMapper.Site) {
             this.sites.push(site);
-        }
+            this.siteAdded.fire(site, site);
+       }
 
         public createSite(feature: OpenLayers.SiteFeature) {
+            console.log("Creating site");
             var aSite = new Site(feature);
             this.sites.push(aSite);
             this.siteAdded.fire(aSite, feature);
@@ -55,13 +50,13 @@ module pvMapper {
         public featureChangedHandler(event: any) {
             console.log("Feature change detected by the site manager");
             if (event.feature && event.feature.site) {
-                try {
-                    event.feature.site.changeEvent.fire(this, event);
+               // try {
+                    event.feature.site.changeEvent.fire(event.feature.site, event);
                     console.log("Fired the change event for site: " + event.feature.site.name);
-                } catch (e) {
-                    console.log("An error occurred while trying to fire the feature change event for a site from the site manager");
-                    console.error(e);
-                }
+            //    } catch (e) {
+            //        console.log("An error occurred while trying to fire the feature change event for a site from the site manager");
+            //        console.error(e);
+            //    }
             } else {
                 console.log("The feature was not a site");
             }

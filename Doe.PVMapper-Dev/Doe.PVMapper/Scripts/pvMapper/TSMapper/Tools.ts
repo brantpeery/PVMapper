@@ -34,13 +34,13 @@ module pvMapper {
         @returns number The calculated value
         */
         calculateValueCallback: (site: Site) => number;
-        onSiteChange: (context: any, event: EventArg, score: Score) => void;
-        onScoreAdded: (context: any, event: EventArg, score: Score) => void;
+        onSiteChange: (event: EventArg, score: Score) => void;
+        onScoreAdded: (event: EventArg, score: Score) => void;
     }
 
     export interface IToolAction {
 
-    }    
+    }
 }
 
 

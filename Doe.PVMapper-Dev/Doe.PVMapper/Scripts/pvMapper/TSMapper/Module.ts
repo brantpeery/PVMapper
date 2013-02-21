@@ -38,12 +38,14 @@ module pvMapper {
             });
 
             //Load up the info tools into the api
-            this.infoTools.map((tool, idx, toolbar) => {
-                console.log("Loading info tool " + tool.title + " into the API");
-                
-                //TODO: Tie to the data model when ready 
+            if (this.infoTools) {
+                this.infoTools.map((tool, idx, toolbar) => {
+                    console.log("Loading info tool " + tool.title + " into the API");
 
-            });
+                    //TODO: Tie to the data model when ready 
+
+                });
+            }
         }
 
         public id: string;

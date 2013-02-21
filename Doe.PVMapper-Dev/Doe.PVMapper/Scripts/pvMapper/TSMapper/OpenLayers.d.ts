@@ -13,6 +13,7 @@ module OpenLayers {
     fid: number;
     geometry: Polygon;
     attributes: Attributes;
+    site: any;
     name: string;
     description: string;
   }
@@ -369,13 +370,13 @@ module OpenLayers {
     //properties
     id: string;
     control: Control;
-    map: Map;
+    map: IMap;
     keyMask: number;
     active: Boolean;
     evt: Event;
 
     //functions
-    setMap(map: Map);
+    setMap(map: IMap);
     checkModifiers(evt: Event): Boolean;
     activate(): Boolean;
     deactivate(): Boolean;
@@ -398,7 +399,7 @@ module OpenLayers {
 
     //properties
     id: string;
-    map: Map;
+    map: IMap;
     div: DOMElement;
     type: number;
     allowSelection: Boolean;
@@ -456,23 +457,23 @@ module OpenLayers {
     cacheSize: number;
     moveDelay: number;
     zoomDelay: number;
-    maps: Map[];
+    maps: IMap[];
     tileQueueId: any;
     tileQueue: Tile[];
     tileCache: any;
 
     //functions
-    addMap(map: Map);
-    removeMap(map: Map);
+    addMap(map: IMap);
+    removeMap(map: IMap);
     move(evt: any);
     changeLayer(evt: any);
     addLayer(evt: any);
     removeLayer(evt: any);
-    updateTimeout(map: Map, delay: number);
+    updateTimeout(map: IMap, delay: number);
     addTile(evt: any);
     unloadTile(evt: any);
     queueTileDraw(evt: any);
-    drawTileFromQueue(map: Map);
+    drawTileFromQueue(map: IMap);
     manageTileCache(evt: any);
     addToCache(evt: any);
     clearTile(evt: any);
@@ -532,8 +533,8 @@ module OpenLayers {
 
     };
   }
-
-  interface Map {
+  
+  interface IMap {
     //constant
     Z_INDEX_BASE : any;
     TILE_WIDTH: number;
@@ -674,17 +675,17 @@ module OpenLayers {
   }
 
   declare var Map: {
-    new (value?: any): Map;
-    (value?: any): Map;
-    new (div: DOMElement, options?: any): Map;
-    new (div: DOMElement, center: LonLat): Map;
-    new (div: DOMElement, zoom: number): Map;
-    new (div: DOMElement, extent:Bounds): Map;
-    (div: DOMElement, options?: any): Map;
-    (div: DOMElement, center: LonLat): Map;
-    (div: DOMElement, zoom: number): Map;
-    (div: DOMElement, extent:Bounds): Map;
-    prototype: Map;
+    new (value?: any): IMap;
+    (value?: any): IMap;
+    new (div: DOMElement, options?: any): IMap;
+    new (div: DOMElement, center: LonLat): IMap;
+    new (div: DOMElement, zoom: number): IMap;
+    new (div: DOMElement, extent:Bounds): IMap;
+    (div: DOMElement, options?: any): IMap;
+    (div: DOMElement, center: LonLat): IMap;
+    (div: DOMElement, zoom: number): IMap;
+    (div: DOMElement, extent:Bounds): IMap;
+    prototype: IMap;
   }
 
 
@@ -732,7 +733,7 @@ module OpenLayers {
     alwaysInRange: Boolean;
 
     events: Events;
-    map: Map;
+    map: IMap;
     isBaseLayer: Boolean;
     alpha: Boolean;
     displayInLayerSwitcher: Boolean;
@@ -770,9 +771,9 @@ module OpenLayers {
     redraw(): Boolean;
     moveTo(bounds: Bounds, zoomChanged: Boolean, draging: Boolean);
     moveByPx(dx: number, dy: number);
-    setMap(map: Map);
+    setMap(map: IMap);
     afterAdd();
-    removeMap(map: Map);
+    removeMap(map: IMap);
     getImageSize(bounds: Bounds): Size;
     setTileSize(size: Size);
     getVisibility(): Boolean;
@@ -925,7 +926,7 @@ module OpenLayers {
     locked: Boolean;
     size: Size;
     resolution: number;
-    map: Map;
+    map: IMap;
     featureDx: number;
     //functions;
     destroy();
@@ -990,9 +991,9 @@ module OpenLayers {
     refresh(obj: any);
     assignRenderer();
     displayError();
-    setMap(map: Map);
+    setMap(map: IMap);
     afterAdd();
-    removeMap(map: Map);
+    removeMap(map: IMap);
     onMapResize: () =>any;
     moveTo(bounds: Bounds, zoomChanged: Boolean, dragging: Boolean);
     display(display: Boolean);
@@ -1055,7 +1056,7 @@ module OpenLayers {
     icon: Icon;
     lonlat: LonLat;
     events:Events;
-    map: Map;
+    map: IMap;
     //functions
     destroy();
     draw(px: Pixel): DOMElement;
@@ -1105,7 +1106,7 @@ module OpenLayers {
     panMapIfOutOfView: Boolean;
     keepInMap:Boolean;
     closeOnMove:Boolean;
-    map:Map;
+    map:IMap;
     
 
     //functions
@@ -1212,7 +1213,7 @@ module OpenLayers {
   interface FVector extends Feature {
     //Properties
     fid: string;
-    geometry: Geometry;
+    geometry: Polygon; //Changed this from Geometry. It seems the documentation is wrong
     attributes: any;
     bounds: Bounds;
     state: string;
