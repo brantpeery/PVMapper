@@ -1,5 +1,5 @@
+/// <reference path="pvMapper.ts" />
 /// <reference path="../../jquery.d.ts" />
-/// <reference path="Renderer.ts" />
 /// <reference path="Event.ts" />
 /// <reference path="ScoreLine.ts" />
 /// <reference path="../../ext-4.1.1a.d.ts" />
@@ -10,27 +10,30 @@ var pvMapper;
     var ScoreBoard = (function () {
         // Constructor
         function ScoreBoard() {
+            var _this = this;
             this.scoreLines = new Array();
             this.changedEvent = new pvMapper.Event();
             this.scoresInvalidatedEvent = new pvMapper.Event();
-            this.tableRenderer = new pvMapper.Table();
+            this.tableRenderer = new pvMapper.Renderer.HTML.Table();
             this.self = this;
+            this.onScoreChanged = function (event) {
+                console.log("Score changed event detected by the scoreboard");
+                //var html = this.self.render();
+                _this.changedEvent.fire(_this, event);
+            };
         }
         ScoreBoard.prototype.addLine = function (scoreline) {
-            if(scoreline instanceof pvMapper.ScoreLine) {
-                scoreline.scoreChangeEvent.addHandler(this.onScoreChanged);
-                this.scoreLines.push(scoreline);
-            }
-        };
-        ScoreBoard.prototype.onScoreChanged = function (event) {
-            var html = this.self.render();
-            this.self.changedEvent.fire(self, html);
-        };
+            console.log("Adding scoreline " + scoreline.name);
+            scoreline.scoreChangeEvent.addHandler(this.onScoreChanged);
+            this.scoreLines.push(scoreline);
+            //this.changedEvent.fire(this,null);
+                    };
         ScoreBoard.prototype.removeLine = function (idx) {
             throw ('Function not yet implemented');
         };
         ScoreBoard.prototype.render = function () {
-            var r = new pvMapper.Table();
+            console.log('Rendering the scorboard');
+            var r = new pvMapper.Renderer.HTML.Table();
             var row = r.addRow();
             row.attr({
                 'class': 'header'
@@ -38,17 +41,27 @@ var pvMapper;
             row.addCell("Tool Name").attr({
                 'class': 'header'
             });
+            //Render the header
             var sites = pvMapper.siteManager.getSites();
             $.each(sites, function (idx, s) {
                 row.addCell(s.name);
             });
+            //Render each scoreline
             $.each(this.scoreLines, function (idx, sl) {
                 var row = r.addRow();
+                //Render the tool name
+                var tc = row.addCell(sl.name);
+                tc.attr({
+                    "title": sl.description
+                });
+                //Render each site for this scoreline
                 $.each(sl.scores, function (idx, s) {
                     row.addCell(s.value);
                 });
             });
-            return r.render();
+            var HTML = r.render();
+            console.log("Scoreboard HTML = " + HTML);
+            return HTML;
         };
         ScoreBoard.prototype.onScoresInvalidated = function () {
             //let all the other modules that care know that a score changed
@@ -58,28 +71,29 @@ var pvMapper;
         return ScoreBoard;
     })();
     pvMapper.ScoreBoard = ScoreBoard;    
-    //Just to trick TypeScript into believing that we are creating an Ext object
-    //to by pass development time compiler
-    if(typeof (Ext) === 'undefined') {
-        var Ext;
-    }
-    pvMapper.floatingScoreboard;
-    pvMapper.mainScoreboard = new ScoreBoard();
+    pvMapper.floatingScoreboard;//The EXTjs window
+    
+    pvMapper.mainScoreboard = new ScoreBoard();//API Element
+    
     pvMapper.mainScoreboard.changedEvent.addHandler(function () {
-        var html = this.render();
+        var self = pvMapper.mainScoreboard;
+        var html = self.render();
         if(!pvMapper.floatingScoreboard) {
-            pvMapper.floatingScoreboard = Ext.create('MainApp.view.Window', [
-                {
-                    title: 'Site Properties',
-                    width: 400,
-                    height: 400,
-                    html: html
-                }
-            ]);
+            pvMapper.floatingScoreboard = Ext.create('MainApp.view.Window', {
+                title: 'Main Scoreboard',
+                width: 400,
+                height: 400,
+                html: html,
+                cls: "propertyBoard"
+            });
             pvMapper.floatingScoreboard.show();
-        } else {
-            pvMapper.floatingScoreboard.update(html);
         }
+        pvMapper.floatingScoreboard.update(html);
         pvMapper.floatingScoreboard.show();
+    });
+    //Create the scoreboard onscreen
+    pvMapper.onReady(function () {
+        pvMapper.mainScoreboard.changedEvent.fire(pvMapper.mainScoreboard, {
+        });
     });
 })(pvMapper || (pvMapper = {}));

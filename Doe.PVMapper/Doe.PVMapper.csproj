@@ -200,19 +200,21 @@
     <Content Include="Scripts\pvMapper\TSMapper\Module.min.js">
       <DependentUpon>Module.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ModuleManager.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\ModuleManager.js">
-      <DependentUpon>ModuleManager.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\ModuleManager.min.js">
-      <DependentUpon>ModuleManager.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Options.d.js">
       <DependentUpon>Options.d.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Scoreboard.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Renderer.ts" />
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ModuleManager.d.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\Options.d.min.js">
+      <DependentUpon>Options.d.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\pvMapper.js">
+      <DependentUpon>pvMapper.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\pvMapper.min.js">
+      <DependentUpon>pvMapper.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\pvMapper.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\Renderer.js">
       <DependentUpon>Renderer.ts</DependentUpon>
     </Content>
@@ -238,7 +240,7 @@
     <Content Include="Scripts\pvMapper\TSMapper\siteAreaModule.min.js">
       <DependentUpon>siteAreaModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Sitemanager.js">
+    <Content Include="Scripts\pvMapper\TSMapper\SiteManager.js">
       <DependentUpon>SiteManager.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\SiteManager.min.js">
@@ -276,6 +278,7 @@
     </Content>
     <Content Include="Scripts\UnitTests\jasmine.js" />
     <Content Include="Scripts\UnitTests\pvMapper.Event.js" />
+    <Content Include="Scripts\UnitTests\pvMapper.Render.js" />
     <Content Include="Scripts\UnitTests\PVMapper.Site.js" />
     <Content Include="Scripts\UnitTests\pvMapper.SiteManager.js" />
     <Content Include="Scripts\UnitTests\string_extensions.js" />
@@ -1129,9 +1132,10 @@
     <Content Include="Scripts\pvMapper\TSMapper\Event.js.map">
       <DependentUpon>Event.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\ModuleManager.js.map">
-      <DependentUpon>ModuleManager.ts</DependentUpon>
+    <Content Include="Scripts\pvMapper\TSMapper\Options.d.min.js.map">
+      <DependentUpon>Options.d.js</DependentUpon>
     </Content>
+    <Content Include="Views\Home\tsindex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

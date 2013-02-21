@@ -1,70 +1,121 @@
-/// <reference path="OpenLayers.d.ts" />
+/// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
+/// <reference path="Tools.ts" />
 /// <reference path="Options.d.ts" />
+/// <reference path="Module.ts" />
 
-interface ISiteCallback {
-  (site: pvMapper.Site, setbackLength?: number): any;
-}
+module INLModules {
+    class SiteAreaModule {
+        constructor() {
+            var myModule: pvMapper.Module = new pvMapper.Module({
+                id: "AreaModule",
+                author: "Brant Peery, INL",
+                version: "0.3.ts",
 
-interface ICalculateAreaCallback {
-  (geometry: OpenLayers.Geometry, offset?: number): number;
-}
+                activate: () => { },
+                deactivate: null,
+                destroy: null,
+                init: null,
 
-interface IScoringTool {
-  calculateCallback: ISiteCallback;
-}
+                scoringTools: [{
+                    activate: null,
+                    deactivate: null,
+                    destroy: null,
+                    init: null,
 
+                    title: "Gross Area",
+                    description:"Calculates the area of the site polygon edges.",
+                    onScoreAdded: (e, score: pvMapper.Score) => {
+                    },
+                    onSiteChange: function (e, s) {
+                        console.log("Site change detected in tool Gross Area. Updating the value.");
+                        var area = calculateSiteArea(s.site);
+                        console.log("Calulated area of " + area + ". Setting the value on the score");
+                        
+                        s.updateValue(area.toString());
 
+                        
+                    },
+                    calculateValueCallback: (site: pvMapper.Site): number => {
+                        var area = calculateSiteArea(site);
+                        console.log("Calulated area of " + area + " Returning value");
 
-// Module
-module pvMapper {
-  export class ScoreEvent extends pvMapper.Event {
-
-}
-
-
-  // Class
-  export class ScoringTool implements IScoringTool {
-
-    // Constructor
-    constructor () { }
-    public title: string;
-    public description: string;
-    public calculateCallback: ISiteCallback = null;
-    public onSiteChange(event: pvMapper.Event, score: Score) { //Fires when a score has been notified that it's site has changed
-      if (this.updateCallback != null)
-        this.updateCallback(score.site);
-
-      //Update the property (only do this if this is a very fast calculation)
-      if (this.calculateCallback != null)
-        score.updateValue(this.calculateCallback(score.site));  //Do it this way so the score can manage getting itself refreshed on the screen and in the DB
+                        return area;
+                    },
+                    
+                }],
+                infoTools: null
+            });
+        }
     }
-    public onScoreAdded(event: ScoreEvent, score: Score) {
 
-      //This will be called when a score is added to the scoreline that represents this tool
-      //Really don't need to do anything here as the framework will be asking for the updated value later
+    var modinstance = new SiteAreaModule();
+
+     //All private functions and varables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
+    var offsetFeature, setbackLength, setbackLayer;
+    setbackLength = 30;
+
+    function calculateArea(geometry:OpenLayers.Polygon) {
+
+        
+        var proj = new OpenLayers.Projection('EPSG:900913');
+
+        var area = geometry.getGeodesicArea(proj);
+        var kmArea = area / 1000000;
+
+        return Math.round(kmArea * 100) / 100;
     }
 
-    //these are delegate function place holders.
-    public updateCallback: ISiteCallback = null;
-  }
+    //Handles the button click for the buttons for this tool
+    function onButtonClicked(event) {
+    };
 
 
-  export class Intent {
-    public Area(geometry: OpenLayers.Geometry): number {
-      if (this.calculateArea != null)
-        return this.calculateArea(geometry);
-      else
-        return null;
+
+    function updateSetbackFeature(site:pvMapper.Site, setback?:number) {
+        if (!$.isNumeric(setback)) {
+            setback = setbackLength;
+        }
+        var reader = new jsts.io.WKTReader();
+        var parser = new jsts.io.OpenLayersParser();
+
+        var input = parser.read(site.feature.geometry);
+        var buffer = input.buffer(-1 * setback); //Inset the feature
+        var newGeometry = parser.write(buffer);
+
+        if (!setbackLayer) {
+            setbackLayer = new OpenLayers.Layer.Vector("Site Setback");
+            pvMapper.map.addLayer(setbackLayer);
+        }
+
+        if (site.offsetFeature) {
+            //Redraw the polygon
+            setbackLayer.removeFeatures(site.offsetFeature);
+            site.offsetFeature.geometry = newGeometry; //This probably wont work
+        } else {
+            var style = { fillColor: 'blue', fillOpacity: 0, strokeWidth: 3, strokeColor: "purple" };
+            site.offsetFeature = new OpenLayers.Feature.Vector(newGeometry, { parentFID: site.feature.fid }, style);
+        }
+        setbackLayer.addFeatures(site.offsetFeature);
+
+
+
+    };
+
+    function calculateSetbackArea(site:pvMapper.Site, setback?:number) {
+        if (site.offsetFeature) {
+            return calculateArea(site.offsetFeature.geometry);
+        }
+
+        return 0;
     }
-    public OffsetArea(geometry: OpenLayers.Geometry, offset: number): number {
-      if (this.calculateArea != null)
-        return this.calculateArea(geometry, offset);
-      else
-        return null;
+
+    function calculateSiteArea(site:pvMapper.Site) {
+        //Use the geometry of the OpenLayers feature to get the area
+        var val = calculateArea(site.feature.geometry);
+
+        return val;
     }
-    public calculateArea: ICalculateAreaCallback = null;
-  }
 
 }

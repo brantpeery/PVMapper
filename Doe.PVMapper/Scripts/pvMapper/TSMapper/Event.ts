@@ -53,7 +53,7 @@ module pvMapper {
       if (!(eventArgs instanceof Array)) {
         eventArgs = [eventArgs];
       }
-      $.each(self.eventHandlers, function (idx, func) {
+      self.eventHandlers.map(function (func, idx) {
         if (typeof (func) != 'undefined')
           func.apply(context, eventArgs);
       });

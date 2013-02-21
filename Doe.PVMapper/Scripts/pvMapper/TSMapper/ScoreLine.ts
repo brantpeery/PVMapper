@@ -12,21 +12,33 @@ module pvMapper {
     export class ScoreLine {
         // Constructor
         constructor(options: IScoreTool) {
+            console.log("Adding a scoreline for " + options.title);
             this.self = this;
             this.name = (typeof (options.title) === 'string') ? options.title : 'Unnamed Tool';
             this.description = (typeof (options.description) === 'string') ? options.description : 'Unname Tool';
             if ($.isFunction(options.onSiteChange)) {
                 this.onSiteChangeHandler = options.onSiteChange
             }
+
+            this.valueChangeHandler = (event: EventArg) => {
+                ///TODO: Create a ValueChangeEventArg or something to let the user know what to expect
+
+                this.scoreChangeEvent.fire(self, event);
+            }
+
             if ($.isFunction(options.onScoreAdded)) {
                 this.scoreAddedEvent.addHandler(options.onScoreAdded);
             }
 
-            siteManager.siteAdded.addHandler(this.onSiteAdded);
+            siteManager.siteAdded.addHandler((event: Site) => {
+                console.log("Siteadded event detected in scoreline" + name);
+
+                this.addScore(event);
+            });
             siteManager.siteRemoved.addHandler(this.onSiteRemove);
 
             this.loadAllSites();
-        }
+        };
 
         public name: string;
         public description: string;
@@ -48,23 +60,24 @@ module pvMapper {
         public addScore(site: pvMapper.Site): pvMapper.Score {
             console.log('Adding new score to scoreline');
             var score: pvMapper.Score = new pvMapper.Score(site);
+            score.value = this.getvalue(site);
 
             //attach the tool's handler directly to the score
-            score.siteChangeEvent.addHandler(this.onSiteChangeHandler); 
+            score.siteChangeEvent.addHandler(this.onSiteChangeHandler);
 
             //subscribe to the score updated event
             score.valueChangeEvent.addHandler(this.valueChangeHandler);
 
-            this.self.scores.push(score);
+            this.scores.push(score);
             //this.self.scoreAddedEvent.fire(score, [{ score: score, site: site }, score]);
             //Set the initial value from the tool
-            //score.updateValue(this.self.getValue(site));
+            score.updateValue(this.getvalue(site));
             return score;
         }
 
         public removeScore(score: Score) {
             // remove site from scoreline.
-            
+
 
         }
 
@@ -72,11 +85,7 @@ module pvMapper {
 
         }
 
-        public valueChangeHandler(event: EventArg) {
-            ///TODO: Create a ValueChangeEventArg or something to let the user know what to expect
-
-            this.scoreChangeEvent.fire(self, event);
-        }
+        public valueChangeHandler: ICallback;
 
         //Storage pointer to the tool's sitechanged handler function
         private onSiteChangeHandler: ICallback;
@@ -95,20 +104,16 @@ module pvMapper {
             if (event.data instanceof Site)
                 //remove the reference to the site.
                 this.self.removeScore(event.data);
-            
+
         }
 
-        private onSiteAdded(event: EventArg) {
-            if (event.data instanceof Site)
-                this.addScore(event.data);
-            console.log("Siteadded event detected in scoreline");
-        }
+        //private onSiteAdded = 
 
         //private onSiteUpdated(event: EventArg) {
         //    if (event.data instanceof Site)
         //        updateScore(event.data);
         //}
 
-     }
+    }
 
 }
