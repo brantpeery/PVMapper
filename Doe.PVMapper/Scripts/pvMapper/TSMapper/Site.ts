@@ -49,7 +49,7 @@ module pvMapper {
             this.selectEvent.fire(this.self, event);
         };
 
-            public onFeatureChange(event: any) {
+        public onFeatureChange(event: any) {
 
             ///TODO: update the event object to reflect THIS event, add in a sub event that refers to the original event object.
             this.changeEvent.fire(this.self, event);
