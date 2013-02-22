@@ -17,8 +17,11 @@ function init() {
 			new OpenLayers.Layer.Vector("WFS", {
 				//strategies: [new OpenLayers.Strategy.BBox()],
 				protocol: new OpenLayers.Protocol.WFS({
-					url: "https://10.18.35.11/geoserver/wfs?",
-					featureType: "USRivers",
+					//url: "https://geoserver.byu.edu/geoserver/wfs?",
+				    //featureType: "USCities",
+				    url: "http://demo.opengeo.org/geoserver/wfs",
+				    featureType: "states",
+				    featureNS: "http://www.openplans.org/topp"
 				}),
 			})
 		],

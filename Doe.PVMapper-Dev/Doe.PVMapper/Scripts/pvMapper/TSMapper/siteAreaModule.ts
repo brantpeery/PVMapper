@@ -52,7 +52,7 @@ module INLModules {
 
     var modinstance = new SiteAreaModule();
 
-     //All private functions and varables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
+     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
     var offsetFeature, setbackLength, setbackLayer;
     setbackLength = 30;
 
@@ -92,7 +92,7 @@ module INLModules {
         if (site.offsetFeature) {
             //Redraw the polygon
             setbackLayer.removeFeatures(site.offsetFeature);
-            site.offsetFeature.geometry = newGeometry; //This probably wont work
+            site.offsetFeature.geometry = newGeometry; //This probably won't work
         } else {
             var style = { fillColor: 'blue', fillOpacity: 0, strokeWidth: 3, strokeColor: "purple" };
             site.offsetFeature = new OpenLayers.Feature.Vector(newGeometry, { parentFID: site.feature.fid }, style);

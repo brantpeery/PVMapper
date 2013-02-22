@@ -2,75 +2,27 @@ var pvMapper;
 (function (pvMapper) {
     var Module = (function () {
         function Module(options) {
-            this.id = "";
-            this.author = "";
-            this.version = "";
-            this.settings = this.self = this;
-            this.id = (typeof (this.self.settings.id) === 'string') ? this.self.settings.id : '';
-            this.author = (typeof (this.self.settings.author) === 'string') ? this.self.settings.author : '';
-            this.scoringTools = new Array();
-            var st = new pvMapper.ScoringTool();
-            st.calculateCallback = this.calculateSiteArea;
-            st.updateCallback = this.updateSetbackFeature;
-            this.scoringTools.push(st);
+            this.id = options.id;
+            this.version = options.version;
+            this.author = options.author;
+            this.init = options.init;
+            this.destroy = options.destroy;
+            this.activate = options.activate;
+            this.deactivate = options.deactivate;
+            this.scoringTools = options.scoringTools;
+            this.infoTools = options.infoTools;
+            this.scoringTools.map(function (tool, idx, toolarr) {
+                console.log("Loading scoring tool " + tool.title + " into the API");
+                var scoreline = new pvMapper.ScoreLine(tool);
+                pvMapper.mainScoreboard.addLine(scoreline);
+            });
+            if(this.infoTools) {
+                this.infoTools.map(function (tool, idx, toolbar) {
+                    console.log("Loading info tool " + tool.title + " into the API");
+                });
+            }
         }
-        Module.prototype.init = function () {
-        };
-        Module.prototype.destroy = function () {
-        };
-        Module.prototype.activate = function () {
-        };
-        Module.prototype.deactivate = function () {
-        };
-        Module.prototype.addScoringTool = function (scoreTool) {
-            this.scoringTools.push(scoreTool);
-        };
-        Module.prototype.removeScoringTool = function (scoreTool) {
-            var idx = this.scoringTools.indexOf(scoreTool, 0);
-            if(idx >= 0) {
-                this.scoringTools.splice(idx, 1);
-            }
-        };
-        Module.prototype.calculateArea = function (polygon) {
-            var proj = new OpenLayers.Projection('EPSG:900913');
-            var area = polygon.getGeodesicArea(proj);
-            var kmArea = area / 1000000;
-            return Math.round(kmArea * 100) / 100;
-        };
-        Module.prototype.calculateSiteArea = function (site) {
-            var val = this.calculateArea(site.feature.geometry);
-            return val;
-        };
-        Module.prototype.updateSetbackFeature = function (site, setbackLength) {
-            var reader = new jsts.io.WKTReader();
-            var parser = new jsts.io.OpenLayersParser();
-            var input = parser.read(site.feature.geometry);
-            var buffer = input.buffer(-1 * setbackLength);
-            var newGeometry = parser.write(buffer);
-            if(!this.setbackLayer) {
-                this.setbackLayer = new OpenLayers.Layer.Vector("Site Setback");
-                pvMapper.map.addLayer(this.setbackLayer);
-            }
-            if(site.offsetFeature) {
-                this.setbackLayer.removeFeatures(site.offsetFeature);
-                site.offsetFeature.geometry = newGeometry;
-            } else {
-                var style = {
-                    fillColor: 'blue',
-                    fillOpacity: 0,
-                    strokeWidth: 3,
-                    strokeColor: "purple"
-                };
-                site.offsetFeature = new OpenLayers.Feature.Vector(newGeometry, {
-                    parentFID: site.feature.fid
-                }, style);
-            }
-            this.setbackLayer.addFeatures(site.offsetFeature);
-            return 0;
-        };
         return Module;
     })();
     pvMapper.Module = Module;    
-    ; ;
-    pvMapper.map = new OpenLayers.Map();
 })(pvMapper || (pvMapper = {}));
