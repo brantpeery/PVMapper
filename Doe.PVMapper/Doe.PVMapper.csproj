@@ -201,6 +201,13 @@
     <Content Include="Scripts\pvMapper\TSMapper\irradianceModule.min.js">
       <DependentUpon>irradianceModule.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\LandUseModule.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\LandUseModule.js">
+      <DependentUpon>LandUseModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\LandUseModule.min.js">
+      <DependentUpon>LandUseModule.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Module.js">
       <DependentUpon>Module.ts</DependentUpon>
     </Content>
@@ -1143,6 +1150,15 @@
       <DependentUpon>Options.d.js</DependentUpon>
     </Content>
     <Content Include="Views\Home\tsindex.cshtml" />
+    <Content Include="Scripts\pvMapper\TSMapper\LandUseModule.js.map">
+      <DependentUpon>LandUseModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\irradianceModule.js.map">
+      <DependentUpon>irradianceModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\pvMapper.js.map">
+      <DependentUpon>pvMapper.ts</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

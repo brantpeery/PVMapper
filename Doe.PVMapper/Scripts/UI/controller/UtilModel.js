@@ -213,3 +213,4 @@ var UtilityModel;
 //Ext.create("Ext.panel.Panel", {
 //    title: "Hello"
 //});
+//@ sourceMappingURL=UtilModel.js.map

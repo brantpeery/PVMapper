@@ -54,3 +54,4 @@ myothertool.description = "Some cool tool that does stuff";
 //Finish fleshing out all members of the interface...
 
 */
+//@ sourceMappingURL=Tools.js.map
