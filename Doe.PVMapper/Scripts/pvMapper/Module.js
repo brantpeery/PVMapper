@@ -56,7 +56,7 @@
                 //Add the scoring line to the scoring tools collection
                 self.scoringTools[idx] = tool;
             });
-        };
+        }
 
         //pvM.registerModule();
         //pvM.registerSiteTool();

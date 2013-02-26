@@ -46,6 +46,14 @@ module pvMapper {
 
                 });
             }
+
+            //TODO: temp - call Init and Activate on the module, because all modules will be inited and activated by default
+            if (typeof (this.init) === "function") {
+                pvMapper.onReady(this.init);
+            }
+            if (typeof (this.activate) === "function") {
+                pvMapper.onReady(this.activate);
+            }
         }
 
         public id: string;

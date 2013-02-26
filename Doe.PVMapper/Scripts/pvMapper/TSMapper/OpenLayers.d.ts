@@ -4,6 +4,13 @@ module OpenLayers {
 
     }
 
+    interface Request {
+        GET(config: any): any;
+    }
+
+    declare var Request: Request;
+
+
   export class Attributes {
     name: string;
     description: string;
@@ -134,12 +141,14 @@ module OpenLayers {
     offset(px: Pixel): Pixel;
   }
 
-  interface Bounds {
+  export class Bounds {
     left: number;
     bottom: number;
     right: number;
     top: number;
     centerLonLat: LonLat;
+
+    constructor(left: number, bottom: number, right: number, top: number);
 
     clone(): Bounds;
     equals(bounds: Bounds): Boolean;
@@ -808,6 +817,7 @@ module OpenLayers {
       (value?: any): Vector;
       prototype: Vector;
     };
+    WMS(name: string, url: string, params: any, options: any): any;
   }
 
   interface Filter {

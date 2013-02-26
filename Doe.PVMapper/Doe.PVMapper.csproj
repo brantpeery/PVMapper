@@ -194,6 +194,13 @@
     <Content Include="Scripts\pvMapper\TSMapper\Event.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Options.d.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Module.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\irradianceModule.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\irradianceModule.js">
+      <DependentUpon>irradianceModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\irradianceModule.min.js">
+      <DependentUpon>irradianceModule.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Module.js">
       <DependentUpon>Module.ts</DependentUpon>
     </Content>
@@ -1139,7 +1146,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Scripts\theme\NewFolder1\" />
+    <Folder Include="Scripts\theme\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
