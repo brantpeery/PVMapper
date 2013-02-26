@@ -99,7 +99,7 @@ Ext.application( {
 ( function ( pvM ) {
   pvM.onReady( function () {
 
-    if ( typeof ( JXG ) == "undefined" ) {
+    if ( typeof ( JXG ) === "undefined" ) {
       console.log( "Loading in the JXG Graph script" );
       $( "<link/>" )
           .appendTo( "head" )
