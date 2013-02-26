@@ -25,8 +25,13 @@ var app = Ext.application({
             }));
 
         //Create default map controls
-        var controls = [new OpenLayers.Control.PanPanel(),
-                        new OpenLayers.Control.ZoomPanel()];
+        var controls = [new OpenLayers.Control.Navigation(),
+                        new OpenLayers.Control.PanPanel(),
+                        new OpenLayers.Control.ZoomPanel(),
+                        new OpenLayers.Control.Attribution(),
+                        new OpenLayers.Control.ScaleLine(),
+                        //new OpenLayers.Control.MousePosition()
+        ];
 
         //Create the map
         var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);

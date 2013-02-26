@@ -1,5 +1,21 @@
 ﻿pvMapper.onReady(function () {
 
+    // EPSG:102113, EPSG:900913, and EPSG:3857 are all the same projection (just different flavors favored by different groups).
+    // So, this is (a bit of) a hack to coax OpenLayers to request maps in the native projection of the server
+    //TODO: move this to wherever it should ultimately go.
+    Ext.override(OpenLayers.Layer.WMS, {
+        getFullRequestString: function (newParams, altUrl) {
+            var projectionCode = this.map.getProjection();
+            if ((projectionCode == 'EPSG:900913') && (this.arcGisEpsgOverride)) {
+                this.params.SRS = 'EPSG:102113';
+            } else {
+                this.params.SRS = (projectionCode == "none") ? null : projectionCode;
+            }
+
+            return OpenLayers.Layer.Grid.prototype.getFullRequestString.apply(this, arguments);
+        }
+    });
+
     //var solarBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
     var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);
 
@@ -29,18 +45,17 @@
 
     var blueMarble = new OpenLayers.Layer.WMS(
             "Global Imagery",
-            "http://maps.opengeo.org/geowebcache/service/wms",
-            {
+            "http://maps.opengeo.org/geowebcache/service/wms", {
                 layers: "bluemarble",
-            }
-            );
+            });
     pvMapper.map.addLayer(blueMarble);
 
-    var wms = new OpenLayers.Layer.WMS("OpenLayers", "http://vmap0.tiles.osgeo.org/wms/vmap0?", {
-        layers: 'basic',
-        projection: new OpenLayers.Projection("EPSG:900913")
-
-    });
+    var wms = new OpenLayers.Layer.WMS(
+        "OpenLayers",
+        "http://vmap0.tiles.osgeo.org/wms/vmap0?", {
+            layers: 'basic',
+            projection: new OpenLayers.Projection("EPSG:900913")
+        });
     pvMapper.map.addLayer(wms);
 
     //Set up the layer for the site polys
