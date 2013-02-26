@@ -21,6 +21,12 @@ var pvMapper;
                     console.log("Loading info tool " + tool.title + " into the API");
                 });
             }
+            if(typeof (this.init) === "function") {
+                pvMapper.onReady(this.init);
+            }
+            if(typeof (this.activate) === "function") {
+                pvMapper.onReady(this.activate);
+            }
         }
         return Module;
     })();
