@@ -9,24 +9,6 @@
     pvMapper.map.addLayer(osm);
     pvMapper.map.zoomToMaxExtent();
 
-    //var solar = new OpenLayers.Layer.WMS(
-    //        "Solar Radiation",
-    //        "http://mapsdb.nrel.gov/jw_router/perezANN_mod/tile",
-    //        {
-    //            maxExtent: solarBounds,
-    //            layers: "perezANN_mod",
-    //            layer_type: "polygon",
-    //            transparent: "true",
-    //            format: "image/gif",
-    //            exceptions: "application/vnd.ogc.se_inimage",
-    //            maxResolution: 156543.0339
-    //        },
-    //        { isBaseLayer: false }
-    //        );
-    //solar.setOpacity(0.3);
-    //$.jGrowl("Adding Solar Radiation");
-    //pvMapper.map.addLayer(solar);
-
     var slope = new OpenLayers.Layer.WMS(
             "Slope",
             "http://mapsdb.nrel.gov/jw_router/DNI_slope_3/tile",

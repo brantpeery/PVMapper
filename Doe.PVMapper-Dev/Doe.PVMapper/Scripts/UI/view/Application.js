@@ -24,6 +24,9 @@ var app = Ext.application({
                 expires: new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 7)) //7 days from now
             }));
 
+        //Create default map controls
+        var controls = [new OpenLayers.Control.PanPanel(),
+                        new OpenLayers.Control.ZoomPanel()];
 
         //Create the map
         var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);
@@ -33,13 +36,9 @@ var app = Ext.application({
             units: "m",
             numZoomLevels: 16,
             restrictedExtent: usBounds,
-            center: '-10723197, 4500612' 
+            center: '-10723197, 4500612',
+            controls: controls
         });
-
-        //Add PanZoom controls
-        var controls = [new OpenLayers.Control.PanPanel(),
-                        new OpenLayers.Control.ZoomPanel()];
-        map.addControls(controls);
 
         //Create the panel the map lives in
         var mapPanel = Ext.create('GeoExt.panel.Map', {
