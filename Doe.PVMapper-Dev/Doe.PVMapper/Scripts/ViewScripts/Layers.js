@@ -6,14 +6,27 @@
     Ext.override(OpenLayers.Layer.WMS, {
         getFullRequestString: function (newParams, altUrl) {
             var projectionCode = this.map.getProjection();
-            if ((projectionCode == 'EPSG:900913') && (this.arcGisEpsgOverride)) {
-                this.params.SRS = 'EPSG:102113';
+            if (((typeof (this.epsgOverride)) !== "undefined") && this.epsgOverride.length > 0) {
+              this.params.SRS = this.epsgOverride;
             } else {
-                this.params.SRS = (projectionCode == "none") ? null : projectionCode;
+              this.params.SRS = (projectionCode == "none") ? null : projectionCode;
             }
 
             return OpenLayers.Layer.Grid.prototype.getFullRequestString.apply(this, arguments);
         }
+    });
+
+    Ext.override(OpenLayers.Layer.ArcGIS93Rest, {
+      getFullRequestString: function (newParams, altUrl) {
+        var projectionCode = this.map.getProjection();
+        if (((typeof (this.epsgOverride)) !== "undefined") && this.epsgOverride.length > 0) {
+          this.params.SRS = this.epsgOverride;
+        } else {
+          this.params.SRS = (projectionCode == "none") ? null : projectionCode;
+        }
+
+        return OpenLayers.Layer.Grid.prototype.getFullRequestString.apply(this, arguments);
+      }
     });
 
     //var solarBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
@@ -50,13 +63,14 @@
             });
     pvMapper.map.addLayer(blueMarble);
 
-    var wms = new OpenLayers.Layer.WMS(
+    var openLayersWmsThing = new OpenLayers.Layer.WMS(
         "OpenLayers",
         "http://vmap0.tiles.osgeo.org/wms/vmap0?", {
             layers: 'basic',
             projection: new OpenLayers.Projection("EPSG:900913")
         });
-    pvMapper.map.addLayer(wms);
+    openLayersWmsThing.epsgOverride = "EPSG:900913";
+    pvMapper.map.addLayer(openLayersWmsThing);
 
     //Set up the layer for the site polys
     //If a style is applied at the layer level, then 

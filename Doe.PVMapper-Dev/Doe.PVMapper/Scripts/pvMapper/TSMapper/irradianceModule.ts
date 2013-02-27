@@ -33,12 +33,12 @@ module INLModules {
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, s) {
-                        var status = getFeatureInfo(s.site);
-                        s.updateValue(status.toString());
+                        getFeatureInfo(s);
+                        //s.updateValue(status.toString());
                     },
                     calculateValueCallback: (site: pvMapper.Site): number => {
-                        var status = getFeatureInfo(site);
-                        return status;
+                        //var status = getFeatureInfo(site);
+                        return 0;
                     },
                 }],
 
@@ -77,7 +77,7 @@ module INLModules {
                 { isBaseLayer: false }
                 );
         solar.setOpacity(0.3);
-        solar.arcGisEpsgOverride = true;
+        solar.epsgOverride = "EPSG:102113";
         pvMapper.map.addLayer(solar);
         //pvMapper.map.setLayerIndex(solar, 0);
     }
@@ -86,13 +86,13 @@ module INLModules {
         pvMapper.map.removeLayer(solar, false);
     }
 
-    function getFeatureInfo(site: pvMapper.Site): number {
+    function getFeatureInfo(score: pvMapper.Score): number { //site: pvMapper.Site
         var params = {
             REQUEST: "GetFeatureInfo",
             EXCEPTIONS: "application/vnd.ogc.se_xml",
-            BBOX: site.geometry.bounds.toBBOX(6, false),
+            BBOX: score.site.geometry.bounds.toBBOX(6, false),
             SERVICE: "WMS",
-            INFO_FORMAT: 'text/html',
+            INFO_FORMAT: 'text/html', //"application/json",
             QUERY_LAYERS: "0", //"perezANN_mod", //solar.params.LAYERS,
             FEATURE_COUNT: 50,
             Layers: "0", //"perezANN_mod", //solar.params.LAYERS,
@@ -134,29 +134,35 @@ module INLModules {
             url: irradianceMapUrl,
             params: params,
             //callback: handler,
+            callback: (request) => {
+              score.updateValue(request.responseText.length);
+            },
             proxy: "http://localhost:1919/Proxy/proxy.ashx?",
-            async: false,
+            //async: false,
             //headers: {
             //    "Content-Type": "text/html"
             //},
         });
 
-        return request.status;
+        return -1;
 
         //OpenLayers.loadURL(irradianceMapUrl, params, this, setHTML, setHTML);
         //OpenLayers.Event.stop(e);
     }
 
     function handler(request) {
-        // if the response was XML, try the parsed doc
-        alert(request.responseXML);
-        // otherwise, you've got the response text
-        alert(request.responseText);
-        // and don't forget you've got status codes
-        alert(request.status);
+      if (request.status === 200) {
+        if (typeof (request.responseXML) !== 'undefined') {
+          // if the response was XML, try the parsed doc
+          alert(request.responseText);
+        } else {
+          // otherwise, you've got the response text
+          alert(request.responseText);
+        }
+      } else {
         // and of course you can get headers
         alert(request.getAllResponseHeaders());
-        // etc.
+      }
     }
 
     //...
