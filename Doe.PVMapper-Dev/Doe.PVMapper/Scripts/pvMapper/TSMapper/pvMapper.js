@@ -1,5 +1,3 @@
-/// <reference path="OpenLayers.d.ts" />
-/// <reference path="Event.ts" />
 var pvMapper;
 (function (pvMapper) {
     pvMapper.readyEvent = new pvMapper.Event();
@@ -9,4 +7,3 @@ var pvMapper;
     pvMapper.onReady = onReady;
     pvMapper.map;
 })(pvMapper || (pvMapper = {}));
-//@ sourceMappingURL=pvMapper.js.map

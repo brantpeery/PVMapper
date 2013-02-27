@@ -6,6 +6,8 @@ module OpenLayers {
 
     interface Request {
         GET(config: any): any;
+        POST(config: any): any;
+        HEAD(config: any): any;
     }
 
     declare var Request: Request;

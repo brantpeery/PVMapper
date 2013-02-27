@@ -1,9 +1,3 @@
-/// <reference path="pvMapper.ts" />
-/// <reference path="Site.ts" />
-/// <reference path="Score.ts" />
-/// <reference path="Tools.ts" />
-/// <reference path="Options.d.ts" />
-/// <reference path="Module.ts" />
 var INLModules;
 (function (INLModules) {
     var LandUseModule = (function () {
@@ -31,11 +25,9 @@ var INLModules;
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, s) {
-                            ///////////////////////////////////////////getFeatureInfo(s.site);
                             s.updateValue("Land score");
                         },
                         calculateValueCallback: function (site) {
-                            ///////////////////////////////////////////getFeatureInfo(site);
                             return -1;
                         }
                     }
@@ -56,7 +48,7 @@ function addLandUseMap() {
         maxExtent: landBounds,
         layers: "0",
         srs: "EPSG:102113",
-        layer_type: "Feature Layer",
+        layer_type: "polygon",
         transparent: "true",
         format: "image/gif",
         exceptions: "application/vnd.ogc.se_inimage",
@@ -73,4 +65,3 @@ function removeLandUseMap() {
 }
 function getLandUseLayerInfo() {
 }
-//@ sourceMappingURL=LandUseModule.js.map
