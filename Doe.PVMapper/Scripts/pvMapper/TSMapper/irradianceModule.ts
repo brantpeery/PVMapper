@@ -33,12 +33,12 @@ module INLModules {
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, s) {
-                        ///////////////////////////////////////////getFeatureInfo(s.site);
-                        s.updateValue("rad score");
+                        var status = getFeatureInfo(s.site);
+                        s.updateValue(status.toString());
                     },
                     calculateValueCallback: (site: pvMapper.Site): number => {
-                        ///////////////////////////////////////////getFeatureInfo(site);
-                        return -1;
+                        var status = getFeatureInfo(site);
+                        return status;
                     },
                 }],
 
@@ -51,27 +51,33 @@ module INLModules {
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
-    var irradianceMapUrl = "http://mapsdb.nrel.gov/jw_router/perezANN_mod/tile";
+    /////////////var irradianceMapUrl = "http://mapsdb.nrel.gov/jw_router/perezANN_mod/tile";
+    var irradianceMapUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/services/PADUS/PADUS_owner/MapServer/WMSServer?";
 
-    var solar
+    //declare var Ext: any;
+
+    var solar: any;
+
     function addIrradianceMap() {
         var solarBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
 
-        var solar = new OpenLayers.Layer.WMS(
-                "Solar Radiation",
+        solar = new OpenLayers.Layer.WMS(
+                "PADUS", //"Solar Radiation",
                 irradianceMapUrl,
                 {
                     maxExtent: solarBounds,
-                    layers: "perezANN_mod",
+                    layers: "0", //"perezANN_mod",
                     layer_type: "polygon",
                     transparent: "true",
                     format: "image/gif",
                     exceptions: "application/vnd.ogc.se_inimage",
-                    maxResolution: 156543.0339
+                    maxResolution: 156543.0339,
+                    srs: "EPSG:102113",
                 },
                 { isBaseLayer: false }
                 );
         solar.setOpacity(0.3);
+        solar.arcGisEpsgOverride = true;
         pvMapper.map.addLayer(solar);
         //pvMapper.map.setLayerIndex(solar, 0);
     }
@@ -80,24 +86,26 @@ module INLModules {
         pvMapper.map.removeLayer(solar, false);
     }
 
-    function getFeatureInfo(site: pvMapper.Site) {
+    function getFeatureInfo(site: pvMapper.Site): number {
         var params = {
             REQUEST: "GetFeatureInfo",
             EXCEPTIONS: "application/vnd.ogc.se_xml",
             BBOX: site.geometry.bounds.toBBOX(6, false),
             SERVICE: "WMS",
             INFO_FORMAT: 'text/html',
-            QUERY_LAYERS: "perezANN_mod", //solar.params.LAYERS,
+            QUERY_LAYERS: "0", //"perezANN_mod", //solar.params.LAYERS,
             FEATURE_COUNT: 50,
-            Layers: "perezANN_mod", //solar.params.LAYERS,
-            WIDTH: site.geometry.bounds.getWidth(),
-            HEIGHT: site.geometry.bounds.getHeight(),
+            Layers: "0", //"perezANN_mod", //solar.params.LAYERS,
+            WIDTH: 1, //site.geometry.bounds.getWidth(),
+            HEIGHT: 1, // site.geometry.bounds.getHeight(),
             format: "image/gif",
             //styles: solar.params.STYLES,
-            //srs: solar.params.SRS
+            srs: solar.params.SRS,
             VERSION: "1.1.1",
             X: 0,
             Y: 0,
+            I: 0,
+            J: 0,
         };
 
         // handle the wms 1.3 vs wms 1.1 madness
@@ -125,8 +133,15 @@ module INLModules {
         var request = OpenLayers.Request.GET({
             url: irradianceMapUrl,
             params: params,
-            callback: handler
+            //callback: handler,
+            proxy: "http://localhost:1919/Proxy/proxy.ashx?",
+            async: false,
+            //headers: {
+            //    "Content-Type": "text/html"
+            //},
         });
+
+        return request.status;
 
         //OpenLayers.loadURL(irradianceMapUrl, params, this, setHTML, setHTML);
         //OpenLayers.Event.stop(e);
