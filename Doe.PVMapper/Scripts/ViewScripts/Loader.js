@@ -50,7 +50,7 @@ Ext.application( {
     var usBounds = new OpenLayers.Bounds( -14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284 );
     var map = new OpenLayers.Map( {
       // These projections are all webmercator, but the openlayers layer wants 900913 specifically
-      projection: new OpenLayers.Projection( "EPSG:900913" ), //3857 //4326
+      projection: new OpenLayers.Projection("EPSG:3857"), //3857 //4326           900913
       units: "m",
       numZoomLevels: 16,
       restrictedExtent: usBounds
