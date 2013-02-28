@@ -1,9 +1,3 @@
-/// <reference path="pvMapper.ts" />
-/// <reference path="Site.ts" />
-/// <reference path="Score.ts" />
-/// <reference path="Tools.ts" />
-/// <reference path="Options.d.ts" />
-/// <reference path="Module.ts" />
 var INLModules;
 (function (INLModules) {
     var SiteAreaModule = (function () {
@@ -33,10 +27,10 @@ var INLModules;
                             console.log("Calulated area of " + area + ". Setting the value on the score");
                             s.updateValue(area.toString());
                         },
-                        calculateValueCallback: function (site) {
-                            var area = calculateSiteArea(site);
+                        updateScoreCallback: function (score) {
+                            var area = calculateSiteArea(score.site);
                             console.log("Calulated area of " + area + " Returning value");
-                            return area;
+                            score.updateValue(area.toString());
                         }
                     }
                 ],
@@ -46,8 +40,7 @@ var INLModules;
         return SiteAreaModule;
     })();    
     var modinstance = new SiteAreaModule();
-    //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
-        var offsetFeature, setbackLength, setbackLayer;
+    var offsetFeature, setbackLength, setbackLayer;
     setbackLength = 30;
     function calculateArea(geometry) {
         var proj = new OpenLayers.Projection('EPSG:900913');
@@ -55,7 +48,6 @@ var INLModules;
         var kmArea = area / 1000000;
         return Math.round(kmArea * 100) / 100;
     }
-    //Handles the button click for the buttons for this tool
     function onButtonClicked(event) {
     }
     ;
@@ -66,18 +58,15 @@ var INLModules;
         var reader = new jsts.io.WKTReader();
         var parser = new jsts.io.OpenLayersParser();
         var input = parser.read(site.feature.geometry);
-        var buffer = input.buffer(-1 * setback);//Inset the feature
-        
+        var buffer = input.buffer(-1 * setback);
         var newGeometry = parser.write(buffer);
         if(!setbackLayer) {
             setbackLayer = new OpenLayers.Layer.Vector("Site Setback");
             pvMapper.map.addLayer(setbackLayer);
         }
         if(site.offsetFeature) {
-            //Redraw the polygon
             setbackLayer.removeFeatures(site.offsetFeature);
-            site.offsetFeature.geometry = newGeometry//This probably won't work
-            ;
+            site.offsetFeature.geometry = newGeometry;
         } else {
             var style = {
                 fillColor: 'blue',
@@ -99,9 +88,7 @@ var INLModules;
         return 0;
     }
     function calculateSiteArea(site) {
-        //Use the geometry of the OpenLayers feature to get the area
         var val = calculateArea(site.feature.geometry);
         return val;
     }
 })(INLModules || (INLModules = {}));
-//@ sourceMappingURL=siteAreaModule.js.map

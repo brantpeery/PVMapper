@@ -9,7 +9,7 @@
             if (((typeof (this.epsgOverride)) !== "undefined") && this.epsgOverride.length > 0) {
               this.params.SRS = this.epsgOverride;
             } else {
-              this.params.SRS = (projectionCode == "none") ? null : projectionCode;
+              this.params.SRS = (projectionCode === "none") ? null : projectionCode;
             }
 
             return OpenLayers.Layer.Grid.prototype.getFullRequestString.apply(this, arguments);
@@ -22,7 +22,7 @@
         if (((typeof (this.epsgOverride)) !== "undefined") && this.epsgOverride.length > 0) {
           this.params.SRS = this.epsgOverride;
         } else {
-          this.params.SRS = (projectionCode == "none") ? null : projectionCode;
+          this.params.SRS = (projectionCode === "none") ? null : projectionCode;
         }
 
         return OpenLayers.Layer.Grid.prototype.getFullRequestString.apply(this, arguments);

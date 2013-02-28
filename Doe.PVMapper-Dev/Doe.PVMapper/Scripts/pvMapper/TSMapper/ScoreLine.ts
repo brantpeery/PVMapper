@@ -43,7 +43,7 @@ module pvMapper {
         public name: string;
         public description: string;
         public scores: Score[] = new Score[]();
-        public getvalue: ICallback = options.calculateValueCallback;
+        public updateScore: ICallback = options.updateScoreCallback;
 
         public self: ScoreLine;
         public scoreAddedEvent: pvMapper.Event = new pvMapper.Event();
@@ -60,7 +60,7 @@ module pvMapper {
         public addScore(site: pvMapper.Site): pvMapper.Score {
             console.log('Adding new score to scoreline');
             var score: pvMapper.Score = new pvMapper.Score(site);
-            score.value = this.getvalue(site);
+            //score.value = this.getvalue(site);
 
             //attach the tool's handler directly to the score
             score.siteChangeEvent.addHandler(this.onSiteChangeHandler);
@@ -71,7 +71,7 @@ module pvMapper {
             this.scores.push(score);
             //this.self.scoreAddedEvent.fire(score, [{ score: score, site: site }, score]);
             //Set the initial value from the tool
-            score.updateValue(this.getvalue(site));
+            this.updateScore(score);
             return score;
         }
 

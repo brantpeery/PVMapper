@@ -916,6 +916,7 @@ module OpenLayers {
     mergeNewParams(newParams: Object);
     addTile(bounds: Bounds, position: Pixel);
     getNumLoadingTiles(): number;
+    epsgOverride: string;
   }
   
 
