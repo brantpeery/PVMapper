@@ -33,7 +33,7 @@ module pvMapper {
         @param site pvMapper.Site The site the tool is recalculating a value for
         @returns number The calculated value
         */
-        calculateValueCallback: (site: Site) => number;
+        updateScoreCallback: (score: Score) => void;
         onSiteChange: (event: EventArg, score: Score) => void;
         onScoreAdded: (event: EventArg, score: Score) => void;
     }

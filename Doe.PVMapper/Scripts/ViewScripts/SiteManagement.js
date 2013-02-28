@@ -105,14 +105,14 @@ pvMapper.onReady(function () {
 //The map is the map the tool will work on
 //Layer is the site polygon layer that the tool will read/write to6
 function siteManagementTool(map, layer) {
-    var selectTool, currentMode, selectedFeature, selectedID, editTool
+    var selectTool, currentMode, selectedFeature, selectedID, editTool;
     var self = this; //Allow the internal functions access to this functionality
 
     //Delete
     this.deleteSite = function (feature) {
         var ret = pvMapper.deleteSite(feature.fid);
         feature.destroy();
-    }
+    };
 
     //Edit poly
     this.editSite = function (feature) {
@@ -120,7 +120,7 @@ function siteManagementTool(map, layer) {
         //This is where a save to the database might happen
         var WKT = feature.geometry.toString();
         var ret = pvMapper.updateSite(feature.fid, feature.attributes.name, feature.attributes.desc, WKT);
-    }
+    };
 
     //Edit attributes
     this.editSiteAttributes = function (feature) {
@@ -182,10 +182,10 @@ function siteManagementTool(map, layer) {
                 }
             }]
 
-        })
+        });
 
         wiz.show();
-    }
+    };
 
 
     //Add new
@@ -203,11 +203,11 @@ function siteManagementTool(map, layer) {
         //}
 
         return selectTool;
-    }
+    };
 
     this.modifyFeatureControl = function (callback) {
         var mft = new OpenLayers.Control.ModifyFeature(layer, {
-            vertexRenderIntent: "select" ,
+            vertexRenderIntent: "select",
             clickout: true, toggle: false,
             multiple: false, hover: false,
             toggleKey: "ctrlKey", // ctrl key removes from selection
@@ -224,6 +224,6 @@ function siteManagementTool(map, layer) {
         });
         layer.events.on({ "afterfeaturemodified": callback });
         return mft;
-    }
+    };
 }
 

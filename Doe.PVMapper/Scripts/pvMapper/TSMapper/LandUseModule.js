@@ -1,9 +1,3 @@
-/// <reference path="pvMapper.ts" />
-/// <reference path="Site.ts" />
-/// <reference path="Score.ts" />
-/// <reference path="Tools.ts" />
-/// <reference path="Options.d.ts" />
-/// <reference path="Module.ts" />
 var INLModules;
 (function (INLModules) {
     var FederalLandsModule = (function () {
@@ -31,11 +25,9 @@ var INLModules;
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, s) {
-                            ///////////////////////////////////////////getFeatureInfo(s.site);
                             s.updateValue("Federal Lands score");
                         },
-                        calculateValueCallback: function (site) {
-                            ///////////////////////////////////////////getFeatureInfo(site);
+                        updateScoreCallback: function (score) {
                             return -1;
                         }
                     }
@@ -72,13 +64,11 @@ var INLModules;
     }
     function getFederalLandsInfo() {
     }
-    //============================================================
     var CitiesTowns = (function () {
         function CitiesTowns() {
             var _this = this;
             this.landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
-            var citiesTownsURL = //"http://services.arcgisonline.com/ArcGIS/rest/services";
-            "http://dingo.gapanalysisprogram.com/ArcGIS/services/NAT_LC/1_NVC_class_landuse/MapServer/WMSServer";
+            var citiesTownsURL = "http://dingo.gapanalysisprogram.com/ArcGIS/services/NAT_LC/1_NVC_class_landuse/MapServer/WMSServer";
             var myModule = new pvMapper.Module({
                 id: "CitiesTownsModule",
                 author: "Leng Vang, INL",
@@ -102,11 +92,9 @@ var INLModules;
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, s) {
-                            ///////////////////////////////////////////getFeatureInfo(s.site);
                             s.updateValue("Cities and Towns score");
                         },
                         calculateValueCallback: function (site) {
-                            ///////////////////////////////////////////getFeatureInfo(site);
                             return -1;
                         }
                     }
@@ -139,7 +127,6 @@ var INLModules;
     })();
     INLModules.CitiesTowns = CitiesTowns;    
     var Layer2 = new INLModules.CitiesTowns();
-    //============================================================
     var SolarMapper = (function () {
         function SolarMapper() {
             var _this = this;
@@ -150,7 +137,6 @@ var INLModules;
                 author: "Leng Vang, INL",
                 version: "0.1.ts",
                 activate: function () {
-                    //this.addRESTLayerMap('Solar Mapper', layerURL);
                     addThatMapThing();
                 },
                 deactivate: function () {
@@ -169,11 +155,9 @@ var INLModules;
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, s) {
-                            ///////////////////////////////////////////getFeatureInfo(s.site);
                             s.updateValue("Solar radiation score");
                         },
-                        calculateValueCallback: function (site) {
-                            ///////////////////////////////////////////getFeatureInfo(site);
+                        updateScoreCallback: function (score) {
                             return -1;
                         }
                     }
@@ -185,7 +169,6 @@ var INLModules;
             var params = new OpenLayers.WMSParams();
             params.setFormat("png");
             params.setLayers("show:0");
-            //params.setLayers("1,58,62");
             params.setIsTransparent(true);
             var aLayer = new OpenLayers.Layer.ArcGIS93Rest(layerName, layerURL, params);
             aLayer.epsgOverride = esriProjection;
@@ -202,38 +185,15 @@ var INLModules;
     INLModules.SolarMapper = SolarMapper;    
     var solarMapper = new SolarMapper();
     function addThatMapThing() {
-        var facilities = new OpenLayers.Layer.ArcGIS93Rest("Some layer from Solarmapper", /////////////////////////////////////////////////////////"http://solarmapper.anl.gov/ArcGIS/rest/services/Solar_Mapper_SDE/MapServer/62",
-        "http://solarmapper.anl.gov/ArcGIS/rest/services/Solar_Mapper_SDE/MapServer/export", //?bbox=-14608729.4935068,4127680.66361813,-10533172.1554586,5562319.83205435
-        {
+        var facilities = new OpenLayers.Layer.ArcGIS93Rest("Some layer from Solarmapper", "http://solarmapper.anl.gov/ArcGIS/rest/services/Solar_Mapper_SDE/MapServer/export", {
             layers: "show:0",
             format: "gif",
             srs: "3857",
-            transparent: //"102100",
-            "true"
-        }, //SRS: "EPSG:4326"
-        {
+            transparent: "true"
+        }, {
             isBaseLayer: false
         });
         facilities.epsgOverride = "3857";
-        //facilities.setOpacity(0.3);
-        //$.jGrowl("Adding PV Solar Facility Locations");
         pvMapper.map.addLayer(facilities);
     }
-    //var facilities = new OpenLayers.Layer.ArcGIS93Rest(
-    //          "Solar Facilities",
-    //          /////////////////////////////////////////////////////////"http://solarmapper.anl.gov/ArcGIS/rest/services/Solar_Mapper_SDE/MapServer/62",
-    //          "http://solarmapper.anl.gov/ArcGIS/rest/services/Solar_Mapper_SDE/MapServer/export", //?bbox=-14608729.4935068,4127680.66361813,-10533172.1554586,5562319.83205435
-    //          {
-    //            layers: "show:1,58,62",
-    //            format: "gif",
-    //            srs: "900913"//,
-    //            //transparent: "true",
-    //            //SRS: "EPSG:4326"
-    //          },
-    //          { isBaseLayer: false }
-    //          );
-    //  //facilities.setOpacity(0.3);
-    //$.jGrowl("Adding PV Solar Facility Locations");
-    //pvMapper.map.addLayer(facilities);
-    })(INLModules || (INLModules = {}));
-//@ sourceMappingURL=LandUseModule.js.map
+})(INLModules || (INLModules = {}));

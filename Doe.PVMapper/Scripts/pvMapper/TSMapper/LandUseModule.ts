@@ -38,7 +38,7 @@ module INLModules {
             ///////////////////////////////////////////getFeatureInfo(s.site);
             s.updateValue("Federal Lands score");
           },
-          calculateValueCallback: (site: pvMapper.Site): number => {
+          updateScoreCallback: (score: pvMapper.Score) => {
             ///////////////////////////////////////////getFeatureInfo(site);
             return -1;
           },
@@ -199,7 +199,7 @@ module INLModules {
             ///////////////////////////////////////////getFeatureInfo(s.site);
             s.updateValue("Solar radiation score");
           },
-          calculateValueCallback: (site: pvMapper.Site): number => {
+          updateScoreCallback: (score: pvMapper.Score) => {
             ///////////////////////////////////////////getFeatureInfo(site);
             return -1;
           },

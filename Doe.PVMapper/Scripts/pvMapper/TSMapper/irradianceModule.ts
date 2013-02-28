@@ -36,9 +36,9 @@ module INLModules {
                         getFeatureInfo(s);
                         //s.updateValue(status.toString());
                     },
-                    calculateValueCallback: (site: pvMapper.Site): number => {
+                    updateScoreCallback: (score: pvMapper.Score) => {
                         //var status = getFeatureInfo(site);
-                        return 0;
+                        getFeatureInfo(score);
                     },
                 }],
 
@@ -131,13 +131,22 @@ module INLModules {
         //}
 
         var request = OpenLayers.Request.GET({
+            //url: "/Proxy/proxy.ashx?" + irradianceMapUrl,
             url: irradianceMapUrl,
+            proxy: "/Proxy/proxy.ashx?",
             params: params,
             //callback: handler,
             callback: (request) => {
-              score.updateValue(request.responseText.length);
+                // debug statement
+                //alert(score.site.name + ": " + request.responseText.length + " (" + request.status + ")");
+
+                // update value
+                if (request.status === 200) {
+                    score.updateValue(request.responseText.length);
+                } else {
+                    score.updateValue("Connection error " + request.status);
+                }
             },
-            proxy: "http://localhost:1919/Proxy/proxy.ashx?",
             //async: false,
             //headers: {
             //    "Content-Type": "text/html"
@@ -152,13 +161,7 @@ module INLModules {
 
     function handler(request) {
       if (request.status === 200) {
-        if (typeof (request.responseXML) !== 'undefined') {
-          // if the response was XML, try the parsed doc
-          alert(request.responseText);
-        } else {
-          // otherwise, you've got the response text
-          alert(request.responseText);
-        }
+        alert(request.responseText);
       } else {
         // and of course you can get headers
         alert(request.getAllResponseHeaders());

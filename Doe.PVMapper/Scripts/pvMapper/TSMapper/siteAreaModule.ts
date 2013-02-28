@@ -37,11 +37,11 @@ module INLModules {
 
                         
                     },
-                    calculateValueCallback: (site: pvMapper.Site): number => {
-                        var area = calculateSiteArea(site);
+                    updateScoreCallback: (score: pvMapper.Score) => {
+                        var area = calculateSiteArea(score.site);
                         console.log("Calulated area of " + area + " Returning value");
 
-                        return area;
+                        score.updateValue(area.toString());
                     },
                     
                 }],
