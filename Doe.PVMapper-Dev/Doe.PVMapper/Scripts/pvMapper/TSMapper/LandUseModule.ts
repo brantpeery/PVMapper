@@ -122,9 +122,9 @@ module INLModules {
             ///////////////////////////////////////////getFeatureInfo(s.site);
             s.updateValue("Cities and Towns score");
           },
-          calculateValueCallback: (site: pvMapper.Site): number => {
-            ///////////////////////////////////////////getFeatureInfo(site);
-            return -1;
+          deactivate: null,
+          updateScoreCallback: (score: pvMapper.Score) => {
+              score.updateValue((-1).toString());
           },
         }
         ],

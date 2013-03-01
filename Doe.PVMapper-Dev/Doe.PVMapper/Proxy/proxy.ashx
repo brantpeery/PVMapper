@@ -47,7 +47,8 @@ public class proxy : IHttpHandler {
         req.Method = context.Request.HttpMethod;
         req.ServicePoint.Expect100Continue = false;
         req.Referer = context.Request.Headers["referer"];
-                
+        req.Accept = context.Request.Headers["accept"];
+        
         // Set body of request for POST requests
         if (context.Request.InputStream.Length > 0)
         {

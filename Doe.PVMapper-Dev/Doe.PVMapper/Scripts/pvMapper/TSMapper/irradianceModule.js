@@ -86,6 +86,7 @@ var INLModules;
             proxy: "/Proxy/proxy.ashx?",
             params: params,
             callback: function (request) {
+                alert(request.responseText);
                 if(request.status === 200) {
                     score.updateValue(request.responseText.length);
                 } else {
