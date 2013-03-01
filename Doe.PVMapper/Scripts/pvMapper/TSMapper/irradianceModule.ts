@@ -92,7 +92,7 @@ module INLModules {
             EXCEPTIONS: "application/vnd.ogc.se_xml",
             BBOX: score.site.geometry.bounds.toBBOX(6, false),
             SERVICE: "WMS",
-            INFO_FORMAT: 'text/html', //"application/json",
+            INFO_FORMAT: 'text/html', //"application/vnd.ogc.gml", //"application/json",
             QUERY_LAYERS: "0", //"perezANN_mod", //solar.params.LAYERS,
             FEATURE_COUNT: 50,
             Layers: "0", //"perezANN_mod", //solar.params.LAYERS,
@@ -139,6 +139,7 @@ module INLModules {
             callback: (request) => {
                 // debug statement
                 //alert(score.site.name + ": " + request.responseText.length + " (" + request.status + ")");
+                alert(request.responseText);
 
                 // update value
                 if (request.status === 200) {

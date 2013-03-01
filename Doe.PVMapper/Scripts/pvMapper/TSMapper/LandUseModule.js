@@ -94,8 +94,9 @@ var INLModules;
                         onSiteChange: function (e, s) {
                             s.updateValue("Cities and Towns score");
                         },
-                        calculateValueCallback: function (site) {
-                            return -1;
+                        deactivate: null,
+                        updateScoreCallback: function (score) {
+                            score.updateValue((-1).toString());
                         }
                     }
                 ],

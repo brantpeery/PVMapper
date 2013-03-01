@@ -63,8 +63,8 @@ var pvMapper;
         if(!pvMapper.floatingScoreboard) {
             pvMapper.floatingScoreboard = Ext.create('MainApp.view.Window', {
                 title: 'Main Scoreboard',
-                width: 400,
-                height: 400,
+                width: 600,
+                height: 200,
                 html: html,
                 cls: "propertyBoard"
             });

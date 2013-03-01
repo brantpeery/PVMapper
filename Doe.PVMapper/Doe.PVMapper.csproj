@@ -1166,6 +1166,9 @@
     <Content Include="Scripts\pvMapper\TSMapper\irradianceModule.min.js.map">
       <DependentUpon>irradianceModule.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Scoreboard.min.js.map">
+      <DependentUpon>Scoreboard.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
