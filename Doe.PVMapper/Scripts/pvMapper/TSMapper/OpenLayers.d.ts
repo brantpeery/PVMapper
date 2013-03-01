@@ -933,10 +933,10 @@ module OpenLayers {
     };
     WMS(name: string, url: string, params: any, options: any): any;
 
-    ArcGIS93Rest(name: string, url: string[], params: WMSParams): any;
-    ArcGIS93Rest(name: string, url: string, params: WMSParams): any;
-    ArcGIS93Rest(name: string, url: string[], params: WMSParams, layerParams: WMSOptions ): any;
-    ArcGIS93Rest(name: string, url: string, params: WMSParams, options: ArcGIS93RestOptions): any;
+    ArcGIS93Rest(name: string, url: string[], params: any): any;
+    ArcGIS93Rest(name: string, url: string, params: any): any;
+    //ArcGIS93Rest(name: string, url: string[], params: WMSParams, layerParams: WMSOptions ): any;
+    //ArcGIS93Rest(name: string, url: string, params: WMSParams, options: ArcGIS93RestOptions): any;
     GridLayer(gridLayer: JSObject): any;
     GridLayer(name: string, url: string, params: WMSParams);
     GridLayer(name: string, url: string, params: WMSParams, options: GridLayerOptions);
