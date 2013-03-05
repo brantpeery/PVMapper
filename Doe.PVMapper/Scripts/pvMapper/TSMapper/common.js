@@ -1,4 +1,4 @@
-;
+; ;
 String.prototype.format = function (args) {
     var values = (arguments.length > 1) ? arguments : args;
     var str = this;
@@ -8,10 +8,12 @@ String.prototype.format = function (args) {
         var replace;
         if(typeof (values[key]) !== 'undefined') {
             replace = values[key];
-        } else if(item === '{\\') {
-            replace = "{";
         } else {
-            replace = item;
+            if(item === '{\\') {
+                replace = "{";
+            } else {
+                replace = item;
+            }
         }
         return replace;
     });
