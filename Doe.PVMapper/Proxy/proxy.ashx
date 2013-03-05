@@ -44,6 +44,9 @@ public class proxy : IHttpHandler {
 
         System.Net.HttpWebRequest req = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create(uri);
 
+        // Be sure to use the default proxy, whatever that might be
+        req.Proxy = System.Net.HttpWebRequest.GetSystemWebProxy();
+
         req.Method = context.Request.HttpMethod;
         req.ServicePoint.Expect100Continue = false;
         req.Referer = context.Request.Headers["referer"];
