@@ -133,7 +133,7 @@ module INLModules {
             HEIGHT: 1, // site.geometry.bounds.getHeight(),
             format: "image/gif",
             //styles: solar.params.STYLES,
-            srs: dniSuny.params.SRS,
+            //srs: dniSuny.params.SRS,
             VERSION: "1.1.1",
             X: 0,
             Y: 0,

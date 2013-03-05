@@ -94,7 +94,6 @@ var INLModules;
             WIDTH: 1,
             HEIGHT: 1,
             format: "image/gif",
-            srs: dniSuny.params.SRS,
             VERSION: "1.1.1",
             X: 0,
             Y: 0,
