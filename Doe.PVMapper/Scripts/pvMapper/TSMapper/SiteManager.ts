@@ -20,7 +20,7 @@ module pvMapper {
         public addSite(site: pvMapper.Site) {
             this.sites.push(site);
             this.siteAdded.fire(site, site);
-       }
+        }
 
         public createSite(feature: OpenLayers.SiteFeature) {
             console.log("Creating site");

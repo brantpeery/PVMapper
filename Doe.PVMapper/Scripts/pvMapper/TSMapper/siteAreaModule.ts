@@ -28,20 +28,20 @@ module INLModules {
                     description:"Calculates the area of the site polygon edges.",
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
-                    onSiteChange: function (e, s) {
+                    onSiteChange: function (e, score: pvMapper.Score) {
                         console.log("Site change detected in tool Gross Area. Updating the value.");
-                        var area = calculateSiteArea(s.site);
+                        var area = calculateSiteArea(score.site);
                         console.log("Calulated area of " + area + ". Setting the value on the score");
                         
-                        s.updateValue(area.toString());
-
-                        
+                        score.popupMessage = area.toFixed(3);
+                        score.updateValue(area);
                     },
                     updateScoreCallback: (score: pvMapper.Score) => {
                         var area = calculateSiteArea(score.site);
                         console.log("Calulated area of " + area + " Returning value");
 
-                        score.updateValue(area.toString());
+                        score.popupMessage = area.toFixed(3);
+                        score.updateValue(area);
                     },
                     
                 }],

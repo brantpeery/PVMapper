@@ -7,7 +7,7 @@ var pvMapper;
             this.invalidateEvent = new pvMapper.Event();
             this.siteChangeEvent = new pvMapper.Event();
             this.self = this;
-            this.value = "";
+            this.value = Number.NaN;
             this.site = site;
             this.popupMessage = null;
             this.site.changeEvent.addHandler(function (e) {
@@ -19,11 +19,8 @@ var pvMapper;
                 ]);
             });
         }
-        Score.prototype.calculateUtility = function (value) {
-            if(typeof (value) != 'undefined') {
-                return this.updateValue(value);
-            }
-            return this.value;
+        Score.prototype.updateUtility = function () {
+            this.utility = this.value;
         };
         Score.prototype.updateValue = function (value) {
             var oldvalue = this.value;
@@ -37,8 +34,10 @@ var pvMapper;
         Score.prototype.toString = function () {
             if(this.popupMessage && this.popupMessage.trim().length > 0) {
                 return this.popupMessage;
+            } else if(this.value && !isNaN(this.value)) {
+                return this.value.toString();
             } else {
-                return this.value;
+                return "";
             }
         };
         return Score;
