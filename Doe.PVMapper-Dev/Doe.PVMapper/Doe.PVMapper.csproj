@@ -187,6 +187,13 @@
     <Content Include="Scripts\pvMapper\TSMapper\DataManager.min.js">
       <DependentUpon>DataManager.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\DemModule.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\demModule.js">
+      <DependentUpon>DemModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\demModule.min.js">
+      <DependentUpon>DemModule.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Event.js">
       <DependentUpon>Event.ts</DependentUpon>
     </Content>
