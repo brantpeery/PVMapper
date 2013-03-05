@@ -68,7 +68,7 @@ module pvMapper {
                 tc.attr({ "title": sl.description });
                 //Render each site for this scoreline
                 $.each(sl.scores, function (idx: number, s: Score) {
-                    row.addCell(s.value);
+                    row.addCell(s.toString());
                 });
             });
 

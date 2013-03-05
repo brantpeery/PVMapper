@@ -25,10 +25,12 @@ var INLModules;
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, s) {
-                            s.updateValue("Federal Lands score");
+                            s.popupMessage = "Federal Lands score";
+                            s.updateValue(Number.NaN);
                         },
                         updateScoreCallback: function (score) {
-                            return -1;
+                            score.popupMessage = "Federal Lands score";
+                            score.updateValue(1);
                         }
                     }
                 ],
@@ -57,6 +59,7 @@ var INLModules;
         });
         federalLandsLayer.epsgOverride = "EPSG:102113";
         federalLandsLayer.setOpacity(0.3);
+        federalLandsLayer.setVisibility(false);
         pvMapper.map.addLayer(federalLandsLayer);
     }
     function removeFederalLandsMap() {
@@ -92,11 +95,12 @@ var INLModules;
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, s) {
-                            s.updateValue("Cities and Towns score");
+                            s.popupMessage = "Cities and Towns score";
+                            s.updateValue(Number.NaN);
                         },
-                        deactivate: null,
                         updateScoreCallback: function (score) {
-                            score.updateValue((-1).toString());
+                            score.popupMessage = "Cities and Towns score";
+                            score.updateValue(1);
                         }
                     }
                 ],
@@ -118,6 +122,7 @@ var INLModules;
             });
             aLayer.epsgOverride = epsgProjection;
             aLayer.setOpacity(0.3);
+            aLayer.setVisibility(false);
             pvMapper.map.addLayer(aLayer);
             this.layerMap = aLayer;
         };
@@ -156,10 +161,12 @@ var INLModules;
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, s) {
-                            s.updateValue("Solar radiation score");
+                            s.popupMessage = "Solar radiation score";
+                            s.updateValue(Number.NaN);
                         },
                         updateScoreCallback: function (score) {
-                            return -1;
+                            score.popupMessage = "Solar radiation score";
+                            score.updateValue(1);
                         }
                     }
                 ],
@@ -175,6 +182,7 @@ var INLModules;
             aLayer.epsgOverride = esriProjection;
             aLayer.setIsBaseLayer(false);
             aLayer.setOpacity(0.3);
+            aLayer.setVisibility(false);
             pvMapper.map.addLayer(aLayer);
             this.layerMap = aLayer;
         };
@@ -191,10 +199,9 @@ var INLModules;
             format: "gif",
             srs: "3857",
             transparent: "true"
-        }, {
-            isBaseLayer: false
         });
         facilities.epsgOverride = "3857";
+        facilities.setVisibility(false);
         pvMapper.map.addLayer(facilities);
     }
 })(INLModules || (INLModules = {}));

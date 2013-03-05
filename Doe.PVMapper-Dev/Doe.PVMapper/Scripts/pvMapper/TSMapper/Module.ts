@@ -29,7 +29,7 @@ module pvMapper {
             //Load the scoring tools into the api
             this.scoringTools.map((tool, idx, toolarr) => {
                 console.log("Loading scoring tool " + tool.title + " into the API");
-                 
+                
                 //Create the scoreline
                 var scoreline = new ScoreLine(tool);
 

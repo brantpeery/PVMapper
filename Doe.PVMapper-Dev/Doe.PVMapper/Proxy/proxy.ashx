@@ -89,35 +89,12 @@ public class proxy : IHttpHandler {
         }
         
         // Set up the response to the client
-        if (serverResponse != null) {
+        if (serverResponse != null)
+        {
             response.ContentType = serverResponse.ContentType;
             using (Stream byteStream = serverResponse.GetResponseStream())
             {
-
-                // Text response
-                if (serverResponse.ContentType.Contains("text") || 
-                    serverResponse.ContentType.Contains("json"))
-                {
-                    using (StreamReader sr = new StreamReader(byteStream))
-                    {
-                        string strResponse = sr.ReadToEnd();
-                        response.Write(strResponse);
-                    }
-                }
-                else
-                {
-                    // Binary response (image, lyr file, other binary file)
-                    BinaryReader br = new BinaryReader(byteStream);
-                    byte[] outb = br.ReadBytes((int)serverResponse.ContentLength);
-                    br.Close();
-
-                    // Tell client not to cache the image since it's dynamic
-                    response.CacheControl = "no-cache";
-
-                    // Send the image to the client
-                    // (Note: if large images/files sent, could modify this to send in chunks)
-                    response.OutputStream.Write(outb, 0, outb.Length);
-                }
+                byteStream.CopyTo(response.OutputStream);
 
                 serverResponse.Close();
             }

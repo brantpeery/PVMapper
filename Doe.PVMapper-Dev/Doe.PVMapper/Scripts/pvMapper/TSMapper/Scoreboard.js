@@ -42,7 +42,7 @@ var pvMapper;
                     "title": sl.description
                 });
                 $.each(sl.scores, function (idx, s) {
-                    row.addCell(s.value);
+                    row.addCell(s.toString());
                 });
             });
             var HTML = r.render();

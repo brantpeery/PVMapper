@@ -70,6 +70,7 @@ module INLModules {
                 );
         mapLayer.setOpacity(0.3);
         mapLayer.epsgOverride = "3857"; //"EPSG:102100";
+        mapLayer.setVisibility(false);
         pvMapper.map.addLayer(mapLayer);
         //pvMapper.map.setLayerIndex(mapLayer, 0);
     }
@@ -102,9 +103,11 @@ module INLModules {
 
                 // update value
                 if (request.status === 200) {
+                    score.popupMessage = null;
                     score.updateValue(request.responseText.length);
                 } else {
-                    score.updateValue("Connection error " + request.status);
+                    score.popupMessage = "Connection error " + request.status;
+                    score.updateValue(Number.NaN);
                 }
             },
         });

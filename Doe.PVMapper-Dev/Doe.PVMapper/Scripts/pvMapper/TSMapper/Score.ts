@@ -22,7 +22,7 @@ module pvMapper {
           */
         constructor(site: pvMapper.Site) {
             this.self = this;
-            this.value = "";
+            this.value = Number.NaN;
             //A reference to the site this score represents
             this.site = site;
 
@@ -42,21 +42,37 @@ module pvMapper {
         /// <Summary>A reference the this object independent of scope</Summary>
         public self;
         public site: pvMapper.Site;
+
+        // a textual description of the raw value as provided by the scoring tool
         public popupMessage: string;
 
+        // the raw value reported by the scoring tool
+        // Number.NaN indicates an invalid / outdated / error-full value
+        public value: number;
+
+        // the computed utility based on the raw value provided by the score tool
+        // Number.NaN indicates an invalid / outdated / error-full value
+        public utility: number;
+
+        // fancy events for tracking changes
         public valueChangeEvent: pvMapper.Event = new pvMapper.Event();
         public invalidateEvent: pvMapper.Event = new pvMapper.Event();
         public siteChangeEvent: pvMapper.Event = new pvMapper.Event();
 
         //Calculates the utility score for the value passed in or if no value is passed in it uses the current value property
-        public calculateUtility(value: string): string {
-            if (typeof (value) != 'undefined') { return this.updateValue(value); }
-            return this.value;
+        public updateUtility() {
+            //TODO: ... duh, calculate the utility here?
+            //if (typeof (value) !== 'undefined') { return this.updateValue(value); }
+
+            // clearly wrong
+            this.utility = this.value;
+
+            //TODO: fire some kind of utilityChangedEvent, or somehting?
         }
 
-        public updateValue(value: string): string {
+        public updateValue(value: number) {
             //Change the context, add this score to the event and pass the event on
-            var oldvalue: string = this.value;
+            var oldvalue = this.value;
             this.value = value;
             //TODO: pvMapper.displayMessage(this.value,"Info");
 
@@ -65,12 +81,20 @@ module pvMapper {
             return this.value;
         }
 
+        //public setError(description: string) {
+        //    this.popupMessage = description;
+        //    this.value = Number.NaN;
+        //    this.utility = Number.NaN;
+        //}
 
-        public value: string;
         public toString() {
             if (this.popupMessage && this.popupMessage.trim().length > 0) {
                 return this.popupMessage;
-            } else { return this.value; }
+            } else if (this.value && !isNaN(this.value)) {
+                return this.value.toString();
+            } else {
+                return "";
+            }
         }
     }
 

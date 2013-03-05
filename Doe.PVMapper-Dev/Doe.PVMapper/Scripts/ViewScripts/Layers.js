@@ -53,6 +53,7 @@
             }
         );
     slope.setOpacity(0.3);
+    slope.setVisibility(false);
     $.jGrowl("Adding Slope");
     pvMapper.map.addLayer(slope);
 

@@ -36,11 +36,13 @@ module INLModules {
           },
           onSiteChange: function (e, s) {
             ///////////////////////////////////////////getFeatureInfo(s.site);
-            s.updateValue("Federal Lands score");
+            s.popupMessage = "Federal Lands score";
+            s.updateValue(Number.NaN);
           },
           updateScoreCallback: (score: pvMapper.Score) => {
-            ///////////////////////////////////////////getFeatureInfo(site);
-            return -1;
+              ///////////////////////////////////////////getFeatureInfo(site);
+            score.popupMessage = "Federal Lands score";
+            score.updateValue(1);
           },
         }],
 
@@ -74,6 +76,7 @@ module INLModules {
             );
     federalLandsLayer.epsgOverride = "EPSG:102113";
     federalLandsLayer.setOpacity(0.3);
+    federalLandsLayer.setVisibility(false);
     pvMapper.map.addLayer(federalLandsLayer);
   }
 
@@ -119,12 +122,14 @@ module INLModules {
           onScoreAdded: (e, score: pvMapper.Score) => {
           },
           onSiteChange: function (e, s) {
-            ///////////////////////////////////////////getFeatureInfo(s.site);
-            s.updateValue("Cities and Towns score");
+              ///////////////////////////////////////////getFeatureInfo(s.site);
+              s.popupMessage = "Cities and Towns score";
+              s.updateValue(Number.NaN);
           },
-          deactivate: null,
           updateScoreCallback: (score: pvMapper.Score) => {
-              score.updateValue((-1).toString());
+              ///////////////////////////////////////////getFeatureInfo(site);
+              score.popupMessage = "Cities and Towns score";
+              score.updateValue(1);
           },
         }
         ],
@@ -151,6 +156,7 @@ module INLModules {
         );
       aLayer.epsgOverride = epsgProjection;
       aLayer.setOpacity(0.3);
+      aLayer.setVisibility(false);
       pvMapper.map.addLayer(aLayer);
       this.layerMap = aLayer;
       
@@ -196,12 +202,14 @@ module INLModules {
           onScoreAdded: (e, score: pvMapper.Score) => {
           },
           onSiteChange: function (e, s) {
-            ///////////////////////////////////////////getFeatureInfo(s.site);
-            s.updateValue("Solar radiation score");
+              ///////////////////////////////////////////getFeatureInfo(s.site);
+              s.popupMessage = "Solar radiation score";
+              s.updateValue(Number.NaN);
           },
           updateScoreCallback: (score: pvMapper.Score) => {
-            ///////////////////////////////////////////getFeatureInfo(site);
-            return -1;
+              ///////////////////////////////////////////getFeatureInfo(site);
+              score.popupMessage = "Solar radiation score";
+              score.updateValue(1);
           },
         }
         ],
@@ -220,6 +228,7 @@ module INLModules {
       aLayer.epsgOverride = esriProjection;
       aLayer.setIsBaseLayer(false);
       aLayer.setOpacity(0.3);
+      aLayer.setVisibility(false);
       pvMapper.map.addLayer(aLayer);
       this.layerMap = aLayer;
     }
@@ -243,12 +252,13 @@ module INLModules {
                 transparent: "true",
 
                 //SRS: "EPSG:4326"
-              },
-              { isBaseLayer: false }
+              }
+              //,{ isBaseLayer: false }
               );
     facilities.epsgOverride = "3857";
     //facilities.setOpacity(0.3);
     //$.jGrowl("Adding PV Solar Facility Locations");
+    facilities.setVisibility(false);
     pvMapper.map.addLayer(facilities);
 
   }

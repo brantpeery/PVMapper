@@ -998,6 +998,8 @@ module OpenLayers {
     new (options?: any): Format;
     (options?: any): Format;
     prototype: Format;
+
+    GML: any;
   }
 
   interface Response {

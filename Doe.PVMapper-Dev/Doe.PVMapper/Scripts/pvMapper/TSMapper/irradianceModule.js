@@ -7,10 +7,10 @@ var INLModules;
                 author: "Scott Brown, INL",
                 version: "0.1.ts",
                 activate: function () {
-                    addIrradianceMap();
+                    addAllMaps();
                 },
                 deactivate: function () {
-                    removeIrradianceMap();
+                    removeAllMaps();
                 },
                 destroy: null,
                 init: null,
@@ -20,15 +20,31 @@ var INLModules;
                         deactivate: null,
                         destroy: null,
                         init: null,
-                        title: "Solar Irradiance",
-                        description: "Calculates the expected solar irradiance for a site",
+                        title: "Direct-Normal Irradiation",
+                        description: "Calculates the expected DNI for a site",
                         onScoreAdded: function (e, score) {
                         },
-                        onSiteChange: function (e, s) {
-                            getFeatureInfo(s);
+                        onSiteChange: function (e, score) {
+                            updateScoreFromLayer(score, "swera:dni_suny_high_900913");
                         },
                         updateScoreCallback: function (score) {
-                            getFeatureInfo(score);
+                            updateScoreFromLayer(score, "swera:dni_suny_high_900913");
+                        }
+                    }, 
+                    {
+                        activate: null,
+                        deactivate: null,
+                        destroy: null,
+                        init: null,
+                        title: "Global-Horizontal Irradiation",
+                        description: "Calculates the expected GHI for a site",
+                        onScoreAdded: function (e, score) {
+                        },
+                        onSiteChange: function (e, score) {
+                            updateScoreFromLayer(score, "swera:ghi_suny_high_900913");
+                        },
+                        updateScoreCallback: function (score) {
+                            updateScoreFromLayer(score, "swera:ghi_suny_high_900913");
                         }
                     }
                 ],
@@ -38,43 +54,47 @@ var INLModules;
         return IrradianceModule;
     })();    
     var modinstance = new IrradianceModule();
-    var irradianceMapUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/services/PADUS/PADUS_owner/MapServer/WMSServer?";
-    var solar;
-    function addIrradianceMap() {
-        var solarBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
-        solar = new OpenLayers.Layer.WMS("PADUS", irradianceMapUrl, {
-            maxExtent: solarBounds,
-            layers: "0",
-            layer_type: "polygon",
+    var MapsDbUrl = "http://mapsdb.nrel.gov/geoserver/swera/wms";
+    var dniSuny, ghiSuny;
+    function addAllMaps() {
+        dniSuny = addMapsDbMap("swera:dni_suny_high_900913", "Direct-Normal Irradiation 10km");
+        pvMapper.map.addLayer(dniSuny);
+        ghiSuny = addMapsDbMap("swera:ghi_suny_high_900913", "Global-Horizontal Irradiation 10km");
+        pvMapper.map.addLayer(ghiSuny);
+    }
+    function addMapsDbMap(name, description) {
+        var newLayer = new OpenLayers.Layer.WMS(description, MapsDbUrl, {
+            layers: name,
             transparent: "true",
-            format: "image/gif",
+            format: "image/png",
             exceptions: "application/vnd.ogc.se_inimage",
             maxResolution: 156543.0339,
-            srs: "EPSG:102113"
+            srs: "EPSG:900913"
         }, {
             isBaseLayer: false
         });
-        solar.setOpacity(0.3);
-        solar.epsgOverride = "EPSG:102113";
-        pvMapper.map.addLayer(solar);
+        newLayer.setOpacity(0.3);
+        newLayer.setVisibility(false);
+        return newLayer;
     }
-    function removeIrradianceMap() {
-        pvMapper.map.removeLayer(solar, false);
+    function removeAllMaps() {
+        pvMapper.map.removeLayer(dniSuny, false);
+        pvMapper.map.removeLayer(ghiSuny, false);
     }
-    function getFeatureInfo(score) {
+    function updateScoreFromLayer(score, layerName) {
         var params = {
             REQUEST: "GetFeatureInfo",
             EXCEPTIONS: "application/vnd.ogc.se_xml",
             BBOX: score.site.geometry.bounds.toBBOX(6, false),
             SERVICE: "WMS",
-            INFO_FORMAT: 'text/html',
-            QUERY_LAYERS: "0",
+            INFO_FORMAT: "application/vnd.ogc.gml",
+            QUERY_LAYERS: layerName,
             FEATURE_COUNT: 50,
-            Layers: "0",
+            Layers: layerName,
             WIDTH: 1,
             HEIGHT: 1,
             format: "image/gif",
-            srs: solar.params.SRS,
+            srs: dniSuny.params.SRS,
             VERSION: "1.1.1",
             X: 0,
             Y: 0,
@@ -82,25 +102,42 @@ var INLModules;
             J: 0
         };
         var request = OpenLayers.Request.GET({
-            url: irradianceMapUrl,
+            url: MapsDbUrl,
             proxy: "/Proxy/proxy.ashx?",
             params: params,
-            callback: function (request) {
-                alert(request.responseText);
-                if(request.status === 200) {
-                    score.updateValue(request.responseText.length);
-                } else {
-                    score.updateValue("Connection error " + request.status);
-                }
-            }
+            callback: queryResponseHandler(score)
         });
-        return -1;
     }
-    function handler(request) {
-        if(request.status === 200) {
-            alert(request.responseText);
-        } else {
-            alert(request.getAllResponseHeaders());
-        }
+    function queryResponseHandler(score) {
+        return function (response) {
+            try  {
+                if(response.status === 200) {
+                    var gmlParser = new OpenLayers.Format.GML();
+                    gmlParser.extractAttributes = true;
+                    var features = gmlParser.read(response.responseText);
+                    if(typeof features !== "undefined") {
+                        var sum = 0.0;
+                        for(var i = 0; i < features.length; i++) {
+                            sum += parseFloat(features[i].attributes.annual);
+                        }
+                        var result = sum / features.length;
+                        score.popupMessage = result.toFixed(3);
+                        score.updateValue(result);
+                    } else {
+                        score.popupMessage = "No irradiance data found near this site";
+                        score.updateValue(Number.NaN);
+                    }
+                } else if(response.status === 500) {
+                    score.popupMessage = "Proxy connection error";
+                    score.updateValue(Number.NaN);
+                } else {
+                    score.popupMessage = "Connection error " + response.status;
+                    score.updateValue(Number.NaN);
+                }
+            } catch (err) {
+                score.popupMessage = "Error";
+                score.updateValue(Number.NaN);
+            }
+        };
     }
 })(INLModules || (INLModules = {}));
