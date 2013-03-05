@@ -4,11 +4,9 @@
 
 module pvMapper {
 
-    // Class
     /**
-    Used to reder output either to screen or file. Uses a template for rendered output.
-
-    */
+     * Used to reder output either to screen or file. Uses a template for rendered output.
+     */
     export class Renderer {
         // Constructor
         constructor(text: string) {
@@ -16,6 +14,10 @@ module pvMapper {
             this.text = (text) ? text : '';
         }
 
+        /**
+         * Renders the Renderer until it's rendered
+         * TODO: what does this really do?
+         */
         public render(): string {
             var s: string = '';
             $.each(this.children, function (idx, val) {
