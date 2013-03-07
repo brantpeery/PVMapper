@@ -1191,6 +1191,15 @@
     <Content Include="Scripts\pvMapper\TSMapper\Scoreboard.min.js.map">
       <DependentUpon>Scoreboard.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\solarmapperModule.js.map">
+      <DependentUpon>solarmapperModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\snlModule.js.map">
+      <DependentUpon>snlModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\DemModule.js.map">
+      <DependentUpon>DemModule.ts</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
