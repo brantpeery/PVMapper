@@ -929,6 +929,7 @@ module OpenLayers {
     Vector: {
       new (value?: any): Vector;
       (value?: any): Vector;
+      new (name: string, options?: any): Vector;
       prototype: Vector;
     };
     WMS(name: string, url: string, params: any, options: any): any;
@@ -981,6 +982,7 @@ module OpenLayers {
     new (options?: any): Strategy;
     (options?: any): Strategy;
     prototype: Strategy;
+    Fixed(): any;
   }
   interface Format {
     options: any;
@@ -1000,6 +1002,7 @@ module OpenLayers {
     prototype: Format;
 
     GML: any;
+    EsriGeoJSON(): any;
   }
 
   interface Response {
@@ -1043,6 +1046,8 @@ module OpenLayers {
       (options?: any): Response;
       prototype: Response;
     };
+    Script(params: any): any;
+    //Script(url: string, params: any, callback: (response: any) => {}, scope?: any): any;
   }
 
   interface DefaultSymbolizer {
