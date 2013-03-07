@@ -1,3 +1,9 @@
+/// <reference path="pvMapper.ts" />
+/// <reference path="Site.ts" />
+/// <reference path="Score.ts" />
+/// <reference path="Tools.ts" />
+/// <reference path="Options.d.ts" />
+/// <reference path="Module.ts" />
 var INLModules;
 (function (INLModules) {
     var IrradianceModule = (function () {
@@ -26,8 +32,10 @@ var INLModules;
                         },
                         onSiteChange: function (e, score) {
                             updateScore(score);
-                        },
+                            //s.updateValue(status.toString());
+                                                    },
                         updateScoreCallback: function (score) {
+                            //var status = getFeatureInfo(site);
                             updateScore(score);
                         }
                     }
@@ -38,7 +46,12 @@ var INLModules;
         return IrradianceModule;
     })();    
     var modinstance = new IrradianceModule();
+    //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
+    //var snlWmsBaseUrl = "http://maps.snl.com/arcgis/services/SNLMaps/PowerCos/MapServer/";
+    //var snlRestBaseUrl = "http://maps.snl.com/arcgis/rest/services/SNLMaps/Power/MapServer/";
+    //var snlLineQueryUrl = "http://maps.snl.com/arcgis/rest/services/SNLMaps/PowerCos/MapServer/2/query";
     var snlLineQueryUrl = "http://maps.snl.com/arcgis/rest/services/SNLMaps/Power/MapServer/5/query";
+    //declare var Ext: any;
     var mapLayer;
     function addAllMaps() {
         mapLayer = new OpenLayers.Layer.Vector("Transmission Lines", {
@@ -49,22 +62,104 @@ var INLModules;
                 url: snlLineQueryUrl,
                 params: {
                     f: "json",
-                    where: "Line_Name NOT LIKE '%\\N%'",
-                    outFields: "Voltage"
+                    where: //Note: this is stupid. ONE of the lines has an unescaped '\' character in its name. Bad ESRI.
+                    "Line_Name NOT LIKE '%\\N%'",
+                    outFields: //"1=1",
+                    "Voltage"
                 },
-                format: new OpenLayers.Format.EsriGeoJSON(),
+                format: //layers: "5", //"2", //solar.params.LAYERS,
+                //callbackKey: "callback",
+                //transparent: "true",
+                //srs: "EPSG:3857",
+                new OpenLayers.Format.EsriGeoJSON(),
                 parseFeatures: function (data) {
                     return this.format.read(data);
                 }
             })
         });
+        //srs: "EPSG:3857",
+        //mapLayer = new OpenLayers.Layer.WMS(
+        //    "Transmission Lines",
+        //    snlWmsBaseUrl + "WMSServer",
+        //    {
+        //        layers: "5", //"swera:ghi_suny_high_900913", //"0", //"perezANN_mod",
+        //        //layer_type: "polygon",
+        //        transparent: "true",
+        //        format: "image/png",
+        //        //exceptions: "application/vnd.ogc.se_inimage",
+        //        //maxResolution: 156543.0339,
+        //        srs: "EPSG:3857",
+        //    },
+        //    { isBaseLayer: false }
+        //);
+        //mapLayer = new OpenLayers.Layer.ArcGIS93Rest(
+        //    "Transmission Lines",
+        //    snlRestBaseUrl + "export",
+        //    {
+        //        layers: "5", //"2",
+        //        format: "gif",
+        //        srs: "3857", //"102100",
+        //        transparent: "true",
+        //    }
+        //);
         mapLayer.setOpacity(0.3);
-        mapLayer.epsgOverride = "EPSG:3857";
+        mapLayer.epsgOverride = "EPSG:3857"//"3857"; //"EPSG:102100";
+        ;
+        //////////////////////////////////////////////////////////////////////////////mapLayer.setVisibility(false);
         pvMapper.map.addLayer(mapLayer);
-    }
+        //pvMapper.map.setLayerIndex(mapLayer, 0);
+            }
     function removeAllMaps() {
         pvMapper.map.removeLayer(mapLayer, false);
     }
     function updateScore(score) {
-    }
+        //var params = {
+        //    mapExtent: score.site.geometry.bounds.toBBOX(6, false),
+        //    geometryType: "esriGeometryEnvelope",
+        //    geometry: score.site.geometry.bounds.toBBOX(6, false),
+        //    f: "json", // or "html",
+        //    layers: "5", //"2", //solar.params.LAYERS,
+        //    tolerance: 0, //TODO: should this be 0 or 1?
+        //    //imageDisplay: "1, 1, 96",
+        //    callbackKey: "callback",
+        //};
+        //var request = OpenLayers.Protocol.Script({
+        //    url: snlRestBaseUrl //+ "identify",
+        //    //params: params,
+        //    //callback: (request) => {
+        //    //    // debug statement
+        //    //    //alert(score.site.name + ": " + request.responseText.length + " (" + request.status + ")");
+        //    //    alert(request);
+        //    //    // update value
+        //    //    //if (request.status === 200) {
+        //    //    //    score.popupMessage = null;
+        //    //    //    score.updateValue(request.responseText.length);
+        //    //    //} else {
+        //    //    //    score.popupMessage = "Connection error " + request.status;
+        //    //    //    score.updateValue(Number.NaN);
+        //    //    //}
+        //    //},
+        //});
+        //var request = OpenLayers.Request.GET({
+        //    //url: "/Proxy/proxy.ashx?" + solarmapperRestBaseUrl + "identify",
+        //    url: snlRestBaseUrl + "identify",
+        //    proxy: "/Proxy/proxy.ashx?",
+        //    params: params,
+        //    //callback: handler,
+        //    callback: (request) => {
+        //        // debug statement
+        //        //alert(score.site.name + ": " + request.responseText.length + " (" + request.status + ")");
+        //        //alert(request.responseText);
+        //        // update value
+        //        if (request.status === 200) {
+        //            score.popupMessage = null;
+        //            score.updateValue(request.responseText.length);
+        //        } else {
+        //            score.popupMessage = "Connection error " + request.status;
+        //            score.updateValue(Number.NaN);
+        //        }
+        //    },
+        //});
+            }
 })(INLModules || (INLModules = {}));
+//@ sourceMappingURL=snlModule.js.map

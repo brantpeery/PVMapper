@@ -101,10 +101,10 @@ module pvMapper {
         public toString() {
             if (this.popupMessage && this.popupMessage.trim().length > 0) {
                 return this.popupMessage;
-            } else if (this.value && !isNaN(this.value)) {
+            } else if (typeof this.value !== "undefined" && !isNaN(this.value)) {
                 return this.value.toString();
             } else {
-                return "";
+                return "No value";
             }
         }
     }

@@ -579,8 +579,8 @@ module OpenLayers {
     minResolution: number;
     maxScale: number;
     minScale: number;
-    maxExtent: Bounds[];
-    minExtent: Bounds[];
+    maxExtent: Bounds;
+    minExtent: Bounds;
     restrictedExtent: Bounds[];
     numZoomLevels: number;
     theme: string;
@@ -1002,7 +1002,11 @@ module OpenLayers {
     prototype: Format;
 
     GML: any;
-    EsriGeoJSON(): any;
+    XML: any;
+    JSON(): any;
+    WMSGetFeatureInfo(): any;
+
+    EsriGeoJSON(): any; //  Note: this is not from OpenLayers, it's different...
   }
 
   interface Response {

@@ -1,3 +1,9 @@
+/// <reference path="pvMapper.ts" />
+/// <reference path="Site.ts" />
+/// <reference path="Score.ts" />
+/// <reference path="Tools.ts" />
+/// <reference path="Options.d.ts" />
+/// <reference path="Module.ts" />
 var BYUModules;
 (function (BYUModules) {
     var DemModule = (function () {
@@ -63,3 +69,4 @@ var BYUModules;
     var modInstance = new DemModule();
     var request = OpenLayers.Request.POST;
 })(BYUModules || (BYUModules = {}));
+//@ sourceMappingURL=DemModule.js.map
