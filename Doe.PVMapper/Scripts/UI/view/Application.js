@@ -40,8 +40,9 @@ var app = Ext.application({
             projection: new OpenLayers.Projection("EPSG:3857"), //3857 //4326            900913
             units: "m",
             numZoomLevels: 16,
-            restrictedExtent: usBounds,
-            center: '-10723197, 4500612',
+            //maxExtent: usBounds, <-- that stopped base layers from drawing out of bounds
+            //restrictedExtent: usBounds, <-- this was annoying
+            //center: '-10723197, 4500612',
             controls: controls
         });
 
@@ -51,8 +52,7 @@ var app = Ext.application({
             title: null,
             header:false,
             map: map,
-            zoom: 0,
-            center: [-10723197, 4500612],
+            extent: usBounds, // <-- this doesn't actually change the visible extent of our map at all
             stateful: true,
             stateId: 'mapPanel',
         });
@@ -63,6 +63,8 @@ var app = Ext.application({
         this.mainContent.add(mapPanel);
         pvMapper.mapPanel = mapPanel;
         pvMapper.map = map;
+
+        //map.zoomToExtent(usBounds, true); <-- this didn't help at all
 
         ///--------------------------END Set the map stuff up--------------------------------------------
 

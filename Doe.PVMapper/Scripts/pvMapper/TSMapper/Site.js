@@ -46,4 +46,3 @@ var pvMapper;
     })();
     pvMapper.Site = Site;    
 })(pvMapper || (pvMapper = {}));
-//@ sourceMappingURL=Site.js.map

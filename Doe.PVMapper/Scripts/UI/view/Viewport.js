@@ -67,22 +67,30 @@ Ext.define( 'MainApp.view.Viewport', {
               padding: '0',
               items: [ ],
               addButton: function ( winObj ) {
-                if ( this.items.items.indexOfObject( function ( val ) { return val.text === winObj.title; } ) >= 0 ) return;
+                //if ( this.items.items.indexOfObject( function ( val ) { return val.text === winObj.title; } ) >= 0 ) return;
                 var abtn = Ext.create( 'Ext.button.Button', {
                   text: winObj.title,
                   associate: winObj,
                   listeners:{ 
                     click: function() {
                       if ( this.associate && this.associate.type == 'Window' && typeof ( this.associate.viewState ) != 'undefined' ) {
-                        switch ( this.associate.viewState ) {
-                          case Ext.view.ViewState.MINIMIZED: this.associate.show(); this.associate.viewState = Ext.view.ViewState.NORMAL; break;
-                          case Ext.view.ViewState.NORMAL: this.associate.hide(); this.associate.viewState = Ext.view.ViewState.HIDDEN; break;
-                          case Ext.view.ViewState.HIDDEN: this.associate.show(); this.associate.viewState = Ext.view.ViewState.NORMAL; break;
-                          default: {
-                            this.associate.minimize();
-                            this.associate.viewState = Ext.view.ViewState.MINIMIZED;
+                          switch (this.associate.viewState) {
+                              case Ext.view.ViewState.MINIMIZED:
+                                  this.associate.show();
+                                  this.associate.viewState = Ext.view.ViewState.NORMAL;
+                                  break;
+                              case Ext.view.ViewState.NORMAL:
+                                  this.associate.hide();
+                                  this.associate.viewState = Ext.view.ViewState.HIDDEN;
+                                  break;
+                              case Ext.view.ViewState.HIDDEN:
+                                  this.associate.show();
+                                  this.associate.viewState = Ext.view.ViewState.NORMAL;
+                                  break;
+                              default:
+                                  this.associate.minimize();
+                                  this.associate.viewState = Ext.view.ViewState.MINIMIZED;
                           }
-                        }
                       }
                     }
                   }

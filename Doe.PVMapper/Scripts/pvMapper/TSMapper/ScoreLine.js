@@ -91,4 +91,3 @@ var pvMapper;
     //        updateScore(event.data);
     //}
     })(pvMapper || (pvMapper = {}));
-//@ sourceMappingURL=ScoreLine.js.map

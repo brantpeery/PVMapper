@@ -8,5 +8,5 @@ module pvMapper {
     }
 
     export var map: OpenLayers.IMap;
-
+    export var siteLayer: any;
 }

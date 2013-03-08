@@ -184,9 +184,15 @@ module INLModules {
                         }
                         var result = sum / features.length;
 
+                        // convert from kWh/m2/day to MW
+                        var siteArea = score.site.geometry.getGeodesicArea(pvMapper.siteLayer.projection);
+                        var megaWatts = result / 24 * siteArea / (1000 * 1000)
+
                         // success
-                        score.popupMessage = result.toFixed(3); // round the display value
+                        score.popupMessage = result.toFixed(2) + " kWh/m2/day" +
+                            "\n(" + megaWatts.toFixed(3) + " MW)";
                         score.updateValue(result);
+                        //score.updateValue(megaWatts); //TODO: duh...? want give two scores...
                     } else {
                         // error
                         score.popupMessage = "No irradiance data found near this site";

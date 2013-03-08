@@ -31,13 +31,13 @@ var INLModules;
                             console.log("Site change detected in tool Gross Area. Updating the value.");
                             var area = calculateSiteArea(score.site);
                             console.log("Calulated area of " + area + ". Setting the value on the score");
-                            score.popupMessage = area.toFixed(3);
+                            score.popupMessage = area.toFixed(3) + " km2";
                             score.updateValue(area);
                         },
                         updateScoreCallback: function (score) {
                             var area = calculateSiteArea(score.site);
                             console.log("Calulated area of " + area + " Returning value");
-                            score.popupMessage = area.toFixed(3);
+                            score.popupMessage = area.toFixed(3) + " km2";
                             score.updateValue(area);
                         }
                     }
@@ -54,8 +54,9 @@ var INLModules;
     function calculateArea(geometry) {
         var proj = new OpenLayers.Projection('EPSG:900913');
         var area = geometry.getGeodesicArea(proj);
-        var kmArea = area / 1000000;
-        return Math.round(kmArea * 100) / 100;
+        var kmArea = area / (1000 * 1000);// m^2 to km^2
+        
+        return kmArea;
     }
     //Handles the button click for the buttons for this tool
     function onButtonClicked(event) {
@@ -106,4 +107,3 @@ var INLModules;
         return val;
     }
 })(INLModules || (INLModules = {}));
-//@ sourceMappingURL=siteAreaModule.js.map

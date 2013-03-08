@@ -102,21 +102,26 @@ var INLModules;
                     var esriJsonPerser = new OpenLayers.Format.JSON();
                     esriJsonPerser.extractAttributes = true;
                     var parsedResponse = esriJsonPerser.read(response.responseText);
-                    var alertText = "";
-                    var lastText = null;
-                    for(var i = 0; i < parsedResponse.results.length; i++) {
-                        var newText = parsedResponse.results[i].attributes["Owner Name"];
-                        if(newText != lastText) {
-                            if(lastText != null) {
-                                alertText += ", \n";
+                    if(parsedResponse.results.length > 0) {
+                        var alertText = "";
+                        var lastText = null;
+                        for(var i = 0; i < parsedResponse.results.length; i++) {
+                            var newText = parsedResponse.results[i].attributes["Owner Name"];
+                            if(newText != lastText) {
+                                if(lastText != null) {
+                                    alertText += ", \n";
+                                }
+                                alertText += newText;
                             }
-                            alertText += newText;
+                            lastText = newText;
                         }
-                        lastText = newText;
+                        score.popupMessage = alertText;
+                        score.updateValue(parsedResponse.results.length)// number of overlapping features
+                        ;
+                    } else {
+                        score.popupMessage = "None";
+                        score.updateValue(0);
                     }
-                    score.popupMessage = alertText;
-                    score.updateValue(parsedResponse.results.length)// number of overlapping features
-                    ;
                 } else {
                     score.popupMessage = "Connection error " + response.status;
                     score.updateValue(Number.NaN);
@@ -225,7 +230,7 @@ var INLModules;
                 author: "Leng Vang, INL",
                 version: "0.1.ts",
                 activate: function () {
-                    _this.addWMSLayerMap('Cities and Towns', citiesTownsURL, "EPSG:102113");
+                    _this.addWMSLayerMap('Land Use', citiesTownsURL, "EPSG:102113");
                 },
                 deactivate: function () {
                     _this.removeWMSLayerMap();
@@ -238,20 +243,20 @@ var INLModules;
                         deactivate: null,
                         destroy: null,
                         init: null,
-                        title: "Cities and Towns",
+                        title: "Land Use",
                         description: "Calculate score based on city boundaries.",
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, s) {
                             ///////////////////////////////////////////getFeatureInfo(s.site);
-                            s.popupMessage = "Cities and Towns score";
-                            s.updateValue(Number.NaN);
-                        },
+                            //s.popupMessage = "...";
+                            //s.updateValue(Number.NaN);
+                                                    },
                         updateScoreCallback: function (score) {
                             ///////////////////////////////////////////getFeatureInfo(site);
-                            score.popupMessage = "Cities and Towns score";
-                            score.updateValue(1);
-                        }
+                            //score.popupMessage = "Cities and Towns score";
+                            //score.updateValue(1);
+                                                    }
                     }
                 ],
                 infoTools: null
@@ -284,141 +289,4 @@ var INLModules;
     INLModules.CitiesTowns = CitiesTowns;    
     var Layer2 = new INLModules.CitiesTowns();
     //============================================================
-    var SolarMapper = (function () {
-        function SolarMapper() {
-            var _this = this;
-            this.landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
-            var layerURL = //"http://services.arcgisonline.com/ArcGIS/rest/services";
-            "http://solarmapper.anl.gov/ArcGIS/rest/services/Solar_Mapper_SDE/MapServer/export";
-            var myModule = new pvMapper.Module({
-                id: "SolarMapperModule",
-                author: "Leng Vang, INL",
-                version: "0.1.ts",
-                activate: function () {
-                    _this.addRESTLayerMap("Solar Mapper", layerURL);
-                },
-                deactivate: function () {
-                    _this.removeRESTLayerMap();
-                },
-                destroy: null,
-                init: null,
-                scoringTools: [
-                    {
-                        activate: null,
-                        deactivate: null,
-                        destroy: null,
-                        init: null,
-                        title: "Solar Mapper",
-                        description: "Calculate score based on solar radiation.",
-                        onScoreAdded: function (e, score) {
-                        },
-                        onSiteChange: function (e, score) {
-                            ///////////////////////////////////////////getFeatureInfo(s.site);
-                            //updateScoreFromLayer(score, "");
-                            score.popupMessage = "Solar radiation score";
-                            score.updateValue(Number.NaN);
-                        },
-                        updateScoreCallback: function (score) {
-                            ///////////////////////////////////////////getFeatureInfo(site);
-                            score.popupMessage = "Solar radiation score";
-                            score.updateValue(1);
-                        }
-                    }
-                ],
-                infoTools: null
-            });
-        }
-        SolarMapper.prototype.addRESTLayerMap = function (layerName, layerURL) {
-            var facilities = new OpenLayers.Layer.ArcGIS93Rest("Some layer from Solarmapper", layerURL, //bbox=-14608729.4935068,4127680.66361813,-10533172.1554586,5562319.83205435
-            {
-                layers: "show:0",
-                format: "gif",
-                srs: "3857",
-                transparent: "true"
-            });
-            facilities.epsgOverride = "3857";
-            facilities.setVisibility(false);
-            pvMapper.map.addLayer(facilities);
-        };
-        SolarMapper.prototype.removeRESTLayerMap = function () {
-            pvMapper.map.removeLayer(this.layerMap, false);
-        };
-        SolarMapper.prototype.updateScoreFromLayer = function (score, layerName) {
-            var params = {
-                REQUEST: "GetFeatureInfo"
-            };
-        };
-        return SolarMapper;
-    })();
-    INLModules.SolarMapper = SolarMapper;    
-    var solarMapper = new SolarMapper();
-    //============================================================
-    var Worldterrain = (function () {
-        function Worldterrain() {
-            var _this = this;
-            this.landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
-            var layerURL = "http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer";
-            var myModule = new pvMapper.Module({
-                id: "WorldTerrainModule",
-                author: "Leng Vang, INL",
-                version: "0.1.ts",
-                activate: function () {
-                    _this.addRESTLayerMap("World Terrain", layerURL);
-                },
-                deactivate: function () {
-                    _this.removeRESTLayerMap();
-                },
-                destroy: null,
-                init: null,
-                scoringTools: [
-                    {
-                        activate: null,
-                        deactivate: null,
-                        destroy: null,
-                        init: null,
-                        title: "World Terrain",
-                        description: "Calculate score based on terrain.",
-                        onScoreAdded: function (e, score) {
-                        },
-                        onSiteChange: function (e, score) {
-                            ///////////////////////////////////////////getFeatureInfo(s.site);
-                            this.updateScoreFromLayer(score, "");
-                            //s.popupMessage = "Solar radiation score";
-                            //s.updateValue(Number.NaN);
-                                                    },
-                        updateScoreCallback: function (score) {
-                            ///////////////////////////////////////////getFeatureInfo(site);
-                            score.popupMessage = "Terrain score";
-                            score.updateValue(1);
-                        }
-                    }
-                ],
-                infoTools: null
-            });
-        }
-        Worldterrain.prototype.addRESTLayerMap = function (layerName, layerURL) {
-            var facilities = new OpenLayers.Layer.ArcGIS93Rest("World Terrain", layerURL, //bbox=-14608729.4935068,4127680.66361813,-10533172.1554586,5562319.83205435
-            {
-                layers: "show:0",
-                format: "gif",
-                srs: "3857",
-                transparent: "true"
-            });
-            facilities.epsgOverride = "3857";
-            facilities.setVisibility(false);
-            pvMapper.map.addLayer(facilities);
-        };
-        Worldterrain.prototype.removeRESTLayerMap = function () {
-            pvMapper.map.removeLayer(this.layerMap, false);
-        };
-        Worldterrain.prototype.updateScoreFromLayer = function (score, layerName) {
-            var params = {
-                REQUEST: "GetFeatureInfo"
-            };
-        };
-        return Worldterrain;
-    })();
-    INLModules.Worldterrain = Worldterrain;    
-    var terrain = new Worldterrain();
-})(INLModules || (INLModules = {}));
-//@ sourceMappingURL=LandUseModule.js.map
+    })(INLModules || (INLModules = {}));

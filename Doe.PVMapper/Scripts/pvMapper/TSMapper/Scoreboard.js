@@ -56,7 +56,12 @@ var pvMapper;
                 });
                 //Render each site for this scoreline
                 $.each(sl.scores, function (idx, s) {
-                    row.addCell(s.toString());
+                    if(isNaN(s.value)) {
+                        row.addCell("<i>" + s.toString() + "</i>")// using raw html tags - ewww
+                        ;
+                    } else {
+                        row.addCell(s.toString());
+                    }
                 });
             });
             var HTML = r.render();
@@ -81,7 +86,7 @@ var pvMapper;
         if(!pvMapper.floatingScoreboard) {
             pvMapper.floatingScoreboard = Ext.create('MainApp.view.Window', {
                 title: 'Main Scoreboard',
-                width: 600,
+                width: 800,
                 height: 200,
                 html: html,
                 cls: "propertyBoard"
@@ -97,4 +102,3 @@ var pvMapper;
         });
     });
 })(pvMapper || (pvMapper = {}));
-//@ sourceMappingURL=Scoreboard.js.map

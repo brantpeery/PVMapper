@@ -36,7 +36,9 @@
     var osm = new OpenLayers.Layer.OSM("Open Street", null, { isBaseLayer:true, zoomOffset: 4, resolutions: resolutions });
     $.jGrowl("Adding Open Street Map");
     pvMapper.map.addLayer(osm);
-    pvMapper.map.zoomToMaxExtent();
+
+    var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);
+    pvMapper.map.zoomToExtent(usBounds); // <-- this worked
 
     var slope = new OpenLayers.Layer.WMS(
             "Slope",
@@ -57,12 +59,13 @@
     $.jGrowl("Adding Slope");
     pvMapper.map.addLayer(slope);
 
-    var blueMarble = new OpenLayers.Layer.WMS(
-            "Global Imagery",
-            "http://maps.opengeo.org/geowebcache/service/wms", {
-                layers: "bluemarble",
-            });
-    pvMapper.map.addLayer(blueMarble);
+    //Note: this isn't working ...
+    //var blueMarble = new OpenLayers.Layer.WMS(
+    //        "Global Imagery",
+    //        "http://maps.opengeo.org/geowebcache/service/wms", {
+    //            layers: "bluemarble",
+    //        });
+    //pvMapper.map.addLayer(blueMarble);
 
     var openLayersWmsThing = new OpenLayers.Layer.WMS(
         "OpenLayers",
@@ -72,6 +75,20 @@
         });
     openLayersWmsThing.epsgOverride = "EPSG:900913";
     pvMapper.map.addLayer(openLayersWmsThing);
+
+    var esriWorldTerrain = new OpenLayers.Layer.ArcGIS93Rest(
+        "World Terrain",
+        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/export",
+        {
+            layers: "0",
+            format: "gif",
+            srs: "3857",
+            transparent: "true",
+        });
+    esriWorldTerrain.setIsBaseLayer(true);
+    esriWorldTerrain.epsgOverride = "3857";
+    pvMapper.map.addLayer(esriWorldTerrain);
+
 
     //Set up the layer for the site polys
     //If a style is applied at the layer level, then 
