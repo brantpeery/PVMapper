@@ -114,21 +114,26 @@ module INLModules {
           esriJsonPerser.extractAttributes = true;
           var parsedResponse = esriJsonPerser.read(response.responseText);
 
-          var alertText = "";
-          var lastText = null;
-          for (var i = 0; i < parsedResponse.results.length; i++) {
-            var newText = parsedResponse.results[i].attributes["Owner Name"];
-            if (newText != lastText) {
-              if (lastText != null) {
-                alertText += ", \n";
+          if (parsedResponse.results.length > 0) {
+              var alertText = "";
+              var lastText = null;
+              for (var i = 0; i < parsedResponse.results.length; i++) {
+                  var newText = parsedResponse.results[i].attributes["Owner Name"];
+                  if (newText != lastText) {
+                      if (lastText != null) {
+                          alertText += ", \n";
+                      }
+                      alertText += newText;
+                  }
+                  lastText = newText;
               }
-              alertText += newText;
-            }
-            lastText = newText;
-          }
 
-          score.popupMessage = alertText;
-          score.updateValue(parsedResponse.results.length);   // number of overlapping features
+              score.popupMessage = alertText;
+              score.updateValue(parsedResponse.results.length);   // number of overlapping features
+          } else {
+              score.popupMessage = "None";
+              score.updateValue(0);
+          }
         } else {
           score.popupMessage = "Connection error " + response.status;
           score.updateValue(Number.NaN);
@@ -243,7 +248,7 @@ module INLModules {
         version: "0.1.ts",
 
         activate: () => {
-          this.addWMSLayerMap('Cities and Towns', citiesTownsURL, "EPSG:102113");
+          this.addWMSLayerMap('Land Use', citiesTownsURL, "EPSG:102113");
         },
         deactivate: () => {
           this.removeWMSLayerMap();
@@ -257,19 +262,19 @@ module INLModules {
           destroy: null,
           init: null,
 
-          title: "Cities and Towns",
+          title: "Land Use",
           description: "Calculate score based on city boundaries.",
           onScoreAdded: (e, score: pvMapper.Score) => {
           },
           onSiteChange: function (e, s) {
               ///////////////////////////////////////////getFeatureInfo(s.site);
-              s.popupMessage = "Cities and Towns score";
-              s.updateValue(Number.NaN);
+              //s.popupMessage = "...";
+              //s.updateValue(Number.NaN);
           },
           updateScoreCallback: (score: pvMapper.Score) => {
               ///////////////////////////////////////////getFeatureInfo(site);
-              score.popupMessage = "Cities and Towns score";
-              score.updateValue(1);
+              //score.popupMessage = "Cities and Towns score";
+              //score.updateValue(1);
           },
         }
         ],
@@ -309,169 +314,6 @@ module INLModules {
   var Layer2 = new INLModules.CitiesTowns();
 
   //============================================================
-
-  export class SolarMapper {
-    private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
-    private layerMap;
-    constructor() {
-      var layerURL: string = //"http://services.arcgisonline.com/ArcGIS/rest/services";
-      "http://solarmapper.anl.gov/ArcGIS/rest/services/Solar_Mapper_SDE/MapServer/export";
-      
-      var myModule: pvMapper.Module = new pvMapper.Module({
-        id: "SolarMapperModule",
-        author: "Leng Vang, INL",
-        version: "0.1.ts",
-
-        activate: () => {
-          this.addRESTLayerMap("Solar Mapper", layerURL);
-          
-        },
-        deactivate: () => {
-          this.removeRESTLayerMap();
-        },
-        destroy: null,
-        init: null,
-
-        scoringTools: [{
-          activate: null,
-          deactivate: null,
-          destroy: null,
-          init: null,
-
-          title: "Solar Mapper",
-          description: "Calculate score based on solar radiation.",
-          onScoreAdded: (e, score: pvMapper.Score) => {
-          },
-          onSiteChange: function (e, score: pvMapper.Score) {
-            ///////////////////////////////////////////getFeatureInfo(s.site);
-
-              //updateScoreFromLayer(score, "");
-            score.popupMessage = "Solar radiation score";
-            score.updateValue(Number.NaN);
-          },
-          updateScoreCallback: (score: pvMapper.Score) => {
-              ///////////////////////////////////////////getFeatureInfo(site);
-              score.popupMessage = "Solar radiation score";
-              score.updateValue(1);
-          },
-        }
-        ],
-
-        infoTools: null
-      });
-    }
-
-    public addRESTLayerMap(layerName: string, layerURL: string) {
-      var facilities = new OpenLayers.Layer.ArcGIS93Rest(
-                "Some layer from Solarmapper",
-                layerURL,
-                //bbox=-14608729.4935068,4127680.66361813,-10533172.1554586,5562319.83205435
-                {
-                  layers: "show:0",
-                  format: "gif",
-                  srs: "3857", 
-                  transparent: "true",
-                });
-      facilities.epsgOverride = "3857";
-      facilities.setVisibility(false);
-      pvMapper.map.addLayer(facilities);
-    }
-
-    public removeRESTLayerMap() {
-      pvMapper.map.removeLayer(this.layerMap, false);
-    }
-
-
-    public updateScoreFromLayer(score: pvMapper.Score, layerName: string) {
-      var params = {
-        REQUEST: "GetFeatureInfo",
-
-      }
-    }
-  }
-  var solarMapper = new SolarMapper();
-    //============================================================
-
-  export class Worldterrain {
-    private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
-    private layerMap;
-    constructor() {
-      var layerURL: string = "http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer";
-
-      var myModule: pvMapper.Module = new pvMapper.Module({
-        id: "WorldTerrainModule",
-        author: "Leng Vang, INL",
-        version: "0.1.ts",
-
-        activate: () => {
-          this.addRESTLayerMap("World Terrain", layerURL);
-
-        },
-        deactivate: () => {
-          this.removeRESTLayerMap();
-        },
-        destroy: null,
-        init: null,
-
-        scoringTools: [{
-          activate: null,
-          deactivate: null,
-          destroy: null,
-          init: null,
-
-          title: "World Terrain",
-          description: "Calculate score based on terrain.",
-          onScoreAdded: (e, score: pvMapper.Score) => {
-          },
-          onSiteChange: function (e, score: pvMapper.Score) {
-            ///////////////////////////////////////////getFeatureInfo(s.site);
-
-            this.updateScoreFromLayer(score, "");
-            //s.popupMessage = "Solar radiation score";
-            //s.updateValue(Number.NaN);
-          },
-          updateScoreCallback: (score: pvMapper.Score) => {
-            ///////////////////////////////////////////getFeatureInfo(site);
-            score.popupMessage = "Terrain score";
-            score.updateValue(1);
-          },
-        }
-        ],
-
-        infoTools: null
-      });
-    }
-
-    public addRESTLayerMap(layerName: string, layerURL: string) {
-      var facilities = new OpenLayers.Layer.ArcGIS93Rest(
-                "World Terrain",
-                layerURL,
-                //bbox=-14608729.4935068,4127680.66361813,-10533172.1554586,5562319.83205435
-                {
-                  layers: "show:0",
-                  format: "gif",
-                  srs: "3857",
-                  transparent: "true",
-                });
-      facilities.epsgOverride = "3857";
-      facilities.setVisibility(false);
-      pvMapper.map.addLayer(facilities);
-    }
-
-    public removeRESTLayerMap() {
-      pvMapper.map.removeLayer(this.layerMap, false);
-    }
-
-
-    public updateScoreFromLayer(score: pvMapper.Score, layerName: string) {
-      var params = {
-        REQUEST: "GetFeatureInfo",
-
-      }
-    }
-  }
-
-  var terrain:Worldterrain = new Worldterrain();
 
 }
 

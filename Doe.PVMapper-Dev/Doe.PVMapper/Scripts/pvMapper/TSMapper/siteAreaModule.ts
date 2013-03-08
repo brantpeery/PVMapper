@@ -33,14 +33,14 @@ module INLModules {
                         var area = calculateSiteArea(score.site);
                         console.log("Calulated area of " + area + ". Setting the value on the score");
                         
-                        score.popupMessage = area.toFixed(3);
+                        score.popupMessage = area.toFixed(3) + " km2";
                         score.updateValue(area);
                     },
                     updateScoreCallback: (score: pvMapper.Score) => {
                         var area = calculateSiteArea(score.site);
                         console.log("Calulated area of " + area + " Returning value");
 
-                        score.popupMessage = area.toFixed(3);
+                        score.popupMessage = area.toFixed(3) + " km2";
                         score.updateValue(area);
                     },
                     
@@ -62,9 +62,9 @@ module INLModules {
         var proj = new OpenLayers.Projection('EPSG:900913');
 
         var area = geometry.getGeodesicArea(proj);
-        var kmArea = area / 1000000;
+        var kmArea = area / (1000 * 1000); // m^2 to km^2
 
-        return Math.round(kmArea * 100) / 100;
+        return kmArea;
     }
 
     //Handles the button click for the buttons for this tool

@@ -61,8 +61,8 @@ module OpenLayers {
     containsPoint(point: Point): Boolean;
     containsPoint(point: Point): number;
     intersects(geometry: Geometry): Boolean;
-    distanceTo(geometry: Geometry, options?: Boolean): number;
-    distanceTo(geometry: Geometry, options?: Boolean): Distance;
+    distanceTo(geometry: Geometry): number;
+    distanceTo(geometry: Geometry, options: any): Distance;
     createRegularPolygon(origin: Point, radius: number, sides: number, rotation: number);
   }
 
@@ -163,7 +163,7 @@ module OpenLayers {
     getSize(): Size;
     getCenterPixel(): Pixel;
     getCenterLonLat(): LonLat;
-    scale(ratio: number, origin: Pixel): Bounds;
+    scale(ratio: number, origin?: Pixel): Bounds;
     scale(ratio: number, origin: LonLat): Bounds;
     add(x: number, y: number): Bounds;
     extend(object: LonLat);
@@ -206,6 +206,8 @@ module OpenLayers {
   }
 
   interface Distance {
+    details: bool; //TODO: is this right?
+    distance: number;
     x0: number;
     y0: number;
     x1: number;
@@ -935,7 +937,7 @@ module OpenLayers {
     WMS(name: string, url: string, params: any, options: any): any;
 
     ArcGIS93Rest(name: string, url: string[], params: any): any;
-    ArcGIS93Rest(name: string, url: string, params: any): any;
+    ArcGIS93Rest(name: string, url: string, options: any, params?: any): any;
     //ArcGIS93Rest(name: string, url: string[], params: WMSParams, layerParams: WMSOptions ): any;
     //ArcGIS93Rest(name: string, url: string, params: WMSParams, options: ArcGIS93RestOptions): any;
     GridLayer(gridLayer: JSObject): any;
@@ -1019,7 +1021,7 @@ module OpenLayers {
     priv: any;
     error: any;
 
-    sucess(): Boolean;
+    success(): Boolean;
   }
 
   interface Protocol {

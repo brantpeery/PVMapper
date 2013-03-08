@@ -243,4 +243,3 @@ return 0;
 
 export var map: any = new OpenLayers.Map();
 */
-//@ sourceMappingURL=Module.js.map

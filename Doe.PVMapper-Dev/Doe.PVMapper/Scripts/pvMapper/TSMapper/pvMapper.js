@@ -8,5 +8,5 @@ var pvMapper;
     }
     pvMapper.onReady = onReady;
     pvMapper.map;
+    pvMapper.siteLayer;
 })(pvMapper || (pvMapper = {}));
-//@ sourceMappingURL=pvMapper.js.map

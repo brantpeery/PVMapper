@@ -39,7 +39,7 @@ Ext.define('MainApp.view.Window', {
       var taskBar = Ext.getCmp('maintaskbar');
 
     },
-    beforeshow: function (win, op) {
+    boxready: function (win, width, height, eOpts) { //Note: this event fires only once (for each new window)
       var taskBar = Ext.getCmp('maintaskbar');
       if (taskBar)
         taskBar.addButton(win);
