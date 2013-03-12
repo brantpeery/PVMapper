@@ -154,8 +154,8 @@ function addSite(map, layer) {
                     feature.fid = id; //Set the id of the feature so that it is updateable
                     
                     //push the new site into the pvMapper system
-                    pvMapper.siteManager.addSite(feature);
-
+                    var newSite = new pvMapper.Site(feature);
+                    pvMapper.siteManager.addSite(newSite);
 
                     var msg;
                     if (id) {

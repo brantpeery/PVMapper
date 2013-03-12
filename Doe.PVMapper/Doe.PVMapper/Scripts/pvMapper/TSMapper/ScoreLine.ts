@@ -6,86 +6,114 @@
 
 // Module
 module pvMapper {
-//  import pvM = pvMapper;
+    //  import pvM = pvMapper;
 
-  // Class
-  export class ScoreLine {
-    // Constructor
-    constructor (options: Options) {
-      this.self = this;
-      this.name = (typeof (options.title) === 'string') ? options.title : 'Unnamed Tool'; 
-      this.description = (typeof (options.description) === 'string') ? options.description : 'Unname Tool';
-      this.siteChangeHandler.addHandler( ($.isFunction(options.onSiteChange)) ? options.onSiteChange : null);
-      if ($.isFunction(options.onScoreAdded)) {
-        this.scoreAddedEvent.addHandler(options.onScoreAdded);
-      }
+    // Class
+    export class ScoreLine {
+        // Constructor
+        constructor(options: IScoreTool) {
+            console.log("Adding a scoreline for " + options.title);
+            this.self = this;
+            this.name = (typeof (options.title) === 'string') ? options.title : 'Unnamed Tool';
+            this.description = (typeof (options.description) === 'string') ? options.description : 'Unname Tool';
+            if ($.isFunction(options.onSiteChange)) {
+                this.onSiteChangeHandler = options.onSiteChange
+            }
 
-      siteManager.siteAdded.addHandler(this.onSiteAdded);
-      siteManager.siteRemoved.addHandler(this.onSiteRemove);
+            this.valueChangeHandler = (event: EventArg) => {
+                ///TODO: Create a ValueChangeEventArg or something to let the user know what to expect
 
-      this.loadAllSites();
+                this.scoreChangeEvent.fire(self, event);
+            }
+
+            if ($.isFunction(options.onScoreAdded)) {
+                this.scoreAddedEvent.addHandler(options.onScoreAdded);
+            }
+
+            siteManager.siteAdded.addHandler((event: Site) => {
+                console.log("Siteadded event detected in scoreline" + name);
+
+                this.addScore(event);
+            });
+            siteManager.siteRemoved.addHandler(this.onSiteRemove);
+
+            this.loadAllSites();
+        };
+
+        public name: string;
+        public description: string;
+        public scores: Score[] = new Score[]();
+        public updateScore: ICallback = options.updateScoreCallback;
+
+        public self: ScoreLine;
+        public scoreAddedEvent: pvMapper.Event = new pvMapper.Event();
+        public scoreChangeEvent: pvMapper.Event = new pvMapper.Event();
+        public updatingScoresEvent: pvMapper.Event = new pvMapper.Event();
+
+        public getUtilityScore(): number { return 0; }
+        public getWeight(): number { return 0; }
+        public getWeightedUtilityScore(): number { return 0; }
+
+        /**
+          Adds a score object to this line for the site.
+        */
+        public addScore(site: pvMapper.Site): pvMapper.Score {
+            console.log('Adding new score to scoreline');
+            var score: pvMapper.Score = new pvMapper.Score(site);
+            //score.value = this.getvalue(site);
+
+            //attach the tool's handler directly to the score
+            score.siteChangeEvent.addHandler(this.onSiteChangeHandler);
+
+            //subscribe to the score updated event
+            score.valueChangeEvent.addHandler(this.valueChangeHandler);
+
+            this.scores.push(score);
+            //this.self.scoreAddedEvent.fire(score, [{ score: score, site: site }, score]);
+            //Set the initial value from the tool
+            this.updateScore(score);
+            return score;
+        }
+
+        public removeScore(score: Score) {
+            // remove site from scoreline.
+
+
+        }
+
+        public updateScores(site: Site) {
+
+        }
+
+        public valueChangeHandler: ICallback;
+
+        //Storage pointer to the tool's sitechanged handler function
+        private onSiteChangeHandler: ICallback;
+
+        private loadAllSites() {
+            var allSites = siteManager.getSites();
+            $.each(allSites, function (idx, site) {
+                this.addScore(site);
+            });
+        }
+
+
+        ///TODO: get this to work using a score not a site
+        private onSiteRemove(event: EventArg) {
+            console.log('Attempting to remove a site/score from the scoreline')
+            if (event.data instanceof Site)
+                //remove the reference to the site.
+                this.self.removeScore(event.data);
+
+        }
+
+        //private onSiteAdded = 
+
+        //private onSiteUpdated(event: EventArg) {
+        //    if (event.data instanceof Site)
+        //        updateScore(event.data);
+        //}
+
     }
-    public name: string;
-    public description: string;
-    public scores: Score[] = new Score[]();
-    public getvalue:ICallBack = options.calculateValueCallback;
-
-    public self: ScoreLine;
-    public scoreAddedEvent: pvMapper.Event = new pvMapper.Event();
-    public scoreChangeEvent: pvMapper.Event = new pvMapper.Event();
-    public updatingScoresEvent: pvMapper.Event = new pvMapper.Event();
-    public siteChangeHandler: pvMapper.Event = new pvMapper.Event();
-
-    public getUtilityScore(): number { return 0;  }
-    public getWeight(): number { return 0; }
-    public getWeightedUtilityScore(): number { return 0; }
-    public addScore(site: pvMapper.Site): pvMapper.Score { 
-      var score: pvMapper.Score = new pvMapper.Score(site);
-      score.siteChangeEvent.addHandler(this.siteChangeHandler); //attach the tool's handler directly to the score
-      //subscribe to the score updated event
-      score.valueChangeEvent.addHandler(this.valueChangeHandler);
-
-      this.self.scores.push(score);
-//      this.self.scoreAddedEvent.fire(score, [{ score: score, site: site }, score]);
-      //Set the initial value from the tool
-//      score.updateValue(this.self.getValue(site));
-      return score;
-     }
-    public removeScore(site: Site) {
-      // remove site from scoreline.
-
-    }
-
-    public valueChangeHandler (event : pvMapper.Event) {
-        this.scoreChangeEvent.fire(self, event);
-    }
-    //The name that will show up in the row
-    public updateScore(site: Site) {
-
-    }
-
-    public onSiteRemove(event: pvMapper.Event) {
-      if (event.data instanceof Site)
-      //remove the reference to the site.
-        this.self.removeScore(event.data);
-    }
-
-    public onSiteAdded(event : pvMapper.Event) {
-      if (event.data instanceof Site)
-      this.self.addScore(event.data);
-    }
-
-    public onSiteUpdated(event: Event) {
-      if (event.data instanceof Site)
-        this.self.updateScore(event.data);
-    }
-
-    private loadAllSites() {
-      var allSites = siteManager.getSites();
-      $.each(allSites, function (idx, site) {
-        this.addScore(site);
-      });
-    }
-  }
 
 }

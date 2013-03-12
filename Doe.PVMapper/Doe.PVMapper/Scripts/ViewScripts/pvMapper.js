@@ -7,8 +7,7 @@ if ( typeof pvMapper == 'undefined' ) {
 (function (pvM) {
     $.extend(pvM, { //Extend the existing pvMapper object
         self: this,
-        // This is exposed to allow extensions to interact with the map.
-        map: null,
+        
         // The developer needs to be able to add and remove buttons to a toolbar.
         mapToolbar: null,
         tabs: null,
@@ -33,14 +32,14 @@ if ( typeof pvMapper == 'undefined' ) {
         updateSite: function (siteId, name, description, polygonGeometry) {
 
             //Only send the stuff that was passed into this function.
-            var data = { id: siteId, isActive: true };
+            var data = {isActive: true};
             if (name) { data.name = name; }
             if (description) { data.description = description; }
             if (polygonGeometry) { data.polygonGeometry = polygonGeometry; }
 
-            return $.ajax("/api/ProjectSite", {
+            return $.ajax("/api/ProjectSite/"+siteId, {
                 data: data,
-                type: "POST",
+                type: "PUT",
                 done: function () {
                     pvMapper.displayMessage("The site changes were saved", "info");
                 },

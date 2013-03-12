@@ -48,9 +48,10 @@ namespace Doe.PVMapper.WebApi
             return response;
         }
 
-        public void Put(string id, ProjectSite value)
+        public void PutSite(string id, ProjectSite value)
         {
             value.UserId = User.Identity.Name;
+            value.Id = id;
 
             if (_db.Update(value) == null)
             {

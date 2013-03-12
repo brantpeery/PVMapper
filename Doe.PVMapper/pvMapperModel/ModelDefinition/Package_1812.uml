@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ComponentDesigner" xmlns:dm9="http://schemas.microsoft.com/dsltools/SimpleShapesModel" xmlns:dm10="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ActivityDesigner" xmlns:dm11="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm12="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner"
+  dslVersion="1.0.0.0"
+  Id="ee7f97d4-3a00-46eb-9c8f-0dff4bda59f8"
+  name="ModuleAPI" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <packagedElements>
+    <packageHasNamedElement>
+      <class
+        Id="8fe814c0-050b-4247-8902-cae38dd62bdc"
+        name="ScoreTool"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <interfaceRealization
+            Id="c822ff34-047c-4cdd-b631-382288ff11fd">
+            <interfaceMoniker
+              Id="f56078e7-3815-4ae0-9c13-93732d9c0283"
+              LastKnownName="ITool"
+              LastKnownLocation="Package_1812.uml" />
+          </interfaceRealization>
+          <dependency
+            Id="7c5e30fe-96d9-42b6-8659-ca31b31c7e60">
+            <classMoniker
+              Id="140f3375-8844-4d15-a508-e6ed5b7975e3"
+              LastKnownName="ScoreLine"
+              LastKnownLocation="Package_1836.uml" />
+          </dependency>
+          <dependency
+            Id="89a0dd9b-d8d4-4885-b43a-2bc9194ddfc4">
+            <classMoniker
+              Id="bbad09d3-0fba-4a2e-ab0c-b420f9f3979e"
+              LastKnownName="ModuleManager"
+              LastKnownLocation="Package_1836.uml" />
+          </dependency>
+        </suppliersInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="478d83d6-6ef7-4a10-a2c2-909d6101aeb9"
+        name="InfoTool"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <interfaceRealization
+            Id="b6225b00-c146-4b65-a18c-0d1f9ea39f72">
+            <interfaceMoniker
+              Id="f56078e7-3815-4ae0-9c13-93732d9c0283"
+              LastKnownName="ITool"
+              LastKnownLocation="Package_1812.uml" />
+          </interfaceRealization>
+          <dependency
+            Id="d8f74573-9429-4f61-8690-7ad287c51a2e">
+            <classMoniker
+              Id="2f32634b-7edb-475b-beb0-19cf81c9963a"
+              LastKnownName="UI_Tools"
+              LastKnownLocation="Package_0836.uml" />
+          </dependency>
+        </suppliersInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="f56078e7-3815-4ae0-9c13-93732d9c0283"
+        name="ITool"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="fa836d71-70a3-46ae-8374-198bbe6db8d6"
+        name="ModuleLoader"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+  </packagedElements>
+</package>

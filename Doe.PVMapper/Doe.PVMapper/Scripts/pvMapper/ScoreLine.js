@@ -20,7 +20,7 @@
 
 
         this.getUtilityScore = function () { };
-        this.getWeight = function () {; }
+        this.getWeight = function () { };
         this.getWeightedUtilityScore = function () { };
         this.addScore = function (site) {
             var score = new pvM.Score(site);
@@ -40,8 +40,8 @@
 
 
         this.name = (typeof (options.title) === 'string') ? options.title : "Unnamed Tool"; //The name that will show up in the row
-        this.description = (typeof (options.description) === 'string') ? options.description : "Unnamed Tool";; //The popup information that will show up on mouse hover
-        this.scores = new Array(); //A collection of scores that store all the information for the colums of this line
+        this.description = (typeof (options.description) === 'string') ? options.description : "Unnamed Tool"; //The popup information that will show up on mouse hover
+        this.scores = []; //A collection of scores that store all the information for the colums of this line
         //for (site in pvM.siteManger.sites) {
         //    self.addScore(site);
         //}
@@ -69,7 +69,7 @@
 
             //Create a new score for the site
             self.addScore(site);
-        }
+        };
 
 
         //Used to force the module to update all the scores for this line 
@@ -79,10 +79,10 @@
                     site: this.scores[idx].site,
                     score: this.scores[idx],
                     type: "ScoreLine.updateScores"
-                }
+                };
                 self.siteChangeEvent.fire(this, e);
             }
-        }
+        };
 
 
         //Init logic
@@ -100,5 +100,5 @@
                 self.addScore(site);
             });
         }
-    }
+    };
 })(pvMapper);
