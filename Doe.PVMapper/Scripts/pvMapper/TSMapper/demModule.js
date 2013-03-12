@@ -69,4 +69,3 @@ var BYUModules;
     var modInstance = new DemModule();
     var request = OpenLayers.Request.POST;
 })(BYUModules || (BYUModules = {}));
-//@ sourceMappingURL=DemModule.js.map
