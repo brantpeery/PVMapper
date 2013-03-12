@@ -2,14 +2,14 @@ var __extends = this.__extends || function (d, b) {
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
-}
+};
 /// <reference path="common.ts" />
 /// <reference path="../../jquery.d.ts" />
-/// <reference path="C:\Program Files (x86)\Microsoft SDKs\TypeScript\0.8.0.0\lib.d.ts" />
-// Module
 var pvMapper;
 (function (pvMapper) {
-    // Class
+    /**
+    * Used to reder output either to screen or file. Uses a template for rendered output.
+    */
     var Renderer = (function () {
         // Constructor
         function Renderer(text) {
@@ -17,7 +17,11 @@ var pvMapper;
             this.children = new Array();
             this.text = (text) ? text : '';
         }
-        Renderer.prototype.render = function () {
+        Renderer.prototype.render = /**
+        * Renders the Renderer until it's rendered
+        * TODO: what does this really do?
+        */
+        function () {
             var s = '';
             $.each(this.children, function (idx, val) {
                 s += val.render();
@@ -28,7 +32,9 @@ var pvMapper;
         };
         Renderer.prototype.getTemplateArgs = /*Returns a list of arguments that is meant to be used with the  template during the render */
         function (childrenRenderText) {
-            return (this.text + childrenRenderText);
+            return {
+                text: this.text + childrenRenderText
+            };
         };
         Renderer.prototype.updateElement = function (element) {
         };
@@ -40,11 +46,11 @@ var pvMapper;
     })();
     pvMapper.Renderer = Renderer;    
     //HTML Renderer class
+    //Renders output to HTML using a template and named tag
     var HTML = (function (_super) {
         __extends(HTML, _super);
         function HTML(tag, text) {
                 _super.call(this, text);
-            this.attributes = new Array();
             _super.prototype.template = '<{tag} {attributes}>{text}</{tag}>';
             this.tag = (tag) ? tag : 'div';
         }
@@ -73,13 +79,15 @@ var pvMapper;
     })(Renderer);
     pvMapper.HTML = HTML;    
     //class Table extends class HTML
+    //Renders a table using the TABLE tag and can contain rows and columns
     var Table = (function (_super) {
         __extends(Table, _super);
         function Table(tag) {
             if (typeof tag === "undefined") { tag = 'table'; }
                 _super.call(this, tag, '');
         }
-        Table.prototype.addRow = function () {
+        Table.prototype.addRow = //Adds a row to the table. Returns the new empty row to be used by the calling code.
+        function () {
             var newRow = new Row();
             this.children.push(newRow);
             return newRow;
@@ -88,14 +96,15 @@ var pvMapper;
     })(HTML);
     pvMapper.Table = Table;    
     //class Row extends class Table
+    //Renders an HTML row in a table object. Contains cells that will render with TD tag
     var Row = (function (_super) {
         __extends(Row, _super);
         function Row(tag) {
             if (typeof tag === "undefined") { tag = 'tr'; }
                 _super.call(this, tag);
         }
-        /*Adds a cell to the row. Passing in a cell will add that cell, passing in text will add a cell with text */
-                Row.prototype.addCell = function (args) {
+        Row.prototype.addCell = /*Adds a cell to the row. Passing in a cell will add that cell, passing in text will add a cell with text */
+        function (args) {
             if(arguments[0] && arguments[0]['tag'] && (arguments[0]['tag'] == 'td' || arguments[0]['tag'] == 'th')) {
                 this.children.push(arguments[0]);
                 return arguments[0];
@@ -110,4 +119,3 @@ var pvMapper;
     })(Table);
     pvMapper.Row = Row;    
 })(pvMapper || (pvMapper = {}));
-

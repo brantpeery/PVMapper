@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{d3426faa-6fff-4846-8da9-5cb63b241e62}</ProjectGuid>
+    <ArchitectureToolsVersion>2.0.0.0</ArchitectureToolsVersion>
+    <Name>pvMapperModel</Name>
+    <RootNamespace>pvMapperModel</RootNamespace>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(VSToolsPath)\ArchitectureTools\Microsoft.VisualStudio.TeamArchitect.ModelingProject.targets" Condition="'$(VSToolsPath)' != ''" />
+  <ItemGroup>
+    <Content Include="ModelDefinition\Package_0836.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package_1751.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package_1807.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package_1812.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package_1836.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModuleRegister.sequencediagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModuleRegister.sequencediagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>ModuleRegister.sequencediagram</DependentUpon>
+    </Content>
+    <Content Include="pvActivities.activitydiagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="pvActivities.activitydiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>pvActivities.activitydiagram</DependentUpon>
+    </Content>
+    <Content Include="pvMapperAPI.classdiagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="pvMapperAPI.classdiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>pvMapperAPI.classdiagram</DependentUpon>
+    </Content>
+    <Content Include="pvMapperComponents.componentdiagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="pvMapperComponents.componentdiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>pvMapperComponents.componentdiagram</DependentUpon>
+    </Content>
+    <Content Include="uiRegister.sequencediagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="uiRegister.sequencediagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>uiRegister.sequencediagram</DependentUpon>
+    </Content>
+    <Folder Include="ModelDefinition\" />
+    <Content Include="ModelDefinition\pvMapperModel.uml">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
+</Project>

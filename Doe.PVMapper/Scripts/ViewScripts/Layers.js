@@ -1,31 +1,44 @@
 ﻿pvMapper.onReady(function () {
 
-    var solarBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
+    // EPSG:102113, EPSG:900913, and EPSG:3857 are all the same projection (just different flavors favored by different groups).
+    // So, this is (a bit of) a hack to coax OpenLayers to request maps in the native projection of the server
+    //TODO: move this to wherever it should ultimately go.
+    Ext.override(OpenLayers.Layer.WMS, {
+        getFullRequestString: function (newParams, altUrl) {
+            var projectionCode = this.map.getProjection();
+            if (((typeof (this.epsgOverride)) !== "undefined") && this.epsgOverride.length > 0) {
+              this.params.SRS = this.epsgOverride;
+            } else {
+              this.params.SRS = (projectionCode === "none") ? null : projectionCode;
+            }
+
+            return OpenLayers.Layer.Grid.prototype.getFullRequestString.apply(this, arguments);
+        }
+    });
+
+    Ext.override(OpenLayers.Layer.ArcGIS93Rest, {
+      getFullRequestString: function (newParams, altUrl) {
+        var projectionCode = this.map.getProjection();
+        if (((typeof (this.epsgOverride)) !== "undefined") && this.epsgOverride.length > 0) {
+          this.params.SRS = this.epsgOverride;
+        } else {
+          this.params.SRS = (projectionCode === "none") ? null : projectionCode;
+        }
+
+        return OpenLayers.Layer.Grid.prototype.getFullRequestString.apply(this, arguments);
+      }
+    });
+
+    //var solarBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
     var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);
 
     var resolutions = OpenLayers.Layer.Bing.prototype.serverResolutions.slice(4, 19);
     var osm = new OpenLayers.Layer.OSM("Open Street", null, { isBaseLayer:true, zoomOffset: 4, resolutions: resolutions });
     $.jGrowl("Adding Open Street Map");
     pvMapper.map.addLayer(osm);
-    pvMapper.map.zoomToMaxExtent();
 
-    var solar = new OpenLayers.Layer.WMS(
-            "Solar Radiation",
-            "http://mapsdb.nrel.gov/jw_router/perezANN_mod/tile",
-            {
-                maxExtent: solarBounds,
-                layers: "perezANN_mod",
-                layer_type: "polygon",
-                transparent: "true",
-                format: "image/gif",
-                exceptions: "application/vnd.ogc.se_inimage",
-                maxResolution: 156543.0339
-            },
-            { isBaseLayer: false }
-            );
-    solar.setOpacity(0.3);
-    $.jGrowl("Adding Solar Radiation");
-    pvMapper.map.addLayer(solar);
+    var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);
+    pvMapper.map.zoomToExtent(usBounds); // <-- this worked
 
     var slope = new OpenLayers.Layer.WMS(
             "Slope",
@@ -42,24 +55,40 @@
             }
         );
     slope.setOpacity(0.3);
+    slope.setVisibility(false);
     $.jGrowl("Adding Slope");
     pvMapper.map.addLayer(slope);
 
-    var blueMarble = new OpenLayers.Layer.WMS(
-            "Global Imagery",
-            "http://maps.opengeo.org/geowebcache/service/wms",
-            {
-                layers: "bluemarble",
-            }
-            );
-    pvMapper.map.addLayer(blueMarble);
+    //Note: this isn't working ...
+    //var blueMarble = new OpenLayers.Layer.WMS(
+    //        "Global Imagery",
+    //        "http://maps.opengeo.org/geowebcache/service/wms", {
+    //            layers: "bluemarble",
+    //        });
+    //pvMapper.map.addLayer(blueMarble);
 
-    var wms = new OpenLayers.Layer.WMS("OpenLayers", "http://vmap0.tiles.osgeo.org/wms/vmap0?", {
-        layers: 'basic',
-        projection: new OpenLayers.Projection("EPSG:900913")
+    var openLayersWmsThing = new OpenLayers.Layer.WMS(
+        "OpenLayers",
+        "http://vmap0.tiles.osgeo.org/wms/vmap0?", {
+            layers: 'basic',
+            projection: new OpenLayers.Projection("EPSG:900913")
+        });
+    openLayersWmsThing.epsgOverride = "EPSG:900913";
+    pvMapper.map.addLayer(openLayersWmsThing);
 
-    });
-    pvMapper.map.addLayer(wms);
+    var esriWorldTerrain = new OpenLayers.Layer.ArcGIS93Rest(
+        "World Terrain",
+        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/export",
+        {
+            layers: "0",
+            format: "gif",
+            srs: "3857",
+            transparent: "true",
+        });
+    esriWorldTerrain.setIsBaseLayer(true);
+    esriWorldTerrain.epsgOverride = "3857";
+    pvMapper.map.addLayer(esriWorldTerrain);
+
 
     //Set up the layer for the site polys
     //If a style is applied at the layer level, then 

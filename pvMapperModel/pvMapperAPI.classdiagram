@@ -1,0 +1,505 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<logicalClassDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ComponentDesigner" xmlns:dm10="http://schemas.microsoft.com/dsltools/SimpleShapesModel" xmlns:dm11="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ActivityDesigner" xmlns:dm12="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" dslVersion="1.0.0.0" Id="28bc8a26-a06d-493f-bd5e-78080d08b6b3" name="pvMapperAPI" linkedPackageId="5f3b1376-ebea-4b4a-ba04-fff8d672af90" xmlns="http://schemas.microsoft.com/dsltools/LogicalClassDesigner">
+  <packagedElements>
+    <packageHasNamedElement>
+      <referencedType Id="61161a31-501e-4c38-ada1-14a0421fb1cb" name="float" isAbstract="false" isLeaf="false" cachedFullName="float">
+        <elementDefinition Id="0e6b6fa6-8621-4cde-b445-93402b44a29b" />
+      </referencedType>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <referencedType Id="e0c94cb7-2098-4c59-9b89-cab954a437af" name="Boolean" isAbstract="false" isLeaf="false" cachedFullName="Boolean">
+        <elementDefinition Id="8943dc84-709e-4f62-b15a-a3273aa6f165" />
+      </referencedType>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <referencedType Id="ea101b2e-dae7-4ed7-9de0-a60950e951f7" name="float" isAbstract="false" isLeaf="false" cachedFullName="float">
+        <elementDefinition Id="0e6b6fa6-8621-4cde-b445-93402b44a29b" />
+      </referencedType>
+    </packageHasNamedElement>
+    <logicalClassDesignerModelHasPackages>
+      <package Id="023240c6-3b2b-4e52-b68d-fb8e1f7cde34" name="DataLayer">
+        <elementDefinition Id="c48cc10c-d973-42e6-83bc-9be2c4b74fdc" />
+        <packagedElements>
+          <packageHasNamedElement>
+            <Interface Id="c886f4f4-cb8c-494b-b60d-289cff24a537" name="DataManager" isAbstract="false" isLeaf="false">
+              <elementDefinition Id="32d1a29d-cec4-481c-b96d-c81a8ed1405e" />
+            </Interface>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="cddef6b0-f605-4834-94a0-710159b0a3e1" name="UtilModel" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="29cfb28b-0d31-4009-985e-ad1b394463ae" />
+              <suppliersInternal>
+                <interfaceRealization Id="71c19c77-b521-4dfe-b490-ade6af62025a">
+                  <interfaceMoniker Id="c886f4f4-cb8c-494b-b60d-289cff24a537" LastKnownName="DataManager" />
+                  <elementDefinition Id="74963a28-9f1a-4999-9aa8-f95f548c7150" />
+                </interfaceRealization>
+                <dependency Id="41a141bf-18fc-44f8-84e5-089b3720cf2e">
+                  <classMoniker Id="8b8193e4-3df2-4606-b17f-d1f872100ec7" LastKnownName="Utility" />
+                  <elementDefinition Id="ce69f72d-db94-44cd-8c17-2d0d073933d2" />
+                </dependency>
+              </suppliersInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="3890401e-4e74-4114-8f65-ca9fa2840abb" name="ScoreModel" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="43641b3e-31f8-4fff-b963-89f3e80d8e62" />
+              <suppliersInternal>
+                <interfaceRealization Id="18598d13-41ae-44cc-aeeb-165fb7bce872">
+                  <interfaceMoniker Id="c886f4f4-cb8c-494b-b60d-289cff24a537" LastKnownName="DataManager" />
+                  <elementDefinition Id="ccca044a-cbac-4ccb-89d6-d2e4f12feab0" />
+                </interfaceRealization>
+                <dependency Id="de13981e-63b4-406f-a3ec-a823d19c68ee">
+                  <classMoniker Id="d5bf4242-7bf6-4856-a7da-f0c619b918c2" LastKnownName="ScoreBoard" />
+                  <elementDefinition Id="6da6d704-9edc-4459-8d7f-9a700de10d7d" />
+                </dependency>
+              </suppliersInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="3b12d35c-51ae-4246-b15a-01f2ee5c0a46" name="PrefModel" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="499360f1-745f-428f-aeb2-8900589abbc9" />
+              <suppliersInternal>
+                <interfaceRealization Id="0e965182-f6b8-4a52-af5e-62cbf2300c3d">
+                  <interfaceMoniker Id="c886f4f4-cb8c-494b-b60d-289cff24a537" LastKnownName="DataManager" />
+                  <elementDefinition Id="40bf1f27-6fc7-44f0-99b6-8fc7f219374c" />
+                </interfaceRealization>
+                <dependency Id="4e63b9f3-fa21-4673-9afa-b57c764e21d4">
+                  <classMoniker Id="ff60800b-8e3e-48e5-ac90-8975eb194e94" LastKnownName="UserPreferrence" />
+                  <elementDefinition Id="8f5744fa-e500-4ffe-add8-2b9e2242723e" />
+                </dependency>
+              </suppliersInternal>
+            </class>
+          </packageHasNamedElement>
+        </packagedElements>
+      </package>
+    </logicalClassDesignerModelHasPackages>
+    <logicalClassDesignerModelHasPackages>
+      <package Id="7308fb33-1bb5-4f43-8e54-2c2fbdc76448" name="ModuleAPI">
+        <elementDefinition Id="ee7f97d4-3a00-46eb-9c8f-0dff4bda59f8" />
+        <packagedElements>
+          <packageHasNamedElement>
+            <class Id="3f864282-add4-47d1-8db9-339bd669dac0" name="ScoreTool" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="8fe814c0-050b-4247-8902-cae38dd62bdc" />
+              <suppliersInternal>
+                <interfaceRealization Id="c0d03572-23cb-481b-9096-0063ec03295e">
+                  <interfaceMoniker Id="aed7a54d-499b-4703-b763-e6290afb96e6" LastKnownName="ITool" />
+                  <elementDefinition Id="c822ff34-047c-4cdd-b631-382288ff11fd" />
+                </interfaceRealization>
+                <dependency Id="67fe38a6-1812-494b-9f5b-eb8fe5a6ac32">
+                  <classMoniker Id="3cbaa1e8-a2f8-48b4-a76f-88f1e05f6872" LastKnownName="ScoreLine" />
+                  <elementDefinition Id="7c5e30fe-96d9-42b6-8659-ca31b31c7e60" />
+                </dependency>
+                <dependency Id="b33cda80-d7fa-4277-81b1-219e2cb099cd">
+                  <classMoniker Id="7af4d130-c098-4c46-afb2-0c613c2c5fa5" LastKnownName="ModuleManager" />
+                  <elementDefinition Id="89a0dd9b-d8d4-4885-b43a-2bc9194ddfc4" />
+                </dependency>
+              </suppliersInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="eaddbdf0-2c37-442f-a221-b55c839f90b8" name="InfoTool" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="478d83d6-6ef7-4a10-a2c2-909d6101aeb9" />
+              <suppliersInternal>
+                <interfaceRealization Id="308750a3-7a09-48fc-9e8b-36156459c6b1">
+                  <interfaceMoniker Id="aed7a54d-499b-4703-b763-e6290afb96e6" LastKnownName="ITool" />
+                  <elementDefinition Id="b6225b00-c146-4b65-a18c-0d1f9ea39f72" />
+                </interfaceRealization>
+                <dependency Id="ca418512-2dd0-40fc-a02e-a19ed0bbeecb">
+                  <classMoniker Id="f00ec5bf-d09c-4e70-91ab-6df35542a01e" LastKnownName="UI_Tools" />
+                  <elementDefinition Id="d8f74573-9429-4f61-8690-7ad287c51a2e" />
+                </dependency>
+              </suppliersInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <Interface Id="aed7a54d-499b-4703-b763-e6290afb96e6" name="ITool" isAbstract="false" isLeaf="false">
+              <elementDefinition Id="f56078e7-3815-4ae0-9c13-93732d9c0283" />
+            </Interface>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="b69dfe68-763d-4ed3-a671-fef0e4d5a5c1" name="ModuleLoader" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="fa836d71-70a3-46ae-8374-198bbe6db8d6" />
+            </class>
+          </packageHasNamedElement>
+        </packagedElements>
+      </package>
+    </logicalClassDesignerModelHasPackages>
+    <logicalClassDesignerModelHasPackages>
+      <package Id="f8c660b9-0936-4b8c-86bb-2c9e1d961dfa" name="Scoring">
+        <elementDefinition Id="964dd9c3-6d2f-4ac0-a9f1-d5b1aac7b1aa" />
+        <packagedElements>
+          <packageHasNamedElement>
+            <class Id="2b6d9375-1bb9-4231-870d-5db8b97d7860" name="Score" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="e6c2e8a3-43ca-4b99-b444-12a1bc24e76f" />
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="3cbaa1e8-a2f8-48b4-a76f-88f1e05f6872" name="ScoreLine" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="140f3375-8844-4d15-a508-e6ed5b7975e3" />
+              <targetEnds>
+                <association Id="aa6535a5-33ad-4d1f-baf4-defa9f8fe385" isDerived="false" sourceEndRoleName="ScoreLine" targetEndRoleName="Score" isLeaf="false" isAbstract="false">
+                  <classMoniker Id="2b6d9375-1bb9-4231-870d-5db8b97d7860" LastKnownName="Score" />
+                  <relationshipOwnedElementsInternal>
+                    <associationHasOwnedEnds>
+                      <memberEnd Id="85600f63-a761-4efe-af3a-f797de0a36c1" name="ScoreLine" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="Composite" isComposite="false" isNavigableOwned="false">
+                        <elementDefinition Id="497df10c-e49f-45c8-91a2-2b46182c1296" />
+                      </memberEnd>
+                    </associationHasOwnedEnds>
+                    <associationHasOwnedEnds>
+                      <memberEnd Id="26430a47-64bd-4787-88db-a66eff1da2bc" name="Score" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="true">
+                        <elementDefinition Id="8711bb6c-26db-4c14-b306-250a6897adc1" />
+                      </memberEnd>
+                    </associationHasOwnedEnds>
+                  </relationshipOwnedElementsInternal>
+                  <elementDefinition Id="be62d98c-1a33-465e-93aa-29bfd7e27d76" />
+                </association>
+              </targetEnds>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="39907faa-d88f-4e25-8462-d7963053fdfc" name="Site" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="aa935fd9-b56c-473c-a165-4f14cd6c7fb1" />
+              <suppliersInternal>
+                <dependency Id="942fbe14-d81c-47f5-b3b7-d0b7b8378dbf">
+                  <classMoniker Id="2b6d9375-1bb9-4231-870d-5db8b97d7860" LastKnownName="Score" />
+                  <elementDefinition Id="ea65115d-9353-4a6e-94a0-f7ee63c6efb3" />
+                </dependency>
+              </suppliersInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="d5bf4242-7bf6-4856-a7da-f0c619b918c2" name="ScoreBoard" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="e842223e-89c3-4de3-b3ef-6a816e3c2fb5" />
+              <suppliersInternal>
+                <dependency Id="a15f97f3-3269-4bfe-9a78-c20e50f1ff7f">
+                  <classMoniker Id="7af4d130-c098-4c46-afb2-0c613c2c5fa5" LastKnownName="ModuleManager" />
+                  <elementDefinition Id="d6d51418-eb7c-4480-a748-5cad0bbdd00f" />
+                </dependency>
+              </suppliersInternal>
+              <targetEnds>
+                <association Id="c954f8a4-4b0b-482b-bd22-8885ae4ae995" isDerived="false" sourceEndRoleName="ScoreBoard" targetEndRoleName="ScoreLine" isLeaf="false" isAbstract="false">
+                  <classMoniker Id="3cbaa1e8-a2f8-48b4-a76f-88f1e05f6872" LastKnownName="ScoreLine" />
+                  <relationshipOwnedElementsInternal>
+                    <associationHasOwnedEnds>
+                      <memberEnd Id="15e3f485-a3b8-4a37-80a0-6745a1fd37ce" name="ScoreBoard" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="Composite" isComposite="false" isNavigableOwned="false">
+                        <elementDefinition Id="6e85794f-1696-45a4-acba-6bc485e8801c" />
+                      </memberEnd>
+                    </associationHasOwnedEnds>
+                    <associationHasOwnedEnds>
+                      <memberEnd Id="53e38660-d0fb-4ae4-bd0d-2f53c6c7f7c6" name="ScoreLine" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="true">
+                        <elementDefinition Id="b4042918-6cc3-4fc9-bf7a-08c390c92b51" />
+                      </memberEnd>
+                    </associationHasOwnedEnds>
+                  </relationshipOwnedElementsInternal>
+                  <elementDefinition Id="1f776f82-51d1-4a8d-b9dd-8d93d57b7624" />
+                </association>
+              </targetEnds>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="ff60800b-8e3e-48e5-ac90-8975eb194e94" name="UserPreferrence" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="d80c5bb3-46be-4c0d-b1ee-13e83e1ed6f5" />
+              <suppliersInternal>
+                <dependency Id="f1e95601-bdb4-4242-9a55-78c462f2a97d">
+                  <classMoniker Id="d5bf4242-7bf6-4856-a7da-f0c619b918c2" LastKnownName="ScoreBoard" />
+                  <elementDefinition Id="0b4fea03-1675-4be4-856b-b9d0302e57e3" />
+                </dependency>
+              </suppliersInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="8b8193e4-3df2-4606-b17f-d1f872100ec7" name="Utility" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="bf80fda9-b22a-4463-b2c4-750512be668a" />
+              <suppliersInternal>
+                <dependency Id="ec43cb95-e75d-4107-8cca-0c8043f2fbe9">
+                  <classMoniker Id="3cbaa1e8-a2f8-48b4-a76f-88f1e05f6872" LastKnownName="ScoreLine" />
+                  <elementDefinition Id="241e1b3d-f953-42fc-aa3a-5e35dd0f2867" />
+                </dependency>
+              </suppliersInternal>
+              <ownedOperationsInternal>
+                <operation Id="9c995ef8-4da9-4029-8ede-264c3d42b00c" name="LessIsBetter" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+                  <elementDefinition Id="464fe023-548e-467f-9d4c-4242c516267d" />
+                  <ownedParameters>
+                    <operationHasOwnedParameters>
+                      <parameter Id="61b6b4c0-a2d8-49fc-a937-80fea832ebca" name="x" direction="In" isUnique="false">
+                        <elementDefinition Id="a6f9664d-0bf3-42fe-adb4-42eb4fdb0984" />
+                        <type_NamedElement>
+                          <referencedTypeMoniker Id="61161a31-501e-4c38-ada1-14a0421fb1cb" LastKnownName="float" />
+                        </type_NamedElement>
+                      </parameter>
+                    </operationHasOwnedParameters>
+                    <operationHasOwnedParameters>
+                      <parameter Id="da46f0a1-01e5-4e25-a3b6-2aa54dae49c3" direction="Return" isUnique="false">
+                        <elementDefinition Id="5ff5af2c-27ba-4f02-b603-5271b16aef68" />
+                        <type_NamedElement>
+                          <referencedTypeMoniker Id="61161a31-501e-4c38-ada1-14a0421fb1cb" LastKnownName="float" />
+                        </type_NamedElement>
+                      </parameter>
+                    </operationHasOwnedParameters>
+                  </ownedParameters>
+                </operation>
+                <operation Id="11e7c31a-5a65-4e42-9385-f063b4c9334e" name="MoreIsBetter" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+                  <elementDefinition Id="4f363e7a-8ec9-4714-9b5e-44116212f623" />
+                  <ownedParameters>
+                    <operationHasOwnedParameters>
+                      <parameter Id="f7e162af-98b4-4815-837f-26e3137e61a5" direction="Return">
+                        <elementDefinition Id="f98fe50a-333d-4568-aa31-cd4f25da4071" />
+                        <type_NamedElement>
+                          <referencedTypeMoniker Id="ea101b2e-dae7-4ed7-9de0-a60950e951f7" LastKnownName="float" />
+                        </type_NamedElement>
+                      </parameter>
+                    </operationHasOwnedParameters>
+                    <operationHasOwnedParameters>
+                      <parameter Id="62d4aa4d-8d78-4a6a-8069-00d2eb3fd3e9" name="x" direction="In">
+                        <elementDefinition Id="0ca9931a-a5f2-4460-9ee9-03cd849d9341" />
+                        <type_NamedElement>
+                          <referencedTypeMoniker Id="61161a31-501e-4c38-ada1-14a0421fb1cb" LastKnownName="float" />
+                        </type_NamedElement>
+                      </parameter>
+                    </operationHasOwnedParameters>
+                  </ownedParameters>
+                </operation>
+                <operation Id="e20577c0-c8a9-4778-88d4-72cea096f1d2" name="ClosestTarget" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+                  <elementDefinition Id="a829abd0-69a8-42fc-bff0-38fc4c3357cb" />
+                  <ownedParameters>
+                    <operationHasOwnedParameters>
+                      <parameter Id="d13b1a3f-5098-4ba5-a8b8-6e396921c8f4" direction="Return" isUnique="false">
+                        <elementDefinition Id="fa75fba3-993d-4be3-8531-2925c99edf3d" />
+                        <type_NamedElement>
+                          <referencedTypeMoniker Id="61161a31-501e-4c38-ada1-14a0421fb1cb" LastKnownName="float" />
+                        </type_NamedElement>
+                      </parameter>
+                    </operationHasOwnedParameters>
+                    <operationHasOwnedParameters>
+                      <parameter Id="4c9caafb-3162-4bdc-bc48-778aaaabb4a3" name="x" direction="In" isUnique="false">
+                        <elementDefinition Id="d114b751-f917-413b-af7d-3804b9f58c57" />
+                        <type_NamedElement>
+                          <referencedTypeMoniker Id="61161a31-501e-4c38-ada1-14a0421fb1cb" LastKnownName="float" />
+                        </type_NamedElement>
+                      </parameter>
+                    </operationHasOwnedParameters>
+                  </ownedParameters>
+                </operation>
+              </ownedOperationsInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="7af4d130-c098-4c46-afb2-0c613c2c5fa5" name="ModuleManager" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="bbad09d3-0fba-4a2e-ab0c-b420f9f3979e" />
+              <ownedOperationsInternal>
+                <operation Id="98891133-06fd-472f-a097-13119822d3cc" name="register" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+                  <elementDefinition Id="8ffe5aab-604e-4ab7-a935-53d295e99595" />
+                  <ownedParameters>
+                    <operationHasOwnedParameters>
+                      <parameter Id="6c2ca66b-b5d8-49c5-9ef8-0430c9623e00" name="tool" direction="In" isUnique="false">
+                        <elementDefinition Id="dbbb6ddf-54c1-4ceb-bd70-bfc1c198470c" />
+                        <type_NamedElement>
+                          <referencedTypeMoniker Id="3befec4b-22a7-4ba9-8e58-037cb9dca263" LastKnownName="ITool" />
+                        </type_NamedElement>
+                      </parameter>
+                    </operationHasOwnedParameters>
+                    <operationHasOwnedParameters>
+                      <parameter Id="3ddc2baa-8647-4738-8839-a60c6413c5d4" direction="Return" isUnique="false">
+                        <elementDefinition Id="c9420ae3-5a2f-4618-9a24-307575393332" />
+                        <type_NamedElement>
+                          <referencedTypeMoniker Id="d40db9d5-8607-4343-bb3f-efd57d8d3e32" LastKnownName="any" />
+                        </type_NamedElement>
+                      </parameter>
+                    </operationHasOwnedParameters>
+                  </ownedParameters>
+                </operation>
+                <operation Id="07dbb091-008f-4a7a-9855-1be3f378f1d8" name="unregister" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+                  <elementDefinition Id="5a6bc605-f18a-436e-ad40-8c12d70aab5a" />
+                  <ownedParameters>
+                    <operationHasOwnedParameters>
+                      <parameter Id="3731122e-51d4-48f2-8f04-d40529bbd305" name="tool" direction="In" isUnique="false">
+                        <elementDefinition Id="059cddbb-807d-4877-86d9-b6552ab1fc1e" />
+                        <type_NamedElement>
+                          <referencedTypeMoniker Id="3befec4b-22a7-4ba9-8e58-037cb9dca263" LastKnownName="ITool" />
+                        </type_NamedElement>
+                      </parameter>
+                    </operationHasOwnedParameters>
+                  </ownedParameters>
+                </operation>
+              </ownedOperationsInternal>
+            </class>
+          </packageHasNamedElement>
+        </packagedElements>
+      </package>
+    </logicalClassDesignerModelHasPackages>
+    <logicalClassDesignerModelHasPackages>
+      <package Id="abad3b3f-4157-428e-97c4-45132a6a4615" name="Presentation">
+        <elementDefinition Id="1ddfd5a2-2f0b-4813-bb76-9c2b412f084e" />
+        <packagedElements>
+          <packageHasNamedElement>
+            <class Id="454a28cb-f235-452d-9362-63caa4c38b26" name="Panel" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="7c2db6e5-d8c3-4ce7-b372-4cad354b08bb" />
+              <suppliersInternal>
+                <dependency Id="90448d78-0479-4dd8-bad6-6cb307a66032">
+                  <classMoniker Id="6b36a1b5-b11a-40aa-888f-82511187c68d" LastKnownName="MainApp" />
+                  <elementDefinition Id="db9a4f6d-c580-422f-bc3f-5d2c90d3da8f" />
+                </dependency>
+              </suppliersInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="325b1bce-e179-4cc9-8a40-25861287e5dc" name="Header" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="9174a2d2-8a24-45e9-aa13-6ca9af23ac37" />
+              <suppliersInternal>
+                <dependency Id="29da007f-4ba0-452c-9495-d544ca0e04fa">
+                  <classMoniker Id="454a28cb-f235-452d-9362-63caa4c38b26" LastKnownName="Panel" />
+                  <elementDefinition Id="d36cb7db-c897-40db-8bac-c96d9f1c2c9a" />
+                </dependency>
+              </suppliersInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="7f21cef2-76b7-45f2-853d-ae912e610b5d" name="MapPanel" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="fe4c45ac-af56-44e9-a477-235988f0b5c6" />
+              <suppliersInternal>
+                <dependency Id="320c0843-2301-40e9-8355-948a68894dd5">
+                  <classMoniker Id="454a28cb-f235-452d-9362-63caa4c38b26" LastKnownName="Panel" />
+                  <elementDefinition Id="d7554b74-6250-46b4-995b-f87276ad0039" />
+                </dependency>
+              </suppliersInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="ab4453fb-e64e-481c-b9ce-270f3d76d509" name="TopMenuBar" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="8429e415-3e73-4902-a41f-93658e2b6622" />
+              <suppliersInternal>
+                <dependency Id="4e468428-7939-4214-9789-8d468f5215f0">
+                  <classMoniker Id="7f21cef2-76b7-45f2-853d-ae912e610b5d" LastKnownName="MapPanel" />
+                  <elementDefinition Id="81477201-162d-47ab-8150-ee10e1b7bced" />
+                </dependency>
+              </suppliersInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="72e46775-15f2-428f-9a06-c601c45501d7" name="Window" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="878e16b1-806c-45e1-9471-193d60da4fdd" />
+              <suppliersInternal>
+                <dependency Id="4da1cb4a-4e2d-41bd-b2b0-58e746e4e517">
+                  <classMoniker Id="7f21cef2-76b7-45f2-853d-ae912e610b5d" LastKnownName="MapPanel" />
+                  <elementDefinition Id="fd6f49c5-d43e-46dc-b088-9fe6030c5962" />
+                </dependency>
+              </suppliersInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="2d545677-e178-4549-9916-3f63d1510c19" name="Map" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="5c65a29f-6dd0-498f-894c-d513eaa1552d" />
+              <suppliersInternal>
+                <dependency Id="e1a324b6-4deb-44db-865c-c1eb7f471dc4">
+                  <classMoniker Id="7f21cef2-76b7-45f2-853d-ae912e610b5d" LastKnownName="MapPanel" />
+                  <elementDefinition Id="bf4c6cf7-5dac-4997-9565-ea2065709bd5" />
+                </dependency>
+              </suppliersInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="76ae4fd5-725b-486f-9cae-488353908bda" name="ToolMenu" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="c8cecb1d-1217-410e-83ae-ccdb9a63c212" />
+              <suppliersInternal>
+                <dependency Id="048f6846-a4bc-40f4-8c86-0b805b29b355">
+                  <classMoniker Id="7f21cef2-76b7-45f2-853d-ae912e610b5d" LastKnownName="MapPanel" />
+                  <elementDefinition Id="91a0ce2e-87ef-4c58-b40e-4cabd7f0ffba" />
+                </dependency>
+              </suppliersInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="cff15937-3918-4361-a647-d3189e1c4698" name="TaskBar" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="6b2cc8d3-cffd-4f04-95a7-21caaf3dc109" />
+              <suppliersInternal>
+                <dependency Id="9205bee0-6ba8-4dba-8191-8356bb2c4a24">
+                  <classMoniker Id="7f21cef2-76b7-45f2-853d-ae912e610b5d" LastKnownName="MapPanel" />
+                  <elementDefinition Id="e73aea71-c6d4-48f7-bb03-05dead8f3ef4" />
+                </dependency>
+              </suppliersInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="6b36a1b5-b11a-40aa-888f-82511187c68d" name="MainApp" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="1b9a204d-5bff-4178-b47d-82619732d7d2" />
+              <suppliersInternal>
+                <dependency Id="8b9730e9-5a10-40ce-8e89-f49bf97f2540">
+                  <classMoniker Id="f00ec5bf-d09c-4e70-91ab-6df35542a01e" LastKnownName="UI_Tools" />
+                  <elementDefinition Id="9ece5b9c-340c-427e-af60-5c0e032f1e65" />
+                </dependency>
+              </suppliersInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="f00ec5bf-d09c-4e70-91ab-6df35542a01e" name="UI_Tools" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="2f32634b-7edb-475b-beb0-19cf81c9963a" />
+              <ownedOperationsInternal>
+                <operation Id="6ee00043-ac20-41be-8104-87ee396a37f1" name="register" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+                  <elementDefinition Id="1460c192-5a70-43af-ab4d-7813bd4959f9" />
+                  <ownedParameters>
+                    <operationHasOwnedParameters>
+                      <parameter Id="e5709c30-82ae-4fae-82ce-bfb524240ab6" name="tool" direction="In" isUnique="false">
+                        <elementDefinition Id="7024d9b8-b790-44f1-a726-128b5d55ca0d" />
+                        <type_NamedElement>
+                          <referencedTypeMoniker Id="3befec4b-22a7-4ba9-8e58-037cb9dca263" LastKnownName="ITool" />
+                        </type_NamedElement>
+                      </parameter>
+                    </operationHasOwnedParameters>
+                    <operationHasOwnedParameters>
+                      <parameter Id="50210d00-dca6-4dff-9072-999647d93db7" direction="Return" isUnique="false">
+                        <elementDefinition Id="dd80f89b-e5ba-4a8a-a858-8572d9824076" />
+                        <type_NamedElement>
+                          <referencedTypeMoniker Id="d40db9d5-8607-4343-bb3f-efd57d8d3e32" LastKnownName="any" />
+                        </type_NamedElement>
+                      </parameter>
+                    </operationHasOwnedParameters>
+                  </ownedParameters>
+                </operation>
+                <operation Id="a956811e-dc71-435c-9379-24105d73bbc8" name="unregister" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+                  <elementDefinition Id="537769a6-79d1-41ce-80c9-752d1360a59c" />
+                  <ownedParameters>
+                    <operationHasOwnedParameters>
+                      <parameter Id="e31d2cc9-8f0a-4900-bd2f-2e582716e276" name="tool" direction="In" isUnique="false">
+                        <elementDefinition Id="d08066a8-0855-4812-bfac-ac1a5c17c50e" />
+                        <type_NamedElement>
+                          <referencedTypeMoniker Id="3befec4b-22a7-4ba9-8e58-037cb9dca263" LastKnownName="ITool" />
+                        </type_NamedElement>
+                      </parameter>
+                    </operationHasOwnedParameters>
+                  </ownedParameters>
+                </operation>
+              </ownedOperationsInternal>
+            </class>
+          </packageHasNamedElement>
+        </packagedElements>
+      </package>
+    </logicalClassDesignerModelHasPackages>
+    <packageHasNamedElement>
+      <referencedType Id="3befec4b-22a7-4ba9-8e58-037cb9dca263" name="ITool" isAbstract="false" isLeaf="false" cachedFullName="ITool">
+        <elementDefinition Id="0e6658fc-f20f-471a-89f6-58c9c733ca6b" />
+      </referencedType>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <referencedType Id="d40db9d5-8607-4343-bb3f-efd57d8d3e32" name="any" isAbstract="false" isLeaf="false" cachedFullName="any">
+        <elementDefinition Id="8b7df97d-804b-4d6e-b586-5765baf8a282" />
+      </referencedType>
+    </packageHasNamedElement>
+  </packagedElements>
+  <package Id="5f3b1376-ebea-4b4a-ba04-fff8d672af90" name="pvMapperModel">
+    <elementDefinition Id="6421538c-419e-4674-a936-f6ac22667ac2" />
+    <profileInstances>
+      <packageHasProfileInstances Id="dc25d4cc-b0b7-4ab9-b9b5-8c55f26a477b">
+        <profileInstance Id="e16b1da9-1fec-435e-b3cd-113b66e23fbc" name="StandardProfileL2">
+          <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+        </profileInstance>
+        <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="fa53a824-bf4f-4886-864c-7e834729e2fb">
+        <profileInstance Id="cbd5ef52-895e-40a7-8709-896868eeb603" name="StandardProfileL3">
+          <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+        </profileInstance>
+        <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+      </packageHasProfileInstances>
+    </profileInstances>
+  </package>
+</logicalClassDesignerModel>

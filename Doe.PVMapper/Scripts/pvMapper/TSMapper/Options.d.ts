@@ -1,18 +1,30 @@
+/// <reference path="Tools.ts" />
+/// <reference path="common.ts" />
 /// <reference path="Event.ts" />
+//A dynamic callback signature.
+
 
 module pvMapper {
-  
-  //A dynamic callback signature.
-  interface ICallBack {
-     (...args: any[]):any;
-  }
 
-  export class Options {
-    public onSiteChange(): pvMapper.Event;
-    public onScoreAdded(): pvMapper.Event;
-    public title: string;
-    public description: string;
+    export class ScoreLineOptions {
+        public onSiteChange(): ICallback;
+        public onScoreAdded(): ICallback;
+        public title: string;
+        public description: string;
 
-    public calculateValueCallback: ICallBack;  //(...args: any[]) =>any;
-  }
+        public calculateValueCallback: ICallback;  //(...args: any[]) =>any;
+    }
+
+    export interface IModuleOptions {
+        scoringTools: IScoreTool[];
+        infoTools: ITool[];
+        //Intents: IIntent[];
+        init: ICallback;
+        destroy: ICallback;
+        activate: ICallback;
+        deactivate: ICallback;
+        id: string;
+        author: string;
+        version: string;
+    }
 }

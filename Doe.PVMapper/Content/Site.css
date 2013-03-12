@@ -36,10 +36,11 @@ table {
 }
 
 /*This can all be removed when the css page naming convention is finalized*/
-.propertyBoard {
+.propertyBoard .x-window-body {
      background: none repeat scroll 0% 0% white;
+     background:white;
+     
 }
-
 .propertyBoard tr:nth-child(2n) {
     background: rgb(244,252,255); /* Old browsers */
 /* IE9 SVG, needs conditional override of 'filter' to 'none' */
@@ -55,6 +56,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4fcff', end
 }
 
 .propertyBoard tr.header {
+    background:orange;
      background: -moz-linear-gradient(center top , #F7F7F7 0%, #F7F7F7 65%, #D3D3D3 100%) repeat scroll 0% 0% transparent;
      border-bottom: 1px double grey;
      color: black;

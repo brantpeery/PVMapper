@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<activityRootModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm5="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ComponentDesigner" xmlns:dm11="http://schemas.microsoft.com/dsltools/SimpleShapesModel" xmlns:dm12="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" dslVersion="1.0.0.0" Id="6baaa009-8098-4abd-bd7b-81ca93127f36" name="pvActivities" linkedPackageId="15f174f9-26cd-4ba5-ba13-bf97dec71aac" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ActivityDesigner">
+  <profileInstances>
+    <packageHasProfileInstances Id="7160bc96-19b8-44f8-baca-8b6d97fa3904">
+      <profileInstance Id="b7bda7d3-2814-4574-9ec4-b566b2e00cdc" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="9879f479-9b6d-4b8f-b2f1-751c1709dfbe">
+      <profileInstance Id="a9c8d55f-de83-4cb8-82ec-783f45611b77" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <activityRootModelHasActivity>
+      <activity Id="c0521e11-c3fe-4261-a5ed-3a0ac77fe58c" name="pvActivities" isAbstract="false" isLeaf="false" isActiveClass="false" isReentrant="false" isReadOnly="false" isSingleExecution="false">
+        <elementDefinition Id="331a3d8a-b959-4fe0-bda0-677513945e95" />
+        <nodes>
+          <initialNode Id="d9aeb935-95ec-4d21-8d11-ecc607aa93c9" name="Initial1" isLeaf="false">
+            <elementDefinition Id="ffc1e06c-c473-4660-af23-91098b5ec2d6" />
+          </initialNode>
+        </nodes>
+      </activity>
+    </activityRootModelHasActivity>
+  </packagedElements>
+  <package Id="15f174f9-26cd-4ba5-ba13-bf97dec71aac" name="pvMapperModel">
+    <elementDefinition Id="6421538c-419e-4674-a936-f6ac22667ac2" />
+  </package>
+</activityRootModel>

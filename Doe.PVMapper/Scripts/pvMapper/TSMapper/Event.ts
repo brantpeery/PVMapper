@@ -1,4 +1,25 @@
-﻿/// <reference path="../../jquery.d.ts" />
+﻿/// <reference path="common.ts" />
+/// <reference path="../../jquery.d.ts" />
+
+
+/**
+ An alias to browser's Event object.  Use this class for passing event object into event function.  The pvMapper.Event class is for creating
+event delegate pair.
+*/
+interface EventArg {
+  parent: EventArg;
+  data: any;
+  timeStamp: number;
+  target: pvMapper.Event;
+  type: string;
+  cancelable: bool;
+}
+
+declare var EventArg: {
+  new (data?: any, parent?: any ): EventArg;
+  prototype: EventArg;
+}
+
 
 module pvMapper {
   /*
@@ -8,17 +29,17 @@ module pvMapper {
     public eventHandlers: { (any): any; }[];
     /// Creates the publish point. 
     /// allowDuplicateHandler if set to true will allow the same function to subscribe more than once.
-    constructor (public allowDuplicateHandler?: bool = false) {
+    constructor(public allowDuplicateHandler?: bool = false) {
       this.eventHandlers = new Array();
     }
     ///
-    public addHandler(callBack) {
+    public addHandler(callBack:EventCallback) {
       if (this.eventHandlers.indexOf(callBack) == -1 || this.allowDuplicateHandler) {
         this.eventHandlers.push(callBack);
       }
     }
 
-    public removeHandler(handler) {
+    public removeHandler(handler:EventCallback) {
       var idx: number;
       while (this.eventHandlers) {
         idx = this.eventHandlers.indexOf(handler)
@@ -32,7 +53,7 @@ module pvMapper {
       if (!(eventArgs instanceof Array)) {
         eventArgs = [eventArgs];
       }
-      $.each(self.eventHandlers, function (idx, func) {
+      self.eventHandlers.map(function (func, idx) {
         if (typeof (func) != 'undefined')
           func.apply(context, eventArgs);
       });
@@ -40,6 +61,5 @@ module pvMapper {
     //for event parameter data tag 
     public data: any = null;
   }
-
 
 }

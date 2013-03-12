@@ -1,6 +1,8 @@
+/// <reference path="Scoreboard.ts" />
+/// <reference path="ScoreLine.ts" />
+/// <reference path="Tools.ts" />
 /// <reference path="Options.d.ts" />
 /// <reference path="OpenLayers.d.ts" />
-/// <reference path="siteAreaModule.ts" />
 /// <reference path="../../jquery.d.ts" />
 
 
@@ -9,8 +11,75 @@ module pvMapper {
 
   // Class
   export class Module {
+        constructor(options: IModuleOptions) {
+            this.id = options.id;
+            this.version = options.version;
+            this.author = options.author;
+
+            this.init = options.init;
+            this.destroy = options.destroy;
+            this.activate = options.activate;
+            this.deactivate = options.deactivate;
+
+            this.scoringTools = options.scoringTools;
+            this.infoTools = options.infoTools;
+
+            //Load the info for this module into the data model
+
+            //Load the scoring tools into the api
+            this.scoringTools.map((tool, idx, toolarr) => {
+                console.log("Loading scoring tool " + tool.title + " into the API");
+                
+                //Create the scoreline
+                var scoreline = new ScoreLine(tool);
+
+                //Add the scoreline to the scoreboard/data model
+                pvMapper.mainScoreboard.addLine(scoreline);
+            });
+
+            //Load up the info tools into the api
+            if (this.infoTools) {
+                this.infoTools.map((tool, idx, toolbar) => {
+                    console.log("Loading info tool " + tool.title + " into the API");
+
+                    //TODO: Tie to the data model when ready 
+
+                });
+            }
+
+            //TODO: temp - call Init and Activate on the module, because all modules will be inited and activated by default
+            if (typeof (this.init) === "function") {
+                pvMapper.onReady(this.init);
+            }
+            if (typeof (this.activate) === "function") {
+                pvMapper.onReady(this.activate);
+            }
+        }
+
+        public id: string;
+        public author: string;
+        public version: string;
+
+        public scoringTools: IScoreTool[];
+        public infoTools: ITool[];
+        
+        
+        public init: ICallback;
+        public destroy: ICallback;
+        public activate: ICallback;
+        public deactivate: ICallback;
+
+    }
+
+}
+
+
+
+    /*************************************************
+    //Old module code here for reference only
+
     // Constructor
-    constructor (options: any) {
+        constructor(options: any) {
       this.settings =
 
       this.self = this;
@@ -46,11 +115,11 @@ module pvMapper {
 
     public nonScoringTools: any[];
     public scoringTools: ScoringTool[];
-    public addScoringTool(scoreTool : ScoringTool) {
+        public addScoringTool(scoreTool: ScoringTool) {
       this.scoringTools.push(scoreTool);
     }
-    public removeScoringTool(scoreTool : ScoringTool) {
-      var idx : number = this.scoringTools.indexOf(scoreTool, 0);
+        public removeScoringTool(scoreTool: ScoringTool) {
+            var idx: number = this.scoringTools.indexOf(scoreTool, 0);
       if (idx >= 0)
         this.scoringTools.splice(idx, 1);
     }
@@ -68,12 +137,13 @@ module pvMapper {
       //Use the geometry of the OpenLayers feature to get the area
       var val = this.calculateArea(site.feature.geometry);
       return val;
-
     }
 
     public setbackLayer: any;
 
-    public updateSetbackFeature (site: pvMapper.Site, setbackLength?: number):any {
+        
+
+    public updateSetbackFeature(site: pvMapper.Site, setbackLength ? : number): any {
       var reader = new jsts.io.WKTReader();
       var parser = new jsts.io.OpenLayersParser();
 
@@ -102,6 +172,4 @@ module pvMapper {
   };
 
   export var map: any = new OpenLayers.Map();
-
-}
-
+*/

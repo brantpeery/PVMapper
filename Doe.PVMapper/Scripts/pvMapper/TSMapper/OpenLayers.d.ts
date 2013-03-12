@@ -1,8 +1,17 @@
-/// <reference path="Options.d.ts" />
-//C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\Extensions\msfz1qy5.oca\~IC\IT\CSharp\1033\f.zip
-
 // Module
 module OpenLayers {
+  interface ICallback extends Function {
+
+    }
+
+    interface Request {
+        GET(config: any): any;
+        POST(config: any): any;
+        HEAD(config: any): any;
+    }
+
+    declare var Request: Request;
+
 
   export class Attributes {
     name: string;
@@ -13,6 +22,7 @@ module OpenLayers {
     fid: number;
     geometry: Polygon;
     attributes: Attributes;
+    site: any;
     name: string;
     description: string;
   }
@@ -51,8 +61,8 @@ module OpenLayers {
     containsPoint(point: Point): Boolean;
     containsPoint(point: Point): number;
     intersects(geometry: Geometry): Boolean;
-    distanceTo(geometry: Geometry, options?: Boolean): number;
-    distanceTo(geometry: Geometry, options?: Boolean): Distance;
+    distanceTo(geometry: Geometry): number;
+    distanceTo(geometry: Geometry, options: any): Distance;
     createRegularPolygon(origin: Point, radius: number, sides: number, rotation: number);
   }
 
@@ -133,12 +143,14 @@ module OpenLayers {
     offset(px: Pixel): Pixel;
   }
 
-  interface Bounds {
+  export class Bounds {
     left: number;
     bottom: number;
     right: number;
     top: number;
     centerLonLat: LonLat;
+
+    constructor(left: number, bottom: number, right: number, top: number);
 
     clone(): Bounds;
     equals(bounds: Bounds): Boolean;
@@ -151,7 +163,7 @@ module OpenLayers {
     getSize(): Size;
     getCenterPixel(): Pixel;
     getCenterLonLat(): LonLat;
-    scale(ratio: number, origin: Pixel): Bounds;
+    scale(ratio: number, origin?: Pixel): Bounds;
     scale(ratio: number, origin: LonLat): Bounds;
     add(x: number, y: number): Bounds;
     extend(object: LonLat);
@@ -194,6 +206,8 @@ module OpenLayers {
   }
 
   interface Distance {
+    details: bool; //TODO: is this right?
+    distance: number;
     x0: number;
     y0: number;
     x1: number;
@@ -237,7 +251,7 @@ module OpenLayers {
     destroy();
     transforms: any;
     defaults: any;
-    addTransform(from: string, to: string, method: pvMapper.ICallBack);
+    addTransform(from: string, to: string, method: ICallback);
     transorm(point: Point, source: Projection, dest: Projection): Point;
     nullTransform(point: Point);
   }
@@ -285,18 +299,18 @@ module OpenLayers {
   }
 
   interface Function {
-    bind(func: pvMapper.ICallBack, object: Object): pvMapper.ICallBack;
-    bindAsEventListener(func: pvMapper.ICallBack, object: Object): pvMapper.ICallBack;
+    bind(func: ICallback, object: Object): ICallback;
+    bindAsEventListener(func: ICallback, object: Object): ICallback;
     False(): Boolean;
     True(): Boolean;
     Void(): void;
   }
 
   interface Array {
-    filter(array: any[], callback: pvMapper.ICallBack, caller: Object): any[];
+    filter(array: any[], callback: ICallback, caller: Object): any[];
   }
 
-  interface Date{
+  interface Date {
     dateRegEx: RegExp;
     toISOString(): string;
     parse(str: string);
@@ -349,17 +363,17 @@ module OpenLayers {
     stop(event: Event, allowDefault: Boolean);
     preventDefault(event: Event);
     findElement(event: Event, tagName: string): DOMElement;
-    observe(elementParam: DOMElement, name: string, observer: pvMapper.ICallBack, useCapture: Boolean);
-    observe(elementParam: string, name: string, observer: pvMapper.ICallBack, useCapture: Boolean);
+    observe(elementParam: DOMElement, name: string, observer: ICallback, useCapture: Boolean);
+    observe(elementParam: string, name: string, observer: ICallback, useCapture: Boolean);
     stopObservingElement(elementParam: DOMElement);
     stopObservingElement(elementParam: string);
     _removeElementObservers(elementObservers: any[]);
-    stopObserving(elementParam: DOMElement, name: string, observer: pvMapper.ICallBack, useCapture: Boolean): Boolean;
-    stopObserving(elementParam: string, name: string, observer: pvMapper.ICallBack, useCapture: Boolean): Boolean;
+    stopObserving(elementParam: DOMElement, name: string, observer: ICallback, useCapture: Boolean): Boolean;
+    stopObserving(elementParam: string, name: string, observer: ICallback, useCapture: Boolean): Boolean;
     unloadCache();
   }
 
-  interface Handler{
+  interface Handler {
     //constants
     MOD_NAME: any;
     MOD_SHIEFT: any;
@@ -369,30 +383,28 @@ module OpenLayers {
     //properties
     id: string;
     control: Control;
-    map: Map;
+    map: IMap;
     keyMask: number;
     active: Boolean;
     evt: Event;
 
     //functions
-    setMap(map: Map);
+    setMap(map: IMap);
     checkModifiers(evt: Event): Boolean;
     activate(): Boolean;
     deactivate(): Boolean;
     callback(name: string, args: any[]);
-    register(name: string, method: pvMapper.ICallBack);
+    register(name: string, method: ICallback);
     setEvent(evt: Event);
     destroy();
-
-    
   }
   declare var Handler: {
-    new (control: Control, callbacks: pvMapper.ICallBack, options: any): Handler;
-    (control: Control, callbacks: pvMapper.ICallBack, options: any): Handler;
+    new (control: Control, callbacks: ICallback, options: any): Handler;
+    (control: Control, callbacks: ICallback, options: any): Handler;
     prototype: Handler;
   }
 
-  interface Control{
+  interface Control {
     //constants
     TYPE_BUTTON: any;
     TYPE_TOGGLE: any;
@@ -400,7 +412,7 @@ module OpenLayers {
 
     //properties
     id: string;
-    map: Map;
+    map: IMap;
     div: DOMElement;
     type: number;
     allowSelection: Boolean;
@@ -422,13 +434,13 @@ module OpenLayers {
     deactivate(): Boolean;
   }
 
-  declare var Control:{
+  declare var Control: {
     new (options: any): Control;
     (options: any): Control;
     prototype: Control;
   }
 
-  interface Tile{
+  interface Tile {
     events: Events;
     eventListeners: any;
     id: string;
@@ -448,55 +460,55 @@ module OpenLayers {
     moveTo(bounds: Bounds, position: Pixel, redraw: Boolean);
     clear(draw: Boolean);
   }
-  declare var Tile:{
+  declare var Tile: {
     new (layer: Layer, position: Pixel, bounds: Bounds, url: string, size: Size, options: any): Tile;
     (layer: Layer, position: Pixel, bounds: Bounds, url: string, size: Size, options: any): Tile;
     prototype: Tile;
   }
 
-  interface TileManager{
+  interface TileManager {
     cacheSize: number;
     moveDelay: number;
     zoomDelay: number;
-    maps: Map[];
+    maps: IMap[];
     tileQueueId: any;
     tileQueue: Tile[];
     tileCache: any;
 
     //functions
-    addMap(map: Map);
-    removeMap(map: Map);
+    addMap(map: IMap);
+    removeMap(map: IMap);
     move(evt: any);
     changeLayer(evt: any);
     addLayer(evt: any);
     removeLayer(evt: any);
-    updateTimeout(map: Map, delay: number);
+    updateTimeout(map: IMap, delay: number);
     addTile(evt: any);
     unloadTile(evt: any);
     queueTileDraw(evt: any);
-    drawTileFromQueue(map: Map);
+    drawTileFromQueue(map: IMap);
     manageTileCache(evt: any);
     addToCache(evt: any);
     clearTile(evt: any);
     destroy();
   } 
-  declare var TileManager:{
+  declare var TileManager: {
     new (options: any): TileManager;
     (options: any): TileManager;
     prototype: TileManager;
   }
 
-  interface Linear{
+  interface Linear {
     easeIn(t: number, b: number, c: number, d: number): number;
     easeOut(t: number, b: number, c: number, d: number): number;
     easeInOut(t: number, b: number, c: number, d: number): number;
   }
-  interface Expo{
+  interface Expo {
     easeIn(t: number, b: number, c: number, d: number): number;
     easeOut(t: number, b: number, c: number, d: number): number;
     easeInOut(t: number, b: number, c: number, d: number): number;
   }
-  interface Quad{
+  interface Quad {
     easeIn(t: number, b: number, c: number, d: number): number;
     easeOut(t: number, b: number, c: number, d: number): number;
     easeInOut(t: number, b: number, c: number, d: number): number;
@@ -518,7 +530,7 @@ module OpenLayers {
     play();
   }
 
-  declare var Tween:{
+  declare var Tween: {
     new (easing: any): Tween;
     (easing: any): Tween;
     prototype: Tween;
@@ -534,26 +546,26 @@ module OpenLayers {
 
     };
   }
-
-  interface Map {
+  
+  interface IMap {
     //constant
-    Z_INDEX_BASE : any;
+    Z_INDEX_BASE: any;
     TILE_WIDTH: number;
     TILE_HEIGHT: number;
 
     //properties
     events: Events;
-    id:string;
-    fractionalZoom : Boolean;
-    allOverlays : Boolean;
-    div:DOMElement;
-    dragging:Boolean;
-    size:Size;
-    viewPortDiv:HTMLDivElement;
-    layerContainerOrigin : LonLat;
-    layerContainerDiv:HTMLDivElement;
-    layers:Layer[];
-    controls:Control[];
+    id: string;
+    fractionalZoom: Boolean;
+    allOverlays: Boolean;
+    div: DOMElement;
+    dragging: Boolean;
+    size: Size;
+    viewPortDiv: HTMLDivElement;
+    layerContainerOrigin: LonLat;
+    layerContainerDiv: HTMLDivElement;
+    layers: Layer[];
+    controls: Control[];
     popups: Popup[];
     baseLayer: Layer;
     center: LonLat;
@@ -569,8 +581,8 @@ module OpenLayers {
     minResolution: number;
     maxScale: number;
     minScale: number;
-    maxExtent: Bounds[];
-    minExtent: Bounds[];
+    maxExtent: Bounds;
+    minExtent: Bounds;
     restrictedExtent: Bounds[];
     numZoomLevels: number;
     theme: string;
@@ -580,7 +592,7 @@ module OpenLayers {
     autoUpdateSize: Boolean;
     panTween: Tween;
     eventListeners: any;
-    panMethod: pvMapper.ICallBack;
+    panMethod: ICallback;
     panDuration: number;
     paddingForPopups: Bounds;
     layerContainerOriginPx: any;
@@ -660,7 +672,7 @@ module OpenLayers {
     zoomToMaxExtent(restricted: Boolean);
     zoomToScale(scale: number, closest: Boolean);
     getLonLatFromViewPortPx(viewPortPx: Pixel);
-    getLonLatFromViewPortPx(viewPortPx: any):LonLat;
+    getLonLatFromViewPortPx(viewPortPx: any): LonLat;
     getViewPortPxFromLonLat(lonlat: LonLat): Pixel;
     getLonLatFromPixel(px: Pixel): LonLat;
     getPixelFromLonLat(lonlat: LonLat): Pixel;
@@ -671,22 +683,22 @@ module OpenLayers {
     getLayerPxFromLonLat(lonlat: LonLat): Pixel;
 
     //delegate
-    unloadDestroy: pvMapper.ICallBack;
-    updateSizeDestroy: pvMapper.ICallBack;
+    unloadDestroy: ICallback;
+    updateSizeDestroy: ICallback;
   }
 
   declare var Map: {
-    new (value?: any): Map;
-    (value?: any): Map;
-    new (div: DOMElement, options?: any): Map;
-    new (div: DOMElement, center: LonLat): Map;
-    new (div: DOMElement, zoom: number): Map;
-    new (div: DOMElement, extent:Bounds): Map;
-    (div: DOMElement, options?: any): Map;
-    (div: DOMElement, center: LonLat): Map;
-    (div: DOMElement, zoom: number): Map;
-    (div: DOMElement, extent:Bounds): Map;
-    prototype: Map;
+    new (value?: any): IMap;
+    (value?: any): IMap;
+    new (div: DOMElement, options?: any): IMap;
+    new (div: DOMElement, center: LonLat): IMap;
+    new (div: DOMElement, zoom: number): IMap;
+    new (div: DOMElement, extent: Bounds): IMap;
+    (div: DOMElement, options?: any): IMap;
+    (div: DOMElement, center: LonLat): IMap;
+    (div: DOMElement, zoom: number): IMap;
+    (div: DOMElement, extent: Bounds): IMap;
+    prototype: IMap;
   }
 
 
@@ -695,7 +707,7 @@ module OpenLayers {
     listeners: any;
     object: any;
     element: DOMElement;
-    eventHandler: pvMapper.ICallBack;
+    eventHandler: ICallback;
     fallThrough: Boolean;
     includeXY: Boolean;
     extensions: any;
@@ -704,13 +716,13 @@ module OpenLayers {
     addEventType(eventName: string);
     attachToElement(element: HTMLDOMElement);
     on(object: any);
-    register(type: string, obj: any, func: pvMapper.ICallBack, priority: Boolean);
-    registerPriority(type: string, obj: any, func: pvMapper.ICallBack);
+    register(type: string, obj: any, func: ICallback, priority: Boolean);
+    registerPriority(type: string, obj: any, func: ICallback);
     un(object: any);
-    unregister(type: string, obj: any, func: pvMapper.ICallBack);
+    unregister(type: string, obj: any, func: ICallback);
     remove(type: string);
-    triggerEvent(type: string, evt: Event):Boolean;
-    triggerEvent(type: string, evt: any):Boolean;
+    triggerEvent(type: string, evt: Event): Boolean;
+    triggerEvent(type: string, evt: any): Boolean;
     handleBrowserEvent(evt: Event);
     getTouchClientXY(evt: Event): any;
     clearMouseCache();
@@ -734,7 +746,7 @@ module OpenLayers {
     alwaysInRange: Boolean;
 
     events: Events;
-    map: Map;
+    map: IMap;
     isBaseLayer: Boolean;
     alpha: Boolean;
     displayInLayerSwitcher: Boolean;
@@ -764,7 +776,7 @@ module OpenLayers {
     
     //functions
     destroy();
-    clone(obj:Layer): Layer;
+    clone(obj: Layer): Layer;
     getOptions(): any;
     setName(newName: string);
     addOptions(newOptions: any, reinitialize: Boolean);
@@ -772,9 +784,9 @@ module OpenLayers {
     redraw(): Boolean;
     moveTo(bounds: Bounds, zoomChanged: Boolean, draging: Boolean);
     moveByPx(dx: number, dy: number);
-    setMap(map: Map);
+    setMap(map: IMap);
     afterAdd();
-    removeMap(map: Map);
+    removeMap(map: IMap);
     getImageSize(bounds: Bounds): Size;
     setTileSize(size: Size);
     getVisibility(): Boolean;
@@ -798,7 +810,119 @@ module OpenLayers {
     adjustBounds(bounds: Bounds);
    }
 
-  declare var Layer:{
+  interface WMSOptions {
+    setBuffer(buffer: number);
+    setProjection(epsgCode: string);
+    setRatio(ratio: number);
+    setReproject(reproject: bool);
+    setSingleTile(b: bool);
+    setTrasitionEffect(TransitionEffect: any);
+    setUnits(units: string);
+    setUntitled();
+    setWrapDateLine(wrap: bool);
+  }
+
+  declare var WMSOptions: {
+    new (): WMSOptions;
+    prototype: WMSOptions;
+  }
+
+  interface WMSParams {
+    getFormat(): string;
+    getLayers(): string;
+    getMaxExtent(): Bounds;
+    getStyles(): string;
+    setFormat(styles: string);
+    setIsTransparent(isTransparent: bool);
+    setLayers(layers: string);
+    setMaxExtent(bound: Bounds);
+    setStyles(styles: string);
+  }
+
+  declare var WMSParams: {
+    new (): WMSParams;
+    new (jsObject: any);
+    prototype: WMSParams;
+  }
+
+  interface ArcGIS93RestOptions {
+    /**
+    A name for the layer.
+    */
+    format: string;
+    /**
+     Comma-separated list of layers to display.
+    */
+    layers: string;
+    /**
+     Projection ID.
+    */
+    srs: string;
+  }
+
+  interface JSObject {
+    createJSArray(): JSObject;
+    createJSFunction(): JSObject;
+    createJSObject(): JSObject;
+    ensureOpaqueArray(): JSObject;
+    getProperty(name: string): JSObject;
+    getPropertyArray(name: string): JSObject[];
+    getPropertyAsBoolean(name: string): bool;
+    getPropertyAsDomElement(name: string): any;   //The return type is "com.google.gwt.user.client.Element"
+    getPropertyAsDouble(name: string): number;
+    getPropertyAsFloat(name: string): number;
+    getPropertyAsInt(name: string): number;
+    getpropertyAsString(name: string): string;
+    getpropertyName(): string;
+    hasProperty(name: string): bool;
+    setProperty(name: string, value: bool);
+    setproperty(name: string, value: number);
+    setproperty(name: string, value: any);
+    setproperty(name: string, value: JSObject);
+    setproperty(name: string, value: string);
+    unsetProperty(name: string);
+  }
+  declare var JSObject: {
+    new (): JSObject;
+    prototype: JSObject;
+  }
+
+
+  interface HTTPRequestLayer extends Layer {
+    //TODO: flush out the rest.
+  }
+
+  interface GridLayer extends HTTPRequestLayer {
+    narrowToGridLayer(gridLayer: JSObject);
+    setBuffer(buffer: number);
+    setNumLoadingTile(numLoadingTiles: number);
+    setRatio(ratio: number);
+    setSingleTile(singleTile: bool);
+    setTitleSize(tileSize: number);
+  }
+
+  interface GridLayerOptions {
+
+  }
+
+  interface ArcGIS93Rest extends GridLayer {
+    DEFAULT_PARAMS: Object;
+    isBaseLayer: Boolean;
+    narrowToArcGIS93Rest(arcgis93Rest: JSObject);
+    setIsBaseLayer(isBaseLayer: bool);
+    destroy();
+    clone(obj: ArcGIS93Rest): ArcGIS93Rest;
+    getURL(bounds: Bounds): string;
+    getLayerFilter(id: string, queryDef: string);
+    clearLayerFilter(id: string);
+    mergeNewParams(newParams: Object);
+    addTile(bounds: Bounds, position: Pixel);
+    getNumLoadingTiles(): number;
+    epsgOverride: string;
+  }
+  
+
+  declare var Layer: {
     new (value?: any): Layer;
     new (name: string, options: any): Layer;
     (value?: any): Layer;
@@ -807,8 +931,19 @@ module OpenLayers {
     Vector: {
       new (value?: any): Vector;
       (value?: any): Vector;
+      new (name: string, options?: any): Vector;
       prototype: Vector;
     };
+    WMS(name: string, url: string, params: any, options: any): any;
+
+    ArcGIS93Rest(name: string, url: string[], params: any): any;
+    ArcGIS93Rest(name: string, url: string, options: any, params?: any): any;
+    //ArcGIS93Rest(name: string, url: string[], params: WMSParams, layerParams: WMSOptions ): any;
+    //ArcGIS93Rest(name: string, url: string, params: WMSParams, options: ArcGIS93RestOptions): any;
+    GridLayer(gridLayer: JSObject): any;
+    GridLayer(name: string, url: string, params: WMSParams);
+    GridLayer(name: string, url: string, params: WMSParams, options: GridLayerOptions);
+
   }
 
   interface Filter {
@@ -818,15 +953,15 @@ module OpenLayers {
     toString(): string;
   }
 
-  declare var Filter:{
+  declare var Filter: {
     new (options?: any): Filter;
     (options?: any): Filter;
     prototype: Filter;
   }
 
   interface StyleMap {
-    styles:any;
-    extendDefault : Boolean;
+    styles: any;
+    extendDefault: Boolean;
 
     destroy();
     createSymobolizer(feature: Feature, intent: string): any;
@@ -849,8 +984,9 @@ module OpenLayers {
     new (options?: any): Strategy;
     (options?: any): Strategy;
     prototype: Strategy;
+    Fixed(): any;
   }
-  interface Format{
+  interface Format {
     options: any;
     externalProjection: Projection;
     internalProjection: Projection;
@@ -859,26 +995,33 @@ module OpenLayers {
 
     destroy();
     read(data: string): any;
-    write(object: any):string;
+    write(object: any): string;
   }
 
-  declare var Format:{
+  declare var Format: {
     new (options?: any): Format;
     (options?: any): Format;
     prototype: Format;
+
+    GML: any;
+    XML: any;
+    JSON(): any;
+    WMSGetFeatureInfo(): any;
+
+    EsriGeoJSON(): any; //  Note: this is not from OpenLayers, it's different...
   }
 
-  interface Response{
+  interface Response {
     code: number;
-    requestType:string;
-    last:Boolean;
+    requestType: string;
+    last: Boolean;
     features: FVector[];
     data: any;
     reqFeatures: FVector[];
     priv: any;
     error: any;
 
-    sucess(): Boolean;
+    success(): Boolean;
   }
 
   interface Protocol {
@@ -892,10 +1035,10 @@ module OpenLayers {
     read(options: any): Response;
     create(features: FVector[], options: any): Response;
     update(features: FVector[], options: any): Response;
-    delete(features: FVector[], options: any): Response;
+    delete (features: FVector[], options: any): Response;
     commit(features: FVector[], options: any): Response;
     abort(response: Response);
-    createCallback(method: pvMapper.ICallBack, response: Response, options: any);
+    createCallback(method: ICallback, response: Response, options: any);
 
 
   }
@@ -909,6 +1052,8 @@ module OpenLayers {
       (options?: any): Response;
       prototype: Response;
     };
+    Script(params: any): any;
+    //Script(url: string, params: any, callback: (response: any) => {}, scope?: any): any;
   }
 
   interface DefaultSymbolizer {
@@ -922,12 +1067,12 @@ module OpenLayers {
 
   interface Renderer {
     container: DOMElement;
-    root:DOMElement;
-    extent:Bounds;
+    root: DOMElement;
+    extent: Bounds;
     locked: Boolean;
     size: Size;
     resolution: number;
-    map: Map;
+    map: IMap;
     featureDx: number;
     //functions;
     destroy();
@@ -946,7 +1091,7 @@ module OpenLayers {
     eraseGeometry(geometry: Geometry, featureId: string);
     moveRoot(renderer: Renderer);
     getRenderLayerId(): string;
-    applyDefaultSymobolizer(symbolizer: any):any;
+    applyDefaultSymobolizer(symbolizer: any): any;
 
     //Constants
     defaultSymbolizer: DefaultSymbolizer;
@@ -969,22 +1114,22 @@ module OpenLayers {
 
   interface Vector extends Layer {
     events: Events;
-    isBaseLayer:Boolean;
-    isFixed:Boolean;
-    features:Vector[];
+    isBaseLayer: Boolean;
+    isFixed: Boolean;
+    features: Vector[];
     filter: Filter;
     selectedFeatures: FVector[];
     unrenderedFeatures: any;
     reportError: Boolean;
     style: any;
-    styleMap:StyleMap;
+    styleMap: StyleMap;
     strategies: Strategy[];
     protocol: Protocol;
     renderers: string[];
     renders: Renderer;
-    rendererOptions:any;
-    geometryType:string;
-    drawn:Boolean;
+    rendererOptions: any;
+    geometryType: string;
+    drawn: Boolean;
     ratio: number;
     //function
     destroy();
@@ -992,10 +1137,10 @@ module OpenLayers {
     refresh(obj: any);
     assignRenderer();
     displayError();
-    setMap(map: Map);
+    setMap(map: IMap);
     afterAdd();
-    removeMap(map: Map);
-    onMapResize: () =>any;
+    removeMap(map: IMap);
+    onMapResize: () => any;
     moveTo(bounds: Bounds, zoomChanged: Boolean, dragging: Boolean);
     display(display: Boolean);
     addFeatures(features: FVector[], options: any);
@@ -1008,14 +1153,14 @@ module OpenLayers {
     getFeatureBy(property: string, value: string): FVector;
     getFeatureByFid(featureFid: string): FVector;
     getFeatureByAttribute(attrName: string, attrValue: any): FVector;
-    onFeatureInsert: (feature: FVector) =>any;
-    preFeatureInsert: (feature: FVector) =>any;
+    onFeatureInsert: (feature: FVector) => any;
+    preFeatureInsert: (feature: FVector) => any;
     getDataExtent(): Bounds;
     
 
   }
 
-  declare var Vector:{
+  declare var Vector: {
     new (value?: any): Vector;
     (value?: any): Vector;
     new (name: string, options: any): Vector;
@@ -1028,7 +1173,7 @@ module OpenLayers {
     url: string;
     size: Size;
     offset: Pixel;
-    calculateOffset: pvMapper.ICallBack;
+    calculateOffset: ICallback;
     imageDiv: DOMElement;
     px: Pixel;
     //functions
@@ -1044,11 +1189,11 @@ module OpenLayers {
     isDraw(): Boolean;
   }
 
-  declare var Icon:{
+  declare var Icon: {
     new (value?: any): Icon;
     (value?: any): Icon;
-    new (url: string, size: Size, offset: Pixel, calculateOffset: pvMapper.ICallBack): Icon;
-    (url: string, size: Size, offset: Pixel, calculateOffset: pvMapper.ICallBack): Icon;
+    new (url: string, size: Size, offset: Pixel, calculateOffset: ICallback): Icon;
+    (url: string, size: Size, offset: Pixel, calculateOffset: ICallback): Icon;
     prototype: Icon;
 
   }
@@ -1056,8 +1201,8 @@ module OpenLayers {
   interface Marker { 
     icon: Icon;
     lonlat: LonLat;
-    events:Events;
-    map: Map;
+    events: Events;
+    map: IMap;
     //functions
     destroy();
     draw(px: Pixel): DOMElement;
@@ -1086,9 +1231,9 @@ module OpenLayers {
 
   interface Popup {   
     events: Event;
-    id:string;
+    id: string;
     lonlat: LonLat;
-    div:DOMElement;
+    div: DOMElement;
     contentSize: Size;
     size: Size;
     contentHTML: string;
@@ -1105,9 +1250,9 @@ module OpenLayers {
     padding: Bounds;
     disableFirefoxOverflowHack: Boolean;
     panMapIfOutOfView: Boolean;
-    keepInMap:Boolean;
-    closeOnMove:Boolean;
-    map:Map;
+    keepInMap: Boolean;
+    closeOnMove: Boolean;
+    map: IMap;
     
 
     //functions
@@ -1129,22 +1274,22 @@ module OpenLayers {
     registerImageListeners();
     getSafeContentSize(size: Size): Size;
     getContentDivPadding(): Bounds;
-    addCloseBox(callback: pvMapper.ICallBack);
+    addCloseBox(callback: ICallback);
     panIntoView();
     registerEvents();
-    onmouseDown:(evt: Event) => any;
-    onmouseMove:(evt: Event) => any;
-    onmouseUp:(evt:Event) => any;
-    onClick:(evt:Event)=>any;
-    onmouseOut:(evt:Event)=>any;
-    ondblClick:(evt:Event)=>any;
+    onmouseDown: (evt: Event) => any;
+    onmouseMove: (evt: Event) => any;
+    onmouseUp: (evt: Event) => any;
+    onClick: (evt: Event) => any;
+    onmouseOut: (evt: Event) => any;
+    ondblClick: (evt: Event) => any;
 }
 
   declare var Popup: {
     new (value?: any): Popup;
     (value?: any): Popup;
-    new (id: string, lonlat: LonLat, contentSize: Size, contentHTML: string, closeBox: Boolean, closeBoxCallback: pvMapper.ICallBack);
-    (id: string, lonlat: LonLat, contentSize: Size, contentHTML: string, closeBox: Boolean, closeBoxCallback: pvMapper.ICallBack);
+    new (id: string, lonlat: LonLat, contentSize: Size, contentHTML: string, closeBox: Boolean, closeBoxCallback: ICallback);
+    (id: string, lonlat: LonLat, contentSize: Size, contentHTML: string, closeBox: Boolean, closeBoxCallback: ICallback);
   }
 
 
@@ -1214,7 +1359,7 @@ module OpenLayers {
   interface FVector extends Feature {
     //Properties
     fid: string;
-    geometry: Geometry;
+    geometry: Polygon; //Changed this from Geometry. It seems the documentation is wrong
     attributes: any;
     bounds: Bounds;
     state: string;
@@ -1266,7 +1411,7 @@ module jsts {
 
   interface OpenLayersParser {
     read(geometry: OpenLayers.Geometry): any;
-    write(buffer: any):any;
+    write(buffer: any): any;
   }
 
   declare var io: {

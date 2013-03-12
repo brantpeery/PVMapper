@@ -1,0 +1,277 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<componentModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm5="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" dslVersion="1.0.0.0" Id="bafaa4ca-d385-41fa-8f41-b537b1e328a6" name="pvMapperComponents" linkedPackageId="5ef954d3-b9ca-4f69-9cfa-f22b98c4a01c" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ComponentDesigner">
+  <ownedCommentsInternal>
+    <comment Id="fb041e65-568f-4dbf-ac18-72343472fec3">
+      <elementDefinition Id="765dcbe2-7510-45a9-8e4f-0ee324985f9a" />
+      <body>JQuery: a framework uses independantly through out the project</body>
+      <annotatedElements>
+        <componentMoniker Id="d8776448-d342-4b27-8e1e-833ba4e8f3a5" LastKnownName="JQuery" />
+      </annotatedElements>
+    </comment>
+    <comment Id="a1be3aba-559f-4866-a32f-126059b34ae8">
+      <elementDefinition Id="3638a31c-fb8e-4a6f-a814-2560f0dbbdd5" />
+      <body>Module writer must inherit and implement required interface from the ModuleAPI.
+</body>
+      <annotatedElements>
+        <componentMoniker Id="3c7a1b7f-0850-44b3-ab2f-e4af5bf524df" LastKnownName="Specific Module" />
+      </annotatedElements>
+    </comment>
+    <comment Id="e4d6e40c-a8c8-4d52-a26a-5c760edd201d">
+      <elementDefinition Id="578ddf44-b011-4664-b818-0b6e316dc8aa" />
+      <body>MongoDB</body>
+      <annotatedElements>
+        <componentMoniker Id="ec6d982e-0a05-4af0-bdb2-fcabafaf153d" LastKnownName="Database Server" />
+      </annotatedElements>
+    </comment>
+    <comment Id="2e0f0c28-f069-4aac-8f14-12fa4f17fc67">
+      <elementDefinition Id="d85bede0-52ae-4516-bf0f-51eda7ad991a" />
+      <body>MVC4 .NET Web Service (C#)</body>
+      <annotatedElements>
+        <componentMoniker Id="0cc7ec85-1687-40d0-a8b0-522bfa79dad0" LastKnownName="Web Service Server" />
+      </annotatedElements>
+    </comment>
+  </ownedCommentsInternal>
+  <profileInstances>
+    <packageHasProfileInstances Id="2f0c23ea-aea8-4574-b1f7-acc56814ea45">
+      <profileInstance Id="4de5f3b3-cfcc-4e2b-81da-f14466c96170" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="fbef2c43-4aff-4269-a135-095e798bd082">
+      <profileInstance Id="5de4c05a-fd9f-4389-9b84-ed2b32994727" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <componentModelHasComponents>
+      <component Id="16ca3a42-31bd-420a-8187-f9a269335522" name="ModuleAPI" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="f0ada3bd-5383-4a30-9194-a52fff356258" />
+        <ownedAttributesInternal>
+          <requiredInterface Id="c3f5391a-46dd-4e12-94cb-945cbd26615c" name="Port2" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isService="false" isBehavior="false">
+            <elementDefinition Id="8d80e8d3-67b9-45f2-b224-f2941c29ab00" />
+            <suppliersInternal>
+              <dependency Id="12b34c4c-2735-425b-9a8a-e10dc7aee8a9">
+                <providedInterfaceMoniker Id="69c260dc-c94f-4339-b070-2f6ef6860a7e" LastKnownName="Port1" />
+                <elementDefinition Id="0771ee21-6c23-4f37-82ef-5d70dd49263f" />
+              </dependency>
+            </suppliersInternal>
+            <type_NamedElement>
+              <interfaceMoniker Id="8a93789a-c8b8-445c-9580-c5e7f4b8e39e" LastKnownName="InfoTool" />
+            </type_NamedElement>
+          </requiredInterface>
+          <requiredInterface Id="303dfcea-3ac1-48db-85ed-4fc5e070821a" name="Port1" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isService="false" isBehavior="false">
+            <elementDefinition Id="787091d9-02b4-4c05-9884-013d6620287d" />
+            <suppliersInternal>
+              <dependency Id="8dc25fa4-687f-4bc6-a5ef-0aaddc624130">
+                <providedInterfaceMoniker Id="453f7918-5e95-480f-b78c-dad021f4ce51" LastKnownName="Port1" />
+                <elementDefinition Id="78c008b4-c603-4c81-8eab-74acda87e455" />
+              </dependency>
+            </suppliersInternal>
+            <type_NamedElement>
+              <interfaceMoniker Id="ad31091e-7379-4147-a845-c01da142189c" LastKnownName="ScoreTool" />
+            </type_NamedElement>
+          </requiredInterface>
+        </ownedAttributesInternal>
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="c60dd054-795c-4c10-950d-22b4dbbed57c" name="ScoringAPI" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="2606b597-e860-4ef9-be60-0ba46289b551" />
+        <ownedAttributesInternal>
+          <providedInterface Id="453f7918-5e95-480f-b78c-dad021f4ce51" name="Port1" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isService="false" isBehavior="false">
+            <elementDefinition Id="c02cdeb3-eeb9-4a9e-8bf3-9bcb497d270e" />
+            <type_NamedElement>
+              <interfaceMoniker Id="4f479c55-412d-4b5c-8317-123725d1f457" LastKnownName="Module Registration" />
+            </type_NamedElement>
+          </providedInterface>
+        </ownedAttributesInternal>
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="c5561090-8b5d-4750-a724-f668088845ce" name="Visual Presentation" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="3cbb65e8-0fff-49bd-a9d2-43ca54969531" />
+        <ownedAttributesInternal>
+          <providedInterface Id="69c260dc-c94f-4339-b070-2f6ef6860a7e" name="Port1" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isService="false" isBehavior="false">
+            <elementDefinition Id="9818abf8-d8a9-4ad8-8b34-6c374af17075" />
+            <type_NamedElement>
+              <interfaceMoniker Id="b5a48afd-1b07-4995-9f33-7139af3b2e3f" LastKnownName="Visual Registration" />
+            </type_NamedElement>
+          </providedInterface>
+          <requiredInterface Id="f30e77ed-0c03-49a2-b6be-d461c50a7b8c" name="Port2" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isService="false" isBehavior="false">
+            <elementDefinition Id="84c0ca9b-32a2-4776-ae39-ac10d9b2d99c" />
+            <suppliersInternal>
+              <dependency Id="a6a741d5-2385-4865-a44e-9c7ac79f4d7c">
+                <providedInterfaceMoniker Id="b8220542-af69-4a15-a915-bc96965b9aaa" LastKnownName="Port2" />
+                <elementDefinition Id="199153b0-72f6-4e50-98de-37b9cdb2fb70" />
+              </dependency>
+            </suppliersInternal>
+            <type_NamedElement>
+              <interfaceMoniker Id="52866651-e9dd-4dc3-9c51-fa6355a3b0a9" LastKnownName="read/write" />
+            </type_NamedElement>
+          </requiredInterface>
+        </ownedAttributesInternal>
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="581ed76c-8c6a-4dfe-9d78-5b89f301812f" name="DataLayer" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="09871845-9c9d-4140-95c1-0759c4ba6f2d" />
+        <ownedAttributesInternal>
+          <requiredInterface Id="54be595e-8153-44c3-81ad-a352061fe003" name="Port1" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isService="false" isBehavior="false">
+            <elementDefinition Id="16dbba26-380b-49c2-bf13-362ccb47aba5" />
+            <suppliersInternal>
+              <dependency Id="c8c583e6-d9f7-47c7-9f90-ca8fbccdf72c">
+                <providedInterfaceMoniker Id="94e30b52-51da-42e1-a5cd-83e03c276674" LastKnownName="Port1" />
+                <elementDefinition Id="ce2f419b-4da1-4b88-9594-88407ca62b54" />
+              </dependency>
+            </suppliersInternal>
+            <type_NamedElement>
+              <interfaceMoniker Id="73748ed8-6f8d-4f34-93dd-761cbf1641b0" LastKnownName="AJAX Connection" />
+            </type_NamedElement>
+          </requiredInterface>
+          <providedInterface Id="b8220542-af69-4a15-a915-bc96965b9aaa" name="Port2" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isService="false" isBehavior="false">
+            <elementDefinition Id="79ce4b49-4223-4902-9e3f-d658de41454c" />
+            <type_NamedElement>
+              <interfaceMoniker Id="18e85f46-42ba-46cf-ba71-d01a26a2e62b" LastKnownName="Cache" />
+            </type_NamedElement>
+          </providedInterface>
+        </ownedAttributesInternal>
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="14352619-8f74-4c8d-be4b-74d527e04c2d" name="ExtJS Framework" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="d62f9f40-563a-49f4-a1f9-dfa4f6068f9a" />
+        <suppliersInternal>
+          <dependency Id="91b9a0bd-c521-4dfd-a121-8c62c56f5c21">
+            <componentMoniker Id="c5561090-8b5d-4750-a724-f668088845ce" LastKnownName="Visual Presentation" />
+            <elementDefinition Id="bbc69422-8709-45b0-ab51-07f5cc24e036" />
+          </dependency>
+          <dependency Id="b91d1bc7-7a24-4da3-b8f6-0b8d27f0e2af">
+            <componentMoniker Id="581ed76c-8c6a-4dfe-9d78-5b89f301812f" LastKnownName="DataLayer" />
+            <elementDefinition Id="fb948aac-e019-4a77-b66d-697e99c39d3d" />
+          </dependency>
+        </suppliersInternal>
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="851daf4f-cc35-4dc3-bd86-339ff7168797" name="OpenLayers" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="8c5d0fa4-3b06-4493-ac11-89a93a7619a0" />
+        <suppliersInternal>
+          <dependency Id="cc0e34a3-fcc0-4c3a-9847-a57151494c4c">
+            <componentMoniker Id="c5561090-8b5d-4750-a724-f668088845ce" LastKnownName="Visual Presentation" />
+            <elementDefinition Id="19b59901-36c9-4f83-9164-a771df72e324" />
+          </dependency>
+        </suppliersInternal>
+      </component>
+    </componentModelHasComponents>
+    <componentModelHasComponents>
+      <component Id="d8776448-d342-4b27-8e1e-833ba4e8f3a5" name="JQuery" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="90ce59d0-c470-43c0-b171-bfb83f5f3efe" />
+      </component>
+    </componentModelHasComponents>
+    <modelContainsNamedElements>
+      <Interface Id="8a93789a-c8b8-445c-9580-c5e7f4b8e39e" name="InfoTool" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="836d003d-bee5-423d-a99e-0fd39e95c78a" />
+      </Interface>
+    </modelContainsNamedElements>
+    <componentModelHasComponents>
+      <component Id="3c7a1b7f-0850-44b3-ab2f-e4af5bf524df" name="Specific Module" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="25082ab2-a68b-488e-a6d6-e16e8b8aeb4c" />
+        <generalsInternal>
+          <generalization Id="3e5a1a06-138f-4117-9fdd-66f7a035dc76" isSubstitutable="false">
+            <componentMoniker Id="16ca3a42-31bd-420a-8187-f9a269335522" LastKnownName="ModuleAPI" />
+            <elementDefinition Id="1bdfcd61-ef40-4fd1-9586-a5c56b75810f" />
+          </generalization>
+        </generalsInternal>
+      </component>
+    </componentModelHasComponents>
+    <modelContainsNamedElements>
+      <Interface Id="b5a48afd-1b07-4995-9f33-7139af3b2e3f" name="Visual Registration" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="342b9e41-0691-4012-a276-2a57f12e5e98" />
+      </Interface>
+    </modelContainsNamedElements>
+    <componentModelHasComponents>
+      <component Id="0cc7ec85-1687-40d0-a8b0-522bfa79dad0" name="Web Service Server" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="6e241255-fb4a-4b6d-a2bb-44940a5af564" />
+        <ownedAttributesInternal>
+          <providedInterface Id="94e30b52-51da-42e1-a5cd-83e03c276674" name="Port1" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isService="false" isBehavior="false">
+            <elementDefinition Id="e57f7814-f191-4df9-8ac7-407cb85cd768" />
+            <type_NamedElement>
+              <interfaceMoniker Id="ae7d0ec9-927e-4479-9ade-93cbb3fc645d" LastKnownName="publish" />
+            </type_NamedElement>
+          </providedInterface>
+          <requiredInterface Id="c2eb55d0-9d54-4ce6-be46-df2f0a48135c" name="Port2" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isService="false" isBehavior="false">
+            <elementDefinition Id="10d8fdd9-ff00-487c-b2fd-7bad462e961e" />
+            <suppliersInternal>
+              <dependency Id="3f5b0094-ed6d-49d2-8202-b8686213f7da">
+                <providedInterfaceMoniker Id="321acf3d-45e9-43e0-95ab-13586f518a7e" LastKnownName="Port1" />
+                <elementDefinition Id="024d2107-a200-4ece-bd9a-42845e2e53fe" />
+              </dependency>
+            </suppliersInternal>
+            <type_NamedElement>
+              <interfaceMoniker Id="2235e3b1-86ff-4342-9a8b-690648fe7ec4" LastKnownName="Connection" />
+            </type_NamedElement>
+          </requiredInterface>
+        </ownedAttributesInternal>
+      </component>
+    </componentModelHasComponents>
+    <modelContainsNamedElements>
+      <Interface Id="ae7d0ec9-927e-4479-9ade-93cbb3fc645d" name="publish" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="d5a0d69b-d9cf-4661-aeb1-e06074c7c460" />
+      </Interface>
+    </modelContainsNamedElements>
+    <modelContainsNamedElements>
+      <Interface Id="73748ed8-6f8d-4f34-93dd-761cbf1641b0" name="AJAX Connection" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="c8e6ad55-80fe-40cc-a22b-ef01df824807" />
+      </Interface>
+    </modelContainsNamedElements>
+    <modelContainsNamedElements>
+      <Interface Id="18e85f46-42ba-46cf-ba71-d01a26a2e62b" name="Cache" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="aeca7b9f-9fa1-463b-b7cd-8fa8a27c5eff" />
+      </Interface>
+    </modelContainsNamedElements>
+    <modelContainsNamedElements>
+      <Interface Id="52866651-e9dd-4dc3-9c51-fa6355a3b0a9" name="read/write" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="b0db57bc-15d2-4aa4-a1b4-f364a259e9bb" />
+      </Interface>
+    </modelContainsNamedElements>
+    <componentModelHasComponents>
+      <component Id="ec6d982e-0a05-4af0-bdb2-fcabafaf153d" name="Database Server" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="ca4deb84-9a62-4165-8f09-5a5cc79a57aa" />
+        <ownedAttributesInternal>
+          <providedInterface Id="321acf3d-45e9-43e0-95ab-13586f518a7e" name="Port1" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isService="false" isBehavior="false">
+            <elementDefinition Id="98a949c4-9a85-4701-a16e-d910ef02ff1a" />
+            <type_NamedElement>
+              <interfaceMoniker Id="f629d35e-d848-4796-97f9-41e606ef10d1" LastKnownName="Data Provider" />
+            </type_NamedElement>
+          </providedInterface>
+        </ownedAttributesInternal>
+      </component>
+    </componentModelHasComponents>
+    <modelContainsNamedElements>
+      <Interface Id="f629d35e-d848-4796-97f9-41e606ef10d1" name="Data Provider" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="884553d3-1562-4db2-875b-0481044f724f" />
+      </Interface>
+    </modelContainsNamedElements>
+    <modelContainsNamedElements>
+      <Interface Id="2235e3b1-86ff-4342-9a8b-690648fe7ec4" name="Connection" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="a9a2eef9-6a3b-4622-adc6-485972da0bcc" />
+      </Interface>
+    </modelContainsNamedElements>
+    <modelContainsNamedElements>
+      <Interface Id="4f479c55-412d-4b5c-8317-123725d1f457" name="Module Registration" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="74d6382a-c52d-4e6b-91ac-e7c7580b97c1" />
+      </Interface>
+    </modelContainsNamedElements>
+    <modelContainsNamedElements>
+      <Interface Id="ad31091e-7379-4147-a845-c01da142189c" name="ScoreTool" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="6c26c0b4-3ea7-44e9-a66a-21aa616a813f" />
+      </Interface>
+    </modelContainsNamedElements>
+  </packagedElements>
+  <package Id="5ef954d3-b9ca-4f69-9cfa-f22b98c4a01c" name="pvMapperModel">
+    <elementDefinition Id="6421538c-419e-4674-a936-f6ac22667ac2" />
+  </package>
+</componentModel>
