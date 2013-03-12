@@ -17,6 +17,9 @@ var app = Ext.application({
 
         console.log('launching application');
 
+        // set the theme for OpenLayers
+        OpenLayers.ImgPath = "/Content/OpenLayers/default/img/";
+
         ///--------------------------Set the map stuff up--------------------------------------------
         // track map position 
         Ext.state.Manager.setProvider(
@@ -26,8 +29,9 @@ var app = Ext.application({
 
         //Create default map controls
         var controls = [new OpenLayers.Control.Navigation(),
-                        new OpenLayers.Control.PanPanel(),
-                        new OpenLayers.Control.ZoomPanel(),
+                        //new OpenLayers.Control.PanPanel(),
+                        //new OpenLayers.Control.ZoomPanel(),
+                        new OpenLayers.Control.PanZoomBar(),
                         new OpenLayers.Control.Attribution(),
                         new OpenLayers.Control.ScaleLine(),
                         //new OpenLayers.Control.MousePosition()
@@ -43,7 +47,8 @@ var app = Ext.application({
             //maxExtent: usBounds, <-- that stopped base layers from drawing out of bounds
             //restrictedExtent: usBounds, <-- this was annoying
             //center: '-10723197, 4500612',
-            controls: controls
+            controls: controls,
+            theme: "/Content/OpenLayers/default/style.css",
         });
 
         //Create the panel the map lives in
