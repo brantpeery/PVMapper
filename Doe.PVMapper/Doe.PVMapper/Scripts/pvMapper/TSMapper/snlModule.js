@@ -47,10 +47,10 @@ var INLModules;
     })();    
     var modinstance = new IrradianceModule();
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
-    var snlWmsBaseUrl = "http://maps.snl.com/arcgis/services/SNLMaps/PowerCos/MapServer/";
-    //var snlRestBaseUrl = "http://maps.snl.com/arcgis/rest/services/SNLMaps/Power/MapServer/";
-    //var snlLineQueryUrl = "http://maps.snl.com/arcgis/rest/services/SNLMaps/PowerCos/MapServer/2/query";
-    var snlLineQueryUrl = "http://maps.snl.com/arcgis/rest/services/SNLMaps/Power/MapServer/5/query";
+    var snlWmsBaseUrl = "https://maps.snl.com/arcgis/services/SNLMaps/PowerCos/MapServer/";
+    //var snlRestBaseUrl = "https://maps.snl.com/arcgis/rest/services/SNLMaps/Power/MapServer/";
+    //var snlLineQueryUrl = "https://maps.snl.com/arcgis/rest/services/SNLMaps/PowerCos/MapServer/2/query";
+    var snlLineQueryUrl = "https://maps.snl.com/arcgis/rest/services/SNLMaps/Power/MapServer/5/query";
     //declare var Ext: any;
     var mapLayer;
     function addAllMaps() {
