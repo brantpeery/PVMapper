@@ -86,3 +86,4 @@ this.sites.push(site);
 this.siteAdded.fire(site, [{ site: site }, site]);
 }
 */
+//@ sourceMappingURL=SiteManager.js.map

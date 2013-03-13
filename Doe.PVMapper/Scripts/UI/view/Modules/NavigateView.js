@@ -3,6 +3,7 @@
 Ext.define( 'MainApp.view.NavigateWindow', {
   extend: 'MainApp.view.Window',
   title: 'Properties',
+  sticky: true,
   height: 400,
   Width: 300,
   x: 10,
