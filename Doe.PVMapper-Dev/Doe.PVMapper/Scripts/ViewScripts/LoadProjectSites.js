@@ -28,6 +28,11 @@
                 }
             }
 
+            // if we loaded any sites, go ahead and zoom in to them.
+            if (sites.length > 0) {
+                pvMapper.map.zoomToExtent(sitesLayer.getDataExtent())
+            }
+
             //Add the event for the sitesLayer to the site manager 
             sitesLayer.events.register("featuremodified", sitesLayer, pvMapper.siteManager.featureChangedHandler);
 
