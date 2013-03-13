@@ -97,7 +97,7 @@ var funcStore = Ext.create( 'Ext.data.JsonStore', {
 } );
 
 var currentMenu = null;
-Ext.define( 'Ext.PopupWindow', {
+Ext.define( 'Ext.FunctionViewWindow', {
   extend: 'Ext.window.Window',
   title: 'Functions',
   height: 500,
@@ -684,7 +684,7 @@ function createUtilsRecord( aName ) {
 //#endregion
 
 
-var puWin = Ext.create( 'Ext.PopupWindow' );
+var puWin = Ext.create( 'Ext.FunctionViewWindow' );
 funcStore.load( {
   scope: this,
   callback: function ( records, operation, success ) {

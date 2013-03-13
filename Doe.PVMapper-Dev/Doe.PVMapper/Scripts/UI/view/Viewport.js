@@ -101,8 +101,15 @@ Ext.define( 'MainApp.view.Viewport', {
               removeButton: function ( winObj ) {
                 var idx = this.items.items.indexOfObject( function ( value ) { return ( value.text === winObj.title ); } );
                 if ( idx >= 0 ) {
-                  this.items.items.splice( idx, 1 );
-                  this.doLayout();
+                  //this.items.items.splice( idx, 1 );
+                  //this.doLayout();
+                  this.remove(btn, true);
+                }
+              },
+              updateButtonText: function (oldText, newText) {
+                var idx = this.items.items.indexOfObject(function (value) { return (value.text === oldText); });
+                if (idx >= 0) {
+                  this.items.items[idx].setText(newText);
                 }
               }
             },
