@@ -100,10 +100,11 @@ Ext.define( 'MainApp.view.Viewport', {
               },
               removeButton: function ( winObj ) {
                 var idx = this.items.items.indexOfObject( function ( value ) { return ( value.text === winObj.title ); } );
-                if ( idx >= 0 ) {
+                if (idx >= 0) {
+                  var btn = this.items.items[idx];
                   //this.items.items.splice( idx, 1 );
-                  //this.doLayout();
-                  this.remove(btn, true);
+                  this.items.remove(btn);
+                  this.doLayout();
                 }
               },
               updateButtonText: function (oldText, newText) {
