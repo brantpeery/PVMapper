@@ -45,6 +45,14 @@ Ext.define('MainApp.view.Window', {
         taskBar.addButton(win);
       return true;
     },
+    beforeclose: function(win, eOpts) {
+      var taskBar = Ext.getCmp('maintaskbar');
+      if (taskBar) {
+        taskBar.removeButton(win);
+        delete win;
+      }
+      return true;
+    },
     beforedestroy: function (win, op) {
       var taskBar = Ext.getCmp('maintaskbar');
       if (taskBar)
