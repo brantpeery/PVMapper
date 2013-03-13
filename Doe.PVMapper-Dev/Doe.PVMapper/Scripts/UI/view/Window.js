@@ -22,6 +22,7 @@ Ext.define('MainApp.view.Window', {
   collapsible: true,
   bodyStyle: 'opacity: 1;',
   titleCollapse: true,
+  sticky: null,
   viewState: Ext.view.ViewState.NORMAL,
   collapse: function () {
     this.callParent(arguments);
@@ -48,14 +49,23 @@ Ext.define('MainApp.view.Window', {
     beforeclose: function(win, eOpts) {
       var taskBar = Ext.getCmp('maintaskbar');
       if (taskBar) {
-        taskBar.removeButton(win);
-        delete win;
+        if (!this.sticky) {
+          taskBar.removeButton(win);
+        }
+        else 
+          this.viewState = Ext.view.ViewState.MINIMIZED;
       }
+      return true;
+    },
+    beforeshow: function(win, op) {
+      var taskBar = Ext.getCmp('maintaskbar');
+      if (taskBar)
+        taskBar.addButton(win);
       return true;
     },
     beforedestroy: function (win, op) {
       var taskBar = Ext.getCmp('maintaskbar');
-      if (taskBar)
+      if (taskBar) 
         taskBar.removeButton(win);
       return true;
     },

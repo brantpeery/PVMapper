@@ -59,6 +59,7 @@ Ext.define( 'MainApp.view.functionWindow', {
   title: 'Functions',
   height: 500,
   width: 400,
+  sticky: false,
   floating: true,
   layout: 'fit',
   closeAction: 'hide',
@@ -407,14 +408,14 @@ Ext.define( 'MainApp.view.functionWindow', {
           var treeMenu = Ext.getCmp( 'ToolTree' );
           treeMenu.setRootNode( navMenu.getRootNode() );  // by resetting root node to the treepanel, forces it to reload and update view.
 
-          pvMapper.functionWin.hide();
+          pvMapper.functionWin.close();
         }
       },
       {
         xtype: 'button',
         text: 'Cancel',
         handler: function () {
-          pvMapper.functionWin.hide();
+          pvMapper.functionWin.close();
         }
       }]
       //#endregion
