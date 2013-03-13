@@ -13,7 +13,7 @@ namespace Doe.PVMapper.Models {
   [JsonObject(MemberSerialization.OptOut)]
   public class Properties : Entity {
    
-    [Key, Required, MaxLength(30)]
+    //[Key, Required, MaxLength(30)]
     public string functionName { get; set; }
     public float minValue { get; set; }
     public float maxValue { get; set; }
