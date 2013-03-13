@@ -33,7 +33,7 @@ module INLModules {
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, score: pvMapper.Score) {
-                        this.updateScoreFederalLand(score);
+                        this.updateScore(score);
                     },
                     updateScoreCallback: (score: pvMapper.Score) => {
                         this.updateScore(score);
@@ -161,7 +161,7 @@ module INLModules {
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, score: pvMapper.Score) {
-                        this.updateScoreFederalLand(score);
+                        this.updateScore(score);
                     },
                     updateScoreCallback: (score: pvMapper.Score) => {
                         this.updateScore(score);
