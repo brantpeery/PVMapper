@@ -36,6 +36,10 @@ table {
 }
 
 /*This can all be removed when the css page naming convention is finalized*/
+.propertyBoard td {
+    padding: 2px 4px;
+}
+
 .propertyBoard .x-window-body {
      background: none repeat scroll 0% 0% white;
      background:white;

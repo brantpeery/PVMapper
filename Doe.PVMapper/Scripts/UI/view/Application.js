@@ -29,12 +29,13 @@ var app = Ext.application({
 
         //Create default map controls
         var controls = [new OpenLayers.Control.Navigation(),
-                        //new OpenLayers.Control.PanPanel(),
+                        //new OpenLayers.Control.PanPanel(), // <-- these two pan/zoom controls use CSS styling
                         //new OpenLayers.Control.ZoomPanel(),
-                        new OpenLayers.Control.PanZoomBar(),
+                        new OpenLayers.Control.PanZoomBar(), // <-- this pan/zoom control is styled by images
                         new OpenLayers.Control.Attribution(),
                         new OpenLayers.Control.ScaleLine(),
-                        //new OpenLayers.Control.MousePosition()
+                        //new OpenLayers.Control.MousePosition(),
+                        new OpenLayers.Control.LayerSwitcher({ 'ascending': true }),
         ];
 
         //Create the map

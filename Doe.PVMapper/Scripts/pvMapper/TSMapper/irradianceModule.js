@@ -161,7 +161,7 @@ var INLModules;
                     var gmlParser = new OpenLayers.Format.GML();
                     gmlParser.extractAttributes = true;
                     var features = gmlParser.read(response.responseText);
-                    if(typeof features !== "undefined") {
+                    if(typeof features !== "undefined" && features.length > 0) {
                         // calculate the average irradiance
                         //TODO: should we just take the floor, or sum proportionally based on overlap, or ...something ?
                         var sum = 0.0;
@@ -178,7 +178,7 @@ var INLModules;
                         //score.updateValue(megaWatts); //TODO: duh...? want give two scores...
                                             } else {
                         // error
-                        score.popupMessage = "No irradiance data found near this site";
+                        score.popupMessage = "No data for this site";
                         score.updateValue(Number.NaN);
                     }
                 } else if(response.status === 500) {
