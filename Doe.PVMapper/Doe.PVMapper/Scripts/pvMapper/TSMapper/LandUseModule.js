@@ -35,7 +35,7 @@ var INLModules;
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {
-                            this.updateScoreFederalLand(score);
+                            this.updateScore(score);
                         },
                         updateScoreCallback: function (score) {
                             _this.updateScore(score);
@@ -148,7 +148,7 @@ var INLModules;
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {
-                            this.updateScoreFederalLand(score);
+                            this.updateScore(score);
                         },
                         updateScoreCallback: function (score) {
                             _this.updateScore(score);
