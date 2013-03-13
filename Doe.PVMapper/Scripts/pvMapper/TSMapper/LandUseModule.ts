@@ -32,7 +32,7 @@ module INLModules {
                     description: "Shows the classification of protected areas within the united states.",
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
-                    onSiteChange: function (e, score: pvMapper.Score) {
+                    onSiteChange: (e, score: pvMapper.Score) => {
                         this.updateScore(score);
                     },
                     updateScoreCallback: (score: pvMapper.Score) => {
@@ -160,7 +160,7 @@ module INLModules {
                     description: "Display the land cover found around the center of a site",
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
-                    onSiteChange: function (e, score: pvMapper.Score) {
+                    onSiteChange: (e, score: pvMapper.Score) => {
                         this.updateScore(score);
                     },
                     updateScoreCallback: (score: pvMapper.Score) => {
