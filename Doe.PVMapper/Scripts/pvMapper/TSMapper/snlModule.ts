@@ -128,6 +128,7 @@ module INLModules {
         var maxSearchDistanceInMeters: number = (20 * 1000);
         var minimumVoltage: number = 230; //Note: common voltages include 230, 345, 500, 765
 
+        // use a genuine JSONP request, rathern than a plain old GET request routed through the proxy.
         var jsonpProtocol = new OpenLayers.Protocol.Script({
             url: snlLineQueryUrl,
             params: {
@@ -184,14 +185,12 @@ module INLModules {
 
         var response: OpenLayers.Protocol.Response = jsonpProtocol.read();
 
-        //alert("Nearby features: " + response.features.length);
-
         //var params = {
         //    mapExtent: score.site.geometry.bounds.toBBOX(6, false),
         //    geometryType: "esriGeometryEnvelope",
         //    geometry: score.site.geometry.bounds.toBBOX(6, false),
         //    f: "json", // or "html",
-        //    layers: "5", //"2", //solar.params.LAYERS,
+        //    layers: "all:5", //"2", //solar.params.LAYERS,
         //    tolerance: 0, //TODO: should this be 0 or 1?
         //    //imageDisplay: "1, 1, 96",
         //    callbackKey: "callback",

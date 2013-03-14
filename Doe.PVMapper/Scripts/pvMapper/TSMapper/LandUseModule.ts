@@ -211,7 +211,7 @@ module INLModules {
                 geometryType: "esriGeometryEnvelope",
                 geometry: score.site.geometry.bounds.toBBOX(6, false),
                 f: "json",
-                layers: "0,1,2",
+                layers: "all",
                 tolerance: 0,
                 imageDisplay: "1, 1, 96",
                 returnGeometry: false,
