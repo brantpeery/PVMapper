@@ -166,60 +166,9 @@
     <Compile Include="Models\ProjectSite.cs" />
     <Compile Include="Models\Properties.cs" />
     <Compile Include="Models\TreeNode.cs" />
-    <Content Include="Content\OpenLayers\default\framedCloud.css" />
-    <Content Include="Content\OpenLayers\default\google.css" />
-    <Content Include="Content\OpenLayers\default\google.tidy.css" />
-    <Content Include="Content\OpenLayers\default\ie6-style.css" />
-    <Content Include="Content\OpenLayers\default\ie6-style.tidy.css" />
-    <Content Include="Content\OpenLayers\default\img\add_point_off.png" />
-    <Content Include="Content\OpenLayers\default\img\add_point_on.png" />
-    <Content Include="Content\OpenLayers\default\img\blank.gif" />
-    <Content Include="Content\OpenLayers\default\img\close.gif" />
-    <Content Include="Content\OpenLayers\default\img\drag-rectangle-off.png" />
-    <Content Include="Content\OpenLayers\default\img\drag-rectangle-on.png" />
-    <Content Include="Content\OpenLayers\default\img\draw_line_off.png" />
-    <Content Include="Content\OpenLayers\default\img\draw_line_on.png" />
-    <Content Include="Content\OpenLayers\default\img\draw_point_off.png" />
-    <Content Include="Content\OpenLayers\default\img\draw_point_on.png" />
-    <Content Include="Content\OpenLayers\default\img\draw_polygon_off.png" />
-    <Content Include="Content\OpenLayers\default\img\draw_polygon_on.png" />
-    <Content Include="Content\OpenLayers\default\img\east-mini.png" />
-    <Content Include="Content\OpenLayers\default\img\editing_tool_bar.png" />
-    <Content Include="Content\OpenLayers\default\img\layer-switcher-maximize.png" />
-    <Content Include="Content\OpenLayers\default\img\layer-switcher-minimize.png" />
-    <Content Include="Content\OpenLayers\default\img\move_feature_off.png" />
-    <Content Include="Content\OpenLayers\default\img\move_feature_on.png" />
-    <Content Include="Content\OpenLayers\default\img\navigation_history.png" />
-    <Content Include="Content\OpenLayers\default\img\north-mini.png" />
-    <Content Include="Content\OpenLayers\default\img\overview_replacement.gif" />
-    <Content Include="Content\OpenLayers\default\img\pan-panel-NOALPHA.png" />
-    <Content Include="Content\OpenLayers\default\img\pan-panel.png" />
-    <Content Include="Content\OpenLayers\default\img\panning-hand-off.png" />
-    <Content Include="Content\OpenLayers\default\img\panning-hand-on.png" />
-    <Content Include="Content\OpenLayers\default\img\pan_off.png" />
-    <Content Include="Content\OpenLayers\default\img\pan_on.png" />
-    <Content Include="Content\OpenLayers\default\img\remove_point_off.png" />
-    <Content Include="Content\OpenLayers\default\img\remove_point_on.png" />
-    <Content Include="Content\OpenLayers\default\img\ruler.png" />
-    <Content Include="Content\OpenLayers\default\img\save_features_off.png" />
-    <Content Include="Content\OpenLayers\default\img\save_features_on.png" />
-    <Content Include="Content\OpenLayers\default\img\slider.png" />
-    <Content Include="Content\OpenLayers\default\img\south-mini.png" />
-    <Content Include="Content\OpenLayers\default\img\view_next_off.png" />
-    <Content Include="Content\OpenLayers\default\img\view_next_on.png" />
-    <Content Include="Content\OpenLayers\default\img\view_previous_off.png" />
-    <Content Include="Content\OpenLayers\default\img\view_previous_on.png" />
-    <Content Include="Content\OpenLayers\default\img\west-mini.png" />
-    <Content Include="Content\OpenLayers\default\img\zoom-minus-mini.png" />
-    <Content Include="Content\OpenLayers\default\img\zoom-panel-NOALPHA.png" />
-    <Content Include="Content\OpenLayers\default\img\zoom-panel.png" />
-    <Content Include="Content\OpenLayers\default\img\zoom-plus-mini.png" />
-    <Content Include="Content\OpenLayers\default\img\zoom-world-mini.png" />
-    <Content Include="Content\OpenLayers\default\img\zoombar.png" />
-    <Content Include="Content\OpenLayers\default\style.css" />
-    <Content Include="Content\OpenLayers\default\style.tidy.css" />
-    <Content Include="Scripts\EsriGeoJSON.js" />
     <Content Include="Scripts\ext-4.1.1a.d.ts" />
+    <Content Include="Scripts\img\layer-switcher-maximize.png" />
+    <Content Include="Scripts\img\layer-switcher-minimize.png" />
     <Content Include="Scripts\jquery.d.ts" />
     <Content Include="Scripts\lib.d.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\OpenLayers.d.ts" />
@@ -237,13 +186,6 @@
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\DataManager.min.js">
       <DependentUpon>DataManager.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\DemModule.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\demModule.js">
-      <DependentUpon>DemModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\demModule.min.js">
-      <DependentUpon>DemModule.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Event.js">
       <DependentUpon>Event.ts</DependentUpon>
@@ -337,13 +279,6 @@
     <Content Include="Scripts\pvMapper\TSMapper\Site.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Tools.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\solarmapperModule.ts" />
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\snlModule.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\snlModule.js">
-      <DependentUpon>snlModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\snlModule.min.js">
-      <DependentUpon>snlModule.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\solarmapperModule.js">
       <DependentUpon>solarmapperModule.ts</DependentUpon>
     </Content>
@@ -364,6 +299,9 @@
     <Content Include="Scripts\UI\controller\UtilModel.min.js">
       <DependentUpon>UtilModel.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\UI\model\Scoreboard.js" />
+    <Content Include="Scripts\UI\model\Tool.js" />
+    <Content Include="Scripts\UI\view\ScoreboardWindow.js" />
     <Content Include="Scripts\UnitTests\jasmine.js" />
     <Content Include="Scripts\UnitTests\pvMapper.Event.js" />
     <Content Include="Scripts\UnitTests\pvMapper.Render.js" />
@@ -1097,6 +1035,7 @@
     <Content Include="Scripts\UI\view\Window.js" />
     <Content Include="Scripts\ViewScripts\AddNewSite.js" />
     <Content Include="Scripts\extExtensions\FitToParent.js" />
+    <Content Include="Scripts\ViewScripts\FunctionView.js" />
     <Content Include="Scripts\ViewScripts\IndexView.js" />
     <Content Include="Scripts\ViewScripts\NavigateMenu.js" />
     <Content Include="Scripts\ViewScripts\PieView.js" />
@@ -1111,7 +1050,8 @@
     <Content Include="Scripts\ViewScripts\SiteDetail.js" />
     <Content Include="Scripts\ViewScripts\testscripts.js" />
     <Content Include="Scripts\ViewScripts\ZoomAction.js" />
-    <Content Include="TestPages\Application.js" />
+    <Content Include="TestPages\LayoutTest.html" />
+    <Content Include="TestPages\SiteObjectTest.html" />
     <Content Include="TestPages\UtilityFunctions.html" />
     <Content Include="TestPages\UtilityWeights.html" />
     <Content Include="favicon.ico" />
@@ -1178,21 +1118,32 @@
     <Content Include="Views\Extensions\Details.cshtml" />
     <Content Include="Views\ProjectSite\Edit.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Home\tsindex.cshtml" />
-    <Content Include="Scripts\pvMapper\Utility.js.map">
-      <DependentUpon>Utility.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\common.js.map">
       <DependentUpon>common.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Event.js.map">
-      <DependentUpon>Event.ts</DependentUpon>
+    <Content Include="Scripts\pvMapper\TSMapper\Tools.js.map">
+      <DependentUpon>Tools.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\DataManager.js.map">
+      <DependentUpon>DataManager.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Module.js.map">
+      <DependentUpon>Module.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Score.js.map">
+      <DependentUpon>Score.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Site.js.map">
+      <DependentUpon>Site.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\siteAreaModule.js.map">
+      <DependentUpon>siteAreaModule.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\SiteManager.js.map">
       <DependentUpon>SiteManager.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Site.js.map">
-      <DependentUpon>Site.ts</DependentUpon>
+    <Content Include="Scripts\pvMapper\Utility.js.map">
+      <DependentUpon>Utility.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\UI\controller\UtilModel.js.map">
       <DependentUpon>UtilModel.ts</DependentUpon>
@@ -1200,48 +1151,39 @@
     <Content Include="Scripts\pvMapper\TSMapper\Scoreboard.js.map">
       <DependentUpon>Scoreboard.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Renderer.js.map">
-      <DependentUpon>Renderer.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\snlModule.js.map">
-      <DependentUpon>snlModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\pvMapper.js.map">
-      <DependentUpon>pvMapper.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\DemModule.js.map">
-      <DependentUpon>DemModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Module.js.map">
-      <DependentUpon>Module.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\ScoreLine.js.map">
       <DependentUpon>ScoreLine.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Tools.js.map">
-      <DependentUpon>Tools.ts</DependentUpon>
+    <Content Include="Scripts\pvMapper\TSMapper\Renderer.js.map">
+      <DependentUpon>Renderer.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\siteAreaModule.js.map">
-      <DependentUpon>siteAreaModule.ts</DependentUpon>
+    <Content Include="Scripts\pvMapper\TSMapper\Event.js.map">
+      <DependentUpon>Event.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\DataManager.js.map">
-      <DependentUpon>DataManager.ts</DependentUpon>
+    <Content Include="Scripts\pvMapper\TSMapper\Options.d.min.js.map">
+      <DependentUpon>Options.d.js</DependentUpon>
+    </Content>
+    <Content Include="Views\Home\tsindex.cshtml" />
+    <Content Include="Scripts\pvMapper\TSMapper\LandUseModule.js.map">
+      <DependentUpon>LandUseModule.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\irradianceModule.js.map">
       <DependentUpon>irradianceModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Score.js.map">
-      <DependentUpon>Score.ts</DependentUpon>
+    <Content Include="Scripts\pvMapper\TSMapper\pvMapper.js.map">
+      <DependentUpon>pvMapper.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\LandUseModule.js.map">
-      <DependentUpon>LandUseModule.ts</DependentUpon>
+    <Content Include="Scripts\pvMapper\TSMapper\irradianceModule.min.js.map">
+      <DependentUpon>irradianceModule.js</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\solarmapperModule.js.map">
-      <DependentUpon>solarmapperModule.ts</DependentUpon>
+    <Content Include="Scripts\pvMapper\TSMapper\Scoreboard.min.js.map">
+      <DependentUpon>Scoreboard.js</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Scripts\theme\" />
+    <Folder Include="Scripts\UI\store\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

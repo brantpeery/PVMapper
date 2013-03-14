@@ -90,6 +90,16 @@ module pvMapper {
 
     }
 
+
+    //Ext.define('MainApp.view.ScoreboardWindow', {
+    //    extends: "MainApp.view.Window",
+    //    title: 'Main Scoreboard',
+    //    width: 800,
+    //    height: 200,
+    //    cls: "propertyBoard",
+    //    sticky: true
+    //});
+
     declare var Ext: any; //So we can use it
     
     export var floatingScoreboard: any; //The EXTjs window
@@ -98,12 +108,9 @@ module pvMapper {
         var self = mainScoreboard;
         var html = self.render();
         if (!pvMapper.floatingScoreboard) {
-            pvMapper.floatingScoreboard = Ext.create('MainApp.view.Window', {
-                title: 'Main Scoreboard',
-                width: 800,
-                height: 200,
-                html: html,
-                cls: "propertyBoard"
+            
+            pvMapper.floatingScoreboard = Ext.create('MainApp.view.ScoreboardWindow', {
+                html:html
             });
             pvMapper.floatingScoreboard.show();
         } 
