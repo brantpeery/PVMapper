@@ -22,7 +22,6 @@ Ext.define('MainApp.view.Window', {
   collapsible: true,
   bodyStyle: 'opacity: 1;',
   titleCollapse: true,
-  sticky: null,
   viewState: Ext.view.ViewState.NORMAL,
   collapse: function () {
     this.callParent(arguments);
@@ -49,7 +48,7 @@ Ext.define('MainApp.view.Window', {
     beforeclose: function(win, eOpts) {
       var taskBar = Ext.getCmp('maintaskbar');
       if (taskBar) {
-        if (!this.sticky) {
+        if (!(this.closeAction == 'hide')) {
           taskBar.removeButton(win);
         }
         else 
