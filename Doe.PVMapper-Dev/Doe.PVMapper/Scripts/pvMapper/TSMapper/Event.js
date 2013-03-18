@@ -38,7 +38,11 @@ var pvMapper;
             }
             self.eventHandlers.map(function (func, idx) {
                 if(typeof (func) != 'undefined') {
-                    func.apply(context, eventArgs);
+                    try  {
+                        func.apply(context, eventArgs);
+                    } catch (e) {
+                        console.log("Error in event");
+                    }
                 }
             });
         };
@@ -46,4 +50,3 @@ var pvMapper;
     })();
     pvMapper.Event = Event;    
 })(pvMapper || (pvMapper = {}));
-//@ sourceMappingURL=Event.js.map
