@@ -39,7 +39,7 @@ module pvMapper {
             //this.changedEvent.fire(this,null);
 
         }
-        
+
         public onScoreChanged: (event: Event) => void;
 
         public removeLine(idx: number) {
@@ -81,6 +81,58 @@ module pvMapper {
             return HTML;
         }
 
+        /**
+        A function that returns a flat table style data object meant for consumption by ExtJS grid
+        */
+        public getTableData(flat?: Boolean = false) {
+
+            //Then an object with all the scorelines
+            //In each scoreline include the 
+            //  Tool name, description, category,
+            //  Weight, and function for the score
+            //  Include for each site:
+            //      Value, Description, score, weighted score
+
+            //This should be strong typed eventually
+            var myData: any = { tools: [] };
+
+            //make a data obect that contains all the active tools
+            this.scoreLines.map(function (sl: ScoreLine, idx: number) {
+                if (!sl.active) { return; } //Dont process the line if it is inactive
+
+                var tool: any = {
+                    name: sl.name,
+                    description: sl.description,
+                    //category: sl.category,
+                    weight: sl.getWeight()
+                };
+
+                var toolSites = [];
+                sl.scores.map(function (s: Score, sidx: number) {
+                    if (flat) {
+                        var sitename: string = 'site_' + sidx;
+                        tool[sitename + '_value'] = s.value;
+                        tool[sitename + '_score'] = s.utility;
+                        tool[sitename + '_popup'] = s.popupMessage;
+                        //tool[sitename + '_weightedscore'] = s.weightedScore;
+                    } else {
+                        var site = {
+                            'name': s.site.name,
+                            'value': s.value,
+                            'score': s.utility,
+                            'popup': s.popupMessage
+                        }
+                        toolSites.push(site);
+                    }
+                });
+                if (!flat) tool['sites'] = toolSites;
+                myData.tools.push(tool);
+            });
+
+
+            return myData;
+        }
+
         public onScoresInvalidated() {
             //let all the other modules that care know that a score changed
             //Create an event that holds the information about score and utility that changed it
@@ -90,32 +142,24 @@ module pvMapper {
 
     }
 
-
-    //Ext.define('MainApp.view.ScoreboardWindow', {
-    //    extends: "MainApp.view.Window",
-    //    title: 'Main Scoreboard',
-    //    width: 800,
-    //    height: 200,
-    //    cls: "propertyBoard",
-    //    sticky: true
-    //});
-
     declare var Ext: any; //So we can use it
-    
+
     export var floatingScoreboard: any; //The EXTjs window
     export var mainScoreboard = new ScoreBoard(); //API Element
     mainScoreboard.changedEvent.addHandler(function () => {
         var self = mainScoreboard;
-        var html = self.render();
+        var mydata = mainScoreboard.getTableData();
         if (!pvMapper.floatingScoreboard) {
-            
+
             pvMapper.floatingScoreboard = Ext.create('MainApp.view.ScoreboardWindow', {
-                html:html
+                data: mydata
             });
             pvMapper.floatingScoreboard.show();
-        } 
-        pvMapper.floatingScoreboard.update(html);
-        pvMapper.floatingScoreboard.show();
+        } else {
+            var gp = pvMapper.floatingScoreboard.down('gridpanel');
+            gp.store.loadRawData(mydata);
+            pvMapper.floatingScoreboard.show();
+        }
     });
 
     //Create the scoreboard onscreen

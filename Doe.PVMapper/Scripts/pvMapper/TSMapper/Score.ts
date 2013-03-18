@@ -56,7 +56,7 @@ module pvMapper {
 
         // the computed utility based on the raw value provided by the score tool
         // Number.NaN indicates an invalid / outdated / error-full value
-        public utility: number;
+        public utility: number = Math.random()*100;
 
         // fancy events for tracking changes
         public valueChangeEvent: pvMapper.Event = new pvMapper.Event();
