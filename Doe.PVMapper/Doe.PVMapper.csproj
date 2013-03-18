@@ -216,6 +216,13 @@
     <Content Include="Scripts\pvMapper\TSMapper\Module.min.js">
       <DependentUpon>Module.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\ModuleTemplate.js">
+      <DependentUpon>ModuleTemplate.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\ModuleTemplate.min.js">
+      <DependentUpon>ModuleTemplate.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\ModuleTemplate.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\Options.d.js">
       <DependentUpon>Options.d.ts</DependentUpon>
     </Content>
@@ -291,6 +298,13 @@
     <Content Include="Scripts\pvMapper\TSMapper\Tools.min.js">
       <DependentUpon>Tools.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\WildernessModule.js">
+      <DependentUpon>WildernessModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\WildernessModule.min.js">
+      <DependentUpon>WildernessModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\WildernessModule.ts" />
     <Content Include="Scripts\pvMapper\Utility.min.js">
       <DependentUpon>Utility.ts</DependentUpon>
     </Content>
