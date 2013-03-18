@@ -44,6 +44,7 @@ module pvMapper {
         public description: string;
         public scores: Score[] = new Score[]();
         public updateScore: ICallback = options.updateScoreCallback;
+        public active: Boolean = true;
 
         public self: ScoreLine;
         public scoreAddedEvent: pvMapper.Event = new pvMapper.Event();

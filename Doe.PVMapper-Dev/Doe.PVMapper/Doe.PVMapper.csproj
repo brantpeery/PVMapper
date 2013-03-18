@@ -166,6 +166,7 @@
     <Compile Include="Models\ProjectSite.cs" />
     <Compile Include="Models\Properties.cs" />
     <Compile Include="Models\TreeNode.cs" />
+    <Content Include="Scripts\EsriGeoJSON.js" />
     <Content Include="Scripts\ext-4.1.1a.d.ts" />
     <Content Include="Scripts\img\layer-switcher-maximize.png" />
     <Content Include="Scripts\img\layer-switcher-minimize.png" />
@@ -187,6 +188,9 @@
     <Content Include="Scripts\pvMapper\TSMapper\DataManager.min.js">
       <DependentUpon>DataManager.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\demModule.js" />
+    <Content Include="Scripts\pvMapper\TSMapper\demModule.min.js" />
+    <Content Include="Scripts\pvMapper\TSMapper\DemModule.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\Event.js">
       <DependentUpon>Event.ts</DependentUpon>
     </Content>
@@ -286,6 +290,9 @@
     <Content Include="Scripts\pvMapper\TSMapper\Site.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Tools.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\solarmapperModule.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\snlModule.js" />
+    <Content Include="Scripts\pvMapper\TSMapper\snlModule.min.js" />
+    <Content Include="Scripts\pvMapper\TSMapper\snlModule.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\solarmapperModule.js">
       <DependentUpon>solarmapperModule.ts</DependentUpon>
     </Content>
@@ -1193,6 +1200,9 @@
     <Content Include="Scripts\pvMapper\TSMapper\Scoreboard.min.js.map">
       <DependentUpon>Scoreboard.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\DemModule.js.map" />
+    <Content Include="Scripts\pvMapper\TSMapper\Event.min.js.map" />
+    <Content Include="Scripts\pvMapper\TSMapper\solarmapperModule.js.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1243,16 +1253,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>1968</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:1919/</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>
