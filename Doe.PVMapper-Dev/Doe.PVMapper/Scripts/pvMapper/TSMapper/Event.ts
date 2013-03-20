@@ -59,7 +59,8 @@ module pvMapper {
                 func.apply(context, eventArgs);
             } catch (e)
           {
-              console.log("Error in event");
+                console.log("Error caught while in an event: " + e.message + " : file: " + e.fileName + " line: " + e.lineNumber);
+                console.log(context);
           }
       });
     }
