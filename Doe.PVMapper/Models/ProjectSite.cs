@@ -49,6 +49,7 @@ namespace Doe.PVMapper.Models
         /// </value>
         public string Description { get; set; }
 
+        //TODO: what the hell was this intended to indicate? What exactly is an inactive site?
         /// <summary>
         /// Gets or sets a value indicating whether this instance is active.
         /// </summary>
@@ -63,6 +64,8 @@ namespace Doe.PVMapper.Models
         /// <value>
         /// The polygon geometry.
         /// </value>
+        [BsonIgnoreIfNull]
+        [JsonProperty(NullValueHandling=NullValueHandling.Ignore)]
         public string PolygonGeometry { get; set; }
     }
 }
