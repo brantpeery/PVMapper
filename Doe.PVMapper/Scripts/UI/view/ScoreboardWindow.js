@@ -106,7 +106,9 @@ toolsStore.on({
                     text: "Value",
                     dataIndex: "sites",
                     renderer: function (value, metaData) {
-                        var c = getColor(value[idx].score);
+                        if (value.length <= idx) return '...'; //Avoid the index out of range error
+                        var val = (value[idx] && value[idx].score) ? value[idx].score : 0;
+                        var c = getColor(val);
                         metaData.style = "background-color:" + c;
                         return value[idx].value;
                     },
@@ -115,7 +117,9 @@ toolsStore.on({
                     text: "Score",
                     dataIndex: "sites",
                     renderer: function (value, metaData) {
-                        var c = getColor(value[idx].score);
+                        if (value.length <= idx) return '...'; //Avoid the index out of range error
+                        var val = (value[idx] && value[idx].score) ? value[idx].score : 0;
+                        var c = getColor(val);
                         metaData.style = "background-color:" + c;
                         return value[idx].score;
                     },
@@ -123,10 +127,12 @@ toolsStore.on({
 
                     summaryType: 'sum',
                     summaryRenderer: function (value, metaData) {
+                        if (value.length <= idx) return '...'; //Avoid the index out of range error
                         var t = 0;
                         var count = 0;
                         this.grid.getStore().each(function (tool, index) {
-                            t += tool.get('scores')[idx].score;
+                            var val = (value[idx] && value[idx].score) ? value[idx].score : 0;
+                            t += val;
                             count++;
                         });
 
@@ -185,7 +191,7 @@ Ext.define('MainApp.view.ScoreboardWindow', {
 
 
 
-toolsStore.load(pvMapper.mainScoreboard.getTableData()); //Load the data to the panel
+//toolsStore.load(pvMapper.mainScoreboard.getTableData()); //Load the data to the panel
 
 function getColor(score) {
     var min = Math.min;

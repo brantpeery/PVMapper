@@ -147,6 +147,7 @@ module pvMapper {
     export var floatingScoreboard: any; //The EXTjs window
     export var mainScoreboard = new ScoreBoard(); //API Element
     mainScoreboard.changedEvent.addHandler(function () => {
+
         var self = mainScoreboard;
         var mydata = mainScoreboard.getTableData();
         if (!pvMapper.floatingScoreboard) {
@@ -157,6 +158,7 @@ module pvMapper {
             pvMapper.floatingScoreboard.show();
         } else {
             var gp = pvMapper.floatingScoreboard.down('gridpanel');
+            //gp.store.removeAll();
             gp.store.loadRawData(mydata);
             pvMapper.floatingScoreboard.show();
         }
@@ -164,7 +166,7 @@ module pvMapper {
 
     //Create the scoreboard onscreen
     pvMapper.onReady(function () {
-        mainScoreboard.changedEvent.fire(mainScoreboard, {});
+        //mainScoreboard.changedEvent.fire(mainScoreboard, {});
     });
 
 }
