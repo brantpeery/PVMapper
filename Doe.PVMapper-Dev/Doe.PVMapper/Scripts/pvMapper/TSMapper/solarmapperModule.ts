@@ -82,9 +82,14 @@ module INLModules {
         pvMapper.map.removeLayer(mapLayer, false);
     }
 
+    // this was added because sometimes the mapLayer is not yet defined before we get a call to update a score.
+    // and everyone loves a good race condition
+    var mapLayerBounds = new OpenLayers.Bounds(-13850000, 3675000, -11350000, 5165000);
+    
     function identifyFeature(score: pvMapper.Score) {
         // if this site lies outside of our layer's extent, then we can't get a value for it.
-        if (!mapLayer.maxExtent.intersectsBounds(score.site.geometry.bounds)) {
+        //if (!mapLayer.maxExtent.intersectsBounds(score.site.geometry.bounds)) {
+        if (!mapLayerBounds.intersectsBounds(score.site.geometry.bounds)) {
             score.popupMessage = "No data for this site";
             score.updateValue(Number.NaN);
             return; // nothin' doin'
