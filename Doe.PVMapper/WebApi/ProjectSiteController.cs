@@ -9,7 +9,6 @@ using MongoRepository;
 
 namespace Doe.PVMapper.WebApi
 {
-
     public class ProjectSiteController : ApiController
     {
         private static readonly IRepository<ProjectSite> _db = MongoHelper.GetRepository<ProjectSite>();
@@ -38,6 +37,16 @@ namespace Doe.PVMapper.WebApi
 
         public HttpResponseMessage Post(ProjectSite value)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden));
+            }
+
+            if (String.IsNullOrEmpty(value.PolygonGeometry))
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest));
+            }
+
             value.UserId = User.Identity.Name;
             ProjectSite site = _db.Add(value);
 
@@ -50,10 +59,17 @@ namespace Doe.PVMapper.WebApi
 
         public void PutSite(string id, ProjectSite value)
         {
-            value.UserId = User.Identity.Name;
-            value.Id = id;
+            ProjectSite existingSite = this.Get(id);
 
-            if (_db.Update(value) == null)
+            // update by hand, because apparently I'm not bright enough to get this working automagically
+            if (value.Name != null) // ah what the hell, let's allow the name to be empety too
+                existingSite.Name = value.Name;
+            if (value.Description != null) // description can be empty
+                existingSite.Description = value.Description;
+            if (!String.IsNullOrEmpty(value.PolygonGeometry)) // polygon geometry can't be empty
+                existingSite.PolygonGeometry = value.PolygonGeometry;
+
+            if (_db.Update(existingSite) == null)
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound));
             }

@@ -26,6 +26,7 @@ var pvMapper;
             this.siteChangeEvent = new pvMapper.Event();
             this.self = this;
             this.value = Number.NaN;
+            this.utility = Number.NaN;
             //A reference to the site this score represents
             this.site = site;
             //The long message formated in HTML that explains the value or score
@@ -45,7 +46,7 @@ var pvMapper;
             //TODO: ... duh, calculate the utility here?
             //if (typeof (value) !== 'undefined') { return this.updateValue(value); }
             // clearly wrong
-            this.utility = this.value;
+            this.utility = isNaN(this.value) ? Number.NaN : Math.min(100, Math.max(0, this.value * 15));
             //TODO: fire some kind of utilityChangedEvent, or somehting?
                     };
         Score.prototype.updateValue = /**
@@ -59,6 +60,7 @@ var pvMapper;
             //Change the context, add this score to the event and pass the event on
             var oldvalue = this.value;
             this.value = value;
+            this.updateUtility();
             //TODO: pvMapper.displayMessage(this.value,"Info");
             //fire the value updated event
             this.valueChangeEvent.fire(this.self, {

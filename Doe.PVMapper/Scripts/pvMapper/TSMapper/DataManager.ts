@@ -55,7 +55,7 @@ module pvMapper {
 
       return $.ajax("/api/ProjectSite", {
         data:data,
-        type:"POST",
+        type:"PUT",
         done: function () {
             pvMapper.displayMessage("The site changes were saved","Info");
           },

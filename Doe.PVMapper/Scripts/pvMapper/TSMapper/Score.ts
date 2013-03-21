@@ -23,6 +23,7 @@ module pvMapper {
         constructor(site: pvMapper.Site) {
             this.self = this;
             this.value = Number.NaN;
+            this.utility = Number.NaN;
             //A reference to the site this score represents
             this.site = site;
 
@@ -69,7 +70,8 @@ module pvMapper {
             //if (typeof (value) !== 'undefined') { return this.updateValue(value); }
 
             // clearly wrong
-            this.utility = this.value;
+            this.utility = isNaN(this.value) ? Number.NaN :
+                 Math.min(100, Math.max(0, this.value * 15));
 
             //TODO: fire some kind of utilityChangedEvent, or somehting?
         }
@@ -85,6 +87,7 @@ module pvMapper {
             //Change the context, add this score to the event and pass the event on
             var oldvalue = this.value;
             this.value = value;
+            this.updateUtility();
             //TODO: pvMapper.displayMessage(this.value,"Info");
 
             //fire the value updated event
