@@ -1,8 +1,10 @@
 ﻿Ext.Loader.setConfig({
     enabled: true,
-    disableCaching: false
+    disableCaching: false,
+    paths: {
+        GeoExt : "/Scripts/GeoExt"
+    }
 });
-
 
 
 var app = Ext.application({

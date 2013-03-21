@@ -1,4 +1,6 @@
-﻿pvMapper.onReady(function () {
+﻿Ext.require('GeoExt.panel.Map');
+
+pvMapper.onReady(function () {
 
     // EPSG:102113, EPSG:900913, and EPSG:3857 are all the same projection (just different flavors favored by different groups).
     // So, this is (a bit of) a hack to coax OpenLayers to request maps in the native projection of the server

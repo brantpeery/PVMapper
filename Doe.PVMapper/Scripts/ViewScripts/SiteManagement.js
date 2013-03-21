@@ -8,6 +8,8 @@
 //          OpenLayers javascript
 //          jQueryUI
 
+Ext.require('GeoExt.Action');
+
 pvMapper.onReady(function () {
     //var self = this;
     var sm = new siteManagementTool(pvMapper.map, pvMapper.getSiteLayer());
