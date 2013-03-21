@@ -209,7 +209,7 @@ module INLModules {
         //    //    //    score.popupMessage = null;
         //    //    //    score.updateValue(request.responseText.length);
         //    //    //} else {
-        //    //    //    score.popupMessage = "Connection error " + request.status;
+        //    //    //    score.popupMessage = "Error " + request.status;
         //    //    //    score.updateValue(Number.NaN);
         //    //    //}
         //    //},
@@ -231,7 +231,7 @@ module INLModules {
         //            score.popupMessage = null;
         //            score.updateValue(request.responseText.length);
         //        } else {
-        //            score.popupMessage = "Connection error " + request.status;
+        //            score.popupMessage = "Error " + request.status;
         //            score.updateValue(Number.NaN);
         //        }
         //    },

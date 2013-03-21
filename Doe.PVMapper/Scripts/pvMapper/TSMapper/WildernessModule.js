@@ -1,3 +1,9 @@
+/// <reference path="pvMapper.ts" />
+/// <reference path="Site.ts" />
+/// <reference path="Score.ts" />
+/// <reference path="Tools.ts" />
+/// <reference path="Options.d.ts" />
+/// <reference path="Module.ts" />
 var BYUModules;
 (function (BYUModules) {
     var WildernessModule = (function () {
@@ -39,10 +45,12 @@ var BYUModules;
     var WildernessMapUrl = "";
     var wildernessLayer;
     function addMap() {
+        //...
         pvMapper.map.addLayer(wildernessLayer);
     }
     function removeMap() {
-    }
+        //pvMapper.map.removeLayer(wildernessLayer, false);
+            }
     function updateScore(score, layers, description) {
         var params = "";
         var request = OpenLayers.Request.GET({
@@ -54,7 +62,7 @@ var BYUModules;
                     var esriJsonParser = new OpenLayers.Format.JSON();
                     esriJsonParser.extractAttributes = true;
                 } else {
-                    score.popupMessage = "Connection error " + response.status;
+                    score.popupMessage = "Error " + response.status;
                     score.updateValue(Number.NaN);
                 }
             }

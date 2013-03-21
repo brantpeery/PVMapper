@@ -46,40 +46,40 @@ module pvMapper {
             throw ('Function not yet implemented');
         }
 
-        public render() {
-            //console.log('Rendering the scorboard');
-            var r = new Renderer.HTML.Table();
-            var row = r.addRow();
-            row.attr({ 'class': 'header' });
-            row.addCell("Tool Name").attr({ 'class': 'header' });
+        //public render() {
+        //    //console.log('Rendering the scorboard');
+        //    var r = new Renderer.HTML.Table();
+        //    var row = r.addRow();
+        //    row.attr({ 'class': 'header' });
+        //    row.addCell("Tool Name").attr({ 'class': 'header' });
 
-            //Render the header
-            var sites = pvMapper.siteManager.getSites();
-            $.each(sites, function (idx: number, s: Site) {
-                row.addCell(s.name);
-            });
+        //    //Render the header
+        //    var sites = pvMapper.siteManager.getSites();
+        //    $.each(sites, function (idx: number, s: Site) {
+        //        row.addCell(s.name);
+        //    });
 
-            //Render each scoreline
-            $.each(this.scoreLines, function (idx: number, sl: ScoreLine) {
-                var row = r.addRow();
+        //    //Render each scoreline
+        //    $.each(this.scoreLines, function (idx: number, sl: ScoreLine) {
+        //        var row = r.addRow();
 
-                //Render the tool name
-                var tc = row.addCell(sl.name);
-                tc.attr({ "title": sl.description });
-                //Render each site for this scoreline
-                $.each(sl.scores, function (idx: number, s: Score) {
-                    if (isNaN(s.value)) {
-                        row.addCell("<i>" + s.toString() + "</i>"); // using raw html tags - ewww
-                    } else {
-                        row.addCell(s.toString());
-                    }
-                });
-            });
+        //        //Render the tool name
+        //        var tc = row.addCell(sl.name);
+        //        tc.attr({ "title": sl.description });
+        //        //Render each site for this scoreline
+        //        $.each(sl.scores, function (idx: number, s: Score) {
+        //            if (isNaN(s.value)) {
+        //                row.addCell("<i>" + s.toString() + "</i>"); // using raw html tags - ewww
+        //            } else {
+        //                row.addCell(s.toString());
+        //            }
+        //        });
+        //    });
 
-            var HTML = r.render();
-            //console.log("Scoreboard HTML = " + HTML);
-            return HTML;
-        }
+        //    var HTML = r.render();
+        //    //console.log("Scoreboard HTML = " + HTML);
+        //    return HTML;
+        //}
 
         /**
         A function that returns a flat table style data object meant for consumption by ExtJS grid
