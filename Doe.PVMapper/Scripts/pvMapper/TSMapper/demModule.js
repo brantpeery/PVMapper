@@ -142,7 +142,7 @@ var BYUModules;
                         score.updateValue(Number.NaN);
                     }
                 } else {
-                    score.popupMessage = "Connection error " + response.status;
+                    score.popupMessage = "Error " + response.status;
                     score.updateValue(Number.NaN);
                 }
             }

@@ -48,14 +48,6 @@ Ext.define( 'MainApp.view.Viewport', {
                 margins: '0',
                 padding: '0',
                 items: [
-                     {
-                         // xtype: 'button', // default for Toolbars
-                         text: 'Button'
-                     },
-                    {
-                        xtype: 'splitbutton',
-                        text: 'Split Button'
-                    }
                 ]
             },
             {
