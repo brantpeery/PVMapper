@@ -38,7 +38,12 @@ var pvMapper;
             }
             self.eventHandlers.map(function (func, idx) {
                 if(typeof (func) != 'undefined') {
-                    func.apply(context, eventArgs);
+                    try  {
+                        func.apply(context, eventArgs);
+                    } catch (e) {
+                        console.log("Error caught while in an event: " + e.message + " : file: " + e.fileName + " line: " + e.lineNumber);
+                        console.log(context);
+                    }
                 }
             });
         };

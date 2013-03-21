@@ -13,13 +13,15 @@ var pvMapper;
             var _this = this;
             this.scores = new Array();
             this.updateScore = options.updateScoreCallback;
+            this.active = true;
             this.scoreAddedEvent = new pvMapper.Event();
             this.scoreChangeEvent = new pvMapper.Event();
             this.updatingScoresEvent = new pvMapper.Event();
-            console.log("Adding a scoreline for " + options.title);
+            //console.log("Adding a scoreline for " + options.title);
             this.self = this;
             this.name = (typeof (options.title) === 'string') ? options.title : 'Unnamed Tool';
-            this.description = (typeof (options.description) === 'string') ? options.description : 'Unname Tool';
+            this.description = (typeof (options.description) === 'string') ? options.description : 'Unnamed Tool';
+            this.weight = 1;
             if($.isFunction(options.onSiteChange)) {
                 this.onSiteChangeHandler = options.onSiteChange;
             }
@@ -41,7 +43,7 @@ var pvMapper;
             return 0;
         };
         ScoreLine.prototype.getWeight = function () {
-            return 0;
+            return this.weight;
         };
         ScoreLine.prototype.getWeightedUtilityScore = function () {
             return 0;
@@ -50,7 +52,7 @@ var pvMapper;
         Adds a score object to this line for the site.
         */
         function (site) {
-            console.log('Adding new score to scoreline');
+            //console.log('Adding new score to scoreline');
             var score = new pvMapper.Score(site);
             //score.value = this.getvalue(site);
             //attach the tool's handler directly to the score
@@ -60,7 +62,11 @@ var pvMapper;
             this.scores.push(score);
             //this.self.scoreAddedEvent.fire(score, [{ score: score, site: site }, score]);
             //Set the initial value from the tool
-            this.updateScore(score);
+            try  {
+                this.updateScore(score);
+            } catch (ex) {
+                console.log(ex);
+            }
             return score;
         };
         ScoreLine.prototype.removeScore = function (score) {

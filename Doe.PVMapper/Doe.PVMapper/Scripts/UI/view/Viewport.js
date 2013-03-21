@@ -66,8 +66,9 @@ Ext.define( 'MainApp.view.Viewport', {
               margins: '0',
               padding: '0',
               items: [ ],
-              addButton: function ( winObj ) {
-                //if ( this.items.items.indexOfObject( function ( val ) { return val.text === winObj.title; } ) >= 0 ) return;
+              addButton: function (winObj) {
+                //if the button exists, do nothing.
+                if ( this.items.items.indexOfObject( function ( val ) { return val.text === winObj.title; } ) >= 0 ) return; 
                 var abtn = Ext.create( 'Ext.button.Button', {
                   text: winObj.title,
                   associate: winObj,
@@ -100,9 +101,16 @@ Ext.define( 'MainApp.view.Viewport', {
               },
               removeButton: function ( winObj ) {
                 var idx = this.items.items.indexOfObject( function ( value ) { return ( value.text === winObj.title ); } );
-                if ( idx >= 0 ) {
-                  this.items.items.splice( idx, 1 );
-                  this.doLayout();
+                if (idx >= 0) {
+                  //remove from the  DOM, not just remove the button.
+                  Ext.fly(this.items.get(idx).getEl()).remove();  
+                  this.items.removeAt(idx);
+                }
+              },
+              updateButtonText: function (oldText, newText) {
+                var idx = this.items.items.indexOfObject(function (value) { return (value.text === oldText); });
+                if (idx >= 0) {
+                  this.items.items[idx].setText(newText);
                 }
               }
             },

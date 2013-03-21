@@ -12,10 +12,12 @@ module pvMapper {
     export class ScoreLine {
         // Constructor
         constructor(options: IScoreTool) {
-            console.log("Adding a scoreline for " + options.title);
+            //console.log("Adding a scoreline for " + options.title);
             this.self = this;
             this.name = (typeof (options.title) === 'string') ? options.title : 'Unnamed Tool';
-            this.description = (typeof (options.description) === 'string') ? options.description : 'Unname Tool';
+            this.description = (typeof (options.description) === 'string') ? options.description : 'Unnamed Tool';
+            this.weight = 1;
+
             if ($.isFunction(options.onSiteChange)) {
                 this.onSiteChangeHandler = options.onSiteChange
             }
@@ -41,9 +43,11 @@ module pvMapper {
         };
 
         public name: string;
+        public weight: number;
         public description: string;
         public scores: Score[] = new Score[]();
         public updateScore: ICallback = options.updateScoreCallback;
+        public active: Boolean = true;
 
         public self: ScoreLine;
         public scoreAddedEvent: pvMapper.Event = new pvMapper.Event();
@@ -51,14 +55,14 @@ module pvMapper {
         public updatingScoresEvent: pvMapper.Event = new pvMapper.Event();
 
         public getUtilityScore(): number { return 0; }
-        public getWeight(): number { return 0; }
+        public getWeight(): number { return this.weight; }
         public getWeightedUtilityScore(): number { return 0; }
 
         /**
           Adds a score object to this line for the site.
         */
         public addScore(site: pvMapper.Site): pvMapper.Score {
-            console.log('Adding new score to scoreline');
+            //console.log('Adding new score to scoreline');
             var score: pvMapper.Score = new pvMapper.Score(site);
             //score.value = this.getvalue(site);
 
@@ -71,7 +75,11 @@ module pvMapper {
             this.scores.push(score);
             //this.self.scoreAddedEvent.fire(score, [{ score: score, site: site }, score]);
             //Set the initial value from the tool
-            this.updateScore(score);
+            try {
+                this.updateScore(score);
+            } catch (ex) {
+                console.log(ex);
+            }
             return score;
         }
 
