@@ -23,16 +23,17 @@ pvMapper.onReady(function () {
                 this.toggle(false);
             }
             else {
-                if (pvMapper.map.getScale() < 60000) {
+                //Note: restricting this to a particular scale is silly.
+                //if (pvMapper.map.getScale() < 60000) {
                     //Make sure the user is seeing the map
                     pvMapper.showMapTab();
                     thisTool.activateDrawSite();
                     thisTool.button = this;
                     this.toggle(true);
-                } else {
-                   pvMapper.displayMessage("The Add Site tool can only be used when the map is zoomed in. Try zooming the map in more to add a site", "warning");
-                    this.cancel;
-                }
+                //} else {
+                //   pvMapper.displayMessage("The Add Site tool can only be used when the map is zoomed in. Try zooming the map in more to add a site", "warning");
+                //    this.cancel;
+                //}
             }
 
 
@@ -150,28 +151,26 @@ function addSite(map, layer) {
                     wiz.destroy();
 
                     WKT = feature.geometry.toString();
-                    var id = pvMapper.postSite(name, desc, WKT);
-                    feature.fid = id; //Set the id of the feature so that it is updateable
-                    
-                    //push the new site into the pvMapper system
-                    var newSite = new pvMapper.Site(feature);
-                    pvMapper.siteManager.addSite(newSite);
 
-                    var msg;
-                    if (id) {
-                        msg = "The site " + name + " has been added to your database";
-                        pvMapper.displayMessage(msg, "info");
-                        
-                    } else {
-                        msg = "There was a problem adding the site to the database!";
-                        pvMapper.displayMessage(msg, "warning");
-                    }
+                    pvMapper.postSite(name, desc, WKT)
+                        .done(function (site) {
+                            feature.fid = site.siteId;
 
-                    
+                            //push the new site into the pvMapper system
+                            var newSite = new pvMapper.Site(feature);
+                            pvMapper.siteManager.addSite(newSite);
+
+                            console.log('Added ' + s.name + ' to the site manager');
+
+                            //Redraw the feature with all the changes
+                            feature.layer.drawFeature(feature);
+                        })
+                        .fail(function () {
+                            console.lot('failed to post site');
+                            feature.destroy();
+                        });
+
                     self.deactivateDrawSite();
-
-                    //Redraw the feature with all the changes
-                    feature.layer.drawFeature(feature);
                 }
             }, {
                 text: 'Cancel',
@@ -179,7 +178,7 @@ function addSite(map, layer) {
                     feature.destroy();
                     control.cancel();
                     wiz.destroy();
-                    deactivateDrawSite();
+                    self.deactivateDrawSite();
                 }
             }]
 

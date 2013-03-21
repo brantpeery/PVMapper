@@ -190,7 +190,7 @@ var INLModules;
                     score.updateValue(Number.NaN);
                 } else {
                     // error
-                    score.popupMessage = "Connection error " + response.status;
+                    score.popupMessage = "Error " + response.status;
                     score.updateValue(Number.NaN);
                 }
             } catch (err) {

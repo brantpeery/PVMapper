@@ -121,7 +121,7 @@ module INLModules {
                             score.updateValue(0);
                         }
                     } else {
-                        score.popupMessage = "Connection error " + response.status;
+                        score.popupMessage = "Error " + response.status;
                         score.updateValue(Number.NaN);
                     }
                 },
@@ -254,7 +254,7 @@ module INLModules {
                             score.updateValue(Number.NaN);
                         }
                     } else {
-                        score.popupMessage = "Connection error " + response.status;
+                        score.popupMessage = "Error " + response.status;
                         score.updateValue(Number.NaN);
                     }
                 },

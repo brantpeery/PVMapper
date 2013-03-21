@@ -27,14 +27,19 @@ if ( typeof pvMapper == 'undefined' ) {
             return $.get("/api/ProjectSite/" + siteId);
         },
         postSite: function (name, description, polygonGeometry) {
-            return $.post("/api/ProjectSite", { name: name, description: description, isActive: true, polygonGeometry: polygonGeometry });
+            return $.post("/api/ProjectSite", {
+                name: name,
+                description: description,
+                isActive: true,
+                polygonGeometry: polygonGeometry
+            });
         },
         updateSite: function (siteId, name, description, polygonGeometry) {
 
             //Only send the stuff that was passed into this function.
             var data = {isActive: true};
             if (name) { data.name = name; }
-            if (description) { data.description = description; }
+            if (description !== null) { data.description = description; }
             if (polygonGeometry) { data.polygonGeometry = polygonGeometry; }
 
             return $.ajax("/api/ProjectSite/"+siteId, {

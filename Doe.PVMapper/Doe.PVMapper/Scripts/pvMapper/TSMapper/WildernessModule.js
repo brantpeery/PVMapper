@@ -62,7 +62,7 @@ var BYUModules;
                     var esriJsonParser = new OpenLayers.Format.JSON();
                     esriJsonParser.extractAttributes = true;
                 } else {
-                    score.popupMessage = "Connection error " + response.status;
+                    score.popupMessage = "Error " + response.status;
                     score.updateValue(Number.NaN);
                 }
             }
