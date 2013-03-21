@@ -63,14 +63,14 @@ var pvMapper;
                 data: data,
                 type: "PUT",
                 done: function () {
-                    pvMapper.displayMessage("The site changes were saved", "Info");
-                },
+                    //pvMapper.displayMessage("The site changes were saved","Info");
+                                    },
                 fail: function () {
-                    pvMapper.displayMessage("Unable to save the changes to the site. There was an error communicating with the database.", "Warning");
-                }
+                    //pvMapper.displayMessage("Unable to save the changes to the site. There was an error communicating with the database.","Warning");
+                                    }
             });
-            pvMapper.displayMessage("The site has been updated.", "Info");
-        };
+            //pvMapper.displayMessage("The site has been updated.","Info");
+                    };
         dataManager.prototype.deleteSite = //Deletes a site from the datastore
         function (siteId) {
             return $.ajax("/api/ProjectSite/" + siteId, {
@@ -78,11 +78,11 @@ var pvMapper;
                     Id: siteId,
                     type: "DELETE",
                     done: function () {
-                        pvMapper.displayMessage("The site was deleted from the database.", "Warning");
-                    },
+                        //pvMapper.displayMessage("The site was deleted from the database.", "Warning");
+                                            },
                     fail: function () {
-                        pvMapper.displayMessage("Unable to delete the site. There was an error communicating with the database.", "warning");
-                    }
+                        //pvMapper.displayMessage("Unable to delete the site. There was an error communicating with the database.", "warning");
+                                            }
                 }
             });
         };
