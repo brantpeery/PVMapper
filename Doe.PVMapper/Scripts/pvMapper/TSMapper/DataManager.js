@@ -61,7 +61,7 @@ var pvMapper;
             }
             return $.ajax("/api/ProjectSite", {
                 data: data,
-                type: "POST",
+                type: "PUT",
                 done: function () {
                     pvMapper.displayMessage("The site changes were saved", "Info");
                 },
@@ -90,4 +90,3 @@ var pvMapper;
     })();
     pvMapper.dataManager = dataManager;    
 })(pvMapper || (pvMapper = {}));
-//@ sourceMappingURL=DataManager.js.map

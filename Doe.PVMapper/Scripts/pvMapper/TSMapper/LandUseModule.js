@@ -238,4 +238,3 @@ var INLModules;
     var landCoverInstance = new INLModules.LandCoverModule();
     //============================================================
     })(INLModules || (INLModules = {}));
-//@ sourceMappingURL=LandUseModule.js.map

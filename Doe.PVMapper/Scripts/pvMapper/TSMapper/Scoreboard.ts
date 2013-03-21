@@ -19,7 +19,7 @@ module pvMapper {
             this.self = this;
 
             this.onScoreChanged = (event) => {
-                console.log("Score changed event detected by the scoreboard");
+                //console.log("Score changed event detected by the scoreboard");
                 //var html = this.self.render();
                 this.changedEvent.fire(this, event);
             }
@@ -33,7 +33,7 @@ module pvMapper {
         public tableRenderer: any = new pvMapper.Renderer.HTML.Table();
 
         public addLine(scoreline: ScoreLine) {
-            console.log("Adding scoreline " + scoreline.name);
+            //console.log("Adding scoreline " + scoreline.name);
             scoreline.scoreChangeEvent.addHandler(this.onScoreChanged);
             this.scoreLines.push(scoreline);
             //this.changedEvent.fire(this,null);
@@ -47,7 +47,7 @@ module pvMapper {
         }
 
         public render() {
-            console.log('Rendering the scorboard');
+            //console.log('Rendering the scorboard');
             var r = new Renderer.HTML.Table();
             var row = r.addRow();
             row.attr({ 'class': 'header' });
@@ -77,7 +77,7 @@ module pvMapper {
             });
 
             var HTML = r.render();
-            console.log("Scoreboard HTML = " + HTML);
+            //console.log("Scoreboard HTML = " + HTML);
             return HTML;
         }
 
@@ -86,51 +86,55 @@ module pvMapper {
         */
         public getTableData(flat?: Boolean = false) {
 
-            //Then an object with all the scorelines
-            //In each scoreline include the 
-            //  Tool name, description, category,
-            //  Weight, and function for the score
-            //  Include for each site:
-            //      Value, Description, score, weighted score
+            return this.scoreLines;
 
-            //This should be strong typed eventually
-            var myData: any = { tools: [] };
+            //TODO: hierarchical view...
 
-            //make a data obect that contains all the active tools
-            this.scoreLines.map(function (sl: ScoreLine, idx: number) {
-                if (!sl.active) { return; } //Dont process the line if it is inactive
+            ////Then an object with all the scorelines
+            ////In each scoreline include the 
+            ////  Tool name, description, category,
+            ////  Weight, and function for the score
+            ////  Include for each site:
+            ////      Value, Description, score, weighted score
 
-                var tool: any = {
-                    name: sl.name,
-                    description: sl.description,
-                    //category: sl.category,
-                    weight: sl.getWeight()
-                };
+            ////This should be strong typed eventually
+            //var myData: any = { tools: [] };
 
-                var toolSites = [];
-                sl.scores.map(function (s: Score, sidx: number) {
-                    if (flat) {
-                        var sitename: string = 'site_' + sidx;
-                        tool[sitename + '_value'] = s.value;
-                        tool[sitename + '_score'] = s.utility;
-                        tool[sitename + '_popup'] = s.popupMessage;
-                        //tool[sitename + '_weightedscore'] = s.weightedScore;
-                    } else {
-                        var site = {
-                            'name': s.site.name,
-                            'value': s.value,
-                            'score': s.utility,
-                            'popup': s.popupMessage
-                        }
-                        toolSites.push(site);
-                    }
-                });
-                if (!flat) tool['sites'] = toolSites;
-                myData.tools.push(tool);
-            });
+            ////make a data obect that contains all the active tools
+            //this.scoreLines.map(function (sl: ScoreLine, idx: number) {
+            //    if (!sl.active) { return; } //Dont process the line if it is inactive
+
+            //    var tool: any = {
+            //        name: sl.name,
+            //        description: sl.description,
+            //        //category: sl.category,
+            //        weight: sl.getWeight()
+            //    };
+
+            //    var toolSites = [];
+            //    sl.scores.map(function (s: Score, sidx: number) {
+            //        if (flat) {
+            //            var sitename: string = 'site_' + sidx;
+            //            tool[sitename + '_value'] = s.value;
+            //            tool[sitename + '_score'] = s.utility;
+            //            tool[sitename + '_popup'] = s.popupMessage;
+            //            //tool[sitename + '_weightedscore'] = s.weightedScore;
+            //        } else {
+            //            var site = {
+            //                'name': s.site.name,
+            //                'value': s.value,
+            //                'score': s.utility,
+            //                'popup': s.popupMessage
+            //            }
+            //            toolSites.push(site);
+            //        }
+            //    });
+            //    if (!flat) tool['sites'] = toolSites;
+            //    myData.tools.push(tool);
+            //});
 
 
-            return myData;
+            //return myData;
         }
 
         public onScoresInvalidated() {
@@ -156,9 +160,9 @@ module pvMapper {
                 data: mydata
             });
             pvMapper.floatingScoreboard.show();
+            gp.store.loadRawData(mydata);
         } else {
             var gp = pvMapper.floatingScoreboard.down('gridpanel');
-            //gp.store.removeAll();
             gp.store.loadRawData(mydata);
             pvMapper.floatingScoreboard.show();
         }
