@@ -122,6 +122,10 @@ toolsStore.on({
                         //    metaData.style = "background-color:" + getColor(value[idx].utility);
                         //}
 
+                        if (value[idx].popupMessage && value[idx].popupMessage.trim().length > 0) {
+                            metaData.tdAttr = 'data-qtip="' + value[idx].popupMessage + '"';
+                        }
+
                         if (typeof value[idx].value !== "undefined" && !isNaN(value[idx].value)) {
                             return value[idx].toString();
                         } else {
