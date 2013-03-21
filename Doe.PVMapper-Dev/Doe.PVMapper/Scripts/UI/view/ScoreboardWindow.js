@@ -116,19 +116,18 @@ toolsStore.on({
                     //minWidth: 50,
                     width: 120,
                     renderer: function (value, metaData) {
-                        if (value.length <= idx) return '<i>No Value</i>'; //Avoid the index out of range error
+                        if (value.length <= idx) return '<i>Calculating...</i>'; //Avoid the index out of range error
 
                         //if (typeof value[idx].utility !== "undefined" && !isNaN(value[idx].utility)) {
                         //    metaData.style = "background-color:" + getColor(value[idx].utility);
                         //}
 
-                        if (value[idx].popupMessage && value[idx].popupMessage.trim().length > 0) {
-                            metaData.tdAttr = 'data-qtip="' + value[idx].popupMessage + '"';
-                            return value[idx].popupMessage;
-                        } else if (typeof value[idx].value !== "undefined" && !isNaN(value[idx].value)) {
-                            return value[idx].value;
+                        if (typeof value[idx].value !== "undefined" && !isNaN(value[idx].value)) {
+                            return value[idx].toString();
+                        } else {
+                            // italicise on error
+                            return '<i>' + value[idx].toString() + '</i>';
                         }
-                        return '<i>No Value</i>'
                     },
                     draggable: false
                 }, {
@@ -143,27 +142,29 @@ toolsStore.on({
 
                         var val = (value[idx] && value[idx].utility) ? value[idx].utility : 0;
                         var c = getColor(val);
-                        metaData.style = "background-color:" + c;
+                        metaData.style = "text-align: center; border-radius: 5px; background-color:" + c;
 
                         return value[idx].utility.toFixed(0);
                     },
                     draggable: false,
 
-                    summaryType: 'sum',
-                    summaryRenderer: function (value, metaData) {
-                        if (value.length <= idx) return '...'; //Avoid the index out of range error
-                        var t = 0;
+                    summaryType: function (records) {
+                        var total = 0;
                         var count = 0;
-                        this.grid.getStore().each(function (tool, index) {
-                            var val = (value[idx] && value[idx].utility) ? value[idx].utility : 0;
-                            t += val;
-                            count++;
+                        records.forEach(function (record) {
+                            var scoreLine = record.raw;
+                            if (scoreLine.scores[idx] && !isNaN(scoreLine.scores[idx].utility)) {
+                                total += scoreLine.scores[idx].utility * scoreLine.weight;
+                                count += scoreLine.weight;
+                            }
                         });
 
-                        t = Math.round(t / count);
-                        var c = getColor(t);
-                        metaData.style = "background-color:" + c;
-                        return '<div style="background-color:' + c + '">' + t + '</div>';
+                        var average = total / count;
+                        return average;
+                    },
+                    summaryRenderer: function (value) {
+                        var c = getColor(value);
+                        return '<span style="border-radius: 3px; background-color:' + c + '">&nbsp' + value.toFixed(0) + '&nbsp</span>'; //font-weight: bold; 
 
                     },
                 }]

@@ -33,31 +33,31 @@
     var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);
 
     var resolutions = OpenLayers.Layer.Bing.prototype.serverResolutions.slice(4, 19);
-    var osm = new OpenLayers.Layer.OSM("Open Street", null, { isBaseLayer:true, zoomOffset: 4, resolutions: resolutions });
-    $.jGrowl("Adding Open Street Map");
+    var osm = new OpenLayers.Layer.OSM("OpenStreetMap", null, { isBaseLayer:true, zoomOffset: 4, resolutions: resolutions });
+    $.jGrowl("Adding OpenStreetMap");
     pvMapper.map.addLayer(osm);
 
     var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);
     pvMapper.map.zoomToExtent(usBounds); // <-- this worked
 
-    var slope = new OpenLayers.Layer.WMS(
-            "Slope",
-            "http://mapsdb.nrel.gov/jw_router/DNI_slope_3/tile",
-            {
-                layers: "DNI_slope_3",
-                format: "image/gif",
-                transparent: "true",
-                maxResolution: 156543.0339,
-            },
-            {
-                isBaseLayer: false,
-                wrapDateLine: true
-            }
-        );
-    slope.setOpacity(0.3);
-    slope.setVisibility(false);
-    $.jGrowl("Adding Slope");
-    pvMapper.map.addLayer(slope);
+    //var slope = new OpenLayers.Layer.WMS(
+    //        "Slope",
+    //        "http://mapsdb.nrel.gov/jw_router/DNI_slope_3/tile",
+    //        {
+    //            layers: "DNI_slope_3",
+    //            format: "image/gif",
+    //            transparent: "true",
+    //            maxResolution: 156543.0339,
+    //        },
+    //        {
+    //            isBaseLayer: false,
+    //            wrapDateLine: true
+    //        }
+    //    );
+    //slope.setOpacity(0.3);
+    //slope.setVisibility(false);
+    //$.jGrowl("Adding Slope");
+    //pvMapper.map.addLayer(slope);
 
     //Note: this isn't working ...
     //var blueMarble = new OpenLayers.Layer.WMS(
@@ -67,17 +67,18 @@
     //        });
     //pvMapper.map.addLayer(blueMarble);
 
-    var openLayersWmsThing = new OpenLayers.Layer.WMS(
-        "OpenLayers",
-        "http://vmap0.tiles.osgeo.org/wms/vmap0?", {
-            layers: 'basic',
-            projection: new OpenLayers.Projection("EPSG:900913")
-        });
-    openLayersWmsThing.epsgOverride = "EPSG:900913";
-    pvMapper.map.addLayer(openLayersWmsThing);
+    //Note: this is hideous...
+    //var openLayersWmsThing = new OpenLayers.Layer.WMS(
+    //    "OpenLayers",
+    //    "http://vmap0.tiles.osgeo.org/wms/vmap0?", {
+    //        layers: 'basic',
+    //        projection: new OpenLayers.Projection("EPSG:900913")
+    //    });
+    //openLayersWmsThing.epsgOverride = "EPSG:900913";
+    //pvMapper.map.addLayer(openLayersWmsThing);
 
     var esriWorldTerrain = new OpenLayers.Layer.ArcGIS93Rest(
-        "World Terrain",
+        "Shaded Relief",
         "http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/export",
         {
             layers: "0",
@@ -152,19 +153,19 @@
                         fillColor: "white",
                         fillOpacity: 0.25,
                         strokeWidth: 2,
-                        strokeColor: "#0000ff",
+                        strokeColor: "#0077ff",
                         label: null
                     },
                     "Line": {
                         strokeWidth: 3,
                         strokeOpacity: 1,
-                        strokeColor: "#0000ff"
+                        strokeColor: "#0077ff"
                     },
                     "Polygon": {
                         strokeWidth: 2,
                         strokeOpacity: 1,
-                        strokeColor: "#0000ff",
-                        fillColor: "#0000ff"
+                        strokeColor: "#0077ff",
+                        fillColor: "#0077ff"
                     }
                 }
             })
@@ -172,11 +173,37 @@
         })
     }); 
     
-    pvMapper.siteLayer = new OpenLayers.Layer.Vector("Sites", { styleMap: commonStyleMap });
-    pvMapper.siteLayer.id = "SiteLayer";
-
-
-
+    pvMapper.siteLayer.styleMap = commonStyleMap;
     pvMapper.map.addLayer(pvMapper.siteLayer);
+
+    // set up site selection and highlighting controls
+    //var highlightControl = new OpenLayers.Control.SelectFeature(
+    //    pvMapper.siteLayer,
+    //    {
+    //        hover: true,
+    //        highlightOnly: true,
+    //        renderIntent: "temporary"
+    //    });
+    //map.addControl(highlightControl);
+    //highlightControl.activate();
+
+    //var selectControl = pvMapper.selectControl; // new OpenLayers.Control.SelectFeature(pvMapper.siteLayer);
+    //map.addControl(selectControl);
+    //selectControl.initLayer(pvMapper.siteLayer); <-- breaks later in selectControl.activate();
+    //selectControl.setLayer(pvMapper.siteLayer); <-- breaks immediately
+    //selectControl.activate();
+
+    //pvMapper.selectControl = selectControl;
+
+    //var selectSiteControl = new OpenLayers.Control.SelectFeature(
+    //    pvMapper.siteLayer,
+    //    {
+    //        clickout: true, toggle: true,
+    //        multiple: false, hover: false,
+    //        toggleKey: "ctrlKey", // ctrl key removes from selection
+    //        multipleKey: "shiftKey", // shift key adds to selection
+    //        //box: true,
+    //    });
+    //map.addControl(selectSiteControl);
 
 });

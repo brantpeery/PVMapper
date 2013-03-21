@@ -63,14 +63,18 @@ var app = Ext.application({
             stateId: 'mapPanel',
         });
 
-        //map.addControl(new OpenLayers.Control.PanZoomBar());
-
         this.mainContent = Ext.ComponentQuery.query('#maincontent')[0];
         this.mainContent.add(mapPanel);
         pvMapper.mapPanel = mapPanel;
         pvMapper.map = map;
 
         //map.zoomToExtent(usBounds, true); <-- this didn't help at all
+
+        //Insert the site layer
+        pvMapper.siteLayer = new OpenLayers.Layer.Vector("Sites");
+        pvMapper.siteLayer.id = "SiteLayer";
+
+        //pvMapper.selectControl = new OpenLayers.Control.SelectFeature(pvMapper.siteLayer);
 
         ///--------------------------END Set the map stuff up--------------------------------------------
 
