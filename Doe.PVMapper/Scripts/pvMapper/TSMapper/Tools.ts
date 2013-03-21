@@ -15,6 +15,11 @@ module pvMapper {
         */
         description: string;
 
+        /**
+         * The category of this tool, for hierarchical sorting
+         */
+        category: string;
+
         //actions: ToolAction[];
 
         //Buttons:UIButton[];
@@ -36,6 +41,8 @@ module pvMapper {
         updateScoreCallback: (score: Score) => void;
         onSiteChange: (event: EventArg, score: Score) => void;
         onScoreAdded: (event: EventArg, score: Score) => void;
+
+        //TODO: add utility function configuration options here...
     }
 
     export interface IToolAction {

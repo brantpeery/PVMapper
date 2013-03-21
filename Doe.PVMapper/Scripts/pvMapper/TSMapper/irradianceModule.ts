@@ -30,6 +30,7 @@ module INLModules {
 
                     title: "Direct-Normal Irradiation",
                     description: "Calculates the expected DNI for a site",
+                    category: "Meteorology",
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, score: pvMapper.Score) {
@@ -48,6 +49,7 @@ module INLModules {
 
                     title: "Global-Horizontal Irradiation",
                     description: "Calculates the expected GHI for a site",
+                    category: "Meteorology",
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, score: pvMapper.Score) {

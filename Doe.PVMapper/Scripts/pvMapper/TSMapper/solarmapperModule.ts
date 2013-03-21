@@ -30,6 +30,7 @@ module INLModules {
 
                     title: "Land Management",
                     description: "Checks solarmapper.anl.gov for intersecting land management polygons",
+                    category: "Land Use",
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, score) {

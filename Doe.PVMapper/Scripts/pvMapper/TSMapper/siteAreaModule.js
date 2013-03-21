@@ -25,6 +25,7 @@ var INLModules;
                         init: null,
                         title: "Gross Area",
                         description: "Calculates the area of the site polygon edges.",
+                        category: "Geography",
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {

@@ -28,6 +28,7 @@ var BYUModules;
                         init: null,
                         title: "Wilderness",
                         description: "Tells whether the given site is in a wilderness area.  ",
+                        category: "Land Use",
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {

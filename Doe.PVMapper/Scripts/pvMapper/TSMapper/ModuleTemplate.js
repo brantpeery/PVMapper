@@ -25,6 +25,7 @@ var Modules;
                         init: null,
                         title: "",
                         description: "",
+                        category: "",
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {

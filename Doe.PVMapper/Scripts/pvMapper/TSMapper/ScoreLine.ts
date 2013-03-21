@@ -16,6 +16,7 @@ module pvMapper {
             this.self = this;
             this.name = (typeof (options.title) === 'string') ? options.title : 'Unnamed Tool';
             this.description = (typeof (options.description) === 'string') ? options.description : 'Unnamed Tool';
+            this.category = (typeof (options.category) === 'string') ? options.category : 'Other';
             this.weight = 1;
 
             if ($.isFunction(options.onSiteChange)) {
@@ -45,6 +46,7 @@ module pvMapper {
         public name: string;
         public weight: number;
         public description: string;
+        public category: string;
         public scores: Score[] = new Score[]();
         public updateScore: ICallback = options.updateScoreCallback;
         public active: Boolean = true;
