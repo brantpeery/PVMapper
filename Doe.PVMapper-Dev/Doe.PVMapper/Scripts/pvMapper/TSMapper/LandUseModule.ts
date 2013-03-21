@@ -30,6 +30,7 @@ module INLModules {
 
                     title: "Protected Areas",
                     description: "Shows the classification of protected areas within the united states.",
+                    category: "Land Use",
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: (e, score: pvMapper.Score) => {
@@ -158,6 +159,7 @@ module INLModules {
 
                     title: "Land Cover",
                     description: "Display the land cover found around the center of a site",
+                    category: "Land Use",
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: (e, score: pvMapper.Score) => {

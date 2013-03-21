@@ -28,6 +28,7 @@ var INLModules;
                         init: null,
                         title: "Direct-Normal Irradiation",
                         description: "Calculates the expected DNI for a site",
+                        category: "Meteorology",
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {
@@ -46,6 +47,7 @@ var INLModules;
                         init: null,
                         title: "Global-Horizontal Irradiation",
                         description: "Calculates the expected GHI for a site",
+                        category: "Meteorology",
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {

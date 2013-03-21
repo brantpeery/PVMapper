@@ -30,6 +30,7 @@ module INLModules {
 
                     title: "Nearest Transmission Line",
                     description: "Calculates the distance to the nearest known transmission line",
+                    category: "Transmission Availability",
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, score) {

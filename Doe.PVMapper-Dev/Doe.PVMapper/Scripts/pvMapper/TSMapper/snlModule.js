@@ -28,6 +28,7 @@ var INLModules;
                         init: null,
                         title: "Nearest Transmission Line",
                         description: "Calculates the distance to the nearest known transmission line",
+                        category: "Transmission Availability",
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {
@@ -184,7 +185,7 @@ var INLModules;
         //    //    //    score.popupMessage = null;
         //    //    //    score.updateValue(request.responseText.length);
         //    //    //} else {
-        //    //    //    score.popupMessage = "Connection error " + request.status;
+        //    //    //    score.popupMessage = "Error " + request.status;
         //    //    //    score.updateValue(Number.NaN);
         //    //    //}
         //    //},
@@ -204,7 +205,7 @@ var INLModules;
         //            score.popupMessage = null;
         //            score.updateValue(request.responseText.length);
         //        } else {
-        //            score.popupMessage = "Connection error " + request.status;
+        //            score.popupMessage = "Error " + request.status;
         //            score.updateValue(Number.NaN);
         //        }
         //    },

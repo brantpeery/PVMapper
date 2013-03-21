@@ -28,6 +28,7 @@ var INLModules;
                         init: null,
                         title: "Land Management",
                         description: "Checks solarmapper.anl.gov for intersecting land management polygons",
+                        category: "Land Use",
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {

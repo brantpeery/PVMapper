@@ -26,6 +26,7 @@ module BYUModules {
 
                     title: "Slope",
                     description: "Calculates the average slope of the site",
+                    category: "Geography",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:3", "degrees"); }, //TODO: is this degrees?
                     updateScoreCallback: (score: pvMapper.Score) => { updateScore(score, "any:3", "degrees"); }, // or maybe it's grade?
@@ -38,6 +39,7 @@ module BYUModules {
 
                     title: "Aspect",
                     description: "Calculates the average aspect of the site",
+                    category: "Geography",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:4", "degrees"); }, //TODO: is this degrees?
                     updateScoreCallback: (score: pvMapper.Score) => { updateScore(score, "any:4", "degrees"); }, // it's not radian.
@@ -52,6 +54,7 @@ module BYUModules {
 
                     title: "Elevation",
                     description: "Calculates the averate elevation of the site",
+                    category: "Geography",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:1", "m"); },
                     updateScoreCallback: (score: pvMapper.Score) => { updateScore(score, "any:1", "m"); },

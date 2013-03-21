@@ -32,6 +32,7 @@ var INLModules;
                         init: null,
                         title: "Protected Areas",
                         description: "Shows the classification of protected areas within the united states.",
+                        category: "Land Use",
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {
@@ -145,6 +146,7 @@ var INLModules;
                         init: null,
                         title: "Land Cover",
                         description: "Display the land cover found around the center of a site",
+                        category: "Land Use",
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {

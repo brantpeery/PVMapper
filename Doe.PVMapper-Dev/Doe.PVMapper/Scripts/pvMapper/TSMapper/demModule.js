@@ -28,6 +28,7 @@ var BYUModules;
                         init: null,
                         title: "Slope",
                         description: "Calculates the average slope of the site",
+                        category: "Geography",
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
@@ -46,6 +47,7 @@ var BYUModules;
                         init: null,
                         title: "Aspect",
                         description: "Calculates the average aspect of the site",
+                        category: "Geography",
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
@@ -66,6 +68,7 @@ var BYUModules;
                         init: null,
                         title: "Elevation",
                         description: "Calculates the averate elevation of the site",
+                        category: "Geography",
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
