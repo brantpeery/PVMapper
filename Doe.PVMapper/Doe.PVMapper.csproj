@@ -1054,7 +1054,6 @@
     <Content Include="Scripts\UI\view\Window.js" />
     <Content Include="Scripts\ViewScripts\AddNewSite.js" />
     <Content Include="Scripts\extExtensions\FitToParent.js" />
-    <Content Include="Scripts\ViewScripts\FunctionView.js" />
     <Content Include="Scripts\ViewScripts\IndexView.js" />
     <Content Include="Scripts\ViewScripts\NavigateMenu.js" />
     <Content Include="Scripts\ViewScripts\PieView.js" />
