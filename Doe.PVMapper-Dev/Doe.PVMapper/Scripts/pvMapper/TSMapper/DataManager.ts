@@ -41,7 +41,12 @@ module pvMapper {
     }
 
     public postSite (aName:string,aDesc:string,aPolygon:OpenLayers.Polygon) {
-      return $.post("/api/ProjectSite", { name: aName, description: aDesc, isActive: true, polygonGeometry: aPolygon });
+        return $.post("/api/ProjectSite", {
+            name: aName,
+            description: aDesc,
+            isActive: true,
+            polygonGeometry: aPolygon
+        });
     }
 
     public updateSite(siteId:string,aName:string, aDesc:string, aPoly){
@@ -57,13 +62,13 @@ module pvMapper {
         data:data,
         type:"PUT",
         done: function () {
-            pvMapper.displayMessage("The site changes were saved","Info");
+            //pvMapper.displayMessage("The site changes were saved","Info");
           },
           fail: function () {
-            pvMapper.displayMessage("Unable to save the changes to the site. There was an error communicating with the database.","Warning");
+            //pvMapper.displayMessage("Unable to save the changes to the site. There was an error communicating with the database.","Warning");
           }
         });
-        pvMapper.displayMessage("The site has been updated.","Info");
+        //pvMapper.displayMessage("The site has been updated.","Info");
     }
 
     //Deletes a site from the datastore
@@ -72,10 +77,10 @@ module pvMapper {
         data: {
           Id: siteId, type: "DELETE",
           done: function () {
-            pvMapper.displayMessage("The site was deleted from the database.", "Warning");
+            //pvMapper.displayMessage("The site was deleted from the database.", "Warning");
           },
           fail: function () {
-            pvMapper.displayMessage("Unable to delete the site. There was an error communicating with the database.", "warning");
+            //pvMapper.displayMessage("Unable to delete the site. There was an error communicating with the database.", "warning");
           }
         }
       });
