@@ -9,7 +9,7 @@ var PVMapper;
             this.functionName = functionName;
             this.run = function (x) {
                 //Run the function that the user needs run
-                var y = this.UtilityFunctions['func'].apply(this, x);
+                var y = this.UtilityFunctions[this.functionName].apply(this, x);
                 //TODO: Error check y
                 return y;
             };
@@ -43,6 +43,12 @@ var PVMapper;
                 }
             };
         }
+        ScoreUtility.prototype.serialize = function () {
+            throw "Serialize not implemented yet for this object";
+        };
+        ScoreUtility.prototype.deserialize = function () {
+            throw "Deserialize is not implemented yet for this object";
+        };
         return ScoreUtility;
     })();    
 })(PVMapper || (PVMapper = {}));

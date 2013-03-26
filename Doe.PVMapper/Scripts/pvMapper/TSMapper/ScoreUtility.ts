@@ -8,7 +8,7 @@ module PVMapper {
 
         public run = function (x) {
             //Run the function that the user needs run
-            var y: number = this.UtilityFunctions['func'].apply(this, x);
+            var y: number = this.UtilityFunctions[this.functionName].apply(this, x);
 
             //TODO: Error check y
             return y;
@@ -39,5 +39,11 @@ module PVMapper {
             }
         }
 
+        public serialize() {
+            throw "Serialize not implemented yet for this object";
+        }
+        public deserialize() {
+            throw "Deserialize is not implemented yet for this object";
+        }
     }
 }
