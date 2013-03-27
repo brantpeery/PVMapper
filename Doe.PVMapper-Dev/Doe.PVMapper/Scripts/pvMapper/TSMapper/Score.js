@@ -25,6 +25,7 @@ var pvMapper;
             this.invalidateEvent = new pvMapper.Event();
             this.siteChangeEvent = new pvMapper.Event();
             this.self = this;
+            //this.parent; //Assign the parent so that we can use the scoring functions
             this.value = Number.NaN;
             this.utility = Number.NaN;
             //A reference to the site this score represents
@@ -45,6 +46,7 @@ var pvMapper;
         function () {
             //TODO: ... duh, calculate the utility here?
             //if (typeof (value) !== 'undefined') { return this.updateValue(value); }
+            //this.utility =
             // clearly wrong
             this.utility = isNaN(this.value) ? Number.NaN : Math.min(100, Math.max(0, this.value * 15));
             //TODO: fire some kind of utilityChangedEvent, or somehting?

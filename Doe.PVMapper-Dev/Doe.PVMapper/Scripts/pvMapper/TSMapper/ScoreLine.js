@@ -1,3 +1,4 @@
+/// <reference path="ScoreUtility.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Options.d.ts" />
@@ -38,10 +39,23 @@ var pvMapper;
                 _this.addScore(event);
             });
             pvMapper.siteManager.siteRemoved.addHandler(this.onSiteRemove);
+            //Set default scoreUtilityOptions object if none was provided
+            if(options.scoreUtilityOptions == undefined) {
+                options.scoreUtilityOptions = {
+                    maxValue: 1,
+                    minValue: 0,
+                    target: 0.5,
+                    slope: 50,
+                    functionName: "moreIsBetter"
+                };
+            }
+            this.scoreUtility = new pvMapper.ScoreUtility(options.scoreUtilityOptions);
+            //Set the default weight of the tool
+            this.weight = (options.defaultWeight) ? options.defaultWeight : 10;
             this.loadAllSites();
         }
-        ScoreLine.prototype.getUtilityScore = function () {
-            return 0;
+        ScoreLine.prototype.getUtilityScore = function (x) {
+            return this.scoreUtility.run(x);
         };
         ScoreLine.prototype.getWeight = function () {
             return this.weight;

@@ -1,3 +1,4 @@
+/// <reference path="ScoreUtility.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Options.d.ts" />
@@ -40,9 +41,26 @@ module pvMapper {
             });
             siteManager.siteRemoved.addHandler(this.onSiteRemove);
 
+            //Set default scoreUtilityOptions object if none was provided
+            if (options.scoreUtilityOptions == undefined) {
+                options.scoreUtilityOptions = {
+                    maxValue: 1,
+                    minValue: 0,
+                    target: .5,
+                    slope: 50,
+                    functionName: "moreIsBetter"
+                }
+            }
+
+            this.scoreUtility = new ScoreUtility(options.scoreUtilityOptions);
+
+            //Set the default weight of the tool
+            this.weight = (options.defaultWeight) ? options.defaultWeight : 10;
+            
             this.loadAllSites();
         };
-
+        
+        public scoreUtility: ScoreUtility;
         public name: string;
         public weight: number;
         public description: string;
@@ -56,7 +74,7 @@ module pvMapper {
         public scoreChangeEvent: pvMapper.Event = new pvMapper.Event();
         public updatingScoresEvent: pvMapper.Event = new pvMapper.Event();
 
-        public getUtilityScore(): number { return 0; }
+        public getUtilityScore(x): number { return this.scoreUtility.run(x); }
         public getWeight(): number { return this.weight; }
         public getWeightedUtilityScore(): number { return 0; }
 

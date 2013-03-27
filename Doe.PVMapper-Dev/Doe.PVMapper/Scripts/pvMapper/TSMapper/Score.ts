@@ -22,6 +22,7 @@ module pvMapper {
          */
         constructor(site: pvMapper.Site) {
             this.self = this;
+            //this.parent; //Assign the parent so that we can use the scoring functions
             this.value = Number.NaN;
             this.utility = Number.NaN;
             //A reference to the site this score represents
@@ -43,6 +44,7 @@ module pvMapper {
         /// <Summary>A reference the this object independent of scope</Summary>
         public self;
         public site: pvMapper.Site;
+        public parent: IScoreTool;
 
         /**
          * A textual description of the raw value as provided by the scoring tool
@@ -68,6 +70,8 @@ module pvMapper {
         public updateUtility() {
             //TODO: ... duh, calculate the utility here?
             //if (typeof (value) !== 'undefined') { return this.updateValue(value); }
+            //this.utility = 
+
 
             // clearly wrong
             this.utility = isNaN(this.value) ? Number.NaN :

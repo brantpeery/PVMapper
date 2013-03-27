@@ -1,3 +1,4 @@
+/// <reference path="ScoreUtility.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="common.ts" />
@@ -43,6 +44,8 @@ module pvMapper {
         onScoreAdded: (event: EventArg, score: Score) => void;
 
         //TODO: add utility function configuration options here...
+        scoreUtilityOptions?: IScoreUtility;
+        defaultWeight?: number;
     }
 
     export interface IToolAction {

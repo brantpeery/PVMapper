@@ -1,11 +1,30 @@
 ﻿
 
-module PVMapper {
-    class ScoreUtility {
-        constructor(public minValue: number, public target: number, public maxValue: number, public slope: number, public functionName: string) {
-            
-        }
+module pvMapper {
+    export interface IScoreUtility {
+        minValue: number;
+        maxValue: number;
+        target: number;
+        slope: number;
+        functionName: string;
+    }
 
+
+    export class ScoreUtility {
+        constructor(options:IScoreUtility) {
+            this.minValue = options.minValue;
+            this.target = options.target;
+            this.maxValue = options.maxValue;
+            this.slope = options.slope;
+            this.functionName = options.functionName;
+        }
+        public minValue: number;
+        public target: number;
+        public maxValue: number;
+        public slope: number;
+        public functionName: string;
+
+        //An options object might be better here. Then a call to a static function with options would be possible 
         public run = function (x) {
             //Run the function that the user needs run
             var y: number = this.UtilityFunctions[this.functionName].apply(this, x);
