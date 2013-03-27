@@ -41,6 +41,14 @@ module INLModules {
                         //var status = getFeatureInfo(site);
                         identifyFeature(score);
                     },
+                    scoreUtilityOptions: {
+                        maxValue: 1,
+                        minValue: 0,
+                        target: .5,
+                        slope: 50,
+                        functionName: "moreIsBetter"
+                    },
+                    defaultWeight:10
                 }],
 
                 infoTools: null

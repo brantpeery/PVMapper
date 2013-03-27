@@ -38,6 +38,13 @@ var INLModules;
                         updateScoreCallback: function (score) {
                             //var status = getFeatureInfo(site);
                             identifyFeature(score);
+                        },
+                        scoreUtilityOptions: {
+                            maxValue: 1,
+                            minValue: 0,
+                            target: 0.5,
+                            slope: 50,
+                            functionName: "moreIsBetter"
                         }
                     }
                 ],

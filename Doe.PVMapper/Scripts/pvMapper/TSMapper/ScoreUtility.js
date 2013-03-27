@@ -1,12 +1,8 @@
-var PVMapper;
-(function (PVMapper) {
+var pvMapper;
+(function (pvMapper) {
     var ScoreUtility = (function () {
-        function ScoreUtility(minValue, target, maxValue, slope, functionName) {
-            this.minValue = minValue;
-            this.target = target;
-            this.maxValue = maxValue;
-            this.slope = slope;
-            this.functionName = functionName;
+        function ScoreUtility(options) {
+            //An options object might be better here. Then a call to a static function with options would be possible
             this.run = function (x) {
                 //Run the function that the user needs run
                 var y = this.UtilityFunctions[this.functionName].apply(this, x);
@@ -42,6 +38,11 @@ var PVMapper;
                     return y;
                 }
             };
+            this.minValue = options.minValue;
+            this.target = options.target;
+            this.maxValue = options.maxValue;
+            this.slope = options.slope;
+            this.functionName = options.functionName;
         }
         ScoreUtility.prototype.serialize = function () {
             throw "Serialize not implemented yet for this object";
@@ -50,5 +51,6 @@ var PVMapper;
             throw "Deserialize is not implemented yet for this object";
         };
         return ScoreUtility;
-    })();    
-})(PVMapper || (PVMapper = {}));
+    })();
+    pvMapper.ScoreUtility = ScoreUtility;    
+})(pvMapper || (pvMapper = {}));
