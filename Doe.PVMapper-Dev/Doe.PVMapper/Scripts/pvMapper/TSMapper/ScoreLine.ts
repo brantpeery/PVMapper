@@ -1,3 +1,4 @@
+/// <reference path="IEventTypes.ts" />
 /// <reference path="ScoreUtility.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Site.ts" />
@@ -24,9 +25,11 @@ module pvMapper {
                 this.onSiteChangeHandler = options.onSiteChange
             }
 
-            this.valueChangeHandler = (event: EventArg) => {
+            this.valueChangeHandler = (event: IScoreValueChangedEvent) => {
                 ///TODO: Create a ValueChangeEventArg or something to let the user know what to expect
 
+                //Update the utility score for the score that just changed it's value.
+                event.score.setUtility(this.getUtilityScore(event.newValue));
                 this.scoreChangeEvent.fire(self, event);
             }
 
@@ -48,18 +51,18 @@ module pvMapper {
                     minValue: 0,
                     target: .5,
                     slope: 50,
-                    functionName: "moreIsBetter"
+                    functionName: "random" //"moreIsBetter"
                 }
             }
 
             this.scoreUtility = new ScoreUtility(options.scoreUtilityOptions);
 
             //Set the default weight of the tool
-            this.weight = (options.defaultWeight) ? options.defaultWeight : 10;
-            
+            this.weight = (options.defaultWeight==undefined) ? options.defaultWeight : 10;
+
             this.loadAllSites();
         };
-        
+
         public scoreUtility: ScoreUtility;
         public name: string;
         public weight: number;
@@ -74,7 +77,7 @@ module pvMapper {
         public scoreChangeEvent: pvMapper.Event = new pvMapper.Event();
         public updatingScoresEvent: pvMapper.Event = new pvMapper.Event();
 
-        public getUtilityScore(x): number { return this.scoreUtility.run(x); }
+        public getUtilityScore(x) { return this.scoreUtility.run(x); }  number;
         public getWeight(): number { return this.weight; }
         public getWeightedUtilityScore(): number { return 0; }
 
