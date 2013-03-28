@@ -44,7 +44,7 @@ module pvMapper {
         /// <Summary>A reference the this object independent of scope</Summary>
         public self;
         public site: pvMapper.Site;
-        public parent: IScoreTool;
+        //public parent: IScoreTool;
 
         /**
          * A textual description of the raw value as provided by the scoring tool
@@ -66,16 +66,10 @@ module pvMapper {
         public invalidateEvent: pvMapper.Event = new pvMapper.Event();
         public siteChangeEvent: pvMapper.Event = new pvMapper.Event();
 
-        //Calculates the utility score for the value passed in or if no value is passed in it uses the current value property
-        public updateUtility() {
-            //TODO: ... duh, calculate the utility here?
-            //if (typeof (value) !== 'undefined') { return this.updateValue(value); }
-            //this.utility = 
-
-
-            // clearly wrong
-            this.utility = isNaN(this.value) ? Number.NaN :
-                 Math.min(100, Math.max(0, this.value * 15));
+        //Sets the utility value for the score. Fires the utilityChanged event
+        public setUtility(value:number) {
+            
+            this.utility = value;
 
             //TODO: fire some kind of utilityChangedEvent, or somehting?
         }
@@ -91,11 +85,11 @@ module pvMapper {
             //Change the context, add this score to the event and pass the event on
             var oldvalue = this.value;
             this.value = value;
-            this.updateUtility();
+            
             //TODO: pvMapper.displayMessage(this.value,"Info");
 
             //fire the value updated event
-            this.valueChangeEvent.fire(this.self, { oldvalue: oldvalue, newvalue: value });
+            this.valueChangeEvent.fire(this.self, { score:this.self, oldValue: oldvalue, newValue: value });
             return this.value;
         }
 
