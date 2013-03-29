@@ -25,7 +25,7 @@ module pvMapper {
                 this.onSiteChangeHandler = options.onSiteChange
             }
 
-            this.valueChangeHandler = (event: IScoreValueChangedEvent) => {
+            this.valueChangeHandler = (event: any) => {
                 ///TODO: Create a ValueChangeEventArg or something to let the user know what to expect
 
                 //Update the utility score for the score that just changed it's value.
@@ -58,7 +58,7 @@ module pvMapper {
             this.scoreUtility = new ScoreUtility(options.scoreUtilityOptions);
 
             //Set the default weight of the tool
-            this.weight = (options.defaultWeight==undefined) ? options.defaultWeight : 10;
+            this.weight = (typeof options.defaultWeight === "undefined") ? 10 : options.defaultWeight;
 
             this.loadAllSites();
         };

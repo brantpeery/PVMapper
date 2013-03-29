@@ -6,6 +6,8 @@
 /// <reference path="Module.ts" />
 var INLModules;
 (function (INLModules) {
+    var maxSearchDistanceInMeters = (30 * 1000);// 30 km - enough?
+    
     var IrradianceModule = (function () {
         function IrradianceModule() {
             var myModule = new pvMapper.Module({
@@ -38,7 +40,24 @@ var INLModules;
                         updateScoreCallback: function (score) {
                             //var status = getFeatureInfo(site);
                             updateScore(score);
-                        }
+                        },
+                        scoreUtilityOptions: // having any nearby line is much better than having no nearby line, so let's reflect that.
+                        {
+                            functionName: "linear3pt",
+                            p0: {
+                                x: 0,
+                                y: 1
+                            },
+                            p1: {
+                                x: (maxSearchDistanceInMeters - 1),
+                                y: 0.3
+                            },
+                            p2: {
+                                x: maxSearchDistanceInMeters,
+                                y: 0
+                            }
+                        },
+                        defaultWeight: 10
                     }
                 ],
                 infoTools: null
@@ -112,7 +131,6 @@ var INLModules;
         pvMapper.map.removeLayer(mapLayer, false);
     }
     function updateScore(score) {
-        var maxSearchDistanceInMeters = (20 * 1000);
         var minimumVoltage = 230;//Note: common voltages include 230, 345, 500, 765
         
         // use a genuine JSONP request, rathern than a plain old GET request routed through the proxy.
@@ -151,10 +169,10 @@ var INLModules;
                     }
                     if(closestFeature !== null) {
                         score.popupMessage = (minDistance / 1000).toFixed(1) + " km to " + closestFeature.attributes.Voltage + " kV line operated by " + closestFeature.attributes.Company;
-                        score.updateValue(response.features.length);
+                        score.updateValue(minDistance);
                     } else {
                         score.popupMessage = "No " + minimumVoltage + " kV line found within " + maxSearchDistanceInMeters / 1000 + " km";
-                        score.updateValue(Number.NaN);
+                        score.updateValue(maxSearchDistanceInMeters);
                     }
                 } else {
                     score.popupMessage = "Request error " + response.error.toString();
