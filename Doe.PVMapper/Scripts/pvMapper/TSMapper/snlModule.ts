@@ -6,6 +6,9 @@
 /// <reference path="Module.ts" />
 
 module INLModules {
+
+    var maxSearchDistanceInMeters: number = (30 * 1000); // 30 km - enough?
+
     class IrradianceModule {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module({
@@ -41,6 +44,15 @@ module INLModules {
                         //var status = getFeatureInfo(site);
                         updateScore(score);
                     },
+
+                    // having any nearby line is much better than having no nearby line, so let's reflect that.
+                    scoreUtilityOptions: <pvMapper.IThreePointUtilityOptions>{
+                        functionName: "linear3pt",
+                        p0: { x: 0, y: 1 },
+                        p1: { x: (maxSearchDistanceInMeters - 1), y: 0.3 },
+                        p2: { x: maxSearchDistanceInMeters, y: 0 },
+                    },
+                    defaultWeight: 10
                 }],
 
                 infoTools: null
@@ -126,7 +138,6 @@ module INLModules {
     }
 
     function updateScore(score: pvMapper.Score) {
-        var maxSearchDistanceInMeters: number = (20 * 1000);
         var minimumVoltage: number = 230; //Note: common voltages include 230, 345, 500, 765
 
         // use a genuine JSONP request, rathern than a plain old GET request routed through the proxy.
@@ -171,11 +182,11 @@ module INLModules {
                         score.popupMessage = (minDistance / 1000).toFixed(1) + " km to " +
                             closestFeature.attributes.Voltage + " kV line operated by " +
                             closestFeature.attributes.Company;
-                        score.updateValue(response.features.length);
+                        score.updateValue(minDistance);
                     } else {
                         score.popupMessage = "No " + minimumVoltage + " kV line found within "
                              + maxSearchDistanceInMeters / 1000 + " km";
-                        score.updateValue(Number.NaN);
+                        score.updateValue(maxSearchDistanceInMeters);
                     }
                 } else {
                     score.popupMessage = "Request error " + response.error.toString();

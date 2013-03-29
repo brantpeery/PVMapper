@@ -44,7 +44,7 @@ module pvMapper {
         onScoreAdded: (event: EventArg, score: Score) => void;
 
         //TODO: add utility function configuration options here...
-        scoreUtilityOptions?: IScoreUtility;
+        scoreUtilityOptions?: IScoreUtilityOptions;
         defaultWeight?: number;
     }
 

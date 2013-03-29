@@ -40,10 +40,19 @@ var INLModules;
                             console.log("Calulated area of " + area + " Returning value");
                             score.popupMessage = area.toFixed(3) + " km2";
                             score.updateValue(area);
-                        }
+                        },
+                        scoreUtilityOptions: //TODO: we have no idea what their ideal size is... we don't even know if more is better or worse. damn.
+                        // for now, this is a constant value (always returns the max, why not)
+                        {
+                            functionName: "linear",
+                            minValue: -1,
+                            maxValue: 0
+                        },
+                        defaultWeight: 0
                     }
                 ],
-                infoTools: null
+                infoTools: //TODO: find a meaningful score & utility for this
+                null
             });
         }
         return SiteAreaModule;

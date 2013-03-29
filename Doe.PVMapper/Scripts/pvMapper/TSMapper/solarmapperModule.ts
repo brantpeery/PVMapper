@@ -41,12 +41,13 @@ module INLModules {
                         //var status = getFeatureInfo(site);
                         identifyFeature(score);
                     },
-                    scoreUtilityOptions: {
-                        maxValue: 1,
-                        minValue: 0,
-                        target: .5,
-                        slope: 50,
-                        functionName: "moreIsBetter"
+
+                    // for now, no land management agencies is best, any one is bad, and multiple are worse
+                    scoreUtilityOptions: <pvMapper.IThreePointUtilityOptions>{
+                        functionName: "linear3pt",
+                        p0: { x: 0, y: 1 },
+                        p1: { x: 1, y: 0.6 },
+                        p2: { x: 5, y: 0 },
                     },
                     defaultWeight:10
                 }],
@@ -136,6 +137,7 @@ module INLModules {
                         if (parsedResponse.results.length > 0) {
                             var allText = "";
                             var lastText = null;
+                            var count: number = 0;
 
                             for (var i = 0; i < parsedResponse.results.length; i++) {
                                 var newText = parsedResponse.results[i].layerName +
@@ -145,6 +147,7 @@ module INLModules {
                                         allText += ", \n";
                                     }
                                     allText += newText;
+                                    count++;
                                 }
                                 lastText = newText;
                             }
@@ -165,7 +168,7 @@ module INLModules {
                             //}).show();
 
                             score.popupMessage = allText;
-                            score.updateValue(parsedResponse.results.length); // number of overlapping features
+                            score.updateValue(count); // number of overlapping features
                         } else {
                             score.popupMessage = "None";
                             score.updateValue(0);

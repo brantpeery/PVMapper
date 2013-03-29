@@ -45,6 +45,14 @@ module INLModules {
                         score.updateValue(area);
                     },
                     
+                    //TODO: we have no idea what their ideal size is... we don't even know if more is better or worse. damn.
+                    // for now, this is a constant value (always returns the max, why not)
+                    scoreUtilityOptions: <pvMapper.IMinMaxUtilityOptions>{
+                        functionName: "linear",
+                        minValue: -1,
+                        maxValue: 0,
+                    },
+                    defaultWeight: 0 //TODO: find a meaningful score & utility for this
                 }],
                 infoTools: null
             });

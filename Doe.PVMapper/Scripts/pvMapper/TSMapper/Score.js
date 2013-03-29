@@ -42,13 +42,9 @@ var pvMapper;
                 ]);
             });
         }
-        Score.prototype.updateUtility = //Calculates the utility score for the value passed in or if no value is passed in it uses the current value property
-        function () {
-            //TODO: ... duh, calculate the utility here?
-            //if (typeof (value) !== 'undefined') { return this.updateValue(value); }
-            //this.utility =
-            // clearly wrong
-            this.utility = isNaN(this.value) ? Number.NaN : Math.min(100, Math.max(0, this.value * 15));
+        Score.prototype.setUtility = //Sets the utility value for the score. Fires the utilityChanged event
+        function (value) {
+            this.utility = value;
             //TODO: fire some kind of utilityChangedEvent, or somehting?
                     };
         Score.prototype.updateValue = /**
@@ -62,12 +58,12 @@ var pvMapper;
             //Change the context, add this score to the event and pass the event on
             var oldvalue = this.value;
             this.value = value;
-            this.updateUtility();
             //TODO: pvMapper.displayMessage(this.value,"Info");
             //fire the value updated event
             this.valueChangeEvent.fire(this.self, {
-                oldvalue: oldvalue,
-                newvalue: value
+                score: this.self,
+                oldValue: oldvalue,
+                newValue: value
             });
             return this.value;
         };
