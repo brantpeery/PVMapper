@@ -1,3 +1,5 @@
+/// <reference path="IEventTypes.ts" />
+/// <reference path="ScoreUtility.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Options.d.ts" />
@@ -16,15 +18,18 @@ module pvMapper {
             this.self = this;
             this.name = (typeof (options.title) === 'string') ? options.title : 'Unnamed Tool';
             this.description = (typeof (options.description) === 'string') ? options.description : 'Unnamed Tool';
+            this.category = (typeof (options.category) === 'string') ? options.category : 'Other';
             this.weight = 1;
 
             if ($.isFunction(options.onSiteChange)) {
                 this.onSiteChangeHandler = options.onSiteChange
             }
 
-            this.valueChangeHandler = (event: EventArg) => {
+            this.valueChangeHandler = (event: IScoreValueChangedEvent) => {
                 ///TODO: Create a ValueChangeEventArg or something to let the user know what to expect
 
+                //Update the utility score for the score that just changed it's value.
+                event.score.setUtility(this.getUtilityScore(event.newValue));
                 this.scoreChangeEvent.fire(self, event);
             }
 
@@ -39,12 +44,30 @@ module pvMapper {
             });
             siteManager.siteRemoved.addHandler(this.onSiteRemove);
 
+            //Set default scoreUtilityOptions object if none was provided
+            if (options.scoreUtilityOptions == undefined) {
+                options.scoreUtilityOptions = {
+                    maxValue: 1,
+                    minValue: 0,
+                    target: .5,
+                    slope: 50,
+                    functionName: "random" //"moreIsBetter"
+                }
+            }
+
+            this.scoreUtility = new ScoreUtility(options.scoreUtilityOptions);
+
+            //Set the default weight of the tool
+            this.weight = (typeof options.defaultWeight === "undefined") ? 10 : options.defaultWeight;
+
             this.loadAllSites();
         };
 
+        public scoreUtility: ScoreUtility;
         public name: string;
         public weight: number;
         public description: string;
+        public category: string;
         public scores: Score[] = new Score[]();
         public updateScore: ICallback = options.updateScoreCallback;
         public active: Boolean = true;
@@ -54,7 +77,7 @@ module pvMapper {
         public scoreChangeEvent: pvMapper.Event = new pvMapper.Event();
         public updatingScoresEvent: pvMapper.Event = new pvMapper.Event();
 
-        public getUtilityScore(): number { return 0; }
+        public getUtilityScore(x) { return this.scoreUtility.run(x); }  number;
         public getWeight(): number { return this.weight; }
         public getWeightedUtilityScore(): number { return 0; }
 

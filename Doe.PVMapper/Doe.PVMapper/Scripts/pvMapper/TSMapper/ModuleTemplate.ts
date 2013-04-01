@@ -26,6 +26,7 @@ module Modules {
 
                     title: "",
                     description: "",
+                    category: "",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { },
                     updateScoreCallback: (score: pvMapper.Score) => { },

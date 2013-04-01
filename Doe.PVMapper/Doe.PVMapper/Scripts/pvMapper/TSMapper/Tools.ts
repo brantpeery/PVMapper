@@ -1,3 +1,4 @@
+/// <reference path="ScoreUtility.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="common.ts" />
@@ -14,6 +15,11 @@ module pvMapper {
          The description of the tool. This will be visible in reports and as a tool tip
         */
         description: string;
+
+        /**
+         * The category of this tool, for hierarchical sorting
+         */
+        category: string;
 
         //actions: ToolAction[];
 
@@ -36,6 +42,10 @@ module pvMapper {
         updateScoreCallback: (score: Score) => void;
         onSiteChange: (event: EventArg, score: Score) => void;
         onScoreAdded: (event: EventArg, score: Score) => void;
+
+        //TODO: add utility function configuration options here...
+        scoreUtilityOptions?: IScoreUtilityOptions;
+        defaultWeight?: number;
     }
 
     export interface IToolAction {

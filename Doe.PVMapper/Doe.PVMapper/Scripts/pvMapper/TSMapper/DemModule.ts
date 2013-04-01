@@ -4,6 +4,7 @@
 /// <reference path="Tools.ts" />
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
+/// <reference path="ScoreUtility.ts" />
 
 module BYUModules {
     class DemModule {
@@ -26,9 +27,19 @@ module BYUModules {
 
                     title: "Slope",
                     description: "Calculates the average slope of the site",
+                    category: "Geography",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:3", "degrees"); }, //TODO: is this degrees?
                     updateScoreCallback: (score: pvMapper.Score) => { updateScore(score, "any:3", "degrees"); }, // or maybe it's grade?
+
+                    //TODO: The utility of slope only makes sense in the context of aspect - merge these two metrics
+                    // for now, flatter is better...?
+                    scoreUtilityOptions: <pvMapper.IMinMaxUtilityOptions>{
+                        functionName: "linear",
+                        minValue: 10,
+                        maxValue: 0,
+                    },
+                    //defaultWeight: 10
                 },
                 {
                     activate: null,
@@ -38,11 +49,22 @@ module BYUModules {
 
                     title: "Aspect",
                     description: "Calculates the average aspect of the site",
+                    category: "Geography",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:4", "degrees"); }, //TODO: is this degrees?
                     updateScoreCallback: (score: pvMapper.Score) => { updateScore(score, "any:4", "degrees"); }, // it's not radian.
+
                     //TODO: should we translate the aspect score into a "degrees away from south" score, or something?
                     //      I assume that south is the best...
+                    //TODO: The utility of aspect only makes sense in the context of slope - merge these two metrics
+                    // for now, south is better, but north ain't so bad...?
+                    scoreUtilityOptions: <pvMapper.IThreePointUtilityOptions>{
+                        functionName: "linear3pt",
+                        p0: { x: 0, y: 0.5 },
+                        p1: { x: 180, y: 1 },
+                        p2: { x: 360, y: 0.5 },
+                    },
+                    //defaultWeight: 10
                 },
                 {
                     activate: null,
@@ -52,10 +74,20 @@ module BYUModules {
 
                     title: "Elevation",
                     description: "Calculates the averate elevation of the site",
+                    category: "Geography",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:1", "m"); },
                     updateScoreCallback: (score: pvMapper.Score) => { updateScore(score, "any:1", "m"); },
-                    //Note: I have no idea why, but the server will not find the correct layer if 
+                    //Note: I have no idea why, but the server will not find the correct layer if we don't include "any:"
+
+                    // higher is better, but not much better, yeah?
+                    scoreUtilityOptions: <pvMapper.IThreePointUtilityOptions>{
+                        functionName: "linear3pt",
+                        p0: { x: 0, y: 0.5 },
+                        p1: { x: 1000, y: 0.9 },
+                        p2: { x: 6000, y: 1 },
+                    },
+                    //defaultWeight: 10
                 }
                 ],
                 infoTools: null

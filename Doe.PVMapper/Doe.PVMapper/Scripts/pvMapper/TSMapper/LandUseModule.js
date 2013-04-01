@@ -32,6 +32,7 @@ var INLModules;
                         init: null,
                         title: "Protected Areas",
                         description: "Shows the classification of protected areas within the united states.",
+                        category: "Land Use",
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {
@@ -39,7 +40,25 @@ var INLModules;
                         },
                         updateScoreCallback: function (score) {
                             _this.updateScore(score);
-                        }
+                        },
+                        scoreUtilityOptions: //TODO: need a categorical scoring system
+                        // for now, this assumes that overlapping more protected areas is worse than overlapping fewer (!)
+                        {
+                            functionName: "linear3pt",
+                            p0: {
+                                x: 0,
+                                y: 1
+                            },
+                            p1: {
+                                x: 1,
+                                y: 0.6
+                            },
+                            p2: {
+                                x: 5,
+                                y: 0
+                            }
+                        },
+                        defaultWeight: 10
                     }
                 ],
                 infoTools: null
@@ -145,6 +164,7 @@ var INLModules;
                         init: null,
                         title: "Land Cover",
                         description: "Display the land cover found around the center of a site",
+                        category: "Land Use",
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {
@@ -152,10 +172,19 @@ var INLModules;
                         },
                         updateScoreCallback: function (score) {
                             _this.updateScore(score);
-                        }
+                        },
+                        scoreUtilityOptions: //TODO: need a categorical scoring system
+                        // for now, this is a constant value (always returns the max, why not)
+                        {
+                            functionName: "linear",
+                            minValue: -1,
+                            maxValue: 0
+                        },
+                        defaultWeight: 0
                     }
                 ],
-                infoTools: null
+                infoTools: //TODO: find a meaningful score & utility for this
+                null
             });
         }
         LandCoverModule.prototype.addMap = function () {

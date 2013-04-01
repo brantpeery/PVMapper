@@ -5,7 +5,7 @@
 
 
 module pvMapper {
-
+    
     export class ScoreLineOptions {
         public onSiteChange(): ICallback;
         public onScoreAdded(): ICallback;
@@ -13,6 +13,8 @@ module pvMapper {
         public description: string;
 
         public calculateValueCallback: ICallback;  //(...args: any[]) =>any;
+
+        public scoreUtility;
     }
 
     export interface IModuleOptions {
