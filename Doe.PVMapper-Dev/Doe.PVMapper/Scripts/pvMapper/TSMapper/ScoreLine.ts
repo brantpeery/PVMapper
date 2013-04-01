@@ -25,7 +25,7 @@ module pvMapper {
                 this.onSiteChangeHandler = options.onSiteChange
             }
 
-            this.valueChangeHandler = (event: any) => {
+            this.valueChangeHandler = (event: IScoreValueChangedEvent) => {
                 ///TODO: Create a ValueChangeEventArg or something to let the user know what to expect
 
                 //Update the utility score for the score that just changed it's value.
