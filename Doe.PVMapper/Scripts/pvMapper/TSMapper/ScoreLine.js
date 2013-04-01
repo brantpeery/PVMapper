@@ -1,3 +1,5 @@
+/// <reference path="IEventTypes.ts" />
+/// <reference path="ScoreUtility.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Options.d.ts" />
@@ -21,12 +23,15 @@ var pvMapper;
             this.self = this;
             this.name = (typeof (options.title) === 'string') ? options.title : 'Unnamed Tool';
             this.description = (typeof (options.description) === 'string') ? options.description : 'Unnamed Tool';
+            this.category = (typeof (options.category) === 'string') ? options.category : 'Other';
             this.weight = 1;
             if($.isFunction(options.onSiteChange)) {
                 this.onSiteChangeHandler = options.onSiteChange;
             }
             this.valueChangeHandler = function (event) {
                 ///TODO: Create a ValueChangeEventArg or something to let the user know what to expect
+                //Update the utility score for the score that just changed it's value.
+                event.score.setUtility(_this.getUtilityScore(event.newValue));
                 _this.scoreChangeEvent.fire(self, event);
             };
             if($.isFunction(options.onScoreAdded)) {
@@ -37,10 +42,24 @@ var pvMapper;
                 _this.addScore(event);
             });
             pvMapper.siteManager.siteRemoved.addHandler(this.onSiteRemove);
+            //Set default scoreUtilityOptions object if none was provided
+            if(options.scoreUtilityOptions == undefined) {
+                options.scoreUtilityOptions = {
+                    maxValue: 1,
+                    minValue: 0,
+                    target: 0.5,
+                    slope: 50,
+                    functionName: "random"
+                };
+                //"moreIsBetter"
+                            }
+            this.scoreUtility = new pvMapper.ScoreUtility(options.scoreUtilityOptions);
+            //Set the default weight of the tool
+            this.weight = (typeof options.defaultWeight === "undefined") ? 10 : options.defaultWeight;
             this.loadAllSites();
         }
-        ScoreLine.prototype.getUtilityScore = function () {
-            return 0;
+        ScoreLine.prototype.getUtilityScore = function (x) {
+            return this.scoreUtility.run(x);
         };
         ScoreLine.prototype.getWeight = function () {
             return this.weight;

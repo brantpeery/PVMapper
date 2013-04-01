@@ -26,6 +26,7 @@ module BYUModules {
 
                     title: "Wilderness",
                     description: "Tells whether the given site is in a wilderness area.  ",
+                    category: "Land Use",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { },
                     updateScoreCallback: (score: pvMapper.Score) => { },

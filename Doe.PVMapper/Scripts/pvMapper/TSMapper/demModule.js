@@ -4,6 +4,7 @@
 /// <reference path="Tools.ts" />
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
+/// <reference path="ScoreUtility.ts" />
 var BYUModules;
 (function (BYUModules) {
     var DemModule = (function () {
@@ -28,6 +29,7 @@ var BYUModules;
                         init: null,
                         title: "Slope",
                         description: "Calculates the average slope of the site",
+                        category: "Geography",
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
@@ -36,9 +38,17 @@ var BYUModules;
                         updateScoreCallback: //TODO: is this degrees?
                         function (score) {
                             updateScore(score, "any:3", "degrees");
+                        },
+                        scoreUtilityOptions: // or maybe it's grade?
+                        //TODO: The utility of slope only makes sense in the context of aspect - merge these two metrics
+                        // for now, flatter is better...?
+                        {
+                            functionName: "linear",
+                            minValue: 10,
+                            maxValue: 0
                         }
                     }, 
-                    // or maybe it's grade?
+                    //defaultWeight: 10
                     {
                         activate: null,
                         deactivate: null,
@@ -46,6 +56,7 @@ var BYUModules;
                         init: null,
                         title: "Aspect",
                         description: "Calculates the average aspect of the site",
+                        category: "Geography",
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
@@ -54,11 +65,29 @@ var BYUModules;
                         updateScoreCallback: //TODO: is this degrees?
                         function (score) {
                             updateScore(score, "any:4", "degrees");
+                        },
+                        scoreUtilityOptions: // it's not radian.
+                        //TODO: should we translate the aspect score into a "degrees away from south" score, or something?
+                        //      I assume that south is the best...
+                        //TODO: The utility of aspect only makes sense in the context of slope - merge these two metrics
+                        // for now, south is better, but north ain't so bad...?
+                        {
+                            functionName: "linear3pt",
+                            p0: {
+                                x: 0,
+                                y: 0.5
+                            },
+                            p1: {
+                                x: 180,
+                                y: 1
+                            },
+                            p2: {
+                                x: 360,
+                                y: 0.5
+                            }
                         }
                     }, 
-                    // it's not radian.
-                    //TODO: should we translate the aspect score into a "degrees away from south" score, or something?
-                    //      I assume that south is the best...
+                    //defaultWeight: 10
                     {
                         activate: null,
                         deactivate: null,
@@ -66,6 +95,7 @@ var BYUModules;
                         init: null,
                         title: "Elevation",
                         description: "Calculates the averate elevation of the site",
+                        category: "Geography",
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
@@ -73,10 +103,27 @@ var BYUModules;
                         },
                         updateScoreCallback: function (score) {
                             updateScore(score, "any:1", "m");
+                        },
+                        scoreUtilityOptions: //Note: I have no idea why, but the server will not find the correct layer if we don't include "any:"
+                        // higher is better, but not much better, yeah?
+                        {
+                            functionName: "linear3pt",
+                            p0: {
+                                x: 0,
+                                y: 0.5
+                            },
+                            p1: {
+                                x: 1000,
+                                y: 0.9
+                            },
+                            p2: {
+                                x: 6000,
+                                y: 1
+                            }
                         }
                     }
                 ],
-                infoTools: //Note: I have no idea why, but the server will not find the correct layer if
+                infoTools: //defaultWeight: 10
                 null
             });
         }

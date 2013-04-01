@@ -128,7 +128,6 @@ var pvMapper;
                 data: mydata
             });
             pvMapper.floatingScoreboard.show();
-            gp.store.loadRawData(mydata);
         } else {
             var gp = pvMapper.floatingScoreboard.down('gridpanel');
             gp.store.loadRawData(mydata);

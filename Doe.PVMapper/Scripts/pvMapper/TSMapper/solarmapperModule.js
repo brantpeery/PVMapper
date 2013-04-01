@@ -28,6 +28,7 @@ var INLModules;
                         init: null,
                         title: "Land Management",
                         description: "Checks solarmapper.anl.gov for intersecting land management polygons",
+                        category: "Land Use",
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {
@@ -37,7 +38,24 @@ var INLModules;
                         updateScoreCallback: function (score) {
                             //var status = getFeatureInfo(site);
                             identifyFeature(score);
-                        }
+                        },
+                        scoreUtilityOptions: // for now, no land management agencies is best, any one is bad, and multiple are worse
+                        {
+                            functionName: "linear3pt",
+                            p0: {
+                                x: 0,
+                                y: 1
+                            },
+                            p1: {
+                                x: 1,
+                                y: 0.6
+                            },
+                            p2: {
+                                x: 5,
+                                y: 0
+                            }
+                        },
+                        defaultWeight: 10
                     }
                 ],
                 infoTools: null
@@ -119,6 +137,7 @@ var INLModules;
                         if(parsedResponse.results.length > 0) {
                             var allText = "";
                             var lastText = null;
+                            var count = 0;
                             for(var i = 0; i < parsedResponse.results.length; i++) {
                                 var newText = parsedResponse.results[i].layerName + ": " + parsedResponse.results[i].value;
                                 if(newText != lastText) {
@@ -126,6 +145,7 @@ var INLModules;
                                         allText += ", \n";
                                     }
                                     allText += newText;
+                                    count++;
                                 }
                                 lastText = newText;
                             }
@@ -144,7 +164,7 @@ var INLModules;
                             //    ],
                             //}).show();
                             score.popupMessage = allText;
-                            score.updateValue(parsedResponse.results.length)// number of overlapping features
+                            score.updateValue(count)// number of overlapping features
                             ;
                         } else {
                             score.popupMessage = "None";

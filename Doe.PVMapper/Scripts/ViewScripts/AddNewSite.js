@@ -160,7 +160,7 @@ function addSite(map, layer) {
                             var newSite = new pvMapper.Site(feature);
                             pvMapper.siteManager.addSite(newSite);
 
-                            console.log('Added ' + s.name + ' to the site manager');
+                            console.log('Added ' + newSite.name + ' to the site manager');
 
                             //Redraw the feature with all the changes
                             feature.layer.drawFeature(feature);

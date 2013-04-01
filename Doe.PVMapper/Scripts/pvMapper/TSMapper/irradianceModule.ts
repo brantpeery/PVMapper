@@ -30,16 +30,22 @@ module INLModules {
 
                     title: "Direct-Normal Irradiation",
                     description: "Calculates the expected DNI for a site",
+                    category: "Meteorology",
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, score: pvMapper.Score) {
-                        //score.updateValue(0);
                         updateScoreFromLayer(score, "swera:dni_suny_high_900913");
                     },
                     updateScoreCallback: (score: pvMapper.Score) => {
-                        //score.updateValue(1);
                         updateScoreFromLayer(score, "swera:dni_suny_high_900913");
                     },
+
+                    scoreUtilityOptions: <pvMapper.IMinMaxUtilityOptions>{
+                        functionName: "linear",
+                        minValue: 0,
+                        maxValue: 8,
+                    },
+                    defaultWeight: 10
                 }, {
                     activate: null,
                     deactivate: null,
@@ -48,16 +54,22 @@ module INLModules {
 
                     title: "Global-Horizontal Irradiation",
                     description: "Calculates the expected GHI for a site",
+                    category: "Meteorology",
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, score: pvMapper.Score) {
-                        //score.updateValue(0);
                         updateScoreFromLayer(score, "swera:ghi_suny_high_900913");
                     },
                     updateScoreCallback: (score: pvMapper.Score) => {
-                        //score.updateValue(1);
                         updateScoreFromLayer(score, "swera:ghi_suny_high_900913");
                     },
+
+                    scoreUtilityOptions: <pvMapper.IMinMaxUtilityOptions>{
+                        functionName: "linear",
+                        minValue: 0,
+                        maxValue: 6,
+                    },
+                    defaultWeight: 10
                 }],
 
                 infoTools: null
