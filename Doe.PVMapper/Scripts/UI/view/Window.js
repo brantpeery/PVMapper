@@ -37,13 +37,23 @@ Ext.define('MainApp.view.Window', {
   listeners: {
     beforerender: function (win, op) {
       var taskBar = Ext.getCmp('maintaskbar');
-
     },
     boxready: function (win, width, height, eOpts) { //Note: this event fires only once (for each new window)
       var taskBar = Ext.getCmp('maintaskbar');
-      if (taskBar)
-        taskBar.addButton(win);
-      return true;
+      // check to see if the window exists.  Show if it is, otherwise add new button.
+      if (taskBar) {
+        var aWin = null;
+        for (var i = 0; i < taskBar.items.length; i++) {
+          if (typeof (taskBar.items[i].associate) != 'undefined') {
+            aWin = taskBar.items[i].associate;
+            break;
+          }
+        }
+
+        if (aWin != null)
+          aWin.viewState = Ext.view.ViewState.NORMAL;
+        return true;
+      }
     },
     beforeclose: function(win, eOpts) {
       var taskBar = Ext.getCmp('maintaskbar');
@@ -58,8 +68,21 @@ Ext.define('MainApp.view.Window', {
     },
     beforeshow: function(win, op) {
       var taskBar = Ext.getCmp('maintaskbar');
-      if (taskBar)
-        taskBar.addButton(win);
+      // check to see if the window exists.  Show if it is, otherwise add new button.
+      if (taskBar) {
+        var aWin = null;
+        for(var i=0;i<taskBar.items.length;i++) {
+          if (typeof (taskBar.items.getAt(i).associate) != 'undefined') {
+            aWin = taskBar.items.getAt(i).associate;
+            break;
+          }
+        }
+
+        if (aWin != null)
+          aWin.viewState = Ext.view.ViewState.NORMAL;
+        else
+          taskBar.addButton(win);
+      }
       return true;
     },
     beforedestroy: function (win, op) {
