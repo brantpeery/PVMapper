@@ -38,32 +38,30 @@ module pvMapper {
 
         //Events that fire when appropriate
         //The select/change events are fired when the feature changes. They are fired by the site manager
-        public selectEvent: pvMapper.Event = new pvMapper.Event();
+        //public selectEvent: pvMapper.Event = new pvMapper.Event();
         public changeEvent: pvMapper.Event = new pvMapper.Event();
-        public destroyEvent: pvMapper.Event = new pvMapper.Event();
-        public labelChangeEvent: pvMapper.Event = new pvMapper.Event();
-        public unselectEvent: pvMapper.Event = new pvMapper.Event();
+        //public destroyEvent: pvMapper.Event = new pvMapper.Event();
+        //public labelChangeEvent: pvMapper.Event = new pvMapper.Event();
+        //public unselectEvent: pvMapper.Event = new pvMapper.Event();
 
-        public onFeatureSelected(event: any) {
+        //public onFeatureSelected(event: any) {
+        //    this.selectEvent.fire(this.self, event);
+        //};
 
-            this.selectEvent.fire(this.self, event);
-        };
+        //public onFeatureChange(event: any) {
+        //    ///TODO: update the event object to reflect THIS event, add in a sub event that refers to the original event object.
+        //    this.changeEvent.fire(this.self, event);
+        //}
 
-        public onFeatureChange(event: any) {
+        //public onFeatureUnselected(event: any) {
+        //    this.unselectEvent.fire(this.self, event);
+        //}
 
-            ///TODO: update the event object to reflect THIS event, add in a sub event that refers to the original event object.
-            this.changeEvent.fire(this.self, event);
-        }
+        //public destroy() {
 
-        public onFeatureUnselected(event: any) {
-            this.unselectEvent.fire(this.self, event);
-        }
-
-        public destroy() {
-
-            var event = {};
-            this.destroyEvent.fire(this.self, event);
-        }
+        //    var event = {};
+        //    this.destroyEvent.fire(this.self, event);
+        //}
     }
 }
 

@@ -12,11 +12,8 @@ var pvMapper;
             //The short description in HTML that will show as a tooltip or popup bubble
             //Events that fire when appropriate
             //The select/change events are fired when the feature changes. They are fired by the site manager
-            this.selectEvent = new pvMapper.Event();
+            //public selectEvent: pvMapper.Event = new pvMapper.Event();
             this.changeEvent = new pvMapper.Event();
-            this.destroyEvent = new pvMapper.Event();
-            this.labelChangeEvent = new pvMapper.Event();
-            this.unselectEvent = new pvMapper.Event();
             //if (!feature instanceof(OpenLayers.Feature))
             //  throw ('The parameter "feature" must be an OpenLayers.Feature');
             this.self = this;
@@ -27,22 +24,24 @@ var pvMapper;
             this.name = feature.attributes.name;
             this.description = feature.attributes.description;
         }
-        Site.prototype.onFeatureSelected = function (event) {
-            this.selectEvent.fire(this.self, event);
-        };
-        Site.prototype.onFeatureChange = function (event) {
-            ///TODO: update the event object to reflect THIS event, add in a sub event that refers to the original event object.
-            this.changeEvent.fire(this.self, event);
-        };
-        Site.prototype.onFeatureUnselected = function (event) {
-            this.unselectEvent.fire(this.self, event);
-        };
-        Site.prototype.destroy = function () {
-            var event = {
-            };
-            this.destroyEvent.fire(this.self, event);
-        };
         return Site;
     })();
     pvMapper.Site = Site;    
-})(pvMapper || (pvMapper = {}));
+    //public destroyEvent: pvMapper.Event = new pvMapper.Event();
+    //public labelChangeEvent: pvMapper.Event = new pvMapper.Event();
+    //public unselectEvent: pvMapper.Event = new pvMapper.Event();
+    //public onFeatureSelected(event: any) {
+    //    this.selectEvent.fire(this.self, event);
+    //};
+    //public onFeatureChange(event: any) {
+    //    ///TODO: update the event object to reflect THIS event, add in a sub event that refers to the original event object.
+    //    this.changeEvent.fire(this.self, event);
+    //}
+    //public onFeatureUnselected(event: any) {
+    //    this.unselectEvent.fire(this.self, event);
+    //}
+    //public destroy() {
+    //    var event = {};
+    //    this.destroyEvent.fire(this.self, event);
+    //}
+    })(pvMapper || (pvMapper = {}));

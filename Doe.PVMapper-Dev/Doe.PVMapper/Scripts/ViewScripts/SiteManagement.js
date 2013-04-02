@@ -32,10 +32,21 @@ pvMapper.onReady(function () {
                 function (result) {
                     if (result === 'yes') {
                         var feature = pvMapper.siteLayer.selectedFeatures[0];
-
+                        // unselect feature first (at present, this causes a PUT to the database)
                         editAction.control.selectControl.unselect(feature);
-                        pvMapper.deleteSite(feature.fid);
-                        feature.destroy();
+                        // try to delete feature
+                        pvMapper.deleteSite(feature.fid)
+                            .done(function () {
+                                // if we've deleted the feature from the database, let's delete it from BOTH local collections (?!?)
+                                //TODO: This should happen automagically - ie the local collection should be tied into the database
+                                //TODO: we should combine our siteManager with our OpenLayers feature collection - they both store sites, and that's absurd.
+                                pvMapper.siteManager.removeSiteById(feature.fid);
+                                feature.destroy();
+                            })
+                            .fail(function () {
+                                console.lot('failed to delete site');
+                            });
+                        // all done
                     }
                 });
             }
@@ -56,7 +67,9 @@ pvMapper.onReady(function () {
         text: 'Edit Site',
         tooltip: "Edit the shape of a site",
         control: sm.modifyFeatureControl(function (data) {
-            sm.editSite(data.feature);
+            if (data.modified) {
+                sm.editSite(data.feature);
+            }
         }),
         map: pvMapper.map,
         enableToggle: false,

@@ -12,13 +12,13 @@ describe("Site", function () {
     it("can be created", function () {
         expect(site).toBeDefined();
     });
-    it("can fire select event", function () {
-        var fn = jasmine.createSpy();
-        site.selectEvent.addHandler(fn);
+    //it("can fire select event", function () {
+    //    var fn = jasmine.createSpy();
+    //    site.selectEvent.addHandler(fn);
 
-        site.onFeatureSelected(this, {});
-        expect(fn).toHaveBeenCalled();
-    });
+    //    site.onFeatureSelected(this, {});
+    //    expect(fn).toHaveBeenCalled();
+    //});
     xit("can fire destroy event", function () {
         var fn = jasmine.createSpy();
         site.destroyEvent.addHandler(fn);
@@ -33,11 +33,11 @@ describe("Site", function () {
         //Do something that would change the label;
         expect(fn).toHaveBeenCalled();
     });
-    it("can fire unselect event", function () {
-        var fn = jasmine.createSpy();
-        site.unselectEvent.addHandler(fn);
+    //it("can fire unselect event", function () {
+    //    var fn = jasmine.createSpy();
+    //    site.unselectEvent.addHandler(fn);
 
-        site.onFeatureUnselected(this, {});
-        expect(fn).toHaveBeenCalled();
-    });
+    //    site.onFeatureUnselected(this, {});
+    //    expect(fn).toHaveBeenCalled();
+    //});
 });
