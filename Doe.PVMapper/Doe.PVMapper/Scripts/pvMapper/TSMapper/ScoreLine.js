@@ -41,7 +41,9 @@ var pvMapper;
                 console.log("Siteadded event detected in scoreline" + name);
                 _this.addScore(event);
             });
-            pvMapper.siteManager.siteRemoved.addHandler(this.onSiteRemove);
+            pvMapper.siteManager.siteRemoved.addHandler(function (site) {
+                _this.onSiteRemove(site);
+            });
             //Set default scoreUtilityOptions object if none was provided
             if(options.scoreUtilityOptions == undefined) {
                 options.scoreUtilityOptions = {
@@ -55,7 +57,7 @@ var pvMapper;
                             }
             this.scoreUtility = new pvMapper.ScoreUtility(options.scoreUtilityOptions);
             //Set the default weight of the tool
-            this.weight = (typeof options.defaultWeight === "undefined") ? 10 : options.defaultWeight;
+            this.weight = (typeof options.defaultWeight === "number") ? options.defaultWeight : 10;
             this.loadAllSites();
         }
         ScoreLine.prototype.getUtilityScore = function (x) {
@@ -88,23 +90,24 @@ var pvMapper;
             }
             return score;
         };
-        ScoreLine.prototype.removeScore = function (score) {
-            // remove site from scoreline.
-                    };
-        ScoreLine.prototype.updateScores = function (site) {
-        };
         ScoreLine.prototype.loadAllSites = function () {
             var allSites = pvMapper.siteManager.getSites();
             $.each(allSites, function (idx, site) {
                 this.addScore(site);
             });
         };
-        ScoreLine.prototype.onSiteRemove = ///TODO: get this to work using a score not a site
-        function (event) {
+        ScoreLine.prototype.onSiteRemove = function (site) {
             console.log('Attempting to remove a site/score from the scoreline');
-            if(event.data instanceof pvMapper.Site) {
-                //remove the reference to the site.
-                this.self.removeScore(event.data);
+            for(var i = 0; i < this.scores.length; i++) {
+                var score = this.scores[i];
+                if(score.site == site) {
+                    // remove site from scoreline.
+                    score.siteChangeEvent.removeHandler(this.onSiteChangeHandler);
+                    score.valueChangeEvent.removeHandler(this.valueChangeHandler);
+                    this.scores.splice(i, 1);
+                    this.scoreChangeEvent.fire(self, undefined);
+                    break;
+                }
             }
         };
         return ScoreLine;

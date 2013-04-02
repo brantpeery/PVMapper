@@ -63,7 +63,7 @@ module pvMapper {
 
         // fancy events for tracking changes
         public valueChangeEvent: pvMapper.Event = new pvMapper.Event();
-        public invalidateEvent: pvMapper.Event = new pvMapper.Event();
+        //public invalidateEvent: pvMapper.Event = new pvMapper.Event();
         public siteChangeEvent: pvMapper.Event = new pvMapper.Event();
 
         //Sets the utility value for the score. Fires the utilityChanged event

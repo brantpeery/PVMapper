@@ -28,9 +28,6 @@ var pvMapper;
             this.scoreLines.push(scoreline);
             //this.changedEvent.fire(this,null);
                     };
-        ScoreBoard.prototype.removeLine = function (idx) {
-            throw ('Function not yet implemented');
-        };
         ScoreBoard.prototype.getTableData = //public render() {
         //    //console.log('Rendering the scorboard');
         //    var r = new Renderer.HTML.Table();
