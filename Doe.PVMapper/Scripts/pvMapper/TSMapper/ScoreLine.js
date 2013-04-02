@@ -14,7 +14,7 @@ var pvMapper;
         function ScoreLine(options) {
             var _this = this;
             this.scores = new Array();
-            this.updateScore = options.updateScoreCallback;
+            //public updateScore: ICallback = options.updateScoreCallback;
             this.active = true;
             this.scoreAddedEvent = new pvMapper.Event();
             this.scoreChangeEvent = new pvMapper.Event();
@@ -84,8 +84,9 @@ var pvMapper;
             //this.self.scoreAddedEvent.fire(score, [{ score: score, site: site }, score]);
             //Set the initial value from the tool
             try  {
-                this.updateScore(score);
-            } catch (ex) {
+                this.onSiteChangeHandler(undefined, score);
+                //this.updateScore(score);
+                            } catch (ex) {
                 console.log(ex);
             }
             return score;

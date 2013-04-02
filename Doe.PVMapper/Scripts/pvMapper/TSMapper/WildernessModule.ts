@@ -29,7 +29,6 @@ module BYUModules {
                     category: "Land Use",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { },
-                    updateScoreCallback: (score: pvMapper.Score) => { },
                 }],
                 infoTools: null
             });

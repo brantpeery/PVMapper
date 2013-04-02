@@ -35,11 +35,6 @@ var INLModules;
                         },
                         onSiteChange: function (e, score) {
                             updateScore(score);
-                            //s.updateValue(status.toString());
-                                                    },
-                        updateScoreCallback: function (score) {
-                            //var status = getFeatureInfo(site);
-                            updateScore(score);
                         },
                         scoreUtilityOptions: // having any nearby line is much better than having no nearby line, so let's reflect that.
                         {
