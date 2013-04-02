@@ -32,8 +32,6 @@ var BYUModules;
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
-                        },
-                        updateScoreCallback: function (score) {
                         }
                     }
                 ],

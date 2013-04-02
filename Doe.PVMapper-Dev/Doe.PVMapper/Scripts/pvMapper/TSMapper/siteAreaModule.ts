@@ -37,13 +37,6 @@ module INLModules {
                         score.popupMessage = area.toFixed(3) + " km2";
                         score.updateValue(area);
                     },
-                    updateScoreCallback: (score: pvMapper.Score) => {
-                        var area = calculateSiteArea(score.site);
-                        console.log("Calulated area of " + area + " Returning value");
-
-                        score.popupMessage = area.toFixed(3) + " km2";
-                        score.updateValue(area);
-                    },
                     
                     //TODO: we have no idea what their ideal size is... we don't even know if more is better or worse. damn.
                     // for now, this is a constant value (always returns the max, why not)

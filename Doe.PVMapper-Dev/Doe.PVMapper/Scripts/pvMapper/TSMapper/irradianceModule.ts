@@ -36,9 +36,6 @@ module INLModules {
                     onSiteChange: function (e, score: pvMapper.Score) {
                         updateScoreFromLayer(score, "swera:dni_suny_high_900913");
                     },
-                    updateScoreCallback: (score: pvMapper.Score) => {
-                        updateScoreFromLayer(score, "swera:dni_suny_high_900913");
-                    },
 
                     scoreUtilityOptions: <pvMapper.IMinMaxUtilityOptions>{
                         functionName: "linear",
@@ -58,9 +55,6 @@ module INLModules {
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, score: pvMapper.Score) {
-                        updateScoreFromLayer(score, "swera:ghi_suny_high_900913");
-                    },
-                    updateScoreCallback: (score: pvMapper.Score) => {
                         updateScoreFromLayer(score, "swera:ghi_suny_high_900913");
                     },
 

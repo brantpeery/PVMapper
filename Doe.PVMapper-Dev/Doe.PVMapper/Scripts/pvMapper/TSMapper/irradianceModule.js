@@ -34,9 +34,6 @@ var INLModules;
                         onSiteChange: function (e, score) {
                             updateScoreFromLayer(score, "swera:dni_suny_high_900913");
                         },
-                        updateScoreCallback: function (score) {
-                            updateScoreFromLayer(score, "swera:dni_suny_high_900913");
-                        },
                         scoreUtilityOptions: {
                             functionName: "linear",
                             minValue: 0,
@@ -55,9 +52,6 @@ var INLModules;
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {
-                            updateScoreFromLayer(score, "swera:ghi_suny_high_900913");
-                        },
-                        updateScoreCallback: function (score) {
                             updateScoreFromLayer(score, "swera:ghi_suny_high_900913");
                         },
                         scoreUtilityOptions: {

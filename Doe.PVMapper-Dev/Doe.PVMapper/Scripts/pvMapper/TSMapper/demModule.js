@@ -35,11 +35,7 @@ var BYUModules;
                         onSiteChange: function (event, score) {
                             updateScore(score, "any:3", "degrees");
                         },
-                        updateScoreCallback: //TODO: is this degrees?
-                        function (score) {
-                            updateScore(score, "any:3", "degrees");
-                        },
-                        scoreUtilityOptions: // or maybe it's grade?
+                        scoreUtilityOptions: //TODO: is this degrees? or maybe it's grade?
                         //TODO: The utility of slope only makes sense in the context of aspect - merge these two metrics
                         // for now, flatter is better...?
                         {
@@ -62,11 +58,7 @@ var BYUModules;
                         onSiteChange: function (event, score) {
                             updateScore(score, "any:4", "degrees");
                         },
-                        updateScoreCallback: //TODO: is this degrees?
-                        function (score) {
-                            updateScore(score, "any:4", "degrees");
-                        },
-                        scoreUtilityOptions: // it's not radian.
+                        scoreUtilityOptions: //TODO: is this degrees? it's not radian.
                         //TODO: should we translate the aspect score into a "degrees away from south" score, or something?
                         //      I assume that south is the best...
                         //TODO: The utility of aspect only makes sense in the context of slope - merge these two metrics
@@ -99,9 +91,6 @@ var BYUModules;
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
-                            updateScore(score, "any:1", "m");
-                        },
-                        updateScoreCallback: function (score) {
                             updateScore(score, "any:1", "m");
                         },
                         scoreUtilityOptions: //Note: I have no idea why, but the server will not find the correct layer if we don't include "any:"

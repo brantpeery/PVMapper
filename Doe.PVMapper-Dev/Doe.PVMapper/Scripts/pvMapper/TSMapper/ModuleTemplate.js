@@ -29,8 +29,6 @@ var Modules;
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
-                        },
-                        updateScoreCallback: function (score) {
                         }
                     }
                 ],

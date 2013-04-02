@@ -81,6 +81,11 @@ module pvMapper {
                 console.log("The feature was not a site");
             }
         }
+
+        //TODO: add event handlers for feature added and feature removed here - it's rather important!
+        //      will move this responsability out of SiteManagement.js and AddNewSite.js
+        //TODO: also, make this class the sole source responsible for calling the server-side site api
+
     }
     //instantiate siteManager object.
     export var siteManager: SiteManager = new SiteManager();

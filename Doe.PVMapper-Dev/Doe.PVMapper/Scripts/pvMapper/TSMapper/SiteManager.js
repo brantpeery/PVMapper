@@ -76,6 +76,9 @@ var pvMapper;
         return SiteManager;
     })();
     pvMapper.SiteManager = SiteManager;    
+    //TODO: add event handlers for feature added and feature removed here - it's rather important!
+    //      will move this responsability out of SiteManagement.js and AddNewSite.js
+    //TODO: also, make this class the sole source responsible for calling the server-side site api
     //instantiate siteManager object.
     pvMapper.siteManager = new SiteManager();
 })(pvMapper || (pvMapper = {}));

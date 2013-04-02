@@ -35,10 +35,6 @@ var INLModules;
                             identifyFeature(score);
                             //s.updateValue(status.toString());
                                                     },
-                        updateScoreCallback: function (score) {
-                            //var status = getFeatureInfo(site);
-                            identifyFeature(score);
-                        },
                         scoreUtilityOptions: // for now, no land management agencies is best, any one is bad, and multiple are worse
                         {
                             functionName: "linear3pt",
