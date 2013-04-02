@@ -42,7 +42,10 @@ module pvMapper {
 
                 this.addScore(event);
             });
-            siteManager.siteRemoved.addHandler(this.onSiteRemove);
+
+            siteManager.siteRemoved.addHandler((site: Site) => {
+                this.onSiteRemove(site);
+            });
 
             //Set default scoreUtilityOptions object if none was provided
             if (options.scoreUtilityOptions == undefined) {
@@ -58,7 +61,7 @@ module pvMapper {
             this.scoreUtility = new ScoreUtility(options.scoreUtilityOptions);
 
             //Set the default weight of the tool
-            this.weight = (typeof options.defaultWeight === "undefined") ? 10 : options.defaultWeight;
+            this.weight = (typeof options.defaultWeight === "number") ? options.defaultWeight : 10;
 
             this.loadAllSites();
         };
@@ -106,15 +109,19 @@ module pvMapper {
             return score;
         }
 
-        public removeScore(score: Score) {
-            // remove site from scoreline.
+        //public removeScore(score: Score) {
+        //    // remove site from scoreline.
+        //    score.siteChangeEvent.removeHandler(this.onSiteChangeHandler);
+        //    score.valueChangeEvent.removeHandler(this.valueChangeHandler);
+        //    var idx: number = this.scores.indexOf(score);
+        //    if (idx >= 0) {
+        //        this.scores.splice(idx, 1);
+        //    }
+        //}
 
+        //public updateScores(site: Site) {
 
-        }
-
-        public updateScores(site: Site) {
-
-        }
+        //}
 
         public valueChangeHandler: ICallback;
 
@@ -128,14 +135,19 @@ module pvMapper {
             });
         }
 
-
-        ///TODO: get this to work using a score not a site
-        private onSiteRemove(event: EventArg) {
+        private onSiteRemove(site: Site) {
             console.log('Attempting to remove a site/score from the scoreline')
-            if (event.data instanceof Site)
-                //remove the reference to the site.
-                this.self.removeScore(event.data);
-
+            for (var i = 0; i < this.scores.length; i++) {
+                var score: Score = this.scores[i];
+                if (score.site == site) {
+                    // remove site from scoreline.
+                    score.siteChangeEvent.removeHandler(this.onSiteChangeHandler);
+                    score.valueChangeEvent.removeHandler(this.valueChangeHandler);
+                    this.scores.splice(i, 1);
+                    this.scoreChangeEvent.fire(self, undefined);
+                    break;
+                }
+            }
         }
 
         //private onSiteAdded = 

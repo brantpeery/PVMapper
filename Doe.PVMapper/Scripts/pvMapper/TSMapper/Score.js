@@ -22,7 +22,7 @@ var pvMapper;
             var _this = this;
             // fancy events for tracking changes
             this.valueChangeEvent = new pvMapper.Event();
-            this.invalidateEvent = new pvMapper.Event();
+            //public invalidateEvent: pvMapper.Event = new pvMapper.Event();
             this.siteChangeEvent = new pvMapper.Event();
             this.self = this;
             //this.parent; //Assign the parent so that we can use the scoring functions

@@ -42,10 +42,6 @@ module pvMapper {
 
         public onScoreChanged: (event: Event) => void;
 
-        public removeLine(idx: number) {
-            throw ('Function not yet implemented');
-        }
-
         //public render() {
         //    //console.log('Rendering the scorboard');
         //    var r = new Renderer.HTML.Table();

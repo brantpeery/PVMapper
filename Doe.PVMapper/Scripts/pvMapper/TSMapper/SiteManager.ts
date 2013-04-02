@@ -32,14 +32,34 @@ module pvMapper {
         /**
         Removes a site from the sites array.
         */
-        public removeSite(site) {
+        public removeSite(site: pvMapper.Site) {
             //find the site
-            var idx: number = this.sites.lastIndexOf(site);
+            var idx: number = this.sites.indexOf(site);
             if (idx !== -1) {
                 this.sites.splice(idx, 1);
+                this.siteRemoved.fire(undefined, site);
+                //site.destroy();
             }
         }
 
+        /**
+        Removes a site from the sites array.
+        */
+        public removeSiteById(siteId: number)
+        {
+            var i: number;
+            for (i = 0; i < this.sites.length; i++)
+            {
+                if (this.sites[i].id == siteId)
+                    break;
+            }
+            
+            if (i < this.sites.length)
+            {
+                var site = this.sites.splice(i, 1)[0];
+                this.siteRemoved.fire(undefined, site);
+            }
+        }
 
         /**
         handles the change event for the features on the sitelayer. will fire the sites change event if the 
