@@ -61,14 +61,14 @@ var pvMapper;
             }
             return $.ajax("/api/ProjectSite", {
                 data: data,
-                type: "PUT",
-                done: function () {
-                    //pvMapper.displayMessage("The site changes were saved","Info");
-                                    },
-                fail: function () {
-                    //pvMapper.displayMessage("Unable to save the changes to the site. There was an error communicating with the database.","Warning");
-                                    }
+                type: "PUT"
             });
+            //done: function () {
+            //    pvMapper.displayMessage("The site changes were saved","Info");
+            //  },
+            //  fail: function () {
+            //    pvMapper.displayMessage("Unable to save the changes to the site. There was an error communicating with the database.","Warning");
+            //  }
             //pvMapper.displayMessage("The site has been updated.","Info");
                     };
         dataManager.prototype.deleteSite = //Deletes a site from the datastore
@@ -76,16 +76,16 @@ var pvMapper;
             return $.ajax("/api/ProjectSite/" + siteId, {
                 data: {
                     Id: siteId,
-                    type: "DELETE",
-                    done: function () {
-                        //pvMapper.displayMessage("The site was deleted from the database.", "Warning");
-                                            },
-                    fail: function () {
-                        //pvMapper.displayMessage("Unable to delete the site. There was an error communicating with the database.", "warning");
-                                            }
+                    type: "DELETE"
                 }
             });
-        };
+            //done: function () {
+            //  pvMapper.displayMessage("The site was deleted from the database.", "Warning");
+            //},
+            //fail: function () {
+            //  pvMapper.displayMessage("Unable to delete the site. There was an error communicating with the database.", "warning");
+            //}
+                    };
         return dataManager;
     })();
     pvMapper.dataManager = dataManager;    

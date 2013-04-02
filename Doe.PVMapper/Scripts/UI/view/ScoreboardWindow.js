@@ -167,9 +167,10 @@ toolsStore.on({
                         return average;
                     },
                     summaryRenderer: function (value) {
-                        var c = getColor(value);
-                        return '<span style="border-radius: 3px; background-color:' + c + '">&nbsp' + value.toFixed(0) + '&nbsp</span>'; //font-weight: bold; 
-
+                        if (typeof value === "number") {
+                            var c = getColor(value);
+                            return '<span style="border-radius: 3px; background-color:' + c + '">&nbsp' + value.toFixed(0) + '&nbsp</span>'; //font-weight: bold; 
+                        }
                     },
                 }]
             });
