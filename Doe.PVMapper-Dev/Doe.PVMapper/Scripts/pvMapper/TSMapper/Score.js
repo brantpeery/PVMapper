@@ -4,7 +4,6 @@ var pvMapper;
         function Score(site) {
             var _this = this;
             this.valueChangeEvent = new pvMapper.Event();
-            //public invalidateEvent: pvMapper.Event = new pvMapper.Event();
             this.siteChangeEvent = new pvMapper.Event();
             this.self = this;
             this.value = Number.NaN;
@@ -20,16 +19,12 @@ var pvMapper;
                 ]);
             });
         }
-        Score.prototype.setUtility = //Sets the utility value for the score. Fires the utilityChanged event
-        function (value) {
+        Score.prototype.setUtility = function (value) {
             this.utility = value;
-            //TODO: fire some kind of utilityChangedEvent, or somehting?
-                    };
+        };
         Score.prototype.updateValue = function (value) {
             var oldvalue = this.value;
             this.value = value;
-            //TODO: pvMapper.displayMessage(this.value,"Info");
-            //fire the value updated event
             this.valueChangeEvent.fire(this.self, {
                 score: this.self,
                 oldValue: oldvalue,
@@ -42,10 +37,10 @@ var pvMapper;
                 return this.popupMessage;
             } else {
                 if(typeof this.value !== "undefined" && !isNaN(this.value)) {
-                return this.value.toString();
-            } else {
-                return "No value";
-            }
+                    return this.value.toString();
+                } else {
+                    return "No value";
+                }
             }
         };
         return Score;

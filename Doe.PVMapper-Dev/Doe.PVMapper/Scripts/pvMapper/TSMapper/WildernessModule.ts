@@ -6,7 +6,7 @@
 /// <reference path="Module.ts" />
 
 module BYUModules {
-    class WildernessModule {
+    export class WildernessModule {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module({
                 id: "WildernessModule",
@@ -29,6 +29,7 @@ module BYUModules {
                     category: "Land Use",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { },
+                    scoreUtilityOptions: null
                 }],
                 infoTools: null
             });
@@ -40,6 +41,14 @@ module BYUModules {
     var wildernessLayer;
     
     function addMap() {
+        wildernessLayer = OpenLayers.Layer.WMS(
+                "Wilderness Areas",
+                "https://geoserver.byu.edu/geoserver/wms?",
+                {
+                    
+                }
+                { isBaseLayer: false }
+            );
         //...
         //pvMapper.map.addLayer(wildernessLayer);
     }
