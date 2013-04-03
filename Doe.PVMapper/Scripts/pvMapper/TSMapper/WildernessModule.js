@@ -1,9 +1,3 @@
-/// <reference path="pvMapper.ts" />
-/// <reference path="Site.ts" />
-/// <reference path="Score.ts" />
-/// <reference path="Tools.ts" />
-/// <reference path="Options.d.ts" />
-/// <reference path="Module.ts" />
 var BYUModules;
 (function (BYUModules) {
     var WildernessModule = (function () {
@@ -44,22 +38,38 @@ var BYUModules;
     var WildernessMapUrl = "";
     var wildernessLayer;
     function addMap() {
-        //...
-        pvMapper.map.addLayer(wildernessLayer);
     }
     function removeMap() {
-        //pvMapper.map.removeLayer(wildernessLayer, false);
-            }
+    }
     function updateScore(score, layers, description) {
-        var params = "";
+        var params = {
+            service: "WCS",
+            version: "1.1.1",
+            request: "GetCoverage",
+            layers: "PVMapper:wilderness_areas"
+        };
         var request = OpenLayers.Request.GET({
-            url: "",
+            url: "https://geoserver.byu.edu/geoserver/wcs?",
             proxy: "/Proxy/proxy.ashx?",
             params: params,
             callback: function (response) {
                 if(response.status == 200) {
                     var esriJsonParser = new OpenLayers.Format.JSON();
                     esriJsonParser.extractAttributes = true;
+                    var parsedResponse = esriJsonParser.read(response.responseText);
+                    if(parsedResponse && parsedResponse.results) {
+                        if(parsedResponse.results.length > 0) {
+                            console.assert(parsedResponse.results.length === 1, "I expected that the server would only return identify" + " results for the single pixel at the center of a site. Something went wrong.");
+                            score.popupMessage = parsedResponse.results[0].value + " " + description;
+                            score.updateValue(parseFloat(parsedResponse.results[0].value));
+                        } else {
+                            score.popupMessage = "No data for this site";
+                            score.updateValue(Number.NaN);
+                        }
+                    } else {
+                        score.popupMessage = "Parse error";
+                        score.updateValue(Number.NaN);
+                    }
                 } else {
                     score.popupMessage = "Error " + response.status;
                     score.updateValue(Number.NaN);

@@ -18,13 +18,14 @@ var pvMapper;
             s = s * Math.max(2 / (b - l), 2 / (h - b));
             var y = 0;//The return variable
             
-            if(x >= h) {
-                y = 0;
-            } else if(x <= l) {
-                y = 1;
+                    if(x >= h) {
+                        y = 0;
             } else {
-                y = (x < b) ? 1 / (1 + Math.pow((b - l) / (x - l), (2 * s * (b + x - 2 * l)))) : 1 - (1 / (1 + Math.pow((b - (2 * b - h)) / ((2 * b - x) - (2 * b - h)), (2 * s * (b + (2 * b - x) - 2 * (2 * b - h))))));
-            }
+                if(x <= l) {
+                        y = 1;
+                    } else {
+                        y = (x < b) ? 1 / (1 + Math.pow((b - l) / (x - l), (2 * s * (b + x - 2 * l)))) : 1 - (1 / (1 + Math.pow((b - (2 * b - h)) / ((2 * b - x) - (2 * b - h)), (2 * s * (b + (2 * b - x) - 2 * (2 * b - h))))));
+                    }
             //Note: clamping this value to the range 0-1 is handled by the run(x) function
             //if (y >= 1) y = 1;
             //if (y <= 0) y = 0;
@@ -45,7 +46,7 @@ var pvMapper;
                 return args.p1.y + ((args.p2.y - args.p1.y) * (x - args.p1.x) / (args.p2.x - args.p1.x));
             } else {
                 return args.p2.y;
-            }
+                    }
         };
         UtilityFunctions.random = function random() {
             return Math.random();
