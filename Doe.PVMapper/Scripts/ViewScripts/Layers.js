@@ -98,84 +98,55 @@ pvMapper.onReady(function () {
     //when a label is applied, the engine draws it incorrectly
     //For this reason the style is defined here, but used only when a 
     //feature is added
-    var commonStyleMap = new OpenLayers.StyleMap({
-        'default': {
-            strokeColor: "#00FF00",
-            strokeOpacity: 1,
-            strokeWidth: 3,
-            fillColor: "#FF5500",
-            fillOpacity: 0.5,
-            pointRadius: 6,
-            pointerEvents: "visiblePainted",
-            fontColor: "blue",
-            fontSize: "12px",
-            fontFamily: "Courier New, monospace",
-            fontWeight: "bold",
-            labelAlign: "cm",
-            labelOutlineColor: "white",
-            labelOutlineWidth: 1,
-            label: "${name}"
-        },
-        "select": new OpenLayers.Style(null, {
-            rules: [
-            new OpenLayers.Rule({
-                symbolizer: {
-                    "Point": {
-                        pointRadius: 5,
-                        graphicName: "square",
-                        fillColor: "white",
-                        fillOpacity: 0.25,
-                        strokeWidth: 2,
-                        strokeOpacity: 1,
-                        strokeColor: "#0000ff",
-                        label:null
-                    },
-                    "Line": {
-                        strokeWidth: 3,
-                        strokeOpacity: 1,
-                        strokeColor: "#0000ff"
-                    },
-                    "Polygon": {
-                        strokeWidth: 2,
-                        strokeOpacity: 1,
-                        fillColor: "#0000ff",
-                        strokeColor: "#0000ff"
-                    }
-                }
-            })
-            ]
+
+    var siteStyleMap = new OpenLayers.StyleMap();
+
+    siteStyleMap.styles.select.addRules([
+        new OpenLayers.Rule({
+            symbolizer: {
+                "Point": {
+                    pointRadius: 5,
+                    fillOpacity: 0.25,
+                    fillColor: "white",
+                },
+            }
         }),
-        "temporary": new OpenLayers.Style(null, {
-            rules: [
-            new OpenLayers.Rule({
-                symbolizer: {
-                    "Point": {
-                        graphicName: "square",
-                        pointRadius: 5,
-                        fillColor: "white",
-                        fillOpacity: 0.25,
-                        strokeWidth: 2,
-                        strokeColor: "#0077ff",
-                        label: null
-                    },
-                    "Line": {
-                        strokeWidth: 3,
-                        strokeOpacity: 1,
-                        strokeColor: "#0077ff"
-                    },
-                    "Polygon": {
-                        strokeWidth: 2,
-                        strokeOpacity: 1,
-                        strokeColor: "#0077ff",
-                        fillColor: "#0077ff"
-                    }
+    ]);
+
+    siteStyleMap.styles.default.addRules([
+        new OpenLayers.Rule({
+            symbolizer: {
+                "Polygon": {
+                    fontSize: "14px",
+                    label: "${name}",
+                    labelOutlineColor: "#fab715",
+                    strokeWidth: 2,
                 }
-            })
-            ]
-        })
-    }); 
-    
-    pvMapper.siteLayer.styleMap = commonStyleMap;
+            }
+        }),
+    ]);
+
+    siteStyleMap.styles.default.addRules([
+        new OpenLayers.Rule({
+            filter: new OpenLayers.Filter.Comparison({
+                //Note: just leaving this filter here to ensure that we don't recolor sites which don't have a valid score
+                type: OpenLayers.Filter.Comparison.BETWEEN,
+                property: "overallScore",
+                lowerBoundary: 0,
+                upperBoundary: 100,
+            }),
+            symbolizer: {
+                //"Polygon": {
+                    // wow... that was easy
+                    fillColor: "${fillColor}",
+                    labelOutlineColor: "${fillColor}",
+                //}
+            }
+        }),
+    ]);
+
+    pvMapper.siteLayer.styleMap = siteStyleMap;
+
     pvMapper.map.addLayer(pvMapper.siteLayer);
 
     // set up site selection and highlighting controls
