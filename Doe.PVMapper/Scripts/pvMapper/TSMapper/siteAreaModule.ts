@@ -30,9 +30,9 @@ module INLModules {
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, score: pvMapper.Score) {
-                        console.log("Site change detected in tool Gross Area. Updating the value.");
+                        if (console) console.log("Site change detected in tool Gross Area. Updating the value.");
                         var area = calculateSiteArea(score.site);
-                        console.log("Calulated area of " + area + ". Setting the value on the score");
+                        if (console) console.log("Calulated area of " + area + ". Setting the value on the score");
                         
                         score.popupMessage = area.toFixed(3) + " km2";
                         score.updateValue(area);

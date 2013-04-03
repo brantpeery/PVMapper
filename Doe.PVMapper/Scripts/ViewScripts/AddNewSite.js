@@ -160,13 +160,13 @@ function addSite(map, layer) {
                             var newSite = new pvMapper.Site(feature);
                             pvMapper.siteManager.addSite(newSite);
 
-                            console.log('Added ' + newSite.name + ' to the site manager');
+                            if (console) console.log('Added ' + newSite.name + ' to the site manager');
 
                             //Redraw the feature with all the changes
                             feature.layer.drawFeature(feature);
                         })
                         .fail(function () {
-                            console.lot('failed to post site');
+                            if (console) console.log('failed to post site');
                             feature.destroy();
                         });
 

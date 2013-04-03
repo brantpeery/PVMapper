@@ -17,7 +17,7 @@ var app = Ext.application({
         Ext.Loader.setPath('GeoExt', "/Scripts/GeoExt");
         Ext.Loader.setPath( 'MainApp', '/Scripts/UI' );
 
-        console.log('launching application');
+        if (console) console.log('launching application');
 
         // set the theme for OpenLayers
         OpenLayers.ImgPath = "/Content/OpenLayers/default/img/";
@@ -84,7 +84,7 @@ var app = Ext.application({
         pvMapper.mapToolbar = Ext.ComponentQuery.query('#maintoolbar')[0];
         //Ext.ComponentQuery.query('#maincontent').add(mapPanel);
 
-        console.log('Signaling that the pvMapper object is ready to go');
+        if (console) console.log('Signaling that the pvMapper object is ready to go');
         pvMapper.readyEvent.fire();
     },
 });

@@ -38,7 +38,7 @@ module pvMapper {
             }
 
             siteManager.siteAdded.addHandler((event: Site) => {
-                console.log("Siteadded event detected in scoreline" + name);
+                if (console) console.log("Siteadded event detected in scoreline" + name);
 
                 this.addScore(event);
             });
@@ -105,7 +105,7 @@ module pvMapper {
                 this.onSiteChangeHandler(undefined, score);
                 //this.updateScore(score);
             } catch (ex) {
-                console.log(ex);
+                if (console) console.log(ex);
             }
             return score;
         }

@@ -3,7 +3,7 @@ var currentMenu = null;
 ( function ( pvM ) {
   //  var pieWin;
   pvM.onReady( function () {
-    console.log( 'Application ready state' );
+    if (console) console.log( 'Application ready state' );
 
     funcStore.load( {
       scope: this,

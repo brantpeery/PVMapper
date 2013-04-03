@@ -23,7 +23,7 @@ module pvMapper {
         }
 
         public createSite(feature: OpenLayers.SiteFeature) {
-            console.log("Creating site");
+            if (console) console.log("Creating site");
             var aSite = new Site(feature);
             this.sites.push(aSite);
             this.siteAdded.fire(aSite, feature);
@@ -68,17 +68,17 @@ module pvMapper {
         @See http://dev.openlayers.org/apidocs/files/OpenLayers/Layer/Vector-js.html#OpenLayers.Layer.Vector.events
         */
         public featureChangedHandler(event: any) {
-            console.log("Feature change detected by the site manager");
+            if (console) console.log("Feature change detected by the site manager");
             if (event.feature && event.feature.site) {
                // try {
                     event.feature.site.changeEvent.fire(event.feature.site, event);
-                    console.log("Fired the change event for site: " + event.feature.site.name);
+                    if (console) console.log("Fired the change event for site: " + event.feature.site.name);
             //    } catch (e) {
             //        console.log("An error occurred while trying to fire the feature change event for a site from the site manager");
             //        console.error(e);
             //    }
             } else {
-                console.log("The feature was not a site");
+                if (console) console.log("The feature was not a site");
             }
         }
 

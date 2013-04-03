@@ -56,7 +56,7 @@ var UtilityFunctions = {
   pvM.onReady( function () {
     pvMapper.functionWin = Ext.create( 'MainApp.view.FunctionWindow' );
     if ( typeof ( JXG ) == "undefined" ) {
-      console.log( "Loading in the JXG Graph script" );
+      if (console) console.log( "Loading in the JXG Graph script" );
       loadExternalCSS( "http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css" );
       $.getScript( "http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js", function () {
         loadBoard();
