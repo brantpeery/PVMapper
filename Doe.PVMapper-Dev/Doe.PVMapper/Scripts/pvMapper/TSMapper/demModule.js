@@ -166,7 +166,9 @@ var BYUModules;
                     var parsedResponse = esriJsonPerser.read(response.responseText);
                     if(parsedResponse && parsedResponse.results) {
                         if(parsedResponse.results.length > 0) {
-                            console.assert(parsedResponse.results.length === 1, "I expected that the server would only return identify" + " results for the single pixel at the center of a site; boy, was I ever wrong.");
+                            if(console) {
+                                console.assert(parsedResponse.results.length === 1, "I expected that the server would only return identify" + " results for the single pixel at the center of a site; boy, was I ever wrong.");
+                            }
                             score.popupMessage = parsedResponse.results[0].value + " " + description;
                             score.updateValue(parseFloat(parsedResponse.results[0].value));
                         } else {

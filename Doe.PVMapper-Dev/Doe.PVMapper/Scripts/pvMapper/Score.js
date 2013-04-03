@@ -40,7 +40,7 @@
         function onSiteChanged(event) {
             //Change the context, add this score to the event and pass the event on
             event.score = self;
-            /*debug*/console.log('The score ' + self.site.name + ' has detected a site change pvM.Event.Firing its own event now');
+            if (console) console.log('The score ' + self.site.name + ' has detected a site change pvM.Event.Firing its own event now');
             self.siteChangeEvent.fire(self, [event, self]);
         };
     };

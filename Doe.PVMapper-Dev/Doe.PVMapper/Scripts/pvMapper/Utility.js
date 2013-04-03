@@ -21,7 +21,9 @@ var UtilityFunctions = (function () {
     };
     UtilityFunctions.LessIsBetter = function LessIsBetter(x) {
         if(!currentConfig) {
-            console.log('No configuration setup.');
+            if(console) {
+                console.log('No configuration setup.');
+            }
             return 0;
         }
         var l = this.currentConfig.data.minValue;
@@ -48,7 +50,9 @@ var UtilityFunctions = (function () {
     };
     UtilityFunctions.NDBalance = function NDBalance(x, r) {
         if(!currentConfig) {
-            console.log('No configuration setup.');
+            if(console) {
+                console.log('No configuration setup.');
+            }
             return 0;
         }
         var u = this.currentConfig.data.target;

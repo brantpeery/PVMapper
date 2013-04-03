@@ -1,5 +1,13 @@
-﻿// This is a globally defined object that represents the client-side behaviors available through the PVMapper framework.
-console.log("Loading pvMapper object");
+﻿// define console, in case the browser won't (like IE9)
+if (typeof console === 'undefined') {
+    console = {};
+    console.log = function () { };
+    console.error = function () { };
+    console.assert = function () { };
+}
+
+// This is a globally defined object that represents the client-side behaviors available through the PVMapper framework.
+if (console) console.log("Loading pvMapper object");
 if ( typeof pvMapper == 'undefined' ) {
   this.pvMapper = {};
 }
@@ -110,7 +118,7 @@ if ( typeof pvMapper == 'undefined' ) {
 
     } ); //End the $.extend
 
-    console.log("pvMapper: " + pvMapper);
+    if (console) console.log("pvMapper: " + pvMapper);
 } )(pvMapper );
 
 

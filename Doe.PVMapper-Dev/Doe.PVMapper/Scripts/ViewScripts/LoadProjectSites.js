@@ -5,7 +5,7 @@
             var sitesLayer = pvMapper.getSiteLayer();
 
             for (var i = 0; i < sites.length; i++) {
-                console.log("Adding site " + sites[i].fid + " to the map");
+                if (console) console.log("Adding site " + sites[i].fid + " to the map");
 
                 var site = sites[i];
                 var poly = new OpenLayers.Format.WKT().read(site.polygonGeometry);
@@ -22,9 +22,9 @@
                     s = new pvMapper.Site(poly);
                     pvMapper.siteManager.addSite(s);
 
-                    console.log('Added ' + s.name + ' to the site manager');
+                    if (console) console.log('Added ' + s.name + ' to the site manager');
                 } else {
-                    console.log("Unable to add the site. Unable to create the openlayers feature");
+                    if (console) console.log("Unable to add the site. Unable to create the openlayers feature");
                 }
             }
 
