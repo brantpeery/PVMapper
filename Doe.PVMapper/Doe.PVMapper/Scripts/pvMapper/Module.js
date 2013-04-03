@@ -44,10 +44,10 @@
         this.scoringTools = {};
 
         if (settings["scoringTools"]) {
-            console.log("Loading scoring tools for module: " + this.id);
+            if (console) console.log("Loading scoring tools for module: " + this.id);
             $.each(settings["scoringTools"], function (idx, toolOptions) {
 
-                /*debug*/console.log('Adding a line for ' + toolOptions.title);
+                if (console) console.log('Adding a line for ' + toolOptions.title);
 
                 //TODO: Update this so it doesn't need a dependancy of pvM to contain a mainScoreboard object
                 var tool = new pvM.ScoreLine(toolOptions);

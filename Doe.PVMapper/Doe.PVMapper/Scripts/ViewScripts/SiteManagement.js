@@ -44,7 +44,7 @@ pvMapper.onReady(function () {
                                 feature.destroy();
                             })
                             .fail(function () {
-                                console.lot('failed to delete site');
+                                if (console) console.log('failed to delete site');
                             });
                         // all done
                     }

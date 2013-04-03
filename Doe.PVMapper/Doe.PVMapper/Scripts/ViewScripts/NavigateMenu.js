@@ -115,7 +115,7 @@ Ext.define( 'MyApp.RootPanel', {
                   .done( function ( script, textStatus ) {
                   } )
                   .fail( function ( jqxhr, settings, exception ) {
-                    console.log( exception );
+                    if (console) console.log( exception );
                     pvMapper.displayMessage( "Could not load tool." );
                   } );
             }

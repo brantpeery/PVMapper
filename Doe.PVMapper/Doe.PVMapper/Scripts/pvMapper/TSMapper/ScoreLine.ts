@@ -38,7 +38,7 @@ module pvMapper {
             }
 
             siteManager.siteAdded.addHandler((event: Site) => {
-                console.log("Siteadded event detected in scoreline" + name);
+                if (console) console.log("Siteadded event detected in scoreline" + name);
 
                 this.addScore(event);
             });
@@ -72,7 +72,7 @@ module pvMapper {
         public description: string;
         public category: string;
         public scores: Score[] = new Score[]();
-        public updateScore: ICallback = options.updateScoreCallback;
+        //public updateScore: ICallback = options.updateScoreCallback;
         public active: Boolean = true;
 
         public self: ScoreLine;
@@ -102,9 +102,10 @@ module pvMapper {
             //this.self.scoreAddedEvent.fire(score, [{ score: score, site: site }, score]);
             //Set the initial value from the tool
             try {
-                this.updateScore(score);
+                this.onSiteChangeHandler(undefined, score);
+                //this.updateScore(score);
             } catch (ex) {
-                console.log(ex);
+                if (console) console.log(ex);
             }
             return score;
         }

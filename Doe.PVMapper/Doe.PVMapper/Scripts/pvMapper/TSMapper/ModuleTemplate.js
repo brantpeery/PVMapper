@@ -1,9 +1,3 @@
-/// <reference path="pvMapper.ts" />
-/// <reference path="Site.ts" />
-/// <reference path="Score.ts" />
-/// <reference path="Tools.ts" />
-/// <reference path="Options.d.ts" />
-/// <reference path="Module.ts" />
 var Modules;
 (function (Modules) {
     var Module = (function () {
@@ -30,8 +24,7 @@ var Modules;
                         },
                         onSiteChange: function (event, score) {
                         },
-                        updateScoreCallback: function (score) {
-                        }
+                        scoreUtilityOptions: null
                     }
                 ],
                 infoTools: null

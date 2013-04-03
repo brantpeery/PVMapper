@@ -100,7 +100,7 @@ Ext.application( {
   pvM.onReady( function () {
 
     if ( typeof ( JXG ) === "undefined" ) {
-      console.log( "Loading in the JXG Graph script" );
+      if (console) console.log( "Loading in the JXG Graph script" );
       $( "<link/>" )
           .appendTo( "head" )
           .attr( { rel: "stylesheet", type: "text/css", href: "http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css" } );

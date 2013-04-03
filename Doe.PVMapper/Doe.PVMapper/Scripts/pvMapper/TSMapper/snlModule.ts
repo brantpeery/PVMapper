@@ -38,11 +38,6 @@ module INLModules {
                     },
                     onSiteChange: function (e, score) {
                         updateScore(score);
-                        //s.updateValue(status.toString());
-                    },
-                    updateScoreCallback: (score: pvMapper.Score) => {
-                        //var status = getFeatureInfo(site);
-                        updateScore(score);
                     },
 
                     // having any nearby line is much better than having no nearby line, so let's reflect that.
