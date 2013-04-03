@@ -22,7 +22,9 @@ var pvMapper;
             //Load the info for this module into the data model
             //Load the scoring tools into the api
             this.scoringTools.map(function (tool, idx, toolarr) {
-                console.log("Loading scoring tool " + tool.title + " into the API");
+                if(console) {
+                    console.log("Loading scoring tool " + tool.title + " into the API");
+                }
                 //Create the scoreline
                 var scoreline = new pvMapper.ScoreLine(tool);
                 //Add the scoreline to the scoreboard/data model
@@ -31,7 +33,9 @@ var pvMapper;
             //Load up the info tools into the api
             if(this.infoTools) {
                 this.infoTools.map(function (tool, idx, toolbar) {
-                    console.log("Loading info tool " + tool.title + " into the API");
+                    if(console) {
+                        console.log("Loading info tool " + tool.title + " into the API");
+                    }
                     //TODO: Tie to the data model when ready
                                     });
             }

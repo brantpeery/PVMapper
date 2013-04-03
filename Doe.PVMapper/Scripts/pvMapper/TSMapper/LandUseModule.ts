@@ -36,9 +36,6 @@ module INLModules {
                     onSiteChange: (e, score: pvMapper.Score) => {
                         this.updateScore(score);
                     },
-                    updateScoreCallback: (score: pvMapper.Score) => {
-                        this.updateScore(score);
-                    },
 
                     //TODO: need a categorical scoring system
                     // for now, this assumes that overlapping more protected areas is worse than overlapping fewer (!)
@@ -173,9 +170,6 @@ module INLModules {
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: (e, score: pvMapper.Score) => {
-                        this.updateScore(score);
-                    },
-                    updateScoreCallback: (score: pvMapper.Score) => {
                         this.updateScore(score);
                     },
 

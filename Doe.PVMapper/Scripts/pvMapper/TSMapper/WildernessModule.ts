@@ -6,7 +6,7 @@
 /// <reference path="Module.ts" />
 
 module BYUModules {
-    class WildernessModule {
+    export class WildernessModule {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module({
                 id: "WildernessModule",
@@ -29,7 +29,7 @@ module BYUModules {
                     category: "Land Use",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { },
-                    updateScoreCallback: (score: pvMapper.Score) => { },
+                    scoreUtilityOptions: null
                 }],
                 infoTools: null
             });
@@ -41,8 +41,16 @@ module BYUModules {
     var wildernessLayer;
     
     function addMap() {
+        wildernessLayer = OpenLayers.Layer.WMS(
+                "Wilderness Areas",
+                "https://geoserver.byu.edu/geoserver/wms?",
+                {
+                    
+                }
+                { isBaseLayer: false }
+            );
         //...
-        pvMapper.map.addLayer(wildernessLayer);
+        //pvMapper.map.addLayer(wildernessLayer);
     }
 
     function removeMap() {
@@ -50,18 +58,39 @@ module BYUModules {
     }
 
     function updateScore(score: pvMapper.Score, layers: string, description?: string) {
-        var params = "";
+        var params = {
+            service: "WCS",
+            version: "1.1.1",
+            request: "GetCoverage",
+            layers: "PVMapper:wilderness_areas",
+        };
         
         var request = OpenLayers.Request.GET({
-            url: "",
+            url: "https://geoserver.byu.edu/geoserver/wcs?",
             proxy: "/Proxy/proxy.ashx?",
             params: params,
             callback: (response) => {
                 if (response.status == 200) {
                     var esriJsonParser = new OpenLayers.Format.JSON();
                     esriJsonParser.extractAttributes = true;
+                    var parsedResponse = esriJsonParser.read(response.responseText);
 
+                    if (parsedResponse && parsedResponse.results) {
+                        if (parsedResponse.results.length > 0) {
+                            console.assert(parsedResponse.results.length === 1,
+                                "I expected that the server would only return identify" +
+                                " results for the single pixel at the center of a site. Something went wrong.");
 
+                            score.popupMessage = parsedResponse.results[0].value + " " + description;
+                            score.updateValue(parseFloat(parsedResponse.results[0].value));
+                        } else {
+                            score.popupMessage = "No data for this site";
+                            score.updateValue(Number.NaN);
+                        }
+                    } else {
+                        score.popupMessage = "Parse error";
+                        score.updateValue(Number.NaN);
+                    }
                 } else {
                     score.popupMessage = "Error " + response.status;
                     score.updateValue(Number.NaN);

@@ -38,9 +38,6 @@ var INLModules;
                         onSiteChange: function (e, score) {
                             _this.updateScore(score);
                         },
-                        updateScoreCallback: function (score) {
-                            _this.updateScore(score);
-                        },
                         scoreUtilityOptions: //TODO: need a categorical scoring system
                         // for now, this assumes that overlapping more protected areas is worse than overlapping fewer (!)
                         {
@@ -168,9 +165,6 @@ var INLModules;
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {
-                            _this.updateScore(score);
-                        },
-                        updateScoreCallback: function (score) {
                             _this.updateScore(score);
                         },
                         scoreUtilityOptions: //TODO: need a categorical scoring system

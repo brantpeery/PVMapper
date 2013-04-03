@@ -221,7 +221,7 @@ function normalDistribution( min, max, mean, std ) {
     std = norm2;
   }
   var ND = norm / std + mean;
-  console.log( 'min: ' + min + ', max: ' + max + ', mean: ' + mean + ', std: ' + std + ', Norm: ' + norm + ', ND: ' + ND );
+  if (console) console.log('min: ' + min + ', max: ' + max + ', mean: ' + mean + ', std: ' + std + ', Norm: ' + norm + ', ND: ' + ND);
   return ND;
 }
 //#endregion

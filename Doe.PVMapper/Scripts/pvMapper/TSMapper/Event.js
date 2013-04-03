@@ -1,20 +1,13 @@
 var pvMapper;
 (function (pvMapper) {
-    /*
-    Is a publish point. Uses the handlers and fire method to publish events
-    */
     var Event = (function () {
-        /// Creates the publish point.
-        /// allowDuplicateHandler if set to true will allow the same function to subscribe more than once.
         function Event(allowDuplicateHandler) {
             if (typeof allowDuplicateHandler === "undefined") { allowDuplicateHandler = false; }
             this.allowDuplicateHandler = allowDuplicateHandler;
-            //for event parameter data tag
             this.data = null;
             this.eventHandlers = new Array();
         }
-        Event.prototype.addHandler = ///
-        function (callBack) {
+        Event.prototype.addHandler = function (callBack) {
             if(this.eventHandlers.indexOf(callBack) == -1 || this.allowDuplicateHandler) {
                 this.eventHandlers.push(callBack);
             }
@@ -41,8 +34,11 @@ var pvMapper;
                     try  {
                         func.apply(context, eventArgs);
                     } catch (e) {
-                        console.log("Error caught while in an event: " + e.message + " : file: " + e.fileName + " line: " + e.lineNumber);
-                        console.log(context);
+                        if(console) {
+                            console.log("Error caught while in an event: " + e.message + " : file: " + e.fileName + " line: " + e.lineNumber);
+                            console.log(context);
+                            console.error(e);
+                        }
                     }
                 }
             });

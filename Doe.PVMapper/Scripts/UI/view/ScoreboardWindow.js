@@ -155,6 +155,7 @@ toolsStore.on({
                     summaryType: function (records) {
                         var total = 0;
                         var count = 0;
+                        var feature;
                         records.forEach(function (record) {
                             var scoreLine = record.raw;
                             if (scoreLine.scores[idx] && !isNaN(scoreLine.scores[idx].utility)) {
@@ -164,6 +165,19 @@ toolsStore.on({
                         });
 
                         var average = total / count;
+
+                        // post the average score to the feature, so that it can render correctly on the map
+                        //TODO: is this really the best place to be mucking about with the feature attributes?
+                        if (records && records.length > 0 && records[0].raw &&
+                            records[0].raw.scores && records[0].raw.scores.length > idx &&
+                            records[0].raw.scores[idx].site && records[0].raw.scores[idx].site.feature) {
+                            if (records[0].raw.scores[idx].site.feature.attributes['overallScore'] !== average) {
+                                records[0].raw.scores[idx].site.feature.attributes.overallScore = average;
+                                records[0].raw.scores[idx].site.feature.attributes.fillColor = (!isNaN(average)) ? getColor(average) : "";
+                                pvMapper.siteLayer.drawFeature(records[0].raw.scores[idx].site.feature);
+                            }
+                        }
+
                         return average;
                     },
                     summaryRenderer: function (value) {

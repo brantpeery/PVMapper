@@ -21,7 +21,9 @@ var pvMapper;
             this.siteAdded.fire(site, site);
         };
         SiteManager.prototype.createSite = function (feature) {
-            console.log("Creating site");
+            if(console) {
+                console.log("Creating site");
+            }
             var aSite = new pvMapper.Site(feature);
             this.sites.push(aSite);
             this.siteAdded.fire(aSite, feature);
@@ -60,22 +62,31 @@ var pvMapper;
         @See http://dev.openlayers.org/apidocs/files/OpenLayers/Layer/Vector-js.html#OpenLayers.Layer.Vector.events
         */
         function (event) {
-            console.log("Feature change detected by the site manager");
+            if(console) {
+                console.log("Feature change detected by the site manager");
+            }
             if(event.feature && event.feature.site) {
                 // try {
                 event.feature.site.changeEvent.fire(event.feature.site, event);
-                console.log("Fired the change event for site: " + event.feature.site.name);
+                if(console) {
+                    console.log("Fired the change event for site: " + event.feature.site.name);
+                }
                 //    } catch (e) {
                 //        console.log("An error occurred while trying to fire the feature change event for a site from the site manager");
                 //        console.error(e);
                 //    }
                             } else {
-                console.log("The feature was not a site");
+                if(console) {
+                    console.log("The feature was not a site");
+                }
             }
         };
         return SiteManager;
     })();
     pvMapper.SiteManager = SiteManager;    
+    //TODO: add event handlers for feature added and feature removed here - it's rather important!
+    //      will move this responsability out of SiteManagement.js and AddNewSite.js
+    //TODO: also, make this class the sole source responsible for calling the server-side site api
     //instantiate siteManager object.
     pvMapper.siteManager = new SiteManager();
 })(pvMapper || (pvMapper = {}));

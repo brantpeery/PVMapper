@@ -37,10 +37,6 @@ module INLModules {
                         identifyFeature(score);
                         //s.updateValue(status.toString());
                     },
-                    updateScoreCallback: (score: pvMapper.Score) => {
-                        //var status = getFeatureInfo(site);
-                        identifyFeature(score);
-                    },
 
                     // for now, no land management agencies is best, any one is bad, and multiple are worse
                     scoreUtilityOptions: <pvMapper.IThreePointUtilityOptions>{

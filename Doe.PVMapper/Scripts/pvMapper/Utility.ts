@@ -32,7 +32,7 @@ class UtilityFunctions {
 
   public static LessIsBetter ( x: number ): number {
     if (!currentConfig) {
-      console.log('No configuration setup.');
+      if (console) console.log('No configuration setup.');
       return 0;
     }
 
@@ -56,7 +56,7 @@ class UtilityFunctions {
 
   public static NDBalance ( x:number, r: number ):number {
     if (!currentConfig) {
-      console.log('No configuration setup.');
+      if (console) console.log('No configuration setup.');
       return 0;
     }
 
