@@ -26,18 +26,22 @@ var BYUModules;
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
-                        }
+                        },
+                        scoreUtilityOptions: null
                     }
                 ],
                 infoTools: null
             });
         }
         return WildernessModule;
-    })();    
+    })();
+    BYUModules.WildernessModule = WildernessModule;    
     var modInstance = new WildernessModule();
     var WildernessMapUrl = "";
     var wildernessLayer;
     function addMap() {
+        wildernessLayer = OpenLayers.Layer.WMS("Wilderness Areas", "https://geoserver.byu.edu/geoserver/wms?", {
+        });
     }
     function removeMap() {
     }

@@ -29,6 +29,7 @@ module Modules {
                     category: "",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { },
+                    scoreUtilityOptions: null
                 }],
                 infoTools: null
             });
