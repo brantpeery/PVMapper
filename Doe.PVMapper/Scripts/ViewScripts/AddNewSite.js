@@ -84,7 +84,6 @@ function addSite(map, layer) {
     function handleSave(b, e) {
         var msg;
 
-
         alert(feature.geometry.toString());
     }
 
@@ -140,13 +139,17 @@ function addSite(map, layer) {
                 text: 'Save',
                 handler: function (b, e) {
                     //Erase the feature so that the label and style and stuff can be modified without having any artifacts linger on the SVG
-                    feature.layer.eraseFeatures(feature);
+                    // removed - I haven't observed this drawing issue, and there have been complaints about sites disappearing when added.
+                    //feature.layer.eraseFeatures(feature);
 
                     var name = Ext.getCmp("name").getValue();
                     var desc = Ext.getCmp("sitedescription").getValue();
 
                     feature.attributes.name = name;
                     feature.attributes.description = desc;
+
+                    //Redraw the feature with its new name
+                    feature.layer.drawFeature(feature);
 
                     wiz.destroy();
 
@@ -161,9 +164,6 @@ function addSite(map, layer) {
                             pvMapper.siteManager.addSite(newSite);
 
                             if (console) console.log('Added ' + newSite.name + ' to the site manager');
-
-                            //Redraw the feature with all the changes
-                            feature.layer.drawFeature(feature);
                         })
                         .fail(function () {
                             if (console) console.log('failed to post site');
