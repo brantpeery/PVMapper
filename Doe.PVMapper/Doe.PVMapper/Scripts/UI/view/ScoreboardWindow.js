@@ -155,7 +155,6 @@ toolsStore.on({
                     summaryType: function (records) {
                         var total = 0;
                         var count = 0;
-                        var feature;
                         records.forEach(function (record) {
                             var scoreLine = record.raw;
                             if (scoreLine.scores[idx] && !isNaN(scoreLine.scores[idx].utility)) {
@@ -171,17 +170,21 @@ toolsStore.on({
                         if (records && records.length > 0 && records[0].raw &&
                             records[0].raw.scores && records[0].raw.scores.length > idx &&
                             records[0].raw.scores[idx].site && records[0].raw.scores[idx].site.feature) {
-                            if (records[0].raw.scores[idx].site.feature.attributes['overallScore'] !== average) {
-                                records[0].raw.scores[idx].site.feature.attributes.overallScore = average;
-                                records[0].raw.scores[idx].site.feature.attributes.fillColor = (!isNaN(average)) ? getColor(average) : "";
-                                pvMapper.siteLayer.drawFeature(records[0].raw.scores[idx].site.feature);
+                            // test if the feature's average score value has changed
+                            var feature = records[0].raw.scores[idx].site.feature;
+                            if (feature.attributes['overallScore'] !== average) {
+                                feature.attributes.overallScore = average;
+                                // set the score's color as an attribute on the feature (note - this is at least partly a hack...)
+                                feature.attributes.fillColor = (!isNaN(average)) ? getColor(average) : "";
+                                // redraw the feature
+                                feature.layer.drawFeature(feature);
                             }
                         }
 
                         return average;
                     },
                     summaryRenderer: function (value) {
-                        if (typeof value === "number") {
+                        if (typeof value === "number" && !isNaN(value)) {
                             var c = getColor(value);
                             return '<span style="border-radius: 3px; background-color:' + c + '">&nbsp' + value.toFixed(0) + '&nbsp</span>'; //font-weight: bold; 
                         }
