@@ -27,7 +27,8 @@ var BYUModules;
                         },
                         onSiteChange: function (event, score) {
                         },
-                        scoreUtilityOptions: null
+                        scoreUtilityOptions: {
+                        }
                     }
                 ],
                 infoTools: null
@@ -41,16 +42,29 @@ var BYUModules;
     var wildernessLayer;
     function addMap() {
         wildernessLayer = OpenLayers.Layer.WMS("Wilderness Areas", "https://geoserver.byu.edu/geoserver/wms?", {
+            layer_type: "polygon",
+            transparent: "true",
+            format: "image/gif",
+            srs: "EPSG:42105"
+        }, {
+            isBaseLayer: false
         });
+        pvMapper.map.addLayer(wildernessLayer);
     }
     function removeMap() {
+        pvMapper.map.removeLayer(wildernessLayer, false);
     }
     function updateScore(score, layers, description) {
         var params = {
+            mapExtent: score.site.geometry.bounds.toBBOX(6, false),
+            geometryType: "esriGeometryEnvelope",
+            geometry: score.site.geometry.bounds.toBBOX(6, false),
+            f: "json",
             service: "WCS",
             version: "1.1.1",
             request: "GetCoverage",
-            layers: "PVMapper:wilderness_areas"
+            layers: "PVMapper:wilderness_areas",
+            returnGeometry: false
         };
         var request = OpenLayers.Request.GET({
             url: "https://geoserver.byu.edu/geoserver/wcs?",

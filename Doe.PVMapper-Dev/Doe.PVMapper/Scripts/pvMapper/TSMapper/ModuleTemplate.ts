@@ -14,7 +14,7 @@ module Modules {
                 version: "",
 
                 activate: () => { },
-                deactivate: null,
+                deactivate: () => { },
                 destroy: null,
                 init: null,
 
@@ -29,7 +29,8 @@ module Modules {
                     category: "",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { },
-                    scoreUtilityOptions: null
+                    scoreUtilityOptions: <pvMapper.IScoreUtilityOptions>{
+                    },
                 }],
                 infoTools: null
             });
