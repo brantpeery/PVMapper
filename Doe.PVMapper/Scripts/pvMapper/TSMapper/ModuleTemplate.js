@@ -8,7 +8,8 @@ var Modules;
                 version: "",
                 activate: function () {
                 },
-                deactivate: null,
+                deactivate: function () {
+                },
                 destroy: null,
                 init: null,
                 scoringTools: [
@@ -24,7 +25,8 @@ var Modules;
                         },
                         onSiteChange: function (event, score) {
                         },
-                        scoreUtilityOptions: null
+                        scoreUtilityOptions: {
+                        }
                     }
                 ],
                 infoTools: null
