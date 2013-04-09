@@ -34,10 +34,12 @@ module BYUModules {
 
                     //TODO: The utility of slope only makes sense in the context of aspect - merge these two metrics
                     // for now, flatter is better...?
-                    scoreUtilityOptions: <pvMapper.IMinMaxUtilityOptions>{
+                    scoreUtilityOptions: {
                         functionName: "linear",
-                        minValue: 10,
-                        maxValue: 0,
+                        functionArgs: <pvMapper.IMinMaxUtilityArgs>{
+                            minValue: 10,
+                            maxValue: 0,
+                        }
                     },
                     //defaultWeight: 10
                 },
@@ -58,11 +60,13 @@ module BYUModules {
                     //      I assume that south is the best...
                     //TODO: The utility of aspect only makes sense in the context of slope - merge these two metrics
                     // for now, south is better, but north ain't so bad...?
-                    scoreUtilityOptions: <pvMapper.IThreePointUtilityOptions>{
+                    scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        p0: { x: 0, y: 0.5 },
-                        p1: { x: 180, y: 1 },
-                        p2: { x: 360, y: 0.5 },
+                        functionArgs: <pvMapper.IThreePointUtilityArgs>{
+                            p0: { x: 0, y: 0.5 },
+                            p1: { x: 180, y: 1 },
+                            p2: { x: 360, y: 0.5 },
+                        }
                     },
                     //defaultWeight: 10
                 },
@@ -80,11 +84,13 @@ module BYUModules {
                     //Note: I have no idea why, but the server will not find the correct layer if we don't include "any:"
 
                     // higher is better, but not much better, yeah?
-                    scoreUtilityOptions: <pvMapper.IThreePointUtilityOptions>{
+                    scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        p0: { x: 0, y: 0.5 },
-                        p1: { x: 1000, y: 0.9 },
-                        p2: { x: 6000, y: 1 },
+                        functionArgs: <pvMapper.IThreePointUtilityArgs>{
+                            p0: { x: 0, y: 0.5 },
+                            p1: { x: 1000, y: 0.9 },
+                            p2: { x: 6000, y: 1 },
+                        }
                     },
                     //defaultWeight: 10
                 }

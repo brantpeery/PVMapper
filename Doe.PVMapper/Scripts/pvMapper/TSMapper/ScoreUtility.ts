@@ -1,89 +1,188 @@
 ﻿
 
 module pvMapper {
+    export interface ICustomFunctionCallback {
+        (x: number, args: any): number;
+    }
+    export declare var ICustomFunctionCallback: {
+        new (x: number, args: any): number;
+        (x: number, args: any): number;
+        prototype: ICustomFunctionCallback;
+    };
+
+    /**
+    A function that is called when the Utility Function Editor window is created. It allows the setup of custom fields in the window.
+    Signature: function (panel:any, args:any)
+
+    @param panel The panel that needs to be set up with custom Extjs components
+    @param args  The argument object that has been saved to use with the custom function. Use this to display current values to the user when setting up the components.
+    */
+    export interface IWindowSetupCallback {
+        (panel: any, args: any);
+    }
+    //export declare var IWindowSetupCallback: {
+    //    new (panel: any, args: any);
+    //    (panel: any, args: any);
+    //    prototype: IWindowSetupCallback;
+    //}
+
+    export interface IWindowOkCallback {
+        (panel: any, args: any);
+    }
+    //export declare var IWindowOkCallback: {
+    //    new (panel: any, args: any);
+    //    (panel: any, args: any);
+    //    prototype: IWindowOkCallback;
+    //}
+
+    export interface IScoreUtilityArgs {
+
+    }
     export interface IScoreUtilityOptions {
         functionName: string;
+        functionArgs: IScoreUtilityArgs;
     }
 
-    export interface IMinMaxUtilityOptions extends IScoreUtilityOptions {
+    export interface ICustomScoreUtilityOptions extends IScoreUtilityOptions {
+        functionCallback: (x: number, args: any) => number;
+        windowSetupCallback: IWindowSetupCallback;
+        windowOkCallback: IWindowOkCallback;
+    }
+
+    export interface IMinMaxUtilityArgs extends IScoreUtilityArgs {
         minValue: number;
         maxValue: number;
     }
 
-    export interface ISinusoidalUtilityOptions extends IMinMaxUtilityOptions {
+    export interface ISinusoidalUtilityArgs extends IMinMaxUtilityArgs {
         target: number;
         slope: number;
     }
 
-    export interface IThreePointUtilityOptions extends IScoreUtilityOptions {
+    export interface IThreePointUtilityArgs extends IScoreUtilityArgs {
         p0: { x: number; y: number; };
         p1: { x: number; y: number; };
         p2: { x: number; y: number; };
     }
 
-    export class UtilityFunctions {
+    //Created for static access from more than one function def
+    export class ScoreUtilityWindows {
+        public static basicWindow = {
+            setup: function () {
 
-        public static sinusoidal(x: number, args: ISinusoidalUtilityOptions) {
-            var l = args.minValue
-            var h = args.maxValue;
-            var b = isNaN(args.target) ? ((h - l) / 2) + l : args.target;
-            var s = isNaN(args.slope) ? 1 : args.slope;
+            },
+            okhandler: function () {
 
-            if (l > h) {
-                // we're going from high to low, rather than from low to high
-                // swap values and negate the slope
-                var swap = l;
-                l = h;
-                h = swap;
-                s = -s;
             }
+        }
+    }
 
-            s = s * Math.max(2 / (b - l), 2 / (h - b));
 
-            var y = 0; //The return variable
-            if (x >= h) y = 0;
-            else if (x <= l) y = 1;
-            else y = (x < b) ? 1 / (1 + Math.pow((b - l) / (x - l), (2 * s * (b + x - 2 * l)))) :
-                1 - (1 / (1 + Math.pow((b - (2 * b - h)) / ((2 * b - x) - (2 * b - h)), (2 * s * (b + (2 * b - x) - 2 * (2 * b - h))))));
-            //Note: clamping this value to the range 0-1 is handled by the run(x) function
-            //if (y >= 1) y = 1;
-            //if (y <= 0) y = 0;
-            return y;
+
+    //Static accessed class that holds all the utility functions for the application
+    export class UtilityFunctions {
+        //System supplied utility function objects
+
+        //Performs a sinusoidal function. Uses the basic setup UI 
+        public static sinusoidal = {
+            windowSetup: ScoreUtilityWindows.basicWindow.setup,
+            windowOk: ScoreUtilityWindows.basicWindow.okhandler,
+
+            fn: function (x: number, args: ISinusoidalUtilityArgs) {
+                var l = args.minValue
+                var h = args.maxValue;
+                var b = isNaN(args.target) ? ((h - l) / 2) + l : args.target;
+                var s = isNaN(args.slope) ? 1 : args.slope;
+
+                if (l > h) {
+                    // we're going from high to low, rather than from low to high
+                    // swap values and negate the slope
+                    var swap = l;
+                    l = h;
+                    h = swap;
+                    s = -s;
+                }
+
+                s = s * Math.max(2 / (b - l), 2 / (h - b));
+
+                var y = 0; //The return variable
+                if (x >= h) y = 0;
+                else if (x <= l) y = 1;
+                else y = (x < b) ? 1 / (1 + Math.pow((b - l) / (x - l), (2 * s * (b + x - 2 * l)))) :
+                    1 - (1 / (1 + Math.pow((b - (2 * b - h)) / ((2 * b - x) - (2 * b - h)), (2 * s * (b + (2 * b - x) - 2 * (2 * b - h))))));
+                //Note: clamping this value to the range 0-1 is handled by the run(x) function
+                //if (y >= 1) y = 1;
+                //if (y <= 0) y = 0;
+                return y;
+            }
         }
 
-        public static linear(x: number, args: IMinMaxUtilityOptions) {
-            //Note: clamping this value to the range 0-1 is handled by the run(x) function
-            return ((x - args.minValue) / (args.maxValue - args.minValue));
+
+        public static linear = {
+            windowSetup: ScoreUtilityWindows.basicWindow.setup,
+            windowOk: ScoreUtilityWindows.basicWindow.okhandler,
+
+            fn: function (x: number, args: IMinMaxUtilityArgs) {
+                //Note: clamping this value to the range 0-1 is handled by the run(x) function
+                return ((x - args.minValue) / (args.maxValue - args.minValue));
+            }
         }
 
         // textbook linear interpolation
-        public static linear3pt(x: number, args: IThreePointUtilityOptions) {
-            //Note: clamping this value to the range 0-1 is handled by the run(x) function
-            if (x < args.p0.x) return args.p0.y;
-            else if (x < args.p1.x) return args.p0.y + ((args.p1.y - args.p0.y) * (x - args.p0.x) / (args.p1.x - args.p0.x));
-            else if (x < args.p2.x) return args.p1.y + ((args.p2.y - args.p1.y) * (x - args.p1.x) / (args.p2.x - args.p1.x));
-            else return args.p2.y;
+        public static linear3pt = {
+            windowSetup: ScoreUtilityWindows.basicWindow.setup,
+            windowOk: ScoreUtilityWindows.basicWindow.okhandler,
+
+            fn: function (x: number, args: IThreePointUtilityArgs) {
+                //Note: clamping this value to the range 0-1 is handled by the run(x) function
+                if (x < args.p0.x) return args.p0.y;
+                else if (x < args.p1.x) return args.p0.y + ((args.p1.y - args.p0.y) * (x - args.p0.x) / (args.p1.x - args.p0.x));
+                else if (x < args.p2.x) return args.p1.y + ((args.p2.y - args.p1.y) * (x - args.p1.x) / (args.p2.x - args.p1.x));
+                else return args.p2.y;
+            }
         }
 
-        public static random():number {
-            return Math.random();
+        public static random = {
+            windowSetup: ScoreUtilityWindows.basicWindow.setup,
+            windowOk: ScoreUtilityWindows.basicWindow.okhandler,
+
+            fn: function (): number {
+                return Math.random();
+            }
         }
     }
 
     export class ScoreUtility {
         constructor(options: IScoreUtilityOptions) {
-            this.scoreUtilityOptions = options;
+            //Check for custom utility by checking to see if there is a function callback (not optimal but in the absence of interface comparison will do)
+            if (options['functionCallback']) {
+                //Load up the ScoreUtility with the custom function + window callbacks
+                var copt: ICustomScoreUtilityOptions = <any> options; //This is a dumb way of making the IDE stop complaining that the type is not right
+                //Create a new utility function named after the custom functionName
+                UtilityFunctions[copt.functionName] = {
+                    fn: copt.functionCallback,
+                    //Attach handlers for setting up and tearing down the utility function setup window
+                    windowSetup: copt.windowSetupCallback,
+                    windowOk: copt.windowOkCallback
+                }
+            }
+
+            //Attach the named function and window
+            this.functionName = options.functionName;
+            this.functionArgs = options.functionArgs;
+
         }
-        
-        public scoreUtilityOptions: IScoreUtilityOptions;
+
+        //public scoreUtilityOptions: IScoreUtilityOptions;
+        public functionName: string;
+        public functionArgs: IScoreUtilityArgs;
 
         //An options object might be better here. Then a call to a static function with options would be possible 
         public run = function (x) {
             if (isNaN(x)) return Number.NaN;
 
             //Run the function that the user needs run
-            var y: number = pvMapper.UtilityFunctions[this.scoreUtilityOptions.functionName](x, this.scoreUtilityOptions);
-
+            var y: number = pvMapper.UtilityFunctions[this.functionName].fn(x, this.functionArgs);
             return Math.max(0, Math.min(1, y)) * 100;
         }
 
@@ -95,6 +194,7 @@ module pvMapper {
             throw "Deserialize is not implemented yet for this object";
         }
     }
+
 
 
 }

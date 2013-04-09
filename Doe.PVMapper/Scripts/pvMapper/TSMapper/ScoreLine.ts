@@ -50,11 +50,8 @@ module pvMapper {
             //Set default scoreUtilityOptions object if none was provided
             if (options.scoreUtilityOptions == undefined) {
                 options.scoreUtilityOptions = {
-                    maxValue: 1,
-                    minValue: 0,
-                    target: .5,
-                    slope: 50,
-                    functionName: "random" //"moreIsBetter"
+                    functionName: "random",
+                    functionArgs: {}
                 }
             }
 
