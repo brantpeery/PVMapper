@@ -201,7 +201,7 @@ toolsStore.on({
                         return average;
                     },
                     summaryRenderer: function (value) {
-                        if (typeof value === "number") {
+                        if (typeof value === "number" && !isNaN(value)) {
                             var c = getColor(value);
                             return '<span style="border-radius: 3px; background-color:' + c + '">&nbsp' + value.toFixed(0) + '&nbsp</span>'; //font-weight: bold; 
                         }
