@@ -50,6 +50,7 @@ Ext.define('MainApp.view.UtilityFunctionEdit', {
             handler: function () { }
         }]
     }]
+
 });
 
 var toolsStore = Ext.create('Ext.data.Store', {
@@ -111,7 +112,7 @@ var scoreboardColumns = [{
             });
             var windows = Ext.create('MainApp.view.UtilityFunctionEdit', {
                 items: dynamicPanel
-            }).show().toFront();
+            }).show();
         }
     }]
 }, {
@@ -197,27 +198,10 @@ toolsStore.on({
                         });
 
                         var average = total / count;
-
-                        // post the average score to the feature, so that it can render correctly on the map
-                        //TODO: is this really the best place to be mucking about with the feature attributes?
-                        if (records && records.length > 0 && records[0].raw &&
-                            records[0].raw.scores && records[0].raw.scores.length > idx &&
-                            records[0].raw.scores[idx].site && records[0].raw.scores[idx].site.feature) {
-                            // test if the feature's average score value has changed
-                            var feature = records[0].raw.scores[idx].site.feature;
-                            if (feature.attributes['overallScore'] !== average) {
-                                feature.attributes.overallScore = average;
-                                // set the score's color as an attribute on the feature (note - this is at least partly a hack...)
-                                feature.attributes.fillColor = (!isNaN(average)) ? getColor(average) : "";
-                                // redraw the feature
-                                feature.layer.drawFeature(feature);
-                            }
-                        }
-
                         return average;
                     },
                     summaryRenderer: function (value) {
-                        if (typeof value === "number" && !isNaN(value)) {
+                        if (typeof value === "number") {
                             var c = getColor(value);
                             return '<span style="border-radius: 3px; background-color:' + c + '">&nbsp' + value.toFixed(0) + '&nbsp</span>'; //font-weight: bold; 
                         }
@@ -249,127 +233,11 @@ Ext.define('Ext.grid.ScoreboardGrid', {
         clicksToEdit: 1
     })],
     features: [
-    //{ftype: 'grouping'},
+        {ftype: 'grouping'},
     {
         ftype: 'summary'
     }]
 });
-
-//Note: this is a failed attempt to get nested/grouped columns to expand their width dynamically (using forcefit and flex)
-//Ext.override(Ext.grid.ColumnLayout, {
-//    completeLayout: function (ownerContext) {
-//        var me = this,
-//            owner = me.owner,
-//            state = ownerContext.state,
-//            needsInvalidate = false,
-//            calculated = me.sizeModels.calculated,
-//            configured = me.sizeModels.configured,
-//            totalFlex = 0, totalWidth = 0, remainingWidth = 0, colWidth = 0,
-//            childItems, len, i, childContext, item,
-//            j, sublen, subChild;
-
-//        console.log("Called column layout completeLayout()");
-
-//        me.callParent(arguments);
-
-
-//        // Get the layout context of the main container
-//        // Required two passes. First pass calculates total flexes of all items
-//        // and child items. Second pass uses those flex values to calculate fixed
-//        // widths for each item, then removes flexing so resizing/hiding works.
-//        if (!state.flexesCalculated && owner.forceFit && !owner.isHeader) {
-//            console.log("Calculating new flex thingey");
-//            childItems = ownerContext.flexedItems = ownerContext.childItems;
-//            len = childItems.length;
-//            totalWidth = state.contentWidth;
-//            if (state.contentWidth < state.boxPlan.availableSpace) {
-//                totalWidth += state.boxPlan.availableSpace - 2;
-//            }
-//            remainingWidth = totalWidth;
-
-
-//            // Begin first pass
-//            ownerContext.flex = 0;
-//            for (i = 0; i < len; i++) {
-//                childContext = childItems[i];
-//                item = childContext.target;
-//                // Special code for Ext.ux.RowExpander
-//                if (item.isRowExpander) {
-//                    item.width = item.flex || item.width;
-//                    totalWidth -= item.width;
-//                    remainingWidth -= item.width;
-//                    item.forceFit = false;
-//                    delete item.flex;
-//                    continue;
-//                }
-
-
-//                if (item.isGroupHeader) {
-//                    totalFlex = 0;
-//                    for (j = 0, sublen = childContext.childItems.length; j < sublen; j++) {
-//                        subChild = childContext.childItems[j];
-//                        subChild.widthModel = calculated;
-//                        totalFlex += subChild.flex;
-//                    }
-//                    item.flex = childContext.flex = childContext.totalFlex = totalFlex;
-//                    ownerContext.flex += totalFlex;
-//                    needsInvalidate = true;
-//                }
-//                else {
-//                    ownerContext.flex += item.flex;
-//                }
-//            }
-
-
-//            ownerContext.totalFlex = ownerContext.flex;
-
-
-//            // Begin second pass
-//            for (i = 0; i < len; i++) {
-//                childContext = childItems[i];
-//                item = childContext.target;
-
-
-//                if (item.isRowExpander) {
-//                    continue;
-//                }
-
-//                // This is probably where the overflow is happening
-//                // Might try using Math.round or Math.floor instead of Math.ceil
-//                item.width = colWidth = Math.min(Math.ceil((totalWidth / ownerContext.totalFlex) * childContext.flex), remainingWidth);
-//                remainingWidth -= colWidth;
-//                childContext.sizeModel.width = childContext.widthModel = configured;
-
-                
-//                if (item.isGroupHeader) {
-//                    for (j = 0, sublen = childContext.childItems.length; j < sublen; j++) {
-//                        subChild = childContext.childItems[j];
-//                        // Another use of Math.ceil where Math.round might work better
-//                        subChild.target.width = Math.ceil((item.width / childContext.flex) * subChild.flex);
-//                        subChild.sizeModel.width = subChild.widthModel = configured;
-//                        delete subChild.flex;
-//                        delete subChild.target.flex;
-//                    }
-//                    childContext.sizeModel.width = childContext.widthModel = calculated;
-//                    delete item.width;
-//                    delete item.flex;
-//                }
-
-//                item.forceFit = false;
-//            }
-
-
-//            delete owner.flex;
-//            owner.forceFit = false;
-
-
-//            if (needsInvalidate) {
-//                console.log("Invalidating context doodle");
-//                ownerContext.invalidate({ state: { flexesCalculated: true } });
-//            }
-//        }
-//    }
-//});
 
 var scoreboardGrid = Ext.create('Ext.grid.ScoreboardGrid', {
 });
@@ -383,6 +251,8 @@ Ext.define('MainApp.view.ScoreboardWindow', {
     closeAction: 'hide',
     items: scoreboardGrid
 });
+
+
 
 
 
