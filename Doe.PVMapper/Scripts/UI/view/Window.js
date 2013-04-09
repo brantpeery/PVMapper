@@ -44,8 +44,8 @@ Ext.define('MainApp.view.Window', {
       if (taskBar) {
         var aWin = null;
         for (var i = 0; i < taskBar.items.length; i++) {
-          if (typeof (taskBar.items[i].associate) != 'undefined') {
-            aWin = taskBar.items[i].associate;
+          if (typeof (taskBar.items.get(i).associate) != 'undefined') {
+            aWin = taskBar.items.get(i).associate;
             break;
           }
         }
