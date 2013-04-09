@@ -1,3 +1,4 @@
+/// <reference path="ScoreUtility.ts" />
 /// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
@@ -39,12 +40,22 @@ module INLModules {
                     },
 
                     // for now, no land management agencies is best, any one is bad, and multiple are worse
-                    scoreUtilityOptions: <pvMapper.IThreePointUtilityOptions>{
+                    //scoreUtilityOptions: <pvMapper.IThreePointUtilityOptions>{
+                    //    functionName: "linear3pt",
+                    //    p0: { x: 0, y: 1 },
+                    //    p1: { x: 1, y: 0.6 },
+                    //    p2: { x: 5, y: 0 },
+                    //},
+
+                    scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        p0: { x: 0, y: 1 },
-                        p1: { x: 1, y: 0.6 },
-                        p2: { x: 5, y: 0 },
+                        functionArgs: <pvMapper.IThreePointUtilityArgs> {
+                            p0: { x: 0, y: 1 },
+                            p1: { x: 1, y: 0.6 },
+                            p2: { x: 5, y: 0 }
+                        }
                     },
+
                     defaultWeight:10
                 }],
 

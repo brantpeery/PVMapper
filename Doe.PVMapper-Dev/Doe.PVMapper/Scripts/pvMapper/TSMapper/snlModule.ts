@@ -4,6 +4,8 @@
 /// <reference path="Tools.ts" />
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
+/// <reference path="ScoreUtility.ts" />
+
 
 module INLModules {
 
@@ -41,11 +43,13 @@ module INLModules {
                     },
 
                     // having any nearby line is much better than having no nearby line, so let's reflect that.
-                    scoreUtilityOptions: <pvMapper.IThreePointUtilityOptions>{
+                    scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        p0: { x: 0, y: 1 },
-                        p1: { x: (maxSearchDistanceInMeters - 1), y: 0.3 },
-                        p2: { x: maxSearchDistanceInMeters, y: 0 },
+                        functionArgs: <pvMapper.IThreePointUtilityArgs>{
+                            p0: { x: 0, y: 1 },
+                            p1: { x: (maxSearchDistanceInMeters - 1), y: 0.3 },
+                            p2: { x: maxSearchDistanceInMeters, y: 0 },
+                        }
                     },
                     defaultWeight: 10
                 }],

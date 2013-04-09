@@ -34,11 +34,9 @@ var pvMapper;
             });
             if(options.scoreUtilityOptions == undefined) {
                 options.scoreUtilityOptions = {
-                    maxValue: 1,
-                    minValue: 0,
-                    target: 0.5,
-                    slope: 50,
-                    functionName: "random"
+                    functionName: "random",
+                    functionArgs: {
+                    }
                 };
             }
             this.scoreUtility = new pvMapper.ScoreUtility(options.scoreUtilityOptions);

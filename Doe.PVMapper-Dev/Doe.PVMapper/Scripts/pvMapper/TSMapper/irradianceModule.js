@@ -36,8 +36,10 @@ var INLModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            minValue: 0,
-                            maxValue: 8
+                            functionArgs: {
+                                minValue: 0,
+                                maxValue: 8
+                            }
                         },
                         defaultWeight: 10
                     }, 
@@ -56,8 +58,10 @@ var INLModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            minValue: 0,
-                            maxValue: 6
+                            functionArgs: {
+                                minValue: 0,
+                                maxValue: 6
+                            }
                         },
                         defaultWeight: 10
                     }
