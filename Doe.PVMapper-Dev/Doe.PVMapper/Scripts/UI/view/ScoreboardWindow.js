@@ -33,6 +33,24 @@
     }
 });
 
+Ext.define('MainApp.view.UtilityFunctionEdit', {
+    extend: "MainApp.view.Window",
+    title: 'Utiltiy Function Editor',
+    layout: 'fit',
+    width: 300,
+    height: 200,
+    buttons: [{
+        buttons: [{
+            xtype: 'button',
+            text: 'OK',
+            handler: function () { }
+        }, {
+            xtype: 'button',
+            text: 'Cancel',
+            handler: function () { }
+        }]
+    }]
+});
 
 var toolsStore = Ext.create('Ext.data.Store', {
     autoSync: false,
@@ -73,14 +91,29 @@ var scoreboardColumns = [{
     dataIndex: 'weight',
     editor: 'textfield'
 }, {
+    xtype: 'actioncolumn',
     text: 'Utility',
-    width: 40,
-    //flex: 0, //Will not be resized
-    //shrinkWrap: 0,
-    sortable: false,
-    hideable: true,
-    dataIndex: '',
-    editor: ''
+    tooltip: 'Edit the Utility Scoring Function for this Tool',
+    items: [{
+        icon: 'http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/gear_icon.jpg',
+        height: 24,
+        width: 24,
+        handler: function (view, rowIndex, colIndex, item, e, record) {
+            var dynamicPanel = Ext.create('Ext.panel.Panel', {
+                items: [{
+                    xtype: 'text',
+                    text: 'configure me',
+                    width: 100,
+                    shrinkWrap: 1,
+                    sortable: true,
+                    hideable: false,
+                }]
+            });
+            var windows = Ext.create('MainApp.view.UtilityFunctionEdit', {
+                items: dynamicPanel
+            }).show().toFront();
+        }
+    }]
 }, {
     text: undefined,
     sealed: true,
@@ -194,7 +227,7 @@ toolsStore.on({
         });
 
         //Now update the sites section of the grid
-        scoreboardPanel.reconfigure(this, scoreboardColumns);
+        scoreboardGrid.reconfigure(this, scoreboardColumns);
     }
 
 });
@@ -338,7 +371,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
 //    }
 //});
 
-var scoreboardPanel = Ext.create('Ext.grid.ScoreboardGrid', {
+var scoreboardGrid = Ext.create('Ext.grid.ScoreboardGrid', {
 });
 
 Ext.define('MainApp.view.ScoreboardWindow', {
@@ -348,7 +381,7 @@ Ext.define('MainApp.view.ScoreboardWindow', {
     height: 400,
     cls: "propertyBoard",
     closeAction: 'hide',
-    items: scoreboardPanel
+    items: scoreboardGrid
 });
 
 
