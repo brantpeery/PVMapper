@@ -1,4 +1,5 @@
-﻿var toolModel = Ext.define('Tools', {
+﻿
+var toolModel = Ext.define('Tools', {
     extend: 'Ext.data.Model',
     xtype: 'Tools',
     fields: [{
@@ -34,7 +35,7 @@
 });
 
 Ext.define('MainApp.view.UtilityFunctionEdit', {
-    extend: "MainApp.view.Window",
+  extend: "MainApp.view.Window",
     title: 'Utiltiy Function Editor',
     layout: 'fit',
     width: 300,
@@ -126,9 +127,15 @@ var scoreboardColumns = [{
                     hideable: false,
                 }]
             });
-            var windows = Ext.create('MainApp.view.UtilityFunctionEdit', {
-                items: dynamicPanel
-            }).show();
+            //var windows = Ext.create('MainApp.view.UtilityFunctionEdit', {
+            //    items: dynamicPanel
+            //}).show();
+
+            var window = createWindow(record.data.name + ' Function Editor','MainApp.view.UtilityFunctionEdit', {
+              items: dynamicPanel
+            });
+            window.show();
+
         }
     }]
 }, {
