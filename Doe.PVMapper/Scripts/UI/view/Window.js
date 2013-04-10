@@ -109,42 +109,48 @@ Ext.define('MainApp.view.Window', {
   }
 });
 
+var WindowManager;
+(function (wnMgr) {
 
-function createWindow(aTitle, aClassName, aConfigObj) {
-  aTitle = aTitle == null ? "Untitled Window": aTitle;
-  aClassName = aClassName == null ? "MyApp.view.Window" : aClassName;
-  aConfigObj = aConfigObj == null ? {} : aConfigObj;
+  wnMgr.createWindow = function (className, configObj, allowDuplicate) {
+    className = (typeof(className) == "string") ? className : ("MyApp.view.Window");
+    configObj = (configObj === undefined || configObj == null) ? {} : configObj;
+    var aTitle = (configObj.title) ? configObj.title : "Untitled Window";
+    allowDuplicate = (allowDuplicate==true);
 
-  var taskBar = Ext.getCmp('maintaskbar');
-  // check to see if the window exists.  Show if it is, otherwise add new button.
-  if (taskBar) {
-    var aWin = null;
-    for (var i = 0; i < taskBar.items.length; i++) {
-      if (typeof (taskBar.items.getAt(i).associate) != 'undefined') {
-        aWin = taskBar.items.getAt(i).associate;
-        if (aTitle == aWin.title)
-          break;
-        else aWin = null;
+    var taskBar = Ext.getCmp('maintaskbar');
+    // check to see if the window exists.  Show if it is, otherwise add new button.
+    if (taskBar) {
+      var aWin = null;
+      if (!allowDuplicate) {
+        for (var i = 0; i < taskBar.items.length; i++) {
+          if (typeof (taskBar.items.getAt(i).associate) != 'undefined') {
+            aWin = taskBar.items.getAt(i).associate;
+            if (aTitle == aWin.title)
+              break;
+            else aWin = null;
+          }
+        }
+      }
+
+      if (aWin != null) {
+        //if ((aWin.ViewState === Ext.view.ViewState.MINIMIZED) || (aWin.ViewState === Ext.view.ViewState.HIDDEN) || (aWin.ViewState === Ext.view.ViewState.COLLAPSED)) {
+        //  aWin.viewState = Ext.view.ViewState.NORMAL;
+        //}
+
+        if (aWin.viewState == Ext.view.ViewState.HIDDEN) aWin.show();
+        if (aWin.viewState == Ext.view.ViewState.MINIMIZED) aWin.viewState = Ext.view.ViewState.NORMAL;
+        if (aWin.viewState == Ext.view.ViewState.COLLAPSED) aWin.expand();
+        return aWin;
+      }
+      else {
+        aWin = Ext.create(className, configObj);
+
+        aWin.setTitle(aTitle);
+        return aWin;
       }
     }
-
-    if (aWin != null) {
-      //if ((aWin.ViewState === Ext.view.ViewState.MINIMIZED) || (aWin.ViewState === Ext.view.ViewState.HIDDEN) || (aWin.ViewState === Ext.view.ViewState.COLLAPSED)) {
-      //  aWin.viewState = Ext.view.ViewState.NORMAL;
-      //}
-     
-      if (aWin.viewState == Ext.view.ViewState.HIDDEN) aWin.show();
-      if (aWin.viewState == Ext.view.ViewState.MINIMIZED) aWin.viewState = Ext.view.ViewState.NORMAL;
-      if (aWin.viewState == Ext.view.ViewState.COLLAPSED) aWin.expand();
-      return aWin;
-    }
-    else {
-      aWin = Ext.create(aClassName, aConfigObj);
-
-      aWin.setTitle(aTitle);
-      return aWin;
-    }
   }
-}
+})(WindowManager || (WindowManager = {}));
 
 
