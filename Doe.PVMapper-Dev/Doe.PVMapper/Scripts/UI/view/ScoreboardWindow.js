@@ -54,7 +54,7 @@ Ext.define('MainApp.view.UtilityFunctionEdit', {
 });
 
 var toolsStore = Ext.create('Ext.data.Store', {
-    autoSync: false,
+    autoSync: true,
     autoLoad: true,
     model: 'Tools',
     data: pvMapper.mainScoreboard.getTableData(),
@@ -80,8 +80,21 @@ var scoreboardColumns = [{
     sortable: true,
     hideable: false,
     dataIndex: 'name',
-    editor: 'textfield'
-
+    //editor: 'textfield',
+    summaryType: function (records) {
+        //Note: this fails when we allow grouping by arbitrary fields (and it fails in mysterious ways)
+        return records[0].get('category') + " subtotal:";
+    },
+//}, {
+//    text: 'Category',
+//    width: 90,
+//    //flex: 0, //Will not be resized
+//    //shrinkWrap: 1,
+//    sortable: true,
+//    hideable: true,
+//    hidden: true,
+//    dataIndex: 'category',
+//    editor: 'textfield',
 }, {
     text: 'Weight',
     width: 45,
@@ -90,11 +103,14 @@ var scoreboardColumns = [{
     sortable: true,
     hideable: false,
     dataIndex: 'weight',
-    editor: 'textfield'
+    editor: 'numberfield', //TODO: this isn't storing after an edit. Ought to fix that.
 }, {
     xtype: 'actioncolumn',
     text: 'Utility',
     tooltip: 'Edit the Utility Scoring Function for this Tool',
+    width: 40,
+    sortable: false,
+    hideable: false,
     items: [{
         icon: 'http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/gear_icon.jpg',
         height: 24,
@@ -173,7 +189,7 @@ toolsStore.on({
                     dataIndex: "sites",
                     //flex: 1, //Will stretch with the size of the window
                     //maxWidth: 500,
-                    width: 45,
+                    width: 40,
                     renderer: function (value, metaData) {
                         if (value.length <= idx) return '...'; //Avoid the index out of range error
                         if (isNaN(value[idx].utility)) return '...';
@@ -233,10 +249,17 @@ Ext.define('Ext.grid.ScoreboardGrid', {
         clicksToEdit: 1
     })],
     features: [
-        {ftype: 'grouping'},
-    {
-        ftype: 'summary'
-    }]
+        {
+            //Note: this feature provides per-group summary values, rather than repeating the global summary for each group.
+            groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
+            ftype: 'groupingsummary',
+            collapsible: false,
+            enableGroupingMenu: false,
+            //hideGroupedHeader: true, <-- this is handy, if we ever allow grouping by arbitrary fields
+        },
+        //{ ftype: 'grouping' },
+        //{ ftype: 'summary' }
+    ]
 });
 
 var scoreboardGrid = Ext.create('Ext.grid.ScoreboardGrid', {
@@ -247,7 +270,7 @@ Ext.define('MainApp.view.ScoreboardWindow', {
     title: 'Main Scoreboard',
     width: 800,
     height: 400,
-    cls: "propertyBoard",
+    //cls: "propertyBoard", <-- this looked hokey, and conflicted with ext js's default styling.
     closeAction: 'hide',
     items: scoreboardGrid
 });
