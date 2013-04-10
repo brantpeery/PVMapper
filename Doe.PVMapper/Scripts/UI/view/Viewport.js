@@ -60,7 +60,7 @@ Ext.define( 'MainApp.view.Viewport', {
               items: [ ],
               addButton: function (winObj) {
                 //if the button exists, do nothing.
-                if ( this.items.items.indexOfObject( function ( val ) { return val.text === winObj.title; } ) >= 0 ) return; 
+                //if ( this.items.items.indexOfObject( function ( val ) { return val.text === winObj.title; } ) >= 0 ) return; 
                 var abtn = Ext.create( 'Ext.button.Button', {
                   text: winObj.title,
                   associate: winObj,
@@ -121,3 +121,4 @@ Ext.define( 'MainApp.view.Viewport', {
         }],
     }]
 });
+

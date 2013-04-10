@@ -46,12 +46,16 @@ Ext.define('MainApp.view.Window', {
         for (var i = 0; i < taskBar.items.length; i++) {
           if (typeof (taskBar.items.get(i).associate) != 'undefined') {
             aWin = taskBar.items.get(i).associate;
-            break;
+            if (win == aWin)
+              break;
+            else aWin = null;
           }
         }
 
         if (aWin != null)
           aWin.viewState = Ext.view.ViewState.NORMAL;
+        else
+          taskBar.addButton(aWin);
         return true;
       }
     },
@@ -74,7 +78,9 @@ Ext.define('MainApp.view.Window', {
         for(var i=0;i<taskBar.items.length;i++) {
           if (typeof (taskBar.items.getAt(i).associate) != 'undefined') {
             aWin = taskBar.items.getAt(i).associate;
-            break;
+            if (win == aWin)
+              break;
+            else aWin = null;
           }
         }
 
@@ -102,3 +108,43 @@ Ext.define('MainApp.view.Window', {
     }
   }
 });
+
+
+function createWindow(aTitle, aClassName, aConfigObj) {
+  aTitle = aTitle == null ? "Untitled Window": aTitle;
+  aClassName = aClassName == null ? "MyApp.view.Window" : aClassName;
+  aConfigObj = aConfigObj == null ? {} : aConfigObj;
+
+  var taskBar = Ext.getCmp('maintaskbar');
+  // check to see if the window exists.  Show if it is, otherwise add new button.
+  if (taskBar) {
+    var aWin = null;
+    for (var i = 0; i < taskBar.items.length; i++) {
+      if (typeof (taskBar.items.getAt(i).associate) != 'undefined') {
+        aWin = taskBar.items.getAt(i).associate;
+        if (aTitle == aWin.title)
+          break;
+        else aWin = null;
+      }
+    }
+
+    if (aWin != null) {
+      //if ((aWin.ViewState === Ext.view.ViewState.MINIMIZED) || (aWin.ViewState === Ext.view.ViewState.HIDDEN) || (aWin.ViewState === Ext.view.ViewState.COLLAPSED)) {
+      //  aWin.viewState = Ext.view.ViewState.NORMAL;
+      //}
+     
+      if (aWin.viewState == Ext.view.ViewState.HIDDEN) aWin.show();
+      if (aWin.viewState == Ext.view.ViewState.MINIMIZED) aWin.viewState = Ext.view.ViewState.NORMAL;
+      if (aWin.viewState == Ext.view.ViewState.COLLAPSED) aWin.expand();
+      return aWin;
+    }
+    else {
+      aWin = Ext.create(aClassName, aConfigObj);
+
+      aWin.setTitle(aTitle);
+      return aWin;
+    }
+  }
+}
+
+
