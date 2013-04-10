@@ -131,7 +131,8 @@ var scoreboardColumns = [{
             //    items: dynamicPanel
             //}).show();
 
-            var window = createWindow(record.data.name + ' Function Editor','MainApp.view.UtilityFunctionEdit', {
+            var window = WindowManager.createWindow('MainApp.view.UtilityFunctionEdit', {
+              title: record.data.name + ' Function Editor',
               items: dynamicPanel
             });
             window.show();
