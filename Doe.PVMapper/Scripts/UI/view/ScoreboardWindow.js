@@ -1,5 +1,4 @@
-﻿
-var toolModel = Ext.define('Tools', {
+﻿var toolModel = Ext.define('Tools', {
     extend: 'Ext.data.Model',
     xtype: 'Tools',
     fields: [{
@@ -17,6 +16,10 @@ var toolModel = Ext.define('Tools', {
     }, {
         name: 'weight',
         type: 'number'
+    },{
+        name: 'utility',
+        mapping: 'scoreUtility',
+        type: 'object'
     }, {
         name: 'sites',
         mapping: 'scores',
@@ -34,28 +37,9 @@ var toolModel = Ext.define('Tools', {
     }
 });
 
-Ext.define('MainApp.view.UtilityFunctionEdit', {
-  extend: "MainApp.view.Window",
-    title: 'Utiltiy Function Editor',
-    layout: 'fit',
-    width: 300,
-    height: 200,
-    buttons: [{
-        buttons: [{
-            xtype: 'button',
-            text: 'OK',
-            handler: function () { }
-        }, {
-            xtype: 'button',
-            text: 'Cancel',
-            handler: function () { }
-        }]
-    }]
-
-});
 
 var toolsStore = Ext.create('Ext.data.Store', {
-    autoSync: true,
+    autoSync: false,
     autoLoad: true,
     model: 'Tools',
     data: pvMapper.mainScoreboard.getTableData(),
@@ -81,21 +65,8 @@ var scoreboardColumns = [{
     sortable: true,
     hideable: false,
     dataIndex: 'name',
-    //editor: 'textfield',
-    summaryType: function (records) {
-        //Note: this fails when we allow grouping by arbitrary fields (and it fails in mysterious ways)
-        return records[0].get('category') + " subtotal:";
-    },
-//}, {
-//    text: 'Category',
-//    width: 90,
-//    //flex: 0, //Will not be resized
-//    //shrinkWrap: 1,
-//    sortable: true,
-//    hideable: true,
-//    hidden: true,
-//    dataIndex: 'category',
-//    editor: 'textfield',
+    editor: 'textfield'
+
 }, {
     text: 'Weight',
     width: 45,
@@ -104,14 +75,11 @@ var scoreboardColumns = [{
     sortable: true,
     hideable: false,
     dataIndex: 'weight',
-    editor: 'numberfield', //TODO: this isn't storing after an edit. Ought to fix that.
+    editor: 'textfield'
 }, {
     xtype: 'actioncolumn',
     text: 'Utility',
     tooltip: 'Edit the Utility Scoring Function for this Tool',
-    width: 40,
-    sortable: false,
-    hideable: false,
     items: [{
         icon: 'http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/gear_icon.jpg',
         height: 24,
@@ -127,16 +95,36 @@ var scoreboardColumns = [{
                     hideable: false,
                 }]
             });
-            //var windows = Ext.create('MainApp.view.UtilityFunctionEdit', {
-            //    items: dynamicPanel
-            //}).show();
+            var uf = record.get('utility');
+            var utilityFn = pvMapper.UtilityFunctions[uf.functionName];
 
-            var window = WindowManager.createWindow('MainApp.view.UtilityFunctionEdit', {
-              title: record.data.name + ' Function Editor',
-              items: dynamicPanel
-            });
-            window.show();
+            var windows = Ext.create('MainApp.view.UtilityFunctionEdit', {
+                items: dynamicPanel,
+                buttons: [{
+                    xtype: 'button',
+                    text: 'OK',
+                    handler: function () {
+                        //send the object (reference) to the function so it can change it
+                        
+                        //Call the setupwindow function with the context of the function it is setting up
+                        utilityFn.windowOK.apply(utilityFn, [dynamicPanel, uf.functionArgs]);
+                        //
 
+                        record.store.update();
+                    }
+                }, {
+                    xtype: 'button',
+                    text: 'Cancel',
+                    handler: function () { }
+                }],
+                listeners: {
+                    beforerender: function () {
+                        utilityFn.windowSetup.apply(utilityFn, [dynamicPanel, uf.functionArgs], utilityFn.fn);
+                        dynamicPanel.doLayout();
+                    }
+                }
+
+            }).show();
         }
     }]
 }, {
@@ -257,7 +245,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
         clicksToEdit: 1
     })],
     features: [
-        {
+    {
             //Note: this feature provides per-group summary values, rather than repeating the global summary for each group.
             groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
             ftype: 'groupingsummary',

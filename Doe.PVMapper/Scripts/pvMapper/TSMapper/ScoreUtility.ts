@@ -1,6 +1,7 @@
-﻿
+﻿declare var Ext: any;
 
 module pvMapper {
+
     export interface ICustomFunctionCallback {
         (x: number, args: any): number;
     }
@@ -52,6 +53,7 @@ module pvMapper {
     export interface IMinMaxUtilityArgs extends IScoreUtilityArgs {
         minValue: number;
         maxValue: number;
+        target: number;
     }
 
     export interface ISinusoidalUtilityArgs extends IMinMaxUtilityArgs {
@@ -68,9 +70,30 @@ module pvMapper {
     //Created for static access from more than one function def
     export class ScoreUtilityWindows {
         public static basicWindow = {
-            setup: function () {
+             setup: function (panel, args, fn) {
+                // var board;
+                // var fnOfy;
+                // function loadBoard() {
+                //     board = JXG.JSXGraph.initBoard('FunctionBox-body', { boundingbox: [0, 1.05, 100, -.05], axis: true, showCopyright: false, showNavigation: false });
+                //     f2 = board.create('functiongraph', [UtilityFunctions.utilityFunction1], { strokeWidth: 3, strokeColor: "red" });
+                //}
+                 panel.removeAll();
+                panel.add(
+                    //Ext.create('MainApp.panel.MinMaxTargetPanel', {
+                    //    listeners: {
+                    //        afterrender: function(){
+                    //            //loadBoard();
+                    //        }
+                    //    }
 
-            },
+                    //})
+
+                    Ext.create('Ext.grid.property.Grid', {
+                        source: args
+                    })
+                    );
+            }
+            ,
             okhandler: function () {
 
             }
@@ -194,7 +217,4 @@ module pvMapper {
             throw "Deserialize is not implemented yet for this object";
         }
     }
-
-
-
 }
