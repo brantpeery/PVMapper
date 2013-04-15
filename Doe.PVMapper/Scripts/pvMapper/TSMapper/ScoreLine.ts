@@ -121,6 +121,20 @@ module pvMapper {
 
         //}
 
+        public updateScores() {
+            this.scores.forEach(function (score: Score, index: number, scores: Score[]) {
+                var oldvalue = score.value;
+                score.setUtility(this.getUtilityScore(score.value));
+                this.scoreChangeEvent.fire(self, <IScoreValueChangedEvent> {
+                    score: score,
+                    oldValue: oldvalue,
+                    newValue: score.value
+                });
+            },
+            this)
+            
+        }
+
         public valueChangeHandler: ICallback;
 
         //Storage pointer to the tool's sitechanged handler function

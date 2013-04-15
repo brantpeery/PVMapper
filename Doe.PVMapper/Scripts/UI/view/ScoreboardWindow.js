@@ -16,7 +16,7 @@
     }, {
         name: 'weight',
         type: 'number'
-    },{
+    }, {
         name: 'utility',
         mapping: 'scoreUtility',
         type: 'object'
@@ -109,20 +109,21 @@ var scoreboardColumns = [{
                     text: 'OK',
                     handler: function () {
                         //send the object (reference) to the function so it can change it
-                        
-                      //Call the setupwindow function with the context of the function it is setting up
-                      if (utilityFn.windowOk != undefined)
-                        utilityFn.windowOk.apply(utilityFn, [dynamicPanel, uf.functionArgs]);
+
+                        //Call the setupwindow function with the context of the function it is setting up
+                        if (utilityFn.windowOk != undefined)
+                            utilityFn.windowOk.apply(utilityFn, [dynamicPanel, uf.functionArgs]);
                         //
 
                         record.store.update();
+                        record.raw.updateScores();
                         windows.close();
                     }
                 }, {
                     xtype: 'button',
                     text: 'Cancel',
                     handler: function () {
-                      windows.close();
+                        windows.close();
                     }
                 }],
                 listeners: {
@@ -254,13 +255,13 @@ Ext.define('Ext.grid.ScoreboardGrid', {
     })],
     features: [
     {
-            //Note: this feature provides per-group summary values, rather than repeating the global summary for each group.
-            groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
-            ftype: 'groupingsummary',
-            collapsible: false,
-            enableGroupingMenu: false,
-            //hideGroupedHeader: true, <-- this is handy, if we ever allow grouping by arbitrary fields
-        },
+        //Note: this feature provides per-group summary values, rather than repeating the global summary for each group.
+        groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
+        ftype: 'groupingsummary',
+        collapsible: false,
+        enableGroupingMenu: false,
+        //hideGroupedHeader: true, <-- this is handy, if we ever allow grouping by arbitrary fields
+    },
         //{ ftype: 'grouping' },
         //{ ftype: 'summary' }
     ]

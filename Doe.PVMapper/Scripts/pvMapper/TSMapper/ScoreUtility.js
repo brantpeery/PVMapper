@@ -4,12 +4,15 @@ var pvMapper;
     var ScoreUtilityWindows = (function () {
         function ScoreUtilityWindows() { }
         ScoreUtilityWindows.basicWindow = {
+            _xArgs: {
+            },
             setup: function (panel, args, fn) {
+                var _this = this;
                 var board;
                 var fnOfy;
-                var xArgs = Ext.Object.merge({
-                }, args);//!Create a clone of the args for use in the graph
-                
+                this._xArgs = Ext.Object.merge({
+                }, args)//!Create a clone of the args for use in the graph
+                ;
                 function loadboard() {
                     Extras.loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
                     Extras.getScript("http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js", function () {
@@ -25,7 +28,7 @@ var pvMapper;
                             showNavigation: false
                         });
                         fnOfy = board.create('functiongraph', function (x) {
-                            return fn(x, xArgs);
+                            return fn(x, _this._xArgs);
                         }, {
                             strokeWidth: 3,
                             strokeColor: "red"
@@ -34,7 +37,7 @@ var pvMapper;
                 }
                 panel.removeAll();
                 panel.add(Ext.create('Ext.grid.property.Grid', {
-                    source: xArgs,
+                    source: _this._xArgs,
                     listeners: {
                         afterrender: function (sender, eOpts) {
                             loadboard();
@@ -68,7 +71,8 @@ var pvMapper;
                     }
                 });
             },
-            okhandler: function () {
+            okhandler: function (panel, args) {
+                Ext.apply(args, this._xArgs);
             }
         };
         return ScoreUtilityWindows;
