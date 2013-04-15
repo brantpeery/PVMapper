@@ -2,9 +2,10 @@
     extend: "MainApp.view.Window",
     title: 'Utiltiy Function Editor',
     modal:true,
-    layout: 'fit',
+    layout: '',
     width: 300,
-    height: 200,
+    shrinkWrap: 3,
+    overflowY:'auto',
     buttons: [{
         buttons: [{
             xtype: 'button',
