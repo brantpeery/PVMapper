@@ -110,16 +110,20 @@ var scoreboardColumns = [{
                     handler: function () {
                         //send the object (reference) to the function so it can change it
                         
-                        //Call the setupwindow function with the context of the function it is setting up
-                        utilityFn.windowOK.apply(utilityFn, [dynamicPanel, uf.functionArgs]);
+                      //Call the setupwindow function with the context of the function it is setting up
+                      if (utilityFn.windowOk != undefined)
+                        utilityFn.windowOk.apply(utilityFn, [dynamicPanel, uf.functionArgs]);
                         //
 
                         record.store.update();
+                        windows.close();
                     }
                 }, {
                     xtype: 'button',
                     text: 'Cancel',
-                    handler: function () { }
+                    handler: function () {
+                      windows.close();
+                    }
                 }],
                 listeners: {
                     beforerender: function () {
