@@ -5,23 +5,68 @@ var pvMapper;
         function ScoreUtilityWindows() { }
         ScoreUtilityWindows.basicWindow = {
             setup: function (panel, args, fn) {
-                // var board;
-                // var fnOfy;
-                // function loadBoard() {
-                //     board = JXG.JSXGraph.initBoard('FunctionBox-body', { boundingbox: [0, 1.05, 100, -.05], axis: true, showCopyright: false, showNavigation: false });
-                //     f2 = board.create('functiongraph', [UtilityFunctions.utilityFunction1], { strokeWidth: 3, strokeColor: "red" });
-                //}
+                var board;
+                var fnOfy;
+                var xArgs = Ext.Object.merge({
+                }, args);//!Create a clone of the args for use in the graph
+                
+                function loadboard() {
+                    Extras.loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
+                    Extras.getScript("http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js", function () {
+                        board = JXG.JSXGraph.initBoard('FunctionBox-body', {
+                            boundingbox: [
+                                0, 
+                                1.05, 
+                                100, 
+                                -0.05
+                            ],
+                            axis: true,
+                            showCopyright: false,
+                            showNavigation: false
+                        });
+                        fnOfy = board.create('functiongraph', function (x) {
+                            return fn(x, xArgs);
+                        }, {
+                            strokeWidth: 3,
+                            strokeColor: "red"
+                        });
+                    });
+                }
                 panel.removeAll();
-                panel.add(//Ext.create('MainApp.panel.MinMaxTargetPanel', {
-                //    listeners: {
-                //        afterrender: function(){
-                //            //loadBoard();
-                //        }
-                //    }
-                //})
-                Ext.create('Ext.grid.property.Grid', {
-                    source: args
-                }));
+                panel.add(Ext.create('Ext.grid.property.Grid', {
+                    source: xArgs,
+                    listeners: {
+                        afterrender: function (sender, eOpts) {
+                            loadboard();
+                        },
+                        edit: function (editor, e, eOpts) {
+                            //Update the xArgs
+                            //Already handled by the prperty grid :)
+                            board.update();
+                        },
+                        propertychange: function (source, recordId, value, oldValue, eOpts) {
+                            board.update();
+                        }
+                    }
+                }), {
+                    xtype: //Center the graph
+                    'panel',
+                    layout: {
+                        align: 'center',
+                        pack: 'center',
+                        type: 'vbox'
+                    },
+                    items: {
+                        id: //padding: '10 0 0 0',
+                        'FunctionBox',
+                        xtype: 'panel',
+                        layout: 'fit',
+                        border: true,
+                        width: 200,
+                        height: 225,
+                        padding: 5
+                    }
+                });
             },
             okhandler: function () {
             }

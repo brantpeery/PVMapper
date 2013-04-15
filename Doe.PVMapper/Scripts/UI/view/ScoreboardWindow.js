@@ -90,9 +90,13 @@ var scoreboardColumns = [{
                     xtype: 'text',
                     text: 'configure me',
                     width: 100,
-                    shrinkWrap: 1,
+                    shrinkWrap: 3,
                     sortable: true,
                     hideable: false,
+                    layout: {
+                        type: 'vbox',
+                        align: 'center'
+                    }
                 }]
             });
             var uf = record.get('utility');
@@ -119,7 +123,7 @@ var scoreboardColumns = [{
                 }],
                 listeners: {
                     beforerender: function () {
-                        utilityFn.windowSetup.apply(utilityFn, [dynamicPanel, uf.functionArgs], utilityFn.fn);
+                        utilityFn.windowSetup.apply(utilityFn, [dynamicPanel, uf.functionArgs, utilityFn.fn]);
                         dynamicPanel.doLayout();
                     }
                 }
