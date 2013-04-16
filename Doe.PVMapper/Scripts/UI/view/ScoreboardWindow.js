@@ -258,6 +258,23 @@ toolsStore.on({
                         });
 
                         var average = total / count;
+
+                        // post the average score to the feature, so that it can render correctly on the map
+                        //TODO: is this really the best place to be mucking about with the feature attributes?
+                        if (records && records.length > 0 && records[0].raw &&
+                            records[0].raw.scores && records[0].raw.scores.length > idx &&
+                            records[0].raw.scores[idx].site && records[0].raw.scores[idx].site.feature) {
+                            // test if the feature's average score value has changed
+                            var feature = records[0].raw.scores[idx].site.feature;
+                            if (feature.attributes['overallScore'] !== average) {
+                                feature.attributes.overallScore = average;
+                                // set the score's color as an attribute on the feature (note - this is at least partly a hack...)
+                                feature.attributes.fillColor = (!isNaN(average)) ? getColor(average) : "";
+                                // redraw the feature
+                                feature.layer.drawFeature(feature);
+                            }
+                        }
+
                         return average;
                     },
                     summaryRenderer: function (value) {
@@ -286,7 +303,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
     //width: '100%',
     //height:600,
     title: "Tools List",
-    selType: 'cellmodel',
+    selType: 'rowmodel', //Note: use 'cellmodel' once we have cell editing worked out
     columns: scoreboardColumns,
     plugins: [
     Ext.create('Ext.grid.plugin.CellEditing', {
@@ -312,16 +329,11 @@ Ext.define('MainApp.view.ScoreboardWindow', {
     extend: "MainApp.view.Window",
     title: 'Main Scoreboard',
     width: 800,
-    height: 400,
+    height: 520,
     //cls: "propertyBoard", <-- this looked hokey, and conflicted with ext js's default styling.
     closeAction: 'hide',
     items: scoreboardGrid
 });
-
-
-
-
-
 
 
 //toolsStore.load(pvMapper.mainScoreboard.getTableData()); //Load the data to the panel
