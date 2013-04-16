@@ -29,7 +29,8 @@ module BYUModules {
                     category: "Land Use",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { },
-                    scoreUtilityOptions: null
+                    scoreUtilityOptions: <pvMapper.IScoreUtilityOptions>{
+                    },
                 }],
                 infoTools: null
             });
@@ -42,27 +43,34 @@ module BYUModules {
     
     function addMap() {
         wildernessLayer = OpenLayers.Layer.WMS(
-                "Wilderness Areas",
-                "https://geoserver.byu.edu/geoserver/wms?",
-                {
-                    
-                }
-                { isBaseLayer: false }
-            );
-        //...
-        //pvMapper.map.addLayer(wildernessLayer);
+            "Wilderness Areas",
+            "https://geoserver.byu.edu/geoserver/wms?",
+            {
+                layer_type: "polygon",
+                transparent: "true",
+                format: "image/gif",
+                srs: "EPSG:42105",
+            },
+            { isBaseLayer: false }
+        );
+        pvMapper.map.addLayer(wildernessLayer);
     }
 
     function removeMap() {
-        //pvMapper.map.removeLayer(wildernessLayer, false);
+        pvMapper.map.removeLayer(wildernessLayer, false);
     }
 
     function updateScore(score: pvMapper.Score, layers: string, description?: string) {
         var params = {
+            mapExtent: score.site.geometry.bounds.toBBOX(6, false),
+            geometryType: "esriGeometryEnvelope",
+            geometry: score.site.geometry.bounds.toBBOX(6, false),
+            f: "json",
             service: "WCS",
             version: "1.1.1",
             request: "GetCoverage",
             layers: "PVMapper:wilderness_areas",
+            returnGeometry: false,
         };
         
         var request = OpenLayers.Request.GET({

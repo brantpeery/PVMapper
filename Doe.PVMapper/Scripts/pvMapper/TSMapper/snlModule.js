@@ -4,6 +4,7 @@
 /// <reference path="Tools.ts" />
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
+/// <reference path="ScoreUtility.ts" />
 var INLModules;
 (function (INLModules) {
     var maxSearchDistanceInMeters = (30 * 1000);// 30 km - enough?
@@ -39,17 +40,19 @@ var INLModules;
                         scoreUtilityOptions: // having any nearby line is much better than having no nearby line, so let's reflect that.
                         {
                             functionName: "linear3pt",
-                            p0: {
-                                x: 0,
-                                y: 1
-                            },
-                            p1: {
-                                x: (maxSearchDistanceInMeters - 1),
-                                y: 0.3
-                            },
-                            p2: {
-                                x: maxSearchDistanceInMeters,
-                                y: 0
+                            functionArgs: {
+                                p0: {
+                                    x: 0,
+                                    y: 1
+                                },
+                                p1: {
+                                    x: (maxSearchDistanceInMeters - 1),
+                                    y: 0.3
+                                },
+                                p2: {
+                                    x: maxSearchDistanceInMeters,
+                                    y: 0
+                                }
                             }
                         },
                         defaultWeight: 10

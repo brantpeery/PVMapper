@@ -1,4 +1,26 @@
-﻿var toolModel = Ext.define('Tools', {
+﻿/*
+ * Start FIX: Summary + Grouping. Without this fix there would be a summary row under each group
+ * http://www.sencha.com/forum/showthread.php?135442-Ext.grid.feature.Summary-amp-amp-Ext.grid.feature.Grouping
+ */
+Ext.override(Ext.grid.feature.Summary, {
+    closeRows: function () {
+        return '</tpl>{[this.recursiveCall ? "" : this.printSummaryRow()]}';
+    }
+});
+Ext.override(Ext.XTemplate, {
+    recurse: function (values, reference) {
+        this.recursiveCall = true;
+        var returnValue = this.apply(reference ? values[reference] : values);
+        this.recursiveCall = false;
+        return returnValue;
+    }
+});
+/*
+ * End FIX: Summary + Grouping. Without this fix there would be a summary row under each group
+ * http://www.sencha.com/forum/showthread.php?135442-Ext.grid.feature.Summary-amp-amp-Ext.grid.feature.Grouping
+ */
+
+var toolModel = Ext.define('Tools', {
     extend: 'Ext.data.Model',
     xtype: 'Tools',
     fields: [{
@@ -16,6 +38,10 @@
     }, {
         name: 'weight',
         type: 'number'
+    }, {
+        name: 'utility',
+        mapping: 'scoreUtility',
+        type: 'object'
     }, {
         name: 'sites',
         mapping: 'scores',
@@ -35,7 +61,7 @@
 
 
 var toolsStore = Ext.create('Ext.data.Store', {
-    autoSync: false,
+    autoSync: true,
     autoLoad: true,
     model: 'Tools',
     data: pvMapper.mainScoreboard.getTableData(),
@@ -61,8 +87,21 @@ var scoreboardColumns = [{
     sortable: true,
     hideable: false,
     dataIndex: 'name',
-    editor: 'textfield'
-
+    //editor: 'textfield', <-- don't edit this field - that would be silly
+    summaryType: function (records) {
+        //Note: this fails when we allow grouping by arbitrary fields (and it fails in mysterious ways)
+        return records[0].get('category') + " subtotal:";
+    },
+    //}, {
+    //    text: 'Category',
+    //    width: 90,
+    //    //flex: 0, //Will not be resized
+    //    //shrinkWrap: 1,
+    //    sortable: true,
+    //    hideable: true,
+    //    hidden: true,
+    //    dataIndex: 'category',
+    //    editor: 'textfield',
 }, {
     text: 'Weight',
     width: 45,
@@ -71,16 +110,71 @@ var scoreboardColumns = [{
     sortable: true,
     hideable: false,
     dataIndex: 'weight',
-    editor: 'textfield'
+    //editor: 'numberfield', //TODO: this editing this value causes the scoreboard to throw exceptions on every subsequent refresh - fix that someday
 }, {
+    xtype: 'actioncolumn',
     text: 'Utility',
+    tooltip: 'Edit the Utility Scoring Function for this Tool',
     width: 40,
-    //flex: 0, //Will not be resized
-    //shrinkWrap: 0,
     sortable: false,
-    hideable: true,
-    dataIndex: '',
-    editor: ''
+    hideable: false,
+    items: [{
+        icon: 'http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/gear_icon.jpg',
+        height: 24,
+        width: 24,
+        handler: function (view, rowIndex, colIndex, item, e, record) {
+            var dynamicPanel = Ext.create('Ext.panel.Panel', {
+                items: [{
+                    xtype: 'text',
+                    text: 'configure me',
+                    width: 100,
+                    shrinkWrap: 3,
+                    sortable: true,
+                    hideable: false,
+                    layout: {
+                        type: 'vbox',
+                        align: 'center'
+                    }
+                }]
+            });
+            var uf = record.get('utility');
+            var utilityFn = pvMapper.UtilityFunctions[uf.functionName];
+
+            var windows = Ext.create('MainApp.view.UtilityFunctionEdit', {
+                items: dynamicPanel,
+                buttons: [{
+                    xtype: 'button',
+                    text: 'OK',
+                    handler: function () {
+                        //send the object (reference) to the function so it can change it
+
+                        //Call the setupwindow function with the context of the function it is setting up
+                        if (utilityFn.windowOk != undefined)
+                            utilityFn.windowOk.apply(utilityFn, [dynamicPanel, uf.functionArgs]);
+                        //Note: I really don't get this... it seems overly complicated.
+
+                        record.store.update();
+                        record.raw.updateScores();
+                        windows.close();
+                    }
+                }, {
+                    xtype: 'button',
+                    text: 'Cancel',
+                    handler: function () {
+                      windows.close();
+                    }
+                }],
+                listeners: {
+                    beforerender: function () {
+                        utilityFn.windowSetup.apply(utilityFn, [dynamicPanel, uf.functionArgs, utilityFn.fn, utilityFn.xBounds]);
+                        //TODO: can't we just pass uf here, in place of all this other crap?
+                        dynamicPanel.doLayout();
+                    }
+                }
+
+            }).show();
+        }
+    }]
 }, {
     text: undefined,
     sealed: true,
@@ -139,7 +233,7 @@ toolsStore.on({
                     dataIndex: "sites",
                     //flex: 1, //Will stretch with the size of the window
                     //maxWidth: 500,
-                    width: 45,
+                    width: 40,
                     renderer: function (value, metaData) {
                         if (value.length <= idx) return '...'; //Avoid the index out of range error
                         if (isNaN(value[idx].utility)) return '...';
@@ -194,7 +288,7 @@ toolsStore.on({
         });
 
         //Now update the sites section of the grid
-        scoreboardPanel.reconfigure(this, scoreboardColumns);
+        scoreboardGrid.reconfigure(this, scoreboardColumns);
     }
 
 });
@@ -209,150 +303,37 @@ Ext.define('Ext.grid.ScoreboardGrid', {
     //width: '100%',
     //height:600,
     title: "Tools List",
-    selType: 'cellmodel',
+    selType: 'rowmodel', //Note: use 'cellmodel' once we have cell editing worked out
     columns: scoreboardColumns,
     plugins: [
     Ext.create('Ext.grid.plugin.CellEditing', {
         clicksToEdit: 1
     })],
     features: [
-    //{ftype: 'grouping'},
     {
-        ftype: 'summary'
-    }]
+            //Note: this feature provides per-group summary values, rather than repeating the global summary for each group.
+            groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
+            ftype: 'groupingsummary',
+            enableGroupingMenu: false,
+            //hideGroupedHeader: true, <-- this is handy, if we ever allow grouping by arbitrary fields
+        },
+        //{ ftype: 'grouping' },
+        //{ ftype: 'summary' },
+    ]
 });
 
-//Note: this is a failed attempt to get nested/grouped columns to expand their width dynamically (using forcefit and flex)
-//Ext.override(Ext.grid.ColumnLayout, {
-//    completeLayout: function (ownerContext) {
-//        var me = this,
-//            owner = me.owner,
-//            state = ownerContext.state,
-//            needsInvalidate = false,
-//            calculated = me.sizeModels.calculated,
-//            configured = me.sizeModels.configured,
-//            totalFlex = 0, totalWidth = 0, remainingWidth = 0, colWidth = 0,
-//            childItems, len, i, childContext, item,
-//            j, sublen, subChild;
-
-//        console.log("Called column layout completeLayout()");
-
-//        me.callParent(arguments);
-
-
-//        // Get the layout context of the main container
-//        // Required two passes. First pass calculates total flexes of all items
-//        // and child items. Second pass uses those flex values to calculate fixed
-//        // widths for each item, then removes flexing so resizing/hiding works.
-//        if (!state.flexesCalculated && owner.forceFit && !owner.isHeader) {
-//            console.log("Calculating new flex thingey");
-//            childItems = ownerContext.flexedItems = ownerContext.childItems;
-//            len = childItems.length;
-//            totalWidth = state.contentWidth;
-//            if (state.contentWidth < state.boxPlan.availableSpace) {
-//                totalWidth += state.boxPlan.availableSpace - 2;
-//            }
-//            remainingWidth = totalWidth;
-
-
-//            // Begin first pass
-//            ownerContext.flex = 0;
-//            for (i = 0; i < len; i++) {
-//                childContext = childItems[i];
-//                item = childContext.target;
-//                // Special code for Ext.ux.RowExpander
-//                if (item.isRowExpander) {
-//                    item.width = item.flex || item.width;
-//                    totalWidth -= item.width;
-//                    remainingWidth -= item.width;
-//                    item.forceFit = false;
-//                    delete item.flex;
-//                    continue;
-//                }
-
-
-//                if (item.isGroupHeader) {
-//                    totalFlex = 0;
-//                    for (j = 0, sublen = childContext.childItems.length; j < sublen; j++) {
-//                        subChild = childContext.childItems[j];
-//                        subChild.widthModel = calculated;
-//                        totalFlex += subChild.flex;
-//                    }
-//                    item.flex = childContext.flex = childContext.totalFlex = totalFlex;
-//                    ownerContext.flex += totalFlex;
-//                    needsInvalidate = true;
-//                }
-//                else {
-//                    ownerContext.flex += item.flex;
-//                }
-//            }
-
-
-//            ownerContext.totalFlex = ownerContext.flex;
-
-
-//            // Begin second pass
-//            for (i = 0; i < len; i++) {
-//                childContext = childItems[i];
-//                item = childContext.target;
-
-
-//                if (item.isRowExpander) {
-//                    continue;
-//                }
-
-//                // This is probably where the overflow is happening
-//                // Might try using Math.round or Math.floor instead of Math.ceil
-//                item.width = colWidth = Math.min(Math.ceil((totalWidth / ownerContext.totalFlex) * childContext.flex), remainingWidth);
-//                remainingWidth -= colWidth;
-//                childContext.sizeModel.width = childContext.widthModel = configured;
-
-                
-//                if (item.isGroupHeader) {
-//                    for (j = 0, sublen = childContext.childItems.length; j < sublen; j++) {
-//                        subChild = childContext.childItems[j];
-//                        // Another use of Math.ceil where Math.round might work better
-//                        subChild.target.width = Math.ceil((item.width / childContext.flex) * subChild.flex);
-//                        subChild.sizeModel.width = subChild.widthModel = configured;
-//                        delete subChild.flex;
-//                        delete subChild.target.flex;
-//                    }
-//                    childContext.sizeModel.width = childContext.widthModel = calculated;
-//                    delete item.width;
-//                    delete item.flex;
-//                }
-
-//                item.forceFit = false;
-//            }
-
-
-//            delete owner.flex;
-//            owner.forceFit = false;
-
-
-//            if (needsInvalidate) {
-//                console.log("Invalidating context doodle");
-//                ownerContext.invalidate({ state: { flexesCalculated: true } });
-//            }
-//        }
-//    }
-//});
-
-var scoreboardPanel = Ext.create('Ext.grid.ScoreboardGrid', {
+var scoreboardGrid = Ext.create('Ext.grid.ScoreboardGrid', {
 });
 
 Ext.define('MainApp.view.ScoreboardWindow', {
     extend: "MainApp.view.Window",
     title: 'Main Scoreboard',
     width: 800,
-    height: 400,
-    cls: "propertyBoard",
+    height: 520,
+    //cls: "propertyBoard", <-- this looked hokey, and conflicted with ext js's default styling.
     closeAction: 'hide',
-    items: scoreboardPanel
+    items: scoreboardGrid
 });
-
-
-
 
 
 //toolsStore.load(pvMapper.mainScoreboard.getTableData()); //Load the data to the panel

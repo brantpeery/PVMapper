@@ -37,7 +37,7 @@ table {
 
 /*This can all be removed when the css page naming convention is finalized*/
 .propertyBoard td {
-    padding: 2px 4px;
+    /*padding: 2px 4px;*/ /* <-- Note: this caused a bug in the scoreboard's categorical view  */
 }
 
 .propertyBoard .x-window-body {

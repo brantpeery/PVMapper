@@ -50,11 +50,8 @@ module pvMapper {
             //Set default scoreUtilityOptions object if none was provided
             if (options.scoreUtilityOptions == undefined) {
                 options.scoreUtilityOptions = {
-                    maxValue: 1,
-                    minValue: 0,
-                    target: .5,
-                    slope: 50,
-                    functionName: "random" //"moreIsBetter"
+                    functionName: "random",
+                    functionArgs: {}
                 }
             }
 
@@ -123,6 +120,20 @@ module pvMapper {
         //public updateScores(site: Site) {
 
         //}
+
+        public updateScores() {
+            this.scores.forEach(function (score: Score, index: number, scores: Score[]) {
+                var oldvalue = score.value;
+                score.setUtility(this.getUtilityScore(score.value));
+                this.scoreChangeEvent.fire(self, <IScoreValueChangedEvent> {
+                    score: score,
+                    oldValue: oldvalue,
+                    newValue: score.value
+                });
+            },
+            this)
+            
+        }
 
         public valueChangeHandler: ICallback;
 

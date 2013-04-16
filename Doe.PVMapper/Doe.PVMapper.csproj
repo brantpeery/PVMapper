@@ -220,12 +220,15 @@
     <Content Include="Content\OpenLayers\default\style.tidy.css" />
     <Content Include="Scripts\EsriGeoJSON.js" />
     <Content Include="Scripts\ext-4.1.1a.d.ts" />
+    <Content Include="Scripts\img\layer-switcher-maximize.png" />
+    <Content Include="Scripts\img\layer-switcher-minimize.png" />
     <Content Include="Scripts\jquery.d.ts" />
     <Content Include="Scripts\lib.d.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\OpenLayers.d.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreLine.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\common.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\DataManager.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\IEventTypes.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\common.js">
       <DependentUpon>common.ts</DependentUpon>
     </Content>
@@ -311,9 +314,10 @@
     <Content Include="Scripts\pvMapper\TSMapper\ScoreLine.min.js">
       <DependentUpon>ScoreLine.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtility.js" />
-    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtility.min.js" />
-    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtility.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreUtility.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtility.js">
+      <DependentUpon>ScoreUtility.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\siteAreaModule.js">
       <DependentUpon>siteAreaModule.ts</DependentUpon>
     </Content>
@@ -375,7 +379,11 @@
     </Content>
     <Content Include="Scripts\UI\model\Scoreboard.js" />
     <Content Include="Scripts\UI\model\Tool.js" />
+    <Content Include="Scripts\UI\panel\MinMaxTargetPanel.js" />
+    <Content Include="Scripts\UI\panel\PropertyGrid.js" />
+    <Content Include="Scripts\UI\view\FunctionWindow.js" />
     <Content Include="Scripts\UI\view\ScoreboardWindow.js" />
+    <Content Include="Scripts\UI\view\UtilityFunctionEdit.js" />
     <Content Include="Scripts\UnitTests\jasmine.js" />
     <Content Include="Scripts\UnitTests\pvMapper.Event.js" />
     <Content Include="Scripts\UnitTests\pvMapper.Render.js" />
@@ -1097,7 +1105,7 @@
     <Content Include="Scripts\UI\controller\UtilModel.ts" />
     <Content Include="Scripts\UI\controller\WeightFunction.js" />
     <Content Include="Scripts\UI\view\Application.js" />
-    <Content Include="Scripts\UI\view\Functions.js" />
+    <Content Include="Scripts\UI\extras\DynamicLoader.js" />
     <Content Include="Scripts\UI\view\Header.js" />
     <Content Include="Scripts\UI\view\MainToolbar.js" />
     <Content Include="Scripts\UI\view\Modules\NavigateView.js" />
@@ -1105,7 +1113,6 @@
     <Content Include="Scripts\UI\view\Taskbar.js" />
     <Content Include="Scripts\UI\view\UserLogin.js" />
     <Content Include="Scripts\UI\view\Viewport.js" />
-    <Content Include="Scripts\UI\view\weightFunctions\FunctionView.js" />
     <Content Include="Scripts\UI\view\Window.js" />
     <Content Include="Scripts\ViewScripts\AddNewSite.js" />
     <Content Include="Scripts\extExtensions\FitToParent.js" />
@@ -1123,6 +1130,8 @@
     <Content Include="Scripts\ViewScripts\SiteDetail.js" />
     <Content Include="Scripts\ViewScripts\testscripts.js" />
     <Content Include="Scripts\ViewScripts\ZoomAction.js" />
+    <Content Include="TestPages\LayoutTest.html" />
+    <Content Include="TestPages\SiteObjectTest.html" />
     <Content Include="TestPages\UtilityFunctions.html" />
     <Content Include="TestPages\UtilityWeights.html" />
     <Content Include="favicon.ico" />
@@ -1194,6 +1203,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Scripts\theme\" />
     <Folder Include="Scripts\UI\store\" />
+    <Folder Include="Scripts\UI\view\weightFunctions\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

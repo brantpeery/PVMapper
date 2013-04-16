@@ -49,14 +49,11 @@ var pvMapper;
             //Set default scoreUtilityOptions object if none was provided
             if(options.scoreUtilityOptions == undefined) {
                 options.scoreUtilityOptions = {
-                    maxValue: 1,
-                    minValue: 0,
-                    target: 0.5,
-                    slope: 50,
-                    functionName: "random"
+                    functionName: "random",
+                    functionArgs: {
+                    }
                 };
-                //"moreIsBetter"
-                            }
+            }
             this.scoreUtility = new pvMapper.ScoreUtility(options.scoreUtilityOptions);
             //Set the default weight of the tool
             this.weight = (typeof options.defaultWeight === "number") ? options.defaultWeight : 10;
@@ -94,6 +91,28 @@ var pvMapper;
                 }
             }
             return score;
+        };
+        ScoreLine.prototype.updateScores = //public removeScore(score: Score) {
+        //    // remove site from scoreline.
+        //    score.siteChangeEvent.removeHandler(this.onSiteChangeHandler);
+        //    score.valueChangeEvent.removeHandler(this.valueChangeHandler);
+        //    var idx: number = this.scores.indexOf(score);
+        //    if (idx >= 0) {
+        //        this.scores.splice(idx, 1);
+        //    }
+        //}
+        //public updateScores(site: Site) {
+        //}
+        function () {
+            this.scores.forEach(function (score, index, scores) {
+                var oldvalue = score.value;
+                score.setUtility(this.getUtilityScore(score.value));
+                this.scoreChangeEvent.fire(self, {
+                    score: score,
+                    oldValue: oldvalue,
+                    newValue: score.value
+                });
+            }, this);
         };
         ScoreLine.prototype.loadAllSites = function () {
             var allSites = pvMapper.siteManager.getSites();
