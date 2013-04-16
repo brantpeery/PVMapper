@@ -1,4 +1,26 @@
-﻿var toolModel = Ext.define('Tools', {
+﻿/*
+ * Start FIX: Summary + Grouping. Without this fix there would be a summary row under each group
+ * http://www.sencha.com/forum/showthread.php?135442-Ext.grid.feature.Summary-amp-amp-Ext.grid.feature.Grouping
+ */
+Ext.override(Ext.grid.feature.Summary, {
+    closeRows: function () {
+        return '</tpl>{[this.recursiveCall ? "" : this.printSummaryRow()]}';
+    }
+});
+Ext.override(Ext.XTemplate, {
+    recurse: function (values, reference) {
+        this.recursiveCall = true;
+        var returnValue = this.apply(reference ? values[reference] : values);
+        this.recursiveCall = false;
+        return returnValue;
+    }
+});
+/*
+ * End FIX: Summary + Grouping. Without this fix there would be a summary row under each group
+ * http://www.sencha.com/forum/showthread.php?135442-Ext.grid.feature.Summary-amp-amp-Ext.grid.feature.Grouping
+ */
+
+var toolModel = Ext.define('Tools', {
     extend: 'Ext.data.Model',
     xtype: 'Tools',
     fields: [{
@@ -39,7 +61,7 @@
 
 
 var toolsStore = Ext.create('Ext.data.Store', {
-    autoSync: false,
+    autoSync: true,
     autoLoad: true,
     model: 'Tools',
     data: pvMapper.mainScoreboard.getTableData(),
@@ -65,8 +87,21 @@ var scoreboardColumns = [{
     sortable: true,
     hideable: false,
     dataIndex: 'name',
-    editor: 'textfield'
-
+    //editor: 'textfield', <-- don't edit this field - that would be silly
+    summaryType: function (records) {
+        //Note: this fails when we allow grouping by arbitrary fields (and it fails in mysterious ways)
+        return records[0].get('category') + " subtotal:";
+    },
+    //}, {
+    //    text: 'Category',
+    //    width: 90,
+    //    //flex: 0, //Will not be resized
+    //    //shrinkWrap: 1,
+    //    sortable: true,
+    //    hideable: true,
+    //    hidden: true,
+    //    dataIndex: 'category',
+    //    editor: 'textfield',
 }, {
     text: 'Weight',
     width: 45,
@@ -75,11 +110,14 @@ var scoreboardColumns = [{
     sortable: true,
     hideable: false,
     dataIndex: 'weight',
-    editor: 'textfield'
+    //editor: 'numberfield', //TODO: this editing this value causes the scoreboard to throw exceptions on every subsequent refresh - fix that someday
 }, {
     xtype: 'actioncolumn',
     text: 'Utility',
     tooltip: 'Edit the Utility Scoring Function for this Tool',
+    width: 40,
+    sortable: false,
+    hideable: false,
     items: [{
         icon: 'http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/gear_icon.jpg',
         height: 24,
@@ -113,7 +151,7 @@ var scoreboardColumns = [{
                         //Call the setupwindow function with the context of the function it is setting up
                         if (utilityFn.windowOk != undefined)
                             utilityFn.windowOk.apply(utilityFn, [dynamicPanel, uf.functionArgs]);
-                        //
+                        //Note: I really don't get this... it seems overly complicated.
 
                         record.store.update();
                         record.raw.updateScores();
@@ -123,12 +161,13 @@ var scoreboardColumns = [{
                     xtype: 'button',
                     text: 'Cancel',
                     handler: function () {
-                        windows.close();
+                      windows.close();
                     }
                 }],
                 listeners: {
                     beforerender: function () {
-                        utilityFn.windowSetup.apply(utilityFn, [dynamicPanel, uf.functionArgs, utilityFn.fn]);
+                        utilityFn.windowSetup.apply(utilityFn, [dynamicPanel, uf.functionArgs, utilityFn.fn, utilityFn.xBounds]);
+                        //TODO: can't we just pass uf here, in place of all this other crap?
                         dynamicPanel.doLayout();
                     }
                 }
@@ -255,15 +294,14 @@ Ext.define('Ext.grid.ScoreboardGrid', {
     })],
     features: [
     {
-        //Note: this feature provides per-group summary values, rather than repeating the global summary for each group.
-        groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
-        ftype: 'groupingsummary',
-        collapsible: false,
-        enableGroupingMenu: false,
-        //hideGroupedHeader: true, <-- this is handy, if we ever allow grouping by arbitrary fields
-    },
+            //Note: this feature provides per-group summary values, rather than repeating the global summary for each group.
+            groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
+            ftype: 'groupingsummary',
+            enableGroupingMenu: false,
+            //hideGroupedHeader: true, <-- this is handy, if we ever allow grouping by arbitrary fields
+        },
         //{ ftype: 'grouping' },
-        //{ ftype: 'summary' }
+        //{ ftype: 'summary' },
     ]
 });
 

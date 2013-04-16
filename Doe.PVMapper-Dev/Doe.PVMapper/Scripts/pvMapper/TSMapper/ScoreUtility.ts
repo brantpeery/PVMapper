@@ -1,4 +1,4 @@
-﻿declare var Ext: any;
+declare var Ext: any;
 declare var JXG: any;
 declare var Extras: any;
 
@@ -72,8 +72,8 @@ module pvMapper {
     //Created for static access from more than one function def
     export class ScoreUtilityWindows {
         public static basicWindow = {
-            _xArgs:{},
-            setup: function (panel, args, fn) {
+            _xArgs: {},
+            setup: function (panel, args, fn, xBounds) {
                 var _this = this;
                 var board;
                 var fnOfy;
@@ -83,10 +83,18 @@ module pvMapper {
                     Extras.loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
                     Extras.getScript("http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js", function () {
 
+                        var bounds = xBounds(args);
+                        // ensure that the buffer is > 0 (bounds being equal is a valid case for a step function)
+                        var buffer = (bounds[0] == bounds[1]) ? 1 : (bounds[1] - bounds[0]) / 10;
 
-                        board = JXG.JSXGraph.initBoard('FunctionBox-body', { boundingbox: [0, 1.05, 100, -.05], axis: true, showCopyright: false, showNavigation: false });
+                        board = JXG.JSXGraph.initBoard('FunctionBox-body', {
+                            boundingbox: [(bounds[0] - buffer), 108, (bounds[1] + buffer), -8],
+                            axis: true, showCopyright: false, showNavigation: false
+                        });
+                        //TODO: should we replace this with ScoreUtility.run(x) ...?
                         fnOfy = board.create('functiongraph', function (x) {
-                            return fn(x, _this._xArgs);
+                            var y = fn(x, _this._xArgs);
+                            return Math.max(0, Math.min(1, y)) * 100;
                         },
                         { strokeWidth: 3, strokeColor: "red" }
                         );
@@ -131,11 +139,9 @@ module pvMapper {
                         }
                     }
                 );
-            }
-            ,
+            },
             okhandler: function (panel, args) {
                 Ext.apply(args, this._xArgs);
-
             }
         }
     }
@@ -150,6 +156,10 @@ module pvMapper {
         public static sinusoidal = {
             windowSetup: ScoreUtilityWindows.basicWindow.setup,
             windowOk: ScoreUtilityWindows.basicWindow.okhandler,
+
+            xBounds: function (args: ISinusoidalUtilityArgs) {
+                return [Math.min(args.minValue, args.maxValue), Math.max(args.minValue, args.maxValue)]
+            },
 
             fn: function (x: number, args: ISinusoidalUtilityArgs) {
                 var l = args.minValue
@@ -185,6 +195,10 @@ module pvMapper {
             windowSetup: ScoreUtilityWindows.basicWindow.setup,
             windowOk: ScoreUtilityWindows.basicWindow.okhandler,
 
+            xBounds: function (args: IMinMaxUtilityArgs) {
+                return [Math.min(args.minValue, args.maxValue), Math.max(args.minValue, args.maxValue)]
+            },
+
             fn: function (x: number, args: IMinMaxUtilityArgs) {
                 //Note: clamping this value to the range 0-1 is handled by the run(x) function
                 return ((x - args.minValue) / (args.maxValue - args.minValue));
@@ -196,8 +210,14 @@ module pvMapper {
             windowSetup: ScoreUtilityWindows.basicWindow.setup,
             windowOk: ScoreUtilityWindows.basicWindow.okhandler,
 
+            xBounds: function (args: IThreePointUtilityArgs) {
+                return [Math.min(args.p0.x, Math.min(args.p1.x, args.p2.x)),
+                     Math.max(args.p0.x, Math.max(args.p1.x, args.p2.x))];
+            },
+
             fn: function (x: number, args: IThreePointUtilityArgs) {
                 //Note: clamping this value to the range 0-1 is handled by the run(x) function
+                //TODO: this breaks if you reorder the points - fix that.
                 if (x < args.p0.x) return args.p0.y;
                 else if (x < args.p1.x) return args.p0.y + ((args.p1.y - args.p0.y) * (x - args.p0.x) / (args.p1.x - args.p0.x));
                 else if (x < args.p2.x) return args.p1.y + ((args.p2.y - args.p1.y) * (x - args.p1.x) / (args.p2.x - args.p1.x));
@@ -233,7 +253,6 @@ module pvMapper {
             //Attach the named function and window
             this.functionName = options.functionName;
             this.functionArgs = options.functionArgs;
-
         }
 
         //public scoreUtilityOptions: IScoreUtilityOptions;

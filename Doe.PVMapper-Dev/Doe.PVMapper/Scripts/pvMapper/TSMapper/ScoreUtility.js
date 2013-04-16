@@ -6,7 +6,7 @@ var pvMapper;
         ScoreUtilityWindows.basicWindow = {
             _xArgs: {
             },
-            setup: function (panel, args, fn) {
+            setup: function (panel, args, fn, xBounds) {
                 var _this = this;
                 var board;
                 var fnOfy;
@@ -16,19 +16,24 @@ var pvMapper;
                 function loadboard() {
                     Extras.loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
                     Extras.getScript("http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js", function () {
+                        var bounds = xBounds(args);
+                        // ensure that the buffer is > 0 (bounds being equal is a valid case for a step function)
+                        var buffer = (bounds[0] == bounds[1]) ? 1 : (bounds[1] - bounds[0]) / 10;
                         board = JXG.JSXGraph.initBoard('FunctionBox-body', {
                             boundingbox: [
-                                0, 
-                                1.05, 
-                                100, 
-                                -0.05
+                                (bounds[0] - buffer), 
+                                108, 
+                                (bounds[1] + buffer), 
+                                -8
                             ],
                             axis: true,
                             showCopyright: false,
                             showNavigation: false
                         });
+                        //TODO: should we replace this with ScoreUtility.run(x) ...?
                         fnOfy = board.create('functiongraph', function (x) {
-                            return fn(x, _this._xArgs);
+                            var y = fn(x, _this._xArgs);
+                            return Math.max(0, Math.min(1, y)) * 100;
                         }, {
                             strokeWidth: 3,
                             strokeColor: "red"
@@ -84,6 +89,12 @@ var pvMapper;
         UtilityFunctions.sinusoidal = {
             windowSetup: ScoreUtilityWindows.basicWindow.setup,
             windowOk: ScoreUtilityWindows.basicWindow.okhandler,
+            xBounds: function (args) {
+                return [
+                    Math.min(args.minValue, args.maxValue), 
+                    Math.max(args.minValue, args.maxValue)
+                ];
+            },
             fn: function (x, args) {
                 var l = args.minValue;
                 var h = args.maxValue;
@@ -116,6 +127,12 @@ var pvMapper;
         UtilityFunctions.linear = {
             windowSetup: ScoreUtilityWindows.basicWindow.setup,
             windowOk: ScoreUtilityWindows.basicWindow.okhandler,
+            xBounds: function (args) {
+                return [
+                    Math.min(args.minValue, args.maxValue), 
+                    Math.max(args.minValue, args.maxValue)
+                ];
+            },
             fn: function (x, args) {
                 //Note: clamping this value to the range 0-1 is handled by the run(x) function
                 return ((x - args.minValue) / (args.maxValue - args.minValue));
@@ -124,8 +141,15 @@ var pvMapper;
         UtilityFunctions.linear3pt = {
             windowSetup: ScoreUtilityWindows.basicWindow.setup,
             windowOk: ScoreUtilityWindows.basicWindow.okhandler,
+            xBounds: function (args) {
+                return [
+                    Math.min(args.p0.x, Math.min(args.p1.x, args.p2.x)), 
+                    Math.max(args.p0.x, Math.max(args.p1.x, args.p2.x))
+                ];
+            },
             fn: function (x, args) {
                 //Note: clamping this value to the range 0-1 is handled by the run(x) function
+                //TODO: this breaks if you reorder the points - fix that.
                 if(x < args.p0.x) {
                     return args.p0.y;
                 } else if(x < args.p1.x) {

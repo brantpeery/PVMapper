@@ -44,7 +44,7 @@ var INLModules;
                         {
                             functionName: "linear",
                             functionArgs: {
-                                minValue: -1,
+                                minValue: 0,
                                 maxValue: 0
                             }
                         },
