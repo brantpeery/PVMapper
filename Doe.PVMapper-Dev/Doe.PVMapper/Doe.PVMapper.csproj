@@ -166,6 +166,7 @@
     <Compile Include="Models\ProjectSite.cs" />
     <Compile Include="Models\Properties.cs" />
     <Compile Include="Models\TreeNode.cs" />
+    <Content Include="Content\jsxgraph.css" />
     <Content Include="Scripts\EsriGeoJSON.js" />
     <Content Include="Scripts\ext-4.1.1a.d.ts" />
     <Content Include="Scripts\img\layer-switcher-maximize.png" />

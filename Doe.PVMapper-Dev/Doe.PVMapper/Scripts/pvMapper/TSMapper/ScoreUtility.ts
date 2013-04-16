@@ -80,8 +80,8 @@ module pvMapper {
                 this._xArgs = Ext.Object.merge({}, args); //!Create a clone of the args for use in the graph
 
                 function loadboard() {
-                    Extras.loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
-                    Extras.getScript("http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js", function () {
+                    //Extras.loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
+                    Extras.getScript("https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js", function () {
 
                         var bounds = xBounds(args);
                         // ensure that the buffer is > 0 (bounds being equal is a valid case for a step function)
@@ -97,9 +97,9 @@ module pvMapper {
                         fnOfy = board.create('functiongraph', function (x) {
                             var y = fn(x, _this._xArgs);
                             return Math.max(0, Math.min(1, y)) * 100;
-                        },
-                        { strokeWidth: 3, strokeColor: "red" }
-                        );
+                        }, {
+                            strokeWidth: 3, strokeColor: "red"
+                        });
                     });
                 }
 
