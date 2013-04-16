@@ -218,6 +218,7 @@
     <Content Include="Content\OpenLayers\default\img\zoombar.png" />
     <Content Include="Content\OpenLayers\default\style.css" />
     <Content Include="Content\OpenLayers\default\style.tidy.css" />
+    <Content Include="Content\jsxgraph.css" />
     <Content Include="Scripts\EsriGeoJSON.js" />
     <Content Include="Scripts\ext-4.1.1a.d.ts" />
     <Content Include="Scripts\jquery.d.ts" />
