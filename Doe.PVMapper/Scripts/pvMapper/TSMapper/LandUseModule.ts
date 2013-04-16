@@ -180,7 +180,7 @@ module INLModules {
                     scoreUtilityOptions: {
                         functionName: "linear",
                         functionArgs: <pvMapper.IMinMaxUtilityArgs>{
-                            minValue: -1,
+                            minValue: 0,
                             maxValue: 0,
                         }
                     },

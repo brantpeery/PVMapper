@@ -117,18 +117,28 @@ var pvMapper;
     
     pvMapper.mainScoreboard = new ScoreBoard();//API Element
     
+    var timeoutHandle = null;
     pvMapper.mainScoreboard.changedEvent.addHandler(function () {
-        var self = pvMapper.mainScoreboard;
-        var mydata = pvMapper.mainScoreboard.getTableData();
-        if(!pvMapper.floatingScoreboard) {
-            pvMapper.floatingScoreboard = Ext.create('MainApp.view.ScoreboardWindow', {
-                data: mydata
-            });
-            pvMapper.floatingScoreboard.show();
-        } else {
-            var gp = pvMapper.floatingScoreboard.down('gridpanel');
-            gp.store.loadRawData(mydata);
-            pvMapper.floatingScoreboard.show();
+        // queue the changed event to be handled shortly; ignore following change events until it is.
+        if(timeoutHandle == null) {
+            timeoutHandle = window.setTimeout(function () {
+                // we're done delaying our event, so reset the timeout handle to null
+                timeoutHandle = null;
+                var self = pvMapper.mainScoreboard;
+                var mydata = pvMapper.mainScoreboard.getTableData();
+                if(!pvMapper.floatingScoreboard) {
+                    pvMapper.floatingScoreboard = Ext.create('MainApp.view.ScoreboardWindow', {
+                        data: mydata
+                    });
+                    pvMapper.floatingScoreboard.show();
+                } else {
+                    var gp = pvMapper.floatingScoreboard.down('gridpanel');
+                    gp.store.loadRawData(mydata);
+                    pvMapper.floatingScoreboard.show();
+                }
+            }, 100);
+            // queue is set to wait 1/10th of a second before it actually refreshes the scoreboard.
+                    } else {
         }
     });
     //Create the scoreboard onscreen

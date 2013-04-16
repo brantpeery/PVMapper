@@ -262,9 +262,10 @@
     <Content Include="Scripts\pvMapper\TSMapper\ScoreLine.min.js">
       <DependentUpon>ScoreLine.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtility.js" />
-    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtility.min.js" />
-    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtility.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreUtility.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtility.js">
+      <DependentUpon>ScoreUtility.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\siteAreaModule.js">
       <DependentUpon>siteAreaModule.ts</DependentUpon>
     </Content>
