@@ -19,11 +19,14 @@ var pvMapper;
                         var bounds = xBounds(args);
                         // ensure that the buffer is > 0 (bounds being equal is a valid case for a step function)
                         var buffer = (bounds[0] == bounds[1]) ? 1 : (bounds[1] - bounds[0]) / 10;
+                        bounds[0] -= buffer;
+                        bounds[1] += buffer * 1.5// a little more on the right hand side feels nice.
+                        ;
                         board = JXG.JSXGraph.initBoard('FunctionBox-body', {
                             boundingbox: [
-                                (bounds[0] - buffer), 
+                                bounds[0], 
                                 108, 
-                                (bounds[1] + buffer), 
+                                bounds[1], 
                                 -8
                             ],
                             axis: true,
