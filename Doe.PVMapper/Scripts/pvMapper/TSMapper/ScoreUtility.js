@@ -14,8 +14,8 @@ var pvMapper;
                 }, args)//!Create a clone of the args for use in the graph
                 ;
                 function loadboard() {
-                    Extras.loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
-                    Extras.getScript("http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js", function () {
+                    //Extras.loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
+                    Extras.getScript("https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js", function () {
                         var bounds = xBounds(args);
                         // ensure that the buffer is > 0 (bounds being equal is a valid case for a step function)
                         var buffer = (bounds[0] == bounds[1]) ? 1 : (bounds[1] - bounds[0]) / 10;
