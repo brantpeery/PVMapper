@@ -220,8 +220,6 @@
     <Content Include="Content\OpenLayers\default\style.tidy.css" />
     <Content Include="Scripts\EsriGeoJSON.js" />
     <Content Include="Scripts\ext-4.1.1a.d.ts" />
-    <Content Include="Scripts\img\layer-switcher-maximize.png" />
-    <Content Include="Scripts\img\layer-switcher-minimize.png" />
     <Content Include="Scripts\jquery.d.ts" />
     <Content Include="Scripts\lib.d.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\OpenLayers.d.ts" />
@@ -1130,8 +1128,6 @@
     <Content Include="Scripts\ViewScripts\SiteDetail.js" />
     <Content Include="Scripts\ViewScripts\testscripts.js" />
     <Content Include="Scripts\ViewScripts\ZoomAction.js" />
-    <Content Include="TestPages\LayoutTest.html" />
-    <Content Include="TestPages\SiteObjectTest.html" />
     <Content Include="TestPages\UtilityFunctions.html" />
     <Content Include="TestPages\UtilityWeights.html" />
     <Content Include="favicon.ico" />
