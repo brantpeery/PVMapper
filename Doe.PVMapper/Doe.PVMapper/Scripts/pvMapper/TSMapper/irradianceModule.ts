@@ -37,10 +37,12 @@ module INLModules {
                         updateScoreFromLayer(score, "swera:dni_suny_high_900913");
                     },
 
-                    scoreUtilityOptions: <pvMapper.IMinMaxUtilityOptions>{
+                    scoreUtilityOptions: {
                         functionName: "linear",
-                        minValue: 0,
-                        maxValue: 8,
+                        functionArgs: <pvMapper.IMinMaxUtilityArgs> {
+                            minValue: 0,
+                            maxValue: 8,
+                        }
                     },
                     defaultWeight: 10
                 }, {
@@ -58,10 +60,12 @@ module INLModules {
                         updateScoreFromLayer(score, "swera:ghi_suny_high_900913");
                     },
 
-                    scoreUtilityOptions: <pvMapper.IMinMaxUtilityOptions>{
+                    scoreUtilityOptions: {
                         functionName: "linear",
-                        minValue: 0,
-                        maxValue: 6,
+                        functionArgs: <pvMapper.IMinMaxUtilityArgs>{
+                            minValue: 0,
+                            maxValue: 6,
+                        }
                     },
                     defaultWeight: 10
                 }],

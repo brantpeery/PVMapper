@@ -42,17 +42,19 @@ var INLModules;
                         // for now, this assumes that overlapping more protected areas is worse than overlapping fewer (!)
                         {
                             functionName: "linear3pt",
-                            p0: {
-                                x: 0,
-                                y: 1
-                            },
-                            p1: {
-                                x: 1,
-                                y: 0.6
-                            },
-                            p2: {
-                                x: 5,
-                                y: 0
+                            functionArgs: {
+                                p0: {
+                                    x: 0,
+                                    y: 1
+                                },
+                                p1: {
+                                    x: 1,
+                                    y: 0.6
+                                },
+                                p2: {
+                                    x: 5,
+                                    y: 0
+                                }
                             }
                         },
                         defaultWeight: 10
@@ -171,8 +173,10 @@ var INLModules;
                         // for now, this is a constant value (always returns the max, why not)
                         {
                             functionName: "linear",
-                            minValue: -1,
-                            maxValue: 0
+                            functionArgs: {
+                                minValue: 0,
+                                maxValue: 0
+                            }
                         },
                         defaultWeight: 0
                     }

@@ -40,8 +40,10 @@ var BYUModules;
                         // for now, flatter is better...?
                         {
                             functionName: "linear",
-                            minValue: 10,
-                            maxValue: 0
+                            functionArgs: {
+                                minValue: 10,
+                                maxValue: 0
+                            }
                         }
                     }, 
                     //defaultWeight: 10
@@ -65,17 +67,19 @@ var BYUModules;
                         // for now, south is better, but north ain't so bad...?
                         {
                             functionName: "linear3pt",
-                            p0: {
-                                x: 0,
-                                y: 0.5
-                            },
-                            p1: {
-                                x: 180,
-                                y: 1
-                            },
-                            p2: {
-                                x: 360,
-                                y: 0.5
+                            functionArgs: {
+                                p0: {
+                                    x: 0,
+                                    y: 0.5
+                                },
+                                p1: {
+                                    x: 180,
+                                    y: 1
+                                },
+                                p2: {
+                                    x: 360,
+                                    y: 0.5
+                                }
                             }
                         }
                     }, 
@@ -97,17 +101,19 @@ var BYUModules;
                         // higher is better, but not much better, yeah?
                         {
                             functionName: "linear3pt",
-                            p0: {
-                                x: 0,
-                                y: 0.5
-                            },
-                            p1: {
-                                x: 1000,
-                                y: 0.9
-                            },
-                            p2: {
-                                x: 6000,
-                                y: 1
+                            functionArgs: {
+                                p0: {
+                                    x: 0,
+                                    y: 0.5
+                                },
+                                p1: {
+                                    x: 1000,
+                                    y: 0.9
+                                },
+                                p2: {
+                                    x: 6000,
+                                    y: 1
+                                }
                             }
                         }
                     }

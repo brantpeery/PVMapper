@@ -43,8 +43,10 @@ var INLModules;
                         // for now, this is a constant value (always returns the max, why not)
                         {
                             functionName: "linear",
-                            minValue: -1,
-                            maxValue: 0
+                            functionArgs: {
+                                minValue: 0,
+                                maxValue: 0
+                            }
                         },
                         defaultWeight: 0
                     }

@@ -39,11 +39,13 @@ module INLModules {
 
                     //TODO: need a categorical scoring system
                     // for now, this assumes that overlapping more protected areas is worse than overlapping fewer (!)
-                    scoreUtilityOptions: <pvMapper.IThreePointUtilityOptions>{
+                    scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        p0: { x: 0, y: 1 },
-                        p1: { x: 1, y: 0.6 },
-                        p2: { x: 5, y: 0 },
+                        functionArgs: <pvMapper.IThreePointUtilityArgs>{
+                            p0: { x: 0, y: 1 },
+                            p1: { x: 1, y: 0.6 },
+                            p2: { x: 5, y: 0 }
+                        }
                     },
                     defaultWeight: 10
                 }],
@@ -175,10 +177,12 @@ module INLModules {
 
                     //TODO: need a categorical scoring system
                     // for now, this is a constant value (always returns the max, why not)
-                    scoreUtilityOptions: <pvMapper.IMinMaxUtilityOptions>{
+                    scoreUtilityOptions: {
                         functionName: "linear",
-                        minValue: -1,
-                        maxValue: 0,
+                        functionArgs: <pvMapper.IMinMaxUtilityArgs>{
+                            minValue: 0,
+                            maxValue: 0,
+                        }
                     },
                     defaultWeight: 0 //TODO: find a meaningful score & utility for this
                 }],
