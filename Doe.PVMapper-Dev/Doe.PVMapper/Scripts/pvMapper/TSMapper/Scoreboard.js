@@ -133,12 +133,17 @@ var pvMapper;
                     pvMapper.floatingScoreboard.show();
                 } else {
                     var gp = pvMapper.floatingScoreboard.down('gridpanel');
+                    //Note: selecting cells hoarks everything up unless we clear the selection before reloading the data
+                    gp.getSelectionModel().deselectAll();
                     gp.store.loadRawData(mydata);
                     pvMapper.floatingScoreboard.show();
                 }
             }, 100);
             // queue is set to wait 1/10th of a second before it actually refreshes the scoreboard.
                     } else {
+            if(console) {
+                console.log("Scoreboard update event safely (and efficiently) ignored.");
+            }
         }
     });
     //Create the scoreboard onscreen
