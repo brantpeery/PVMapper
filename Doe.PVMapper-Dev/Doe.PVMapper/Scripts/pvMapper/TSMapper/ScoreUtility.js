@@ -98,6 +98,7 @@ var pvMapper;
                     Math.max(args.minValue, args.maxValue)
                 ];
             },
+            iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/wizard_icon.jpg",
             fn: function (x, args) {
                 var l = args.minValue;
                 var h = args.maxValue;
@@ -136,6 +137,7 @@ var pvMapper;
                     Math.max(args.minValue, args.maxValue)
                 ];
             },
+            iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/stats_icon.jpg",
             fn: function (x, args) {
                 //Note: clamping this value to the range 0-1 is handled by the run(x) function
                 return ((x - args.minValue) / (args.maxValue - args.minValue));
@@ -150,6 +152,7 @@ var pvMapper;
                     Math.max(args.p0.x, Math.max(args.p1.x, args.p2.x))
                 ];
             },
+            iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/document_icon.jpg",
             fn: function (x, args) {
                 //Note: clamping this value to the range 0-1 is handled by the run(x) function
                 //TODO: this breaks if you reorder the points - fix that.
@@ -167,6 +170,7 @@ var pvMapper;
         UtilityFunctions.random = {
             windowSetup: ScoreUtilityWindows.basicWindow.setup,
             windowOk: ScoreUtilityWindows.basicWindow.okhandler,
+            iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/help_icon.jpg",
             fn: function () {
                 return Math.random();
             }
@@ -195,12 +199,14 @@ var pvMapper;
                     fn: copt.functionCallback,
                     windowSetup: //Attach handlers for setting up and tearing down the utility function setup window
                     copt.windowSetupCallback,
-                    windowOk: copt.windowOkCallback
+                    windowOk: copt.windowOkCallback,
+                    iconURL: copt.iconURL
                 };
             }
             //Attach the named function and window
             this.functionName = options.functionName;
             this.functionArgs = options.functionArgs;
+            this.iconURL = options.iconURL;
         }
         ScoreUtility.prototype.serialize = function () {
             throw "Serialize not implemented yet for this object";
@@ -212,3 +218,4 @@ var pvMapper;
     })();
     pvMapper.ScoreUtility = ScoreUtility;    
 })(pvMapper || (pvMapper = {}));
+//@ sourceMappingURL=ScoreUtility.js.map

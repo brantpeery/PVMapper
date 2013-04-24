@@ -102,3 +102,4 @@ var BYUModules;
         });
     }
 })(BYUModules || (BYUModules = {}));
+//@ sourceMappingURL=WildernessModule.js.map

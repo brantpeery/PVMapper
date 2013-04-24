@@ -42,6 +42,12 @@ var toolModel = Ext.define('Tools', {
         name: 'utility',
         mapping: 'scoreUtility',
         type: 'object'
+    },{
+      name: 'utilityFnName',
+      convert: function (value, record) {
+        var fnName = record.get('utility').functionName;
+        return fnName;
+      }
     }, {
         name: 'sites',
         mapping: 'scores',
@@ -118,6 +124,10 @@ var scoreboardColumns = [{
     width: 40,
     sortable: false,
     hideable: false,
+    renderer: function (value, metadata, record) {
+      var fn = record.get('utilityFnName');
+      this.items[0].icon = pvMapper.UtilityFunctions[fn].iconURL;
+    },
     items: [{
         icon: 'http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/gear_icon.jpg',
         height: 24,
@@ -139,9 +149,10 @@ var scoreboardColumns = [{
             });
             var uf = record.get('utility');
             var utilityFn = pvMapper.UtilityFunctions[uf.functionName];
-
+           
             var windows = Ext.create('MainApp.view.UtilityFunctionEdit', {
-                items: dynamicPanel,
+              items: dynamicPanel,
+              icon: utilityFn.iconURL,
                 buttons: [{
                     xtype: 'button',
                     text: 'OK',

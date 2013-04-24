@@ -12,6 +12,7 @@ var Modules;
                 id: "",
                 author: "",
                 version: "",
+                iconURL: "",
                 activate: function () {
                 },
                 deactivate: function () {
@@ -42,3 +43,4 @@ var Modules;
     })();    
     var modInstance = new Module();
 })(Modules || (Modules = {}));
+//@ sourceMappingURL=ModuleTemplate.js.map

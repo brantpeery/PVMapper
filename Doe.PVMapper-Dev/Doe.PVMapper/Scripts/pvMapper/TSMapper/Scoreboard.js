@@ -151,3 +151,4 @@ var pvMapper;
         //mainScoreboard.changedEvent.fire(mainScoreboard, {});
             });
 })(pvMapper || (pvMapper = {}));
+//@ sourceMappingURL=Scoreboard.js.map
