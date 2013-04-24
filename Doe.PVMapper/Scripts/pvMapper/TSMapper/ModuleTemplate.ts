@@ -12,6 +12,7 @@ module Modules {
                 id: "",
                 author: "",
                 version: "",
+                iconURL: "",
 
                 activate: () => { },
                 deactivate: () => { },

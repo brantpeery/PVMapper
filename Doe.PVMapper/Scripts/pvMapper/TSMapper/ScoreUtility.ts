@@ -44,6 +44,7 @@ module pvMapper {
     export interface IScoreUtilityOptions {
         functionName: string;
         functionArgs: IScoreUtilityArgs;
+        iconURL: string;
     }
 
     export interface ICustomScoreUtilityOptions extends IScoreUtilityOptions {
@@ -149,7 +150,6 @@ module pvMapper {
     }
 
 
-
     //Static accessed class that holds all the utility functions for the application
     export class UtilityFunctions {
         //System supplied utility function objects
@@ -162,7 +162,7 @@ module pvMapper {
             xBounds: function (args: ISinusoidalUtilityArgs) {
                 return [Math.min(args.minValue, args.maxValue), Math.max(args.minValue, args.maxValue)]
             },
-
+            iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/wizard_icon.jpg",
             fn: function (x: number, args: ISinusoidalUtilityArgs) {
                 var l = args.minValue
                 var h = args.maxValue;
@@ -200,7 +200,7 @@ module pvMapper {
             xBounds: function (args: IMinMaxUtilityArgs) {
                 return [Math.min(args.minValue, args.maxValue), Math.max(args.minValue, args.maxValue)]
             },
-
+            iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/stats_icon.jpg",
             fn: function (x: number, args: IMinMaxUtilityArgs) {
                 //Note: clamping this value to the range 0-1 is handled by the run(x) function
                 return ((x - args.minValue) / (args.maxValue - args.minValue));
@@ -211,12 +211,12 @@ module pvMapper {
         public static linear3pt = {
             windowSetup: ScoreUtilityWindows.basicWindow.setup,
             windowOk: ScoreUtilityWindows.basicWindow.okhandler,
-
+    
             xBounds: function (args: IThreePointUtilityArgs) {
                 return [Math.min(args.p0.x, Math.min(args.p1.x, args.p2.x)),
                      Math.max(args.p0.x, Math.max(args.p1.x, args.p2.x))];
             },
-
+            iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/document_icon.jpg",
             fn: function (x: number, args: IThreePointUtilityArgs) {
                 //Note: clamping this value to the range 0-1 is handled by the run(x) function
                 //TODO: this breaks if you reorder the points - fix that.
@@ -230,7 +230,7 @@ module pvMapper {
         public static random = {
             windowSetup: ScoreUtilityWindows.basicWindow.setup,
             windowOk: ScoreUtilityWindows.basicWindow.okhandler,
-
+            iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/help_icon.jpg",
             fn: function (): number {
                 return Math.random();
             }
@@ -242,24 +242,28 @@ module pvMapper {
             //Check for custom utility by checking to see if there is a function callback (not optimal but in the absence of interface comparison will do)
             if (options['functionCallback']) {
                 //Load up the ScoreUtility with the custom function + window callbacks
-                var copt: ICustomScoreUtilityOptions = <any> options; //This is a dumb way of making the IDE stop complaining that the type is not right
+                var copt: ICustomScoreUtilityOptions = <ICustomScoreUtilityOptions> options; //This is a dumb way of making the IDE stop complaining that the type is not right
                 //Create a new utility function named after the custom functionName
                 UtilityFunctions[copt.functionName] = {
                     fn: copt.functionCallback,
                     //Attach handlers for setting up and tearing down the utility function setup window
                     windowSetup: copt.windowSetupCallback,
-                    windowOk: copt.windowOkCallback
+                    windowOk: copt.windowOkCallback,
+                    iconURL: copt.iconURL
                 }
             }
 
             //Attach the named function and window
             this.functionName = options.functionName;
             this.functionArgs = options.functionArgs;
+            this.iconURL = options.iconURL;
+          
         }
 
         //public scoreUtilityOptions: IScoreUtilityOptions;
         public functionName: string;
         public functionArgs: IScoreUtilityArgs;
+        public iconURL: string;
 
         //An options object might be better here. Then a call to a static function with options would be possible 
         public run = function (x) {

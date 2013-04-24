@@ -267,6 +267,9 @@
     <Content Include="Scripts\pvMapper\TSMapper\ScoreUtility.js">
       <DependentUpon>ScoreUtility.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtility.min.js">
+      <DependentUpon>ScoreUtility.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\siteAreaModule.js">
       <DependentUpon>siteAreaModule.ts</DependentUpon>
     </Content>
@@ -1191,6 +1194,30 @@
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Tools.js.map">
       <DependentUpon>Tools.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\snlModule.js.map">
+      <DependentUpon>snlModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\irradianceModule.js.map">
+      <DependentUpon>irradianceModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\ModuleTemplate.js.map">
+      <DependentUpon>ModuleTemplate.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\pvMapper.js.map">
+      <DependentUpon>pvMapper.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Scoreboard.js.map">
+      <DependentUpon>Scoreboard.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtility.js.map">
+      <DependentUpon>ScoreUtility.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\siteAreaModule.js.map">
+      <DependentUpon>siteAreaModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\WildernessModule.js.map">
+      <DependentUpon>WildernessModule.ts</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>
