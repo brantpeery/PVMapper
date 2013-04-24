@@ -153,6 +153,8 @@ var scoreboardColumns = [{
             var windows = Ext.create('MainApp.view.UtilityFunctionEdit', {
               items: dynamicPanel,
               icon: utilityFn.iconURL,
+              minimizable: false,
+              collapsible: false,
                 buttons: [{
                     xtype: 'button',
                     text: 'OK',
