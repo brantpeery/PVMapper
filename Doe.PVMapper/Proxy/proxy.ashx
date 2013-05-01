@@ -3,7 +3,7 @@
   This proxy page does not have any security checks. It is highly recommended
   that a user deploying this proxy page on their web server, add appropriate
   security checks, for example checking request path, username/password, target
-  url, etc.
+  url, etc.  
 */
 using System;
 using System.Drawing;
