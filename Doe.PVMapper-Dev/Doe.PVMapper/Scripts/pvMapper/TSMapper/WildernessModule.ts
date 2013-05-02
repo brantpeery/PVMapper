@@ -13,8 +13,8 @@ module BYUModules {
                 author: "Darian Ramage",
                 version: "0.1.ts",
 
-                activate: () => { addMap(); },
-                deactivate: () => { removeMap(); },
+                activate: () => { this.addMap(); },
+                deactivate: () => { this.removeMap(); },
                 destroy: null,
                 init: null,
 
@@ -27,83 +27,99 @@ module BYUModules {
                     title: "Wilderness",
                     description: "Tells whether the given site is in a wilderness area.  ",
                     category: "Land Use",
-                    onScoreAdded: (event, score) => { },
-                    onSiteChange: (event, score: pvMapper.Score) => { },
+                    onScoreAdded: (event, score: pvMapper.Score) => { },
+                    onSiteChange: (event, score: pvMapper.Score) => { 
+                        this.updateScore(score);
+                    },
                     scoreUtilityOptions: <pvMapper.IScoreUtilityOptions>{
                     },
                 }],
                 infoTools: null
             });
         }
-    }
 
-    var modInstance = new WildernessModule();
-    var WildernessMapUrl = "";
-    var wildernessLayer;
+        private WildernessMapUrl = "";
+        private wildernessLayer;
+        private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
     
-    function addMap() {
-        wildernessLayer = OpenLayers.Layer.WMS(
+        private addMap() {
+            this.wildernessLayer = OpenLayers.Layer.WMS(
             "Wilderness Areas",
             "https://geoserver.byu.edu/geoserver/wms?",
             {
+                request: "GetMap",
+                bbox: this.landBounds,
                 layer_type: "polygon",
                 transparent: "true",
                 format: "image/gif",
+                exceptions: "application/vnd.ogc.se_inimage",
+                //maxResolution: 156543.0339,
                 srs: "EPSG:42105",
             },
             { isBaseLayer: false }
-        );
-        pvMapper.map.addLayer(wildernessLayer);
-    }
+            );
+            pvMapper.map.addLayer(this.wildernessLayer);
+        }
 
-    function removeMap() {
-        pvMapper.map.removeLayer(wildernessLayer, false);
-    }
+        private removeMap() {
+            pvMapper.map.removeLayer(this.wildernessLayer, false);
+        }
 
-    function updateScore(score: pvMapper.Score, layers: string, description?: string) {
-        var params = {
-            mapExtent: score.site.geometry.bounds.toBBOX(6, false),
-            geometryType: "esriGeometryEnvelope",
-            geometry: score.site.geometry.bounds.toBBOX(6, false),
-            f: "json",
-            service: "WCS",
-            version: "1.1.1",
-            request: "GetCoverage",
-            layers: "PVMapper:wilderness_areas",
-            returnGeometry: false,
-        };
+        private updateScore(score: pvMapper.Score) {
+            var params = {
+                /*mapExtent: score.site.geometry.bounds.toBBOX(6, false),
+                geometryType: "esriGeometryEnvelope",
+                geometry: score.site.geometry.bounds.toBBOX(6, false),
+                f: "json",
+                service: "WCS",
+                version: "1.1.1",
+                request: "GetCoverage",
+                layers: "PVMapper:wilderness_areas",
+                returnGeometry: false,*/
+                service: "WFS",
+                version: "2.0.0",
+                request: "GetFeature",
+                typename: "PVMapper:Double",
+                propertyName: "wilderness",
+                outputformat: "JSON",
+                bbox: score.site.geometry.bounds,
+            };
         
-        var request = OpenLayers.Request.GET({
-            url: "https://geoserver.byu.edu/geoserver/wcs?",
-            proxy: "/Proxy/proxy.ashx?",
-            params: params,
-            callback: (response) => {
-                if (response.status == 200) {
-                    var esriJsonParser = new OpenLayers.Format.JSON();
-                    esriJsonParser.extractAttributes = true;
-                    var parsedResponse = esriJsonParser.read(response.responseText);
+            var request = OpenLayers.Request.GET({
+                url: "https://geoserver.byu.edu/geoserver/wcs?",
+                proxy: "/Proxy/proxy.ashx?",
+                params: params,
+                callback: (response) => {
+                    if (response.status == 200) {
+                        var esriJsonParser = new OpenLayers.Format.JSON();
+                        esriJsonParser.extractAttributes = true;
+                        var parsedResponse = esriJsonParser.read(response.responseText);
 
-                    if (parsedResponse && parsedResponse.results) {
-                        if (parsedResponse.results.length > 0) {
-                            console.assert(parsedResponse.results.length === 1,
-                                "I expected that the server would only return identify" +
-                                " results for the single pixel at the center of a site. Something went wrong.");
+                        if (parsedResponse && parsedResponse.results) {
+                            if (parsedResponse.results.length > 0) {
+                                console.assert(parsedResponse.results.length === 1,
+                                    "I expected that the server would only return identify" +
+                                    " results for the single pixel at the center of a site. Something went wrong.");
 
-                            score.popupMessage = parsedResponse.results[0].value + " " + description;
-                            score.updateValue(parseFloat(parsedResponse.results[0].value));
+                                score.popupMessage = parsedResponse.results[0].value + " " + description;
+                                score.updateValue(parseFloat(parsedResponse.results[0].value));
+                            } else {
+                                score.popupMessage = "No data for this site";
+                                score.updateValue(Number.NaN);
+                            }
                         } else {
-                            score.popupMessage = "No data for this site";
+                            score.popupMessage = "Parse error";
                             score.updateValue(Number.NaN);
                         }
                     } else {
-                        score.popupMessage = "Parse error";
+                        score.popupMessage = "Error " + response.status;
                         score.updateValue(Number.NaN);
                     }
-                } else {
-                    score.popupMessage = "Error " + response.status;
-                    score.updateValue(Number.NaN);
                 }
-            }
-        })
+            })
+        }
     }
+
+    var modInstance = new BYUModules.WildernessModule();
+    
 }

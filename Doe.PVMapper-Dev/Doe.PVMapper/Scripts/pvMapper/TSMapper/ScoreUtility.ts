@@ -75,7 +75,7 @@ module pvMapper {
         public static basicWindow = {
             _xArgs: {},
             setup: function (panel, args, fn, xBounds) {
-                var _this = this;
+                //var _this = this;
                 var board;
                 var fnOfy;
                 this._xArgs = Ext.Object.merge({}, args); //!Create a clone of the args for use in the graph
@@ -96,7 +96,7 @@ module pvMapper {
                         });
                         //TODO: should we replace this with ScoreUtility.run(x) ...?
                         fnOfy = board.create('functiongraph', function (x) {
-                            var y = fn(x, _this._xArgs);
+                            var y = fn(x, this._xArgs);
                             return Math.max(0, Math.min(1, y)) * 100;
                         }, {
                             strokeWidth: 3, strokeColor: "red"
@@ -107,7 +107,7 @@ module pvMapper {
                 panel.removeAll();
                 panel.add(
                     Ext.create('Ext.grid.property.Grid', {
-                        source: _this._xArgs,
+                        source: this._xArgs,
                         listeners: {
                             afterrender: function (sender, eOpts) {
                                 loadboard();
@@ -266,7 +266,7 @@ module pvMapper {
         public iconURL: string;
 
         //An options object might be better here. Then a call to a static function with options would be possible 
-        public run = function (x) {
+        public run (x) {
             if (isNaN(x)) return Number.NaN;
 
             //Run the function that the user needs run
