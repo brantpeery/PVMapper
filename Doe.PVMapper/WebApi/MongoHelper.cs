@@ -20,7 +20,10 @@ namespace Doe.PVMapper.WebApi
         public static MongoDatabase GetDatabase()
         {
             string connectionstring = GetConnectionString();
-            var database = MongoDatabase.Create(connectionstring);
+            var client = new MongoClient(connectionstring);
+            var server = client.GetServer();
+            var database = server.GetDatabase(connectionstring);
+            //var database = MongoDatabase.Create(connectionstring);
 
             return database;
         }

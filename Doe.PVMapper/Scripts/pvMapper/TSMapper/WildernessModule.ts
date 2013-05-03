@@ -18,7 +18,7 @@ module BYUModules {
                 destroy: null,
                 init: null,
 
-                scoringTools: [{
+                scoringTools: [<any> {
                     activate: null,
                     deactivate: null,
                     destroy: null,
@@ -31,7 +31,9 @@ module BYUModules {
                     onSiteChange: (event, score: pvMapper.Score) => { 
                         this.updateScore(score);
                     },
-                    scoreUtilityOptions: <pvMapper.IScoreUtilityOptions>{
+                    scoreUtilityOptions: <pvMapper.IMinMaxUtilityArgs>{
+                        minValue: 10,
+                        maxValue: 0,
                     },
                 }],
                 infoTools: null

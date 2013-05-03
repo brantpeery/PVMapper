@@ -314,7 +314,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
     store: toolsStore,
     //forceFit: true,
     //width: '100%',
-    //height:600,
+    //height: 600,
     title: "Tools List",
     selType: 'rowmodel', //Note: use 'cellmodel' once we have cell editing worked out
     columns: scoreboardColumns,
@@ -345,7 +345,8 @@ Ext.define('MainApp.view.ScoreboardWindow', {
     height: 520,
     //cls: "propertyBoard", <-- this looked hokey, and conflicted with ext js's default styling.
     closeAction: 'hide',
-    items: scoreboardGrid
+    items: scoreboardGrid,
+    constrain: true
 });
 
 
