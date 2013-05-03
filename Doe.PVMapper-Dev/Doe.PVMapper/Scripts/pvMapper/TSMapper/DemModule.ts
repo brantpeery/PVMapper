@@ -20,7 +20,7 @@ module BYUModules {
                 destroy: null,
                 init: null,
 
-                scoringTools: [{
+                scoringTools: [<any> {
                     activate: null,
                     deactivate: null,
                     destroy: null,

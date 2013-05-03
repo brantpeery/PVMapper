@@ -32,6 +32,8 @@ var BYUModules;
                             _this.updateScore(score);
                         },
                         scoreUtilityOptions: {
+                            minValue: 10,
+                            maxValue: 0
                         }
                     }
                 ],
