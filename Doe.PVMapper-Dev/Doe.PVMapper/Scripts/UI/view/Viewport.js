@@ -4,7 +4,7 @@
 if ( !Array.prototype.indexOfObject ) {
   Array.prototype.indexOfObject = function (fn/*, from*/) {
     var len = this.length;
-    if (!fn || typeof (fn) != 'function') return -2;  //no function passed in.
+    if (!fn || typeof (fn) !== 'function') return -2;  //no function passed in.
 
     var from = Number(arguments[1]) || 0;  //second optional parameter is expected to be the start index, default to 0.
     from = ( from < 0 ) ? 0 : (from>len) ? len : from;
@@ -66,7 +66,7 @@ Ext.define( 'MainApp.view.Viewport', {
                   associate: winObj,
                   listeners:{ 
                     click: function() {
-                      if ( this.associate && this.associate.type == 'Window' && typeof ( this.associate.viewState ) != 'undefined' ) {
+                      if ( this.associate && this.associate.type === 'Window' && typeof ( this.associate.viewState ) !== 'undefined' ) {
                           switch (this.associate.viewState) {
                               case Ext.view.ViewState.MINIMIZED:
                                   this.associate.show();
@@ -116,7 +116,7 @@ Ext.define( 'MainApp.view.Viewport', {
                 padding: '5,5,5,5',
                 contentEl: 'Content',
                 items: [],
-                weight: .7
+                weight: 0.7
             }]
         }],
     }]
