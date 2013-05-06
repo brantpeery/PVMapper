@@ -162,7 +162,7 @@ var scoreboardColumns = [{
                         //send the object (reference) to the function so it can change it
 
                         //Call the setupwindow function with the context of the function it is setting up
-                        if (utilityFn.windowOk != undefined)
+                        if (utilityFn.windowOk !== undefined)
                             utilityFn.windowOk.apply(utilityFn, [dynamicPanel, uf.functionArgs]);
                         //Note: I really don't get this... it seems overly complicated.
 
@@ -279,7 +279,8 @@ toolsStore.on({
                             records[0].raw.scores[idx].site && records[0].raw.scores[idx].site.feature) {
                             // test if the feature's average score value has changed
                             var feature = records[0].raw.scores[idx].site.feature;
-                            if (feature.attributes['overallScore'] !== average) {
+                            //if (feature.attributes['overallScore'] !== average) {
+                            if (feature.attributes.overallScore !== average) {
                                 feature.attributes.overallScore = average;
                                 // set the score's color as an attribute on the feature (note - this is at least partly a hack...)
                                 feature.attributes.fillColor = (!isNaN(average)) ? getColor(average) : "";
@@ -383,9 +384,12 @@ function getColor(score) {
         scale = score / 50;
     }
 
-    var r = startColor['red'] + scale * (endColor['red'] - startColor['red']);
-    var b = startColor['blue'] + scale * (endColor['blue'] - startColor['blue']);
-    var g = startColor['green'] + scale * (endColor['green'] - startColor['green']);
+    //var r = startColor['red'] + scale * (endColor['red'] - startColor['red']);
+    //var b = startColor['blue'] + scale * (endColor['blue'] - startColor['blue']);
+    //var g = startColor['green'] + scale * (endColor['green'] - startColor['green']);
+    var r = startColor.red + scale * (endColor.red - startColor.red);
+    var b = startColor.blue + scale * (endColor.blue - startColor.blue);
+    var g = startColor.green + scale * (endColor.green - startColor.green);
     r = round(min(255, max(0, r)));
     b = round(min(255, max(0, b)));
     g = round(min(255, max(0, g)));
