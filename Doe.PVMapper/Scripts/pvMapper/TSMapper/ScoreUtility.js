@@ -6,9 +6,10 @@ var pvMapper;
             _xArgs: {
             },
             setup: function (panel, args, fn, xBounds) {
+                var _this = this;
                 var board;
                 var fnOfy;
-                this._xArgs = Ext.Object.merge({
+                _this._xArgs = Ext.Object.merge({
                 }, args);
                 function loadboard() {
                     Extras.getScript("https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js", function () {
