@@ -75,10 +75,10 @@ module pvMapper {
         public static basicWindow = {
             _xArgs: {},
             setup: function (panel, args, fn, xBounds) {
-                //var _this = this;
+                var _this = this;
                 var board;
                 var fnOfy;
-                this._xArgs = Ext.Object.merge({}, args); //!Create a clone of the args for use in the graph
+                _this._xArgs = Ext.Object.merge({}, args); //!Create a clone of the args for use in the graph
 
                 function loadboard() {
                     //Extras.loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
