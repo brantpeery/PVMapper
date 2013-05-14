@@ -28,7 +28,7 @@ module BYUModules {
                     description: "Tells whether the given site is in a wilderness area.  ",
                     category: "Land Use",
                     onScoreAdded: (event, score: pvMapper.Score) => { },
-                    onSiteChange: (event, score: pvMapper.Score) => { 
+                    onSiteChange: (event, score: pvMapper.Score) => { mang
                         this.updateScore(score);
                     },
                     scoreUtilityOptions: <pvMapper.IMinMaxUtilityArgs>{
@@ -103,7 +103,7 @@ module BYUModules {
                                     "I expected that the server would only return identify" +
                                     " results for the single pixel at the center of a site. Something went wrong.");
 
-                                score.popupMessage = parsedResponse.results[0].value + " " + description;
+                                score.popupMessage = parsedResponse.results[0].value;
                                 score.updateValue(parseFloat(parsedResponse.results[0].value));
                             } else {
                                 score.popupMessage = "No data for this site";

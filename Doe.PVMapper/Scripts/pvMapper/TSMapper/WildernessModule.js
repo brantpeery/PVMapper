@@ -29,6 +29,7 @@ var BYUModules;
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
+                            mang;
                             _this.updateScore(score);
                         },
                         scoreUtilityOptions: {
@@ -79,7 +80,7 @@ var BYUModules;
                         if(parsedResponse && parsedResponse.results) {
                             if(parsedResponse.results.length > 0) {
                                 console.assert(parsedResponse.results.length === 1, "I expected that the server would only return identify" + " results for the single pixel at the center of a site. Something went wrong.");
-                                score.popupMessage = parsedResponse.results[0].value + " " + description;
+                                score.popupMessage = parsedResponse.results[0].value;
                                 score.updateValue(parseFloat(parsedResponse.results[0].value));
                             } else {
                                 score.popupMessage = "No data for this site";
