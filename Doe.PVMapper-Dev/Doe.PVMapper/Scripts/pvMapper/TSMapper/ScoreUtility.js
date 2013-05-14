@@ -103,12 +103,10 @@ var pvMapper;
                 var y = 0;
                 if(x >= h) {
                     y = 0;
+                } else if(x <= l) {
+                    y = 1;
                 } else {
-                    if(x <= l) {
-                        y = 1;
-                    } else {
-                        y = (x < b) ? 1 / (1 + Math.pow((b - l) / (x - l), (2 * s * (b + x - 2 * l)))) : 1 - (1 / (1 + Math.pow((b - (2 * b - h)) / ((2 * b - x) - (2 * b - h)), (2 * s * (b + (2 * b - x) - 2 * (2 * b - h))))));
-                    }
+                    y = (x < b) ? 1 / (1 + Math.pow((b - l) / (x - l), (2 * s * (b + x - 2 * l)))) : 1 - (1 / (1 + Math.pow((b - (2 * b - h)) / ((2 * b - x) - (2 * b - h)), (2 * s * (b + (2 * b - x) - 2 * (2 * b - h))))));
                 }
                 return y;
             }
@@ -140,16 +138,12 @@ var pvMapper;
             fn: function (x, args) {
                 if(x < args.p0.x) {
                     return args.p0.y;
+                } else if(x < args.p1.x) {
+                    return args.p0.y + ((args.p1.y - args.p0.y) * (x - args.p0.x) / (args.p1.x - args.p0.x));
+                } else if(x < args.p2.x) {
+                    return args.p1.y + ((args.p2.y - args.p1.y) * (x - args.p1.x) / (args.p2.x - args.p1.x));
                 } else {
-                    if(x < args.p1.x) {
-                        return args.p0.y + ((args.p1.y - args.p0.y) * (x - args.p0.x) / (args.p1.x - args.p0.x));
-                    } else {
-                        if(x < args.p2.x) {
-                            return args.p1.y + ((args.p2.y - args.p1.y) * (x - args.p1.x) / (args.p2.x - args.p1.x));
-                        } else {
-                            return args.p2.y;
-                        }
-                    }
+                    return args.p2.y;
                 }
             }
         };
