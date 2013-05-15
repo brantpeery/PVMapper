@@ -40,7 +40,7 @@ Ext.define('MainApp.view.RatingTool', {
   },
 
   /*
-  NOTE:  Any custom class that to be create/destroy and recreate must be wrapped inside 'initComponent' property.  -- leng.
+  NOTE:  Any custom class that to be create/destroy and recreate must be wrapped inside 'initComponent' function.  -- leng.
   */
   initComponent: function() {
     Ext.apply(this, {
