@@ -22,6 +22,7 @@ Ext.define('MainApp.view.Window', {
   collapsible: true,
   bodyStyle: 'opacity: 1;',
   titleCollapse: true,
+  constrain: true,
   viewState: Ext.view.ViewState.NORMAL,
   collapse: function () {
     this.callParent(arguments);
