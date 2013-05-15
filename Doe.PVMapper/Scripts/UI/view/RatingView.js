@@ -87,11 +87,10 @@ Ext.define('MainApp.view.RatingView', {
   title: 'Rating',
   width: 400,
   modal: true,
-  constraint: true,
   closeAction: 'destroy',
-  layout:'fit',
   initComponent: function() {
     Ext.apply(this, {
+
       items: [Ext.create('MainApp.view.RatingTool', {
         store: ratingStore(),
         options: optionStore()
@@ -99,7 +98,9 @@ Ext.define('MainApp.view.RatingView', {
       ]
     });
     this.callParent(arguments);
-  }
+  },
+  constrain: true
+  
 });
 
 //var ratingView = Ext.create('RatingView').show();

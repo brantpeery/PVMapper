@@ -16,5 +16,6 @@
             text: 'Cancel',
             handler: function () { }
         }]
-    }]
+    }],
+  constrain: true
 });
