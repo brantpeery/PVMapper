@@ -3,7 +3,7 @@ var BYUModules;
     var WildernessModule = (function () {
         function WildernessModule() {
             var _this = this;
-            this.WildernessMapUrl = "";
+            this.WildernessRestUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/nat_parks/MapServer/";
             this.landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
             var myModule = new pvMapper.Module({
                 id: "WildernessModule",
@@ -29,7 +29,6 @@ var BYUModules;
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
-                            mang;
                             _this.updateScore(score);
                         },
                         scoreUtilityOptions: {
@@ -42,14 +41,10 @@ var BYUModules;
             });
         }
         WildernessModule.prototype.addMap = function () {
-            this.wildernessLayer = OpenLayers.Layer.WMS("Wilderness Areas", "https://geoserver.byu.edu/geoserver/wms?", {
-                request: "GetMap",
-                bbox: this.landBounds,
-                layer_type: "polygon",
-                transparent: "true",
-                format: "image/gif",
-                exceptions: "application/vnd.ogc.se_inimage",
-                srs: "EPSG:42105"
+            this.wildernessLayer = OpenLayers.Layer.WMS("Wilderness Areas", this.WildernessRestUrl + "export", {
+                f: "json",
+                layers: "show: 0",
+                transparent: true
             }, {
                 isBaseLayer: false
             });
@@ -60,13 +55,14 @@ var BYUModules;
         };
         WildernessModule.prototype.updateScore = function (score) {
             var params = {
-                service: "WFS",
-                version: "2.0.0",
-                request: "GetFeature",
-                typename: "PVMapper:Double",
-                propertyName: "wilderness",
-                outputformat: "JSON",
-                bbox: score.site.geometry.bounds
+                mapExtent: score.site.geometry.bounds,
+                geometryType: "esriGeometryPolygon",
+                geometry: score.site.geometry,
+                f: "json",
+                layers: "all",
+                tolerance: 0,
+                imageDisplay: "1, 1, 96",
+                returnGeometry: false
             };
             var request = OpenLayers.Request.GET({
                 url: "https://geoserver.byu.edu/geoserver/wcs?",
