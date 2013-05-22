@@ -28,7 +28,7 @@ module BYUModules {
                     description: "Tells whether the given site is in a wilderness area.  ",
                     category: "Land Use",
                     onScoreAdded: (event, score: pvMapper.Score) => { },
-                    onSiteChange: (event, score: pvMapper.Score) => { mang
+                    onSiteChange: (event, score: pvMapper.Score) => {
                         this.updateScore(score);
                     },
                     scoreUtilityOptions: <pvMapper.IMinMaxUtilityArgs>{
@@ -40,23 +40,27 @@ module BYUModules {
             });
         }
 
-        private WildernessMapUrl = "";
+        private WildernessRestUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/nat_parks/MapServer/";
         private wildernessLayer;
         private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
     
         private addMap() {
             this.wildernessLayer = OpenLayers.Layer.WMS(
             "Wilderness Areas",
-            "https://geoserver.byu.edu/geoserver/wms?",
+            this.WildernessRestUrl + "export",
             {
-                request: "GetMap",
+                f: "json",
+                layers: "show: 0",
+                transparent: true,
+
+                /*request: "GetMap",
                 bbox: this.landBounds,
                 layer_type: "polygon",
                 transparent: "true",
                 format: "image/gif",
                 exceptions: "application/vnd.ogc.se_inimage",
                 //maxResolution: 156543.0339,
-                srs: "EPSG:42105",
+                srs: "EPSG:42105",*/
             },
             { isBaseLayer: false }
             );
@@ -69,6 +73,15 @@ module BYUModules {
 
         private updateScore(score: pvMapper.Score) {
             var params = {
+                mapExtent: score.site.geometry.bounds,
+                geometryType: "esriGeometryPolygon",
+                geometry: score.site.geometry,
+                f: "json",
+                layers: "all",
+                tolerance: 0,
+                imageDisplay: "1, 1, 96",
+                returnGeometry: false,
+
                 /*mapExtent: score.site.geometry.bounds.toBBOX(6, false),
                 geometryType: "esriGeometryEnvelope",
                 geometry: score.site.geometry.bounds.toBBOX(6, false),
@@ -77,14 +90,14 @@ module BYUModules {
                 version: "1.1.1",
                 request: "GetCoverage",
                 layers: "PVMapper:wilderness_areas",
-                returnGeometry: false,*/
+                returnGeometry: false,
                 service: "WFS",
                 version: "2.0.0",
                 request: "GetFeature",
                 typename: "PVMapper:Double",
                 propertyName: "wilderness",
                 outputformat: "JSON",
-                bbox: score.site.geometry.bounds,
+                bbox: score.site.geometry.bounds,*/
             };
         
             var request = OpenLayers.Request.GET({
