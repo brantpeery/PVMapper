@@ -96,7 +96,7 @@ module pvMapper {
                         });
                         //TODO: should we replace this with ScoreUtility.run(x) ...?
                         fnOfy = board.create('functiongraph', function (x) {
-                            var y = fn(x, this._xArgs);
+                            var y = fn(x, _this._xArgs);
                             return Math.max(0, Math.min(1, y)) * 100;
                         }, {
                             strokeWidth: 3, strokeColor: "red"
@@ -105,49 +105,60 @@ module pvMapper {
                 }
 
                 panel.removeAll();
-                panel.add(
-                    Ext.create('Ext.grid.property.Grid', {
-                        source: this._xArgs,
-                        listeners: {
-                            afterrender: function (sender, eOpts) {
-                                loadboard();
-                            },
-                            edit: function (editor, e, eOpts) {
-                                //Update the xArgs
-                                //Already handled by the prperty grid :)
-                                board.update();
-                            },
-                            propertychange: function (source, recordId, value, oldValue, eOpts) {
-                                board.update();
-                            }
-                        }
-                    }),
-                    {
-                        //Center the graph
-                        xtype: 'panel',
-                        layout: {
-                            align: 'center',
-                            pack: 'center',
-                            type: 'vbox'
+
+                var gridPanel = Ext.create('Ext.grid.property.Grid', {
+                    source: _this._xArgs,
+                    listeners: {
+                        afterrender: function (sender, eOpts) {
+                            _this.loadboard();
                         },
-                        items: {
-                            //padding: '10 0 0 0',
-                            id: 'FunctionBox',
-                            xtype: 'panel',
-                            layout: 'fit',
-                            border: true,
-                            width: 200,
-                            height: 225,
-                            padding: 5
+                        edit: function (editor, e, eOpts) {
+                            //Update the xArgs
+                            //Already handled by the prperty grid :)
+                            board.update();
+                        },
+                        propertychange: function (source, recordId, value, oldValue, eOpts) {
+                            board.update();
                         }
                     }
-                );
+                });
+
+                //For the property grid's items, it seems always has a 'constructor' item to begin with.
+                if (gridPanel.items.length > 1)
+                    panel.add(gridPanel);
+
+                panel.add({
+                    //Center the graph
+                    xtype: 'panel',
+                    layout: {
+                        align: 'center',
+                        pack: 'center',
+                        type: 'vbox'
+                    },
+                    items: {
+                        //padding: '10 0 0 0',
+                        id: 'FunctionBox',
+                        xtype: 'panel',
+                        layout: 'fit',
+                        border: true,
+                        width: 200,
+                        height: 225,
+                        padding: 5
+                    },
+                    listeners: {
+                        afterrender: function (sender, eOpts) {
+                            loadboard();
+                        }
+                    }
+                });
             },
+
             okhandler: function (panel, args) {
                 Ext.apply(args, this._xArgs);
             }
         }
     }
+
 
 
     //Static accessed class that holds all the utility functions for the application
@@ -203,7 +214,10 @@ module pvMapper {
             iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/stats_icon.jpg",
             fn: function (x: number, args: IMinMaxUtilityArgs) {
                 //Note: clamping this value to the range 0-1 is handled by the run(x) function
-                return ((x - args.minValue) / (args.maxValue - args.minValue));
+                if (args != null)
+                    return ((x - args.minValue) / (args.maxValue - args.minValue));
+                else
+                    return 0;
             }
         }
 
@@ -211,7 +225,7 @@ module pvMapper {
         public static linear3pt = {
             windowSetup: ScoreUtilityWindows.basicWindow.setup,
             windowOk: ScoreUtilityWindows.basicWindow.okhandler,
-    
+
             xBounds: function (args: IThreePointUtilityArgs) {
                 return [Math.min(args.p0.x, Math.min(args.p1.x, args.p2.x)),
                      Math.max(args.p0.x, Math.max(args.p1.x, args.p2.x))];
@@ -220,6 +234,7 @@ module pvMapper {
             fn: function (x: number, args: IThreePointUtilityArgs) {
                 //Note: clamping this value to the range 0-1 is handled by the run(x) function
                 //TODO: this breaks if you reorder the points - fix that.
+                //if (args == null) return 0;
                 if (x < args.p0.x) return args.p0.y;
                 else if (x < args.p1.x) return args.p0.y + ((args.p1.y - args.p0.y) * (x - args.p0.x) / (args.p1.x - args.p0.x));
                 else if (x < args.p2.x) return args.p1.y + ((args.p2.y - args.p1.y) * (x - args.p1.x) / (args.p2.x - args.p1.x));
@@ -257,7 +272,7 @@ module pvMapper {
             this.functionName = options.functionName;
             this.functionArgs = options.functionArgs;
             this.iconURL = options.iconURL;
-          
+
         }
 
         //public scoreUtilityOptions: IScoreUtilityOptions;
@@ -266,7 +281,7 @@ module pvMapper {
         public iconURL: string;
 
         //An options object might be better here. Then a call to a static function with options would be possible 
-        public run (x) {
+        public run(x) {
             if (isNaN(x)) return Number.NaN;
 
             //Run the function that the user needs run
