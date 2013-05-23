@@ -5996,7 +5996,7 @@ browsers will do whacky things with it.
 /* line 508, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_grid.scss */
 .x-grid-group-hd-collapsible .x-grid-group-title {
   background: transparent no-repeat 0 -1px;
-  background-image: url('../images/default/grid/group-collapse.gif');
+  background-image: url('../images/default/grid/group-collapse.gif'); 
   padding: 0 0 0 14px;
 }
 
@@ -6008,7 +6008,8 @@ browsers will do whacky things with it.
 
 /* line 521, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_grid.scss */
 .x-grid-group-hd-collapsed .x-grid-group-title {
-  background-image: url('../images/default/grid/group-expand.gif');
+  /*background-image: url('../images/default/grid/group-expand.gif'); */
+  background-image:none;  /*  make it so it doesn't displays +++++++ when collapsed*/
 }
 
 /* line 526, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_grid.scss */
