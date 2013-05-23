@@ -46,10 +46,13 @@ var pvMapper;
                 panel.removeAll();
                 var gridPanel = Ext.create('Ext.grid.property.Grid', {
                     source: _this._xArgs,
-                    listeners: {
-                        afterrender: function (sender, eOpts) {
-                            _this.loadboard();
-                        },
+                    viewConfig: {
+                        deferEmptyText: false,
+                        emptyText: // defaults to true
+                        '<center><h3>No Editable Fields</h3></center>'
+                    },
+                    listeners: // can be passed to the grid itself or within a viewConfig object
+                    {
                         edit: function (editor, e, eOpts) {
                             //Update the xArgs
                             //Already handled by the prperty grid :)
@@ -60,10 +63,7 @@ var pvMapper;
                         }
                     }
                 });
-                //For the property grid's items, it seems always has a 'constructor' item to begin with.
-                if(gridPanel.items.length > 1) {
-                    panel.add(gridPanel);
-                }
+                panel.add(gridPanel);
                 panel.add({
                     xtype: //Center the graph
                     'panel',
