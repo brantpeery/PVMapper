@@ -75,9 +75,7 @@ var BYUModules;
                         var parsedResponse = esriJsonParser.read(response.responseText);
                         if(parsedResponse && parsedResponse.results) {
                             if(parsedResponse.results.length > 0) {
-                                console.assert(parsedResponse.results.length === 1, "I expected that the server would only return identify" + " results for the single pixel at the center of a site. Something went wrong.");
-                                score.popupMessage = parsedResponse.results[0].value;
-                                score.updateValue(parseFloat(parsedResponse.results[0].value));
+                                score.updateValue(parsedResponse.results);
                             } else {
                                 score.popupMessage = "No data for this site";
                                 score.updateValue(Number.NaN);
