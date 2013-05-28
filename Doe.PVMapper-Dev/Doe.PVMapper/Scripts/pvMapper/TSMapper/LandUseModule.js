@@ -1,3 +1,9 @@
+/// <reference path="pvMapper.ts" />
+/// <reference path="Site.ts" />
+/// <reference path="Score.ts" />
+/// <reference path="Tools.ts" />
+/// <reference path="Options.d.ts" />
+/// <reference path="Module.ts" />
 var INLModules;
 (function (INLModules) {
     var ProtectedAreasModule = (function () {
@@ -32,7 +38,9 @@ var INLModules;
                         onSiteChange: function (e, score) {
                             _this.updateScore(score);
                         },
-                        scoreUtilityOptions: {
+                        scoreUtilityOptions: //TODO: need a categorical scoring system
+                        // for now, this assumes that overlapping more protected areas is worse than overlapping fewer (!)
+                        {
                             functionName: "linear3pt",
                             functionArgs: {
                                 p0: {
@@ -92,6 +100,7 @@ var INLModules;
                 proxy: "/Proxy/proxy.ashx?",
                 params: params,
                 callback: function (response) {
+                    // update value
                     if(response.status === 200) {
                         var esriJsonPerser = new OpenLayers.Format.JSON();
                         esriJsonPerser.extractAttributes = true;
@@ -110,7 +119,8 @@ var INLModules;
                                 lastText = newText;
                             }
                             score.popupMessage = alertText;
-                            score.updateValue(parsedResponse.results.length);
+                            score.updateValue(parsedResponse.results.length)// number of overlapping features
+                            ;
                         } else {
                             score.popupMessage = "None";
                             score.updateValue(0);
@@ -126,6 +136,7 @@ var INLModules;
     })();
     INLModules.ProtectedAreasModule = ProtectedAreasModule;    
     var protectedAreasInstance = new INLModules.ProtectedAreasModule();
+    //============================================================
     var LandCoverModule = (function () {
         function LandCoverModule() {
             var _this = this;
@@ -158,7 +169,9 @@ var INLModules;
                         onSiteChange: function (e, score) {
                             _this.updateScore(score);
                         },
-                        scoreUtilityOptions: {
+                        scoreUtilityOptions: //TODO: need a categorical scoring system
+                        // for now, this is a constant value (always returns the max, why not)
+                        {
                             functionName: "linear",
                             functionArgs: {
                                 minValue: 0,
@@ -168,7 +181,8 @@ var INLModules;
                         defaultWeight: 0
                     }
                 ],
-                infoTools: null
+                infoTools: //TODO: find a meaningful score & utility for this
+                null
             });
         }
         LandCoverModule.prototype.addMap = function () {
@@ -208,6 +222,7 @@ var INLModules;
                 proxy: "/Proxy/proxy.ashx?",
                 params: params,
                 callback: function (response) {
+                    // update value
                     if(response.status === 200) {
                         var esriJsonPerser = new OpenLayers.Format.JSON();
                         esriJsonPerser.extractAttributes = true;
@@ -226,8 +241,14 @@ var INLModules;
                                 lastText = newText;
                             }
                             score.popupMessage = alertText;
-                            score.updateValue(parsedResponse.results.length);
-                        } else {
+                            score.updateValue(parsedResponse.results.length)// returns 1
+                            ;
+                            //TODO: the server refuses to return more than one pixel value... how do we get %coverage?
+                            //      I'm afraid that we'll have to fetch the overlapping image and parse it ourselves...
+                            //      or at least run a few requests for different pixels and conbine the results.
+                            //      Either way, it'll be costly and inefficient. But, I can't find a better server,
+                            //      nor have I been successful at coaxing multiple results from this one. Curses.
+                                                    } else {
                             score.popupMessage = "No data for this site";
                             score.updateValue(Number.NaN);
                         }
@@ -242,4 +263,5 @@ var INLModules;
     })();
     INLModules.LandCoverModule = LandCoverModule;    
     var landCoverInstance = new INLModules.LandCoverModule();
-})(INLModules || (INLModules = {}));
+    //============================================================
+    })(INLModules || (INLModules = {}));

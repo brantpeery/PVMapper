@@ -26,10 +26,10 @@ module pvMapper {
         //Buttons:UIButton[];
         //SiteAttributes:SiteAttribute[];
 
-        init: ICallback;
-        destroy: ICallback;
-        activate: ICallback;
-        deactivate: ICallback;
+        init?: ICallback;
+        destroy?: ICallback;
+        activate?: ICallback;
+        deactivate?: ICallback;
     }
 
     export interface IScoreTool extends ITool {
