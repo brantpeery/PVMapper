@@ -1,3 +1,4 @@
+/// <reference path="ScoreUtility.ts" />
 /// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
@@ -18,23 +19,23 @@ module BYUModules {
                 destroy: null,
                 init: null,
 
-                scoringTools: [<any> {
-                    activate: null,
-                    deactivate: null,
-                    destroy: null,
-                    init: null,
+                scoringTools: [<pvMapper.IScoreTool>{
+                    //activate: null,
+                    //deactivate: null,
+                    //destroy: null,
+                    //init: null,
 
                     title: "Wilderness",
                     description: "Tells whether the given site is in a wilderness area.  ",
                     category: "Land Use",
-                    onScoreAdded: (event, score: pvMapper.Score) => { },
-                    onSiteChange: (event, score: pvMapper.Score) => {
+                    onScoreAdded: (event:EventArg, score: pvMapper.Score) => { },
+                    onSiteChange: (event: EventArg, score: pvMapper.Score) => {
                         this.updateScore(score);
                     },
-                    scoreUtilityOptions: <pvMapper.IMinMaxUtilityArgs>{
-                        minValue: 10,
-                        maxValue: 0,
-                    },
+                    scoreUtilityOptions: {
+                        functionArgs: <pvMapper.IMinMaxUtilityArgs>{},
+                        functionName: "linear"
+                    }
                 }],
                 infoTools: null
             });

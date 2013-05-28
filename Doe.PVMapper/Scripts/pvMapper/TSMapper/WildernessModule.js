@@ -1,3 +1,10 @@
+/// <reference path="ScoreUtility.ts" />
+/// <reference path="pvMapper.ts" />
+/// <reference path="Site.ts" />
+/// <reference path="Score.ts" />
+/// <reference path="Tools.ts" />
+/// <reference path="Options.d.ts" />
+/// <reference path="Module.ts" />
 var BYUModules;
 (function (BYUModules) {
     var WildernessModule = (function () {
@@ -19,11 +26,11 @@ var BYUModules;
                 init: null,
                 scoringTools: [
                     {
-                        activate: null,
-                        deactivate: null,
-                        destroy: null,
-                        init: null,
-                        title: "Wilderness",
+                        title: //activate: null,
+                        //deactivate: null,
+                        //destroy: null,
+                        //init: null,
+                        "Wilderness",
                         description: "Tells whether the given site is in a wilderness area.  ",
                         category: "Land Use",
                         onScoreAdded: function (event, score) {
@@ -32,8 +39,9 @@ var BYUModules;
                             _this.updateScore(score);
                         },
                         scoreUtilityOptions: {
-                            minValue: 10,
-                            maxValue: 0
+                            functionArgs: {
+                            },
+                            functionName: "linear"
                         }
                     }
                 ],
@@ -45,7 +53,15 @@ var BYUModules;
                 f: "json",
                 layers: "show: 0",
                 transparent: true
-            }, {
+            }, /*request: "GetMap",
+            bbox: this.landBounds,
+            layer_type: "polygon",
+            transparent: "true",
+            format: "image/gif",
+            exceptions: "application/vnd.ogc.se_inimage",
+            //maxResolution: 156543.0339,
+            srs: "EPSG:42105",*/
+            {
                 isBaseLayer: false
             });
             pvMapper.map.addLayer(this.wildernessLayer);
@@ -64,6 +80,22 @@ var BYUModules;
                 imageDisplay: "1, 1, 96",
                 returnGeometry: false
             };
+            /*mapExtent: score.site.geometry.bounds.toBBOX(6, false),
+            geometryType: "esriGeometryEnvelope",
+            geometry: score.site.geometry.bounds.toBBOX(6, false),
+            f: "json",
+            service: "WCS",
+            version: "1.1.1",
+            request: "GetCoverage",
+            layers: "PVMapper:wilderness_areas",
+            returnGeometry: false,
+            service: "WFS",
+            version: "2.0.0",
+            request: "GetFeature",
+            typename: "PVMapper:Double",
+            propertyName: "wilderness",
+            outputformat: "JSON",
+            bbox: score.site.geometry.bounds,*/
             var request = OpenLayers.Request.GET({
                 url: "https://geoserver.byu.edu/geoserver/wcs?",
                 proxy: "/Proxy/proxy.ashx?",
@@ -75,6 +107,7 @@ var BYUModules;
                         var parsedResponse = esriJsonParser.read(response.responseText);
                         if(parsedResponse && parsedResponse.results) {
                             if(parsedResponse.results.length > 0) {
+                                //score.popupMessage = parsedResponse.results[0].value;
                                 score.updateValue(parsedResponse.results);
                             } else {
                                 score.popupMessage = "No data for this site";
