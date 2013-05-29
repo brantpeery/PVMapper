@@ -1,45 +1,50 @@
-/// <reference path="pvMapper.ts" />
-/// <reference path="Site.ts" />
-/// <reference path="Score.ts" />
-/// <reference path="Tools.ts" />
-/// <reference path="Options.d.ts" />
-/// <reference path="Module.ts" />
 var Modules;
 (function (Modules) {
     var Module = (function () {
         function Module() {
+            var _this = this;
+            this.restUrl = "";
+            this.landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
             var myModule = new pvMapper.Module({
                 id: "",
                 author: "",
                 version: "",
-                iconURL: "",
                 activate: function () {
+                    _this.addMap();
                 },
                 deactivate: function () {
+                    _this.removeMap();
                 },
                 destroy: null,
                 init: null,
                 scoringTools: [
                     {
-                        activate: null,
-                        deactivate: null,
-                        destroy: null,
-                        init: null,
                         title: "",
                         description: "",
                         category: "",
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
+                            _this.updateScore(score);
                         },
                         scoreUtilityOptions: {
+                            functionArgs: {
+                            },
+                            functionName: "linear"
                         }
                     }
                 ],
                 infoTools: null
             });
         }
+        Module.prototype.addMap = function () {
+        };
+        Module.prototype.removeMap = function () {
+        };
+        Module.prototype.updateScore = function (score) {
+        };
         return Module;
-    })();    
+    })();
+    Modules.Module = Module;    
     var modInstance = new Module();
 })(Modules || (Modules = {}));

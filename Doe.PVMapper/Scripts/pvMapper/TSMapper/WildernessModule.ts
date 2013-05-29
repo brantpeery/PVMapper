@@ -102,7 +102,7 @@ module BYUModules {
             };
         
             var request = OpenLayers.Request.GET({
-                url: "https://geoserver.byu.edu/geoserver/wcs?",
+                url: this.WildernessRestUrl + "identify",
                 proxy: "/Proxy/proxy.ashx?",
                 params: params,
                 callback: (response) => {
@@ -110,10 +110,10 @@ module BYUModules {
                         var esriJsonParser = new OpenLayers.Format.JSON();
                         esriJsonParser.extractAttributes = true;
                         var parsedResponse = esriJsonParser.read(response.responseText);
-
+                        console.log("Wilderness Module Response: " + response.responseText);
                         if (parsedResponse && parsedResponse.results) {
                             if (parsedResponse.results.length > 0) {
-                                //score.popupMessage = parsedResponse.results[0].value;
+                                score.popupMessage = parsedResponse.results[0].value;
                                 score.updateValue(parsedResponse.results);
                             } else {
                                 score.popupMessage = "No data for this site";

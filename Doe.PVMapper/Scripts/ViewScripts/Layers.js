@@ -42,6 +42,24 @@ pvMapper.onReady(function () {
     var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);
     pvMapper.map.zoomToExtent(usBounds); // <-- this worked
 
+    //US Counties WMS taken from ArcGIS server
+    var counties = new OpenLayers.Layer.WMS(
+        "US Counties",
+        "https://geoserver.byu.edu/arcgis/rest/services/Layers/counties/MapServer/export",
+        {
+            //layers: "counties",
+            layers: "show: 0",
+            bbox: "-127.61950111389159,34.53405555476987,-64.08176994323729,54.06967725986387",
+            size: "2048, 2048",
+            transparent: true,
+        },
+        {
+            isBaseLayer: false,
+        }
+    );
+    counties.setOpacity(0.3);
+    pvMapper.map.addLayer(counties);
+
     //var slope = new OpenLayers.Layer.WMS(
     //        "Slope",
     //        "http://mapsdb.nrel.gov/jw_router/DNI_slope_3/tile",
