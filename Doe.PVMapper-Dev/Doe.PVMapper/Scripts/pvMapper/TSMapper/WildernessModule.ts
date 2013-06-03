@@ -111,6 +111,7 @@ module BYUModules {
                         esriJsonParser.extractAttributes = true;
                         var parsedResponse = esriJsonParser.read(response.responseText);
                         console.log("Wilderness Module Response: " + response.responseText);
+                        console.log("geometry: " + score.site.geometry);
                         if (parsedResponse && parsedResponse.results) {
                             if (parsedResponse.results.length > 0) {
                                 score.popupMessage = parsedResponse.results[0].value;
