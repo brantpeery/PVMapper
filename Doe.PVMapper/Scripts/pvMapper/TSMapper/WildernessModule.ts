@@ -74,9 +74,13 @@ module BYUModules {
 
         private updateScore(score: pvMapper.Score) {
             var params = {
-                mapExtent: score.site.geometry.bounds,
+                /*mapExtent: score.site.geometry.bounds,
                 geometryType: "esriGeometryPolygon",
-                geometry: score.site.geometry,
+                geometry: score.site.geometry,*/
+
+                mapExtent: score.site.geometry.bounds,
+                geometryType: "esriGeometryEnvelope",
+                geometry: score.site.geometry.bounds.toBBOX(6, false),
                 f: "json",
                 layers: "all",
                 tolerance: 0,
@@ -112,6 +116,7 @@ module BYUModules {
                         var parsedResponse = esriJsonParser.read(response.responseText);
                         console.log("Wilderness Module Response: " + response.responseText);
                         console.log("geometry: " + score.site.geometry);
+                        console.log("geometry bbox: " + score.site.geometry.bounds.toBBOX(6, false));
                         if (parsedResponse && parsedResponse.results) {
                             if (parsedResponse.results.length > 0) {
                                 score.popupMessage = parsedResponse.results[0].value;
