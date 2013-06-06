@@ -53,8 +53,8 @@ var BYUModules;
         WildernessModule.prototype.updateScore = function (score) {
             var params = {
                 mapExtent: score.site.geometry.bounds,
-                geometryType: "esriGeometryPolygon",
-                geometry: score.site.geometry,
+                geometryType: "esriGeometryEnvelope",
+                geometry: score.site.geometry.bounds.toBBOX(6, false),
                 f: "json",
                 layers: "all",
                 tolerance: 0,
@@ -72,6 +72,7 @@ var BYUModules;
                         var parsedResponse = esriJsonParser.read(response.responseText);
                         console.log("Wilderness Module Response: " + response.responseText);
                         console.log("geometry: " + score.site.geometry);
+                        console.log("geometry bbox: " + score.site.geometry.bounds.toBBOX(6, false));
                         if(parsedResponse && parsedResponse.results) {
                             if(parsedResponse.results.length > 0) {
                                 score.popupMessage = parsedResponse.results[0].value;

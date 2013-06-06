@@ -99,6 +99,8 @@ module INLModules {
                 returnGeometry: false,
             };
 
+            //console.log("LandUseModule.ts: " + score.site.geometry.bounds.toBBOX(6, false));
+
             var request = OpenLayers.Request.GET({
                 url: this.federalLandsRestUrl + "identify",
                 proxy: "/Proxy/proxy.ashx?",
