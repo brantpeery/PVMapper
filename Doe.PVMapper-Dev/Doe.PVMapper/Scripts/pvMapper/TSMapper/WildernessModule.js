@@ -78,7 +78,7 @@ var BYUModules;
                                 score.popupMessage = parsedResponse.results[0].value;
                                 score.updateValue(parsedResponse.results);
                             } else {
-                                score.popupMessage = "No data for this site";
+                                score.popupMessage = "No National Park Overlaps";
                                 score.updateValue(Number.NaN);
                             }
                         } else {

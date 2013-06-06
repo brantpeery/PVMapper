@@ -119,10 +119,13 @@ module BYUModules {
                         console.log("geometry bbox: " + score.site.geometry.bounds.toBBOX(6, false));
                         if (parsedResponse && parsedResponse.results) {
                             if (parsedResponse.results.length > 0) {
+                                
+                                //This will only take the first national park that overlaps
                                 score.popupMessage = parsedResponse.results[0].value;
                                 score.updateValue(parsedResponse.results);
                             } else {
-                                score.popupMessage = "No data for this site";
+                                score.popupMessage = "No National Park Overlaps";
+                                //score.popupMessage = "No data for this site";
                                 score.updateValue(Number.NaN);
                             }
                         } else {
