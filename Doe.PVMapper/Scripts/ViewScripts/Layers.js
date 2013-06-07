@@ -47,18 +47,22 @@ pvMapper.onReady(function () {
         "US Counties",
         "https://geoserver.byu.edu/arcgis/rest/services/Layers/counties/MapServer/export",
         {
+            f: "image",
             //layers: "counties",
             layers: "show: 0",
-            bbox: "-127.61950111389159,34.53405555476987,-64.08176994323729,54.06967725986387",
-            size: "2048, 2048",
+            bbox: "-1.4206537879290022E7,4093175.1430570777,-7133549.99921288,7889772.508363001",
+            //size: "400, 400",
             transparent: true,
+            format: "gif",
         },
         {
             isBaseLayer: false,
         }
     );
-    counties.setOpacity(0.3);
+    counties.setOpacity(0.5);
+    counties.setVisibility(false);
     pvMapper.map.addLayer(counties);
+    console.log("Counties Overlay added");
 
     //var slope = new OpenLayers.Layer.WMS(
     //        "Slope",

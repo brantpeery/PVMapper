@@ -29,9 +29,12 @@ var BYUModules;
                         },
                         scoreUtilityOptions: {
                             functionArgs: {
+                                minValue: 0,
+                                maxValue: 1
                             },
                             functionName: "linear"
-                        }
+                        },
+                        defaultWeight: 10
                     }
                 ],
                 infoTools: null
@@ -76,10 +79,10 @@ var BYUModules;
                         if(parsedResponse && parsedResponse.results) {
                             if(parsedResponse.results.length > 0) {
                                 score.popupMessage = parsedResponse.results[0].value;
-                                score.updateValue(parsedResponse.results);
+                                score.updateValue(0);
                             } else {
                                 score.popupMessage = "No National Park Overlaps";
-                                score.updateValue(Number.NaN);
+                                score.updateValue(1);
                             }
                         } else {
                             score.popupMessage = "Parse error";

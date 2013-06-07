@@ -33,9 +33,13 @@ module BYUModules {
                         this.updateScore(score);
                     },
                     scoreUtilityOptions: {
-                        functionArgs: <pvMapper.IMinMaxUtilityArgs>{},
+                        functionArgs: <pvMapper.IMinMaxUtilityArgs>{
+                            minValue: 0,
+                            maxValue: 1,
+                        },
                         functionName: "linear"
-                    }
+                    },
+                    defaultWeight: 10
                 }],
                 infoTools: null
             });
@@ -122,11 +126,11 @@ module BYUModules {
                                 
                                 //This will only take the first national park that overlaps
                                 score.popupMessage = parsedResponse.results[0].value;
-                                score.updateValue(parsedResponse.results);
+                                score.updateValue(0);
                             } else {
                                 score.popupMessage = "No National Park Overlaps";
                                 //score.popupMessage = "No data for this site";
-                                score.updateValue(Number.NaN);
+                                score.updateValue(1);
                             }
                         } else {
                             score.popupMessage = "Parse error";
