@@ -42,16 +42,26 @@ pvMapper.onReady(function () {
     var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);
     pvMapper.map.zoomToExtent(usBounds); // <-- this worked
 
+    
+
     //US Counties WMS taken from ArcGIS server
+    /* Only Working for Counties right now, maybe other maps need their projections switched
+    
+    addBYUServerLayer("US Counties", "https://geoserver.byu.edu/arcgis/rest/services/Layers/counties/MapServer", 0);
+    addBYUServerLayer("US Cities", "https://geoserver.byu.edu/arcgis/rest/services/Layers/cities/MapServer", 0);
+    addBYUServerLayer("Roads", "https://geoserver.byu.edu/arcgis/rest/services/Layers/roads/MapServer", 0);
+    addBYUServerLayer("Rivers", "https://geoserver.byu.edu/arcgis/rest/services/Layers/rivers/MapServer", 0);
+    addBYUServerLayer("Railroads", "https://geoserver.byu.edu/arcgis/rest/services/Layers/rail/MapServer", 0);
+    addBYUServerLayer("States", "https://geoserver.byu.edu/arcgis/rest/services/Layers/states/MapServer", 0);
+    addBYUServerLayer("Indian Lands", "https://geoserver.byu.edu/arcgis/rest/services/Layers/indian_res/MapServer", 0);*/
+
     var counties = new OpenLayers.Layer.WMS(
         "US Counties",
         "https://geoserver.byu.edu/arcgis/rest/services/Layers/counties/MapServer/export",
         {
             f: "image",
-            //layers: "counties",
             layers: "show: 0",
             bbox: "-1.4206537879290022E7,4093175.1430570777,-7133549.99921288,7889772.508363001",
-            //size: "400, 400",
             transparent: true,
             format: "gif",
         },
@@ -200,5 +210,32 @@ pvMapper.onReady(function () {
     //        //box: true,
     //    });
     //map.addControl(selectSiteControl);
+
+
+    function addBYUServerLayer(name, url, layerNumber) {
+
+        var layer = new OpenLayers.Layer.WMS(
+            name,
+            url + "/export",
+            {
+                f: "image",
+                layers: "show: " + layerNumber,
+                bbox: "-1.4206537879290022E7,4093175.1430570777,-7133549.99921288,7889772.508363001",
+                transparent: true,
+                format: "gif",
+            },
+            {
+                isBaseLayer: false,
+            }
+        );
+        layer.setOpacity(0.5);
+        layer.setVisibility(false);
+        pvMapper.map.addLayer(layer);
+        console.log(name + " Overlay added");
+    }
+
+
+
+
 
 });
