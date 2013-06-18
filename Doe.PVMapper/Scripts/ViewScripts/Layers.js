@@ -45,15 +45,29 @@ pvMapper.onReady(function () {
     
 
     //US Counties WMS taken from ArcGIS server
-    /* Only Working for Counties right now, maybe other maps need their projections switched
     
     addBYUServerLayer("US Counties", "https://geoserver.byu.edu/arcgis/rest/services/Layers/counties/MapServer", 0);
-    addBYUServerLayer("US Cities", "https://geoserver.byu.edu/arcgis/rest/services/Layers/cities/MapServer", 0);
-    addBYUServerLayer("Roads", "https://geoserver.byu.edu/arcgis/rest/services/Layers/roads/MapServer", 0);
-    addBYUServerLayer("Rivers", "https://geoserver.byu.edu/arcgis/rest/services/Layers/rivers/MapServer", 0);
-    addBYUServerLayer("Railroads", "https://geoserver.byu.edu/arcgis/rest/services/Layers/rail/MapServer", 0);
-    addBYUServerLayer("States", "https://geoserver.byu.edu/arcgis/rest/services/Layers/states/MapServer", 0);
-    addBYUServerLayer("Indian Lands", "https://geoserver.byu.edu/arcgis/rest/services/Layers/indian_res/MapServer", 0);*/
+    addBYUServerLayer("Dams", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 0);
+    addBYUServerLayer("Airports", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 1);
+    addBYUServerLayer("Cities", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 2);
+    addBYUServerLayer("Railroads", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 3);
+    addBYUServerLayer("Rivers", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 4);
+    addBYUServerLayer("Roads", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 5);
+    addBYUServerLayer("Indian Reservations", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 6);
+    addBYUServerLayer("States", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 7);
+    
+
+    /*
+    dams
+    airports
+    cities
+    rail
+    rivers
+    roads
+    indian res
+    states
+    */
+    https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer
 
     var counties = new OpenLayers.Layer.WMS(
         "US Counties",
