@@ -5,6 +5,10 @@
 /// <reference path="Tools.ts" />
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
+/// <reference path="Esri-GeoJsonConverter.js />
+
+declare function esriConverter(): any;
+declare function geoJsonConverter(): any;
 
 module BYUModules {
     export class WildernessModule {
@@ -79,10 +83,14 @@ module BYUModules {
         }
 
         private updateScore(score: pvMapper.Score) {
+            /*var converter = geoJsonConverter();
+            var esriGeometry = converter.toEsri(score.site.geometry);
+            console.log("Converted Geometry: " + esriGeometry);*/
+
             var params = {
                 /*mapExtent: score.site.geometry.bounds,
                 geometryType: "esriGeometryPolygon",
-                geometry: score.site.geometry,*/
+                geometry: esriGeometry,*/
 
                 mapExtent: score.site.geometry.bounds,
                 geometryType: "esriGeometryEnvelope",
@@ -92,23 +100,6 @@ module BYUModules {
                 tolerance: 0,
                 imageDisplay: "1, 1, 96",
                 returnGeometry: false,
-
-                /*mapExtent: score.site.geometry.bounds.toBBOX(6, false),
-                geometryType: "esriGeometryEnvelope",
-                geometry: score.site.geometry.bounds.toBBOX(6, false),
-                f: "json",
-                service: "WCS",
-                version: "1.1.1",
-                request: "GetCoverage",
-                layers: "PVMapper:wilderness_areas",
-                returnGeometry: false,
-                service: "WFS",
-                version: "2.0.0",
-                request: "GetFeature",
-                typename: "PVMapper:Double",
-                propertyName: "wilderness",
-                outputformat: "JSON",
-                bbox: score.site.geometry.bounds,*/
             };
         
             var request = OpenLayers.Request.GET({

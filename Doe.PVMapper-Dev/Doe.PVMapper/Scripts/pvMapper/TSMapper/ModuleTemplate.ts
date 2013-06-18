@@ -4,6 +4,7 @@
 /// <reference path="Tools.ts" />
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
+/// <reference path="../../Esri-GeoJsonConverter.js />
 
 module Modules {
     export class Module {

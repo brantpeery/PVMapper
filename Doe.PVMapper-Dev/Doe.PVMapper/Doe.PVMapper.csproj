@@ -167,6 +167,7 @@
     <Compile Include="Models\Properties.cs" />
     <Compile Include="Models\TreeNode.cs" />
     <Content Include="Content\jsxgraph.css" />
+    <Content Include="Scripts\Esri-GeoJsonConverter.js" />
     <Content Include="Scripts\EsriGeoJSON.js" />
     <Content Include="Scripts\ext-4.1.1a.d.ts" />
     <Content Include="Scripts\img\layer-switcher-maximize.png" />
@@ -177,6 +178,8 @@
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreLine.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\common.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\DataManager.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\Esri-GeoJsonConverter-test.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\Esri-GeoJsonConverter.js" />
     <Content Include="Scripts\pvMapper\TSMapper\IEventTypes.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\common.js">
       <DependentUpon>common.ts</DependentUpon>
