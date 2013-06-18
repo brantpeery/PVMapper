@@ -103,7 +103,7 @@ module pvMapper {
                 this.onSiteChangeHandler(undefined, score);
                 //this.updateScore(score);
             } catch (ex) {
-                if (console) console.log(ex);
+                if (console) console.error(ex);
             }
             return score;
         }
