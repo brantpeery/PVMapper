@@ -83,9 +83,15 @@ module BYUModules {
         }
 
         private updateScore(score: pvMapper.Score) {
-            /*var converter = geoJsonConverter();
-            var esriGeometry = converter.toEsri(score.site.geometry);
-            console.log("Converted Geometry: " + esriGeometry);*/
+
+            var toGeoJson = new OpenLayers.Format.GeoJSON();
+            var geoJsonObj = toGeoJson.extract.geometry.apply(toGeoJson, [score.site.geometry]);
+
+            var toEsriJson = new geoJsonConverter();
+            var esriJsonObj = toEsriJson.toEsri(geoJsonObj);
+
+            console.log("Converted Geometry:");
+            console.log(esriJsonObj);
 
             var params = {
                 /*mapExtent: score.site.geometry.bounds,
