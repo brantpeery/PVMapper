@@ -22,7 +22,7 @@ module INLModules {
                 destroy: null,
                 init: null,
 
-                scoringTools: [<any> {
+                scoringTools: [{
                     activate: null,
                     deactivate: null,
                     destroy: null,
@@ -162,7 +162,7 @@ module INLModules {
                 destroy: null,
                 init: null,
 
-                scoringTools: [<any> {
+                scoringTools: [{
                     activate: null,
                     deactivate: null,
                     destroy: null,
