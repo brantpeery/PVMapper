@@ -19,12 +19,12 @@ module BYUModules {
                 destroy: null,
                 init: null,
 
-                scoringTools: [<pvMapper.IScoreTool>{
+                scoringTools: [{
                     //activate: null,
                     //deactivate: null,
                     //destroy: null,
                     //init: null,
-
+                    
                     title: "Wilderness",
                     description: "Tells whether the given site is in a wilderness area.  ",
                     category: "Land Use",
@@ -50,25 +50,27 @@ module BYUModules {
         private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
     
         private addMap() {
-            this.wildernessLayer = OpenLayers.Layer.WMS(
-            "Wilderness Areas",
-            this.WildernessRestUrl + "export",
-            {
-                f: "json",
-                layers: "show: 0",
-                transparent: true,
+            this.wildernessLayer = new OpenLayers.Layer.ArcGIS93Rest(
+                "Wilderness Areas",
+                this.WildernessRestUrl + "export",
+                {
+                    format: "gif",
+                    layers: "show: 0",
+                    srs: "3857",
+                    transparent: "true",
 
-                /*request: "GetMap",
-                bbox: this.landBounds,
-                layer_type: "polygon",
-                transparent: "true",
-                format: "image/gif",
-                exceptions: "application/vnd.ogc.se_inimage",
-                //maxResolution: 156543.0339,
-                srs: "EPSG:42105",*/
-            },
-            { isBaseLayer: false }
-            );
+                    /*request: "GetMap",
+                    bbox: this.landBounds,
+                    layer_type: "polygon",
+                    transparent: "true",
+                    format: "image/gif",
+                    exceptions: "application/vnd.ogc.se_inimage",
+                    //maxResolution: 156543.0339,
+                    srs: "EPSG:42105",*/
+                },
+                { isBaseLayer: false }
+                );
+            this.wildernessLayer.setVisibility(false);
             pvMapper.map.addLayer(this.wildernessLayer);
         }
 
