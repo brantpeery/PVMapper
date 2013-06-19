@@ -67,7 +67,7 @@ pvMapper.onReady(function () {
     indian res
     states
     */
-    https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer
+    //https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer
 
     var counties = new OpenLayers.Layer.WMS(
         "US Counties",
@@ -228,7 +228,7 @@ pvMapper.onReady(function () {
 
     function addBYUServerLayer(name, url, layerNumber) {
 
-        var layer = new OpenLayers.Layer.WMS(
+        var layer = new OpenLayers.Layer.ArcGIS93Rest(
             name,
             url + "/export",
             {
