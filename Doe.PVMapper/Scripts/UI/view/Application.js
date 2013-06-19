@@ -9,13 +9,21 @@
 
 var app = Ext.application({
     name: 'MainApp',
-    requires: ['Ext.container.Viewport'],
+    requires: [
+        'Ext.container.Viewport',
+        'GeoExt.panel.Map',
+        'GeoExt.panel.Legend',
+        'GeoExt.container.LayerLegend',
+        'GeoExt.container.WmsLegend',
+        'GeoExt.container.VectorLegend',
+        'GeoExt.container.UrlLegend'
+    ],
     appFolder: '/Scripts/UI',
     autoCreateViewport: true,
 
     launch: function () {
-        Ext.Loader.setPath('GeoExt', "/Scripts/GeoExt");
-        Ext.Loader.setPath( 'MainApp', '/Scripts/UI' );
+        //Ext.Loader.setPath('GeoExt', "/Scripts/GeoExt");
+        //Ext.Loader.setPath( 'MainApp', '/Scripts/UI' );
 
         if (console) console.log('launching application');
 
@@ -54,6 +62,28 @@ var app = Ext.application({
             theme: "/Content/OpenLayers/default/style.css",
         });
 
+        // create a layer store for the map
+        var layerStore = new GeoExt.data.LayerStore({
+            map: map,
+        });
+
+        var legendPanel = new GeoExt.LegendPanel({
+            title: 'Legend',
+            layerStore: layerStore,
+            filter: function(record) {
+                return (record.getLayer() !== pvMapper.siteLayer);
+            },
+            width: 200,
+            minWidth: 150,
+            maxWidth: 400,
+            split: true,
+            collapsible: true,
+            collapsed: true,
+            animCollapse: true,
+            autoScroll: true,
+            region: 'east'
+        });
+
         //Create the panel the map lives in
         var mapPanel = Ext.create('GeoExt.panel.Map', {
             id: 'mapPanel',
@@ -62,11 +92,18 @@ var app = Ext.application({
             map: map,
             extent: usBounds, // <-- this doesn't actually change the visible extent of our map at all
             stateful: true,
+            region: 'center',
             stateId: 'mapPanel',
         });
 
+        var mainPanel = new Ext.Container({
+            //title: 'Border Layout',
+            layout: 'border',
+            items: [mapPanel, legendPanel]
+        });
+
         this.mainContent = Ext.ComponentQuery.query('#maincontent')[0];
-        this.mainContent.add(mapPanel);
+        this.mainContent.add(mainPanel);
         pvMapper.mapPanel = mapPanel;
         pvMapper.map = map;
 
