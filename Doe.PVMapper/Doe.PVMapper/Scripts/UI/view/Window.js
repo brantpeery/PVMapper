@@ -106,8 +106,8 @@ Ext.define('MainApp.view.Window', {
       var taskBar = Ext.getCmp('maintaskbar');
       if (taskBar)
         taskBar.updateButtonText(oldTitle, newTitle);
-    },
-    scrope: this
+    }/*,
+    scope: this*/
   }
 });
 

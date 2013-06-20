@@ -66,6 +66,11 @@ var pvMapper;
         ScoreLine.prototype.getWeight = function () {
             return this.weight;
         };
+        ScoreLine.prototype.setWeight = function (value) {
+            this.weight = value;
+            this.scoreChangeEvent.fire(self, undefined)// score line changed
+            ;
+        };
         ScoreLine.prototype.getWeightedUtilityScore = function () {
             return 0;
         };
@@ -92,28 +97,6 @@ var pvMapper;
                 }
             }
             return score;
-        };
-        ScoreLine.prototype.updateScores = //public removeScore(score: Score) {
-        //    // remove site from scoreline.
-        //    score.siteChangeEvent.removeHandler(this.onSiteChangeHandler);
-        //    score.valueChangeEvent.removeHandler(this.valueChangeHandler);
-        //    var idx: number = this.scores.indexOf(score);
-        //    if (idx >= 0) {
-        //        this.scores.splice(idx, 1);
-        //    }
-        //}
-        //public updateScores(site: Site) {
-        //}
-        function () {
-            this.scores.forEach(function (score, index, scores) {
-                var oldvalue = score.value;
-                score.setUtility(this.getUtilityScore(score.value));
-                this.scoreChangeEvent.fire(self, {
-                    score: score,
-                    oldValue: oldvalue,
-                    newValue: score.value
-                });
-            }, this);
         };
         ScoreLine.prototype.loadAllSites = function () {
             var allSites = pvMapper.siteManager.getSites();

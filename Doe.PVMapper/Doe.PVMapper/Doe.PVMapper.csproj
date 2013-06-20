@@ -399,6 +399,8 @@
     <Content Include="Scripts\UI\panel\MinMaxTargetPanel.js" />
     <Content Include="Scripts\UI\panel\PropertyGrid.js" />
     <Content Include="Scripts\UI\view\FunctionWindow.js" />
+    <Content Include="Scripts\UI\view\RatingTool.js" />
+    <Content Include="Scripts\UI\view\RatingView.js" />
     <Content Include="Scripts\UI\view\ScoreboardWindow.js" />
     <Content Include="Scripts\UI\view\UtilityFunctionEdit.js" />
     <Content Include="Scripts\UnitTests\jasmine.js" />
