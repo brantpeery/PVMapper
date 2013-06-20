@@ -64,7 +64,7 @@ module INLModules {
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
-    var snlWmsBaseUrl = "https://maps.snl.com/arcgis/services/SNLMaps/PowerCos/MapServer/";
+    var snlLineExportUrl = "https://maps.snl.com/arcgis/rest/services/SNLMaps/Power/MapServer/export"
     var snlLineQueryUrl = "https://maps.snl.com/arcgis/rest/services/SNLMaps/Power/MapServer/5/query";
 
     //declare var Ext: any;
@@ -72,24 +72,20 @@ module INLModules {
     var mapLayer: any;
 
     function addAllMaps() {
-        mapLayer = new OpenLayers.Layer.WMS(
-            "Power Lines",
-            snlWmsBaseUrl + "WMSServer",
-            {
-                layers: "5", //"swera:ghi_suny_high_900913", //"0", //"perezANN_mod",
-                //layer_type: "polygon",
-                transparent: "true",
-                format: "image/png",
-                //exceptions: "application/vnd.ogc.se_inimage",
-                //maxResolution: 156543.0339,
-                srs: "EPSG:3857",
-            },
-            { isBaseLayer: false }
-        );
-
+        mapLayer = new OpenLayers.Layer.ArcGIS93Rest(
+                "Power Lines",
+                snlLineExportUrl,
+                {
+                    layers: "show:5", //"show:2",
+                    format: "gif",
+                    srs: "3857", //"102100",
+                    transparent: "true",
+                }//,{ isBaseLayer: false }
+                );
         mapLayer.setOpacity(0.3);
-        mapLayer.epsgOverride = "EPSG:3857"; //"3857"; //"EPSG:102100";
+        mapLayer.epsgOverride = "3857"; //"EPSG:102100";
         mapLayer.setVisibility(false);
+
         pvMapper.map.addLayer(mapLayer);
         //pvMapper.map.setLayerIndex(mapLayer, 0);
     }
