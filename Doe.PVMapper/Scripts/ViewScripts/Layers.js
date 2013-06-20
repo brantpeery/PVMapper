@@ -42,6 +42,20 @@ pvMapper.onReady(function () {
     var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);
     pvMapper.map.zoomToExtent(usBounds); // <-- this worked
 
+    
+
+    //US Counties WMS taken from ArcGIS server
+    
+    addBYUServerLayer("US Counties", "https://geoserver.byu.edu/arcgis/rest/services/Layers/counties/MapServer", 0);
+    addBYUServerLayer("Dams", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 0);
+    addBYUServerLayer("Airports", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 1);
+    addBYUServerLayer("Cities", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 2);
+    addBYUServerLayer("Railroads", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 3);
+    addBYUServerLayer("Rivers", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 4);
+    addBYUServerLayer("Roads", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 5);
+    addBYUServerLayer("Indian Reservations", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 6);
+    addBYUServerLayer("States", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 7);
+
     //var slope = new OpenLayers.Layer.WMS(
     //        "Slope",
     //        "http://mapsdb.nrel.gov/jw_router/DNI_slope_3/tile",
@@ -79,6 +93,8 @@ pvMapper.onReady(function () {
     //openLayersWmsThing.epsgOverride = "EPSG:900913";
     //pvMapper.map.addLayer(openLayersWmsThing);
 
+
+    //Note: this map is pretty ugly...
     var esriWorldTerrain = new OpenLayers.Layer.ArcGIS93Rest(
         "Shaded Relief",
         "http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/export",
@@ -178,5 +194,33 @@ pvMapper.onReady(function () {
     //        //box: true,
     //    });
     //map.addControl(selectSiteControl);
+
+
+    function addBYUServerLayer(name, url, layerNumber) {
+
+        var layer = new OpenLayers.Layer.ArcGIS93Rest(
+            name,
+            url + "/export",
+            {
+                f: "image",
+                layers: "show: " + layerNumber,
+                bbox: "-1.4206537879290022E7,4093175.1430570777,-7133549.99921288,7889772.508363001",
+                transparent: true,
+                format: "gif",
+            },
+            {
+                isBaseLayer: false,
+            }
+        );
+        layer.setOpacity(0.5);
+        layer.setVisibility(false);
+        layer.isReferenceLayer = true;
+        pvMapper.map.addLayer(layer);
+        console.log(name + " Overlay added");
+    }
+
+
+
+
 
 });

@@ -15,6 +15,7 @@ var INLModules;
                 id: "SnlModule",
                 author: "Scott Brown, INL",
                 version: "0.1.ts",
+                iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/home_icon.jpg",
                 activate: function () {
                     addAllMaps();
                 },
@@ -65,61 +66,22 @@ var INLModules;
     })();    
     var modinstance = new IrradianceModule();
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
-    var snlWmsBaseUrl = "https://maps.snl.com/arcgis/services/SNLMaps/PowerCos/MapServer/";
-    //var snlRestBaseUrl = "https://maps.snl.com/arcgis/rest/services/SNLMaps/Power/MapServer/";
-    //var snlLineQueryUrl = "https://maps.snl.com/arcgis/rest/services/SNLMaps/PowerCos/MapServer/2/query";
+    var snlLineExportUrl = "https://maps.snl.com/arcgis/rest/services/SNLMaps/Power/MapServer/export";
     var snlLineQueryUrl = "https://maps.snl.com/arcgis/rest/services/SNLMaps/Power/MapServer/5/query";
     //declare var Ext: any;
     var mapLayer;
     function addAllMaps() {
-        //mapLayer = new OpenLayers.Layer.Vector(
-        //    "Transmission Lines",
-        //    {
-        //        strategies: [new OpenLayers.Strategy.Fixed()],
-        //        protocol: new OpenLayers.Protocol.Script({
-        //            url: snlLineQueryUrl,
-        //            params: {
-        //                f: "json",
-        //                //Note: this is stupid. ONE of the lines has an unescaped '\' character in its name. Bad ESRI.
-        //                where: "Line_Name NOT LIKE '%\\N%'", //"1=1",
-        //                outFields: "Voltage",
-        //                //layers: "5", //"2", //solar.params.LAYERS,
-        //                //callbackKey: "callback",
-        //                //transparent: "true",
-        //                //srs: "EPSG:3857",
-        //            },
-        //            format: new OpenLayers.Format.EsriGeoJSON(),
-        //            parseFeatures: function(data) {
-        //                return this.format.read(data);
-        //            }
-        //        }),
-        //        //srs: "EPSG:3857",
-        //    }
-        //);
-        mapLayer = new OpenLayers.Layer.WMS("Power Lines", snlWmsBaseUrl + "WMSServer", {
-            layers: "5",
-            transparent: //"swera:ghi_suny_high_900913", //"0", //"perezANN_mod",
-            //layer_type: "polygon",
-            "true",
-            format: "image/png",
-            srs: //exceptions: "application/vnd.ogc.se_inimage",
-            //maxResolution: 156543.0339,
-            "EPSG:3857"
-        }, {
-            isBaseLayer: false
+        mapLayer = new OpenLayers.Layer.ArcGIS93Rest("Power Lines", snlLineExportUrl, {
+            layers: "show:5",
+            format: //"show:2",
+            "gif",
+            srs: "3857",
+            transparent: //"102100",
+            "true"
         });
-        //mapLayer = new OpenLayers.Layer.ArcGIS93Rest(
-        //    "Transmission Lines",
-        //    snlRestBaseUrl + "export",
-        //    {
-        //        layers: "5", //"2",
-        //        format: "gif",
-        //        srs: "3857", //"102100",
-        //        transparent: "true",
-        //    }
-        //);
+        //,{ isBaseLayer: false }
         mapLayer.setOpacity(0.3);
-        mapLayer.epsgOverride = "EPSG:3857"//"3857"; //"EPSG:102100";
+        mapLayer.epsgOverride = "3857"//"EPSG:102100";
         ;
         mapLayer.setVisibility(false);
         pvMapper.map.addLayer(mapLayer);
@@ -179,52 +141,5 @@ var INLModules;
             }
         });
         var response = jsonpProtocol.read();
-        //var params = {
-        //    mapExtent: score.site.geometry.bounds.toBBOX(6, false),
-        //    geometryType: "esriGeometryEnvelope",
-        //    geometry: score.site.geometry.bounds.toBBOX(6, false),
-        //    f: "json", // or "html",
-        //    layers: "all:5", //"2", //solar.params.LAYERS,
-        //    tolerance: 0, //TODO: should this be 0 or 1?
-        //    //imageDisplay: "1, 1, 96",
-        //    callbackKey: "callback",
-        //};
-        //var request = OpenLayers.Protocol.Script({
-        //    url: snlRestBaseUrl //+ "identify",
-        //    //params: params,
-        //    //callback: (request) => {
-        //    //    // debug statement
-        //    //    //alert(score.site.name + ": " + request.responseText.length + " (" + request.status + ")");
-        //    //    alert(request);
-        //    //    // update value
-        //    //    //if (request.status === 200) {
-        //    //    //    score.popupMessage = null;
-        //    //    //    score.updateValue(request.responseText.length);
-        //    //    //} else {
-        //    //    //    score.popupMessage = "Error " + request.status;
-        //    //    //    score.updateValue(Number.NaN);
-        //    //    //}
-        //    //},
-        //});
-        //var request = OpenLayers.Request.GET({
-        //    //url: "/Proxy/proxy.ashx?" + solarmapperRestBaseUrl + "identify",
-        //    url: snlRestBaseUrl + "identify",
-        //    proxy: "/Proxy/proxy.ashx?",
-        //    params: params,
-        //    //callback: handler,
-        //    callback: (request) => {
-        //        // debug statement
-        //        //alert(score.site.name + ": " + request.responseText.length + " (" + request.status + ")");
-        //        //alert(request.responseText);
-        //        // update value
-        //        if (request.status === 200) {
-        //            score.popupMessage = null;
-        //            score.updateValue(request.responseText.length);
-        //        } else {
-        //            score.popupMessage = "Error " + request.status;
-        //            score.updateValue(Number.NaN);
-        //        }
-        //    },
-        //});
-            }
+    }
 })(INLModules || (INLModules = {}));

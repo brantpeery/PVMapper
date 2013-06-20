@@ -95,6 +95,7 @@ var INLModules;
                 imageDisplay: "1, 1, 96",
                 returnGeometry: false
             };
+            //console.log("LandUseModule.ts: " + score.site.geometry.bounds.toBBOX(6, false));
             var request = OpenLayers.Request.GET({
                 url: this.federalLandsRestUrl + "identify",
                 proxy: "/Proxy/proxy.ashx?",
@@ -140,7 +141,6 @@ var INLModules;
     var LandCoverModule = (function () {
         function LandCoverModule() {
             var _this = this;
-            this.landCoverWmsUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/services/NAT_LC/1_NVC_class_landuse/MapServer/WMSServer";
             this.landCoverRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/NAT_LC/1_NVC_class_landuse/MapServer/";
             this.landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
             var myModule = new pvMapper.Module({
@@ -186,20 +186,17 @@ var INLModules;
             });
         }
         LandCoverModule.prototype.addMap = function () {
-            this.landCoverLayer = new OpenLayers.Layer.WMS("Land Cover", this.landCoverWmsUrl, {
-                maxExtent: this.landBounds,
-                layers: "0,1,2",
-                layer_type: "polygon",
-                transparent: "true",
-                format: "image/gif",
-                exceptions: "application/vnd.ogc.se_inimage",
-                maxResolution: 156543.0339,
-                srs: "EPSG:102113"
-            }, {
-                isBaseLayer: false
+            this.landCoverLayer = new OpenLayers.Layer.ArcGIS93Rest("Land Cover", this.landCoverRestUrl + "export", {
+                layers: "show:0,1,2",
+                format: "gif",
+                srs: "3857",
+                transparent: //"102100",
+                "true"
             });
-            this.landCoverLayer.epsgOverride = "EPSG:102113";
+            //,{ isBaseLayer: false }
             this.landCoverLayer.setOpacity(0.3);
+            this.landCoverLayer.epsgOverride = "3857"//"EPSG:102100";
+            ;
             this.landCoverLayer.setVisibility(false);
             pvMapper.map.addLayer(this.landCoverLayer);
         };

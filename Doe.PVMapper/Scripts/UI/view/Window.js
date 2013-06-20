@@ -21,7 +21,8 @@ Ext.define('MainApp.view.Window', {
   minimizable: true,
   collapsible: true,
   bodyStyle: 'opacity: 1;',
-  titleCollapse: true,
+  titleCollapse: false,  //set to false to prevent double clicking on title collapse.
+  constrain: true,
   viewState: Ext.view.ViewState.NORMAL,
   collapse: function () {
     this.callParent(arguments);
@@ -105,7 +106,8 @@ Ext.define('MainApp.view.Window', {
       var taskBar = Ext.getCmp('maintaskbar');
       if (taskBar)
         taskBar.updateButtonText(oldTitle, newTitle);
-    }
+    },
+    scrope: this
   }
 });
 

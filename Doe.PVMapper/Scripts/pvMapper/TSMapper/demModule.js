@@ -5,6 +5,7 @@
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
 /// <reference path="ScoreUtility.ts" />
+/// <reference path="/../../EsriGeoJSON.js>
 var BYUModules;
 (function (BYUModules) {
     var DemModule = (function () {
@@ -41,7 +42,9 @@ var BYUModules;
                         {
                             functionName: "linear",
                             functionArgs: {
-                                minValue: 10,
+                                minValue: //IThreePointUtilityArgs
+                                //IMinMaxUtilityArgs
+                                10,
                                 maxValue: 0
                             }
                         }

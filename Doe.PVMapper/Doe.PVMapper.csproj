@@ -219,6 +219,7 @@
     <Content Include="Content\OpenLayers\default\style.css" />
     <Content Include="Content\OpenLayers\default\style.tidy.css" />
     <Content Include="Content\jsxgraph.css" />
+    <Content Include="Scripts\Esri-GeoJsonConverter.js" />
     <Content Include="Scripts\EsriGeoJSON.js" />
     <Content Include="Scripts\ext-4.1.1a.d.ts" />
     <Content Include="Scripts\jquery.d.ts" />
@@ -317,6 +318,16 @@
     <Content Include="Scripts\pvMapper\TSMapper\ScoreUtility.js">
       <DependentUpon>ScoreUtility.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtility.min.js">
+      <DependentUpon>ScoreUtility.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtilityWindows.js">
+      <DependentUpon>ScoreUtilityWindows.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtilityWindows.min.js">
+      <DependentUpon>ScoreUtilityWindows.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtilityWindows.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\siteAreaModule.js">
       <DependentUpon>siteAreaModule.ts</DependentUpon>
     </Content>
@@ -361,6 +372,13 @@
     <Content Include="Scripts\pvMapper\TSMapper\Tools.min.js">
       <DependentUpon>Tools.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\UtilityFunctions.js">
+      <DependentUpon>UtilityFunctions.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\UtilityFunctions.min.js">
+      <DependentUpon>UtilityFunctions.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\UtilityFunctions.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\WildernessModule.js">
       <DependentUpon>WildernessModule.ts</DependentUpon>
     </Content>

@@ -1006,6 +1006,7 @@ module OpenLayers {
     GML: any;
     XML: any;
     JSON(): any;
+    GeoJSON(): any;
     WMSGetFeatureInfo(): any;
 
     EsriGeoJSON(): any; //  Note: this is not from OpenLayers, it's different...
