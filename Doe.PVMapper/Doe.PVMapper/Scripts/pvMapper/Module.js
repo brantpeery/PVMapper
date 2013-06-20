@@ -24,6 +24,8 @@
             id: "",
             author: "",
             version: "",
+            iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/gear_icon.jpg",
+
 
             init: function () { },          //Called when the tool is loaded as a module.
             destroy: function () { },       //Called when the tool needs to completely remove itself from the interface and object tree
@@ -40,6 +42,8 @@
         this.destroy = (typeof (settings.destroy) === 'function') ? settings.destroy : null;
         this.activate = (typeof (settings.activate) === 'function') ? settings.activate : null;
         this.deactivate = (typeof (settings.deactivate) === 'function') ? settings.deactivate : null;
+        this.iconURL = (typeof(settings.iconURL) === 'string') ? settings.iconURL : 'http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/home_icon.jpg';
+         fasdfasdf
 
         this.scoringTools = {};
 

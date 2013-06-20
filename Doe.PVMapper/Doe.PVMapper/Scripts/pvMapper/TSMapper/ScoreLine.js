@@ -51,7 +51,8 @@ var pvMapper;
                 options.scoreUtilityOptions = {
                     functionName: "random",
                     functionArgs: {
-                    }
+                    },
+                    iconURL: null
                 };
             }
             this.scoreUtility = new pvMapper.ScoreUtility(options.scoreUtilityOptions);
@@ -87,7 +88,7 @@ var pvMapper;
                 //this.updateScore(score);
                             } catch (ex) {
                 if(console) {
-                    console.log(ex);
+                    console.error(ex);
                 }
             }
             return score;

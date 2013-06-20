@@ -5,6 +5,7 @@
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
 /// <reference path="ScoreUtility.ts" />
+/// <reference path="/../../EsriGeoJSON.js>
 
 module BYUModules {
     class DemModule {
@@ -37,6 +38,8 @@ module BYUModules {
                     scoreUtilityOptions: {
                         functionName: "linear",
                         functionArgs: <pvMapper.IMinMaxUtilityArgs>{
+                            //IThreePointUtilityArgs
+                            //IMinMaxUtilityArgs
                             minValue: 10,
                             maxValue: 0,
                         }
