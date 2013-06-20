@@ -109,13 +109,20 @@ var scoreboardColumns = [{
   //    dataIndex: 'category',
   //    editor: 'textfield',
 }, {
-  text: 'Weight',
+  header: 'Weight',
+  //text: 'Weight',
   width: 45,
   //flex: 0, //Will not be resized
   //shrinkWrap: 1,
   sortable: true,
   hideable: false,
   dataIndex: 'weight',
+  field: {
+    xtype: 'numberfield',
+    allowBlank: false,
+    minValue: 0,
+    maxValue: 100
+  }
   //editor: 'numberfield', //TODO: this editing this value causes the scoreboard to throw exceptions on every subsequent refresh - fix that someday
 }, {
   xtype: 'actioncolumn',
@@ -133,23 +140,24 @@ var scoreboardColumns = [{
     height: 24,
     width: 24,
     handler: function (view, rowIndex, colIndex, item, e, record) {
-      var dynamicPanel = Ext.create('Ext.panel.Panel', {
-        items: [{
-          xtype: 'text',
-          text: 'configure me',
-          width: 100,
-          shrinkWrap: 3,
-          sortable: true,
-          hideable: false,
-          layout: {
-            type: 'vbox',
-            align: 'center'
-          }
-        }]
-      });
       var uf = record.get('utility');
       var utilityFn = pvMapper.UtilityFunctions[uf.functionName];
 
+      dynamicPanel = Ext.create('Ext.panel.Panel', {
+          items: [{
+            xtype: 'text',
+            text: 'configure me',
+            width: 100,
+            shrinkWrap: 3,
+            sortable: true,
+            hideable: false,
+            layout: {
+              type: 'vbox',
+              align: 'center'
+            }
+          }]
+        });
+      
       var windows = Ext.create('MainApp.view.UtilityFunctionEdit', {
         items: dynamicPanel,
         icon: utilityFn.iconURL,
@@ -331,6 +339,7 @@ toolsStore.on({
 });
 
 
+
 //----------------The grid and window-----------------
 Ext.define('Ext.grid.ScoreboardGrid', {
   //xtype:'Scoreboard',
@@ -340,12 +349,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
   //width: '100%',
   //height: 600,
   title: "Tools List",
-  selType: 'rowmodel', //Note: use 'cellmodel' once we have cell editing worked out
   columns: scoreboardColumns,
-  plugins: [
-  Ext.create('Ext.grid.plugin.CellEditing', {
-    clicksToEdit: 1
-  })],
   features: [
   {
     //Note: this feature provides per-group summary values, rather than repeating the global summary for each group.
@@ -353,13 +357,40 @@ Ext.define('Ext.grid.ScoreboardGrid', {
     ftype: 'groupingsummary',
     enableGroupingMenu: false,
     //hideGroupedHeader: true, <-- this is handy, if we ever allow grouping by arbitrary fields
+    //onGroupClick: function(view, group, idx, foo, e) {}
   },
       //{ ftype: 'grouping' },
       //{ ftype: 'summary' },
   ]
 });
 
+var cellEditing = Ext.create('Ext.grid.plugin.CellEditing',
+  {
+    clicksToEdit: 1,
+    listeners: {
+      'beforeedit': function (e) {
+        var me = this;
+        var allowed = !!me.isEditAllowed;
+        if (!me.isEditAllowed) {
+          if (e.colIndex !== 1) return;
+          //Ext.Msg.confirm('confirm', 'Are you sure?', function (btn) {
+          //  if (btn !== 'yes') return;
+          me.isEditAllowed = true;
+          me.startEditByPosition({ row: e.rowIndex, column: e.colIndex });
+        }
+        return allowed;
+      },
+      'edit': function (e) {
+        this.isEditAllowed = false;
+      }
+    }
+  });
+
 var scoreboardGrid = Ext.create('Ext.grid.ScoreboardGrid', {
+  selModel: {
+    selType: 'cellmodel', //'rowmodel', //Note: use 'cellmodel' once we have cell editing worked out
+  },
+  plugins: [cellEditing]
 });
 
 Ext.define('MainApp.view.ScoreboardWindow', {
