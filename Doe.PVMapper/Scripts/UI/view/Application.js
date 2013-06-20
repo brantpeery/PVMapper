@@ -1,30 +1,40 @@
-﻿Ext.Loader.setConfig({
+﻿// configure search paths for Ext require()
+Ext.Loader.setConfig({
     enabled: true,
     disableCaching: false,
     paths: {
-        GeoExt : "/Scripts/GeoExt"
+        GeoExt: "/Scripts/GeoExt"
+        //MainApp: "/Scripts/UI"
     }
 });
 
+// requirements for layer list and legend
+Ext.require([
+    'Ext.layout.container.Border',
+    'GeoExt.tree.Panel',
+    //'Ext.tree.plugin.TreeViewDragDrop',
+    'GeoExt.panel.Map',
+    'GeoExt.tree.OverlayLayerContainer',
+    'GeoExt.tree.BaseLayerContainer',
+    'GeoExt.tree.View',
+    'GeoExt.data.LayerTreeModel',
+    'GeoExt.container.LayerLegend',
+    'GeoExt.container.WmsLegend',
+    'GeoExt.container.VectorLegend',
+    'GeoExt.container.UrlLegend',
+    'GeoExt.tree.Column'
+]);
 
 var app = Ext.application({
     name: 'MainApp',
     requires: [
         'Ext.container.Viewport',
-        'GeoExt.panel.Map',
-        'GeoExt.panel.Legend',
-        'GeoExt.container.LayerLegend',
-        'GeoExt.container.WmsLegend',
-        'GeoExt.container.VectorLegend',
-        'GeoExt.container.UrlLegend'
+        'GeoExt.panel.Map'
     ],
     appFolder: '/Scripts/UI',
     autoCreateViewport: true,
 
     launch: function () {
-        //Ext.Loader.setPath('GeoExt', "/Scripts/GeoExt");
-        //Ext.Loader.setPath( 'MainApp', '/Scripts/UI' );
-
         if (console) console.log('launching application');
 
         // set the theme for OpenLayers
@@ -45,7 +55,7 @@ var app = Ext.application({
                         new OpenLayers.Control.Attribution(),
                         new OpenLayers.Control.ScaleLine(),
                         //new OpenLayers.Control.MousePosition(),
-                        new OpenLayers.Control.LayerSwitcher({ 'ascending': true }),
+                        //new OpenLayers.Control.LayerSwitcher({ 'ascending': true }), // <-- replaced by fancy GeoExt stuff
         ];
 
         //Create the map
@@ -62,27 +72,92 @@ var app = Ext.application({
             theme: "/Content/OpenLayers/default/style.css",
         });
 
-        // create a layer store for the map
-        var layerStore = new GeoExt.data.LayerStore({
-            map: map,
+        var layerTreeStore = Ext.create('Ext.data.TreeStore', {
+            model: 'GeoExt.data.LayerTreeModel',
+            root: {
+                children: [{
+                    text: "Base Maps",
+                    expanded: true,
+                    plugins: ['gx_baselayercontainer']
+                }, {
+                    text: "Tool Data",
+                    expanded: true,
+                    plugins: [{
+                        ptype: "gx_overlaylayercontainer",
+                        loader: {
+                            createNode: function (attr) {
+                                // add a WMS legend to each WMS node created
+                                if (attr.layer instanceof OpenLayers.Layer.WMS) {
+                                    attr.component = {
+                                        xtype: "gx_wmslegend",
+                                        layerRecord: mapPanel.layers.getByLayer(attr.layer),
+                                        showTitle: false,
+                                        style: "padding-left: 46px;",
+                                        hidden: !attr.layer.getVisibility()
+                                    };
+                                }
+                                return GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);
+                            },
+                            filter: function (record) {
+                                return record.raw != pvMapper.siteLayer && !record.raw.isBaseLayer &&
+                                    !record.raw.isReferenceLayer;
+                            }
+                        }
+                    } ]
+                }, {
+                    text: "Reference",
+                    expanded: true,
+                    plugins: [{
+                        ptype: "gx_overlaylayercontainer",
+                        loader: {
+                            createNode: function (attr) {
+                                // add a WMS legend to each WMS node created
+                                if (attr.layer instanceof OpenLayers.Layer.WMS) {
+                                    attr.component = {
+                                        xtype: "gx_wmslegend",
+                                        layerRecord: mapPanel.layers.getByLayer(attr.layer),
+                                        showTitle: false,
+                                        style: "padding-left: 46px;",
+                                        hidden: !attr.layer.getVisibility()
+                                    };
+                                }
+                                return GeoExt.tree.LayerLoader.prototype.createNode.call(this, attr);
+                            },
+                            filter: function (record) {
+                                return record.raw != pvMapper.siteLayer && !record.raw.isBaseLayer &&
+                                    record.raw.isReferenceLayer;
+                            }
+                        }
+                    }]
+                }]
+            }
         });
 
-        var legendPanel = new GeoExt.LegendPanel({
-            title: 'Legend',
-            layerStore: layerStore,
-            filter: function(record) {
-                return (record.getLayer() !== pvMapper.siteLayer);
+        var layerPanel = new GeoExt.tree.Panel({
+            title: "Layers",
+            viewConfig: {
+                plugins: [{
+                    ptype: 'treeviewdragdrop',
+                    appendOnly: false
+                }]
             },
+            store: layerTreeStore,
+            rootVisible: false,
+            lines: false,
+
             width: 200,
             minWidth: 150,
             maxWidth: 400,
             split: true,
             collapsible: true,
-            collapsed: true,
+            //collapsed: true,  //Note: uncommenting this will break stuff (GeoExt needs this to be rendered right away)
             animCollapse: true,
             autoScroll: true,
             region: 'east'
         });
+
+        // if we can't have this start collapsed initially, let's have it collapse half a second after loading the page. It'll be cute.
+        window.setTimeout(function () { layerPanel.collapse(); }, 500);
 
         //Create the panel the map lives in
         var mapPanel = Ext.create('GeoExt.panel.Map', {
@@ -97,13 +172,13 @@ var app = Ext.application({
         });
 
         var mainPanel = new Ext.Container({
-            //title: 'Border Layout',
             layout: 'border',
-            items: [mapPanel, legendPanel]
+            items: [mapPanel, layerPanel]
         });
 
         this.mainContent = Ext.ComponentQuery.query('#maincontent')[0];
         this.mainContent.add(mainPanel);
+
         pvMapper.mapPanel = mapPanel;
         pvMapper.map = map;
 

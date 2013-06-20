@@ -55,38 +55,6 @@ pvMapper.onReady(function () {
     addBYUServerLayer("Roads", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 5);
     addBYUServerLayer("Indian Reservations", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 6);
     addBYUServerLayer("States", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 7);
-    
-
-    /*
-    dams
-    airports
-    cities
-    rail
-    rivers
-    roads
-    indian res
-    states
-    */
-    //https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer
-
-    var counties = new OpenLayers.Layer.WMS(
-        "US Counties",
-        "https://geoserver.byu.edu/arcgis/rest/services/Layers/counties/MapServer/export",
-        {
-            f: "image",
-            layers: "show: 0",
-            bbox: "-1.4206537879290022E7,4093175.1430570777,-7133549.99921288,7889772.508363001",
-            transparent: true,
-            format: "gif",
-        },
-        {
-            isBaseLayer: false,
-        }
-    );
-    counties.setOpacity(0.5);
-    counties.setVisibility(false);
-    pvMapper.map.addLayer(counties);
-    console.log("Counties Overlay added");
 
     //var slope = new OpenLayers.Layer.WMS(
     //        "Slope",
@@ -125,6 +93,8 @@ pvMapper.onReady(function () {
     //openLayersWmsThing.epsgOverride = "EPSG:900913";
     //pvMapper.map.addLayer(openLayersWmsThing);
 
+
+    //Note: this map is pretty ugly...
     var esriWorldTerrain = new OpenLayers.Layer.ArcGIS93Rest(
         "Shaded Relief",
         "http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/export",
@@ -244,6 +214,7 @@ pvMapper.onReady(function () {
         );
         layer.setOpacity(0.5);
         layer.setVisibility(false);
+        layer.isReferenceLayer = true;
         pvMapper.map.addLayer(layer);
         console.log(name + " Overlay added");
     }
