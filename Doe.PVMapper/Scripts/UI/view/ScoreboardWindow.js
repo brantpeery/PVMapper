@@ -117,13 +117,7 @@ var scoreboardColumns = [{
   sortable: true,
   hideable: false,
   dataIndex: 'weight',
-  field: {
-    xtype: 'numberfield',
-    allowBlank: false,
-    minValue: 0,
-    maxValue: 100
-  }
-  //editor: 'numberfield', //TODO: this editing this value causes the scoreboard to throw exceptions on every subsequent refresh - fix that someday
+  editor: 'numberfield'
 }, {
   xtype: 'actioncolumn',
   text: 'Utility',
@@ -343,31 +337,8 @@ Ext.define('MainApp.view.ScoreWeightEditing', {
   extend: 'Ext.grid.plugin.CellEditing',
   clicksToEdit: 1,
   listeners: {
-    'beforeedit': function (e) {
-      var me = this;
-      var allowed = !!me.isEditAllowed;
-      if (!me.isEditAllowed) {
-        if (e.colIndex !== 1) return;
-        //Ext.Msg.confirm('confirm', 'Are you sure?', function (btn) {
-        //  if (btn !== 'yes') return;
-        me.isEditAllowed = true;
-        me.startEditByPosition({ row: e.rowIndex, column: e.colIndex });
-      }
-      return allowed;
-    },
-    onEditComplete: function (ed, val, startVal) {
-      var me = this;
-      var tmpVal = me.context.value;
-      me.context.value = val;
-      if (!me.validateEdit()) {
-        me.context.value = tmpVal;
-        return; //if validate failed, do nothing.
-      }
-      //call to recalculate score line.
-
-    },
-    'edit': function (e) {
-      this.isEditAllowed = false;
+    edit: function (editor, e, eOpts) {
+      e.record.raw.setWeight(e.record.data['weight']);
     }
   }
 });
