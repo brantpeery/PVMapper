@@ -144,20 +144,20 @@ var scoreboardColumns = [{
       var utilityFn = pvMapper.UtilityFunctions[uf.functionName];
 
       dynamicPanel = Ext.create('Ext.panel.Panel', {
-          items: [{
-            xtype: 'text',
-            text: 'configure me',
-            width: 100,
-            shrinkWrap: 3,
-            sortable: true,
-            hideable: false,
-            layout: {
-              type: 'vbox',
-              align: 'center'
-            }
-          }]
-        });
-      
+        items: [{
+          xtype: 'text',
+          text: 'configure me',
+          width: 100,
+          shrinkWrap: 3,
+          sortable: true,
+          hideable: false,
+          layout: {
+            type: 'vbox',
+            align: 'center'
+          }
+        }]
+      });
+
       var windows = Ext.create('MainApp.view.UtilityFunctionEdit', {
         items: dynamicPanel,
         icon: utilityFn.iconURL,
@@ -339,6 +339,39 @@ toolsStore.on({
 });
 
 
+Ext.define('MainApp.view.ScoreWeightEditing', {
+  extend: 'Ext.grid.plugin.CellEditing',
+  clicksToEdit: 1,
+  listeners: {
+    'beforeedit': function (e) {
+      var me = this;
+      var allowed = !!me.isEditAllowed;
+      if (!me.isEditAllowed) {
+        if (e.colIndex !== 1) return;
+        //Ext.Msg.confirm('confirm', 'Are you sure?', function (btn) {
+        //  if (btn !== 'yes') return;
+        me.isEditAllowed = true;
+        me.startEditByPosition({ row: e.rowIndex, column: e.colIndex });
+      }
+      return allowed;
+    },
+    onEditComplete: function (ed, val, startVal) {
+      var me = this;
+      var tmpVal = me.context.value;
+      me.context.value = val;
+      if (!me.validateEdit()) {
+        me.context.value = tmpVal;
+        return; //if validate failed, do nothing.
+      }
+      //call to recalculate score line.
+
+    },
+    'edit': function (e) {
+      this.isEditAllowed = false;
+    }
+  }
+});
+
 
 //----------------The grid and window-----------------
 Ext.define('Ext.grid.ScoreboardGrid', {
@@ -350,6 +383,10 @@ Ext.define('Ext.grid.ScoreboardGrid', {
   //height: 600,
   title: "Tools List",
   columns: scoreboardColumns,
+  selModel: {
+    selType: 'cellmodel', //'rowmodel', //Note: use 'cellmodel' once we have cell editing worked out
+  },
+  plugins: [Ext.create('MainApp.view.ScoreWeightEditing')],
   features: [
   {
     //Note: this feature provides per-group summary values, rather than repeating the global summary for each group.
@@ -364,33 +401,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
   ]
 });
 
-var cellEditing = Ext.create('Ext.grid.plugin.CellEditing',
-  {
-    clicksToEdit: 1,
-    listeners: {
-      'beforeedit': function (e) {
-        var me = this;
-        var allowed = !!me.isEditAllowed;
-        if (!me.isEditAllowed) {
-          if (e.colIndex !== 1) return;
-          //Ext.Msg.confirm('confirm', 'Are you sure?', function (btn) {
-          //  if (btn !== 'yes') return;
-          me.isEditAllowed = true;
-          me.startEditByPosition({ row: e.rowIndex, column: e.colIndex });
-        }
-        return allowed;
-      },
-      'edit': function (e) {
-        this.isEditAllowed = false;
-      }
-    }
-  });
-
 var scoreboardGrid = Ext.create('Ext.grid.ScoreboardGrid', {
-  selModel: {
-    selType: 'cellmodel', //'rowmodel', //Note: use 'cellmodel' once we have cell editing worked out
-  },
-  plugins: [cellEditing]
 });
 
 Ext.define('MainApp.view.ScoreboardWindow', {
