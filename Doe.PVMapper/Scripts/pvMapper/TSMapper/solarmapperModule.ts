@@ -68,26 +68,25 @@ module INLModules {
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
-    var solarmapperRestBaseUrl = "http://solarmapper.anl.gov/ArcGIS/rest/services/Solar_Mapper_SDE/MapServer/";
-
+    var solarmapperRestBaseUrl = "http://solarmapper.anl.gov/ArcGIS/rest/services/PV_Mapper_SDE/MapServer/";
+    var solarmapperWmsUrl = "http://solarmapper.anl.gov/ArcGIS/services/PV_Mapper_SDE/MapServer/WMSServer";
     //declare var Ext: any;
 
     var mapLayer: any;
 
     function addMapLayer() {
-        mapLayer = new OpenLayers.Layer.ArcGIS93Rest(
-                "Land Management",
-                solarmapperRestBaseUrl + "export",
-                {
-                    layers: "72", //"show:2",
-                    format: "gif",
-                    srs: "3857", //"102100",
-                    transparent: "true",
-                },
-                {
-                    maxExtent: [-13850000, 3675000, -11350000, 5165000],
-                }
-                );
+        // use WMS for easy-to-get legend graphic
+        mapLayer = new OpenLayers.Layer.WMS(
+            "Land Management",
+            solarmapperWmsUrl,
+            {
+                layers: "1", //"72",
+                format: "gif",
+                srs: "3857", //"102100",
+                transparent: "true",
+            },
+            { isBaseLayer: false }
+            );
         mapLayer.setOpacity(0.3);
         mapLayer.epsgOverride = "3857"; //"EPSG:102100";
         mapLayer.setVisibility(false);
@@ -101,23 +100,23 @@ module INLModules {
 
     // this was added because sometimes the mapLayer is not yet defined before we get a call to update a score.
     // and everyone loves a good race condition
-    var mapLayerBounds = new OpenLayers.Bounds(-13850000, 3675000, -11350000, 5165000);
+    //var mapLayerBounds = new OpenLayers.Bounds(-13850000, 3675000, -11350000, 5165000);
     
     function identifyFeature(score: pvMapper.Score) {
         // if this site lies outside of our layer's extent, then we can't get a value for it.
         //if (!mapLayer.maxExtent.intersectsBounds(score.site.geometry.bounds)) {
-        if (!mapLayerBounds.intersectsBounds(score.site.geometry.bounds)) {
-            score.popupMessage = "No data for this site";
-            score.updateValue(Number.NaN);
-            return; // nothin' doin'
-        }
+        //if (!mapLayerBounds.intersectsBounds(score.site.geometry.bounds)) {
+        //    score.popupMessage = "No data for this site";
+        //    score.updateValue(Number.NaN);
+        //    return; // nothin' doin'
+        //}
 
         var params = {
             mapExtent: score.site.geometry.bounds.toBBOX(6, false),
             geometryType: "esriGeometryEnvelope",
             geometry: score.site.geometry.bounds.toBBOX(6, false),
             f: "json", // or "html",
-            layers: "72", //"perezANN_mod", //solar.params.LAYERS,
+            layers: "1", //"perezANN_mod", //solar.params.LAYERS,
             tolerance: 0, //TODO: should this be 0 or 1?
             imageDisplay: "1, 1, 96",
         };
@@ -147,8 +146,17 @@ module INLModules {
                             var count: number = 0;
 
                             for (var i = 0; i < parsedResponse.results.length; i++) {
-                                var newText = parsedResponse.results[i].layerName +
-                                     ": " + parsedResponse.results[i].value;
+                                //var newText = parsedResponse.results[i].layerName +
+                                //     ": " + parsedResponse.results[i].value;
+                                var newText = parsedResponse.results[i].value;
+                                var type = parsedResponse.results[i].attributes['Feature Type'];
+                                var code = parsedResponse.results[i].attributes['SMA Code'];
+
+                                if (type && type != "Null") {
+                                    newText += " (" + type + ")";
+                                } else if (code && code != "Null") {
+                                    newText += " (" + code + ")";
+                                }
                                 if (newText != lastText) {
                                     if (lastText != null) {
                                         allText += ", \n";

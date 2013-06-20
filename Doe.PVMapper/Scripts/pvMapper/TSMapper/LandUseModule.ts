@@ -194,31 +194,26 @@ module INLModules {
         }
 
 
-        private landCoverWmsUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/services/NAT_LC/1_NVC_class_landuse/MapServer/WMSServer";
         private landCoverRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/NAT_LC/1_NVC_class_landuse/MapServer/";
 
         private landCoverLayer;
         private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
 
         private addMap() {
-            this.landCoverLayer = new OpenLayers.Layer.WMS(
+            this.landCoverLayer = new OpenLayers.Layer.ArcGIS93Rest(
                     "Land Cover",
-                    this.landCoverWmsUrl,
+                    this.landCoverRestUrl + "export",
                     {
-                        maxExtent: this.landBounds,
-                        layers: "0,1,2",
-                        layer_type: "polygon",
+                        layers: "show:0,1,2", 
+                        format: "gif",
+                        srs: "3857", //"102100",
                         transparent: "true",
-                        format: "image/gif",
-                        exceptions: "application/vnd.ogc.se_inimage",
-                        maxResolution: 156543.0339,
-                        srs: "EPSG:102113",
-                    },
-                    { isBaseLayer: false }
+                    }//,{ isBaseLayer: false }
                     );
-            this.landCoverLayer.epsgOverride = "EPSG:102113";
             this.landCoverLayer.setOpacity(0.3);
+            this.landCoverLayer.epsgOverride = "3857"; //"EPSG:102100";
             this.landCoverLayer.setVisibility(false);
+
             pvMapper.map.addLayer(this.landCoverLayer);
         }
 
