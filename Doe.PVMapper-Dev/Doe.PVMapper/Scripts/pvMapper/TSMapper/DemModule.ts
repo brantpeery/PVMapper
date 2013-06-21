@@ -42,6 +42,10 @@ module BYUModules {
                             //IMinMaxUtilityArgs
                             minValue: 10,
                             maxValue: 0,
+                            tips: {
+                                minValue: "The minimum usable slope.",
+                                maxValue: "The maximum usable slope."
+                            }
                         }
                     },
                     //defaultWeight: 10

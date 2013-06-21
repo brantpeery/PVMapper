@@ -60,6 +60,7 @@ module pvMapper {
     export interface IMinMaxUtilityArgs extends IScoreUtilityArgs {
         minValue: number;
         maxValue: number;
+        tips: { minValue: string; maxValue: string; };
     }
 
     export interface ISinusoidalUtilityArgs extends IMinMaxUtilityArgs {

@@ -4,6 +4,7 @@ declare var Extras: any;
 
 
 module pvMapper {
+
     //Created for static access from more than one function def
     export class ScoreUtilityWindows {
         public static basicWindow = {
@@ -42,6 +43,7 @@ module pvMapper {
 
                 var gridPanel = Ext.create('Ext.grid.property.Grid', {
                     source: _this._xArgs,
+                    tipValue: null,
                     viewConfig: {
                         deferEmptyText: false, // defaults to true
                         emptyText: '<center><h3>No Editable Fields</h3></center>' // can be passed to the grid itself or within a viewConfig object
@@ -54,7 +56,34 @@ module pvMapper {
                         },
                         propertychange: function (source, recordId, value, oldValue, eOpts) {
                             board.update();
+                        },
+                        //======= Add to support tool tip =============
+                        itemmouseenter: function (grid, record, item, index, e, opts) {
+                            if (this.source.tips != undefined) {
+                                this.tipValue = this.source.tips[record.internalId];
+                            } else {
+                                this.tipValue = "Property " + record.internalId;
+                            }
+                            this.tip.update(this.tipValue);
+                        },
+                        itemmouseleave: function (grid, record, item, index, e, opts) {
+                            this.tipValue = null;
+                        },
+                        render: function (grid, opts) {
+                            var _this = this;
+                            grid.tip = Ext.create('Ext.tip.ToolTip', {
+                                target: grid.el,
+                                delegate: grid.cellSelector,
+                                trackMouse: true,
+                                renterTo: Ext.getBody(),
+                                listeners: {
+                                    beforeshow: function (tip) {
+                                        tip.update(_this.tipValue);
+                                    }
+                                }
+                            });
                         }
+                        //======= END Tooltip ========
                     }
                 });
                 panel.add(gridPanel);

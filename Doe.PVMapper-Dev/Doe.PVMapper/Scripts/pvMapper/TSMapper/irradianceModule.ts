@@ -42,6 +42,10 @@ module INLModules {
                         functionArgs: <pvMapper.IMinMaxUtilityArgs> {
                             minValue: 0,
                             maxValue: 8,
+                            tips: {
+                                minValue: "Minimum Direct-Normal Irradiation allowed.",
+                                maxValue: "Maximum Direct-Normal Irradiation allowed."
+                            }
                         }
                     },
                     defaultWeight: 10

@@ -40,6 +40,10 @@ module BYUModules {
                         functionArgs: <pvMapper.IMinMaxUtilityArgs>{
                             minValue: 0,
                             maxValue: 1,
+                            tips: {
+                                minValue: "Minimum Wilderness threshold allowed.",
+                                maxValue: "Maximum Wilderness threshold allowed."
+                            }
                         },
                         functionName: "linear"
                     },
