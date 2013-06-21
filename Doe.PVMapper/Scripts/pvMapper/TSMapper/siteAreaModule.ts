@@ -44,7 +44,11 @@ module INLModules {
                         functionName: "linear",
                         functionArgs: <pvMapper.IMinMaxUtilityArgs> {
                             minValue: 0,
-                            maxValue: 0
+                            maxValue: 0,
+                            tips: {
+                                minValue: 'Minimum gross area to be considered.',
+                                maxValue: 'Maximum gross area to be considered.'
+                            }
                         }
                     },
                     defaultWeight: 0 //TODO: find a meaningful score & utility for this

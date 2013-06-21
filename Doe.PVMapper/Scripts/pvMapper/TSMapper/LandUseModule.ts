@@ -184,6 +184,10 @@ module INLModules {
                         functionArgs: <pvMapper.IMinMaxUtilityArgs>{
                             minValue: 0,
                             maxValue: 0,
+                            tips: {
+                                minValue: "The minimum Land Cover allowed.",
+                                maxValue: "The maximum Land Cover allowed.",
+                            }
                         }
                     },
                     defaultWeight: 0 //TODO: find a meaningful score & utility for this
