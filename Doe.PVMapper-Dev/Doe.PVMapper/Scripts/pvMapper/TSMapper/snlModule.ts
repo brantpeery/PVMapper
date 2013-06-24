@@ -11,7 +11,7 @@ module INLModules {
 
     var maxSearchDistanceInMeters: number = (30 * 1000); // 30 km - enough?
 
-    class IrradianceModule {
+    class SnlModule {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module({
                 id: "SnlModule",
@@ -35,7 +35,7 @@ module INLModules {
                     init: null,
 
                     title: "Nearest Transmission Line",
-                    description: "Calculates the distance to the nearest known transmission line",
+                    description: "Distance from a site boundary to the nearest known transmission line, using data from SNL",
                     category: "Transmission Availability",
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
@@ -60,7 +60,7 @@ module INLModules {
         }
     }
 
-    var modinstance = new IrradianceModule();
+    var modinstance = new SnlModule();
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 

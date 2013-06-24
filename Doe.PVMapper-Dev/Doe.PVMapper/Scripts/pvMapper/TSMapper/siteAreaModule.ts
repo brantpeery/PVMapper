@@ -25,7 +25,7 @@ module INLModules {
                     init: null,
 
                     title: "Gross Area",
-                    description:"Calculates the area of the site polygon edges.",
+                    description:"The raw area of a site polygon",
                     category: "Geography",
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },

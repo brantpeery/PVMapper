@@ -27,7 +27,7 @@ module BYUModules {
                     init: null,
 
                     title: "Slope",
-                    description: "Calculates the average slope of the site",
+                    description: "The slope at the center of a site, using data from ArcGIS Online",
                     category: "Geography",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:3", "degrees"); },
@@ -57,7 +57,7 @@ module BYUModules {
                     init: null,
 
                     title: "Aspect",
-                    description: "Calculates the average aspect of the site",
+                    description: "The horizontal aspect at the center of a site, using data from ArcGIS Online",
                     category: "Geography",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:4", "degrees"); },
@@ -84,7 +84,7 @@ module BYUModules {
                     init: null,
 
                     title: "Elevation",
-                    description: "Calculates the averate elevation of the site",
+                    description: "The elevation at the center of a site, using data from ArcGIS Online",
                     category: "Geography",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:1", "m"); },
