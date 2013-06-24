@@ -30,7 +30,7 @@ module BYUModules {
                     //init: null,
                     
                     title: "Wilderness",
-                    description: "Tells whether the given site is in a wilderness area.  ",
+                    description: "Overlapping national parks, using data hosted by BYU",
                     category: "Land Use",
                     onScoreAdded: (event:EventArg, score: pvMapper.Score) => { },
                     onSiteChange: (event: EventArg, score: pvMapper.Score) => {

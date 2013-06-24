@@ -7,7 +7,7 @@
 /// <reference path="Module.ts" />
 
 module INLModules {
-    class IrradianceModule {
+    class SolarmapperModule {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module({
                 id: "SolarmapperModule",
@@ -64,7 +64,7 @@ module INLModules {
         }
     }
 
-    var modinstance = new IrradianceModule();
+    var modinstance = new SolarmapperModule();
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
@@ -152,9 +152,9 @@ module INLModules {
                                 var type = parsedResponse.results[i].attributes['Feature Type'];
                                 var code = parsedResponse.results[i].attributes['SMA Code'];
 
-                                if (type && type != "Null") {
+                                if (type && type != "Null" && newText.indexOf(type) < 0) {
                                     newText += " (" + type + ")";
-                                } else if (code && code != "Null") {
+                                } else if (code && code != "Null" && newText.indexOf(code) < 0) {
                                     newText += " (" + code + ")";
                                 }
                                 if (newText != lastText) {

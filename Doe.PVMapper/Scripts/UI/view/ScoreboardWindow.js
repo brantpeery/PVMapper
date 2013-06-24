@@ -93,6 +93,13 @@ var scoreboardColumns = [{
   sortable: true,
   hideable: false,
   dataIndex: 'name',
+  renderer: function (value, metadata, record) {
+      if (record.data.description) {
+          metadata.tdAttr = 'data-qtip="' + record.data.description + '"';
+      }
+      return value;
+  },
+  //tooltip: '{description}',
   //editor: 'textfield', <-- don't edit this field - that would be silly
   summaryType: function (records) {
     //Note: this fails when we allow grouping by arbitrary fields (and it fails in mysterious ways)
@@ -121,7 +128,6 @@ var scoreboardColumns = [{
 }, {
   xtype: 'actioncolumn',
   text: 'Utility',
-  tooltip: 'Edit the Utility Scoring Function for this Tool',
   width: 40,
   sortable: false,
   hideable: false,
