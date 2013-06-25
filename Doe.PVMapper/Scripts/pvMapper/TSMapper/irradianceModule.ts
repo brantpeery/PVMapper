@@ -39,15 +39,10 @@ module INLModules {
 
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: <pvMapper.MinMaxUtilityArgs> {
-                            minValue: 0,
-                            maxValue: 8,
+                        functionArgs: new pvMapper.MinMaxUtilityArgs( 0, 8,
                             //override the default for specific message.
-                            tips: {
-                                minValue: "Minimum Direct-Normal Irradiation allowed.",
-                                maxValue: "Maximum Direct-Normal Irradiation allowed."
-                            }
-                        }
+                            "Minimum Direct-Normal Irradiation allowed.",
+                            "Maximum Direct-Normal Irradiation allowed." )
                     },
                     defaultWeight: 10
                 }, {
@@ -67,10 +62,7 @@ module INLModules {
 
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: <pvMapper.MinMaxUtilityArgs>{
-                            minValue: 0,
-                            maxValue: 6
-                        }
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0,6)
                     },
                     defaultWeight: 10
                 }, {
@@ -90,10 +82,7 @@ module INLModules {
 
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: <pvMapper.IMinMaxUtilityArgs>{
-                            minValue: 0,
-                            maxValue: 6,
-                        }
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0,6)
                     },
                     defaultWeight: 10
                 }],

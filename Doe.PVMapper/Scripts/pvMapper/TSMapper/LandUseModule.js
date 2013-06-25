@@ -31,7 +31,7 @@ var INLModules;
                         destroy: null,
                         init: null,
                         title: "Protected Areas",
-                        description: "Shows the classification of protected areas within the united states.",
+                        description: "Overlapping protected areas, using PAD-US map data hosted by UI-GAP (gap.uidaho.edu)",
                         category: "Land Use",
                         onScoreAdded: function (e, score) {
                         },
@@ -42,20 +42,7 @@ var INLModules;
                         // for now, this assumes that overlapping more protected areas is worse than overlapping fewer (!)
                         {
                             functionName: "linear3pt",
-                            functionArgs: {
-                                p0: {
-                                    x: 0,
-                                    y: 1
-                                },
-                                p1: {
-                                    x: 1,
-                                    y: 0.6
-                                },
-                                p2: {
-                                    x: 5,
-                                    y: 0
-                                }
-                            }
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 1, 0.6, 5, 0)
                         },
                         defaultWeight: 10
                     }
@@ -110,7 +97,25 @@ var INLModules;
                             var alertText = "";
                             var lastText = null;
                             for(var i = 0; i < parsedResponse.results.length; i++) {
-                                var newText = parsedResponse.results[i].attributes["Owner Name"];
+                                var name = parsedResponse.results[i].attributes["Primary Designation Name"];
+                                var type = parsedResponse.results[i].attributes["Primary Designation Type"];
+                                var owner = parsedResponse.results[i].attributes["Owner Name"];
+                                var manager = parsedResponse.results[i].attributes["Manager Name"];
+                                var newText = "";
+                                // use name if we can; use type otherwise
+                                if(name && name != "Null" && isNaN(parseFloat(name))) {
+                                    // some of the names start with a number - skip those
+                                    newText += name;
+                                } else if(type && type != "Null") {
+                                    newText += type;
+                                }
+                                // use manager if we can; use owner otherwise
+                                if(manager && manager != "Null") {
+                                    newText += (newText) ? ": " + manager : manager;
+                                } else if(owner && owner != "Null") {
+                                    newText += (newText) ? ": " + owner : owner;
+                                }
+                                // finally, append the new text...
                                 if(newText != lastText) {
                                     if(lastText != null) {
                                         alertText += ", \n";
@@ -162,7 +167,7 @@ var INLModules;
                         destroy: null,
                         init: null,
                         title: "Land Cover",
-                        description: "Display the land cover found around the center of a site",
+                        description: "The type of land cover found in the center of a site, using NLCD map data hosted by UI-GAP (gap.uidaho.edu)",
                         category: "Land Use",
                         onScoreAdded: function (e, score) {
                         },

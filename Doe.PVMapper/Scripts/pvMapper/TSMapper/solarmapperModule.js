@@ -7,8 +7,8 @@
 /// <reference path="Module.ts" />
 var INLModules;
 (function (INLModules) {
-    var IrradianceModule = (function () {
-        function IrradianceModule() {
+    var SolarmapperModule = (function () {
+        function SolarmapperModule() {
             var myModule = new pvMapper.Module({
                 id: "SolarmapperModule",
                 author: "Scott Brown, INL",
@@ -45,20 +45,7 @@ var INLModules;
                         //},
                         {
                             functionName: "linear3pt",
-                            functionArgs: {
-                                p0: {
-                                    x: 0,
-                                    y: 1
-                                },
-                                p1: {
-                                    x: 1,
-                                    y: 0.6
-                                },
-                                p2: {
-                                    x: 5,
-                                    y: 0
-                                }
-                            }
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 1, 0.6, 5, 0)
                         },
                         defaultWeight: 10
                     }
@@ -66,28 +53,25 @@ var INLModules;
                 infoTools: null
             });
         }
-        return IrradianceModule;
+        return SolarmapperModule;
     })();    
-    var modinstance = new IrradianceModule();
+    var modinstance = new SolarmapperModule();
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
-    var solarmapperRestBaseUrl = "http://solarmapper.anl.gov/ArcGIS/rest/services/Solar_Mapper_SDE/MapServer/";
+    var solarmapperRestBaseUrl = "http://solarmapper.anl.gov/ArcGIS/rest/services/PV_Mapper_SDE/MapServer/";
+    var solarmapperWmsUrl = "http://solarmapper.anl.gov/ArcGIS/services/PV_Mapper_SDE/MapServer/WMSServer";
     //declare var Ext: any;
     var mapLayer;
     function addMapLayer() {
-        mapLayer = new OpenLayers.Layer.ArcGIS93Rest("Land Management", solarmapperRestBaseUrl + "export", {
-            layers: "72",
-            format: //"show:2",
+        // use WMS for easy-to-get legend graphic
+        mapLayer = new OpenLayers.Layer.WMS("Land Management", solarmapperWmsUrl, {
+            layers: "1",
+            format: //"72",
             "gif",
             srs: "3857",
             transparent: //"102100",
             "true"
         }, {
-            maxExtent: [
-                -13850000, 
-                3675000, 
-                -11350000, 
-                5165000
-            ]
+            isBaseLayer: false
         });
         mapLayer.setOpacity(0.3);
         mapLayer.epsgOverride = "3857"//"EPSG:102100";
@@ -101,23 +85,22 @@ var INLModules;
     }
     // this was added because sometimes the mapLayer is not yet defined before we get a call to update a score.
     // and everyone loves a good race condition
-    var mapLayerBounds = new OpenLayers.Bounds(-13850000, 3675000, -11350000, 5165000);
+    //var mapLayerBounds = new OpenLayers.Bounds(-13850000, 3675000, -11350000, 5165000);
     function identifyFeature(score) {
         // if this site lies outside of our layer's extent, then we can't get a value for it.
         //if (!mapLayer.maxExtent.intersectsBounds(score.site.geometry.bounds)) {
-        if(!mapLayerBounds.intersectsBounds(score.site.geometry.bounds)) {
-            score.popupMessage = "No data for this site";
-            score.updateValue(Number.NaN);
-            return;// nothin' doin'
-            
-        }
+        //if (!mapLayerBounds.intersectsBounds(score.site.geometry.bounds)) {
+        //    score.popupMessage = "No data for this site";
+        //    score.updateValue(Number.NaN);
+        //    return; // nothin' doin'
+        //}
         var params = {
             mapExtent: score.site.geometry.bounds.toBBOX(6, false),
             geometryType: "esriGeometryEnvelope",
             geometry: score.site.geometry.bounds.toBBOX(6, false),
             f: "json",
             layers: // or "html",
-            "72",
+            "1",
             tolerance: //"perezANN_mod", //solar.params.LAYERS,
             0,
             imageDisplay: //TODO: should this be 0 or 1?
@@ -144,7 +127,16 @@ var INLModules;
                             var lastText = null;
                             var count = 0;
                             for(var i = 0; i < parsedResponse.results.length; i++) {
-                                var newText = parsedResponse.results[i].layerName + ": " + parsedResponse.results[i].value;
+                                //var newText = parsedResponse.results[i].layerName +
+                                //     ": " + parsedResponse.results[i].value;
+                                var newText = parsedResponse.results[i].value;
+                                var type = parsedResponse.results[i].attributes['Feature Type'];
+                                var code = parsedResponse.results[i].attributes['SMA Code'];
+                                if(type && type != "Null" && newText.indexOf(type) < 0) {
+                                    newText += " (" + type + ")";
+                                } else if(code && code != "Null" && newText.indexOf(code) < 0) {
+                                    newText += " (" + code + ")";
+                                }
                                 if(newText != lastText) {
                                     if(lastText != null) {
                                         allText += ", \n";

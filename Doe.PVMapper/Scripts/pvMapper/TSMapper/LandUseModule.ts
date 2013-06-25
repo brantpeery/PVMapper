@@ -41,11 +41,7 @@ module INLModules {
                     // for now, this assumes that overlapping more protected areas is worse than overlapping fewer (!)
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        functionArgs: <pvMapper.ThreePointUtilityArgs>{
-                            p0: { x: 0, y: 1 },
-                            p1: { x: 1, y: 0.6 },
-                            p2: { x: 5, y: 0 }
-                        }
+                        functionArgs: new pvMapper.ThreePointUtilityArgs(0,1,1,0.6,5,0)
                     },
                     defaultWeight: 10
                 }],

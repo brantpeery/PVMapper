@@ -42,14 +42,9 @@ module INLModules {
                     // for now, this is a constant value (always returns the max, why not)
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: <pvMapper.MinMaxUtilityArgs> {
-                            minValue: 0,
-                            maxValue: 0,
-                            tips: {
-                                minValue: 'Minimum gross area to be considered.',
-                                maxValue: 'Maximum gross area to be considered.'
-                            }
-                        }
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0,
+                            "Minimum gross area to be considered.",
+                            "Maximum gross area to be considered.")
                     },
                     defaultWeight: 0 //TODO: find a meaningful score & utility for this
                 }],

@@ -57,31 +57,16 @@ module pvMapper {
 
     }
 
-    //export interface IMinMaxUtilityArgs extends IScoreUtilityArgs {
-    //    minValue: number;
-    //    maxValue: number;
-    //}
-
     export class MinMaxUtilityArgs implements IScoreUtilityArgs {
 
-        constructor(mmObj?: MinMaxUtilityArgs) {
-            if (mmObj == undefined) {
-                this.minValue = 0;
-                this.maxValue = 0;
-            } else
-            {
-                this.minValue = mmObj.minValue;
-                this.maxValue = mmObj.maxValue;
-            }
-            this.tips = { minValue: "The minimum value.", maxValue: "The maximum value." };
+        constructor(public minValue?: number = 0,
+                    public maxValue?: number = 100,
+                    minTip?: string = "The minimum value.",
+                    maxTip?: string = "The maximum value."
+            ) {
+            this.tips = { minValue: minTip, maxValue: maxTip };
+
         }
-
-        public functionName: string;
-        public functionArgs: IScoreUtilityArgs;
-        public iconURL: string;
-
-        public minValue: number;
-        public maxValue: number;
 
         public tips: {
             minValue: string;
@@ -90,25 +75,21 @@ module pvMapper {
     }
 
     export class SinusoidalUtilityArgs implements IScoreUtilityArgs {// IMinMaxUtilityArgs {
-        constructor() {
-            this.target = 0;
-            this.slope = 0;
+        constructor(public minValue?: number = 0,
+            public maxValue?: number = 100,
+            public target?: number = 0,
+            public slope?: number = 0,
+            minTip?: string = "The minimum value.",
+            maxTip?: string = "The maximum value.",
+            targetTip?: string = "The target value.",
+            slopeTip?: string = "The slope value.") {
             this.tips = {
-                target: "The target value.",
-                slope: "The slope value.",
-                minValue: "The minimum value.",
-                maxValue: "The maximum value."
+                target: targetTip,
+                slope: slopeTip,
+                minValue: minTip,
+                maxValue: maxTip
             };
         }
-
-        public functionName: string;
-        public functionArgs: IScoreUtilityArgs;
-        public iconURL: string;
-
-        public target: number;
-        public slope: number;
-        public minValue: number;
-        public maxValue: number;
 
         public tips: {
             target: string;
@@ -119,9 +100,17 @@ module pvMapper {
     }
 
     export class ThreePointUtilityArgs implements IScoreUtilityArgs {
-        p0: { x: number; y: number; };
-        p1: { x: number; y: number; };
-        p2: { x: number; y: number; };
+        constructor(p0x?: number = 0, p0y?: number = 0.5,
+            p1x?: number = 180, p1y?: number = 1,
+            p2x?: number = 360, p2y?: number = 0.5) {
+            this.p0 = { x: p0x, y: p0y };
+            this.p1 = { x: p1x, y: p1y };
+            this.p2 = { x: p2x, y: p2y };
+
+        }
+        public p0: { x: number; y: number; };
+        public p1: { x: number; y: number; };
+        public p2: { x: number; y: number; };
     }
 
     export class ScoreUtility {
