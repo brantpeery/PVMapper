@@ -18,8 +18,9 @@ module pvMapper {
     }
 
     export interface IModuleOptions {
-        scoringTools: IScoreTool[];
-        infoTools: ITool[];
+        scoringTools?: IScoreTool[];
+        infoTools?: ITool[];
+        totalTools?: ITotalTool[];
         //Intents: IIntent[];
         init: ICallback;
         destroy: ICallback;

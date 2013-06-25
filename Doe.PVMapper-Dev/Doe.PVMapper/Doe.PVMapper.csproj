@@ -178,8 +178,13 @@
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreLine.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\common.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\DataManager.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\Esri-GeoJsonConverter-test.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\Esri-GeoJsonConverter.js" />
+    <Content Include="Scripts\pvExtensions\TotalsModule.js">
+      <DependentUpon>TotalsModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvExtensions\TotalsModule.min.js">
+      <DependentUpon>TotalsModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvExtensions\TotalsModule.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\IEventTypes.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\common.js">
       <DependentUpon>common.ts</DependentUpon>
@@ -213,6 +218,7 @@
       <DependentUpon>irradianceModule.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\LandUseModule.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\JXG.d.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\LandUseModule.js">
       <DependentUpon>LandUseModule.ts</DependentUpon>
     </Content>
@@ -324,6 +330,13 @@
     <Content Include="Scripts\pvMapper\TSMapper\Tools.min.js">
       <DependentUpon>Tools.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\TotalLine.js">
+      <DependentUpon>TotalLine.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\TotalLine.min.js">
+      <DependentUpon>TotalLine.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\TotalLine.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\UtilityFunctions.js">
       <DependentUpon>UtilityFunctions.ts</DependentUpon>
     </Content>

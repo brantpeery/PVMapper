@@ -1,25 +1,13 @@
-/// <reference path="IEventTypes.ts" />
-/// <reference path="ScoreUtility.ts" />
-/// <reference path="Score.ts" />
-/// <reference path="Site.ts" />
-/// <reference path="Options.d.ts" />
-/// <reference path="SiteManager.ts" />
-// Module
 var pvMapper;
 (function (pvMapper) {
-    //  import pvM = pvMapper;
-    // Class
     var ScoreLine = (function () {
-        // Constructor
         function ScoreLine(options) {
             var _this = this;
             this.scores = new Array();
-            //public updateScore: ICallback = options.updateScoreCallback;
             this.active = true;
             this.scoreAddedEvent = new pvMapper.Event();
             this.scoreChangeEvent = new pvMapper.Event();
             this.updatingScoresEvent = new pvMapper.Event();
-            //console.log("Adding a scoreline for " + options.title);
             this.self = this;
             this.name = (typeof (options.title) === 'string') ? options.title : 'Unnamed Tool';
             this.description = (typeof (options.description) === 'string') ? options.description : 'Unnamed Tool';
@@ -29,8 +17,6 @@ var pvMapper;
                 this.onSiteChangeHandler = options.onSiteChange;
             }
             this.valueChangeHandler = function (event) {
-                ///TODO: Create a ValueChangeEventArg or something to let the user know what to expect
-                //Update the utility score for the score that just changed it's value.
                 event.score.setUtility(_this.getUtilityScore(event.newValue));
                 _this.scoreChangeEvent.fire(self, event);
             };
@@ -46,7 +32,6 @@ var pvMapper;
             pvMapper.siteManager.siteRemoved.addHandler(function (site) {
                 _this.onSiteRemove(site);
             });
-            //Set default scoreUtilityOptions object if none was provided
             if(options.scoreUtilityOptions == undefined) {
                 options.scoreUtilityOptions = {
                     functionName: "random",
@@ -56,7 +41,6 @@ var pvMapper;
                 };
             }
             this.scoreUtility = new pvMapper.ScoreUtility(options.scoreUtilityOptions);
-            //Set the default weight of the tool
             this.weight = (typeof options.defaultWeight === "number") ? options.defaultWeight : 10;
             this.loadAllSites();
         }
@@ -68,48 +52,26 @@ var pvMapper;
         };
         ScoreLine.prototype.setWeight = function (value) {
             this.weight = value;
-            this.scoreChangeEvent.fire(self, undefined)// score line changed
-            ;
+            this.scoreChangeEvent.fire(self, undefined);
         };
         ScoreLine.prototype.getWeightedUtilityScore = function () {
             return 0;
         };
-        ScoreLine.prototype.addScore = /**
-        Adds a score object to this line for the site.
-        */
-        function (site) {
-            //console.log('Adding new score to scoreline');
+        ScoreLine.prototype.addScore = function (site) {
             var score = new pvMapper.Score(site);
-            //score.value = this.getvalue(site);
-            //attach the tool's handler directly to the score
             score.siteChangeEvent.addHandler(this.onSiteChangeHandler);
-            //subscribe to the score updated event
             score.valueChangeEvent.addHandler(this.valueChangeHandler);
             this.scores.push(score);
-            //this.self.scoreAddedEvent.fire(score, [{ score: score, site: site }, score]);
-            //Set the initial value from the tool
             try  {
                 this.onSiteChangeHandler(undefined, score);
-                //this.updateScore(score);
-                            } catch (ex) {
+            } catch (ex) {
                 if(console) {
                     console.error(ex);
                 }
             }
             return score;
         };
-        ScoreLine.prototype.updateScores = //public removeScore(score: Score) {
-        //    // remove site from scoreline.
-        //    score.siteChangeEvent.removeHandler(this.onSiteChangeHandler);
-        //    score.valueChangeEvent.removeHandler(this.valueChangeHandler);
-        //    var idx: number = this.scores.indexOf(score);
-        //    if (idx >= 0) {
-        //        this.scores.splice(idx, 1);
-        //    }
-        //}
-        //public updateScores(site: Site) {
-        //}
-        function () {
+        ScoreLine.prototype.updateScores = function () {
             this.scores.forEach(function (score, index, scores) {
                 var oldvalue = score.value;
                 score.setUtility(this.getUtilityScore(score.value));
@@ -131,7 +93,6 @@ var pvMapper;
             for(var i = 0; i < this.scores.length; i++) {
                 var score = this.scores[i];
                 if(score.site == site) {
-                    // remove site from scoreline.
                     score.siteChangeEvent.removeHandler(this.onSiteChangeHandler);
                     score.valueChangeEvent.removeHandler(this.valueChangeHandler);
                     this.scores.splice(i, 1);
@@ -143,10 +104,4 @@ var pvMapper;
         return ScoreLine;
     })();
     pvMapper.ScoreLine = ScoreLine;    
-    //private onSiteAdded =
-    //private onSiteUpdated(event: EventArg) {
-    //    if (event.data instanceof Site)
-    //        updateScore(event.data);
-    //}
-    })(pvMapper || (pvMapper = {}));
-//@ sourceMappingURL=ScoreLine.js.map
+})(pvMapper || (pvMapper = {}));
