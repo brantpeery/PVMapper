@@ -38,7 +38,12 @@ var INLModules;
                             functionName: "linear",
                             functionArgs: {
                                 minValue: 0,
-                                maxValue: 8
+                                maxValue: 8,
+                                tips: //override the default for specific message.
+                                {
+                                    minValue: "Minimum Direct-Normal Irradiation allowed.",
+                                    maxValue: "Maximum Direct-Normal Irradiation allowed."
+                                }
                             }
                         },
                         defaultWeight: 10
@@ -209,3 +214,4 @@ var INLModules;
         };
     }
 })(INLModules || (INLModules = {}));
+//@ sourceMappingURL=irradianceModule.js.map

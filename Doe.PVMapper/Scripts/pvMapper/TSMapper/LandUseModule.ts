@@ -41,7 +41,7 @@ module INLModules {
                     // for now, this assumes that overlapping more protected areas is worse than overlapping fewer (!)
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        functionArgs: <pvMapper.IThreePointUtilityArgs>{
+                        functionArgs: <pvMapper.ThreePointUtilityArgs>{
                             p0: { x: 0, y: 1 },
                             p1: { x: 1, y: 0.6 },
                             p2: { x: 5, y: 0 }
@@ -204,7 +204,7 @@ module INLModules {
                     // for now, this is a constant value (always returns the max, why not)
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: <pvMapper.IMinMaxUtilityArgs>{
+                        functionArgs: <pvMapper.MinMaxUtilityArgs>{
                             minValue: 0,
                             maxValue: 0,
                             tips: {

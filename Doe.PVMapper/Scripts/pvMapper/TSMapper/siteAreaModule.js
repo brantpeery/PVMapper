@@ -45,7 +45,11 @@ var INLModules;
                             functionName: "linear",
                             functionArgs: {
                                 minValue: 0,
-                                maxValue: 0
+                                maxValue: 0,
+                                tips: {
+                                    minValue: 'Minimum gross area to be considered.',
+                                    maxValue: 'Maximum gross area to be considered.'
+                                }
                             }
                         },
                         defaultWeight: 0
@@ -117,3 +121,4 @@ var INLModules;
         return val;
     }
 })(INLModules || (INLModules = {}));
+//@ sourceMappingURL=siteAreaModule.js.map

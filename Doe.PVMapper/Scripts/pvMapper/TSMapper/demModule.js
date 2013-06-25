@@ -41,12 +41,10 @@ var BYUModules;
                         // for now, flatter is better...?
                         {
                             functionName: "linear",
-                            functionArgs: {
-                                minValue: //IThreePointUtilityArgs
-                                //IMinMaxUtilityArgs
-                                10,
-                                maxValue: 0
-                            }
+                            functionArgs: new pvMapper.MinMaxUtilityArgs({
+                                minValue: 0,
+                                maxValue: 10
+                            })
                         }
                     }, 
                     //defaultWeight: 10
@@ -196,3 +194,4 @@ var BYUModules;
         });
     }
 })(BYUModules || (BYUModules = {}));
+//@ sourceMappingURL=DemModule.js.map

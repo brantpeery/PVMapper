@@ -37,16 +37,11 @@ module BYUModules {
                     // for now, flatter is better...?
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: <pvMapper.IMinMaxUtilityArgs>{
-                            //IThreePointUtilityArgs
-                            //IMinMaxUtilityArgs
-                            minValue: 10,
-                            maxValue: 0,
-                            tips: {
-                                minValue: "The minimum usable slope.",
-                                maxValue: "The maximum usable slope."
-                            }
-                        }
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(<pvMapper.MinMaxUtilityArgs>
+                        {
+                            minValue: 0,
+                            maxValue: 10
+                        })
                     },
                     //defaultWeight: 10
                 },
@@ -69,7 +64,7 @@ module BYUModules {
                     // for now, south is better, but north ain't so bad...?
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        functionArgs: <pvMapper.IThreePointUtilityArgs>{
+                        functionArgs: <pvMapper.ThreePointUtilityArgs>{
                             p0: { x: 0, y: 0.5 },
                             p1: { x: 180, y: 1 },
                             p2: { x: 360, y: 0.5 },
@@ -93,7 +88,7 @@ module BYUModules {
                     // higher is better, but not much better, yeah?
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        functionArgs: <pvMapper.IThreePointUtilityArgs>{
+                        functionArgs: <pvMapper.ThreePointUtilityArgs>{
                             p0: { x: 0, y: 0.5 },
                             p1: { x: 1000, y: 0.9 },
                             p2: { x: 6000, y: 1 },

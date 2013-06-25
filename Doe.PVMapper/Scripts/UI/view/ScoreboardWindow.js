@@ -187,7 +187,7 @@ var scoreboardColumns = [{
         }],
         listeners: {
           beforerender: function () {
-            utilityFn.windowSetup.apply(utilityFn, [dynamicPanel, uf.functionArgs, utilityFn.fn, utilityFn.xBounds]);
+            utilityFn.windowSetup.apply(utilityFn, [dynamicPanel, uf]); // uf.functionArgs, utilityFn.fn, utilityFn.xBounds]);
             //TODO: can't we just pass uf here, in place of all this other crap?
             dynamicPanel.doLayout();
           }

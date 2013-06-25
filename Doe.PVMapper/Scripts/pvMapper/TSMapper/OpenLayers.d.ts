@@ -423,7 +423,7 @@ module OpenLayers {
     handlerOptions: any;
     handler: Handler;   
     eventListeners: any;
-    events: Event;
+    events: Events;
 
     //functions
     destroy();
@@ -439,6 +439,170 @@ module OpenLayers {
     (options: any): Control;
     prototype: Control;
   }
+
+  //* controls inherites from Control
+  interface ArgParser extends Control {
+      center: LonLat;
+      zoom: number;
+      layers: string;
+      displayProjection: Projection;
+
+      getParameters(url);
+      setMap(map: IMap);
+      setCenter();
+      configureLayers();
+  }
+  declare var ArgParse: {
+      new (options: any): ArgParser;
+      (options: any): ArgParser;
+      prototype: ArgParser;
+  }
+
+  interface Attribution extends Control {
+      separator: string;
+      template: string;
+      destroy();
+      draw();
+      udpateAttribution();
+
+  }
+  declare var Attribution: {
+      new (options: any): Attribution;
+      (options: any): Attribution;
+      prototype: Attribution;
+  }
+  
+  interface Button extends Control {
+      type: number;
+      trigger();
+  }
+
+  interface CacheRead extends Control {
+      fetchEvent: string;
+      layers: Grid[];
+      autoActivate: bool;
+
+      setMap(map: IMap);
+      addLayer(evt: Layer);
+      removeLayer(evt: Layer);
+      fetch(evt: any);
+      destroy();
+  }
+  declare var CacheRead: {
+      new (options: any): CacheRead;
+      (options: any): CacheRead;
+      prototype: CacheRead;
+  }
+
+  interface CacheWrite extends Control {
+      events: Events;
+      eventListeners: any;
+      layers: Grid[];
+      imageFormat: string;
+      quotaRegEx: RegExp;
+
+      setMap(map: IMap);
+      addLayer(evt: Layer);
+      removeLayer(evt: Layer);
+      makeSameOrigin(evt: Event);
+      onTileLoaded(evt: Event);
+      cache(obj: any);  // {Object} Object with a tile property, tile being the OpenLayers.Tile.Image with the data to add to the cache
+      destroy();
+      clearCache();
+  }
+  declare var CacheWrite: {
+      new (options: any): CacheWrite;
+      (options: any): CacheWrite;
+      prototype: CacheWrite;
+  }
+
+  //To finish: go here:
+  //http://dev.openlayers.org/docs/files/OpenLayers/Control/CacheWrite-js.html
+  interface DragFeature extends Control {
+  }
+  interface DragPan extends Control {
+  }
+  interface DrawFeature extends Control {
+  }
+  interface EditingToolbar extends Control {
+  }
+  interface Geolocate extends Control {
+  }
+  interface GetFeature extends Control {
+  }
+  interface Graticule extends Control {
+  }
+  interface KeyboardDefaults extends Control {
+  }
+  interface LayerSwitcher extends Control {
+  }
+  interface Measure extends Control {
+  }
+  interface ModifyFeature extends Control {
+  }
+  interface MousePosition extends Control {
+  }
+  interface Navigation extends Control {
+  }
+  interface NavgationHistory extends Control {
+  }
+  interface NavToolbar extends Control {
+  }
+  interface OverviewMap extends Control {
+  }
+  interface Pan extends Control {
+  }
+
+  interface Panel extends Control {
+  }
+
+  interface PanPanel extends Control {
+  }
+  interface PanZoom extends Control {
+  }
+  interface PanZoomBar extends Control {
+  }
+      interface Permalink extends Control {
+  }
+      interface PinchZoom extends Control {
+  }
+      interface Scale extends Control {
+  }
+      interface ScaleLine extends Control {
+  }
+      interface SelectFeature extends Control {
+  }
+      interface SLDSelect extends Control {
+  }
+      interface Snapping extends Control {
+  }
+      interface Split extends Control {
+  }
+      interface TouchNavigation extends Control {
+  }
+      interface TranformFeature extends Control {
+  }
+      interface UTFGrid extends Control {
+  }
+      interface WMSGetFeatureInfo extends Control {
+  }
+      interface WMTSGetFeatureInfo extends Control {
+  }
+      interface Zoom extends Control {
+  }
+      interface ZoomBox extends Control {
+  }
+      interface ZoomIn extends Control {
+  }
+      interface ZoomOut extends Control {
+  }
+      interface ZoomPanel extends Control {
+  }
+      interface ZoomToMaxExtent extends Control {
+  }
+
+  //********************
+
 
   interface Tile {
     events: Events;
@@ -921,6 +1085,10 @@ module OpenLayers {
     epsgOverride: string;
   }
   
+  interface Grid {
+      getGridBounds(); // deprecated.
+      getTilesBounds();
+  }
 
   declare var Layer: {
     new (value?: any): Layer;
@@ -943,7 +1111,10 @@ module OpenLayers {
     GridLayer(gridLayer: JSObject): any;
     GridLayer(name: string, url: string, params: WMSParams);
     GridLayer(name: string, url: string, params: WMSParams, options: GridLayerOptions);
-
+    Grid: {
+        (): Grid;
+        prototype: Grid;
+    };
   }
 
   interface Filter {

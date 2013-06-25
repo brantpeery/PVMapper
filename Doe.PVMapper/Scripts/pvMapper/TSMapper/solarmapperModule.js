@@ -188,3 +188,4 @@ var INLModules;
     }
     //declare var Ext: any; //So we can use it
     })(INLModules || (INLModules = {}));
+//@ sourceMappingURL=solarmapperModule.js.map

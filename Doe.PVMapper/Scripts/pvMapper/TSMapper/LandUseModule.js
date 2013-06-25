@@ -1,3 +1,9 @@
+/// <reference path="pvMapper.ts" />
+/// <reference path="Site.ts" />
+/// <reference path="Score.ts" />
+/// <reference path="Tools.ts" />
+/// <reference path="Options.d.ts" />
+/// <reference path="Module.ts" />
 var INLModules;
 (function (INLModules) {
     var ProtectedAreasModule = (function () {
@@ -32,7 +38,9 @@ var INLModules;
                         onSiteChange: function (e, score) {
                             _this.updateScore(score);
                         },
-                        scoreUtilityOptions: {
+                        scoreUtilityOptions: //TODO: need a categorical scoring system
+                        // for now, this assumes that overlapping more protected areas is worse than overlapping fewer (!)
+                        {
                             functionName: "linear3pt",
                             functionArgs: {
                                 p0: {
@@ -87,11 +95,13 @@ var INLModules;
                 imageDisplay: "1, 1, 96",
                 returnGeometry: false
             };
+            //console.log("LandUseModule.ts: " + score.site.geometry.bounds.toBBOX(6, false));
             var request = OpenLayers.Request.GET({
                 url: this.federalLandsRestUrl + "identify",
                 proxy: "/Proxy/proxy.ashx?",
                 params: params,
                 callback: function (response) {
+                    // update value
                     if(response.status === 200) {
                         var esriJsonPerser = new OpenLayers.Format.JSON();
                         esriJsonPerser.extractAttributes = true;
@@ -110,7 +120,8 @@ var INLModules;
                                 lastText = newText;
                             }
                             score.popupMessage = alertText;
-                            score.updateValue(parsedResponse.results.length);
+                            score.updateValue(parsedResponse.results.length)// number of overlapping features
+                            ;
                         } else {
                             score.popupMessage = "None";
                             score.updateValue(0);
@@ -126,10 +137,10 @@ var INLModules;
     })();
     INLModules.ProtectedAreasModule = ProtectedAreasModule;    
     var protectedAreasInstance = new INLModules.ProtectedAreasModule();
+    //============================================================
     var LandCoverModule = (function () {
         function LandCoverModule() {
             var _this = this;
-            this.landCoverWmsUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/services/NAT_LC/1_NVC_class_landuse/MapServer/WMSServer";
             this.landCoverRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/NAT_LC/1_NVC_class_landuse/MapServer/";
             this.landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
             var myModule = new pvMapper.Module({
@@ -158,34 +169,38 @@ var INLModules;
                         onSiteChange: function (e, score) {
                             _this.updateScore(score);
                         },
-                        scoreUtilityOptions: {
+                        scoreUtilityOptions: //TODO: need a categorical scoring system
+                        // for now, this is a constant value (always returns the max, why not)
+                        {
                             functionName: "linear",
                             functionArgs: {
                                 minValue: 0,
-                                maxValue: 0
+                                maxValue: 0,
+                                tips: {
+                                    minValue: "The minimum Land Cover allowed.",
+                                    maxValue: "The maximum Land Cover allowed."
+                                }
                             }
                         },
                         defaultWeight: 0
                     }
                 ],
-                infoTools: null
+                infoTools: //TODO: find a meaningful score & utility for this
+                null
             });
         }
         LandCoverModule.prototype.addMap = function () {
-            this.landCoverLayer = new OpenLayers.Layer.WMS("Land Cover", this.landCoverWmsUrl, {
-                maxExtent: this.landBounds,
-                layers: "0,1,2",
-                layer_type: "polygon",
-                transparent: "true",
-                format: "image/gif",
-                exceptions: "application/vnd.ogc.se_inimage",
-                maxResolution: 156543.0339,
-                srs: "EPSG:102113"
-            }, {
-                isBaseLayer: false
+            this.landCoverLayer = new OpenLayers.Layer.ArcGIS93Rest("Land Cover", this.landCoverRestUrl + "export", {
+                layers: "show:0,1,2",
+                format: "gif",
+                srs: "3857",
+                transparent: //"102100",
+                "true"
             });
-            this.landCoverLayer.epsgOverride = "EPSG:102113";
+            //,{ isBaseLayer: false }
             this.landCoverLayer.setOpacity(0.3);
+            this.landCoverLayer.epsgOverride = "3857"//"EPSG:102100";
+            ;
             this.landCoverLayer.setVisibility(false);
             pvMapper.map.addLayer(this.landCoverLayer);
         };
@@ -208,6 +223,7 @@ var INLModules;
                 proxy: "/Proxy/proxy.ashx?",
                 params: params,
                 callback: function (response) {
+                    // update value
                     if(response.status === 200) {
                         var esriJsonPerser = new OpenLayers.Format.JSON();
                         esriJsonPerser.extractAttributes = true;
@@ -226,8 +242,14 @@ var INLModules;
                                 lastText = newText;
                             }
                             score.popupMessage = alertText;
-                            score.updateValue(parsedResponse.results.length);
-                        } else {
+                            score.updateValue(parsedResponse.results.length)// returns 1
+                            ;
+                            //TODO: the server refuses to return more than one pixel value... how do we get %coverage?
+                            //      I'm afraid that we'll have to fetch the overlapping image and parse it ourselves...
+                            //      or at least run a few requests for different pixels and conbine the results.
+                            //      Either way, it'll be costly and inefficient. But, I can't find a better server,
+                            //      nor have I been successful at coaxing multiple results from this one. Curses.
+                                                    } else {
                             score.popupMessage = "No data for this site";
                             score.updateValue(Number.NaN);
                         }
@@ -242,4 +264,6 @@ var INLModules;
     })();
     INLModules.LandCoverModule = LandCoverModule;    
     var landCoverInstance = new INLModules.LandCoverModule();
-})(INLModules || (INLModules = {}));
+    //============================================================
+    })(INLModules || (INLModules = {}));
+//@ sourceMappingURL=LandUseModule.js.map
