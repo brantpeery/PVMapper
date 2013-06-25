@@ -42,7 +42,7 @@ module INLModules {
                     // for now, this is a constant value (always returns the max, why not)
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: <pvMapper.IMinMaxUtilityArgs> {
+                        functionArgs: <pvMapper.MinMaxUtilityArgs> {
                             minValue: 0,
                             maxValue: 0,
                             tips: {

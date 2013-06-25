@@ -37,7 +37,7 @@ module BYUModules {
                         this.updateScore(score);
                     },
                     scoreUtilityOptions: {
-                        functionArgs: <pvMapper.IMinMaxUtilityArgs>{
+                        functionArgs: <pvMapper.MinMaxUtilityArgs>{
                             minValue: 0,
                             maxValue: 1,
                             tips: {

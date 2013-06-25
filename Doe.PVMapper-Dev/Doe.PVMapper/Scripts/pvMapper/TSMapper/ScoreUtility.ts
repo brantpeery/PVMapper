@@ -57,23 +57,72 @@ module pvMapper {
 
     }
 
-    export interface IMinMaxUtilityArgs extends IScoreUtilityArgs {
-        minValue: number;
-        maxValue: number;
-        tips: { minValue: string; maxValue: string; };
+    //export interface IMinMaxUtilityArgs extends IScoreUtilityArgs {
+    //    minValue: number;
+    //    maxValue: number;
+    //}
+
+    export class MinMaxUtilityArgs implements IScoreUtilityArgs {
+
+        constructor(mmObj?: MinMaxUtilityArgs) {
+            if (mmObj == undefined) {
+                this.minValue = 0;
+                this.maxValue = 0;
+            } else
+            {
+                this.minValue = mmObj.minValue;
+                this.maxValue = mmObj.maxValue;
+            }
+            this.tips = { minValue: "The minimum value.", maxValue: "The maximum value." };
+        }
+
+        public functionName: string;
+        public functionArgs: IScoreUtilityArgs;
+        public iconURL: string;
+
+        public minValue: number;
+        public maxValue: number;
+
+        public tips: {
+            minValue: string;
+            maxValue: string;
+        };
     }
 
-    export interface ISinusoidalUtilityArgs extends IMinMaxUtilityArgs {
-        target: number;
-        slope: number;
+    export class SinusoidalUtilityArgs implements IScoreUtilityArgs {// IMinMaxUtilityArgs {
+        constructor() {
+            this.target = 0;
+            this.slope = 0;
+            this.tips = {
+                target: "The target value.",
+                slope: "The slope value.",
+                minValue: "The minimum value.",
+                maxValue: "The maximum value."
+            };
+        }
+
+        public functionName: string;
+        public functionArgs: IScoreUtilityArgs;
+        public iconURL: string;
+
+        public target: number;
+        public slope: number;
+        public minValue: number;
+        public maxValue: number;
+
+        public tips: {
+            target: string;
+            slope: string;
+            minValue: string;
+            maxValue: string;
+        };
     }
 
-    export interface IThreePointUtilityArgs extends IScoreUtilityArgs {
+    export class ThreePointUtilityArgs implements IScoreUtilityArgs {
         p0: { x: number; y: number; };
         p1: { x: number; y: number; };
         p2: { x: number; y: number; };
     }
-
 
     export class ScoreUtility {
         constructor(options: IScoreUtilityOptions) {

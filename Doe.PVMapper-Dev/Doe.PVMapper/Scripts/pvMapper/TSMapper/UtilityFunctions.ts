@@ -12,11 +12,11 @@ module pvMapper {
             windowSetup: ScoreUtilityWindows.basicWindow.setup,
             windowOk: ScoreUtilityWindows.basicWindow.okhandler,
 
-            xBounds: function (args: ISinusoidalUtilityArgs) {
+            xBounds: function (args: SinusoidalUtilityArgs) {
                 return [Math.min(args.minValue, args.maxValue), Math.max(args.minValue, args.maxValue)]
             },
             iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/wizard_icon.jpg",
-            fn: function (x: number, args: ISinusoidalUtilityArgs) {
+            fn: function (x: number, args: SinusoidalUtilityArgs) {
                 var l = args.minValue
                 var h = args.maxValue;
                 var b = isNaN(args.target) ? ((h - l) / 2) + l : args.target;
@@ -50,11 +50,15 @@ module pvMapper {
             windowSetup: ScoreUtilityWindows.basicWindow.setup,
             windowOk: ScoreUtilityWindows.basicWindow.okhandler,
 
-            xBounds: function (args: IMinMaxUtilityArgs) {
+            xBounds: function (args: MinMaxUtilityArgs) {
                 return [Math.min(args.minValue, args.maxValue), Math.max(args.minValue, args.maxValue)]
             },
             iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/stats_icon.jpg",
-            fn: function (x: number, args: IMinMaxUtilityArgs) {
+            tips: {
+                minValue: "The minimum usable value.",
+                maxValue: "The maximum usable value."
+            },
+            fn: function (x: number, args: MinMaxUtilityArgs) {
                 //Note: clamping this value to the range 0-1 is handled by the run(x) function
                 if (args != null)
                     return ((x - args.minValue) / (args.maxValue - args.minValue));
@@ -68,12 +72,12 @@ module pvMapper {
             windowSetup: ScoreUtilityWindows.basicWindow.setup,
             windowOk: ScoreUtilityWindows.basicWindow.okhandler,
 
-            xBounds: function (args: IThreePointUtilityArgs) {
+            xBounds: function (args: ThreePointUtilityArgs) {
                 return [Math.min(args.p0.x, Math.min(args.p1.x, args.p2.x)),
                      Math.max(args.p0.x, Math.max(args.p1.x, args.p2.x))];
             },
             iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/document_icon.jpg",
-            fn: function (x: number, args: IThreePointUtilityArgs) {
+            fn: function (x: number, args: ThreePointUtilityArgs) {
                 //Note: clamping this value to the range 0-1 is handled by the run(x) function
                 //TODO: this breaks if you reorder the points - fix that.
                 //if (args == null) return 0;

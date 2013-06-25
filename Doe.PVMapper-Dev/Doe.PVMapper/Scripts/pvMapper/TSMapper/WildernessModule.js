@@ -30,7 +30,11 @@ var BYUModules;
                         scoreUtilityOptions: {
                             functionArgs: {
                                 minValue: 0,
-                                maxValue: 1
+                                maxValue: 1,
+                                tips: {
+                                    minValue: "Minimum Wilderness threshold allowed.",
+                                    maxValue: "Maximum Wilderness threshold allowed."
+                        }
                             },
                             functionName: "linear"
                         },
@@ -41,19 +45,37 @@ var BYUModules;
             });
         }
         WildernessModule.prototype.addMap = function () {
-            this.wildernessLayer = OpenLayers.Layer.WMS("Wilderness Areas", this.WildernessRestUrl + "export", {
-                f: "json",
+            this.wildernessLayer = new OpenLayers.Layer.ArcGIS93Rest("Wilderness Areas", this.WildernessRestUrl + "export", {
+                format: "gif",
                 layers: "show: 0",
-                transparent: true
-            }, {
+                srs: "3857",
+                transparent: "true"
+            }, /*request: "GetMap",
+            bbox: this.landBounds,
+            layer_type: "polygon",
+            transparent: "true",
+            format: "image/gif",
+            exceptions: "application/vnd.ogc.se_inimage",
+            //maxResolution: 156543.0339,
+            srs: "EPSG:42105",*/
+            {
                 isBaseLayer: false
             });
+            this.wildernessLayer.setVisibility(false);
             pvMapper.map.addLayer(this.wildernessLayer);
         };
         WildernessModule.prototype.removeMap = function () {
             pvMapper.map.removeLayer(this.wildernessLayer, false);
         };
         WildernessModule.prototype.updateScore = function (score) {
+            var toGeoJson = new OpenLayers.Format.GeoJSON();
+            var geoJsonObj = toGeoJson.extract.geometry.apply(toGeoJson, [
+                score.site.geometry
+            ]);
+            var toEsriJson = new geoJsonConverter();
+            var esriJsonObj = toEsriJson.toEsri(geoJsonObj);
+            console.log("Converted Geometry:");
+            console.log(esriJsonObj);
             var params = {
                 mapExtent: score.site.geometry.bounds,
                 geometryType: "esriGeometryEnvelope",
@@ -78,10 +100,12 @@ var BYUModules;
                         console.log("geometry bbox: " + score.site.geometry.bounds.toBBOX(6, false));
                         if(parsedResponse && parsedResponse.results) {
                             if(parsedResponse.results.length > 0) {
+                                //This will only take the first national park that overlaps
                                 score.popupMessage = parsedResponse.results[0].value;
                                 score.updateValue(0);
                             } else {
                                 score.popupMessage = "No National Park Overlaps";
+                                //score.popupMessage = "No data for this site";
                                 score.updateValue(1);
                             }
                         } else {
@@ -100,3 +124,4 @@ var BYUModules;
     BYUModules.WildernessModule = WildernessModule;    
     var modInstance = new BYUModules.WildernessModule();
 })(BYUModules || (BYUModules = {}));
+//@ sourceMappingURL=WildernessModule.js.map

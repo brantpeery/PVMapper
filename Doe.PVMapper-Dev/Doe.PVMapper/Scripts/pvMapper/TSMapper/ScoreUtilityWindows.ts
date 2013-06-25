@@ -9,7 +9,11 @@ module pvMapper {
     export class ScoreUtilityWindows {
         public static basicWindow = {
             _xArgs: {},
-            setup: function (panel, args, fn, xBounds) {
+            setup: function (panel, scoreObj) { // args, fn, xBounds) {
+                var args = scoreObj.functionArgs;
+                var fn = pvMapper.UtilityFunctions[scoreObj.functionName].fn;
+                var xBounds = pvMapper.UtilityFunctions[scoreObj.functionName].xBounds;
+
                 var _this = this;
                 var board;
                 var fnOfy;
@@ -60,6 +64,8 @@ module pvMapper {
                         //======= Add to support tool tip =============
                         itemmouseenter: function (grid, record, item, index, e, opts) {
                             if (this.source.tips != undefined) {
+                                //TODO: this...?
+                                //this.tipValue = pvMapper.UtilityFunctions[this.source.functionName].tips[record.internalId];
                                 this.tipValue = this.source.tips[record.internalId];
                             } else {
                                 this.tipValue = "Property " + record.internalId;
