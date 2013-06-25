@@ -29,7 +29,7 @@ var BYUModules;
                         destroy: null,
                         init: null,
                         title: "Slope",
-                        description: "Calculates the average slope of the site",
+                        description: "The slope at the center of a site, using data from ArcGIS Online",
                         category: "Geography",
                         onScoreAdded: function (event, score) {
                         },
@@ -41,10 +41,7 @@ var BYUModules;
                         // for now, flatter is better...?
                         {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs({
-                                minValue: 0,
-                                maxValue: 10
-                            })
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 10)
                         }
                     }, 
                     //defaultWeight: 10
@@ -54,7 +51,7 @@ var BYUModules;
                         destroy: null,
                         init: null,
                         title: "Aspect",
-                        description: "Calculates the average aspect of the site",
+                        description: "The horizontal aspect at the center of a site, using data from ArcGIS Online",
                         category: "Geography",
                         onScoreAdded: function (event, score) {
                         },
@@ -68,20 +65,7 @@ var BYUModules;
                         // for now, south is better, but north ain't so bad...?
                         {
                             functionName: "linear3pt",
-                            functionArgs: {
-                                p0: {
-                                    x: 0,
-                                    y: 0.5
-                                },
-                                p1: {
-                                    x: 180,
-                                    y: 1
-                                },
-                                p2: {
-                                    x: 360,
-                                    y: 0.5
-                                }
-                            }
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.5, 180, 1, 360, 0.5)
                         }
                     }, 
                     //defaultWeight: 10
@@ -91,7 +75,7 @@ var BYUModules;
                         destroy: null,
                         init: null,
                         title: "Elevation",
-                        description: "Calculates the averate elevation of the site",
+                        description: "The elevation at the center of a site, using data from ArcGIS Online",
                         category: "Geography",
                         onScoreAdded: function (event, score) {
                         },
@@ -102,24 +86,16 @@ var BYUModules;
                         // higher is better, but not much better, yeah?
                         {
                             functionName: "linear3pt",
-                            functionArgs: {
-                                p0: {
-                                    x: 0,
-                                    y: 0.5
-                                },
-                                p1: {
-                                    x: 1000,
-                                    y: 0.9
-                                },
-                                p2: {
-                                    x: 6000,
-                                    y: 1
-                                }
-                            }
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.5, 1000, 0.9, 6000, 1)
                         }
                     }
                 ],
-                infoTools: //defaultWeight: 10
+                infoTools: //<pvMapper.ThreePointUtilityArgs>{
+                //    p0: { x: 0, y: 0.5 },
+                //    p1: { x: 1000, y: 0.9 },
+                //    p2: { x: 6000, y: 1 },
+                //}
+                //defaultWeight: 10
                 null
             });
         }

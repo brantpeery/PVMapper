@@ -24,7 +24,7 @@ var INLModules;
                         destroy: null,
                         init: null,
                         title: "Gross Area",
-                        description: "Calculates the area of the site polygon edges.",
+                        description: "The raw area of a site polygon",
                         category: "Geography",
                         onScoreAdded: function (e, score) {
                         },
@@ -43,14 +43,7 @@ var INLModules;
                         // for now, this is a constant value (always returns the max, why not)
                         {
                             functionName: "linear",
-                            functionArgs: {
-                                minValue: 0,
-                                maxValue: 0,
-                                tips: {
-                                    minValue: 'Minimum gross area to be considered.',
-                                    maxValue: 'Maximum gross area to be considered.'
-                                }
-                            }
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "Minimum gross area to be considered.", "Maximum gross area to be considered.")
                         },
                         defaultWeight: 0
                     }

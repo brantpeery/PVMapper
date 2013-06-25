@@ -174,7 +174,7 @@ var scoreboardColumns = [{
               utilityFn.windowOk.apply(utilityFn, [dynamicPanel, uf.functionArgs]);
             //Note: I really don't get this... it seems overly complicated.
 
-            record.store.update();
+            //record.store.update();  //Is there a reason for this
             record.raw.updateScores();
             windows.close();
           }

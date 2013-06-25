@@ -9,8 +9,8 @@ var INLModules;
 (function (INLModules) {
     var maxSearchDistanceInMeters = (30 * 1000);// 30 km - enough?
     
-    var IrradianceModule = (function () {
-        function IrradianceModule() {
+    var SnlModule = (function () {
+        function SnlModule() {
             var myModule = new pvMapper.Module({
                 id: "SnlModule",
                 author: "Scott Brown, INL",
@@ -31,7 +31,7 @@ var INLModules;
                         destroy: null,
                         init: null,
                         title: "Nearest Transmission Line",
-                        description: "Calculates the distance to the nearest known transmission line",
+                        description: "Distance from a site boundary to the nearest known transmission line, using data from SNL",
                         category: "Transmission Availability",
                         onScoreAdded: function (e, score) {
                         },
@@ -41,20 +41,7 @@ var INLModules;
                         scoreUtilityOptions: // having any nearby line is much better than having no nearby line, so let's reflect that.
                         {
                             functionName: "linear3pt",
-                            functionArgs: {
-                                p0: {
-                                    x: 0,
-                                    y: 1
-                                },
-                                p1: {
-                                    x: (maxSearchDistanceInMeters - 1),
-                                    y: 0.3
-                                },
-                                p2: {
-                                    x: maxSearchDistanceInMeters,
-                                    y: 0
-                                }
-                            }
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (maxSearchDistanceInMeters - 1), 0.3, maxSearchDistanceInMeters, 0)
                         },
                         defaultWeight: 10
                     }
@@ -62,29 +49,26 @@ var INLModules;
                 infoTools: null
             });
         }
-        return IrradianceModule;
+        return SnlModule;
     })();    
-    var modinstance = new IrradianceModule();
+    var modinstance = new SnlModule();
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
-    var snlWmsBaseUrl = "https://maps.snl.com/arcgis/services/SNLMaps/PowerCos/MapServer/";
+    var snlLineExportUrl = "https://maps.snl.com/arcgis/rest/services/SNLMaps/Power/MapServer/export";
     var snlLineQueryUrl = "https://maps.snl.com/arcgis/rest/services/SNLMaps/Power/MapServer/5/query";
     //declare var Ext: any;
     var mapLayer;
     function addAllMaps() {
-        mapLayer = new OpenLayers.Layer.WMS("Power Lines", snlWmsBaseUrl + "WMSServer", {
-            layers: "5",
-            transparent: //"swera:ghi_suny_high_900913", //"0", //"perezANN_mod",
-            //layer_type: "polygon",
-            "true",
-            format: "image/png",
-            srs: //exceptions: "application/vnd.ogc.se_inimage",
-            //maxResolution: 156543.0339,
-            "EPSG:3857"
-        }, {
-            isBaseLayer: false
+        mapLayer = new OpenLayers.Layer.ArcGIS93Rest("Power Lines", snlLineExportUrl, {
+            layers: "show:5",
+            format: //"show:2",
+            "gif",
+            srs: "3857",
+            transparent: //"102100",
+            "true"
         });
+        //,{ isBaseLayer: false }
         mapLayer.setOpacity(0.3);
-        mapLayer.epsgOverride = "EPSG:3857"//"3857"; //"EPSG:102100";
+        mapLayer.epsgOverride = "3857"//"EPSG:102100";
         ;
         mapLayer.setVisibility(false);
         pvMapper.map.addLayer(mapLayer);

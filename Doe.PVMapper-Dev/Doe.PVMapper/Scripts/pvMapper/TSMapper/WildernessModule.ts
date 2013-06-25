@@ -37,15 +37,10 @@ module BYUModules {
                         this.updateScore(score);
                     },
                     scoreUtilityOptions: {
-                        functionArgs: <pvMapper.MinMaxUtilityArgs>{
-                            minValue: 0,
-                            maxValue: 1,
-                            tips: {
-                                minValue: "Minimum Wilderness threshold allowed.",
-                                maxValue: "Maximum Wilderness threshold allowed."
-                            }
-                        },
-                        functionName: "linear"
+                       functionName: "linear",
+                       functionArgs: new pvMapper.MinMaxUtilityArgs(0, 1,
+                           "Minimum Wilderness threshold allowed.",
+                           "Maximum Wilderness threshold allowed.")
                     },
                     defaultWeight: 10
                 }],

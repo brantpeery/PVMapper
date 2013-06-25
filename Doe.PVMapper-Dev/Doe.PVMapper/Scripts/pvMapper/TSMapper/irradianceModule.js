@@ -26,8 +26,8 @@ var INLModules;
                         deactivate: null,
                         destroy: null,
                         init: null,
-                        title: "Direct-Normal Irradiation",
-                        description: "Calculates the expected DNI for a site",
+                        title: "Direct-Normal Irradiance",
+                        description: "The average annual DNI for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)",
                         category: "Meteorology",
                         onScoreAdded: function (e, score) {
                         },
@@ -36,15 +36,8 @@ var INLModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: {
-                                minValue: 0,
-                                maxValue: 8,
-                                tips: //override the default for specific message.
-                                {
-                                    minValue: "Minimum Direct-Normal Irradiation allowed.",
-                                    maxValue: "Maximum Direct-Normal Irradiation allowed."
-                                }
-                            }
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 8, //override the default for specific message.
+                            "Minimum Direct-Normal Irradiation allowed.", "Maximum Direct-Normal Irradiation allowed.")
                         },
                         defaultWeight: 10
                     }, 
@@ -53,8 +46,8 @@ var INLModules;
                         deactivate: null,
                         destroy: null,
                         init: null,
-                        title: "Global-Horizontal Irradiation",
-                        description: "Calculates the expected GHI for a site",
+                        title: "Global-Horizontal Irradiance",
+                        description: "The average annual flat plate GHI for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)",
                         category: "Meteorology",
                         onScoreAdded: function (e, score) {
                         },
@@ -63,10 +56,26 @@ var INLModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: {
-                                minValue: 0,
-                                maxValue: 6
-                            }
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 6)
+                        },
+                        defaultWeight: 10
+                    }, 
+                    {
+                        activate: null,
+                        deactivate: null,
+                        destroy: null,
+                        init: null,
+                        title: "Tilted flat-plate Irradiance",
+                        description: "The average annual tilt irradiance for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)",
+                        category: "Meteorology",
+                        onScoreAdded: function (e, score) {
+                        },
+                        onSiteChange: function (e, score) {
+                            updateScoreFromLayer(score, "swera:tilt_suny_high_900913");
+                        },
+                        scoreUtilityOptions: {
+                            functionName: "linear",
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 6)
                         },
                         defaultWeight: 10
                     }
@@ -83,15 +92,19 @@ var INLModules;
     var MapsDbUrl = "http://mapsdb.nrel.gov/geoserver/swera/wms";
     //declare var Ext: any;
     // references to layer objects (used for later querying and removal)
-        var dniSuny, ghiSuny;
+    var dniSuny;
+    var ghiSuny;
+    var tiltSuny;
     function addAllMaps() {
         //var solarBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
         // Direct-Normal Irradiation
-        dniSuny = addMapsDbMap("swera:dni_suny_high_900913", "Direct-Normal Irradiation 10km");
+        dniSuny = addMapsDbMap("swera:dni_suny_high_900913", "Direct-Normal Irradiance 10km");
         pvMapper.map.addLayer(dniSuny);
         // Global-Horizontal Irradiation
-        ghiSuny = addMapsDbMap("swera:ghi_suny_high_900913", "Global-Horizontal Irradiation 10km");
+        ghiSuny = addMapsDbMap("swera:ghi_suny_high_900913", "Global-Horizontal Irradiance 10km");
         pvMapper.map.addLayer(ghiSuny);
+        tiltSuny = addMapsDbMap("swera:tilt_suny_high_900913", "Tilted flat-plate Irradiance");
+        pvMapper.map.addLayer(tiltSuny);
     }
     function addMapsDbMap(name, description) {
         var newLayer = new OpenLayers.Layer.WMS(description, //"Solar GHI 10km by SUNY", //"Solar Radiation",
@@ -116,6 +129,7 @@ var INLModules;
     function removeAllMaps() {
         pvMapper.map.removeLayer(dniSuny, false);
         pvMapper.map.removeLayer(ghiSuny, false);
+        pvMapper.map.removeLayer(tiltSuny, false);
     }
     function updateScoreFromLayer(score, layerName) {
         //site: pvMapper.Site

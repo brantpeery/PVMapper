@@ -19,8 +19,12 @@ var BYUModules;
                 init: null,
                 scoringTools: [
                     {
-                        title: "Wilderness",
-                        description: "Tells whether the given site is in a wilderness area.  ",
+                        title: //activate: null,
+                        //deactivate: null,
+                        //destroy: null,
+                        //init: null,
+                        "Wilderness",
+                        description: "Overlapping national parks, using data hosted by BYU",
                         category: "Land Use",
                         onScoreAdded: function (event, score) {
                         },
@@ -28,15 +32,8 @@ var BYUModules;
                             _this.updateScore(score);
                         },
                         scoreUtilityOptions: {
-                            functionArgs: {
-                                minValue: 0,
-                                maxValue: 1,
-                                tips: {
-                                    minValue: "Minimum Wilderness threshold allowed.",
-                                    maxValue: "Maximum Wilderness threshold allowed."
-                        }
-                            },
-                            functionName: "linear"
+                            functionName: "linear",
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 1, "Minimum Wilderness threshold allowed.", "Maximum Wilderness threshold allowed.")
                         },
                         defaultWeight: 10
                     }
@@ -77,7 +74,10 @@ var BYUModules;
             console.log("Converted Geometry:");
             console.log(esriJsonObj);
             var params = {
-                mapExtent: score.site.geometry.bounds,
+                mapExtent: /*mapExtent: score.site.geometry.bounds,
+                geometryType: "esriGeometryPolygon",
+                geometry: esriGeometry,*/
+                score.site.geometry.bounds,
                 geometryType: "esriGeometryEnvelope",
                 geometry: score.site.geometry.bounds.toBBOX(6, false),
                 f: "json",
