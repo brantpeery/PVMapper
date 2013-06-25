@@ -5,6 +5,16 @@
 
 // Module
 module pvMapper {
+    export interface IScore{
+        utility: number;
+    }
+    export interface ISiteScore {
+        value: number;
+        site: Site;
+        valueChangeEvent: pvMapper.Event;
+        siteChangeEvent: pvMapper.Event;
+        updateValue: (value: number) => number;
+    }
 
     /**
      * A PVMapper.Score object. Tracks the score for a site. Ties a site to a scoring line and represents a line's value cell for a site.
@@ -12,7 +22,7 @@ module pvMapper {
      * @variable {string} value The value that was calculated for the site. Uses the site geometry and the tool to figure the value. Updated by the tool
      * @variable {string} popupMessage The message to display when the mouse hovers  over the scoring cell on the interface
      */
-    export class Score {
+    export class Score implements ISiteScore{
         /**
          * Creates a Score object. Ties the site's change event to this scores score changed event
          *

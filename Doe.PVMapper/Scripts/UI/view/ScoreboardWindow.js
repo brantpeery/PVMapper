@@ -133,7 +133,7 @@ var scoreboardColumns = [{
   hideable: false,
   renderer: function (value, metadata, record) {
     var fn = record.get('utilityFnName');
-    this.items[0].icon = pvMapper.UtilityFunctions[fn].iconURL;
+    if (fn) { this.items[0].icon = pvMapper.UtilityFunctions[fn].iconURL; }
   },
   items: [{
     icon: 'http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/gear_icon.jpg',
@@ -296,8 +296,9 @@ toolsStore.on({
             records.forEach(function (record) {
               var scoreLine = record.raw;
               if (scoreLine.scores[idx] && !isNaN(scoreLine.scores[idx].utility)) {
-                total += scoreLine.scores[idx].utility * scoreLine.weight;
-                count += scoreLine.weight;
+                  var weight = (scoreLine.weight != 'undefined') ? scoreLine.weight : 1;
+                  total += scoreLine.scores[idx].utility * weight;
+                count += weight;
               }
             });
 
