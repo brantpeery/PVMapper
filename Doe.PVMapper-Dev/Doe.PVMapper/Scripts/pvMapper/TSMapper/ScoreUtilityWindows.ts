@@ -1,4 +1,5 @@
-﻿declare var Ext: any;
+﻿/// <reference path="UtilityFunctions.ts" />
+declare var Ext: any;
 declare var JXG: any;
 declare var Extras: any;
 
@@ -18,10 +19,10 @@ module pvMapper {
                 var board;
                 var fnOfy;
                 _this._xArgs = Ext.Object.merge({}, args); //!Create a clone of the args for use in the graph
-
+                var gridPanel;
                 function loadboard() {
                     //Extras.loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
-                    Extras.getScript("https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js", function () {
+                    Extras.getScript("https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.97/jsxgraphcore.js", function () {
 
                         var bounds = xBounds(args);
                         // ensure that the buffer is > 0 (bounds being equal is a valid case for a step function)
@@ -31,21 +32,86 @@ module pvMapper {
 
                         board = JXG.JSXGraph.initBoard('FunctionBox-body', {
                             boundingbox: [bounds[0], 108, bounds[1], -8],
-                            axis: true, showCopyright: false, showNavigation: false
+                            axis: true, showCopyright: false, showNavigation: true
                         });
+
+
                         //TODO: should we replace this with ScoreUtility.run(x) ...?
                         fnOfy = board.create('functiongraph', function (x) {
                             var y = fn(x, _this._xArgs);
                             return Math.max(0, Math.min(1, y)) * 100;
                         }, {
-                            strokeWidth: 3, strokeColor: "red"
+                            strokeWidth: 3, strokeColor: "red",
                         });
+
+                        //NOTE: this code section aught to move to a separate file closer to the UtilityFunction.
+                        if (args.constructor == pvMapper.ThreePointUtilityArgs) {
+                            if (_this._xArgs.points != undefined && _this._xArgs.points.length > 0) {
+                                //create the points
+                                _this._xArgs.points.forEach(function (p, idx) {
+                                    var point = board.create('point', [_this._xArgs[p].x, _this._xArgs[p].y * 100], { name: p, size: 3 });
+                                    point.on("drag", function (e) {
+                                        _this._xArgs[p].x = point.X();
+                                        _this._xArgs[p].y = point.Y() / 100;
+                                        board.update();
+                                    });
+                                })
+                            }
+                        }
+                        else if (args.constructor == pvMapper.MinMaxUtilityArgs) {
+                            var point1 = board.create('point', [_this._xArgs.minValue, 0], { name: 'Min', size: 3 });
+                            point1.on("drag", function (e) {
+                                _this._xArgs.minValue = point1.X();
+                                board.update();
+                                point1.moveTo([point1.X(), 0]);
+                                gridPanel.setSource(_this._xArgs);
+                            });
+
+                            var point2 = board.create('point', [_this._xArgs.maxValue, 100], { name: 'Max', size: 3 });
+                            point2.on("drag", function (e) {
+                                _this._xArgs.maxValue = point1.X();
+                                board.update();
+                                point2.moveTo([point1.X(), 100]);
+                                gridPanel.setSource(_this._xArgs);
+                            });
+                        }
+                        else if (args.constructor == pvMapper.SinusoidalUtilityArgs) {
+                            var minPoint = board.create('point', [_this._xArgs.minValue, 0], { name: 'Min', size: 3 });
+                            var maxPoint = board.create('point', [_this._xArgs.maxValue, 100], { name: 'Max', size: 3 });
+                            var targetPoint = board.create('point', [_this._xArgs.target, 50], { name: 'target', size: 3 });
+                            minPoint.on("drag", function (e) {
+                                var x = minPoint.X();
+                                if (x > targetPoint.X())
+                                    x = targetPoint.X();
+                                _this._xArgs.minValue = x;
+                                board.update();
+                                minPoint.moveTo(x, minPoint.Y());
+                            });
+                            maxPoint.on("drag", function (e) {
+                                var x = maxPoint.X();
+                                if (x < targetPoint.X())
+                                    x = targetPoint.X();
+                                _this._xArgs.maxValue = x;
+                                board.update();
+                                minPoint.moveTo(x, minPoint.Y());
+                            });
+                            targetPoint.on("drag", function (e) {
+                                var x = targetPoint.X();
+                                if (x < minPoint.X())
+                                    x = minPoint.X();
+                                if (x > maxPoint.X())
+                                    x = maxPoint.X();
+                                _this._xArgs.targetValue = x;
+                                board.update();
+                                minPoint.moveTo(x, targetPoint.Y());
+                            });
+                        }
                     });
                 }
 
                 panel.removeAll();
 
-                var gridPanel = Ext.create('Ext.grid.property.Grid', {
+                gridPanel = Ext.create('Ext.grid.property.Grid', {
                     source: _this._xArgs,
                     tipValue: null,
                     viewConfig: {
