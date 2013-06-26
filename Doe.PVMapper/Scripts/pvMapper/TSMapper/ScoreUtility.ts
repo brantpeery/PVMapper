@@ -1,9 +1,9 @@
 /// <reference path="UtilityFunctions.ts" />
 /// <reference path="ScoreUtilityWindows.ts" />
 
-declare var Ext: any;
-declare var JXG: any;
-declare var Extras: any;
+//declare var Ext;
+//declare var JXG;
+//declare var Extras;
 
 module pvMapper {
 
@@ -59,15 +59,14 @@ module pvMapper {
 
     export class MinMaxUtilityArgs implements IScoreUtilityArgs {
 
-        constructor(public minValue?: number = 0,
-                    public maxValue?: number = 100,
-                    minTip?: string = "The minimum value.",
-                    maxTip?: string = "The maximum value."
+        constructor(public minValue: number = 0,
+                    public maxValue: number = 100,
+                    minTip: string = "The minimum value.",
+                    maxTip: string = "The maximum value."
             ) {
             this.tips = { minValue: minTip, maxValue: maxTip };
 
         }
-
         public tips: {
             minValue: string;
             maxValue: string;
@@ -75,14 +74,14 @@ module pvMapper {
     }
 
     export class SinusoidalUtilityArgs implements IScoreUtilityArgs {// IMinMaxUtilityArgs {
-        constructor(public minValue?: number = 0,
-            public maxValue?: number = 100,
-            public target?: number = 0,
-            public slope?: number = 0,
-            minTip?: string = "The minimum value.",
-            maxTip?: string = "The maximum value.",
-            targetTip?: string = "The target value.",
-            slopeTip?: string = "The slope value.") {
+        constructor(public minValue: number = 0,
+            public maxValue: number = 100,
+            public target: number = 0,
+            public slope: number = 0,
+            minTip: string = "The minimum value.",
+            maxTip: string = "The maximum value.",
+            targetTip: string = "The target value.",
+            slopeTip: string = "The slope value.") {
             this.tips = {
                 target: targetTip,
                 slope: slopeTip,
@@ -97,12 +96,14 @@ module pvMapper {
             minValue: string;
             maxValue: string;
         };
+
+        
     }
 
     export class ThreePointUtilityArgs implements IScoreUtilityArgs {
-        constructor(p0x?: number = 0, p0y?: number = 0.5,
-            p1x?: number = 180, p1y?: number = 1,
-            p2x?: number = 360, p2y?: number = 0.5) {
+        constructor(p0x: number = 0, p0y: number = 0.5,
+            p1x: number = 180, p1y: number = 1,
+            p2x: number = 360, p2y: number = 0.5) {
             this.p0 = { x: p0x, y: p0y };
             this.p1 = { x: p1x, y: p1y };
             this.p2 = { x: p2x, y: p2y };
@@ -111,6 +112,9 @@ module pvMapper {
         public p0: { x: number; y: number; };
         public p1: { x: number; y: number; };
         public p2: { x: number; y: number; };
+        
+
+        public points: string[] = ["p0", "p1", "p2"];
     }
 
     export class ScoreUtility {
