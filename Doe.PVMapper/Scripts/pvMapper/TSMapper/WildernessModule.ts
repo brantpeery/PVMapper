@@ -90,16 +90,16 @@ module BYUModules {
             var esriJsonObj = toEsriJson.toEsri(geoJsonObj);
 
             console.log("Converted Geometry:");
-            console.log(esriJsonObj);
+            console.log("Esri Json: " + esriJsonObj);
 
             var params = {
-                /*mapExtent: score.site.geometry.bounds,
-                geometryType: "esriGeometryPolygon",
-                geometry: esriGeometry,*/
-
                 mapExtent: score.site.geometry.bounds,
+                geometryType: "esriGeometryPolygon",
+                geometry: esriJsonObj,
+
+                /*mapExtent: score.site.geometry.bounds,
                 geometryType: "esriGeometryEnvelope",
-                geometry: score.site.geometry.bounds.toBBOX(6, false),
+                geometry: score.site.geometry.bounds.toBBOX(6, false),*/
                 f: "json",
                 layers: "all",
                 tolerance: 0,
@@ -117,7 +117,7 @@ module BYUModules {
                         esriJsonParser.extractAttributes = true;
                         var parsedResponse = esriJsonParser.read(response.responseText);
                         console.log("Wilderness Module Response: " + response.responseText);
-                        console.log("geometry: " + score.site.geometry);
+                        console.log("geometry: " + esriJsonObj.toString());
                         console.log("geometry bbox: " + score.site.geometry.bounds.toBBOX(6, false));
                         if (parsedResponse && parsedResponse.results) {
                             if (parsedResponse.results.length > 0) {
