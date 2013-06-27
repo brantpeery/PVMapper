@@ -1,38 +1,66 @@
 var pvMapper;
 (function (pvMapper) {
     var MinMaxUtilityArgs = (function () {
-        function MinMaxUtilityArgs(mmObj) {
-            if(mmObj == undefined) {
-                this.minValue = 0;
-                this.maxValue = 0;
-            } else {
-                this.minValue = mmObj.minValue;
-                this.maxValue = mmObj.maxValue;
-            }
+        function MinMaxUtilityArgs(minValue, maxValue, minTip, maxTip) {
+            if (typeof minValue === "undefined") { minValue = 0; }
+            if (typeof maxValue === "undefined") { maxValue = 100; }
+            if (typeof minTip === "undefined") { minTip = "The minimum value."; }
+            if (typeof maxTip === "undefined") { maxTip = "The maximum value."; }
+            this.minValue = minValue;
+            this.maxValue = maxValue;
             this.tips = {
-                minValue: "The minimum value.",
-                maxValue: "The maximum value."
+                minValue: minTip,
+                maxValue: maxTip
             };
         }
         return MinMaxUtilityArgs;
     })();
     pvMapper.MinMaxUtilityArgs = MinMaxUtilityArgs;    
     var SinusoidalUtilityArgs = (function () {
-        function SinusoidalUtilityArgs() {
-            this.target = 0;
-            this.slope = 0;
+        function SinusoidalUtilityArgs(minValue, maxValue, target, slope, minTip, maxTip, targetTip, slopeTip) {
+            if (typeof minValue === "undefined") { minValue = 0; }
+            if (typeof maxValue === "undefined") { maxValue = 100; }
+            if (typeof target === "undefined") { target = 0; }
+            if (typeof slope === "undefined") { slope = 0; }
+            if (typeof minTip === "undefined") { minTip = "The minimum value."; }
+            if (typeof maxTip === "undefined") { maxTip = "The maximum value."; }
+            if (typeof targetTip === "undefined") { targetTip = "The target value."; }
+            if (typeof slopeTip === "undefined") { slopeTip = "The slope value."; }
+            this.minValue = minValue;
+            this.maxValue = maxValue;
+            this.target = target;
+            this.slope = slope;
             this.tips = {
-                target: "The target value.",
-                slope: "The slope value.",
-                minValue: "The minimum value.",
-                maxValue: "The maximum value."
+                target: targetTip,
+                slope: slopeTip,
+                minValue: minTip,
+                maxValue: maxTip
             };
         }
         return SinusoidalUtilityArgs;
     })();
     pvMapper.SinusoidalUtilityArgs = SinusoidalUtilityArgs;    
     var ThreePointUtilityArgs = (function () {
-        function ThreePointUtilityArgs() { }
+        function ThreePointUtilityArgs(p0x, p0y, p1x, p1y, p2x, p2y) {
+            if (typeof p0x === "undefined") { p0x = 0; }
+            if (typeof p0y === "undefined") { p0y = 0.5; }
+            if (typeof p1x === "undefined") { p1x = 180; }
+            if (typeof p1y === "undefined") { p1y = 1; }
+            if (typeof p2x === "undefined") { p2x = 360; }
+            if (typeof p2y === "undefined") { p2y = 0.5; }
+            this.p0 = {
+                x: p0x,
+                y: p0y
+            };
+            this.p1 = {
+                x: p1x,
+                y: p1y
+            };
+            this.p2 = {
+                x: p2x,
+                y: p2y
+            };
+        }
         return ThreePointUtilityArgs;
     })();
     pvMapper.ThreePointUtilityArgs = ThreePointUtilityArgs;    

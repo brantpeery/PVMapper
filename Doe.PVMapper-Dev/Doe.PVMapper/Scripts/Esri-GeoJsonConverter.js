@@ -247,10 +247,11 @@ function geoJsonConverter(){
 
     //make new empty ESRI geometry object
     esriGeometry = {
-      type: esriGeomInfo.type,
-      spatialReference: {
+      geometryType: esriGeomInfo.type,
+      spatialReference: "{\"wkid\": 3785}",
+      /*spatialReference: {
         wkid: 3785
-      }
+      }*/
     };
 
     //perform conversion

@@ -19,11 +19,7 @@ var BYUModules;
                 init: null,
                 scoringTools: [
                     {
-                        title: //activate: null,
-                        //deactivate: null,
-                        //destroy: null,
-                        //init: null,
-                        "Wilderness",
+                        title: "Wilderness",
                         description: "Overlapping national parks, using data hosted by BYU",
                         category: "Land Use",
                         onScoreAdded: function (event, score) {
@@ -47,15 +43,7 @@ var BYUModules;
                 layers: "show: 0",
                 srs: "3857",
                 transparent: "true"
-            }, /*request: "GetMap",
-            bbox: this.landBounds,
-            layer_type: "polygon",
-            transparent: "true",
-            format: "image/gif",
-            exceptions: "application/vnd.ogc.se_inimage",
-            //maxResolution: 156543.0339,
-            srs: "EPSG:42105",*/
-            {
+            }, {
                 isBaseLayer: false
             });
             this.wildernessLayer.setVisibility(false);
@@ -72,14 +60,11 @@ var BYUModules;
             var toEsriJson = new geoJsonConverter();
             var esriJsonObj = toEsriJson.toEsri(geoJsonObj);
             console.log("Converted Geometry:");
-            console.log(esriJsonObj);
+            console.log("Esri Json: " + esriJsonObj);
             var params = {
-                mapExtent: /*mapExtent: score.site.geometry.bounds,
+                mapExtent: score.site.geometry.bounds,
                 geometryType: "esriGeometryPolygon",
-                geometry: esriGeometry,*/
-                score.site.geometry.bounds,
-                geometryType: "esriGeometryEnvelope",
-                geometry: score.site.geometry.bounds.toBBOX(6, false),
+                geometry: esriJsonObj,
                 f: "json",
                 layers: "all",
                 tolerance: 0,
@@ -96,16 +81,14 @@ var BYUModules;
                         esriJsonParser.extractAttributes = true;
                         var parsedResponse = esriJsonParser.read(response.responseText);
                         console.log("Wilderness Module Response: " + response.responseText);
-                        console.log("geometry: " + score.site.geometry);
+                        console.log("geometry: " + esriJsonObj.toString());
                         console.log("geometry bbox: " + score.site.geometry.bounds.toBBOX(6, false));
                         if(parsedResponse && parsedResponse.results) {
                             if(parsedResponse.results.length > 0) {
-                                //This will only take the first national park that overlaps
                                 score.popupMessage = parsedResponse.results[0].value;
                                 score.updateValue(0);
                             } else {
                                 score.popupMessage = "No National Park Overlaps";
-                                //score.popupMessage = "No data for this site";
                                 score.updateValue(1);
                             }
                         } else {
@@ -124,4 +107,3 @@ var BYUModules;
     BYUModules.WildernessModule = WildernessModule;    
     var modInstance = new BYUModules.WildernessModule();
 })(BYUModules || (BYUModules = {}));
-//@ sourceMappingURL=WildernessModule.js.map
