@@ -43,7 +43,7 @@ module INLModules {
                         functionName: "linear3pt",
                         functionArgs: new pvMapper.ThreePointUtilityArgs(0,1,1,0.6,5,0)
                     },
-                    defaultWeight: 10
+                    weight: 10
                 }],
 
                 infoTools: null
@@ -209,7 +209,7 @@ module INLModules {
                             }
                         }
                     },
-                    defaultWeight: 0 //TODO: find a meaningful score & utility for this
+                    weight: 0 //TODO: find a meaningful score & utility for this
                 }],
 
                 infoTools: null

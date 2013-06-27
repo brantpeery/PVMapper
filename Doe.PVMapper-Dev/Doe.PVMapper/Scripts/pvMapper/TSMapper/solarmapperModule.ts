@@ -52,7 +52,7 @@ module INLModules {
                         functionArgs: new pvMapper.ThreePointUtilityArgs(0,1,1,0.6,5,0)
                     },
 
-                    defaultWeight:10
+                    weight:10
                 }],
 
                 infoTools: null

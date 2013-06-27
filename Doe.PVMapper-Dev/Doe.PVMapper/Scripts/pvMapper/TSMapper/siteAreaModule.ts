@@ -46,7 +46,7 @@ module INLModules {
                             "Minimum gross area to be considered.",
                             "Maximum gross area to be considered.")
                     },
-                    defaultWeight: 0 //TODO: find a meaningful score & utility for this
+                    weight: 0 //TODO: find a meaningful score & utility for this
                 }],
                 infoTools: null
             });

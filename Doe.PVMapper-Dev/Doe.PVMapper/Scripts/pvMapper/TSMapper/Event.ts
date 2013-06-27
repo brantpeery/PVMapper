@@ -50,20 +50,20 @@ module pvMapper {
 
     public fire(context, eventArgs: any) {
       var self = this;
-      if (!(eventArgs instanceof Array)) {
+      if (typeof eventArgs !== 'undefined' && !(eventArgs instanceof Array)) {
         eventArgs = [eventArgs];
       }
       self.eventHandlers.map(function (func, idx) {
           if (typeof (func) != 'undefined') {
-              try {
+              //try {
                   func.apply(context, eventArgs);
-              } catch (e) {
-                  if (console) {
-                      console.log("Error caught while in an event: " + e.message + " : file: " + e.fileName + " line: " + e.lineNumber);
-                      console.log(context);
-                      console.error(e);
-                  }
-              }
+              //} catch (e) {
+              //    if (console) {
+              //        console.log("Error caught while in an event: " + e.message + " : file: " + e.fileName + " line: " + e.lineNumber);
+              //        console.log(context);
+              //        console.error(e);
+              //    }
+              //}
           }
       });
     }

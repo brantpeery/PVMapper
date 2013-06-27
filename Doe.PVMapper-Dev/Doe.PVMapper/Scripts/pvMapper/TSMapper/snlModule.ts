@@ -28,7 +28,7 @@ module INLModules {
                 destroy: null,
                 init: null,
 
-                scoringTools: [{
+                scoringTools: [<pvMapper.IScoreTool>{
                     activate: null,
                     deactivate: null,
                     destroy: null,
@@ -49,7 +49,7 @@ module INLModules {
                         functionArgs:
                         new pvMapper.ThreePointUtilityArgs(0, 1, (maxSearchDistanceInMeters -1), 0.3, maxSearchDistanceInMeters,0)
                     },
-                    defaultWeight: 10
+                    weight: 10
                 }],
 
                 infoTools: null
