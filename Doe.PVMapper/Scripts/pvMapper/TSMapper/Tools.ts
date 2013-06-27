@@ -10,8 +10,8 @@ module pvMapper {
          The title of the tool that will be used in the scoreboard
          Make it short
         */
-        name: string;
-        title?: string;
+        //name: string;
+        title: string;
 
         /**
          The description of the tool. This will be visible in reports and as a tool tip
@@ -37,7 +37,8 @@ module pvMapper {
     export interface IToolLine extends ITool {
         scores: IScore[];
     }
-    export interface IScoreTool extends IToolLine {
+
+    export interface IScoreTool extends ITool {
         /**
         The function that will be called by the API everytime the tool should
         recalculate a value.
@@ -49,18 +50,25 @@ module pvMapper {
 
         //TODO: add utility function configuration options here...
         scoreUtilityOptions?: IScoreUtilityOptions;
-        defaultWeight?: number;
+        weight?: number;
     }
 
-    export interface IValueWeight{
-        value: number;
-        weight: number;
+    export interface IValueWeight {
+        utility: number;
+        tool: {
+            weight: number;
+            title: string;
+            //category: string;
+            //description: string;
+            // etc...
+        };
     }
+
     /**
      A tool that will provide a total based on statistical analysis of the values in the scoring tools.
      Will normally be placed last on a scoreboard or report to represent the total score, average, mean, mode or whatever other aggragate the tool outputs
     */
-    export interface ITotalTool extends IToolLine {
+    export interface ITotalTool extends ITool {
         /**
          Calculate the aggragate score based on an internal algorithm. 
         //This is called by the TotalLine.UpdateScores() when a value is changed in the Scoreboard
@@ -68,7 +76,7 @@ module pvMapper {
         @param values: array of numbers. The scores for a single site that is to be aggregated.
          Returns a number that is the result of the aggragate.
         */
-        CalculateScore: (values: IValueWeight[]) => number;
+        CalculateScore: (values: IValueWeight[]) => IScore;
     }
 
     export interface IToolAction {

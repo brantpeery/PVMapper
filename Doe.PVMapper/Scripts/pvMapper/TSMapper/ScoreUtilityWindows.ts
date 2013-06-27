@@ -116,7 +116,7 @@ module pvMapper {
                     tipValue: null,
                     viewConfig: {
                         deferEmptyText: false, // defaults to true
-                        emptyText: '<center><h3>No Editable Fields</h3></center>' // can be passed to the grid itself or within a viewConfig object
+                        emptyText: '<center><i>no editable fields</i></center>' // can be passed to the grid itself or within a viewConfig object
                     },
                     listeners: {
                         edit: function (editor, e, eOpts) {

@@ -44,7 +44,7 @@ module INLModules {
                             "Minimum Direct-Normal Irradiation allowed.",
                             "Maximum Direct-Normal Irradiation allowed." )
                     },
-                    defaultWeight: 10
+                    weight: 10
                 }, {
                     activate: null,
                     deactivate: null,
@@ -64,7 +64,7 @@ module INLModules {
                         functionName: "linear",
                         functionArgs: new pvMapper.MinMaxUtilityArgs(0,6)
                     },
-                    defaultWeight: 10
+                    weight: 10
                 }, {
                     activate: null,
                     deactivate: null,
@@ -84,7 +84,7 @@ module INLModules {
                         functionName: "linear",
                         functionArgs: new pvMapper.MinMaxUtilityArgs(0,6)
                     },
-                    defaultWeight: 10
+                    weight: 10
                 }],
 
                 infoTools: null

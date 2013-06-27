@@ -6,11 +6,11 @@
 /// <reference path="SiteManager.ts" />
 
 module pvMapper {
-    export class TotalLine {
+    export class TotalLine implements ITotalTool {
         constructor(options: ITotalTool) {
             this.CalculateScore = options.CalculateScore;
             this.title = options.title;
-            this.name = options.name;
+            //this.name = options.name;
             this.description = options.description;
 
             this.init = options.init || function () { };
@@ -27,12 +27,12 @@ module pvMapper {
         public activate: ICallback;
         public deactivate: ICallback;
         public title: string;
-        public name: string;
+        //public name: string;
         public description: string;
 
         public category = "Totals";
-        public scores: { utility: number; }[] = [];
-        public CalculateScore: ICallback;
+        public scores: IScore[] = [];
+        public CalculateScore: (values: IValueWeight[]) => IScore;
         public UpdateScores(lines: ScoreLine[]) {
             //Setup an array of sites(scores) that contain all the scoringTool values
             var numSites: number = (lines.length > 0) ? lines[0].scores.length : 0;
@@ -44,13 +44,13 @@ module pvMapper {
             
             //Loop through all the sites on the scoreboard
             for (var idx = 0; idx < numSites; idx++) {
-                var values: { value: number; weight: number; }[] = [];
+                var values: IValueWeight[] = [];
 
                 //Aggragate all the scoreline's values into an array
                 lines.forEach((line) => {
                     //TODO: This should be the weighted score
-                    if (line.scores[idx].utility){
-                        values.push({value:line.scores[idx].utility, weight:line.weight});
+                    if (line.scores && line.scores[idx] && line.scores[idx].utility){
+                        values.push({utility:line.scores[idx].utility, tool:line});
                     }
                 });
 
@@ -60,7 +60,7 @@ module pvMapper {
                 }
 
                 //Update the score on the total line using the tools CalculateScore method
-                this.scores[idx].utility = this.CalculateScore(values);
+                this.scores[idx] = this.CalculateScore(values);
             }
         }
     }

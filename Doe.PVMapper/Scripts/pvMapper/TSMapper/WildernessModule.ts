@@ -42,7 +42,7 @@ module BYUModules {
                            "Minimum Wilderness threshold allowed.",
                            "Maximum Wilderness threshold allowed.")
                     },
-                    defaultWeight: 10
+                    weight: 10
                 }],
                 infoTools: null
             });

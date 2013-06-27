@@ -39,7 +39,7 @@ module BYUModules {
                         functionName: "linear",
                         functionArgs: new pvMapper.MinMaxUtilityArgs(0, 10)
                     },
-                    //defaultWeight: 10
+                    //weight: 10
                 },
                 {
                     activate: null,
@@ -62,7 +62,7 @@ module BYUModules {
                         functionName: "linear3pt",
                         functionArgs: new pvMapper.ThreePointUtilityArgs(0,0.5,180,1,360,0.5 )
                     },
-                    //defaultWeight: 10
+                    //weight: 10
                 },
                 {
                     activate: null,
@@ -87,7 +87,7 @@ module BYUModules {
                         //    p2: { x: 6000, y: 1 },
                         //}
                     },
-                    //defaultWeight: 10
+                    //weight: 10
                 }
                 ],
                 infoTools: null

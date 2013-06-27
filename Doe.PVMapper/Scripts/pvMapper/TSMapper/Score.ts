@@ -7,8 +7,9 @@
 module pvMapper {
     export interface IScore{
         utility: number;
+        popupMessage?: string;
     }
-    export interface ISiteScore {
+    export interface ISiteScore extends IScore {
         value: number;
         site: Site;
         valueChangeEvent: pvMapper.Event;
@@ -47,8 +48,6 @@ module pvMapper {
                 if (console) console.log('The score ' + this.site.name + ' has detected a site change pvMapper.Event.fire its own event now.');
                 this.siteChangeEvent.fire(this, [e,this]);
             });
-
-
         }
 
         /// <Summary>A reference the this object independent of scope</Summary>
