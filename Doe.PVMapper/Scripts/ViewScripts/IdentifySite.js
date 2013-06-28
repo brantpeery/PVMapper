@@ -1,14 +1,13 @@
-/*Identify tool modify from Add site plugin ( Contributors: Brant Peery, Matthew Klien)
+/*Idetify tool modify from Add site plugin ( Contributors: Brant Peery, Matthew Klien)
 */
 var tools = [];
 
 pvMapper.onReady(function () {
-    //console.log("Beginning of Identify Site");
     var thisTool = new addSite(pvMapper.map, pvMapper.getSiteLayer());
     tools.push(thisTool);
 
     var IdentifyTool = new Ext.Button({
-        text: "Identify",
+        text: "IdentifyXYZ",
         handler: function () {
             if (thisTool.mapControl.active) {
                 thisTool.deactivateDrawSite();
@@ -20,6 +19,8 @@ pvMapper.onReady(function () {
                 thisTool.button = this;
                 this.toggle(true);
             }
+
+
         }
 
     });
@@ -56,14 +57,30 @@ function addSite(map, layer) {
     this.mapControl = new OpenLayers.Control.DrawFeature(this.layer, OpenLayers.Handler.Point);
     map.addControl(this.mapControl);
 
+    //activateDrawSite();
 
+
+    function handleSave(b, e) {
+        var msg;
+
+        alert(feature.geometry.toString());
+    }
+
+    function createLayer() { }
     this.activateDrawSite = function () {
         self.mapControl.activate();
         self.mapControl.events.register("featureadded", this.mapControl, onIdentify);
         pvMapper.displayMessage("Start creating your site by clicking on the map to draw the perimeter of your new site", "help");
 
     }
-    
+    /*
+        function saveSiteInfo() { }
+        this.deactivateDrawSite = function () {
+            self.mapControl.events.unregister("featureadded", this.mapControl, onIdentify);
+            self.mapControl.deactivate();
+            self.button.toggle(false);
+        }
+    */
     function onIdentify(data) {
         var control = this;
         feature = data.feature;
@@ -123,7 +140,6 @@ function addSite(map, layer) {
     }
 
 };
-
 addSite.prototype = {
     createEditTool: function () {
         control
