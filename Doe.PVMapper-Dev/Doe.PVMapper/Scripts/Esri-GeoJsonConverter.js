@@ -153,7 +153,7 @@ function geoJsonConverter(){
     geometry type, point, line, polygon*/
   function isCompatible(esriGeomType, gcGeomType) {
     var compatible = false;
-    if ((esriGeomType === "esriGeometryPoint" || esriGeomType === "esriGeometryMultipoint") && (gcGeomType === "Point" || gcGeomType === "MultiPoint")) {
+    if ((esriGeomType === "esriGeometryPoint" || esriGeomType ===" esriGeometryMultipoint") && (gcGeomType === "Point" || gcGeomType === "MultiPoint")) {
       compatible = true;
     } else if (esriGeomType === "esriGeometryPolyline" && (gcGeomType === "LineString" || gcGeomType === "MultiLineString")) {
       compatible = true;
@@ -178,7 +178,7 @@ function geoJsonConverter(){
       esriType = "esriGeometryPolyline";
       geomHolderId = "paths";
     } else if (gcType === "Polygon" || gcType === "MultiPolygon") {
-      esriType = "esriGeometryPolygon";
+      esriType = "esriGeometryPolygon"; 
       geomHolderId = "rings";
     }
     return {
@@ -317,8 +317,23 @@ function geoJsonConverter(){
 				}
 	        }
 		}
-		else if (geoJsonObject.type === "Feature"){
-			outObj = gcFeatureToEsriFeature(geoJsonObject);
+		else if (geoJsonObject.type === "Feature") {
+            //Change made to the the formatting for the feature type data input @Rohit
+		    var recObj = gcFeatureToEsriFeature(geoJsonObject);
+
+		    outObj = {
+
+		        "displayFieldName": "",
+		        "geometryType": recObj.geometry.type,
+		        "spatialReference": recObj.spatialReference,
+		        features: [
+				recObj
+		        ],
+
+		    };
+
+		  //  outObj = gcFeatureToEsriFeature(geoJsonObject);
+
 		}
 		else{
 			outObj = gcGeometryToEsriGeometry(geoJsonObject);

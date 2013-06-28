@@ -3,10 +3,12 @@
 var tools = [];
 
 pvMapper.onReady(function () {
-    var thisTool = new addSite(pvMapper.map, pvMapper.getSiteLayer());
+    var thisTool = new identifySite(pvMapper.map, pvMapper.getSiteLayer());
     tools.push(thisTool);
-
+ 
     var IdentifyTool = new Ext.Button({
+        enableToggle: true,
+        toggleGroup: "editToolbox",
         text: "IdentifyXYZ",
         handler: function () {
             if (thisTool.mapControl.active) {
@@ -28,7 +30,7 @@ pvMapper.onReady(function () {
 });
 
 //The main plugin object. Conforms to the plugin definition set by the framework
-function addSite(map, layer) {
+function identifySite(map, layer) {
     var commonStyleMap = new OpenLayers.StyleMap({
         'default': {
             strokeColor: "#00FF00",
@@ -73,18 +75,22 @@ function addSite(map, layer) {
         pvMapper.displayMessage("Start creating your site by clicking on the map to draw the perimeter of your new site", "help");
 
     }
+
+    this.deactivateDrawSite = function () {
+        
+        self.mapControl.events.unregister("featureadded", this.mapControl, onIdentify);
+        self.mapControl.deactivate();
+        self.button.toggle(false);
+    }
+
     /*
         function saveSiteInfo() { }
-        this.deactivateDrawSite = function () {
-            self.mapControl.events.unregister("featureadded", this.mapControl, onIdentify);
-            self.mapControl.deactivate();
-            self.button.toggle(false);
-        }
+      
     */
     function onIdentify(data) {
         var control = this;
-        feature = data.feature;
-        var kml = new OpenLayers.Format.KML();
+       feature = data.feature;
+       var kml = new OpenLayers.Format.KML();
         pvMapper.newFeature = feature;
 
         //----------------------------------------------------------------------
@@ -103,6 +109,31 @@ function addSite(map, layer) {
         var y = point2.lon;
         //----------------------------------------------------------------------
 
+/*
+        //To Retrieve data from OpenGeo
+        var map = pvMapper.map;
+       var info = new OpenLayers.Control.WMSGetFeatureInfo({
+            url: 'http://demo.opengeo.org/geoserver/wms',
+            title: 'Identify features by clicking',
+            queryVisible: true,
+            eventListeners: {
+                getfeatureinfo: function (data) {
+                    map.addPopup(new OpenLayers.Popup.FramedCloud(
+                        "chicken",
+                        map.getLonLatFromPixel(event.xy),
+                        null,
+                        event.text,
+                        null,
+                        true
+                    ));
+                }
+            }
+        });
+        map.addControl(info);
+        info.activate();
+
+        map.addControl(new OpenLayers.Control.LayerSwitcher());
+        map.zoomToMaxExtent();*/
 
         //Continue to collect the needed form data
         ///HACK: This needs to use the framework standard way of doing it. For now I am going to assume that I have access to EXTjs 3
@@ -111,12 +142,10 @@ function addSite(map, layer) {
             modal: true,
             collapsible: false,
             id: "iden",
-
             title: "Identify point(" + x + "," + y + ")",
-
             bodyPadding: '5 5 0',
             width: 350,
-            height: 650,
+            height: 450,
             items: {  // Let's put an empty grid in just to illustrate fit layout
                 xtype: 'grid',
                 border: false,
@@ -140,7 +169,7 @@ function addSite(map, layer) {
     }
 
 };
-addSite.prototype = {
+identifySite.prototype = {
     createEditTool: function () {
         control
         return control;
