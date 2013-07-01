@@ -79,12 +79,13 @@ module pvMapper {
             iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/document_icon.jpg",
             fn: function (x: number, args: ThreePointUtilityArgs) {
                 //Note: clamping this value to the range 0-1 is handled by the run(x) function
-                //TODO: this breaks if you reorder the points - fix that.
                 //if (args == null) return 0;
-                if (x < args.p0.x) return args.p0.y;
-                else if (x < args.p1.x) return args.p0.y + ((args.p1.y - args.p0.y) * (x - args.p0.x) / (args.p1.x - args.p0.x));
-                else if (x < args.p2.x) return args.p1.y + ((args.p2.y - args.p1.y) * (x - args.p1.x) / (args.p2.x - args.p1.x));
-                else return args.p2.y;
+                var sortedPts = [args.p0, args.p1, args.p2].sort(function (a, b) { return a.x - b.x; } );
+
+                if (x < sortedPts[0].x) return sortedPts[0].y;
+                else if (x < sortedPts[1].x) return sortedPts[0].y + ((sortedPts[1].y - sortedPts[0].y) * (x - sortedPts[0].x) / (sortedPts[1].x - sortedPts[0].x));
+                else if (x < sortedPts[2].x) return sortedPts[1].y + ((sortedPts[2].y - sortedPts[1].y) * (x - sortedPts[1].x) / (sortedPts[2].x - sortedPts[1].x));
+                else return sortedPts[2].y;
             }
         }
 

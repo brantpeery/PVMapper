@@ -69,9 +69,9 @@ module pvMapper {
 
                             var point2 = board.create('point', [_this._xArgs.maxValue, 100], { name: 'Max', size: 3 });
                             point2.on("drag", function (e) {
-                                _this._xArgs.maxValue = point1.X();
+                                _this._xArgs.maxValue = point2.X();
                                 board.update();
-                                point2.moveTo([point1.X(), 100]);
+                                point2.moveTo([point2.X(), 100]);
                                 gridPanel.setSource(_this._xArgs);
                             });
                         }
@@ -93,7 +93,7 @@ module pvMapper {
                                     x = targetPoint.X();
                                 _this._xArgs.maxValue = x;
                                 board.update();
-                                minPoint.moveTo(x, minPoint.Y());
+                                maxPoint.moveTo(x, maxPoint.Y());
                             });
                             targetPoint.on("drag", function (e) {
                                 var x = targetPoint.X();
@@ -103,7 +103,7 @@ module pvMapper {
                                     x = maxPoint.X();
                                 _this._xArgs.targetValue = x;
                                 board.update();
-                                minPoint.moveTo(x, targetPoint.Y());
+                                targetPoint.moveTo(x, targetPoint.Y());
                             });
                         }
                     });
@@ -160,7 +160,6 @@ module pvMapper {
                 });
                 panel.add(gridPanel);
                 panel.add({
-                    //Center the graph
                     xtype: 'panel',
                     layout: {
                         align: 'center',
@@ -168,7 +167,6 @@ module pvMapper {
                         type: 'vbox'
                     },
                     items: {
-                        //padding: '10 0 0 0',
                         id: 'FunctionBox',
                         xtype: 'panel',
                         layout: 'fit',
