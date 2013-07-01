@@ -124,7 +124,15 @@ var scoreboardColumns = [{
     sortable: true,
     hideable: false,
     dataIndex: 'weight',
-    editor: 'numberfield'
+    editor: {
+        xtype: 'numberfield',
+        maxValue: 100,
+        minValue: 0,
+        allowBlank: false,
+        allowDecimals: false,
+        allowExponential: false,
+        allowOnlyWhitespace: false
+    }
 }, {
     xtype: 'actioncolumn',
     text: 'Utility',
@@ -265,7 +273,7 @@ toolsStore.on({
                         }
 
                         //TODO: hack hack hack... it's a hack
-                        if (value[idx].hasOwnProperty('toString')) {
+                        if (value[idx].toString !== Object.prototype.toString) {
                             if (typeof value[idx].value !== "undefined" && !isNaN(value[idx].value)) {
                                 return value[idx].toString();
                             } else {
