@@ -12,7 +12,7 @@ interface EventArg {
   timeStamp: number;
   target: pvMapper.Event;
   type: string;
-  cancelable: bool;
+  cancelable: boolean;
 }
 
 declare var EventArg: {
@@ -29,7 +29,7 @@ module pvMapper {
     public eventHandlers: { (any): any; }[];
     /// Creates the publish point. 
     /// allowDuplicateHandler if set to true will allow the same function to subscribe more than once.
-    constructor(public allowDuplicateHandler?: bool = false) {
+    constructor(public allowDuplicateHandler: boolean = false) {
       this.eventHandlers = new Array();
     }
     ///

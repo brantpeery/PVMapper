@@ -6,7 +6,7 @@ interface ICallback {
 
 
 // Module
-module JXG {
+declare module JXG {
 
 
   interface EventEmitter {
@@ -192,7 +192,7 @@ module JXG {
     update();
   }
   
-  declare var Board: {
+  var Board: {
     new (container: string, renderer: AbstractRenderer, id: string, origin: Coords, zoomX: number, zoomY: number, unitX: number, unitY: number, canvasWidth: number, canvasHeight: number, attributes: any): Board;
     (container: string, renderer: AbstractRenderer, id: string, origin: Coords, zoomX: number, zoomY: number, unitX: number, unitY: number, canvasWidth: number, canvasHeight: number, attributes: any): Board;
     prototype: Board;
@@ -216,7 +216,7 @@ module JXG {
     usr2screen(doRound:bool);
     update(ou:any[], os:any[]);
   }
-  declare var Coords: {
+  var Coords: {
     new (method: number, coordinates: any[], board: Board): Coords;
     (method: number, coordinates: any[], board: Board): Coords;
     prototype: Coords;
@@ -276,7 +276,7 @@ module JXG {
     ZEval(): number;
   }
 
-  declare var Point: {
+  var Point: {
     new (board: Board, coordinates: Coords, attributes: any): Point;
     (board: Board, coordinates: Coords, attributes: any): Point;
     prototype: Point;
@@ -308,7 +308,7 @@ module JXG {
     Z(t): number;
   }
 
-  declare var Curve: {
+  var Curve: {
     new (board: Board, parents: any[], attributes: any[]): Curve;
     (board: Board, parents: any[], attributes: any[]): Curve;
     prototype: Curve;
@@ -331,7 +331,7 @@ module JXG {
     initBoard(box: string, attributes: any): Board;
   }
 
-  declare var JSXGraph: {
+  var JSXGraph: {
     new (): JSXGraph;
     (): JSXGraph;
     prototype: JSXGraph;

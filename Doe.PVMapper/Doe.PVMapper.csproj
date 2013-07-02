@@ -169,7 +169,7 @@
     <Content Include="Content\jsxgraph.css" />
     <Content Include="Scripts\Esri-GeoJsonConverter.js" />
     <Content Include="Scripts\EsriGeoJSON.js" />
-    <Content Include="Scripts\ext-4.1.1a.d.ts" />
+    <Content Include="Scripts\ExtJS.d.ts" />
     <Content Include="Scripts\img\layer-switcher-maximize.png" />
     <Content Include="Scripts\img\layer-switcher-minimize.png" />
     <Content Include="Scripts\jquery.d.ts" />
@@ -185,6 +185,24 @@
       <DependentUpon>TotalsModule.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvExtensions\TotalsModule.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\DataManager.js">
+      <DependentUpon>DataManager.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\DataManager.min.js">
+      <DependentUpon>DataManager.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\DemModule.js">
+      <DependentUpon>DemModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\DemModule.min.js">
+      <DependentUpon>DemModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\IEventTypes.js">
+      <DependentUpon>IEventTypes.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\IEventTypes.min.js">
+      <DependentUpon>IEventTypes.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\IEventTypes.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\common.js">
       <DependentUpon>common.ts</DependentUpon>
@@ -192,14 +210,6 @@
     <Content Include="Scripts\pvMapper\TSMapper\common.min.js">
       <DependentUpon>common.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\DataManager.js">
-      <DependentUpon>DataManager.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\DataManager.min.js">
-      <DependentUpon>DataManager.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\demModule.js" />
-    <Content Include="Scripts\pvMapper\TSMapper\demModule.min.js" />
     <Content Include="Scripts\pvMapper\TSMapper\DemModule.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\Event.js">
       <DependentUpon>Event.ts</DependentUpon>
@@ -269,10 +279,13 @@
     <Content Include="Scripts\pvMapper\TSMapper\Scoreboard.min.js">
       <DependentUpon>Scoreboard.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreUtility.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\ScoreLine.js">
+      <DependentUpon>ScoreLine.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\ScoreLine.min.js">
       <DependentUpon>ScoreLine.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreUtility.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\ScoreUtility.js">
       <DependentUpon>ScoreUtility.ts</DependentUpon>
     </Content>
@@ -303,9 +316,6 @@
       <DependentUpon>Score.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Score.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\ScoreLine.js">
-      <DependentUpon>ScoreLine.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Site.js">
       <DependentUpon>Site.ts</DependentUpon>
     </Content>
@@ -1211,20 +1221,11 @@
     <Content Include="Scripts\pvMapper\TSMapper\SiteManager.js.map">
       <DependentUpon>SiteManager.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\ScoreLine.js.map">
-      <DependentUpon>ScoreLine.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\Utility.js.map">
       <DependentUpon>Utility.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\solarmapperModule.js.map">
       <DependentUpon>solarmapperModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\DemModule.js.map">
-      <DependentUpon>DemModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\DataManager.js.map">
-      <DependentUpon>DataManager.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Tools.js.map">
       <DependentUpon>Tools.ts</DependentUpon>
@@ -1258,9 +1259,6 @@
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\UtilityFunctions.js.map">
       <DependentUpon>UtilityFunctions.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\demModule.min.js.map">
-      <DependentUpon>demModule.js</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>

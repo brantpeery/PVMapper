@@ -95,7 +95,7 @@ module INLModules {
         var minimumVoltage: number = 230; //Note: common voltages include 230, 345, 500, 765
 
         // use a genuine JSONP request, rathern than a plain old GET request routed through the proxy.
-        var jsonpProtocol = new OpenLayers.Protocol.Script({
+        var jsonpProtocol = new OpenLayers.Protocol.Script(<any>{
             url: snlLineQueryUrl,
             params: {
                 f: "json",
@@ -149,7 +149,7 @@ module INLModules {
             },
         });
 
-        var response: OpenLayers.Protocol.Response = jsonpProtocol.read();
+        var response: OpenLayers.Response = jsonpProtocol.read();
     }
 
 

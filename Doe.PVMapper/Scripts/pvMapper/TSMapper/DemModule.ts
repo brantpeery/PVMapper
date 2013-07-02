@@ -3,9 +3,10 @@
 /// <reference path="Score.ts" />
 /// <reference path="Tools.ts" />
 /// <reference path="Options.d.ts" />
-/// <reference path="Module.ts" />
 /// <reference path="ScoreUtility.ts" />
 /// <reference path="/../../EsriGeoJSON.js>
+/// <reference path="Module.ts" />
+/// <reference path="ScoreUtility.ts" />
 
 module BYUModules {
     class DemModule {
@@ -19,8 +20,9 @@ module BYUModules {
                 deactivate: () => { removeMap(); },
                 destroy: null,
                 init: null,
-
-                scoringTools: [{
+                                        
+                scoringTools: [
+                <pvMapper.IScoreTool> {
                     activate: null,
                     deactivate: null,
                     destroy: null,
@@ -37,11 +39,9 @@ module BYUModules {
                     // for now, flatter is better...?
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 10)
-                    },
-                    //weight: 10
-                },
-                {
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 100)
+                    }
+                }, {
                     activate: null,
                     deactivate: null,
                     destroy: null,
@@ -60,11 +60,9 @@ module BYUModules {
                     // for now, south is better, but north ain't so bad...?
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        functionArgs: new pvMapper.ThreePointUtilityArgs(0,0.5,180,1,360,0.5 )
-                    },
-                    //weight: 10
-                },
-                {
+                        functionArgs: new pvMapper.ThreePointUtilityArgs( 0, 0.5, 180, 1, 360, 0.5)
+                    }
+                }, {
                     activate: null,
                     deactivate: null,
                     destroy: null,
@@ -87,9 +85,7 @@ module BYUModules {
                         //    p2: { x: 6000, y: 1 },
                         //}
                     },
-                    //weight: 10
-                }
-                ],
+                } ],
                 infoTools: null
             });
         }

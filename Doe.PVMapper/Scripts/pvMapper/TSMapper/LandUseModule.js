@@ -1,4 +1,4 @@
-/// <reference path="pvMapper.ts" />
+﻿/// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Tools.ts" />
@@ -38,13 +38,13 @@ var INLModules;
                         onSiteChange: function (e, score) {
                             _this.updateScore(score);
                         },
-                        scoreUtilityOptions: //TODO: need a categorical scoring system
+                        //TODO: need a categorical scoring system
                         // for now, this assumes that overlapping more protected areas is worse than overlapping fewer (!)
-                        {
+                        scoreUtilityOptions: {
                             functionName: "linear3pt",
                             functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 1, 0.6, 5, 0)
                         },
-                        defaultWeight: 10
+                        weight: 10
                     }
                 ],
                 infoTools: null
@@ -60,17 +60,17 @@ var INLModules;
                 exceptions: "application/vnd.ogc.se_inimage",
                 maxResolution: 156543.0339,
                 srs: "EPSG:102113"
-            }, {
-                isBaseLayer: false
-            });
+            }, { isBaseLayer: false });
             this.federalLandsLayer.epsgOverride = "EPSG:102113";
             this.federalLandsLayer.setOpacity(0.3);
             this.federalLandsLayer.setVisibility(false);
             pvMapper.map.addLayer(this.federalLandsLayer);
         };
+
         ProtectedAreasModule.prototype.removeMap = function () {
             pvMapper.map.removeLayer(this.federalLandsLayer, false);
         };
+
         ProtectedAreasModule.prototype.updateScore = function (score) {
             var params = {
                 mapExtent: score.site.geometry.bounds.toBBOX(6, false),
@@ -82,51 +82,54 @@ var INLModules;
                 imageDisplay: "1, 1, 96",
                 returnGeometry: false
             };
+
             //console.log("LandUseModule.ts: " + score.site.geometry.bounds.toBBOX(6, false));
             var request = OpenLayers.Request.GET({
                 url: this.federalLandsRestUrl + "identify",
                 proxy: "/Proxy/proxy.ashx?",
                 params: params,
                 callback: function (response) {
-                    // update value
-                    if(response.status === 200) {
+                    if (response.status === 200) {
                         var esriJsonPerser = new OpenLayers.Format.JSON();
                         esriJsonPerser.extractAttributes = true;
                         var parsedResponse = esriJsonPerser.read(response.responseText);
-                        if(parsedResponse && parsedResponse.results && parsedResponse.results.length > 0) {
+
+                        if (parsedResponse && parsedResponse.results && parsedResponse.results.length > 0) {
                             var alertText = "";
                             var lastText = null;
-                            for(var i = 0; i < parsedResponse.results.length; i++) {
+                            for (var i = 0; i < parsedResponse.results.length; i++) {
                                 var name = parsedResponse.results[i].attributes["Primary Designation Name"];
                                 var type = parsedResponse.results[i].attributes["Primary Designation Type"];
+
                                 var owner = parsedResponse.results[i].attributes["Owner Name"];
                                 var manager = parsedResponse.results[i].attributes["Manager Name"];
+
                                 var newText = "";
-                                // use name if we can; use type otherwise
-                                if(name && name != "Null" && isNaN(parseFloat(name))) {
+
+                                if (name && name != "Null" && isNaN(parseFloat(name))) {
                                     // some of the names start with a number - skip those
                                     newText += name;
-                                } else if(type && type != "Null") {
+                                } else if (type && type != "Null") {
                                     newText += type;
                                 }
-                                // use manager if we can; use owner otherwise
-                                if(manager && manager != "Null") {
+
+                                if (manager && manager != "Null") {
                                     newText += (newText) ? ": " + manager : manager;
-                                } else if(owner && owner != "Null") {
+                                } else if (owner && owner != "Null") {
                                     newText += (newText) ? ": " + owner : owner;
                                 }
-                                // finally, append the new text...
-                                if(newText != lastText) {
-                                    if(lastText != null) {
+
+                                if (newText != lastText) {
+                                    if (lastText != null) {
                                         alertText += ", \n";
                                     }
                                     alertText += newText;
                                 }
                                 lastText = newText;
                             }
+
                             score.popupMessage = alertText;
-                            score.updateValue(parsedResponse.results.length)// number of overlapping features
-                            ;
+                            score.updateValue(parsedResponse.results.length);
                         } else {
                             score.popupMessage = "None";
                             score.updateValue(0);
@@ -140,8 +143,10 @@ var INLModules;
         };
         return ProtectedAreasModule;
     })();
-    INLModules.ProtectedAreasModule = ProtectedAreasModule;    
+    INLModules.ProtectedAreasModule = ProtectedAreasModule;
+
     var protectedAreasInstance = new INLModules.ProtectedAreasModule();
+
     //============================================================
     var LandCoverModule = (function () {
         function LandCoverModule() {
@@ -174,9 +179,9 @@ var INLModules;
                         onSiteChange: function (e, score) {
                             _this.updateScore(score);
                         },
-                        scoreUtilityOptions: //TODO: need a categorical scoring system
+                        //TODO: need a categorical scoring system
                         // for now, this is a constant value (always returns the max, why not)
-                        {
+                        scoreUtilityOptions: {
                             functionName: "linear",
                             functionArgs: {
                                 minValue: 0,
@@ -187,11 +192,10 @@ var INLModules;
                                 }
                             }
                         },
-                        defaultWeight: 0
+                        weight: 0
                     }
                 ],
-                infoTools: //TODO: find a meaningful score & utility for this
-                null
+                infoTools: null
             });
         }
         LandCoverModule.prototype.addMap = function () {
@@ -199,19 +203,19 @@ var INLModules;
                 layers: "show:0,1,2",
                 format: "gif",
                 srs: "3857",
-                transparent: //"102100",
-                "true"
+                transparent: "true"
             });
-            //,{ isBaseLayer: false }
             this.landCoverLayer.setOpacity(0.3);
-            this.landCoverLayer.epsgOverride = "3857"//"EPSG:102100";
-            ;
+            this.landCoverLayer.epsgOverride = "3857";
             this.landCoverLayer.setVisibility(false);
+
             pvMapper.map.addLayer(this.landCoverLayer);
         };
+
         LandCoverModule.prototype.removeMap = function () {
             pvMapper.map.removeLayer(this.landCoverLayer, false);
         };
+
         LandCoverModule.prototype.updateScore = function (score) {
             var params = {
                 mapExtent: score.site.geometry.bounds.toBBOX(6, false),
@@ -223,38 +227,34 @@ var INLModules;
                 imageDisplay: "1, 1, 96",
                 returnGeometry: false
             };
+
             var request = OpenLayers.Request.GET({
                 url: this.landCoverRestUrl + "identify",
                 proxy: "/Proxy/proxy.ashx?",
                 params: params,
                 callback: function (response) {
-                    // update value
-                    if(response.status === 200) {
+                    if (response.status === 200) {
                         var esriJsonPerser = new OpenLayers.Format.JSON();
                         esriJsonPerser.extractAttributes = true;
                         var parsedResponse = esriJsonPerser.read(response.responseText);
-                        if(parsedResponse && parsedResponse.results && parsedResponse.results.length > 0) {
+
+                        if (parsedResponse && parsedResponse.results && parsedResponse.results.length > 0) {
                             var alertText = "";
                             var lastText = null;
-                            for(var i = 0; i < parsedResponse.results.length; i++) {
+                            for (var i = 0; i < parsedResponse.results.length; i++) {
                                 var newText = parsedResponse.results[i].attributes["NVC_DIV"];
-                                if(newText != lastText) {
-                                    if(lastText != null) {
+                                if (newText != lastText) {
+                                    if (lastText != null) {
                                         alertText += ", \n";
                                     }
                                     alertText += newText;
                                 }
                                 lastText = newText;
                             }
+
                             score.popupMessage = alertText;
-                            score.updateValue(parsedResponse.results.length)// returns 1
-                            ;
-                            //TODO: the server refuses to return more than one pixel value... how do we get %coverage?
-                            //      I'm afraid that we'll have to fetch the overlapping image and parse it ourselves...
-                            //      or at least run a few requests for different pixels and conbine the results.
-                            //      Either way, it'll be costly and inefficient. But, I can't find a better server,
-                            //      nor have I been successful at coaxing multiple results from this one. Curses.
-                                                    } else {
+                            score.updateValue(parsedResponse.results.length);
+                        } else {
                             score.popupMessage = "No data for this site";
                             score.updateValue(Number.NaN);
                         }
@@ -267,8 +267,7 @@ var INLModules;
         };
         return LandCoverModule;
     })();
-    INLModules.LandCoverModule = LandCoverModule;    
+    INLModules.LandCoverModule = LandCoverModule;
+
     var landCoverInstance = new INLModules.LandCoverModule();
-    //============================================================
-    })(INLModules || (INLModules = {}));
-//@ sourceMappingURL=LandUseModule.js.map
+})(INLModules || (INLModules = {}));

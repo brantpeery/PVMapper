@@ -1,13 +1,13 @@
 /// <reference path="common.ts" />
-/// <reference path="../../ext-4.1.1a.d.ts" />
 /// <reference path="Score.ts" />
+/// <reference path="../../ExtJS.d.ts" />
 
 
 // Module
 module pvMapper {
    //Just to trick TypeScript into believing that we are creating an Ext object
    //to by pass development time compiler
-   if (typeof(Ext) === 'undefined') var Ext: Ext;
+//   if (typeof(Ext) === 'undefined') var Ext: ;
 
 
   export class SiteData{
@@ -30,7 +30,7 @@ module pvMapper {
           // refresh scoreboard.
           //Ext.getCmp('scoreboard-grid-id')).store.load();
           //Ext.getCmp('scoreboard-grid-id').getView().refresh();
-          var grid: Ext_panel_Table = <Ext_panel_Table>Ext.getCmp('scoreboard-grid-id');
+          var grid: Ext.panel = Ext.getCmp('scoreboard-grid-id');
           grid.store.load();
           grid.getView().refresh();
         });

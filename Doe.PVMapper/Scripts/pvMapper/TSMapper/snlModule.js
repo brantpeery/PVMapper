@@ -1,4 +1,4 @@
-/// <reference path="pvMapper.ts" />
+﻿/// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Tools.ts" />
@@ -7,8 +7,8 @@
 /// <reference path="ScoreUtility.ts" />
 var INLModules;
 (function (INLModules) {
-    var maxSearchDistanceInMeters = (30 * 1000);// 30 km - enough?
-    
+    var maxSearchDistanceInMeters = (30 * 1000);
+
     var SnlModule = (function () {
         function SnlModule() {
             var myModule = new pvMapper.Module({
@@ -38,83 +38,83 @@ var INLModules;
                         onSiteChange: function (e, score) {
                             updateScore(score);
                         },
-                        scoreUtilityOptions: // having any nearby line is much better than having no nearby line, so let's reflect that.
-                        {
+                        // having any nearby line is much better than having no nearby line, so let's reflect that.
+                        scoreUtilityOptions: {
                             functionName: "linear3pt",
                             functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (maxSearchDistanceInMeters - 1), 0.3, maxSearchDistanceInMeters, 0)
                         },
-                        defaultWeight: 10
+                        weight: 10
                     }
                 ],
                 infoTools: null
             });
         }
         return SnlModule;
-    })();    
+    })();
+
     var modinstance = new SnlModule();
+
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
     var snlLineExportUrl = "https://maps.snl.com/arcgis/rest/services/SNLMaps/Power/MapServer/export";
     var snlLineQueryUrl = "https://maps.snl.com/arcgis/rest/services/SNLMaps/Power/MapServer/5/query";
+
     //declare var Ext: any;
     var mapLayer;
+
     function addAllMaps() {
         mapLayer = new OpenLayers.Layer.ArcGIS93Rest("Power Lines", snlLineExportUrl, {
             layers: "show:5",
-            format: //"show:2",
-            "gif",
+            format: "gif",
             srs: "3857",
-            transparent: //"102100",
-            "true"
+            transparent: "true"
         });
-        //,{ isBaseLayer: false }
         mapLayer.setOpacity(0.3);
-        mapLayer.epsgOverride = "3857"//"EPSG:102100";
-        ;
+        mapLayer.epsgOverride = "3857";
         mapLayer.setVisibility(false);
+
         pvMapper.map.addLayer(mapLayer);
-        //pvMapper.map.setLayerIndex(mapLayer, 0);
-            }
+    }
+
     function removeAllMaps() {
         pvMapper.map.removeLayer(mapLayer, false);
     }
+
     function updateScore(score) {
-        var minimumVoltage = 230;//Note: common voltages include 230, 345, 500, 765
-        
+        var minimumVoltage = 230;
+
         // use a genuine JSONP request, rathern than a plain old GET request routed through the proxy.
         var jsonpProtocol = new OpenLayers.Protocol.Script({
             url: snlLineQueryUrl,
             params: {
                 f: "json",
-                where: //Note: this is stupid. ONE of the lines has an unescaped '\' character in its name. Bad ESRI.
-                "Voltage >= " + minimumVoltage + "AND Line_Name NOT LIKE '%\\N%'",
-                outFields: //"1=1",
-                "*",
-                geometryType: //"Voltage",
+                //Note: this is stupid. ONE of the lines has an unescaped '\' character in its name. Bad ESRI.
+                where: "Voltage >= " + minimumVoltage + "AND Line_Name NOT LIKE '%\\N%'",
+                outFields: "*",
                 //returnGeometry: false,
-                "esriGeometryEnvelope",
-                geometry: //TODO: scaling is problematic - should use a constant-size search window
-                new OpenLayers.Bounds(score.site.geometry.bounds.left - maxSearchDistanceInMeters, score.site.geometry.bounds.bottom - maxSearchDistanceInMeters, score.site.geometry.bounds.right + maxSearchDistanceInMeters, score.site.geometry.bounds.top + maxSearchDistanceInMeters).toBBOX(0, false)
+                geometryType: "esriGeometryEnvelope",
+                //TODO: scaling is problematic - should use a constant-size search window
+                geometry: new OpenLayers.Bounds(score.site.geometry.bounds.left - maxSearchDistanceInMeters, score.site.geometry.bounds.bottom - maxSearchDistanceInMeters, score.site.geometry.bounds.right + maxSearchDistanceInMeters, score.site.geometry.bounds.top + maxSearchDistanceInMeters).toBBOX(0, false)
             },
             format: new OpenLayers.Format.EsriGeoJSON(),
             parseFeatures: function (data) {
                 return this.format.read(data);
             },
             callback: function (response) {
-                //alert("Nearby features: " + response.features.length);
-                if(response.success()) {
+                if (response.success()) {
                     var closestFeature = null;
                     var minDistance = maxSearchDistanceInMeters;
-                    if(response.features) {
-                        for(var i = 0; i < response.features.length; i++) {
+
+                    if (response.features) {
+                        for (var i = 0; i < response.features.length; i++) {
                             var distance = score.site.geometry.distanceTo(response.features[i].geometry);
                             var voltage = response.features[i].attributes.Voltage;
-                            if(distance < minDistance && voltage >= minimumVoltage) {
+                            if (distance < minDistance && voltage >= minimumVoltage) {
                                 minDistance = distance;
                                 closestFeature = response.features[i];
                             }
                         }
                     }
-                    if(closestFeature !== null) {
+                    if (closestFeature !== null) {
                         score.popupMessage = (minDistance / 1000).toFixed(1) + " km to " + closestFeature.attributes.Voltage + " kV line operated by " + closestFeature.attributes.Company;
                         score.updateValue(minDistance);
                     } else {
@@ -127,7 +127,7 @@ var INLModules;
                 }
             }
         });
+
         var response = jsonpProtocol.read();
     }
 })(INLModules || (INLModules = {}));
-//@ sourceMappingURL=snlModule.js.map

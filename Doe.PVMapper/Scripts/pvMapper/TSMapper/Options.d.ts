@@ -4,7 +4,7 @@
 //A dynamic callback signature.
 
 
-module pvMapper {
+declare module pvMapper {
     
     //export class ScoreLineOptions {
     //    public onSiteChange(): ICallback;

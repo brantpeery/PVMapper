@@ -34,7 +34,7 @@ module Modules {
                     },
                     scoreUtilityOptions: {
                         //Replace these with desired scoreUtility
-                        functionArgs: <pvMapper.IMinMaxUtilityArgs>{},
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(),
                         functionName: "linear"
                     }
                 }],

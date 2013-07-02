@@ -8,7 +8,7 @@
 module INLModules {
     export class ProtectedAreasModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.Module>{
                 id: "ProtectedAreasModule",
                 author: "Leng Vang, INL",
                 version: "0.1.ts",

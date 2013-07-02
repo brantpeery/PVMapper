@@ -5,6 +5,7 @@
 //declare var JXG;
 //declare var Extras;
 
+
 module pvMapper {
 
     export interface ICustomFunctionCallback {
@@ -42,7 +43,7 @@ module pvMapper {
     //}
 
     export interface IScoreUtilityArgs {
-
+        className: string;
     }
     export interface IScoreUtilityOptions {
         functionName: string;
@@ -60,9 +61,9 @@ module pvMapper {
     export class MinMaxUtilityArgs implements IScoreUtilityArgs {
 
         constructor(public minValue: number = 0,
-                    public maxValue: number = 100,
-                    minTip: string = "The minimum value.",
-                    maxTip: string = "The maximum value."
+            public maxValue: number = 100,
+            minTip: string = "The minimum value.",
+            maxTip: string = "The maximum value."
             ) {
             this.tips = { minValue: minTip, maxValue: maxTip };
 
@@ -71,6 +72,7 @@ module pvMapper {
             minValue: string;
             maxValue: string;
         };
+        public className = "MinMaxUtilityArgs";
     }
 
     export class SinusoidalUtilityArgs implements IScoreUtilityArgs {// IMinMaxUtilityArgs {
@@ -96,8 +98,7 @@ module pvMapper {
             minValue: string;
             maxValue: string;
         };
-
-        
+        public className = "SinusoidalUtilityArgs";
     }
 
     export class ThreePointUtilityArgs implements IScoreUtilityArgs {
@@ -107,14 +108,14 @@ module pvMapper {
             this.p0 = { x: p0x, y: p0y };
             this.p1 = { x: p1x, y: p1y };
             this.p2 = { x: p2x, y: p2y };
-
         }
         public p0: { x: number; y: number; };
         public p1: { x: number; y: number; };
         public p2: { x: number; y: number; };
-        
+
 
         public points: string[] = ["p0", "p1", "p2"];
+        public className: string = "ThreePointUtilityArgs";
     }
 
     export class ScoreUtility {
