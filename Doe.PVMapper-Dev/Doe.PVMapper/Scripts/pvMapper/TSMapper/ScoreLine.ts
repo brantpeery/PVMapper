@@ -5,7 +5,6 @@
 /// <reference path="Options.d.ts" />
 /// <reference path="SiteManager.ts" />
 
-
 // Module
 module pvMapper {
     //  import pvM = pvMapper;
@@ -53,25 +52,27 @@ module pvMapper {
             if (options.scoreUtilityOptions == undefined) {
                 options.scoreUtilityOptions = {
                     functionName: "random",
-                    functionArgs: {},
+                    functionArgs: {className: "Random"},
                     iconURL: null
                 }
-            }
+            };
 
-            this.scoreUtility = new ScoreUtility(options.scoreUtilityOptions);
+            this.utilargs = new pvMapper.MinMaxUtilityArgs(0, 0, "", "");
+            this.scoreUtility = new pvMapper.ScoreUtility(options.scoreUtilityOptions);
 
             //Set the default weight of the tool
             this.weight = (typeof options.weight === "number") ? options.weight : 10;
 
             this.loadAllSites();
-        };
+        }
 
+        public utilargs: pvMapper.MinMaxUtilityArgs;
         public scoreUtility: ScoreUtility;
         public title: string;
         public weight: number;
         public description: string;
         public category: string;
-        public scores: Score[] = new Score[]();
+        public scores: Score[] = new Array<Score>(); //new Score[](); <<-- TS0.9.0 doesn't like this.
         //public updateScore: ICallback = options.updateScoreCallback;
         public active: Boolean = true;
 
@@ -101,7 +102,7 @@ module pvMapper {
 
             //subscribe to the score updated event
             score.valueChangeEvent.addHandler(this.valueChangeHandler);
-            
+
             this.scores.push(score);
             //this.self.scoreAddedEvent.fire(score, [{ score: score, site: site }, score]);
             //Set the initial value from the tool
@@ -118,7 +119,7 @@ module pvMapper {
         //    score.siteChangeEvent.removeHandler(this.onSiteChangeHandler);
         //    score.valueChangeEvent.removeHandler(this.valueChangeHandler);
         //    var idx: number = this.scores.indexOf(score);
-        //    if (idx >= 0) { 
+        //    if (idx >= 0) {
         //        this.scores.splice(idx, 1);
         //    }
         //}

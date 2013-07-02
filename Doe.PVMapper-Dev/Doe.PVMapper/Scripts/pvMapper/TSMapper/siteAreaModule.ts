@@ -8,7 +8,7 @@
 module INLModules {
     class SiteAreaModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.Module>{
                 id: "AreaModule",
                 author: "Brant Peery, INL",
                 version: "0.3.ts",

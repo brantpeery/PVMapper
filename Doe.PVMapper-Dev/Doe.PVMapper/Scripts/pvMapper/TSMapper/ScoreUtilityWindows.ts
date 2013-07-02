@@ -45,7 +45,7 @@ module pvMapper {
                         });
 
                         //NOTE: this code section aught to move to a separate file closer to the UtilityFunction.
-                        if (args.constructor == pvMapper.ThreePointUtilityArgs) {
+                        if (_this._xArgs.className == "ThreePointUtilityArgs") {
                             if (_this._xArgs.points != undefined && _this._xArgs.points.length > 0) {
                                 //create the points
                                 _this._xArgs.points.forEach(function (p, idx) {
@@ -58,7 +58,7 @@ module pvMapper {
                                 })
                             }
                         }
-                        else if (args.constructor == pvMapper.MinMaxUtilityArgs) {
+                        else if (_this._xArgs.className == "MinMaxUtilityArgs") {
                             var point1 = board.create('point', [_this._xArgs.minValue, 0], { name: 'Min', size: 3 });
                             point1.on("drag", function (e) {
                                 _this._xArgs.minValue = point1.X();
@@ -75,7 +75,7 @@ module pvMapper {
                                 gridPanel.setSource(_this._xArgs);
                             });
                         }
-                        else if (args.constructor == pvMapper.SinusoidalUtilityArgs) {
+                        else if (_this.xArgs.className == "SinusoidalUtilityArgs") {
                             var minPoint = board.create('point', [_this._xArgs.minValue, 0], { name: 'Min', size: 3 });
                             var maxPoint = board.create('point', [_this._xArgs.maxValue, 100], { name: 'Max', size: 3 });
                             var targetPoint = board.create('point', [_this._xArgs.target, 50], { name: 'target', size: 3 });

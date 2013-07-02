@@ -54,10 +54,6 @@ module pvMapper {
                 return [Math.min(args.minValue, args.maxValue), Math.max(args.minValue, args.maxValue)]
             },
             iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/stats_icon.jpg",
-            tips: {
-                minValue: "The minimum usable value.",
-                maxValue: "The maximum usable value."
-            },
             fn: function (x: number, args: MinMaxUtilityArgs) {
                 //Note: clamping this value to the range 0-1 is handled by the run(x) function
                 if (args != null)

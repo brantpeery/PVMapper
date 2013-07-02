@@ -81,7 +81,7 @@ module UtilityModel {
     _dictionary: { [index: string]: any; } = {};
 
     //fn is a callback function to perform the comparison.
-    public indexOf(fn: (value: string) =>bool): any {
+    public indexOf(fn: (value: string) =>boolean): any {
       //Since the array is defined as associative array, can not use regular
       //loop.  The index becomes the propery of the array itself.  To access
       //the index name, this loop should work, based on javascript specs.
@@ -133,7 +133,7 @@ module UtilityModel {
       return this.loadConfig(configName);
     }
     private setConfiguration(configName: string, config: UtilConfig) {
-      var isNew: bool = false;
+      var isNew: boolean = false;
       var cfg: UtilConfig = configStore.findRecord('functionName', configName);
       if (!cfg) {
         isNew = true;

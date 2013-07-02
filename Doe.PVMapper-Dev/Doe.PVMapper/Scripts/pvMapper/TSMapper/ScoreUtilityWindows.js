@@ -1,36 +1,39 @@
-var pvMapper;
+﻿var pvMapper;
 (function (pvMapper) {
+    //Created for static access from more than one function def
     var ScoreUtilityWindows = (function () {
-        function ScoreUtilityWindows() { }
+        function ScoreUtilityWindows() {
+        }
         ScoreUtilityWindows.basicWindow = {
-            _xArgs: {
-            },
+            _xArgs: {},
             setup: function (panel, scoreObj) {
                 var args = scoreObj.functionArgs;
                 var fn = pvMapper.UtilityFunctions[scoreObj.functionName].fn;
                 var xBounds = pvMapper.UtilityFunctions[scoreObj.functionName].xBounds;
+
                 var _this = this;
                 var board;
                 var fnOfy;
-                _this._xArgs = Ext.Object.merge({
-                }, args);
+                _this._xArgs = Ext.Object.merge({}, args);
+                var gridPanel;
                 function loadboard() {
-                    Extras.getScript("https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js", function () {
+                    //Extras.loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
+                    Extras.getScript("https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.97/jsxgraphcore.js", function () {
                         var bounds = xBounds(args);
+
+                        // ensure that the buffer is > 0 (bounds being equal is a valid case for a step function)
                         var buffer = (bounds[0] == bounds[1]) ? 1 : (bounds[1] - bounds[0]) / 10;
                         bounds[0] -= buffer;
                         bounds[1] += buffer * 1.5;
+
                         board = JXG.JSXGraph.initBoard('FunctionBox-body', {
-                            boundingbox: [
-                                bounds[0], 
-                                108, 
-                                bounds[1], 
-                                -8
-                            ],
+                            boundingbox: [bounds[0], 108, bounds[1], -8],
                             axis: true,
                             showCopyright: false,
-                            showNavigation: false
+                            showNavigation: true
                         });
+
+                        //TODO: should we replace this with ScoreUtility.run(x) ...?
                         fnOfy = board.create('functiongraph', function (x) {
                             var y = fn(x, _this._xArgs);
                             return Math.max(0, Math.min(1, y)) * 100;
@@ -38,25 +41,92 @@ var pvMapper;
                             strokeWidth: 3,
                             strokeColor: "red"
                         });
+
+                        if (_this._xArgs.className == "ThreePointUtilityArgs") {
+                            if (_this._xArgs.points != undefined && _this._xArgs.points.length > 0) {
+                                //create the points
+                                _this._xArgs.points.forEach(function (p, idx) {
+                                    var point = board.create('point', [_this._xArgs[p].x, _this._xArgs[p].y * 100], { name: p, size: 3 });
+                                    point.on("drag", function (e) {
+                                        _this._xArgs[p].x = point.X();
+                                        _this._xArgs[p].y = point.Y() / 100;
+                                        board.update();
+                                    });
+                                });
+                            }
+                        } else if (_this._xArgs.className == "MinMaxUtilityArgs") {
+                            var point1 = board.create('point', [_this._xArgs.minValue, 0], { name: 'Min', size: 3 });
+                            point1.on("drag", function (e) {
+                                _this._xArgs.minValue = point1.X();
+                                board.update();
+                                point1.moveTo([point1.X(), 0]);
+                                gridPanel.setSource(_this._xArgs);
+                            });
+
+                            var point2 = board.create('point', [_this._xArgs.maxValue, 100], { name: 'Max', size: 3 });
+                            point2.on("drag", function (e) {
+                                _this._xArgs.maxValue = point2.X();
+                                board.update();
+                                point2.moveTo([point2.X(), 100]);
+                                gridPanel.setSource(_this._xArgs);
+                            });
+                        } else if (_this.xArgs.className == "SinusoidalUtilityArgs") {
+                            var minPoint = board.create('point', [_this._xArgs.minValue, 0], { name: 'Min', size: 3 });
+                            var maxPoint = board.create('point', [_this._xArgs.maxValue, 100], { name: 'Max', size: 3 });
+                            var targetPoint = board.create('point', [_this._xArgs.target, 50], { name: 'target', size: 3 });
+                            minPoint.on("drag", function (e) {
+                                var x = minPoint.X();
+                                if (x > targetPoint.X())
+                                    x = targetPoint.X();
+                                _this._xArgs.minValue = x;
+                                board.update();
+                                minPoint.moveTo(x, minPoint.Y());
+                            });
+                            maxPoint.on("drag", function (e) {
+                                var x = maxPoint.X();
+                                if (x < targetPoint.X())
+                                    x = targetPoint.X();
+                                _this._xArgs.maxValue = x;
+                                board.update();
+                                maxPoint.moveTo(x, maxPoint.Y());
+                            });
+                            targetPoint.on("drag", function (e) {
+                                var x = targetPoint.X();
+                                if (x < minPoint.X())
+                                    x = minPoint.X();
+                                if (x > maxPoint.X())
+                                    x = maxPoint.X();
+                                _this._xArgs.targetValue = x;
+                                board.update();
+                                targetPoint.moveTo(x, targetPoint.Y());
+                            });
+                        }
                     });
                 }
+
                 panel.removeAll();
-                var gridPanel = Ext.create('Ext.grid.property.Grid', {
+
+                gridPanel = Ext.create('Ext.grid.property.Grid', {
                     source: _this._xArgs,
                     tipValue: null,
                     viewConfig: {
                         deferEmptyText: false,
-                        emptyText: '<center><h3>No Editable Fields</h3></center>'
+                        emptyText: '<center><i>no editable fields</i></center>'
                     },
                     listeners: {
                         edit: function (editor, e, eOpts) {
+                            //Update the xArgs
+                            //Already handled by the prperty grid :)
                             board.update();
                         },
                         propertychange: function (source, recordId, value, oldValue, eOpts) {
                             board.update();
                         },
+                        //======= Add to support tool tip =============
                         itemmouseenter: function (grid, record, item, index, e, opts) {
-                            if(this.source.tips != undefined) {
+                            if (this.source.tips != undefined) {
+                                //TODO: this...?
+                                //this.tipValue = pvMapper.UtilityFunctions[this.source.functionName].tips[record.internalId];
                                 this.tipValue = this.source.tips[record.internalId];
                             } else {
                                 this.tipValue = "Property " + record.internalId;
@@ -112,5 +182,5 @@ var pvMapper;
         };
         return ScoreUtilityWindows;
     })();
-    pvMapper.ScoreUtilityWindows = ScoreUtilityWindows;    
+    pvMapper.ScoreUtilityWindows = ScoreUtilityWindows;
 })(pvMapper || (pvMapper = {}));

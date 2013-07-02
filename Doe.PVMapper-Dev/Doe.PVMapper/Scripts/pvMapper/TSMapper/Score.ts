@@ -1,7 +1,5 @@
 /// <reference path="common.ts" />
 /// <reference path="Site.ts" />
-/// <reference path="../../ext-4.1.1a.d.ts" />
-
 
 // Module
 module pvMapper {

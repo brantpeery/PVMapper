@@ -2,7 +2,6 @@
 /// <reference path="../../jquery.d.ts" />
 /// <reference path="Event.ts" />
 /// <reference path="ScoreLine.ts" />
-/// <reference path="../../ext-4.1.1a.d.ts" />
 /// <reference path="TotalLine.ts" />
 
 
@@ -27,8 +26,8 @@ module pvMapper {
         }
 
         private self: ScoreBoard;
-        public scoreLines: ScoreLine[] = new ScoreLine[]();
-        public totalLines: TotalLine[] = new TotalLine[]();
+        public scoreLines: ScoreLine[] = new Array<ScoreLine>();//ScoreLine[]();  <<-- TS0.9.0 doesn't like this.
+        public totalLines: TotalLine[] = new Array<TotalLine>();
 
         //Events -----------
         public changedEvent: pvMapper.Event = new pvMapper.Event();
@@ -48,7 +47,7 @@ module pvMapper {
             //console.log("Adding scoreline " + scoreline.name);
             scoreline.scoreChangeEvent.addHandler(this.onScoreChanged);
             this.scoreLines.push(scoreline);
-            
+
             //this.changedEvent.fire(this,null);
         }
 
@@ -75,11 +74,11 @@ module pvMapper {
         //Set up in the constructor
         public onScoreChanged: (event: Event) => void;
 
- 
+
         /**
         A function that returns a data object meant for consumption by ExtJS grid (UI)
         */
-        public getTableData(flat?: Boolean = false) {
+        public getTableData(flat: Boolean = false) {
             //Mash the two rendering line types together for display on the GUI
             var lines:IToolLine[]= ([].concat(this.scoreLines)).concat(this.totalLines)
             return lines;
@@ -99,11 +98,11 @@ module pvMapper {
     export var mainScoreboard = new ScoreBoard(); //API Element
 
     var timeoutHandle = null;
-    mainScoreboard.changedEvent.addHandler(function () => {
-
+    //mainScoreboard.changedEvent.addHandler(() => {
+    mainScoreboard.changedEvent.addHandler(function () {
         // queue the changed event to be handled shortly; ignore following change events until it is.
         if (timeoutHandle == null) {
-            timeoutHandle = window.setTimeout(function () => {
+            timeoutHandle = window.setTimeout(function () {
                 // we're done delaying our event, so reset the timeout handle to null
                 timeoutHandle = null; 
                 var self = mainScoreboard;

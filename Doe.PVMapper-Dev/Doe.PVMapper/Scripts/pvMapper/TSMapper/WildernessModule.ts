@@ -7,8 +7,17 @@
 /// <reference path="Module.ts" />
 /// <reference path="Esri-GeoJsonConverter.js />
 
-declare function esriConverter(): any;
-declare function geoJsonConverter(): any;
+interface esriConverter {}
+declare var esriConverter: {
+    new (): any;
+    prototype: esriConverter;
+}
+
+interface geoJsonConverter { }
+declare var geoJsonConverter: {
+    new (): any;
+    prototype: geoJsonConverter;
+}
 
 module BYUModules {
     export class WildernessModule {

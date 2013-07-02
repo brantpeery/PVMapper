@@ -28,7 +28,7 @@ module pvMapper {
             html = this.template.format(this.getTemplateArgs(s));
 
             return html;
-        };
+        }
 
         /*Returns a list of arguments that is meant to be used with the  template during the render */
 
@@ -41,17 +41,16 @@ module pvMapper {
         private clear() { }
         public template: String = '{text}';
         public text: string;
-        public children: Renderer[] = new Renderer[]();
+        public children: Renderer[] = new Array<Renderer>(); //Renderer[]();
     }
     //HTML Renderer class
     //Renders output to HTML using a template and named tag
     export class HTML extends Renderer {
         public tag: string;
         private attributes: { [key: string]: (val: string) => string; };
-
         constructor(tag: string, text: string) {
             super(text);
-            super.template = '<{tag} {attributes}>{text}</{tag}>';
+            this.template = '<{tag} {attributes}>{text}</{tag}>';
             this.tag = (tag) ? tag : 'div';
         }
 
@@ -62,7 +61,7 @@ module pvMapper {
                     attributesHTML += idx + '="' + val + '" ';
                 });
             }
-            return super.text + childrenRenderText, this.tag, attributesHTML;
+            return this.text + childrenRenderText, this.tag, attributesHTML;
         }
 
         public attr(...args: any[]): any {
@@ -77,7 +76,7 @@ module pvMapper {
     //class Table extends class HTML
     //Renders a table using the TABLE tag and can contain rows and columns
     export class Table extends HTML {
-        constructor(tag?: string = 'table') {
+        constructor(tag: string = 'table') {
             super(tag, '');
         }
         //Adds a row to the table. Returns the new empty row to be used by the calling code.
@@ -92,7 +91,7 @@ module pvMapper {
     //class Row extends class Table
     //Renders an HTML row in a table object. Contains cells that will render with TD tag
     export class Row extends Table {
-        constructor(tag?: string = 'tr') {
+        constructor(tag: string = 'tr') {
             super(tag);
         }
 
