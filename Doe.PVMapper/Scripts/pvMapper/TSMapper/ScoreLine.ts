@@ -11,15 +11,17 @@ module pvMapper {
     //  import pvM = pvMapper;
 
     // Class
-    export class ScoreLine {
+    export class ScoreLine implements IToolLine {
         // Constructor
         constructor(options: IScoreTool) {
             //console.log("Adding a scoreline for " + options.title);
             this.self = this;
-            this.name = (typeof (options.title) === 'string') ? options.title : 'Unnamed Tool';
-            this.description = (typeof (options.description) === 'string') ? options.description : 'Unnamed Tool';
+            this.title = (typeof (options.title) === 'string') ? options.title : 'Unnamed Tool';
+            //this.description = (typeof (options.description) === 'string') ? options.description : 'Unnamed Tool';
+            if (options.description) {
+                this.description = options.description;
+            }
             this.category = (typeof (options.category) === 'string') ? options.category : 'Other';
-            this.weight = 1;
 
             if ($.isFunction(options.onSiteChange)) {
                 this.onSiteChangeHandler = options.onSiteChange
@@ -29,7 +31,7 @@ module pvMapper {
 
                 //Update the utility score for the score that just changed it's value.
                 event.score.setUtility(this.getUtilityScore(event.newValue));
-
+                
                 this.scoreChangeEvent.fire(self, event);
             }
 
@@ -59,13 +61,13 @@ module pvMapper {
             this.scoreUtility = new ScoreUtility(options.scoreUtilityOptions);
 
             //Set the default weight of the tool
-            this.weight = (typeof options.defaultWeight === "number") ? options.defaultWeight : 10;
+            this.weight = (typeof options.weight === "number") ? options.weight : 10;
 
             this.loadAllSites();
         };
 
         public scoreUtility: ScoreUtility;
-        public name: string;
+        public title: string;
         public weight: number;
         public description: string;
         public category: string;
@@ -99,13 +101,12 @@ module pvMapper {
 
             //subscribe to the score updated event
             score.valueChangeEvent.addHandler(this.valueChangeHandler);
-
+            
             this.scores.push(score);
             //this.self.scoreAddedEvent.fire(score, [{ score: score, site: site }, score]);
             //Set the initial value from the tool
             try {
                 this.onSiteChangeHandler(undefined, score);
-                //this.updateScore(score);
             } catch (ex) {
                 if (console) console.error(ex);
             }
@@ -117,7 +118,7 @@ module pvMapper {
         //    score.siteChangeEvent.removeHandler(this.onSiteChangeHandler);
         //    score.valueChangeEvent.removeHandler(this.valueChangeHandler);
         //    var idx: number = this.scores.indexOf(score);
-        //    if (idx >= 0) {
+        //    if (idx >= 0) { 
         //        this.scores.splice(idx, 1);
         //    }
         //}
