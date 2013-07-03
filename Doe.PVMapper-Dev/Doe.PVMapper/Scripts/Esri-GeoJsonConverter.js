@@ -248,10 +248,10 @@ function geoJsonConverter(){
     //make new empty ESRI geometry object
     esriGeometry = {
       geometryType: esriGeomInfo.type,
-      spatialReference: "{\"wkid\": 3785}",
-      /*spatialReference: {
+     // spatialReference: {\"wkid\": 3785},
+      spatialReference: {
         wkid: 3785
-      }*/
+      }
     };
 
     //perform conversion
@@ -322,22 +322,24 @@ function geoJsonConverter(){
 		    var recObj = gcFeatureToEsriFeature(geoJsonObject);
 
 		    outObj = {
-
+                "geometry" : recObj.geometry,
 		        "displayFieldName": "",
 		        "geometryType": recObj.geometry.type,
 		        "spatialReference": recObj.spatialReference,
-		        features: [
+		        "features": [
 				recObj
 		        ],
 
 		    };
 
-		  //  outObj = gcFeatureToEsriFeature(geoJsonObject);
+		    outObj = gcFeatureToEsriFeature(geoJsonObject);
 
 		}
-		else{
-			outObj = gcGeometryToEsriGeometry(geoJsonObject);
-		}
+		else {
+
+		  
+		    outObj = gcGeometryToEsriGeometry(geoJsonObject);
+		   		}
     }
     return outObj;
   };
