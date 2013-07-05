@@ -50,6 +50,8 @@ module pvMapper {
                                 //create the points
                                 _this._xArgs.points.forEach(function (p, idx) {
                                     var point = board.create('point', [_this._xArgs[p].x, _this._xArgs[p].y * 100], { name: p, size: 3 });
+                                    var v = board.create('line', [point, [function () {return point.X() }, 0]], { dash: 2, size: 1, strokeOpacity: 0.15 });
+                                    var h = board.create('line', [point, [0, function () {return point.Y() }]], { dash: 2, size: 1, strokeOpacity: 0.15 });
                                     point.on("drag", function (e) {
                                         _this._xArgs[p].x = point.X();
                                         _this._xArgs[p].y = point.Y() / 100;
@@ -60,6 +62,7 @@ module pvMapper {
                         }
                         else if (_this._xArgs.className == "MinMaxUtilityArgs") {
                             var point1 = board.create('point', [_this._xArgs.minValue, 0], { name: 'Min', size: 3 });
+                            var v = board.create('line', [point1, [function () {return point1.X() }, 10]], { dash: 2, size: 1, strokeOpacity: 0.15 });
                             point1.on("drag", function (e) {
                                 _this._xArgs.minValue = point1.X();
                                 board.update();
@@ -68,6 +71,7 @@ module pvMapper {
                             });
 
                             var point2 = board.create('point', [_this._xArgs.maxValue, 100], { name: 'Max', size: 3 });
+                            var v = board.create('line', [point2, [function () {return point2.X() }, 10]], { dash: 2, size: 1, strokeOpacity:0.15 });
                             point2.on("drag", function (e) {
                                 _this._xArgs.maxValue = point2.X();
                                 board.update();
@@ -79,6 +83,8 @@ module pvMapper {
                             var minPoint = board.create('point', [_this._xArgs.minValue, 0], { name: 'Min', size: 3 });
                             var maxPoint = board.create('point', [_this._xArgs.maxValue, 100], { name: 'Max', size: 3 });
                             var targetPoint = board.create('point', [_this._xArgs.target, 50], { name: 'target', size: 3 });
+                            var v = board.create('line', [targetPoint, [function () {return targetPoint.X() }, 0]], { dash: 2, size: 1, strokeOpacity: 0.15 });
+                            var h = board.create('line', [targetPoint, [0, function () {return targetPoint.Y() }]], { dash: 2, size: 1, strokeOpacity: 0.15 });
                             minPoint.on("drag", function (e) {
                                 var x = minPoint.X();
                                 if (x > targetPoint.X())
