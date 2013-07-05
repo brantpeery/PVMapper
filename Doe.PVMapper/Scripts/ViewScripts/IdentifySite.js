@@ -1,4 +1,4 @@
-/*Idetify tool modify from Add site plugin ( Contributors: Brant Peery, Matthew Klien)
+/*Identify tool modify from Add site plugin ( Contributors: Brant Peery, Matthew Klien)
 */
 var tools = [];
 
@@ -9,7 +9,7 @@ pvMapper.onReady(function () {
     var IdentifyTool = new Ext.Button({
         enableToggle: true,
         toggleGroup: "editToolbox",
-        text: "IdentifyXYZ",
+        text: "Identify",
         handler: function () {
             if (thisTool.mapControl.active) {
                 thisTool.deactivateDrawSite();
@@ -21,10 +21,7 @@ pvMapper.onReady(function () {
                 thisTool.button = this;
                 this.toggle(true);
             }
-
-
         }
-
     });
     pvMapper.mapToolbar.add(IdentifyTool);
 });
@@ -59,8 +56,6 @@ function identifySite(map, layer) {
     this.mapControl = new OpenLayers.Control.DrawFeature(this.layer, OpenLayers.Handler.Point);
     map.addControl(this.mapControl);
 
-    //activateDrawSite();
-
 
     function handleSave(b, e) {
         var msg;
@@ -83,10 +78,6 @@ function identifySite(map, layer) {
         self.button.toggle(false);
     }
 
-    /*
-        function saveSiteInfo() { }
-      
-    */
     function onIdentify(data) {
         var control = this;
        feature = data.feature;
@@ -169,6 +160,7 @@ function identifySite(map, layer) {
     }
 
 };
+
 identifySite.prototype = {
     createEditTool: function () {
         control
