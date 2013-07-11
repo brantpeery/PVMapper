@@ -6,6 +6,7 @@ pvMapper.onReady(function () {
     var thisTool = new identifySite(pvMapper.map, pvMapper.getSiteLayer());
     tools.push(thisTool);
  
+    
     var IdentifyTool = new Ext.Button({
         enableToggle: true,
         toggleGroup: "editToolbox",
@@ -100,31 +101,62 @@ function identifySite(map, layer) {
         var y = point2.lon;
         //----------------------------------------------------------------------
 
-/*
+
         //To Retrieve data from OpenGeo
+       
         var map = pvMapper.map;
-       var info = new OpenLayers.Control.WMSGetFeatureInfo({
+        var info = new OpenLayers.Control.WMSGetFeatureInfo({
+            id: 'identify',
+            autoActivate : true,
             url: 'http://demo.opengeo.org/geoserver/wms',
             title: 'Identify features by clicking',
             queryVisible: true,
             eventListeners: {
-                getfeatureinfo: function (data) {
-                    map.addPopup(new OpenLayers.Popup.FramedCloud(
-                        "chicken",
-                        map.getLonLatFromPixel(event.xy),
-                        null,
-                        event.text,
-                        null,
-                        true
-                    ));
+                "beforegetfeatureinfo": function (e) {
+
+                    console.log("Event captured : " + e.xy);
+                },
+                "getfeatureinfo": function (e) {
+                    console.log(JSON.stringify(e.features));
+                    var items = [];
+                    Ext.each(e.features, function (feature) {
+                        items.push({
+                            xtype: "propertygrid",
+                            title: feature.fid,
+                            source: feature.attributes
+                        });
+                    });
+
+                    new GeoExt.Popup({
+                        title: "Feature Info",
+                        width: 200,
+                        height: 200,
+                        layout: "accordion",
+                        map: map,
+                        location: e.xy,
+                        items: items
+                    }).show();
+
                 }
             }
         });
         map.addControl(info);
+
+        //Build the request
+
+
         info.activate();
 
-        map.addControl(new OpenLayers.Control.LayerSwitcher());
-        map.zoomToMaxExtent();*/
+        var optionsI = info.buildWMSOptions('http://demo.opengeo.org/geoserver/wms', pvMapper.map , map.getPixelFromLonLat(point));
+      
+        //var result = info.request(map.getPixelFromLonLat(point));
+
+        //handleResponse(xy,request,url);
+
+       // info.triggerGetFeatureInfo(optionsI,map.getPixelFromLonLat(point),result);
+
+//        map.events.triggerEvent("WMSGetFeatureInfo", { xy: map.getPixelFromLonLat(point) });
+        
 
         //Continue to collect the needed form data
         ///HACK: This needs to use the framework standard way of doing it. For now I am going to assume that I have access to EXTjs 3
