@@ -80,6 +80,7 @@ function identifySite(map, layer) {
     }
 
     function onIdentify(data) {
+        console.log(data);
         var control = this;
        feature = data.feature;
        var kml = new OpenLayers.Format.KML();
@@ -90,7 +91,7 @@ function identifySite(map, layer) {
         // UTM system
         var x0 = data.feature.geometry.x;
         var y0 = data.feature.geometry.y;
-
+     
         var projWGS84 = new OpenLayers.Projection("EPSG:4326");
         var proj900913 = new OpenLayers.Projection("EPSG:900913");
 
@@ -101,61 +102,40 @@ function identifySite(map, layer) {
         var y = point2.lon;
         //----------------------------------------------------------------------
 
-
-        //To Retrieve data from OpenGeo
+        //Send out a WMS Request as below, get the JSON data and push it into the array for output. 
+        var lonlat = new OpenLayers.LonLat(x0, y0);
+        var pixel = pvMapper.map.getPixelFromLonLat(lonlat);
+      //  console.log(pixel);
        
-        var map = pvMapper.map;
-        var info = new OpenLayers.Control.WMSGetFeatureInfo({
-            id: 'identify',
-            autoActivate : true,
-            url: 'http://demo.opengeo.org/geoserver/wms',
-            title: 'Identify features by clicking',
-            queryVisible: true,
-            eventListeners: {
-                "beforegetfeatureinfo": function (e) {
+      //  console.log(pvMapper.map.calculateBounds().toBBOX());
+        var paramsWMS = {
+        bbox: pvMapper.map.calculateBounds().transform(proj900913, projWGS84).toBBOX(),
+            format: "jpeg",
+            info_format: "application/json",
+            request: "GetFeatureInfo",
+            layers: "PVMapper:USStates",
+            query_layers: "PVMapper:USStates",
+            width: pvMapper.map.getSize().w,
+            height: pvMapper.map.getSize().h,
+            x: pixel.x,
+            y: pixel.y,
+            feature_count: 5
+        };
 
-                    console.log("Event captured : " + e.xy);
-                },
-                "getfeatureinfo": function (e) {
-                    console.log(JSON.stringify(e.features));
-                    var items = [];
-                    Ext.each(e.features, function (feature) {
-                        items.push({
-                            xtype: "propertygrid",
-                            title: feature.fid,
-                            source: feature.attributes
-                        });
-                    });
 
-                    new GeoExt.Popup({
-                        title: "Feature Info",
-                        width: 200,
-                        height: 200,
-                        layout: "accordion",
-                        map: map,
-                        location: e.xy,
-                        items: items
-                    }).show();
+        var request = new OpenLayers.Request.GET({
+            url: "https://geoserver.byu.edu/geoserver/wms",
+            proxy: "/Proxy/proxy.ashx?",
+            params: paramsWMS,
+            callback: function (response) {
 
-                }
+                console.log(response);
+                var jsonres = JSON.parse(response._object.response);
+                console.log(jsonres.features[0].properties);
             }
-        });
-        map.addControl(info);
-
-        //Build the request
 
 
-        info.activate();
-
-        var optionsI = info.buildWMSOptions('http://demo.opengeo.org/geoserver/wms', pvMapper.map , map.getPixelFromLonLat(point));
-      
-        //var result = info.request(map.getPixelFromLonLat(point));
-
-        //handleResponse(xy,request,url);
-
-       // info.triggerGetFeatureInfo(optionsI,map.getPixelFromLonLat(point),result);
-
-//        map.events.triggerEvent("WMSGetFeatureInfo", { xy: map.getPixelFromLonLat(point) });
+        })
         
 
         //Continue to collect the needed form data
