@@ -1,4 +1,4 @@
-﻿var BYUModules;
+var BYUModules;
 (function (BYUModules) {
     var WildernessModule = (function () {
         function WildernessModule() {
@@ -19,10 +19,6 @@
                 init: null,
                 scoringTools: [
                     {
-                        //activate: null,
-                        //deactivate: null,
-                        //destroy: null,
-                        //init: null,
                         title: "Wilderness",
                         description: "Overlapping national parks, using data hosted by BYU",
                         category: "Land Use",
@@ -61,18 +57,22 @@
             var geoJsonObj = toGeoJson.extract.geometry.apply(toGeoJson, [score.site.geometry]);
 
             var toEsriJson = new geoJsonConverter();
-            var esriJsonObj = toEsriJson.toEsri(geoJsonObj);
+            var recObj = toEsriJson.toEsri(geoJsonObj);
+
+            var esriJsonObj = {
+                "rings": recObj.rings,
+                "spatialReference": recObj.spatialReference,
+                type: "esriGeometryPolygon"
+            };
+
 
             console.log("Converted Geometry:");
-            console.log("Esri Json: " + esriJsonObj);
+            console.log("Esri Json: " + JSON.stringify(esriJsonObj));
 
             var params = {
                 mapExtent: score.site.geometry.bounds,
                 geometryType: "esriGeometryPolygon",
-                geometry: esriJsonObj,
-                /*mapExtent: score.site.geometry.bounds,
-                geometryType: "esriGeometryEnvelope",
-                geometry: score.site.geometry.bounds.toBBOX(6, false),*/
+                geometry: JSON.stringify(esriJsonObj),
                 f: "json",
                 layers: "all",
                 tolerance: 0,
@@ -94,13 +94,11 @@
                         console.log("geometry bbox: " + score.site.geometry.bounds.toBBOX(6, false));
                         if (parsedResponse && parsedResponse.results) {
                             if (parsedResponse.results.length > 0) {
-                                //This will only take the first national park that overlaps
                                 score.popupMessage = parsedResponse.results[0].value;
                                 score.updateValue(0);
                             } else {
                                 score.popupMessage = "No National Park Overlaps";
 
-                                //score.popupMessage = "No data for this site";
                                 score.updateValue(1);
                             }
                         } else {
