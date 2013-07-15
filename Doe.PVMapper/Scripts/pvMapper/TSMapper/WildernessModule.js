@@ -57,17 +57,10 @@ var BYUModules;
             var geoJsonObj = toGeoJson.extract.geometry.apply(toGeoJson, [score.site.geometry]);
 
             var toEsriJson = new geoJsonConverter();
-            var recObj = toEsriJson.toEsri(geoJsonObj);
-
-            var esriJsonObj = {
-                "rings": recObj.rings,
-                "spatialReference": recObj.spatialReference,
-                type: "esriGeometryPolygon"
-            };
-
+            var esriJsonObj = toEsriJson.toEsri(geoJsonObj);
 
             console.log("Converted Geometry:");
-            console.log("Esri Json: " + JSON.stringify(esriJsonObj));
+            console.log("Esri Json: " + esriJsonObj);
 
             var params = {
                 mapExtent: score.site.geometry.bounds,
