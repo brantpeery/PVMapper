@@ -104,7 +104,7 @@ module BYUModules {
             var params = {
                 mapExtent: score.site.geometry.bounds,
                 geometryType: "esriGeometryPolygon",
-                geometry: esriJsonObj,
+                geometry: JSON.stringify(esriJsonObj),
 
                 /*mapExtent: score.site.geometry.bounds,
                 geometryType: "esriGeometryEnvelope",
