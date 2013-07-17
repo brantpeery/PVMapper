@@ -44,14 +44,47 @@ module pvMapper {
                             strokeWidth: 3, strokeColor: "red",
                         });
 
+                        //draggable lines querying reflecting values.  By using the fn function to query the intersecting Y value, this should work for any utility function.
+                        var bb = board.getBoundingBox();
+                        var vline = board.create('line', [[bb[2] / 2.0, bb[1]], [bb[2] / 2, bb[3]]], { name: bb[2] / 2.0, withLabel: true, strokeColor: "blue", dash: 2, size: 1, strokeOpacity: 0.15 });
+                        var dy = fn(bb[2] / 2.0, _this._xArgs) * 100;
+                        var hline = board.create('line', [[bb[0], dy], [bb[2], dy]], {name: dy, withLabel: true, strokeColor: "blue", dash: 2, size: 1, strokeOpacity: 0.15 });
+
+                        
+                        vline.on("drag", function (e) {
+                            board.suspendUpdate();
+                            
+                            var y = fn(vline.point1.X(), _this._xArgs);
+                            y = Math.max(0, Math.min(1, y)) * 100;
+
+                            hline.labelColor("red");
+                            hline.setLabelText(y.toFixed(2));
+                            vline.labelColor("red");
+                            vline.setLabelText((vline.point1.X()).toFixed(2));
+
+                            hline.point1.moveTo([bb[0], y]);
+                            hline.point2.moveTo([bb[2], y]);
+                            board.unsuspendUpdate();
+                        });
+
+                        //do this just to prevent the horizontal line from dragging.
+                        hline.on("drag", function (e) {
+                            board.suspendUpdate();
+                            var y = fn(vline.point1.X(), _this._xArgs) * 100;
+                            hline.point1.moveTo([bb[0], y]);
+                            hline.point2.moveTo([bb[2], y]);
+                            board.unsuspendUpdate();
+                        });
+
+
                         //NOTE: this code section aught to move to a separate file closer to the UtilityFunction.
                         if (_this._xArgs.className == "ThreePointUtilityArgs") {
                             if (_this._xArgs.points != undefined && _this._xArgs.points.length > 0) {
                                 //create the points
+                               // var seg: any[] = new Array<any>();
                                 _this._xArgs.points.forEach(function (p, idx) {
                                     var point = board.create('point', [_this._xArgs[p].x, _this._xArgs[p].y * 100], { name: p, size: 3 });
-                                    var v = board.create('line', [point, [function () {return point.X() }, 0]], { dash: 2, size: 1, strokeOpacity: 0.15 });
-                                    var h = board.create('line', [point, [0, function () {return point.Y() }]], { dash: 2, size: 1, strokeOpacity: 0.15 });
+                                 //   seg.push(point);
                                     point.on("drag", function (e) {
                                         _this._xArgs[p].x = point.X();
                                         _this._xArgs[p].y = point.Y() / 100;
@@ -62,7 +95,6 @@ module pvMapper {
                         }
                         else if (_this._xArgs.className == "MinMaxUtilityArgs") {
                             var point1 = board.create('point', [_this._xArgs.minValue, 0], { name: 'Min', size: 3 });
-                            var v = board.create('line', [point1, [function () {return point1.X() }, 10]], { dash: 2, size: 1, strokeOpacity: 0.15 });
                             point1.on("drag", function (e) {
                                 _this._xArgs.minValue = point1.X();
                                 board.update();
@@ -71,7 +103,6 @@ module pvMapper {
                             });
 
                             var point2 = board.create('point', [_this._xArgs.maxValue, 100], { name: 'Max', size: 3 });
-                            var v = board.create('line', [point2, [function () {return point2.X() }, 10]], { dash: 2, size: 1, strokeOpacity:0.15 });
                             point2.on("drag", function (e) {
                                 _this._xArgs.maxValue = point2.X();
                                 board.update();
