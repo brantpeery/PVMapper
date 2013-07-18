@@ -10,7 +10,7 @@
 
 module BYUModules {
     class DemModule {
-        constructor() {
+        constructor() {                                        
             var myModule: pvMapper.Module = new pvMapper.Module({
                 id: "DemModule",
                 author: "Darian Ramage, BYU",
@@ -39,7 +39,7 @@ module BYUModules {
                     // for now, flatter is better...?
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 100)
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 100,"degree")
                     }
                 }, {
                     activate: null,
@@ -60,7 +60,7 @@ module BYUModules {
                     // for now, south is better, but north ain't so bad...?
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        functionArgs: new pvMapper.ThreePointUtilityArgs( 0, 0.5, 180, 1, 360, 0.5)
+                        functionArgs: new pvMapper.ThreePointUtilityArgs( 0, 0.5, 180, 1, 360, 0.5, "degree")
                     }
                 }, {
                     activate: null,
@@ -78,13 +78,8 @@ module BYUModules {
                     // higher is better, but not much better, yeah?
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        functionArgs: new pvMapper.ThreePointUtilityArgs(0,0.5,1000,0.9,6000,1)
-                        //<pvMapper.ThreePointUtilityArgs>{
-                        //    p0: { x: 0, y: 0.5 },
-                        //    p1: { x: 1000, y: 0.9 },
-                        //    p2: { x: 6000, y: 1 },
-                        //}
-                    },
+                        functionArgs: new pvMapper.ThreePointUtilityArgs(0,0.5,1000,0.9,6000,1, "m")
+                    }
                 } ],
                 infoTools: null
             });

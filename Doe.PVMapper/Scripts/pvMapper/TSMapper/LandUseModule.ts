@@ -8,7 +8,7 @@
 module INLModules {
     export class ProtectedAreasModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.Module>{
+            var myModule: pvMapper.Module = new pvMapper.Module({
                 id: "ProtectedAreasModule",
                 author: "Leng Vang, INL",
                 version: "0.1.ts",
@@ -26,7 +26,7 @@ module INLModules {
                     activate: null,
                     deactivate: null,
                     destroy: null,
-                    init: null,
+                    init: null,                           
 
                     title: "Protected Areas",
                     description: "Overlapping protected areas, using PAD-US map data hosted by UI-GAP (gap.uidaho.edu)",
@@ -43,7 +43,9 @@ module INLModules {
                         functionName: "linear3pt",
                         functionArgs: new pvMapper.ThreePointUtilityArgs(0,1,1,0.6,5,0)
                     },
-                    weight: 10
+                    weight: 10,
+                    unitSymbol: "NU",
+                    unitClass: ""
                 }],
 
                 infoTools: null
@@ -200,14 +202,7 @@ module INLModules {
                     // for now, this is a constant value (always returns the max, why not)
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: <pvMapper.MinMaxUtilityArgs>{
-                            minValue: 0,
-                            maxValue: 0,
-                            tips: {
-                                minValue: "The minimum Land Cover allowed.",
-                                maxValue: "The maximum Land Cover allowed.",
-                            }
-                        }
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 100, "NU", "The minimum Land Cover allowed.", "The maximum Land Cover allowed.")
                     },
                     weight: 0 //TODO: find a meaningful score & utility for this
                 }],

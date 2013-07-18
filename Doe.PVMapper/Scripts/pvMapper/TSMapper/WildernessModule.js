@@ -1,4 +1,4 @@
-var BYUModules;
+﻿var BYUModules;
 (function (BYUModules) {
     var WildernessModule = (function () {
         function WildernessModule() {
@@ -19,6 +19,10 @@ var BYUModules;
                 init: null,
                 scoringTools: [
                     {
+                        //activate: null,
+                        //deactivate: null,
+                        //destroy: null,
+                        //init: null,
                         title: "Wilderness",
                         description: "Overlapping national parks, using data hosted by BYU",
                         category: "Land Use",
@@ -29,7 +33,7 @@ var BYUModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 1, "Minimum Wilderness threshold allowed.", "Maximum Wilderness threshold allowed.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 1, "NU", "Minimum Wilderness threshold allowed.", "Maximum Wilderness threshold allowed.")
                         },
                         weight: 10
                     }
@@ -66,6 +70,9 @@ var BYUModules;
                 mapExtent: score.site.geometry.bounds,
                 geometryType: "esriGeometryPolygon",
                 geometry: JSON.stringify(esriJsonObj),
+                /*mapExtent: score.site.geometry.bounds,
+                geometryType: "esriGeometryEnvelope",
+                geometry: score.site.geometry.bounds.toBBOX(6, false),*/
                 f: "json",
                 layers: "all",
                 tolerance: 0,
@@ -87,11 +94,13 @@ var BYUModules;
                         console.log("geometry bbox: " + score.site.geometry.bounds.toBBOX(6, false));
                         if (parsedResponse && parsedResponse.results) {
                             if (parsedResponse.results.length > 0) {
+                                //This will only take the first national park that overlaps
                                 score.popupMessage = parsedResponse.results[0].value;
                                 score.updateValue(0);
                             } else {
                                 score.popupMessage = "No National Park Overlaps";
 
+                                //score.popupMessage = "No data for this site";
                                 score.updateValue(1);
                             }
                         } else {

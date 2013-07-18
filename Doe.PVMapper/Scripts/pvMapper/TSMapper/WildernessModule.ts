@@ -47,7 +47,7 @@ module BYUModules {
                     },
                     scoreUtilityOptions: {
                        functionName: "linear",
-                       functionArgs: new pvMapper.MinMaxUtilityArgs(0, 1,
+                       functionArgs: new pvMapper.MinMaxUtilityArgs(0, 1,"NU",
                            "Minimum Wilderness threshold allowed.",
                            "Maximum Wilderness threshold allowed.")
                     },

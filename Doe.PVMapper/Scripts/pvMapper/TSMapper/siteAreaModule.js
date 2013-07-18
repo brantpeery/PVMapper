@@ -42,7 +42,7 @@ var INLModules;
                         // for now, this is a constant value (always returns the max, why not)
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "Minimum gross area to be considered.", "Maximum gross area to be considered.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "km2", "Minimum gross area to be considered.", "Maximum gross area to be considered.")
                         },
                         weight: 0
                     }
