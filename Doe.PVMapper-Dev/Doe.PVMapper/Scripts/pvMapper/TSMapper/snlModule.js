@@ -41,7 +41,7 @@ var INLModules;
                         // having any nearby line is much better than having no nearby line, so let's reflect that.
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (maxSearchDistanceInMeters - 1), 0.3, maxSearchDistanceInMeters, 0)
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (maxSearchDistanceInMeters - 1), 0.3, maxSearchDistanceInMeters, 0, "km")
                         },
                         weight: 10
                     }

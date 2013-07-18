@@ -44,9 +44,9 @@
 
                         //draggable lines querying reflecting values.  By using the fn function to query the intersecting Y value, this should work for any utility function.
                         var bb = board.getBoundingBox();
-                        var vline = board.create('line', [[bb[2] / 2.0, bb[1]], [bb[2] / 2, bb[3]]], { name: bb[2] / 2.0, withLabel: true, strokeColor: "blue", dash: 2, size: 1, strokeOpacity: 0.15 });
+                        var vline = board.create('line', [[bb[2] / 2.0, bb[1]], [bb[2] / 2, bb[3]]], { name: (bb[2] / 2.0).toFixed(2) + " " + _this._xArgs.metaInfo.unitSymbol, withLabel: true, strokeColor: "blue", dash: 2, size: 1, strokeOpacity: 0.15 });
                         var dy = fn(bb[2] / 2.0, _this._xArgs) * 100;
-                        var hline = board.create('line', [[bb[0], dy], [bb[2], dy]], { name: dy, withLabel: true, strokeColor: "blue", dash: 2, size: 1, strokeOpacity: 0.15 });
+                        var hline = board.create('line', [[bb[0], dy], [bb[2], dy]], { name: dy.toFixed(2) + " " + _this._xArgs.metaInfo.unitSymbol, withLabel: true, strokeColor: "blue", dash: 2, size: 1, strokeOpacity: 0.15 });
 
                         vline.on("drag", function (e) {
                             board.suspendUpdate();
@@ -55,9 +55,9 @@
                             y = Math.max(0, Math.min(1, y)) * 100;
 
                             hline.labelColor("red");
-                            hline.setLabelText(y.toFixed(2));
+                            hline.setLabelText(y.toFixed(2) + " " + _this._xArgs.metaInfo.unitSymbol);
                             vline.labelColor("red");
-                            vline.setLabelText((vline.point1.X()).toFixed(2));
+                            vline.setLabelText((vline.point1.X()).toFixed(2) + " " + _this._xArgs.metaInfo.unitSymbol);
 
                             hline.point1.moveTo([bb[0], y]);
                             hline.point2.moveTo([bb[2], y]);
@@ -73,7 +73,7 @@
                             board.unsuspendUpdate();
                         });
 
-                        if (_this._xArgs.className == "ThreePointUtilityArgs") {
+                        if (_this._xArgs.metaInfo.name == "ThreePointUtilityArgs") {
                             if (_this._xArgs.points != undefined && _this._xArgs.points.length > 0) {
                                 //create the points
                                 // var seg: any[] = new Array<any>();
@@ -88,7 +88,7 @@
                                     });
                                 });
                             }
-                        } else if (_this._xArgs.className == "MinMaxUtilityArgs") {
+                        } else if (_this._xArgs.metaInfo.name == "MinMaxUtilityArgs") {
                             var point1 = board.create('point', [_this._xArgs.minValue, 0], { name: 'Min', size: 3 });
                             point1.on("drag", function (e) {
                                 _this._xArgs.minValue = point1.X();
@@ -104,7 +104,7 @@
                                 point2.moveTo([point2.X(), 100]);
                                 gridPanel.setSource(_this._xArgs);
                             });
-                        } else if (_this.xArgs.className == "SinusoidalUtilityArgs") {
+                        } else if (_this.xArgs.metaInfo.name == "SinusoidalUtilityArgs") {
                             var minPoint = board.create('point', [_this._xArgs.minValue, 0], { name: 'Min', size: 3 });
                             var maxPoint = board.create('point', [_this._xArgs.maxValue, 100], { name: 'Max', size: 3 });
                             var targetPoint = board.create('point', [_this._xArgs.target, 50], { name: 'target', size: 3 });
@@ -164,10 +164,10 @@
                         },
                         //======= Add to support tool tip =============
                         itemmouseenter: function (grid, record, item, index, e, opts) {
-                            if (this.source.tips != undefined) {
+                            if (this.source.metaInfo != undefined) {
                                 //TODO: this...?
                                 //this.tipValue = pvMapper.UtilityFunctions[this.source.functionName].tips[record.internalId];
-                                this.tipValue = this.source.tips[record.internalId];
+                                this.tipValue = this.source.metaInfo[record.internalId + "Tip"];
                             } else {
                                 this.tipValue = "Property " + record.internalId;
                             }

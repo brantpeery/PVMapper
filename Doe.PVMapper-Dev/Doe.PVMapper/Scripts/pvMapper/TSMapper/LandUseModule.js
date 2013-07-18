@@ -44,7 +44,9 @@ var INLModules;
                             functionName: "linear3pt",
                             functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 1, 0.6, 5, 0)
                         },
-                        weight: 10
+                        weight: 10,
+                        unitSymbol: "NU",
+                        unitClass: ""
                     }
                 ],
                 infoTools: null
@@ -183,14 +185,7 @@ var INLModules;
                         // for now, this is a constant value (always returns the max, why not)
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: {
-                                minValue: 0,
-                                maxValue: 0,
-                                tips: {
-                                    minValue: "The minimum Land Cover allowed.",
-                                    maxValue: "The maximum Land Cover allowed."
-                                }
-                            }
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 100, "NU", "The minimum Land Cover allowed.", "The maximum Land Cover allowed.")
                         },
                         weight: 0
                     }

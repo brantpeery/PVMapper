@@ -47,8 +47,8 @@ module INLModules {
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
                         functionArgs:
-                        new pvMapper.ThreePointUtilityArgs(0, 1, (maxSearchDistanceInMeters -1), 0.3, maxSearchDistanceInMeters,0)
-                    },
+                        new pvMapper.ThreePointUtilityArgs(0, 1, (maxSearchDistanceInMeters -1), 0.3, maxSearchDistanceInMeters,0, "km")
+                    },                                                                                                                   
                     weight: 10
                 }],
 

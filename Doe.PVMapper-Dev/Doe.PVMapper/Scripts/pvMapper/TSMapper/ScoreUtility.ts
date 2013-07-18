@@ -43,7 +43,6 @@ module pvMapper {
     //}
 
     export interface IScoreUtilityArgs {
-        className: string;
     }
     export interface IScoreUtilityOptions {
         functionName: string;
@@ -62,17 +61,24 @@ module pvMapper {
 
         constructor(public minValue: number = 0,
             public maxValue: number = 100,
+            unit: string = "NU",
             minTip: string = "The minimum value.",
             maxTip: string = "The maximum value."
             ) {
-            this.tips = { minValue: minTip, maxValue: maxTip };
+//            this.tips = { minValue: minTip, maxValue: maxTip };
+            this.metaInfo = { name: "MinMaxUtilityArgs", unitSymbol: unit, minValueTip: minTip, maxValueTip: maxTip };
 
         }
-        public tips: {
-            minValue: string;
-            maxValue: string;
-        };
-        public className = "MinMaxUtilityArgs";
+        //public tips: {
+        //    minValue: string;
+        //    maxValue: string;
+        //};
+        public metaInfo: {
+            name: string;
+            unitSymbol: string;
+            minValueTip: string;
+            maxValueTip: string;
+        }
     }
 
     export class SinusoidalUtilityArgs implements IScoreUtilityArgs {// IMinMaxUtilityArgs {
@@ -80,34 +86,52 @@ module pvMapper {
             public maxValue: number = 100,
             public target: number = 0,
             public slope: number = 0,
+            unit: string = "NU",
             minTip: string = "The minimum value.",
             maxTip: string = "The maximum value.",
             targetTip: string = "The target value.",
             slopeTip: string = "The slope value.") {
-            this.tips = {
-                target: targetTip,
-                slope: slopeTip,
-                minValue: minTip,
-                maxValue: maxTip
+            //this.tips = {
+            //    target: targetTip,
+            //    slope: slopeTip,
+            //    minValue: minTip,
+            //    maxValue: maxTip
+            //};
+            this.metaInfo = {
+                name: "SinusoidalUtilityArgs", unitSymbol: unit,
+                targetTip: targetTip,
+                slopeTip: slopeTip,
+                minValueTip: minTip,
+                maxValueTip: maxTip
             };
         }
 
-        public tips: {
-            target: string;
-            slope: string;
-            minValue: string;
-            maxValue: string;
-        };
-        public className = "SinusoidalUtilityArgs";
+        //public tips: {
+        //    target: string;
+        //    slope: string;
+        //    minValue: string;
+        //    maxValue: string;
+        //};
+        public metaInfo: {
+            name: string;
+            unitSymbol: string;
+            targetTip: string;
+            slopeTip: string;
+            minValueTip: string;
+            maxValueTip: string;
+        }
     }
 
     export class ThreePointUtilityArgs implements IScoreUtilityArgs {
         constructor(p0x: number = 0, p0y: number = 0.5,
             p1x: number = 180, p1y: number = 1,
-            p2x: number = 360, p2y: number = 0.5) {
+            p2x: number = 360, p2y: number = 0.5,
+            unit: string = "NU"
+            ) {
             this.p0 = { x: p0x, y: p0y };
             this.p1 = { x: p1x, y: p1y };
             this.p2 = { x: p2x, y: p2y };
+            this.metaInfo = { name: "ThreePointUtilityArgs", unitSymbol: unit };
         }
         public p0: { x: number; y: number; };
         public p1: { x: number; y: number; };
@@ -115,7 +139,10 @@ module pvMapper {
 
 
         public points: string[] = ["p0", "p1", "p2"];
-        public className: string = "ThreePointUtilityArgs";
+        public metaInfo: {
+            name: string;
+            unitSymbol: string;
+        }
     }
 
     export class ScoreUtility {

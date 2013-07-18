@@ -465,8 +465,8 @@ declare module OpenLayers {
         };
     }
 
-  //* controls inherites from Control
-  interface ArgParser extends Control {
+//* controls inherites from Control
+interface ArgParser extends Control {
         center: LonLat;
         zoom: number;
         layers: string;
@@ -763,7 +763,7 @@ declare module OpenLayers {
         observeElement: DOMElement;
 
         draw();
-        defaultKeyPress(evt:Event);
+        defaultKeyPress(evt: Event);
     }
     var KeyboardDefaults: {
         new (): KeyboardDefaults;
@@ -800,8 +800,8 @@ declare module OpenLayers {
         (options: any): LayerSwitcher;
         prototype: LayerSwitcher;
     }
-    
-    interface ValueUnit{
+
+    interface ValueUnit {
         value: number;
         unit: string;
     }
@@ -837,7 +837,6 @@ declare module OpenLayers {
         prototype: Measure;
     }
     interface ModifyFeature extends Control {
-
     }
     interface MousePosition extends Control {
     }

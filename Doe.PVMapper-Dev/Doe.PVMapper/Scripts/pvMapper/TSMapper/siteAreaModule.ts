@@ -8,7 +8,7 @@
 module INLModules {
     class SiteAreaModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.Module>{
+            var myModule: pvMapper.Module = new pvMapper.Module({
                 id: "AreaModule",
                 author: "Brant Peery, INL",
                 version: "0.3.ts",
@@ -42,7 +42,7 @@ module INLModules {
                     // for now, this is a constant value (always returns the max, why not)
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0,
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "km2",
                             "Minimum gross area to be considered.",
                             "Maximum gross area to be considered.")
                     },

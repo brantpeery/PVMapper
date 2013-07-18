@@ -49,12 +49,10 @@ module INLModules {
 
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        functionArgs: new pvMapper.ThreePointUtilityArgs(0,1,1,0.6,5,0)
-                    },
-
-                    weight:10
+                        functionArgs: new pvMapper.ThreePointUtilityArgs(0,1,1,0.6,5,0,"NU")
+                    },                                                                     
+                    weight: 10
                 }],
-
                 infoTools: null
             });
         }
