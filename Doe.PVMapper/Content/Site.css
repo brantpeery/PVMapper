@@ -66,3 +66,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4fcff', end
      color: black;
      font-weight: bold;
 }
+
+.x-ux-grid-printer {
+    padding: 0 0 0 18px;
+    margin: 0 5px;
+    background-image: url(../Scripts/ux/grid/gridPrinterCss/printer.png); no-repeat bottom left !important;
+}

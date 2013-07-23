@@ -375,7 +375,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
     //forceFit: true,
     //width: '100%',
     //height: 600,
-    title: "Tools List",
+    //title: "Tools List",
     columns: scoreboardColumns,
     selModel: {
         selType: 'cellmodel', //'rowmodel', //Note: use 'cellmodel' once we have cell editing worked out
@@ -398,13 +398,69 @@ Ext.define('Ext.grid.ScoreboardGrid', {
 var scoreboardGrid = Ext.create('Ext.grid.ScoreboardGrid', {
 });
 
+//define a plugin to use to insert a button onto the window panel's header area.
+Ext.define('MainApp.view.ExtraIcons', {
+  extend: 'Ext.AbstractPlugin',
+  alias: 'plugin.headericons',
+  alternateClassName: 'MainApp.view.PanelHeaderExtraIcons',
+  iconCls: '',
+  index: undefined,
+  headerButtons: [],
+  init: function (panel) {
+    this.panel = panel;
+    this.callParent();
+    panel.on('render', this.onAddIcons, this, {single: true});
+  },
+  onAddIcons: function () {
+    if (this.panel.getHeader) {
+      this.header = this.panel.getHeader();
+    } else if (this.panel.getOwnerHeaderCt) {
+      this.header = this.panel.getOwnerHeaderCt();
+    }
+    this.header.insert(this.index || this.header.items.length, this.headerButtons);
+  }
+});
+
+
 Ext.define('MainApp.view.ScoreboardWindow', {
     extend: "MainApp.view.Window",
+    id: "ScoreboardWindowID",
     title: 'Main Scoreboard',
     width: 800,
     height: 520,
     //cls: "propertyBoard", <-- this looked hokey, and conflicted with ext js's default styling.
     closeAction: 'hide',
+    plugins: [{
+      ptype: "headericons",
+      index: 1,
+      headerButtons: [
+          {
+            xtype: 'button',
+            iconCls: 'x-ux-grid-printer',
+            //scope: this,
+            handler: function () {
+              //var win = Ext.WindowManager.getActive();
+              //if (win) {
+              //  win.toggleMaximize();
+              //}
+              var printContent = document.getElementById("ScoreboardWindowID-body"); //TODO: change to get the ID, rather than use 'magic' ID
+              var printWindow = window.open('', '', ''); // 'left=10, width=800, height=520');
+              printWindow.document.title = "PV Mapper Scoreboard"
+              printWindow.document.write(printContent.outerHTML); //TODO: must change to innerHTML ???
+              $("link, style").each(function () {
+                $(printWindow.document.head).append($(this).clone())
+              });
+              printWindow.document.close();
+              printWindow.print();
+
+              //if (win) {
+              //  win.toggleMaximize();
+              //}
+              //printWindow.close();
+             }
+          }
+      ]
+    }],
     items: scoreboardGrid,
     constrain: true
 });
