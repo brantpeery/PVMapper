@@ -79,6 +79,98 @@ function identifySite(map, layer) {
         self.button.toggle(false);
     }
 
+    function byuLayersIdentify(x, y) {
+        console.log("In BYU identify method");
+        var byuLayers = [   //contains info for all of BYU Layers to identify on [url, layerName]
+            ["https://geoserver.byu.edu/arcgis/rest/services/Layers/counties/MapServer/", "US Counties"]
+        ]
+
+        var panels = [];
+
+        for (var i = 0; i < byuLayers.length; i++) {
+            console.log("byuLayersIdentify( " + i + "): " + byuLayers[i][0] + byuLayers[i][1]);
+            panels[i] = byuIdentify(byuLayers[i][0], byuLayers[i][1]);
+        }
+        return panels;
+    }
+
+    function byuIdentify(inUrl, layerName, x, y) {
+        var dataArray = [];
+
+        var params = {
+            f: "json",
+            mapExtent: "{x: " + x + " , y: " + y + "}",     //TODO start here tomorrow
+            geometryType: "esriGeometryPoint",
+            geometry: "{x: " + x + " , y: " + y + "}",
+            layers: "all",
+            tolerance: 0,
+            imageDisplay: "1, 1, 96",
+            returnGeometry: false,
+        };
+
+        function handler(response) {
+            if (response.status == 200) {
+                var esriJsonParser = new OpenLayers.Format.JSON();
+                esriJsonParser.extractAttributes = true;
+                var parsedResponse = esriJsonParser.read(response.responseText);
+                console.log("Identify Site Response: " + response.responseText);
+                if (parsedResponse && parsedResponse.results) {
+                    Console.log(parsedResponse.results);
+                    dataArray = parsedResponse.results;
+                } else {
+                    dataArray = [["error: ", response.text]];
+                }
+            } else {
+                dataArray = [["error: ", response.status]];
+            }
+        };
+
+        var request = OpenLayers.Request.GET({
+            url: inUrl + "identify",
+            proxy: "/Proxy/proxy.ashx?",
+            params: params,
+            callback: handler
+        });
+
+        return createGrid(dataArray, layerName);
+    }
+
+    function createGrid(dataArray, layerName) {
+        var store = Ext.create('Ext.data.ArrayStore', {
+            fields: [
+                { name: 'field' },
+                { name: 'value' }
+            ],
+            data: dataArray
+        });
+
+        var grid = Ext.create('Ext.grid.Panel', {
+            hideCollapseTool: true,
+            store: store,
+            columnLines: true,
+            columns: [
+                {
+                    text: 'Field',
+                    sortable: true,
+                    dataIndex: 'field',
+                    width: 125
+                },
+                {
+                    text: 'Value',
+                    sortable: false,
+                    dataIndex: 'value',
+                    flex: 1
+                }
+            ],
+            title: layerName,
+            viewConfig: {
+                stripeRows: true
+            }
+        });
+
+        return grid;
+    }
+
     function onIdentify(data) {
         console.log(data);
         var control = this;
@@ -108,7 +200,7 @@ function identifySite(map, layer) {
       //  console.log(pixel);
        
       //  console.log(pvMapper.map.calculateBounds().toBBOX());
-        var paramsWMS = {
+        /*var paramsWMS = {
         bbox: pvMapper.map.calculateBounds().transform(proj900913, projWGS84).toBBOX(),
             format: "jpeg",
             info_format: "application/json",
@@ -135,13 +227,15 @@ function identifySite(map, layer) {
             }
 
 
-        })
+        })*/
+
+        var accordionGrid = byuLayersIdentify(x, y);
         
 
         //Continue to collect the needed form data
         ///HACK: This needs to use the framework standard way of doing it. For now I am going to assume that I have access to EXTjs 3
         var wiz = new Ext.create('Ext.window.Window', {
-            layout: 'fit',
+            layout: 'accordion',
             modal: true,
             collapsible: false,
             id: "iden",
@@ -149,12 +243,14 @@ function identifySite(map, layer) {
             bodyPadding: '5 5 0',
             width: 350,
             height: 450,
-            items: {  // Let's put an empty grid in just to illustrate fit layout
+            items: accordionGrid,
+                //grid,
+            /*{  // Let's put an empty grid in just to illustrate fit layout
                 xtype: 'grid',
                 border: false,
                 columns: [{ header: 'Field' }, { header: 'Value' }],                 // One header just for show. There's no data,
                 store: Ext.create('Ext.data.ArrayStore', {}) // A dummy empty data store
-            },
+            },*/
 
             buttons: [{
                 text: 'Close',
@@ -180,3 +276,62 @@ identifySite.prototype = {
     }
 
 }
+
+/* Notes Completing Identify Method
+main identify method called from OnIdentify Method
+    returns completed ext.grid.panel
+    use method to identify each layer, adding them in turn to the data store
+
+layer panel creator method
+    This method takes the array from the layer data store creator and adds it to a grid
+
+layer data store creator method
+    takes the array from layer identify method
+
+layer identify
+    sends identify request to the server
+    takes the response, which should be all the field/value pairs from that layer at that location,
+    and puts them into an array
+    this array is returned to the above method
+
+ */
+
+
+
+//Basis for individual layer
+//To be used for testing UI
+var dataArray = [];
+
+var layerName = "Layer Name";
+
+var store = Ext.create('Ext.data.ArrayStore', {
+    fields: [
+        { name: 'field' },
+        { name: 'value' }
+    ],
+    data: dataArray
+});
+
+var grid = Ext.create('Ext.grid.Panel', {
+    hideCollapseTool: true,
+    store: store,
+    columnLines: true,
+    columns: [
+        {
+            text: 'Field',
+            sortable: true,
+            dataIndex: 'field',
+            width: 125
+        },
+        {
+            text: 'Value',
+            sortable: false,
+            dataIndex: 'value',
+            flex: 1
+        }
+    ],
+    title: layerName,
+    viewConfig: {
+        stripeRows: true
+    }
+});
