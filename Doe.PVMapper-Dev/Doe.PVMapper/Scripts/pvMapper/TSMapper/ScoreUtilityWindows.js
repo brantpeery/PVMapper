@@ -44,7 +44,7 @@
 
                         //draggable lines querying reflecting values.  By using the fn function to query the intersecting Y value, this should work for any utility function.
                         var bb = board.getBoundingBox();
-                        var vline = board.create('line', [[bb[2] / 2.0, bb[1]], [bb[2] / 2, bb[3]]], { name: (bb[2] / 2.0).toFixed(2) + " " + _this._xArgs.metaInfo.unitSymbol, withLabel: true, strokeColor: "blue", dash: 2, size: 1, strokeOpacity: 0.15 });
+                        var vline = board.create('line', [[bb[2] / 2.0, bb[1]], [bb[2] / 2, bb[3]]], { name: (bb[2] / 2.0).toFixed(2) + " score", withLabel: true, strokeColor: "blue", dash: 2, size: 1, strokeOpacity: 0.15 });
                         var dy = fn(bb[2] / 2.0, _this._xArgs) * 100;
                         var hline = board.create('line', [[bb[0], dy], [bb[2], dy]], { name: dy.toFixed(2) + " " + _this._xArgs.metaInfo.unitSymbol, withLabel: true, strokeColor: "blue", dash: 2, size: 1, strokeOpacity: 0.15 });
 
@@ -55,7 +55,7 @@
                             y = Math.max(0, Math.min(1, y)) * 100;
 
                             hline.labelColor("red");
-                            hline.setLabelText(y.toFixed(2) + " " + _this._xArgs.metaInfo.unitSymbol);
+                            hline.setLabelText(y.toFixed(2) + " score");
                             vline.labelColor("red");
                             vline.setLabelText((vline.point1.X()).toFixed(2) + " " + _this._xArgs.metaInfo.unitSymbol);
 
@@ -84,6 +84,13 @@
                                     point.on("drag", function (e) {
                                         _this._xArgs[p].x = point.X();
                                         _this._xArgs[p].y = point.Y() / 100;
+
+                                        var y = fn(vline.point1.X(), _this._xArgs);
+                                        y = Math.max(0, Math.min(1, y)) * 100;
+
+                                        hline.setLabelText(y.toFixed(2) + " score");
+                                        hline.point1.moveTo([bb[0], y]);
+                                        hline.point2.moveTo([bb[2], y]);
                                         board.update();
                                     });
                                 });

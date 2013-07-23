@@ -105,12 +105,21 @@ module pvMapper {
 
             this.scores.push(score);
             //this.self.scoreAddedEvent.fire(score, [{ score: score, site: site }, score]);
+
+            //TODO: uncomment this - it's testing code!!!!!!
             //Set the initial value from the tool
-            try {
-                this.onSiteChangeHandler(undefined, score);
-            } catch (ex) {
-                if (console) console.error(ex);
-            }
+            //try {
+            //    this.onSiteChangeHandler(undefined, score);
+            //} catch (ex) {
+            //    if (console) console.error(ex);
+            //}
+
+            //TODO: Don't check this in - it's testing code!!!!!!!!
+            window.setTimeout(function () {
+                score.popupMessage = "test value";
+                score.updateValue(Math.random());
+            }, Math.random() * 3000);
+
             return score;
         }
 
