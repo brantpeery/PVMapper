@@ -7,7 +7,7 @@
     }
   });
 
-  map.addControl(control);
+  pvMapper.map.addControl(control);
 
   var distanceBtn = new Ext.Button({
     text: 'Measure Length',

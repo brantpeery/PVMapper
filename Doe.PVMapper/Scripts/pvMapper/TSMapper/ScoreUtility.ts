@@ -61,7 +61,7 @@ module pvMapper {
 
         constructor(public minValue: number = 0,
             public maxValue: number = 100,
-            unit: string = "NU",
+            unit: string = "",
             minTip: string = "The minimum value.",
             maxTip: string = "The maximum value."
             ) {
@@ -86,7 +86,7 @@ module pvMapper {
             public maxValue: number = 100,
             public target: number = 0,
             public slope: number = 0,
-            unit: string = "NU",
+            unit: string = "",
             minTip: string = "The minimum value.",
             maxTip: string = "The maximum value.",
             targetTip: string = "The target value.",
@@ -98,7 +98,8 @@ module pvMapper {
             //    maxValue: maxTip
             //};
             this.metaInfo = {
-                name: "SinusoidalUtilityArgs", unitSymbol: unit,
+                name: "SinusoidalUtilityArgs",
+                unitSymbol: unit,
                 targetTip: targetTip,
                 slopeTip: slopeTip,
                 minValueTip: minTip,
@@ -126,7 +127,7 @@ module pvMapper {
         constructor(p0x: number = 0, p0y: number = 0.5,
             p1x: number = 180, p1y: number = 1,
             p2x: number = 360, p2y: number = 0.5,
-            unit: string = "NU"
+            unit: string = ""
             ) {
             this.p0 = { x: p0x, y: p0y };
             this.p1 = { x: p1x, y: p1y };

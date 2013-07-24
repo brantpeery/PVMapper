@@ -25,7 +25,8 @@ var BYUModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 100, "Minimum Road Distance threshold allowed.", "Maximum Road Distance threshold allowed.")
+                            //TODO: what units is this distance in? kilometers? I'm guessing km...
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 100, "km", "Minimum Road Distance threshold allowed.", "Maximum Road Distance threshold allowed.")
                         },
                         defaultWeight: 10
                     }
@@ -113,7 +114,7 @@ var BYUModules;
 
                         score.popupMessage = "Please Wait! Roads confuse me!";
 
-                        score.updateValue(0);
+                        score.updateValue(Number.NaN);
 
                     }
                 }

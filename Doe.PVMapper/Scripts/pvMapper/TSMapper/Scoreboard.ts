@@ -20,7 +20,10 @@ module pvMapper {
             this.onScoreChanged = (event) => {
                 //console.log("Score changed event detected by the scoreboard");
                 //var html = this.self.render();
-                this.updateTotals(); //Update all the total lines
+
+                //Update all the summary (average/total) lines
+                this.updateTotals();
+
                 this.changedEvent.fire(this, event); //Let the UI handle the changes
             }
         }
@@ -103,8 +106,11 @@ module pvMapper {
         // queue the changed event to be handled shortly; ignore following change events until it is.
         if (timeoutHandle == null) {
             timeoutHandle = window.setTimeout(function () {
+
+                if (console) { console.log("Scoreboard update event(s) being processed..."); }
                 // we're done delaying our event, so reset the timeout handle to null
-                timeoutHandle = null; 
+                timeoutHandle = null;
+
                 var self = mainScoreboard;
                 var mydata = mainScoreboard.getTableData();
                 if (!pvMapper.floatingScoreboard) {

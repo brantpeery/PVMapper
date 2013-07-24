@@ -18,7 +18,7 @@ declare module pvMapper {
     //}
 
     export interface IModuleOptions {
-        scoringTools?: IScoreTool[];
+        scoringTools?: IScoreToolOptions[];
         infoTools?: ITool[];
         totalTools?: ITotalTool[];
         //Intents: IIntent[];
@@ -31,7 +31,5 @@ declare module pvMapper {
         id: string;
         author: string;
         version: string;
-
-
     }
 }

@@ -1,100 +1,97 @@
-﻿
-Ext.define('RatingModel', {
-  extend: 'Ext.data.Model',
-  fields: [{
-    name: 'name'
-  }, {
-    name: 'value',
-    type: 'object'
-  }]
+﻿//Note: we're using the Property Grid model instead (which happens to be functionally identical to this).
+//Ext.define('RatingModel', {
+//    extend: 'Ext.data.Model',
+//    fields: [{
+//        name: 'name'
+//    }, {
+//        name: 'value',
+//        type: 'number'
+//    }]
+//});
+
+
+Ext.define('MainApp.view.RatingColumn', {
+    extend: 'Ext.grid.column.Action',
+
+    sortable: true,
+    text: 'Rating',
+
+    onURL: 'http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/star_icon.jpg',
+    offURL: 'http://www.iconshock.com/img_jpg/VECTORNIGHT/general/jpg/16/star_icon.jpg',
+
+    me: null,
+
+    constructor: function (config) {
+        me = this;
+
+        me.callParent(arguments); // or  me.callParent([config]);
+
+        // Items is an array property of ActionColumns
+        me.items = [
+            { index: 0, handler: me.handleItems, getClass: me.getStarClass, tooltip: '0 stars', icon: me.offURL },
+            { index: 1, handler: me.handleItems, getClass: me.getStarClass, tooltip: '1 star', icon: me.onURL },
+            { index: 2, handler: me.handleItems, getClass: me.getStarClass, tooltip: '2 stars', icon: me.onURL },
+            { index: 3, handler: me.handleItems, getClass: me.getStarClass, tooltip: '3 stars', icon: me.onURL },
+            { index: 4, handler: me.handleItems, getClass: me.getStarClass, tooltip: '4 stars', icon: me.onURL },
+            { index: 5, handler: me.handleItems, getClass: me.getStarClass, tooltip: '5 stars', icon: me.onURL },
+        ];
+
+        for (i = 0; i <= 5; i++) {
+            me.items[i].scope = me.items[i];
+        }
+    },
+
+    handleItems: function (grid, rowIndex, colIndex, item, e, record) {
+        record.set('value', item.index);
+
+        // also, update the source object
+        // hackety hack hack...
+        //record.raw.value = item.index;
+        record.store.source[record.get('name')] = item.index;
+    },
+
+    getStarClass: function (value, metadata, record, rowIndex, colIndex, store) {
+        //Note: any changes made to metadata.style will be applied to the entire row of stars, not just to this particular star ~!
+        if (this.index == 0) {
+            return 'ux-rating-star-zero';
+        } else if (this.index > 0 && record.get('value') >= this.index) {
+            return 'ux-rating-star-on';
+        } else {
+            return 'ux-rating-star-off';
+        }
+    },
+
 });
-
-
-Ext.define('RatingOptionModel', {
-  extend: 'Ext.data.Model',
-  fields: [{
-    name: 'name',
-  }, {
-    name: 'value',
-    type: 'object'
-  }]
-});
-
-
-var handleItems = function (grid, rowIndex, colIndex, item, e, record) {
-  record.set('value', item.index);
-  record.raw.value = item.index;
-}
 
 Ext.define('MainApp.view.RatingTool', {
-  extend: 'Ext.grid.Panel',
-  columnLines: true,
-  width: 600,
-  height: 300,
-  title: 'Rate',
-  renderTo: Ext.getBody(),
-  onURL: 'http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/star_icon.jpg',
-  offURL: 'http://www.iconshock.com/img_jpg/VECTORNIGHT/general/jpg/16/star_icon.jpg',
-  getData: function () {
-    return this.store.proxy.data;
-  },
+    extend: 'Ext.grid.Panel',
+    columnLines: true,
+    width: 250,
+    //width: 600,
+    //height: 300,
 
-  /*
-  NOTE:  Any custom class that to be create/destroy and recreate must be wrapped inside 'initComponent' function.  -- leng.
-  */
-  initComponent: function() {
-    Ext.apply(this, {
-      listeners: {
-        beforerender: function (ts, eOpts) {
-          var me = this;
-          var aOption = {};
-          Ext.merge(aOption, me.options);
-          me.options = aOption;
+    /*
+    NOTE:  Any custom class that to be create/destroy and recreate must be wrapped inside 'initComponent' function.  -- leng.
+    */
+    initComponent: function () {
+        Ext.apply(this, {
 
-          me.columns[1].items = [];
-          var m = me.options.data.getCount();
-
-          for (i = 0; i < m; i++) {
-            me.columns[1].items.push({
-              index: i + 1,
-              tooltip: aOption.data.items[i].raw.name,
-              handler: handleItems,
-              icon: me.onURL
-            });
-          }
-          return true;
-        },
-        beforedestroy: function (ts, ops) {
-          this.options = null;
-          return true;
-        }
-      },
-      columns: [{
-        // text: "Name",
-        width: 150,
-        dataIndex: 'name'
-      }, {
-        xtype: 'actioncolumn',
-        //  text: 'Rating',
-        width: 150,
-        renderer: function (value, metadata, record) {
-          var me = this.ownerCt.ownerCt;
-          var n = record.get('value');
-
-          var m = me.options.data.getCount();
-          m = (m < n) ? n : m;
-
-          for (i = 0; i < n; i++) {
-            this.items[i].icon = me.onURL;
-          }
-
-          for (i = n; i < m; i++) {
-            this.items[i].icon = me.offURL;
-          }
-        },
-        items: []
-      }]
-    });
-    this.callParent(arguments);
-  }
+            columns: [
+                //Ext.create('Ext.grid.column.Column', {
+                {
+                    text: "Category",
+                    minWidth: 100,
+                    flex: 1,
+                    dataIndex: 'name'
+                //}),
+                },
+                Ext.create('MainApp.view.RatingColumn', {
+                    //text: 'Rating',
+                    minWidth: 100,
+                    dataIndex: 'value',
+                })
+            ]
+        });
+        this.callParent(arguments);
+    }
 });

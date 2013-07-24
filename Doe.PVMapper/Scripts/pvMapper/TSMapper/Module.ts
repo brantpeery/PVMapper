@@ -10,7 +10,7 @@
 module pvMapper {
 
   // Class
-  export class Module {
+    export class Module implements IModuleOptions {
         constructor(options: IModuleOptions) {
             this.id = options.id;
             this.version = options.version;
@@ -74,7 +74,7 @@ module pvMapper {
         public author: string;
         public version: string;
 
-        public scoringTools: IScoreTool[];
+        public scoringTools: IScoreToolOptions[];
         public infoTools: ITool[];
         public totalTools: ITotalTool[];
         
