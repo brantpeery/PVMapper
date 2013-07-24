@@ -45,26 +45,40 @@ module pvMapper {
 
                         //draggable lines querying reflecting values.  By using the fn function to query the intersecting Y value, this should work for any utility function.
                         var bb = board.getBoundingBox();
-                        var vline = board.create('line', [[bb[2] / 2.0, bb[1]], [bb[2] / 2, bb[3]]],
-                            { name: (bb[2] / 2.0).toFixed(2) + " score", withLabel: true, strokeColor: "blue", dash: 2, size: 1, strokeOpacity: 0.15 });
-                        var dy = fn(bb[2] / 2.0, _this._xArgs) * 100;
-                        var hline = board.create('line', [[bb[0], dy], [bb[2], dy]],
-                            { name: dy.toFixed(2) + " " + _this._xArgs.metaInfo.unitSymbol, withLabel: true, strokeColor: "blue", dash: 2, size: 1, strokeOpacity: 0.15 });
+                        var dx = ((bb[2] - bb[0]) / 2.0) + bb[0];
+                        var dy = fn(dx, _this._xArgs) * 100;
+                        var vline = board.create('segment', [[dx, 0], [dx, dy]],
+                            { name: (bb[2] / 2.0).toFixed(1) + " " + _this._xArgs.metaInfo.unitSymbol, withLabel: true, strokeColor: "blue", dash: 2, strokeOpacity: 0.15 });
+                        var scoreColor = (<any>pvMapper).getColorForScore(dy);
+                        var hline = board.create('segment', [[0, dy], [vline.point1.X(), dy]],
+                            { name: "Score: " + dy.toFixed(0), withLabel: true, strokeColor: scoreColor, dash: 2, strokeWidth: 4, strokeOpacity: 1 });
 
-                        
+                        //TODO: make the line move on mouseover, rather than on drag (it's more intuitive)
+                        //board.on("mousemove", function (e) {
+                        //    //TODO: translate coordinates from event e to score function (x,y)
+                        //    //      OR, find a better event to hook into which has translated coordinates
+                        //    //      then, do the same line move doodle as below...
+                        //});
+
                         vline.on("drag", function (e) {
                             board.suspendUpdate();
+                            //var bb = board.getBoundingBox();
                             
                             var y = fn(vline.point1.X(), _this._xArgs);
                             y = Math.max(0, Math.min(1, y)) * 100;
 
-                            hline.labelColor("red");
-                            hline.setLabelText(y.toFixed(2) + " score");
                             vline.labelColor("red");
-                            vline.setLabelText((vline.point1.X()).toFixed(2) + " " + _this._xArgs.metaInfo.unitSymbol);
+                            vline.setLabelText((vline.point1.X()).toFixed(1) + " " + _this._xArgs.metaInfo.unitSymbol);
 
-                            hline.point1.moveTo([bb[0], y]);
-                            hline.point2.moveTo([bb[2], y]);
+                            vline.point1.moveTo([vline.point1.X(), 0]);
+                            vline.point2.moveTo([vline.point1.X(), y]);
+
+                            hline.labelColor("red");
+                            hline.setLabelText("Score: " + y.toFixed(0));
+                            hline.visProp.strokecolor = (<any>pvMapper).getColorForScore(y);
+
+                            hline.point1.moveTo([0, y]);
+                            hline.point2.moveTo([vline.point1.X(), y]);
                             board.unsuspendUpdate();
                         });
 
@@ -72,11 +86,24 @@ module pvMapper {
                         hline.on("drag", function (e) {
                             board.suspendUpdate();
                             var y = fn(vline.point1.X(), _this._xArgs) * 100;
-                            hline.point1.moveTo([bb[0], y]);
-                            hline.point2.moveTo([bb[2], y]);
+                            hline.point1.moveTo([0, y]);
+                            hline.point2.moveTo([vline.point1.X(), y]);
                             board.unsuspendUpdate();
                         });
 
+                        // updates guide lines after the function is altered in some way
+                        var updateGuideLines = function () {
+                            board.suspendUpdate();
+                            var y = fn(vline.point1.X(), _this._xArgs);
+                            y = Math.max(0, Math.min(1, y)) * 100;
+
+                            vline.point2.moveTo([vline.point1.X(), y]);
+                            hline.setLabelText("Score: " + y.toFixed(2));
+                            hline.point1.moveTo([0, y]);
+                            hline.point2.moveTo([vline.point1.X(), y]);
+                            hline.visProp.strokecolor = (<any>pvMapper).getColorForScore(y);
+                            board.unsuspendUpdate();
+                        };
 
                         //NOTE: this code section aught to move to a separate file closer to the UtilityFunction.
                         if (_this._xArgs.metaInfo.name == "ThreePointUtilityArgs") {
@@ -89,14 +116,7 @@ module pvMapper {
                                     point.on("drag", function (e) {
                                         _this._xArgs[p].x = point.X();
                                         _this._xArgs[p].y = point.Y() / 100;
-
-                                        var y = fn(vline.point1.X(), _this._xArgs);
-                                        y = Math.max(0, Math.min(1, y)) * 100;
-
-                                        hline.setLabelText(y.toFixed(2) + " score");
-                                        hline.point1.moveTo([bb[0], y]);
-                                        hline.point2.moveTo([bb[2], y]);
-                                        board.update();
+                                        updateGuideLines();
                                     });
                                 })
                             }
@@ -108,6 +128,7 @@ module pvMapper {
                                 board.update();
                                 point1.moveTo([point1.X(), 0]);
                                 gridPanel.setSource(_this._xArgs);
+                                updateGuideLines();
                             });
 
                             var point2 = board.create('point', [_this._xArgs.maxValue, 100], { name: 'Max', size: 3 });
@@ -116,6 +137,7 @@ module pvMapper {
                                 board.update();
                                 point2.moveTo([point2.X(), 100]);
                                 gridPanel.setSource(_this._xArgs);
+                                updateGuideLines();
                             });
                         }
                         else if (_this.xArgs.metaInfo.name == "SinusoidalUtilityArgs") {
@@ -131,6 +153,7 @@ module pvMapper {
                                 _this._xArgs.minValue = x;
                                 board.update();
                                 minPoint.moveTo(x, minPoint.Y());
+                                updateGuideLines();
                             });
                             maxPoint.on("drag", function (e) {
                                 var x = maxPoint.X();
@@ -139,6 +162,7 @@ module pvMapper {
                                 _this._xArgs.maxValue = x;
                                 board.update();
                                 maxPoint.moveTo(x, maxPoint.Y());
+                                updateGuideLines();
                             });
                             targetPoint.on("drag", function (e) {
                                 var x = targetPoint.X();
@@ -149,6 +173,7 @@ module pvMapper {
                                 _this._xArgs.targetValue = x;
                                 board.update();
                                 targetPoint.moveTo(x, targetPoint.Y());
+                                updateGuideLines();
                             });
                         }
                     });
@@ -168,9 +193,11 @@ module pvMapper {
                             //Update the xArgs
                             //Already handled by the prperty grid :)
                             board.update();
+                            //TODO: updateGuideLines() isn't called here... but it need to be
                         },
                         propertychange: function (source, recordId, value, oldValue, eOpts) {
                             board.update();
+                            //TODO: updateGuideLines() isn't called here... but it need to be
                         },
                         //======= Add to support tool tip =============
                         itemmouseenter: function (grid, record, item, index, e, opts) {

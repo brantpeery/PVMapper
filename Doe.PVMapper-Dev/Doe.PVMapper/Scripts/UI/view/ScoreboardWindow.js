@@ -1,4 +1,5 @@
-﻿
+﻿Ext.require('MainApp.view.RatingView');
+
 /*
  * Start FIX: Summary + Grouping. Without this fix there would be a summary row under each group
  * http://www.sencha.com/forum/showthread.php?135442-Ext.grid.feature.Summary-amp-amp-Ext.grid.feature.Grouping
@@ -135,18 +136,32 @@ var scoreboardColumns = [{
     }
 }, {
     xtype: 'actioncolumn',
-    text: 'Utility',
-    width: 40,
+    text: 'Options',
+    width: 60,
     sortable: false,
     hideable: false,
     renderer: function (value, metadata, record) {
+        //metadata.style = 'cursor: pointer;' // <-- this looks silly...
         var fn = record.get('utilityFnName');
         if (fn) { this.items[0].icon = pvMapper.UtilityFunctions[fn].iconURL; }
+
+        //this.items[1].disabled = !( $.isFunction(record.raw.getStarRatables) );
     },
     items: [{
         icon: 'http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/gear_icon.jpg',
+        tooltip: "Edit score utility function",
         height: 24,
         width: 24,
+        //renderer: function (value, metadata, record) {
+        //    var fn = record.get('utilityFnName');
+        //    if (fn) { this.icon = pvMapper.UtilityFunctions[fn].iconURL; }
+        //    //return value;
+        //},
+        getClass: function (value, metadata, record, rowIndex, colIndex, store) {
+            if (!(record.get('utility'))) {
+                return "x-item-disabled";
+            }
+        },
         handler: function (view, rowIndex, colIndex, item, e, record) {
             var uf = record.get('utility');
             var utilityFn = pvMapper.UtilityFunctions[uf.functionName];
@@ -204,27 +219,45 @@ var scoreboardColumns = [{
             }).show();
         }
     }, {
-        icon: 'http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/gear_icon.jpg',
+        icon: 'http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/star_icon.jpg',
+        tooltip: "Give star ratings to categories",
         height: 24,
         width: 24,
+        getClass: function (value, metadata, record, rowIndex, colIndex, store) {
+            if (typeof record.raw.getStarRatables !== "function") {
+                return "x-item-disabled";
+            }
+        },
         handler: function (view, rowIndex, colIndex, item, e, record) {
-            var ratingWindow = Ext.create('MainApp.view.RatingView', {
-                minimizable: false,
-                collapsible: false,
-                buttons: [{
-                    xtype: 'button',
-                    text: 'OK',
-                    handler: function () {
-                        ratingWindow.close();
+            if (typeof record.raw.getStarRatables === "function") {
+                pvMapper.showRatingWindow(
+                    record.raw.getStarRatables(),
+                    function () {
+                        // recalculate all scores
+                        //TODO: this is hideous... isn't there a better way?
+                        for (i = 0; i < record.raw.scores.length; i++) {
+                            record.raw.onSiteChange(undefined, record.raw.scores[i]);
+                            //record.raw.scores.forEach(updateScore);
+                        }
+                    },
+                    record.get('title') + " Categories"
+                );
+            }
                     }
                 }, {
-                    xtype: 'button',
-                    text: 'Cancel',
-                    handler: function () {
-                        ratingWindow.close();
-                    }
-                }]
-            }).show();
+        icon: 'http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/gear_icon.jpg',
+        tooltip: "Configure score tool",
+        height: 24,
+        width: 24,
+        getClass: function (value, metadata, record, rowIndex, colIndex, store) {
+            if (typeof record.raw.showConfigWindow !== "function") {
+                return "x-item-disabled";
+            }
+        },
+        handler: function (view, rowIndex, colIndex, item, e, record) {
+            if (typeof record.raw.showConfigWindow === "function") {
+                record.raw.showConfigWindow();
+            }
         }
     }]
 }, {
@@ -510,5 +543,5 @@ function getColor(score) {
     g = round(min(255, max(0, g)));
 
     return 'rgb(' + r + ',' + g + ',' + b + ')';
-
 }
+pvMapper.getColorForScore = getColor;

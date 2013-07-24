@@ -44,7 +44,7 @@ module INLModules {
                         functionArgs: new pvMapper.ThreePointUtilityArgs(0,1,1,0.6,5,0)
                     },
                     weight: 10,
-                    unitSymbol: "NU",
+                    unitSymbol: "stars",
                     unitClass: ""
                 }],
 
@@ -202,7 +202,7 @@ module INLModules {
                     // for now, this is a constant value (always returns the max, why not)
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 100, "NU", "The minimum Land Cover allowed.", "The maximum Land Cover allowed.")
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "stars", "The minimum Land Cover allowed.", "The maximum Land Cover allowed.")
                     },
                     weight: 0 //TODO: find a meaningful score & utility for this
                 }],

@@ -9,10 +9,10 @@
 module INLModules {
     class SolarmapperModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({
+            var myModule: pvMapper.Module = new pvMapper.Module( <pvMapper.IModuleOptions>{
                 id: "SolarmapperModule",
                 author: "Scott Brown, INL",
-                version: "0.1.ts",
+                version: "0.2.ts",
 
                 activate: () => {
                     addMapLayer();
@@ -38,6 +38,10 @@ module INLModules {
                         identifyFeature(score);
                         //s.updateValue(status.toString());
                     },
+                    
+                    getStarRatables: () => {
+                        return starRatables;
+                    },
 
                     // for now, no land management agencies is best, any one is bad, and multiple are worse
                     //scoreUtilityOptions: <pvMapper.IThreePointUtilityOptions>{
@@ -47,10 +51,14 @@ module INLModules {
                     //    p2: { x: 5, y: 0 },
                     //},
 
+                    //scoreUtilityOptions: {
+                    //    functionName: "linear3pt",
+                    //    functionArgs: new pvMapper.ThreePointUtilityArgs(0,1,1,0.6,5,0,"NU")
+                    //},                                                                     
                     scoreUtilityOptions: {
-                        functionName: "linear3pt",
-                        functionArgs: new pvMapper.ThreePointUtilityArgs(0,1,1,0.6,5,0,"NU")
-                    },                                                                     
+                        functionName: "linear",
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
+                    },
                     weight: 10
                 }],
                 infoTools: null
@@ -61,6 +69,26 @@ module INLModules {
     var modinstance = new SolarmapperModule();
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
+
+    /////////////////////////////////////////////////////
+    // bits of code for handling qualitative star ratings
+
+    var starRatables: pvMapper.IStarRatings = {};
+    var defaultStarRating: number = 2;
+    var noCategoryRating: number = 4;
+    var noCategoryLabel: string = "None";
+
+    function sortRatables(a: string, b:string): number {
+        // sort from lowest to highest star rating first
+        var difference = starRatables[a] - starRatables[b];
+        if (difference !== 0)
+            return difference;
+
+        // after that, sort alphabitically
+        return a.localeCompare(b);
+    }
+
+    /////////////////////////////////////////////////////
 
     var solarmapperRestBaseUrl = "http://solarmapper.anl.gov/ArcGIS/rest/services/PV_Mapper_SDE/MapServer/";
     var solarmapperWmsUrl = "http://solarmapper.anl.gov/ArcGIS/services/PV_Mapper_SDE/MapServer/WMSServer";
@@ -86,6 +114,10 @@ module INLModules {
         mapLayer.setVisibility(false);
         pvMapper.map.addLayer(mapLayer);
         //pvMapper.map.setLayerIndex(mapLayer, 0);
+
+        // also, add a ratable star for the None category
+        if (typeof starRatables[noCategoryLabel] === "undefined")
+            starRatables[noCategoryLabel] = noCategoryRating;
     }
 
     function removeMapLayer() {
@@ -135,30 +167,44 @@ module INLModules {
 
                     if (parsedResponse && parsedResponse.results) {
                         if (parsedResponse.results.length > 0) {
-                            var allText = "";
-                            var lastText = null;
                             var count: number = 0;
+                            //var responseSet: { [name: string]: bool; } = {};
+                            var responseArray: string[] = [];
 
                             for (var i = 0; i < parsedResponse.results.length; i++) {
-                                //var newText = parsedResponse.results[i].layerName +
-                                //     ": " + parsedResponse.results[i].value;
                                 var newText = parsedResponse.results[i].value;
                                 var type = parsedResponse.results[i].attributes['Feature Type'];
                                 var code = parsedResponse.results[i].attributes['SMA Code'];
 
                                 if (type && type != "Null" && newText.indexOf(type) < 0) {
+                                    // if we have a type, and it isn't in the name, then append it
                                     newText += " (" + type + ")";
                                 } else if (code && code != "Null" && newText.indexOf(code) < 0) {
+                                    // otherwise, if we have a code, and it isn't in the name, then append it
                                     newText += " (" + code + ")";
                                 }
-                                if (newText != lastText) {
-                                    if (lastText != null) {
-                                        allText += ", \n";
-                                    }
-                                    allText += newText;
-                                    count++;
+
+                                // add this to the array of responses we've received
+                                if (responseArray.indexOf(newText) < 0) {
+                                    responseArray.push(newText);
+
+                                    // if this is a response we've never seen before, give it a new (default) rating
+                                    if (typeof starRatables[newText] === "undefined")
+                                        starRatables[newText] = defaultStarRating;
                                 }
-                                lastText = newText;
+                            }
+
+                            // sort the array of responses based on star rating (then alphabitically)
+                            responseArray.sort(sortRatables);
+
+                            // format responses in a single line of text
+                            var minStarValue = starRatables[responseArray[0]];
+                            var allText = responseArray[0] + " [" + starRatables[responseArray[0]] +
+                                ((starRatables[responseArray[0]] === 1) ? " star]" : " stars]");
+
+                            for (var i = 1; i < responseArray.length; i++) {
+                                allText += ", " + responseArray[i] + " [" + starRatables[responseArray[i]] +
+                                ((starRatables[responseArray[i]] === 1) ? " star]" : " stars]");
                             }
 
                             // display a cute little properties window describing our doodle here.
@@ -177,10 +223,10 @@ module INLModules {
                             //}).show();
 
                             score.popupMessage = allText;
-                            score.updateValue(count); // number of overlapping features
+                            score.updateValue(minStarValue);
                         } else {
-                            score.popupMessage = "None";
-                            score.updateValue(0);
+                            score.popupMessage = noCategoryLabel;
+                            score.updateValue(starRatables[noCategoryLabel]);
                         }
                     } else {
                         score.popupMessage = "Parse error";

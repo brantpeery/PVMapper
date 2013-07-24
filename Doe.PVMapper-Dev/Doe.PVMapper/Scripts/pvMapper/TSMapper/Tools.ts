@@ -32,13 +32,25 @@ module pvMapper {
         destroy?: ICallback;
         activate?: ICallback;
         deactivate?: ICallback;
+
+        
     }
 
     export interface IToolLine extends ITool {
         scores: IScore[];
+
+        ////TODO: implementation option B
+        ////Note: implemented once by the API
+        ////ensureStarRatable: (name: string, defaultRating: number = 3) => void; // done by getStarRating...?
+        //getStarRating: (name: string) => number;
+        //onStarRatingChange: (scores: Score[]) => void; //...?
     }
 
-    export interface IScoreTool extends ITool {
+    export interface IStarRatings {
+        [name: string]: number;
+    }
+
+    export interface IScoreToolOptions extends ITool {
         /**
         The function that will be called by the API everytime the tool should
         recalculate a value.
@@ -46,7 +58,14 @@ module pvMapper {
         @returns number The calculated value
         */
         onSiteChange: (event: EventArg, score: Score) => void;
-        onScoreAdded: (event: EventArg, score: Score) => void;
+
+        // optional members for star ratings (qualitative) tools...
+        getStarRatables?: () => IStarRatings;
+        //setStarRatables?: (ratables: IStarRatings) => void;
+        //getStarRating: (name: string) => number;
+
+        // optional method, implemented on configurable tools, which will show a configuration menu
+        showConfigWindow?: () => void;
 
         //TODO: add utility function configuration options here...
         scoreUtilityOptions?: IScoreUtilityOptions;

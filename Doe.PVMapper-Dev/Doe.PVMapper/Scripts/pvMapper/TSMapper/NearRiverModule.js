@@ -25,7 +25,8 @@ var BYUModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 100, "Minimum River threshold allowed.", "Maximum River threshold allowed.")
+                            //TODO: what units is this distance in? kilometers? I'm guessing km...
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 100, "km", "Minimum River threshold allowed.", "Maximum River threshold allowed.")
                         },
                         defaultWeight: 10
                     }
@@ -112,7 +113,7 @@ var BYUModules;
 
                         score.popupMessage = "Please Wait! Lots of rivers!";
                       
-                        score.updateValue(0);
+                        score.updateValue(Number.NaN);
 
                     }
                 }

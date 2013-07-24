@@ -248,6 +248,8 @@
       <DependentUpon>ModuleTemplate.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\ModuleTemplate.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\NearRiverModule.js" />
+    <Content Include="Scripts\pvMapper\TSMapper\NearRoadModule.js" />
     <Content Include="Scripts\pvMapper\TSMapper\Options.d.js">
       <DependentUpon>Options.d.ts</DependentUpon>
     </Content>
@@ -256,6 +258,7 @@
     <Content Include="Scripts\pvMapper\TSMapper\Options.d.min.js">
       <DependentUpon>Options.d.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\PVData.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\pvMapper.js">
       <DependentUpon>pvMapper.ts</DependentUpon>
     </Content>
