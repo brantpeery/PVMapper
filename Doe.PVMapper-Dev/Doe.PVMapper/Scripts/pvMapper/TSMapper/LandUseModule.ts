@@ -47,8 +47,6 @@ module INLModules {
                         functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
                     },
                     weight: 10,
-                    unitSymbol: "stars",
-                    unitClass: ""
                 }],
 
                 infoTools: null
