@@ -2,6 +2,7 @@
 /// <reference path="ScoreUtility.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Site.ts" />
+/// <reference path="StarRatingHelper.ts" />
 /// <reference path="common.ts" />
 
 module pvMapper {
@@ -44,10 +45,6 @@ module pvMapper {
         ////ensureStarRatable: (name: string, defaultRating: number = 3) => void; // done by getStarRating...?
         //getStarRating: (name: string) => number;
         //onStarRatingChange: (scores: Score[]) => void; //...?
-    }
-
-    export interface IStarRatings {
-        [name: string]: number;
     }
 
     export interface IScoreToolOptions extends ITool {
