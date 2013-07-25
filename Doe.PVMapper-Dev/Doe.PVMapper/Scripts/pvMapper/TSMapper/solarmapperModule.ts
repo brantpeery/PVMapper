@@ -5,6 +5,7 @@
 /// <reference path="Tools.ts" />
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
+/// <reference path="StarRatingHelper.ts" />
 
 module INLModules {
     class SolarmapperModule {
@@ -32,15 +33,15 @@ module INLModules {
                     title: "Land Management",
                     description: "Checks solarmapper.anl.gov for intersecting land management polygons",
                     category: "Land Use",
-                    onScoreAdded: (e, score: pvMapper.Score) => {
-                    },
+                    //onScoreAdded: (e, score: pvMapper.Score) => {
+                    //},
                     onSiteChange: function (e, score) {
                         identifyFeature(score);
                         //s.updateValue(status.toString());
                     },
                     
                     getStarRatables: () => {
-                        return starRatables;
+                        return starRatingHelper.starRatings;
                     },
 
                     // for now, no land management agencies is best, any one is bad, and multiple are worse
@@ -70,25 +71,11 @@ module INLModules {
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
-    /////////////////////////////////////////////////////
-    // bits of code for handling qualitative star ratings
-
-    var starRatables: pvMapper.IStarRatings = {};
-    var defaultStarRating: number = 2;
-    var noCategoryRating: number = 4;
-    var noCategoryLabel: string = "None";
-
-    function sortRatables(a: string, b:string): number {
-        // sort from lowest to highest star rating first
-        var difference = starRatables[a] - starRatables[b];
-        if (difference !== 0)
-            return difference;
-
-        // after that, sort alphabitically
-        return a.localeCompare(b);
-    }
-
-    /////////////////////////////////////////////////////
+    var starRatingHelper = new pvMapper.StarRatingHelper({
+        defaultStarRating: 2,
+        noCategoryRating: 4,
+        noCategoryLabel: "None"
+    });
 
     var solarmapperRestBaseUrl = "http://solarmapper.anl.gov/ArcGIS/rest/services/PV_Mapper_SDE/MapServer/";
     var solarmapperWmsUrl = "http://solarmapper.anl.gov/ArcGIS/services/PV_Mapper_SDE/MapServer/WMSServer";
@@ -114,10 +101,6 @@ module INLModules {
         mapLayer.setVisibility(false);
         pvMapper.map.addLayer(mapLayer);
         //pvMapper.map.setLayerIndex(mapLayer, 0);
-
-        // also, add a ratable star for the None category
-        if (typeof starRatables[noCategoryLabel] === "undefined")
-            starRatables[noCategoryLabel] = noCategoryRating;
     }
 
     function removeMapLayer() {
@@ -187,25 +170,14 @@ module INLModules {
                                 // add this to the array of responses we've received
                                 if (responseArray.indexOf(newText) < 0) {
                                     responseArray.push(newText);
-
-                                    // if this is a response we've never seen before, give it a new (default) rating
-                                    if (typeof starRatables[newText] === "undefined")
-                                        starRatables[newText] = defaultStarRating;
                                 }
                             }
 
                             // sort the array of responses based on star rating (then alphabitically)
-                            responseArray.sort(sortRatables);
 
                             // format responses in a single line of text
-                            var minStarValue = starRatables[responseArray[0]];
-                            var allText = responseArray[0] + " [" + starRatables[responseArray[0]] +
-                                ((starRatables[responseArray[0]] === 1) ? " star]" : " stars]");
-
-                            for (var i = 1; i < responseArray.length; i++) {
-                                allText += ", " + responseArray[i] + " [" + starRatables[responseArray[i]] +
-                                ((starRatables[responseArray[i]] === 1) ? " star]" : " stars]");
-                            }
+                            var allText = starRatingHelper.sortRatableArray(responseArray);
+                            var minStarValue = starRatingHelper.starRatings[responseArray[0]];
 
                             // display a cute little properties window describing our doodle here.
                             //Note: this works only as well as our windowing scheme, which is to say poorly
@@ -225,8 +197,9 @@ module INLModules {
                             score.popupMessage = allText;
                             score.updateValue(minStarValue);
                         } else {
-                            score.popupMessage = noCategoryLabel;
-                            score.updateValue(starRatables[noCategoryLabel]);
+                            score.popupMessage = starRatingHelper.options.noCategoryLabel;
+                            score.updateValue(starRatingHelper.starRatings[
+                                starRatingHelper.options.noCategoryLabel]);
                         }
                     } else {
                         score.popupMessage = "Parse error";
