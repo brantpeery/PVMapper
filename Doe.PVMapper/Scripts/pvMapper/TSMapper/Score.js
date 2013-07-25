@@ -38,8 +38,8 @@ var pvMapper;
             //Grab onto the change event for the site
             this.site.changeEvent.addHandler(function (e) {
                 e.data = _this;
-                if (console)
-                    console.log('The score ' + _this.site.name + ' has detected a site change pvMapper.Event.fire its own event now.');
+
+                //if (console) console.log('A score for site ' + this.site.name + ' has detected a site change pvMapper.Event.fire its own event now.');
                 _this.siteChangeEvent.fire(_this, [e, _this]);
             });
         }

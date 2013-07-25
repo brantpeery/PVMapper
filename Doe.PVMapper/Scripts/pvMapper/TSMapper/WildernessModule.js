@@ -33,7 +33,7 @@
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 1, "NU", "Minimum Wilderness threshold allowed.", "Maximum Wilderness threshold allowed.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(1, 0, "parks", "Minimum Wilderness threshold allowed.", "Maximum Wilderness threshold allowed.")
                         },
                         weight: 10
                     }
@@ -96,12 +96,12 @@
                             if (parsedResponse.results.length > 0) {
                                 //This will only take the first national park that overlaps
                                 score.popupMessage = parsedResponse.results[0].value;
-                                score.updateValue(0);
+                                score.updateValue(1);
                             } else {
                                 score.popupMessage = "No National Park Overlaps";
 
                                 //score.popupMessage = "No data for this site";
-                                score.updateValue(1);
+                                score.updateValue(0);
                             }
                         } else {
                             score.popupMessage = "Parse error";

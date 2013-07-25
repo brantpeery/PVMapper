@@ -9,7 +9,7 @@ var pvMapper;
         function MinMaxUtilityArgs(minValue, maxValue, unit, minTip, maxTip) {
             if (typeof minValue === "undefined") { minValue = 0; }
             if (typeof maxValue === "undefined") { maxValue = 100; }
-            if (typeof unit === "undefined") { unit = "NU"; }
+            if (typeof unit === "undefined") { unit = ""; }
             if (typeof minTip === "undefined") { minTip = "The minimum value."; }
             if (typeof maxTip === "undefined") { maxTip = "The maximum value."; }
             this.minValue = minValue;
@@ -27,7 +27,7 @@ var pvMapper;
             if (typeof maxValue === "undefined") { maxValue = 100; }
             if (typeof target === "undefined") { target = 0; }
             if (typeof slope === "undefined") { slope = 0; }
-            if (typeof unit === "undefined") { unit = "NU"; }
+            if (typeof unit === "undefined") { unit = ""; }
             if (typeof minTip === "undefined") { minTip = "The minimum value."; }
             if (typeof maxTip === "undefined") { maxTip = "The maximum value."; }
             if (typeof targetTip === "undefined") { targetTip = "The target value."; }
@@ -63,7 +63,7 @@ var pvMapper;
             if (typeof p1y === "undefined") { p1y = 1; }
             if (typeof p2x === "undefined") { p2x = 360; }
             if (typeof p2y === "undefined") { p2y = 0.5; }
-            if (typeof unit === "undefined") { unit = "NU"; }
+            if (typeof unit === "undefined") { unit = ""; }
             this.points = ["p0", "p1", "p2"];
             this.p0 = { x: p0x, y: p0y };
             this.p1 = { x: p1x, y: p1y };

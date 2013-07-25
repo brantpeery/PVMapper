@@ -470,26 +470,52 @@ Ext.define('MainApp.view.ScoreboardWindow', {
           {
             xtype: 'button',
             iconCls: 'x-ux-grid-printer',
+            width: 24,
+            height: 15,
             //scope: this,
             handler: function () {
               //var win = Ext.WindowManager.getActive();
               //if (win) {
               //  win.toggleMaximize();
               //}
+              var style=''; var link='';
               var printContent = document.getElementById("ScoreboardWindowID-body"); //TODO: change to get the ID, rather than use 'magic' ID
               var printWindow = window.open('', '', ''); // 'left=10, width=800, height=520');
-              printWindow.document.title = "PV Mapper Scoreboard"
-              printWindow.document.write(printContent.outerHTML); //TODO: must change to innerHTML ???
-              $("link, style").each(function () {
-                $(printWindow.document.head).append($(this).clone())
+
+              var html = printContent.outerHTML; //TODO: must change to innerHTML ???
+              $("link").each(function () {
+                link += $(this)[0].outerHTML;
               });
+              $("style").each(function () {
+                style += $(this)[0].outerHTML;
+              });
+
+             // var script = '<script> window.onmouseover = function(){window.close();}</script>';
+              printWindow.document.write('<!DOCTYPE html><html lang="en"><head><title>PV Mapper Scoreboard</title>' + link + style + ' </head><body>' + html + '</body>');
+              $('div',printWindow.document).each(function () {
+                if (($(this).css('overflow') == 'hidden') || ($(this).css('overflow') == 'auto')) {
+                  $(this).css('overflow', 'visible');
+                  
+                }
+              });
+    //-- if we want to control auto sizing.
+              //$('.x-panel, .x-grid-header-ct', printWindow.document).css('overflow', 'visible');
+              //$('.x-window-body,.x-panel, .x-grid-header-ct', printWindow.document).width('inherit');
+              //$('.x-panel, .x-grid-header-ct', printWindow.document).height('auto');
+              //$('.x-window-body', printWindow.document).height('inherit');
+              //$('.x-box-inner', printWindow.document).css('overflow','visible');
+              //$('.x-box-inner', printWindow.document).width('inherit');
+              //$('.x-box-inner', printWindow.document).height('inherit');
+              
+              //$('.x-panel-body,.x-grid-body,.x-grid-view', printWindow.document).css('overflow','visible');
+              //$('.x-panel-body,.x-grid-view', printWindow.document).width('inherit');
+              //$('.x-panel-body,.x-grid-view', printWindow.document).height('auto');
+    //--
+             
               printWindow.document.close();
               printWindow.print();
 
-              //if (win) {
-              //  win.toggleMaximize();
-              //}
-              //printWindow.close();
+              //printWindow.close();'
              }
           }
       ]

@@ -28,7 +28,9 @@ var pvMapper;
             this.onScoreChanged = function (event) {
                 //console.log("Score changed event detected by the scoreboard");
                 //var html = this.self.render();
+                //Update all the summary (average/total) lines
                 _this.updateTotals();
+
                 _this.changedEvent.fire(_this, event);
             };
         }
@@ -83,8 +85,13 @@ var pvMapper;
     pvMapper.mainScoreboard.changedEvent.addHandler(function () {
         if (timeoutHandle == null) {
             timeoutHandle = window.setTimeout(function () {
+                if (console) {
+                    console.log("Scoreboard update event(s) being processed...");
+                }
+
                 // we're done delaying our event, so reset the timeout handle to null
                 timeoutHandle = null;
+
                 var self = pvMapper.mainScoreboard;
                 var mydata = pvMapper.mainScoreboard.getTableData();
                 if (!pvMapper.floatingScoreboard) {
