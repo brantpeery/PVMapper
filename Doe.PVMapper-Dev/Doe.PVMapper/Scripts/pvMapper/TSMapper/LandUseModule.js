@@ -9,6 +9,11 @@ var INLModules;
     var ProtectedAreasModule = (function () {
         function ProtectedAreasModule() {
             var _this = this;
+            this.starRatingHelper = new pvMapper.StarRatingHelper({
+                defaultStarRating: 2,
+                noCategoryRating: 4,
+                noCategoryLabel: "None"
+            });
             this.federalLandsWmsUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/services/PADUS/PADUS_owner/MapServer/WMSServer";
             this.federalLandsRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/PADUS/PADUS_owner/MapServer/";
             this.landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
@@ -33,20 +38,19 @@ var INLModules;
                         title: "Protected Areas",
                         description: "Overlapping protected areas, using PAD-US map data hosted by UI-GAP (gap.uidaho.edu)",
                         category: "Land Use",
-                        onScoreAdded: function (e, score) {
-                        },
+                        //onScoreAdded: (e, score: pvMapper.Score) => {
+                        //},
                         onSiteChange: function (e, score) {
                             _this.updateScore(score);
                         },
-                        //TODO: need a categorical scoring system
-                        // for now, this assumes that overlapping more protected areas is worse than overlapping fewer (!)
-                        scoreUtilityOptions: {
-                            functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 1, 0.6, 5, 0)
+                        getStarRatables: function () {
+                            return _this.starRatingHelper.starRatings;
                         },
-                        weight: 10,
-                        unitSymbol: "NU",
-                        unitClass: ""
+                        scoreUtilityOptions: {
+                            functionName: "linear",
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
+                        },
+                        weight: 10
                     }
                 ],
                 infoTools: null
@@ -74,6 +78,7 @@ var INLModules;
         };
 
         ProtectedAreasModule.prototype.updateScore = function (score) {
+            var _this = this;
             var params = {
                 mapExtent: score.site.geometry.bounds.toBBOX(6, false),
                 geometryType: "esriGeometryEnvelope",
@@ -97,8 +102,7 @@ var INLModules;
                         var parsedResponse = esriJsonPerser.read(response.responseText);
 
                         if (parsedResponse && parsedResponse.results && parsedResponse.results.length > 0) {
-                            var alertText = "";
-                            var lastText = null;
+                            var responseArray = [];
                             for (var i = 0; i < parsedResponse.results.length; i++) {
                                 var name = parsedResponse.results[i].attributes["Primary Designation Name"];
                                 var type = parsedResponse.results[i].attributes["Primary Designation Type"];
@@ -121,20 +125,19 @@ var INLModules;
                                     newText += (newText) ? ": " + owner : owner;
                                 }
 
-                                if (newText != lastText) {
-                                    if (lastText != null) {
-                                        alertText += ", \n";
-                                    }
-                                    alertText += newText;
+                                if (responseArray.indexOf(newText) < 0) {
+                                    responseArray.push(newText);
                                 }
-                                lastText = newText;
                             }
 
-                            score.popupMessage = alertText;
-                            score.updateValue(parsedResponse.results.length);
+                            // use the combined rating string, and its lowest rating value
+                            var combinedText = _this.starRatingHelper.sortRatableArray(responseArray);
+                            score.popupMessage = combinedText;
+                            score.updateValue(_this.starRatingHelper.starRatings[responseArray[0]]);
                         } else {
-                            score.popupMessage = "None";
-                            score.updateValue(0);
+                            // use the no category label, and its current star rating
+                            score.popupMessage = _this.starRatingHelper.options.noCategoryLabel;
+                            score.updateValue(_this.starRatingHelper.starRatings[_this.starRatingHelper.options.noCategoryLabel]);
                         }
                     } else {
                         score.popupMessage = "Error " + response.status;
@@ -153,6 +156,8 @@ var INLModules;
     var LandCoverModule = (function () {
         function LandCoverModule() {
             var _this = this;
+            this.ratables = {};
+            this.defaultRating = 3;
             this.landCoverRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/NAT_LC/1_NVC_class_landuse/MapServer/";
             this.landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
             var myModule = new pvMapper.Module({
@@ -176,18 +181,19 @@ var INLModules;
                         title: "Land Cover",
                         description: "The type of land cover found in the center of a site, using NLCD map data hosted by UI-GAP (gap.uidaho.edu)",
                         category: "Land Use",
-                        onScoreAdded: function (e, score) {
-                        },
+                        //onScoreAdded: (e, score: pvMapper.Score) => {
+                        //},
                         onSiteChange: function (e, score) {
                             _this.updateScore(score);
                         },
-                        //TODO: need a categorical scoring system
-                        // for now, this is a constant value (always returns the max, why not)
+                        getStarRatables: function () {
+                            return _this.ratables;
+                        },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 100, "NU", "The minimum Land Cover allowed.", "The maximum Land Cover allowed.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
                         },
-                        weight: 0
+                        weight: 10
                     }
                 ],
                 infoTools: null
@@ -212,6 +218,7 @@ var INLModules;
         };
 
         LandCoverModule.prototype.updateScore = function (score) {
+            var _this = this;
             var params = {
                 mapExtent: score.site.geometry.bounds.toBBOX(6, false),
                 geometryType: "esriGeometryEnvelope",
@@ -234,21 +241,29 @@ var INLModules;
                         var parsedResponse = esriJsonPerser.read(response.responseText);
 
                         if (parsedResponse && parsedResponse.results && parsedResponse.results.length > 0) {
-                            var alertText = "";
+                            console.assert(parsedResponse.results.length === 1, "Warning: land cover score tool unexpectedly found more than one land cover type");
+
+                            var landCover = "";
                             var lastText = null;
                             for (var i = 0; i < parsedResponse.results.length; i++) {
                                 var newText = parsedResponse.results[i].attributes["NVC_DIV"];
                                 if (newText != lastText) {
                                     if (lastText != null) {
-                                        alertText += ", \n";
+                                        landCover += ", \n";
                                     }
-                                    alertText += newText;
+                                    landCover += newText;
                                 }
                                 lastText = newText;
                             }
 
-                            score.popupMessage = alertText;
-                            score.updateValue(parsedResponse.results.length);
+                            var rating = _this.ratables[landCover];
+
+                            if (typeof rating === "undefined") {
+                                var rating = _this.ratables[landCover] = _this.defaultRating;
+                            }
+
+                            score.popupMessage = landCover + " [" + rating + (rating === 1 ? " star]" : " stars]");
+                            score.updateValue(rating);
                         } else {
                             score.popupMessage = "No data for this site";
                             score.updateValue(Number.NaN);

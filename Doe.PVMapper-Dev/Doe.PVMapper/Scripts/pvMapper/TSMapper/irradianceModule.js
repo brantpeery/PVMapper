@@ -36,7 +36,7 @@ var INLModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 8, "MW", "Minimum Direct-Normal Irradiation allowed.", "Maximum Direct-Normal Irradiation allowed.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 8, "kWh/m2/day", "Minimum Direct-Normal Irradiation allowed.", "Maximum Direct-Normal Irradiation allowed.")
                         },
                         weight: 10
                     },
@@ -55,7 +55,7 @@ var INLModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 6, "MW")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 6, "kWh/m2/day")
                         },
                         weight: 10
                     },
@@ -74,7 +74,7 @@ var INLModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 6, "MW")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 6, "kWh/m2/day")
                         },
                         weight: 10
                     }
