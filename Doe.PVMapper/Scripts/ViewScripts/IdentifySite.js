@@ -79,6 +79,7 @@ function identifySite(map, layer) {
         self.button.toggle(false);
     }
 
+    /*  Methods to use REST Identify on various layers
     function byuLayersIdentify(x, y) {
         console.log("In BYU identify method");
         var byuLayers = [   //contains info for all of BYU Layers to identify on [url, layerName]
@@ -99,9 +100,9 @@ function identifySite(map, layer) {
 
         var params = {
             f: "json",
-            mapExtent: "{x: " + x + " , y: " + y + "}",     //TODO start here tomorrow
+            mapExtent: pvMapper.map.getExtent(),
             geometryType: "esriGeometryPoint",
-            geometry: "{x: " + x + " , y: " + y + "}",
+            geometry: "",
             layers: "all",
             tolerance: 0,
             imageDisplay: "1, 1, 96",
@@ -169,7 +170,7 @@ function identifySite(map, layer) {
         });
 
         return grid;
-    }
+    }*/
 
     function onIdentify(data) {
         console.log(data);
@@ -201,7 +202,7 @@ function identifySite(map, layer) {
        
       //  console.log(pvMapper.map.calculateBounds().toBBOX());
         /*var paramsWMS = {
-        bbox: pvMapper.map.calculateBounds().transform(proj900913, projWGS84).toBBOX(),
+            bbox: pvMapper.map.calculateBounds().transform(proj900913, projWGS84).toBBOX(),
             format: "jpeg",
             info_format: "application/json",
             request: "GetFeatureInfo",
@@ -293,7 +294,6 @@ layer identify
     takes the response, which should be all the field/value pairs from that layer at that location,
     and puts them into an array
     this array is returned to the above method
-
  */
 
 
