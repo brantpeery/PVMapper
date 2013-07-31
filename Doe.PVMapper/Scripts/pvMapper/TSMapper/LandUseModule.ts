@@ -223,6 +223,9 @@ module INLModules {
 
         private landCoverRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/NAT_LC/1_NVC_class_landuse/MapServer/";
 
+        //TODO: try switching to WMS source instead, to support Identify and Legend functions. WMS url:
+        //      http://dingo.gapanalysisprogram.com/ArcGIS/services/NAT_LC/6_Ecol_Sys_landuseNocache/MapServer/WMSServer?request=GetCapabilities&service=WMS
+
         private landCoverLayer;
         private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
 

@@ -99,7 +99,7 @@ module INLModules {
 
     /////////////var irradianceMapUrl = "http://mapsdb.nrel.gov/jw_router/perezANN_mod/tile";
     //var irradianceMapUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/services/PADUS/PADUS_owner/MapServer/WMSServer?";
-    var MapsDbUrl = "http://mapsdb.nrel.gov/geoserver/swera/wms";
+    var MapsDbUrl = "http://mapsdb.nrel.gov/geoserver/swera/wms?";
 
     //declare var Ext: any;
 
@@ -133,7 +133,7 @@ module INLModules {
                 //layer_type: "polygon",
                 transparent: "true",
                 format: "image/png",
-                exceptions: "application/vnd.ogc.se_inimage",
+                //exceptions: "application/vnd.ogc.se_inimage",
                 maxResolution: 156543.0339,
                 srs: "EPSG:900913",
             },
