@@ -26,7 +26,7 @@ var BYUModules;
                         scoreUtilityOptions: {
                             functionName: "linear",
                             //TODO: what units is this distance in? kilometers? I'm guessing km...
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 100, "km", "Minimum River threshold allowed.", "Maximum River threshold allowed.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(100, 0, "km", "Minimum River threshold allowed.", "Maximum River threshold allowed.")
                         },
                         defaultWeight: 10
                     }
@@ -74,7 +74,6 @@ var BYUModules;
                         var finalResponse = {};
                         var jobId = parsedResponse.jobId;
                         var resultSearcher = setInterval(function () {
-
                             console.log("Job Still Processing");
                             //Send out another request
                             var resultRequestRepeat = OpenLayers.Request.GET({
@@ -86,6 +85,7 @@ var BYUModules;
                                         var esriJsonParser = new OpenLayers.Format.JSON();
                                         esriJsonParser.extractAttributes = true;
                                         var parsedResponse = esriJsonParser.read(response.responseText);
+
                                         if (!parsedResponse.error) {
                                             //Finally got Result. Lets Send it to the console for now and break from this stupid loop!
                                        
@@ -94,8 +94,8 @@ var BYUModules;
                                      
                                             if (parsedResponse && parsedResponse.value.features[0].attributes.PNAME) {
                                                
-                                                score.popupMessage = parsedResponse.value.features[0].attributes.PNAME;
                                                 var dist = Math.round(parsedResponse.value.features[0].attributes.near_dist * 0.000621371);
+                                                score.popupMessage = dist + "km to " + parsedResponse.value.features[0].attributes.PNAME;
                                          
                                                 score.updateValue(dist);
                                             }
@@ -105,16 +105,20 @@ var BYUModules;
                                             }
 
                                         }
+                                    } else {
+                                        clearInterval(resultSearcher);
+                                        score.popupMessage = "Error " + response.status;
+                                        score.updateValue(Number.NaN);
                                     }
                                 }
                             });
                         }, 10000);
 
-
                         score.popupMessage = "Please Wait! Lots of rivers!";
-                      
                         score.updateValue(Number.NaN);
-
+                    } else {
+                        score.popupMessage = "Error " + response.status;
+                        score.updateValue(Number.NaN);
                     }
                 }
             });

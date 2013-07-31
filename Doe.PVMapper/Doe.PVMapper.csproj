@@ -386,12 +386,12 @@
     <Content Include="Scripts\UI\view\ScoreboardWindow.js" />
     <Content Include="Scripts\UI\view\UtilityFunctionEdit.js" />
     <Content Include="Scripts\ViewScripts\SiteId.js" />
-    <Content Include="Scripts\ViewScripts\UnitTests\jasmine.js" />
-    <Content Include="Scripts\ViewScripts\UnitTests\pvMapper.Event.js" />
-    <Content Include="Scripts\ViewScripts\UnitTests\pvMapper.Render.js" />
-    <Content Include="Scripts\ViewScripts\UnitTests\PVMapper.Site.js" />
-    <Content Include="Scripts\ViewScripts\UnitTests\pvMapper.SiteManager.js" />
-    <Content Include="Scripts\ViewScripts\UnitTests\string_extensions.js" />
+    <Content Include="Scripts\UnitTests\jasmine.js" />
+    <Content Include="Scripts\UnitTests\pvMapper.Event.js" />
+    <Content Include="Scripts\UnitTests\pvMapper.Render.js" />
+    <Content Include="Scripts\UnitTests\PVMapper.Site.js" />
+    <Content Include="Scripts\UnitTests\pvMapper.SiteManager.js" />
+    <Content Include="Scripts\UnitTests\string_extensions.js" />
     <Content Include="Scripts\ViewScripts\DistanceTool.js" />
     <Content Include="Scripts\ViewScripts\IdentifySite.js" />
     <Content Include="Scripts\_frameworkobjects.d.ts" />
@@ -1134,8 +1134,6 @@
     <Content Include="Scripts\ViewScripts\SiteDetail.js" />
     <Content Include="Scripts\ViewScripts\testscripts.js" />
     <Content Include="Scripts\ViewScripts\ZoomAction.js" />
-    <Content Include="TestPages\LayoutTest.html" />
-    <Content Include="TestPages\SiteObjectTest.html" />
     <Content Include="TestPages\UtilityFunctions.html" />
     <Content Include="TestPages\UtilityWeights.html" />
     <Content Include="favicon.ico" />
