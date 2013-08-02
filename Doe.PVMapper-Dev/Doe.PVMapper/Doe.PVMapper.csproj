@@ -381,6 +381,7 @@
     <Content Include="Scripts\UI\panel\MinMaxTargetPanel.js" />
     <Content Include="Scripts\UI\panel\PropertyGrid.js" />
     <Content Include="Scripts\UI\view\FunctionWindow.js" />
+    <Content Include="Scripts\UI\view\PieView.js" />
     <Content Include="Scripts\UI\view\RatingTool.js" />
     <Content Include="Scripts\UI\view\RatingView.js" />
     <Content Include="Scripts\UI\view\ScoreboardWindow.js" />
@@ -1113,7 +1114,6 @@
     <Content Include="Scripts\UI\view\Header.js" />
     <Content Include="Scripts\UI\view\MainToolbar.js" />
     <Content Include="Scripts\UI\view\Modules\NavigateView.js" />
-    <Content Include="Scripts\UI\view\Modules\PieView.js" />
     <Content Include="Scripts\UI\view\Taskbar.js" />
     <Content Include="Scripts\UI\view\UserLogin.js" />
     <Content Include="Scripts\UI\view\Viewport.js" />

@@ -79,12 +79,6 @@ var toolsStore = Ext.create('Ext.data.Store', {
 
 var siteColumns = []; //Empty array for use below as a reference to what will be in the array eventually
 
-//var sitesColumn = Ext.create('Ext.grid.column.Column', {
-//    text: null,
-//    sealed: false,
-//    columns: siteColumns
-//});
-
 var scoreboardColumns = [{
     text: 'Tool Name',
     minWidth: 150,
@@ -100,11 +94,48 @@ var scoreboardColumns = [{
         }
         return value;
     },
+    viewPie: function (cat) {
+    
+      var records = scoreboardGrid.store.getGroups(cat);
+      if (records.children.length > 0) {
+        pieStore.removeAll(); //delete all records in the score
+        records.children.forEach(function(record, index, array) {
+          pieStore.add({Category: record.get('title'), Data: record.get('weight'), Color: "blue"});
+        });
+      }
+
+      var pieWin = Ext.create('MainApp.view.PieWindow', {
+        dataStore: pieStore,
+        dataField: 'Data',
+        dataName: 'Category',
+        fillColor: 'Color',
+        title: 'Weight Percentage - ' + cat,
+        buttons: [{
+          xtype: 'button',
+          text: 'OK',
+          handler: function () {
+            //TODO: execute update function here.
+
+
+            pieWin.close();
+          }
+        },
+      //{
+      //  xtype: 'button',
+      //  text: 'Cancel',
+      //  handler: function () {
+      //    pieWin.close();
+      //  }
+      //}
+        ]
+      }).show();
+
+    },
     //tooltip: '{description}',
     //editor: 'textfield', <-- don't edit this field - that would be silly
     summaryType: function (records) {
-        //Note: this fails when we allow grouping by arbitrary fields (and it fails in mysterious ways)
-        return records[0].get('category') + " subtotal:";
+      //Note: this fails when we allow grouping by arbitrary fields (and it fails in mysterious ways)
+      return records[0].get('category') + " subtotal: <input type='button' value='Pie' onClick='scoreboardColumns[0].viewPie(\"" + records[0].get('category') + "\");' />";
     },
     //}, {
     //    text: 'Category',
