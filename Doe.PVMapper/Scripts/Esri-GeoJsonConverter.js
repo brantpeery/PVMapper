@@ -153,7 +153,7 @@ function geoJsonConverter(){
     geometry type, point, line, polygon*/
   function isCompatible(esriGeomType, gcGeomType) {
     var compatible = false;
-    if ((esriGeomType === "esriGeometryPoint" || esriGeomType ===" esriGeometryMultipoint") && (gcGeomType === "Point" || gcGeomType === "MultiPoint")) {
+    if ((esriGeomType === "esriGeometryPoint" || esriGeomType === "esriGeometryMultipoint") && (gcGeomType === "Point" || gcGeomType === "MultiPoint")) {
       compatible = true;
     } else if (esriGeomType === "esriGeometryPolyline" && (gcGeomType === "LineString" || gcGeomType === "MultiLineString")) {
       compatible = true;
