@@ -63,8 +63,11 @@ interface String {
         That would produce
         "this is John's book."
 */
-String.prototype.format = function (args) {
-    var values: string = (arguments.length > 1) ? arguments : args;
+String.prototype.format = function (args: string) {
+
+    //var values: string = (arguments.length > 1) ? arguments : args;
+    //                                                              -------------  TC9.0 doesn't allow reference this way.
+    var values: string = (arguments.length > 1) ? arguments[0] : args;
     var str = this;
     //The regular expression for the formatter to separate terms from the string.
     //    The default expression will parse to variables named inside brackets.
@@ -85,7 +88,7 @@ String.prototype.format = function (args) {
     });
 };
 
-String.prototype.isNullOrEmpty = function (): bool {
+String.prototype.isNullOrEmpty = function (): boolean {
   var value: string = this;
   if ((typeof (value) === 'undefined') || (value.length == 0))
     return true;

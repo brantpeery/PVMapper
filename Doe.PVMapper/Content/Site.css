@@ -66,3 +66,33 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4fcff', end
      color: black;
      font-weight: bold;
 }
+
+.ux-rating-star-zero {
+	/*background: transparent;*/
+	/*overflow: hidden;*/
+	opacity: 0.5;
+}
+
+.ux-rating-star-on {
+	/*background: transparent;*/
+	/*overflow: hidden;*/
+}
+
+.ux-rating-star-off {
+	/*background: transparent;
+	overflow: hidden;*/
+	/*background-position:0 -16px!important*/
+	opacity: 0.3;
+}
+
+.x-ux-grid-printer {
+  background-image: url(../Images/printer.png);
+}
+
+.x-action-col-icon {
+    cursor: pointer;
+}
+
+.x-action-col-icon.x-item-disabled {
+    cursor: default;
+}

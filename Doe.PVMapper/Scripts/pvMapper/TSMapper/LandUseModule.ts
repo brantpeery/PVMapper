@@ -6,6 +6,7 @@
 /// <reference path="Module.ts" />
 
 module INLModules {
+
     export class ProtectedAreasModule {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module({
@@ -26,34 +27,37 @@ module INLModules {
                     activate: null,
                     deactivate: null,
                     destroy: null,
-                    init: null,
+                    init: null,                           
 
                     title: "Protected Areas",
-                    description: "Shows the classification of protected areas within the united states.",
+                    description: "Overlapping protected areas, using PAD-US map data hosted by UI-GAP (gap.uidaho.edu)",
                     category: "Land Use",
-                    onScoreAdded: (e, score: pvMapper.Score) => {
-                    },
+                    //onScoreAdded: (e, score: pvMapper.Score) => {
+                    //},
                     onSiteChange: (e, score: pvMapper.Score) => {
                         this.updateScore(score);
                     },
 
-                    //TODO: need a categorical scoring system
-                    // for now, this assumes that overlapping more protected areas is worse than overlapping fewer (!)
-                    scoreUtilityOptions: {
-                        functionName: "linear3pt",
-                        functionArgs: <pvMapper.IThreePointUtilityArgs>{
-                            p0: { x: 0, y: 1 },
-                            p1: { x: 1, y: 0.6 },
-                            p2: { x: 5, y: 0 }
-                        }
+                    getStarRatables: () => {
+                        return this.starRatingHelper.starRatings;
                     },
-                    defaultWeight: 10
+
+                    scoreUtilityOptions: {
+                        functionName: "linear",
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
+                    },
+                    weight: 10,
                 }],
 
                 infoTools: null
             });
         }
 
+        private starRatingHelper: pvMapper.IStarRatingHelper = new pvMapper.StarRatingHelper({
+            defaultStarRating: 2,
+            noCategoryRating: 4,
+            noCategoryLabel: "None"
+        });
 
         private federalLandsWmsUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/services/PADUS/PADUS_owner/MapServer/WMSServer";
         private federalLandsRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/PADUS/PADUS_owner/MapServer/";
@@ -113,24 +117,46 @@ module INLModules {
                         var parsedResponse = esriJsonPerser.read(response.responseText);
 
                         if (parsedResponse && parsedResponse.results && parsedResponse.results.length > 0) {
-                            var alertText = "";
-                            var lastText = null;
+                            var responseArray: string[] = [];
                             for (var i = 0; i < parsedResponse.results.length; i++) {
-                                var newText = parsedResponse.results[i].attributes["Owner Name"];
-                                if (newText != lastText) {
-                                    if (lastText != null) {
-                                        alertText += ", \n";
-                                    }
-                                    alertText += newText;
+                                var name = parsedResponse.results[i].attributes["Primary Designation Name"];
+                                var type = parsedResponse.results[i].attributes["Primary Designation Type"];
+
+                                var owner = parsedResponse.results[i].attributes["Owner Name"];
+                                var manager = parsedResponse.results[i].attributes["Manager Name"];
+
+                                var newText = "";
+
+                                // use name if we can; use type otherwise
+                                if (name && name != "Null" && isNaN(parseFloat(name))) {
+                                    // some of the names start with a number - skip those
+                                    newText += name;
+                                } else if (type && type != "Null") {
+                                    newText += type;
                                 }
-                                lastText = newText;
+
+                                // use manager if we can; use owner otherwise
+                                if (manager && manager != "Null") {
+                                    newText += (newText) ? ": " + manager : manager;
+                                } else if (owner && owner != "Null") {
+                                    newText += (newText) ? ": " + owner : owner;
+                                }
+
+                                // add this to the array of responses we've received
+                                if (responseArray.indexOf(newText) < 0) {
+                                    responseArray.push(newText);
+                                }
                             }
 
-                            score.popupMessage = alertText;
-                            score.updateValue(parsedResponse.results.length);   // number of overlapping features
+                            // use the combined rating string, and its lowest rating value
+                            var combinedText = this.starRatingHelper.sortRatableArray(responseArray);
+                            score.popupMessage = combinedText;
+                            score.updateValue(this.starRatingHelper.starRatings[responseArray[0]]);
                         } else {
-                            score.popupMessage = "None";
-                            score.updateValue(0);
+                            // use the no category label, and its current star rating
+                            score.popupMessage = this.starRatingHelper.options.noCategoryLabel;
+                            score.updateValue(this.starRatingHelper.starRatings[
+                                this.starRatingHelper.options.noCategoryLabel]);
                         }
                     } else {
                         score.popupMessage = "Error " + response.status;
@@ -169,32 +195,36 @@ module INLModules {
                     init: null,
 
                     title: "Land Cover",
-                    description: "Display the land cover found around the center of a site",
+                    description: "The type of land cover found in the center of a site, using NLCD map data hosted by UI-GAP (gap.uidaho.edu)",
                     category: "Land Use",
-                    onScoreAdded: (e, score: pvMapper.Score) => {
-                    },
+                    //onScoreAdded: (e, score: pvMapper.Score) => {
+                    //},
                     onSiteChange: (e, score: pvMapper.Score) => {
                         this.updateScore(score);
                     },
 
-                    //TODO: need a categorical scoring system
-                    // for now, this is a constant value (always returns the max, why not)
+                    getStarRatables: () => {
+                        return this.ratables;
+                    },
+
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: <pvMapper.IMinMaxUtilityArgs>{
-                            minValue: 0,
-                            maxValue: 0,
-                        }
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
                     },
-                    defaultWeight: 0 //TODO: find a meaningful score & utility for this
+                    weight: 10
                 }],
 
                 infoTools: null
             });
         }
 
+        private ratables: pvMapper.IStarRatings = {};
+        private defaultRating: number = 3;
 
         private landCoverRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/NAT_LC/1_NVC_class_landuse/MapServer/";
+
+        //TODO: try switching to WMS source instead, to support Identify and Legend functions. WMS url:
+        //      http://dingo.gapanalysisprogram.com/ArcGIS/services/NAT_LC/6_Ecol_Sys_landuseNocache/MapServer/WMSServer?request=GetCapabilities&service=WMS
 
         private landCoverLayer;
         private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
@@ -245,21 +275,30 @@ module INLModules {
                         var parsedResponse = esriJsonPerser.read(response.responseText);
 
                         if (parsedResponse && parsedResponse.results && parsedResponse.results.length > 0) {
-                            var alertText = "";
+                            console.assert(parsedResponse.results.length === 1,
+                                "Warning: land cover score tool unexpectedly found more than one land cover type");
+
+                            var landCover = "";
                             var lastText = null;
                             for (var i = 0; i < parsedResponse.results.length; i++) {
                                 var newText = parsedResponse.results[i].attributes["NVC_DIV"];
                                 if (newText != lastText) {
                                     if (lastText != null) {
-                                        alertText += ", \n";
+                                        landCover += ", \n";
                                     }
-                                    alertText += newText;
+                                    landCover += newText;
                                 }
                                 lastText = newText;
                             }
 
-                            score.popupMessage = alertText;
-                            score.updateValue(parsedResponse.results.length);   // returns 1
+                            var rating = this.ratables[landCover];
+
+                            if (typeof rating === "undefined") {
+                                var rating = this.ratables[landCover] = this.defaultRating;
+                            }
+
+                            score.popupMessage = landCover + " [" + rating + (rating === 1 ? " star]" : " stars]");
+                            score.updateValue(rating);
                             //TODO: the server refuses to return more than one pixel value... how do we get %coverage?
                             //      I'm afraid that we'll have to fetch the overlapping image and parse it ourselves...
                             //      or at least run a few requests for different pixels and conbine the results.

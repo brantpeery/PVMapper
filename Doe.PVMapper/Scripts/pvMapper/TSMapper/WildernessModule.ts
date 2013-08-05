@@ -7,8 +7,17 @@
 /// <reference path="Module.ts" />
 /// <reference path="Esri-GeoJsonConverter.js />
 
-declare function esriConverter(): any;
-declare function geoJsonConverter(): any;
+interface esriConverter {}
+declare var esriConverter: {
+    new (): any;
+    prototype: esriConverter;
+}
+
+interface geoJsonConverter { }
+declare var geoJsonConverter: {
+    new (): any;
+    prototype: geoJsonConverter;
+}
 
 module BYUModules {
     export class WildernessModule {
@@ -30,20 +39,19 @@ module BYUModules {
                     //init: null,
                     
                     title: "Wilderness",
-                    description: "Tells whether the given site is in a wilderness area.  ",
+                    description: "Overlapping national parks, using data hosted by BYU",
                     category: "Land Use",
                     onScoreAdded: (event:EventArg, score: pvMapper.Score) => { },
                     onSiteChange: (event: EventArg, score: pvMapper.Score) => {
                         this.updateScore(score);
                     },
                     scoreUtilityOptions: {
-                        functionArgs: <pvMapper.IMinMaxUtilityArgs>{
-                            minValue: 0,
-                            maxValue: 1,
-                        },
-                        functionName: "linear"
+                       functionName: "linear",
+                       functionArgs: new pvMapper.MinMaxUtilityArgs(1, 0, "parks",
+                           "Minimum Wilderness threshold allowed.",
+                           "Maximum Wilderness threshold allowed.")
                     },
-                    defaultWeight: 10
+                    weight: 10
                 }],
                 infoTools: null
             });
@@ -91,16 +99,16 @@ module BYUModules {
             var esriJsonObj = toEsriJson.toEsri(geoJsonObj);
 
             console.log("Converted Geometry:");
-            console.log(esriJsonObj);
+            console.log("Esri Json: " + esriJsonObj);
 
             var params = {
-                /*mapExtent: score.site.geometry.bounds,
-                geometryType: "esriGeometryPolygon",
-                geometry: esriGeometry,*/
-
                 mapExtent: score.site.geometry.bounds,
+                geometryType: "esriGeometryPolygon",
+                geometry: JSON.stringify(esriJsonObj),
+
+                /*mapExtent: score.site.geometry.bounds,
                 geometryType: "esriGeometryEnvelope",
-                geometry: score.site.geometry.bounds.toBBOX(6, false),
+                geometry: score.site.geometry.bounds.toBBOX(6, false),*/
                 f: "json",
                 layers: "all",
                 tolerance: 0,
@@ -118,18 +126,18 @@ module BYUModules {
                         esriJsonParser.extractAttributes = true;
                         var parsedResponse = esriJsonParser.read(response.responseText);
                         console.log("Wilderness Module Response: " + response.responseText);
-                        console.log("geometry: " + score.site.geometry);
+                        console.log("geometry: " + esriJsonObj.toString());
                         console.log("geometry bbox: " + score.site.geometry.bounds.toBBOX(6, false));
                         if (parsedResponse && parsedResponse.results) {
                             if (parsedResponse.results.length > 0) {
                                 
                                 //This will only take the first national park that overlaps
                                 score.popupMessage = parsedResponse.results[0].value;
-                                score.updateValue(0);
+                                score.updateValue(1);
                             } else {
                                 score.popupMessage = "No National Park Overlaps";
                                 //score.popupMessage = "No data for this site";
-                                score.updateValue(1);
+                                score.updateValue(0);
                             }
                         } else {
                             score.popupMessage = "Parse error";

@@ -14,9 +14,10 @@ var tools = [];
 pvMapper.onReady(function () {
     var thisTool = new addSite(pvMapper.map, pvMapper.getSiteLayer());
     tools.push(thisTool);
-
     var addSiteTool = new Ext.Button({
         text: "Add Site",
+        enableToggle: true,
+        toggleGroup: "editToolbox",
         handler: function () {
             if (thisTool.mapControl.active) {
                 thisTool.deactivateDrawSite();

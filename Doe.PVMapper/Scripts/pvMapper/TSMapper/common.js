@@ -1,4 +1,5 @@
 ;
+
 /*
 Replace all tokens with values passed in using the order the value is found in args.
 the { 0 } token is the first parameter, { 1 } is the second parameter and so on.
@@ -16,31 +17,33 @@ That would produce
 "this is John's book."
 */
 String.prototype.format = function (args) {
-    var values = (arguments.length > 1) ? arguments : args;
+    //var values: string = (arguments.length > 1) ? arguments : args;
+    //                                                              -------------  TC9.0 doesn't allow reference this way.
+    var values = (arguments.length > 1) ? arguments[0] : args;
     var str = this;
+
     //The regular expression for the formatter to separate terms from the string.
     //    The default expression will parse to variables named inside brackets.
     //    Has to be a RegExp
     var regex = new RegExp("{[\\w\\.-]+}|{\\\\", "g");
+
     return str.replace(regex, function (item) {
         var key = item.substr(1, item.length - 2);
         var replace;
-        if(typeof (values[key]) !== 'undefined') {
+        if (typeof (values[key]) !== 'undefined') {
             replace = values[key];
-        } else if(item === '{\\') {
-            replace = "{"//Replace {\ with just {
-            ;
+        } else if (item === '{\\') {
+            replace = "{";
         } else {
             replace = item;
         }
         return replace;
     });
 };
+
 String.prototype.isNullOrEmpty = function () {
     var value = this;
-    if((typeof (value) === 'undefined') || (value.length == 0)) {
-        return true;
-    } else {
+    if ((typeof (value) === 'undefined') || (value.length == 0))
+        return true; else
         return false;
-    }
 };

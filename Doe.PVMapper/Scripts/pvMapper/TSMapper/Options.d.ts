@@ -4,27 +4,30 @@
 //A dynamic callback signature.
 
 
-module pvMapper {
+declare module pvMapper {
     
-    export class ScoreLineOptions {
-        public onSiteChange(): ICallback;
-        public onScoreAdded(): ICallback;
-        public title: string;
-        public description: string;
+    //export class ScoreLineOptions {
+    //    public onSiteChange(): ICallback;
+    //    public onScoreAdded(): ICallback;
+    //    public title: string;
+    //    public description: string;
 
-        public calculateValueCallback: ICallback;  //(...args: any[]) =>any;
+    //    public calculateValueCallback: ICallback;  //(...args: any[]) =>any;
 
-        public scoreUtility;
-    }
+    //    public scoreUtility;
+    //}
 
     export interface IModuleOptions {
-        scoringTools: IScoreTool[];
-        infoTools: ITool[];
+        scoringTools?: IScoreToolOptions[];
+        infoTools?: ITool[];
+        totalTools?: ITotalTool[];
         //Intents: IIntent[];
+
         init: ICallback;
         destroy: ICallback;
         activate: ICallback;
         deactivate: ICallback;
+
         id: string;
         author: string;
         version: string;

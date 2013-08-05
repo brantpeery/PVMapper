@@ -10,7 +10,7 @@
 module pvMapper {
 
   // Class
-  export class Module {
+    export class Module implements IModuleOptions {
         constructor(options: IModuleOptions) {
             this.id = options.id;
             this.version = options.version;
@@ -23,19 +23,33 @@ module pvMapper {
 
             this.scoringTools = options.scoringTools;
             this.infoTools = options.infoTools;
+            this.totalTools = options.totalTools;
 
             //Load the info for this module into the data model
 
             //Load the scoring tools into the api
-            this.scoringTools.map((tool, idx, toolarr) => {
-                if (console) console.log("Loading scoring tool " + tool.title + " into the API");
-                
-                //Create the scoreline
-                var scoreline = new ScoreLine(tool);
+            if (this.scoringTools) {
+                this.scoringTools.map((tool, idx, toolarr) => {
+                    if (console) console.log("Loading scoring tool " + tool.title + " into the API");
 
-                //Add the scoreline to the scoreboard/data model
-                pvMapper.mainScoreboard.addLine(scoreline);
-            });
+                    //Create the scoreline
+                    var scoreline = new ScoreLine(tool);
+
+                    //Add the scoreline to the scoreboard/data model
+                    pvMapper.mainScoreboard.addLine(scoreline);
+                });
+            }
+
+            //Load in the TotalLine tools into the api
+            if (this.totalTools) {
+                this.totalTools.forEach((tool, idx, tools) => {
+                    if (console) console.log("Loading total tool " + tool.title + " into the API");
+
+                    //Create the tool
+                    var toolLine = new TotalLine(tool);
+                    pvMapper.mainScoreboard.addTotalLine(toolLine);
+                });
+            }
 
             //Load up the info tools into the api
             if (this.infoTools) {
@@ -60,8 +74,9 @@ module pvMapper {
         public author: string;
         public version: string;
 
-        public scoringTools: IScoreTool[];
+        public scoringTools: IScoreToolOptions[];
         public infoTools: ITool[];
+        public totalTools: ITotalTool[];
         
         
         public init: ICallback;
