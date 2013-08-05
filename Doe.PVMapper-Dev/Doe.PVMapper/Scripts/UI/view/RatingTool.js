@@ -67,6 +67,8 @@ Ext.define('MainApp.view.RatingTool', {
     extend: 'Ext.grid.Panel',
     columnLines: true,
     width: 250,
+    enableColumnHide: false,
+    enableColumnResize: false,
     //width: 600,
     //height: 300,
 
