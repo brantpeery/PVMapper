@@ -30,7 +30,8 @@ module pvMapper {
           // refresh scoreboard.
           //Ext.getCmp('scoreboard-grid-id')).store.load();
           //Ext.getCmp('scoreboard-grid-id').getView().refresh();
-          var grid: Ext.panel = Ext.getCmp('scoreboard-grid-id');
+          //var grid: Ext.panel = Ext.getCmp('scoreboard-grid-id');
+          var grid: any = Ext.getCmp('scoreboard-grid-id');
           grid.store.load();
           grid.getView().refresh();
         });

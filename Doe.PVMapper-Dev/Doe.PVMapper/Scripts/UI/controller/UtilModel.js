@@ -1,4 +1,4 @@
-﻿if (typeof Ext == 'undefined')
+if (typeof Ext == 'undefined')
     var Ext = Ext || {};
 
 // Interface

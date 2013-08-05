@@ -1,4 +1,4 @@
-﻿var BYUModules;
+var BYUModules;
 (function (BYUModules) {
     var WildernessModule = (function () {
         function WildernessModule() {
