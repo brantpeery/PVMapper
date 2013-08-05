@@ -17,9 +17,11 @@ Ext.define('MainApp.view.PieWindow', {
   minimizable: false,
   collapsible: false,
   modal: true,
+  internalPanel: null,
   renderTo: 'maincontent-body',
   initComponent: function () {
     var me = this;
+    internalPanel = this
     me.items = [
       Ext.create('Ext.form.Panel', {
         //id: 'pie-view-panel-id',
@@ -89,6 +91,47 @@ Ext.define('MainApp.view.PieWindow', {
     ],
     this.callParent(arguments);
   },
+  plugins: [{
+    ptype: "headericons",
+    index: 1,
+    headerButtons: [
+        {
+          xtype: 'button',
+          iconCls: 'x-ux-grid-printer',
+          width: 24,
+          height: 15,
+          //scope: this,
+          handler: function () {
+            //var win = Ext.WindowManager.getActive();
+            //if (win) {
+            //  win.toggleMaximize();
+            //}
+            var style=''; var link='';
+            var printContent = document.getElementById(internalPanel.id+"-body"); //TODO: change to get the ID, rather than use 'magic' ID
+            var printWindow = window.open('', '', ''); // 'left=10, width=800, height=520');
+
+            var html = printContent.outerHTML; //TODO: must change to innerHTML ???
+            $("link").each(function () {
+              link += $(this)[0].outerHTML;
+            });
+            $("style").each(function () {
+              style += $(this)[0].outerHTML;
+            });
+
+            // var script = '<script> window.onmouseover = function(){window.close();}</script>';
+            printWindow.document.write('<!DOCTYPE html><html lang="en"><head><title>PV Mapper: ' + internalPanel.title + '</title>' + link + style + ' </head><body>' + html + '</body>');
+            $('div',printWindow.document).each(function () {
+              if (($(this).css('overflow') == 'hidden') || ($(this).css('overflow') == 'auto')) {
+                $(this).css('overflow', 'visible');
+                  
+              }
+            });
+            printWindow.document.close();
+            printWindow.print();
+          }
+        }
+    ]
+  }],
   showing: function (aTitle) {
     pieStore.data.clear();
     this.setTitle(aTitle);
