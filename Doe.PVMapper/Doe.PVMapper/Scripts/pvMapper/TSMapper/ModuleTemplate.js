@@ -28,11 +28,11 @@ var Modules;
                 init: null,
                 scoringTools: [
                     {
-                        title: //activate: null,
+                        //activate: null,
                         //deactivate: null,
                         //destroy: null,
                         //init: null,
-                        "",
+                        title: "",
                         description: "",
                         category: "",
                         onScoreAdded: function (event, score) {
@@ -41,9 +41,8 @@ var Modules;
                             _this.updateScore(score);
                         },
                         scoreUtilityOptions: {
-                            functionArgs: //Replace these with desired scoreUtility
-                            {
-                            },
+                            //Replace these with desired scoreUtility
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(),
                             functionName: "linear"
                         }
                     }
@@ -51,17 +50,20 @@ var Modules;
                 infoTools: null
             });
         }
-        Module.prototype.addMap = //These functions are used to add and remove the layer from the main map when
+        //These functions are used to add and remove the layer from the main map when
         //activated and deactivated
-        function () {
+        Module.prototype.addMap = function () {
         };
+
         Module.prototype.removeMap = function () {
         };
-        Module.prototype.updateScore = //Function used to update the score in the scoreboard
-        function (score) {
+
+        //Function used to update the score in the scoreboard
+        Module.prototype.updateScore = function (score) {
         };
         return Module;
     })();
-    Modules.Module = Module;    
+    Modules.Module = Module;
+
     var modInstance = new Module();
 })(Modules || (Modules = {}));

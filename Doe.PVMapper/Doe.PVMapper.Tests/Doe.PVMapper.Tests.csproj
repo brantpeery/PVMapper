@@ -60,6 +60,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
+    <Content Include="Openlayers\OpenLayers-tests.js">
+      <DependentUpon>OpenLayers-tests.ts</DependentUpon>
+    </Content>
+    <CodeAnalysisDictionary Include="Openlayers\OpenLayers.d.ts" />
+    <Content Include="Openlayers\Readme.txt" />
+    <TypeScriptCompile Include="Openlayers\OpenLayers-tests.ts" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Doe.PVMapper\Doe.PVMapper.csproj">

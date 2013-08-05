@@ -4,38 +4,49 @@
 /// <reference path="Site.ts" />
 /// <reference path="Options.d.ts" />
 /// <reference path="SiteManager.ts" />
-
+/// <reference path="Tools.ts" />
 
 // Module
 module pvMapper {
     //  import pvM = pvMapper;
 
     // Class
-    export class ScoreLine {
+    export class ScoreLine implements IToolLine {
         // Constructor
-        constructor(options: IScoreTool) {
+        constructor(options: IScoreToolOptions) {
             //console.log("Adding a scoreline for " + options.title);
             this.self = this;
-            this.name = (typeof (options.title) === 'string') ? options.title : 'Unnamed Tool';
-            this.description = (typeof (options.description) === 'string') ? options.description : 'Unnamed Tool';
+            this.title = (typeof (options.title) === 'string') ? options.title : 'Unnamed Tool';
+            //this.description = (typeof (options.description) === 'string') ? options.description : 'Unnamed Tool';
+            if (options.description) {
+                this.description = options.description;
+            }
             this.category = (typeof (options.category) === 'string') ? options.category : 'Other';
-            this.weight = 1;
 
             if ($.isFunction(options.onSiteChange)) {
-                this.onSiteChangeHandler = options.onSiteChange
+                this.onSiteChange = () => { return options.onSiteChange.apply(this, arguments); }
+            }
+
+            // star rating functions
+            if ($.isFunction(options.getStarRatables)) {
+                this.getStarRatables = () => { return options.getStarRatables.apply(this, arguments); }
+            }
+
+            // config window
+            if ($.isFunction(options.showConfigWindow)) {
+                this.showConfigWindow = () => { options.showConfigWindow.apply(this, arguments); }
             }
 
             this.valueChangeHandler = (event: IScoreValueChangedEvent) => {
-                ///TODO: Create a ValueChangeEventArg or something to let the user know what to expect
-
                 //Update the utility score for the score that just changed it's value.
                 event.score.setUtility(this.getUtilityScore(event.newValue));
-                this.scoreChangeEvent.fire(self, event);
+                
+                this.scoreChangeEvent.fire(this, event);
             }
 
-            if ($.isFunction(options.onScoreAdded)) {
-                this.scoreAddedEvent.addHandler(options.onScoreAdded);
-            }
+            //if ($.isFunction(options.onScoreAdded)) {
+            //    this.scoreAddedEvent.addHandler(options.onScoreAdded);
+            //}
 
             siteManager.siteAdded.addHandler((event: Site) => {
                 if (console) console.log("Siteadded event detected in scoreline" + name);
@@ -43,38 +54,44 @@ module pvMapper {
                 this.addScore(event);
             });
 
-            siteManager.siteRemoved.addHandler((site: Site) => {
-                this.onSiteRemove(site);
-            });
+            //siteManager.siteRemoved.addHandler((site: Site) => {
+            //    this.onSiteRemove(site);
+            //});
 
             //Set default scoreUtilityOptions object if none was provided
             if (options.scoreUtilityOptions == undefined) {
                 options.scoreUtilityOptions = {
                     functionName: "random",
-                    functionArgs: {},
+                    functionArgs: {className: "Random"},
                     iconURL: null
                 }
-            }
+            };
 
-            this.scoreUtility = new ScoreUtility(options.scoreUtilityOptions);
+            this.utilargs = new pvMapper.MinMaxUtilityArgs(0, 0, "", "");
+            this.scoreUtility = new pvMapper.ScoreUtility(options.scoreUtilityOptions);
 
             //Set the default weight of the tool
-            this.weight = (typeof options.defaultWeight === "number") ? options.defaultWeight : 10;
+            this.weight = (typeof options.weight === "number") ? options.weight : 10;
 
             this.loadAllSites();
-        };
+        }
 
+        public utilargs: pvMapper.MinMaxUtilityArgs;
         public scoreUtility: ScoreUtility;
-        public name: string;
+        public title: string;
         public weight: number;
         public description: string;
         public category: string;
-        public scores: Score[] = new Score[]();
+        public scores: Score[] = new Array<Score>(); //new Score[](); <<-- TS0.9.0 doesn't like this.
         //public updateScore: ICallback = options.updateScoreCallback;
         public active: Boolean = true;
 
+        getStarRatables: () => IStarRatings;
+
+        showConfigWindow: () => void;
+
         public self: ScoreLine;
-        public scoreAddedEvent: pvMapper.Event = new pvMapper.Event();
+        //public scoreAddedEvent: pvMapper.Event = new pvMapper.Event();
         public scoreChangeEvent: pvMapper.Event = new pvMapper.Event();
         public updatingScoresEvent: pvMapper.Event = new pvMapper.Event();
 
@@ -84,7 +101,6 @@ module pvMapper {
             this.weight = value;
             this.scoreChangeEvent.fire(self, undefined); // score line changed
         }
-        public getWeightedUtilityScore(): number { return 0; }
 
         /**
           Adds a score object to this line for the site.
@@ -95,20 +111,30 @@ module pvMapper {
             //score.value = this.getvalue(site);
 
             //attach the tool's handler directly to the score
-            score.siteChangeEvent.addHandler(this.onSiteChangeHandler);
+            score.siteChangeEvent.addHandler(this.onSiteChange);
 
             //subscribe to the score updated event
             score.valueChangeEvent.addHandler(this.valueChangeHandler);
 
             this.scores.push(score);
+
             //this.self.scoreAddedEvent.fire(score, [{ score: score, site: site }, score]);
+
+            //TODO: uncomment this - it's testing code!!!!!!
             //Set the initial value from the tool
             try {
-                this.onSiteChangeHandler(undefined, score);
-                //this.updateScore(score);
+                // request a score update
+                this.onSiteChange(undefined, score);
             } catch (ex) {
                 if (console) console.error(ex);
             }
+
+            //TODO: testing code - leave this commented out!!!
+            //window.setTimeout(function () {
+            //    score.popupMessage = "test value";
+            //    score.updateValue.apply(score, [1]);
+            //}, 2000 * Math.random());
+
             return score;
         }
 
@@ -126,23 +152,29 @@ module pvMapper {
 
         //}
 
-        //public updateScores() {
+        // this updates utility scores from the existing score value of each Score object
+        public updateScores() {
+            this.scores.forEach(function (score: Score, index: number, scores: Score[]) {
+                var oldvalue = score.value;
+                score.setUtility(this.getUtilityScore(score.value));
+                this.scoreChangeEvent.fire(this, <IScoreValueChangedEvent> {
+                    score: score,
+                    oldValue: oldvalue,
+                    newValue: score.value
+                });
+            }, this);
+        }
+
+        //public refreshAllScoresFromServer() {
         //    this.scores.forEach(function (score: Score, index: number, scores: Score[]) {
-        //        var oldvalue = score.value;
-        //        score.setUtility(this.getUtilityScore(score.value));
-        //        this.scoreChangeEvent.fire(self, <IScoreValueChangedEvent> {
-        //            score: score,
-        //            oldValue: oldvalue,
-        //            newValue: score.value
-        //        });
-        //    },
-        //    this)
+        //       this.onSiteChange(null, score);
+        //    });
         //}
 
         public valueChangeHandler: ICallback;
 
         //Storage pointer to the tool's sitechanged handler function
-        private onSiteChangeHandler: ICallback;
+        private onSiteChange: ICallback;
 
         private loadAllSites() {
             var allSites = siteManager.getSites();
@@ -157,7 +189,7 @@ module pvMapper {
                 var score: Score = this.scores[i];
                 if (score.site == site) {
                     // remove site from scoreline.
-                    score.siteChangeEvent.removeHandler(this.onSiteChangeHandler);
+                    score.siteChangeEvent.removeHandler(this.onSiteChange);
                     score.valueChangeEvent.removeHandler(this.valueChangeHandler);
                     this.scores.splice(i, 1);
                     this.scoreChangeEvent.fire(self, undefined);

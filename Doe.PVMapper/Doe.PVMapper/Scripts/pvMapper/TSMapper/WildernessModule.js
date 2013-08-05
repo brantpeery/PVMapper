@@ -19,12 +19,12 @@ var BYUModules;
                 init: null,
                 scoringTools: [
                     {
-                        title: //activate: null,
+                        //activate: null,
                         //deactivate: null,
                         //destroy: null,
                         //init: null,
-                        "Wilderness",
-                        description: "Tells whether the given site is in a wilderness area.  ",
+                        title: "Wilderness",
+                        description: "Overlapping national parks, using data hosted by BYU",
                         category: "Land Use",
                         onScoreAdded: function (event, score) {
                         },
@@ -32,13 +32,10 @@ var BYUModules;
                             _this.updateScore(score);
                         },
                         scoreUtilityOptions: {
-                            functionArgs: {
-                                minValue: 0,
-                                maxValue: 1
-                            },
-                            functionName: "linear"
+                            functionName: "linear",
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(1, 0, "parks", "Minimum Wilderness threshold allowed.", "Maximum Wilderness threshold allowed.")
                         },
-                        defaultWeight: 10
+                        weight: 10
                     }
                 ],
                 infoTools: null
@@ -50,66 +47,61 @@ var BYUModules;
                 layers: "show: 0",
                 srs: "3857",
                 transparent: "true"
-            }, /*request: "GetMap",
-            bbox: this.landBounds,
-            layer_type: "polygon",
-            transparent: "true",
-            format: "image/gif",
-            exceptions: "application/vnd.ogc.se_inimage",
-            //maxResolution: 156543.0339,
-            srs: "EPSG:42105",*/
-            {
-                isBaseLayer: false
-            });
+            }, { isBaseLayer: false });
             this.wildernessLayer.setVisibility(false);
             pvMapper.map.addLayer(this.wildernessLayer);
         };
+
         WildernessModule.prototype.removeMap = function () {
             pvMapper.map.removeLayer(this.wildernessLayer, false);
         };
+
         WildernessModule.prototype.updateScore = function (score) {
             var toGeoJson = new OpenLayers.Format.GeoJSON();
-            var geoJsonObj = toGeoJson.extract.geometry.apply(toGeoJson, [
-                score.site.geometry
-            ]);
+            var geoJsonObj = toGeoJson.extract.geometry.apply(toGeoJson, [score.site.geometry]);
+
             var toEsriJson = new geoJsonConverter();
             var esriJsonObj = toEsriJson.toEsri(geoJsonObj);
+
             console.log("Converted Geometry:");
-            console.log(esriJsonObj);
+            console.log("Esri Json: " + esriJsonObj);
+
             var params = {
-                mapExtent: /*mapExtent: score.site.geometry.bounds,
+                mapExtent: score.site.geometry.bounds,
                 geometryType: "esriGeometryPolygon",
-                geometry: esriGeometry,*/
-                score.site.geometry.bounds,
+                geometry: JSON.stringify(esriJsonObj),
+                /*mapExtent: score.site.geometry.bounds,
                 geometryType: "esriGeometryEnvelope",
-                geometry: score.site.geometry.bounds.toBBOX(6, false),
+                geometry: score.site.geometry.bounds.toBBOX(6, false),*/
                 f: "json",
                 layers: "all",
                 tolerance: 0,
                 imageDisplay: "1, 1, 96",
                 returnGeometry: false
             };
+
             var request = OpenLayers.Request.GET({
                 url: this.WildernessRestUrl + "identify",
                 proxy: "/Proxy/proxy.ashx?",
                 params: params,
                 callback: function (response) {
-                    if(response.status == 200) {
+                    if (response.status == 200) {
                         var esriJsonParser = new OpenLayers.Format.JSON();
                         esriJsonParser.extractAttributes = true;
                         var parsedResponse = esriJsonParser.read(response.responseText);
                         console.log("Wilderness Module Response: " + response.responseText);
-                        console.log("geometry: " + score.site.geometry);
+                        console.log("geometry: " + esriJsonObj.toString());
                         console.log("geometry bbox: " + score.site.geometry.bounds.toBBOX(6, false));
-                        if(parsedResponse && parsedResponse.results) {
-                            if(parsedResponse.results.length > 0) {
+                        if (parsedResponse && parsedResponse.results) {
+                            if (parsedResponse.results.length > 0) {
                                 //This will only take the first national park that overlaps
                                 score.popupMessage = parsedResponse.results[0].value;
-                                score.updateValue(0);
+                                score.updateValue(1);
                             } else {
                                 score.popupMessage = "No National Park Overlaps";
+
                                 //score.popupMessage = "No data for this site";
-                                score.updateValue(1);
+                                score.updateValue(0);
                             }
                         } else {
                             score.popupMessage = "Parse error";
@@ -124,6 +116,7 @@ var BYUModules;
         };
         return WildernessModule;
     })();
-    BYUModules.WildernessModule = WildernessModule;    
+    BYUModules.WildernessModule = WildernessModule;
+
     var modInstance = new BYUModules.WildernessModule();
 })(BYUModules || (BYUModules = {}));

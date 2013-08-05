@@ -3,9 +3,10 @@
 /// <reference path="Score.ts" />
 /// <reference path="Tools.ts" />
 /// <reference path="Options.d.ts" />
-/// <reference path="Module.ts" />
 /// <reference path="ScoreUtility.ts" />
 /// <reference path="/../../EsriGeoJSON.js>
+/// <reference path="Module.ts" />
+/// <reference path="ScoreUtility.ts" />
 
 module BYUModules {
     class DemModule {
@@ -19,15 +20,16 @@ module BYUModules {
                 deactivate: () => { removeMap(); },
                 destroy: null,
                 init: null,
-
-                scoringTools: [{
+                                        
+                scoringTools: [
+                <pvMapper.IScoreToolOptions> {
                     activate: null,
                     deactivate: null,
                     destroy: null,
                     init: null,
 
                     title: "Slope",
-                    description: "Calculates the average slope of the site",
+                    description: "The slope at the center of a site, using data from ArcGIS Online",
                     category: "Geography",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:3", "degrees"); },
@@ -37,23 +39,16 @@ module BYUModules {
                     // for now, flatter is better...?
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: <pvMapper.IMinMaxUtilityArgs>{
-                            //IThreePointUtilityArgs
-                            //IMinMaxUtilityArgs
-                            minValue: 10,
-                            maxValue: 0,
-                        }
-                    },
-                    //defaultWeight: 10
-                },
-                {
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(10, 0, "degrees")
+                    }
+                }, {
                     activate: null,
                     deactivate: null,
                     destroy: null,
                     init: null,
 
                     title: "Aspect",
-                    description: "Calculates the average aspect of the site",
+                    description: "The horizontal aspect at the center of a site, using data from ArcGIS Online",
                     category: "Geography",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:4", "degrees"); },
@@ -65,22 +60,16 @@ module BYUModules {
                     // for now, south is better, but north ain't so bad...?
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        functionArgs: <pvMapper.IThreePointUtilityArgs>{
-                            p0: { x: 0, y: 0.5 },
-                            p1: { x: 180, y: 1 },
-                            p2: { x: 360, y: 0.5 },
-                        }
-                    },
-                    //defaultWeight: 10
-                },
-                {
+                        functionArgs: new pvMapper.ThreePointUtilityArgs( 0, 0.5, 180, 1, 360, 0.5, "degrees")
+                    }
+                }, {
                     activate: null,
                     deactivate: null,
                     destroy: null,
                     init: null,
 
                     title: "Elevation",
-                    description: "Calculates the averate elevation of the site",
+                    description: "The elevation at the center of a site, using data from ArcGIS Online",
                     category: "Geography",
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:1", "m"); },
@@ -89,15 +78,9 @@ module BYUModules {
                     // higher is better, but not much better, yeah?
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        functionArgs: <pvMapper.IThreePointUtilityArgs>{
-                            p0: { x: 0, y: 0.5 },
-                            p1: { x: 1000, y: 0.9 },
-                            p2: { x: 6000, y: 1 },
-                        }
-                    },
-                    //defaultWeight: 10
-                }
-                ],
+                        functionArgs: new pvMapper.ThreePointUtilityArgs(0,0.5,1000,0.9,6000,1, "m")
+                    }
+                } ],
                 infoTools: null
             });
         }

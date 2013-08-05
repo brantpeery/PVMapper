@@ -3,8 +3,8 @@ Ext.Loader.setConfig({
     enabled: true,
     disableCaching: false,
     paths: {
-        GeoExt: "/Scripts/GeoExt"
-        //MainApp: "/Scripts/UI"
+        GeoExt: "/Scripts/GeoExt",
+        MainApp: "/Scripts/UI"
     }
 });
 

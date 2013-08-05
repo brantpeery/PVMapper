@@ -1,5 +1,6 @@
+/// <reference path="../../ExtJS.d.ts" />
 /// <reference path="../../jquery.d.ts" />
-/// <reference path="../../ext-4.1.1a.d.ts" />
+
 
 
 if (typeof (Ext) == 'undefined')
