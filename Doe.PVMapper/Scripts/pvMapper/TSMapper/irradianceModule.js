@@ -1,4 +1,4 @@
-﻿/// <reference path="pvMapper.ts" />
+/// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Tools.ts" />
@@ -90,7 +90,7 @@ var INLModules;
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
     /////////////var irradianceMapUrl = "http://mapsdb.nrel.gov/jw_router/perezANN_mod/tile";
     //var irradianceMapUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/services/PADUS/PADUS_owner/MapServer/WMSServer?";
-    var MapsDbUrl = "http://mapsdb.nrel.gov/geoserver/swera/wms";
+    var MapsDbUrl = "http://mapsdb.nrel.gov/geoserver/swera/wms?";
 
     //declare var Ext: any;
     // references to layer objects (used for later querying and removal)
@@ -119,7 +119,7 @@ var INLModules;
             //layer_type: "polygon",
             transparent: "true",
             format: "image/png",
-            exceptions: "application/vnd.ogc.se_inimage",
+            //exceptions: "application/vnd.ogc.se_inimage",
             maxResolution: 156543.0339,
             srs: "EPSG:900913"
         }, { isBaseLayer: false });
