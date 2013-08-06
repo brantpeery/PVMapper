@@ -77,6 +77,8 @@ pvMapper.onReady(function () {
                     }
                 });
 
+                
+                
                 // hack hack... show any returned html 'natively'
                 if (e.text.indexOf('html') >= 0) {
                     items.push({
