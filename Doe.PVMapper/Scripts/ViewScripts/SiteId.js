@@ -23,6 +23,7 @@ pvMapper.onReady(function () {
         maxFeatures: 3,
         eventListeners: {
             getfeatureinfo: function (e) {
+                console.log("Identify WMS GetFeatureInfo Function");
                 var items = [];
                 Ext.each(e.features, function (feature) {
                     items.push({

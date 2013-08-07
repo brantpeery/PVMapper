@@ -47,14 +47,23 @@ pvMapper.onReady(function () {
     //US Counties WMS taken from ArcGIS server
 
     //addWMSLayer("US Counties", "https://geoserver.byu.edu/arcgis/services/Layers/counties/MapServer/WmsServer?", 0, true);
-    addWMSLayer("Cities", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", 7, true);
-    addWMSLayer("Dams", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", 6, true);
-    addWMSLayer("Roads", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", 5, true);
-    addWMSLayer("Rivers", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", 4, true);
-    addWMSLayer("Railroads", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", 3, true);
-    addWMSLayer("Indian Reservations", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", 2, true);
-    addWMSLayer("States", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", 1, true);
-    addWMSLayer("Counties", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", 0, true);
+    addWMSLayer("Cities", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "7", true);
+    addWMSLayer("Dams", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "6", true);
+    addWMSLayer("Roads", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "5", true);
+    addWMSLayer("Rivers", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "4", true);
+    addWMSLayer("Railroads", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "3", true);
+    addWMSLayer("Indian Reservations", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "2", true);
+    addWMSLayer("States", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "1", true);
+    addWMSLayer("Counties", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "0", true);
+
+    //addWMSLayer("Cities", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "cities1", true);
+    //addWMSLayer("Dams", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "dams", true);
+    //addWMSLayer("Roads", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "Roads", true);
+    //addWMSLayer("Rivers", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "Rivers1", true);
+    //addWMSLayer("Railroads", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "railroads", true);
+    //addWMSLayer("Indian Reservations", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "indian_res", true);
+    //addWMSLayer("States", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "states", true);
+    //addWMSLayer("Counties", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "counties_webmercator", true);
     
     //addBYUServerLayer("US Counties", "https://geoserver.byu.edu/arcgis/rest/services/Layers/counties/MapServer", 0);
     //addBYUServerLayer("Dams", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 0);
@@ -229,6 +238,12 @@ pvMapper.onReady(function () {
         console.log(name + " Overlay added");
     }
 
+    /*
+        name: string - name of layer as displayed in the GUI
+        url: string - url of the wms service
+        layer: string - the name of the layer in the server
+        reference: boolean - is it a reference layer? true/false
+    */
     function addWMSLayer(name, url, layer, reference) {
         var wms = new OpenLayers.Layer.WMS(name,
             url,
