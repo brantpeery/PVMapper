@@ -38,10 +38,14 @@ var pvMapper;
             //console.log("Adding scoreline " + scoreline.name);
             scoreline.scoreChangeEvent.addHandler(this.onScoreChanged);
             this.scoreLines.push(scoreline);
+            //this.changedEvent.fire(this,null);
         };
 
         ScoreBoard.prototype.addTotalLine = function (line) {
             line.ValueChangedEvent.addHandler(function (event) {
+                //Do what ever needs to be done for updating the GUI when
+                //the total line recalculates
+                //IGNORED for now
             });
 
             this.totalLines.push(line);
@@ -108,6 +112,7 @@ var pvMapper;
                     pvMapper.floatingScoreboard.show();
                 }
             }, 100);
+            // queue is set to wait 1/10th of a second before it actually refreshes the scoreboard.
         } else {
             if (console) {
                 console.log("Scoreboard update event safely (and efficiently) ignored.");
@@ -117,5 +122,6 @@ var pvMapper;
 
     //Create the scoreboard onscreen
     pvMapper.onReady(function () {
+        //mainScoreboard.changedEvent.fire(mainScoreboard, {});
     });
 })(pvMapper || (pvMapper = {}));

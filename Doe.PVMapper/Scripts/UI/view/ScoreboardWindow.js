@@ -94,48 +94,15 @@ var scoreboardColumns = [{
         }
         return value;
     },
-    viewPie: function (cat) {
-    
-      var records = scoreboardGrid.store.getGroups(cat);
-      if (records.children.length > 0) {
-        pieStore.removeAll(); //delete all records in the score
-        records.children.forEach(function(record, index, array) {
-          pieStore.add({Category: record.get('title'), Data: record.get('weight'), Color: "blue"});
-        });
-      }
-
-      var pieWin = Ext.create('MainApp.view.PieWindow', {
-        dataStore: pieStore,
-        dataField: 'Data',
-        dataName: 'Category',
-        fillColor: 'Color',
-        title: 'Weight Percentage - ' + cat,
-        buttons: [{
-          xtype: 'button',
-          text: 'OK',
-          handler: function () {
-            //TODO: execute update function here.
-
-
-            pieWin.close();
-          }
-        },
-      //{
-      //  xtype: 'button',
-      //  text: 'Cancel',
-      //  handler: function () {
-      //    pieWin.close();
-      //  }
-      //}
-        ]
-      }).show();
-
-    },
-    //tooltip: '{description}',
+     //tooltip: '{description}',
     //editor: 'textfield', <-- don't edit this field - that would be silly
     summaryType: function (records) {
       //Note: this fails when we allow grouping by arbitrary fields (and it fails in mysterious ways)
-      return records[0].get('category') + " subtotal: <input type='button' value='Pie' onClick='scoreboardColumns[0].viewPie(\"" + records[0].get('category') + "\");' />";
+      //return records[0].get('category') + " subtotal: <input type='button' img='http://localhost:53465/Images/Pie Chart.png' value='Pie' onClick='scoreboardColumns[0].viewPie(\"" + records[0].get('category') + "\");' />";
+
+      return records[0].get('category') +
+        " subtotal: <input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
+        records[0].get('category') + "\",null);' />";
     },
     //}, {
     //    text: 'Category',
@@ -217,6 +184,47 @@ var scoreboardColumns = [{
                 icon: utilityFn.iconURL,
                 minimizable: false,
                 collapsible: false,
+                plugins: [{
+                  ptype: "headericons",
+                  index: 2,
+                  headerButtons: [
+                      {
+                        xtype: 'button',
+                        iconCls: 'x-ux-grid-printer',
+                        width: 24,
+                        height: 15,
+                        //scope: this,
+                        handler: function () {
+                          //var win = Ext.WindowManager.getActive();
+                          //if (win) {
+                          //  win.toggleMaximize();
+                          //}
+                          var style = ''; var link = '';
+                          var printContent = document.getElementById(dynamicPanel.id + "-body"); //TODO: change to get the ID, rather than use 'magic' ID
+                          var printWindow = window.open('', '', ''); // 'left=10, width=800, height=520');
+
+                          var html = printContent.outerHTML; //TODO: must change to innerHTML ???
+                          $("link").each(function () {
+                            link += $(this)[0].outerHTML;
+                          });
+                          $("style").each(function () {
+                            style += $(this)[0].outerHTML;
+                          });
+
+                          // var script = '<script> window.onmouseover = function(){window.close();}</script>';
+                          printWindow.document.write('<!DOCTYPE html><html lang="en"><head><title>PV Mapper: ' + windows.title + '</title>' + link + style + ' </head><body>' + html + '</body>');
+                          $('div', printWindow.document).each(function () {
+                            if (($(this).css('overflow') == 'hidden') || ($(this).css('overflow') == 'auto')) {
+                              $(this).css('overflow', 'visible');
+
+                            }
+                          });
+                          printWindow.document.close();
+                          printWindow.print();
+                        }
+                      }
+                  ]
+                }],
                 buttons: [{
                     xtype: 'button',
                     text: 'OK',
@@ -406,7 +414,9 @@ toolsStore.on({
                     summaryRenderer: function (value) {
                         if (typeof value === "number" && !isNaN(value)) {
                             var c = getColor(value);
-                            return '<span style="border-radius: 3px; background-color:' + c + '">&nbsp' + value.toFixed(0) + '&nbsp</span>'; //font-weight: bold; 
+                            return '<span style="border-radius: 3px; background-color:' + c + '">&nbsp' + value.toFixed(0) + '&nbsp</span>'
+                              //+ "<input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
+                              //  scoreLine.Category + "\",\""+ scoreline.site.name +"\");' />";
                         }
                     },
                 }]
@@ -456,7 +466,38 @@ Ext.define('Ext.grid.ScoreboardGrid', {
     },
         //{ ftype: 'grouping' },
         //{ ftype: 'summary' },
-    ]
+    ],
+    viewPie: function (cat, site) {
+
+      var records = scoreboardGrid.store.getGroups(cat);
+      if (records.children.length > 0) {
+        pieStore.removeAll(); //delete all records in the score
+        records.children.forEach(function (record, index, array) {
+          pieStore.add({ Category: record.get('title'), Data: record.get('weight'), Color: "blue" });
+        });
+      }
+
+      var pieWin = Ext.create('MainApp.view.PieWindow', {
+        dataStore: pieStore,
+        dataField: 'Data',
+        dataName: 'Category',
+        fillColor: 'Color',
+        title: 'Weight Percentage - ' + cat,
+        buttons: [{
+          xtype: 'button',
+          text: 'OK',
+          handler: function () {
+            //TODO: execute update function here.
+
+
+            pieWin.close();
+          }
+        },
+        ]
+      }).show();
+
+    },
+
 });
 
 var scoreboardGrid = Ext.create('Ext.grid.ScoreboardGrid', {

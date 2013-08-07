@@ -22,7 +22,7 @@ module BYUModules {
                 init: null,
                                         
                 scoringTools: [
-                <pvMapper.IScoreToolOptions> {
+                <pvMapper.IScoreToolOptions> {                                   
                     activate: null,
                     deactivate: null,
                     destroy: null,

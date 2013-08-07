@@ -26,7 +26,7 @@ var pvMapper;
             if (typeof minValue === "undefined") { minValue = 0; }
             if (typeof maxValue === "undefined") { maxValue = 100; }
             if (typeof target === "undefined") { target = 0; }
-            if (typeof slope === "undefined") { slope = 0; }
+            if (typeof slope === "undefined") { slope = 10; }
             if (typeof unit === "undefined") { unit = ""; }
             if (typeof minTip === "undefined") { minTip = "The minimum value."; }
             if (typeof maxTip === "undefined") { maxTip = "The maximum value."; }

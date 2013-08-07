@@ -6,7 +6,10 @@ Ext.define('MainApp.view.RatingView', {
   layout: "fit",
   //modal: true,
   closeAction: 'destroy',
-  constrain: true,
+  constrainHeader: true,
+  minimizable: false,
+  collapsible: false,
+  modal: true,
     buttons: [{
         xtype: 'button',
         text: 'OK',

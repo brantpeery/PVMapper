@@ -13,7 +13,7 @@ module INLModules {
                 author: "Scott Brown, INL",
                 version: "0.1.ts",
 
-                activate: () => {
+                activate: () => {                                          
                     addAllMaps();
                 },
                 deactivate: () => {

@@ -21,7 +21,7 @@ Ext.define('MainApp.view.PieWindow', {
   renderTo: 'maincontent-body',
   initComponent: function () {
     var me = this;
-    internalPanel = this
+    me.internalPanel = this;
     me.items = [
       Ext.create('Ext.form.Panel', {
         //id: 'pie-view-panel-id',
@@ -56,9 +56,9 @@ Ext.define('MainApp.view.PieWindow', {
             },
             tips: {
               trackMouse: true,
-              minWidth: 100,
-              maxWidth: 550,
-              height: 40,
+              minWidth: 150,
+              //maxWidth: 650,
+              //height: 50,
               renderer: function (storeItem, item) {
                 //calculate and display percentage on hover
                 var total = 0;
@@ -77,7 +77,7 @@ Ext.define('MainApp.view.PieWindow', {
               field: me.dataName,
               display: 'rotate',
               contrast: true,
-              font: '18px Arial'
+              font: '14px Arial'
             },
             listeners: {
               itemmousedown: function (options, obj) {

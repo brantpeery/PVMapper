@@ -22,7 +22,7 @@ module pvMapper {
     public scores = null;
 
     public insert(tableName: string, fields: any[]) { }
-    public update(tableName: string, fields: any[], id: number) { }
+    public update(tableName: string, fields: any[], id: number) { }                         
     public delete (tableName: string, id: number) { }
     public select(tableName: string, fields: any[], predicate: string[]): any { }
 

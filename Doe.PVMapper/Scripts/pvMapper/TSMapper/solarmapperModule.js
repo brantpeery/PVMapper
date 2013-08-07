@@ -1,4 +1,4 @@
-/// <reference path="ScoreUtility.ts" />
+﻿/// <reference path="ScoreUtility.ts" />
 /// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
@@ -35,6 +35,7 @@ var INLModules;
                         //},
                         onSiteChange: function (e, score) {
                             identifyFeature(score);
+                            //s.updateValue(status.toString());
                         },
                         getStarRatables: function () {
                             return starRatingHelper.starRatings;
@@ -90,6 +91,7 @@ var INLModules;
         mapLayer.epsgOverride = "3857";
         mapLayer.setVisibility(false);
         pvMapper.map.addLayer(mapLayer);
+        //pvMapper.map.setLayerIndex(mapLayer, 0);
     }
 
     function removeMapLayer() {
