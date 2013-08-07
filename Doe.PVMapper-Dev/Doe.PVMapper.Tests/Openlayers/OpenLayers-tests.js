@@ -1,4 +1,4 @@
-/// <reference path="OpenLayers.d.ts" />
+﻿/// <reference path="OpenLayers.d.ts" />
 var OpenLayersTest;
 (function (OpenLayersTest) {
     // Class

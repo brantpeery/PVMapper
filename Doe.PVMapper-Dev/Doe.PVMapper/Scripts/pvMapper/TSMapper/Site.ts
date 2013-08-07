@@ -19,7 +19,7 @@ module pvMapper {
             //  throw ('The parameter "feature" must be an OpenLayers.Feature');
             this.self = this;
             this.id = feature.fid;
-            this.feature = feature;
+            this.feature = feature;                                       
             this.feature.site = this;
             this.geometry = feature.geometry;
             this.name = feature.attributes.name;

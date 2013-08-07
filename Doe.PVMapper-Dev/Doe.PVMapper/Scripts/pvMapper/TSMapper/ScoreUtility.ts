@@ -85,7 +85,7 @@ module pvMapper {
         constructor(public minValue: number = 0,
             public maxValue: number = 100,
             public target: number = 0,
-            public slope: number = 0,
+            public slope: number = 10,
             unit: string = "",
             minTip: string = "The minimum value.",
             maxTip: string = "The maximum value.",
@@ -146,7 +146,7 @@ module pvMapper {
         }
     }
 
-    export class ScoreUtility {
+    export class ScoreUtility {                            
         constructor(options: IScoreUtilityOptions) {
             //Check for custom utility by checking to see if there is a function callback (not optimal but in the absence of interface comparison will do)
             if (options['functionCallback']) {

@@ -1,4 +1,4 @@
-var Modules;
+﻿var Modules;
 (function (Modules) {
     var Module = (function () {
         function Module() {

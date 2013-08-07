@@ -40,6 +40,7 @@ var pvMapper;
             if (idx !== -1) {
                 this.sites.splice(idx, 1);
                 this.siteRemoved.fire(undefined, site);
+                //site.destroy();
             }
         };
 
@@ -73,6 +74,10 @@ var pvMapper;
                 event.feature.site.changeEvent.fire(event.feature.site, event);
                 if (console)
                     console.log("Fired the change event for site: " + event.feature.site.name);
+                //    } catch (e) {
+                //        console.log("An error occurred while trying to fire the feature change event for a site from the site manager");
+                //        console.error(e);
+                //    }
             } else {
                 if (console)
                     console.log("The feature was not a site");
