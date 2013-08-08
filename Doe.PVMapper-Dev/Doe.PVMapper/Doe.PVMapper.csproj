@@ -1266,6 +1266,9 @@
     <Content Include="Scripts\pvMapper\TSMapper\UtilityFunctions.js.map">
       <DependentUpon>UtilityFunctions.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\siteAreaModule.min.js.map">
+      <DependentUpon>siteAreaModule.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
