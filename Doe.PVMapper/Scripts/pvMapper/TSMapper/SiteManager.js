@@ -1,19 +1,16 @@
-﻿/// <reference path="Site.ts" />
-/// <reference path="Event.ts" />
-var pvMapper;
+﻿var pvMapper;
 (function (pvMapper) {
     var SiteManager = (function () {
         function SiteManager() {
             this.siteAdded = new pvMapper.Event();
             this.siteRemoved = new pvMapper.Event();
+            this.siteLoaded = new pvMapper.Event();
             this.sites = [];
         }
         SiteManager.prototype.getSites = function () {
             return this.sites;
         };
 
-        //public getSite(index: string): Site;
-        //public getSite(index: any): Site {
         SiteManager.prototype.getSite = function (index) {
             return this.sites[index];
         };
@@ -23,6 +20,12 @@ var pvMapper;
             this.siteAdded.fire(site, site);
         };
 
+        SiteManager.prototype.loadSite = function (site) {
+            this.sites.push(site);
+            this.siteLoaded.fire(site, site);
+        };
+
+
         SiteManager.prototype.createSite = function (feature) {
             if (console)
                 console.log("Creating site");
@@ -31,11 +34,7 @@ var pvMapper;
             this.siteAdded.fire(aSite, feature);
         };
 
-        /**
-        Removes a site from the sites array.
-        */
         SiteManager.prototype.removeSite = function (site) {
-            //find the site
             var idx = this.sites.indexOf(site);
             if (idx !== -1) {
                 this.sites.splice(idx, 1);
@@ -44,9 +43,6 @@ var pvMapper;
             }
         };
 
-        /**
-        Removes a site from the sites array.
-        */
         SiteManager.prototype.removeSiteById = function (siteId) {
             var i;
             for (i = 0; i < this.sites.length; i++) {
@@ -60,17 +56,10 @@ var pvMapper;
             }
         };
 
-        /**
-        handles the change event for the features on the sitelayer. will fire the sites change event if the
-        feature that changed is a project site
-        @parameter event {openlayers.event object with a feature property that is a reference to the feature that changed
-        @See http://dev.openlayers.org/apidocs/files/OpenLayers/Layer/Vector-js.html#OpenLayers.Layer.Vector.events
-        */
         SiteManager.prototype.featureChangedHandler = function (event) {
             if (console)
                 console.log("Feature change detected by the site manager");
             if (event.feature && event.feature.site) {
-                // try {
                 event.feature.site.changeEvent.fire(event.feature.site, event);
                 if (console)
                     console.log("Fired the change event for site: " + event.feature.site.name);
@@ -87,6 +76,5 @@ var pvMapper;
     })();
     pvMapper.SiteManager = SiteManager;
 
-    //instantiate siteManager object.
     pvMapper.siteManager = new SiteManager();
 })(pvMapper || (pvMapper = {}));
