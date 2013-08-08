@@ -79,7 +79,7 @@ pvMapper.onReady(function () {
                 });
 
                 
-                
+                /* For Testing Purposes
                 // hack hack... show any returned html 'natively'
                 if (e.text.indexOf('html') >= 0) {
                     items.push({
@@ -94,7 +94,7 @@ pvMapper.onReady(function () {
                     xtype: "propertygrid",
                     title: "Raw value returned",
                     source: { url: e.object.url, features: e.features.length, text: e.text, textLength: e.text.length }
-                });
+                });*/
 
                 // End shabby code block.
                 ////////////////////////////////////////////////
