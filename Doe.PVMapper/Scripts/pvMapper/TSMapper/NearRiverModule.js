@@ -42,7 +42,7 @@ var BYUModules;
             ]);
             var toEsriJson = new geoJsonConverter();
             var recObj = toEsriJson.toEsri(geoJsonObj);
-            var key = "riverModuleScore";
+            var key = "riverModuleScore" + score.site.id;
             var esriJsonObj = {
                 "displayFieldName": "",
                 "features": [
@@ -50,6 +50,8 @@ var BYUModules;
                 ],
 
             };
+       
+
             //Geometry Checked. Its fine. Now to Pass the Geometry to the service and since the service is running slow, figure out a way to repeat requests untill a response is obtained
 
            // console.log("Converted Geometry:");
@@ -100,6 +102,7 @@ var BYUModules;
 
                                                 //Save to local cache
 
+                                                
 
                                                 $.jStorage.deleteKey(key);
                                                 $.jStorage.deleteKey(key + "msg");
