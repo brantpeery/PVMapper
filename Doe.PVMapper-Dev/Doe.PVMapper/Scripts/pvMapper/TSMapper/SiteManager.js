@@ -19,12 +19,11 @@
             this.sites.push(site);
             this.siteAdded.fire(site, site);
         };
-
         SiteManager.prototype.loadSite = function (site) {
             this.sites.push(site);
-            this.siteLoaded.fire(site, site);
-        };
 
+            this.siteAdded.fire(site, site);
+        };
 
         SiteManager.prototype.createSite = function (feature) {
             if (console)
@@ -39,7 +38,6 @@
             if (idx !== -1) {
                 this.sites.splice(idx, 1);
                 this.siteRemoved.fire(undefined, site);
-                //site.destroy();
             }
         };
 
@@ -63,10 +61,6 @@
                 event.feature.site.changeEvent.fire(event.feature.site, event);
                 if (console)
                     console.log("Fired the change event for site: " + event.feature.site.name);
-                //    } catch (e) {
-                //        console.log("An error occurred while trying to fire the feature change event for a site from the site manager");
-                //        console.error(e);
-                //    }
             } else {
                 if (console)
                     console.log("The feature was not a site");
@@ -78,3 +72,4 @@
 
     pvMapper.siteManager = new SiteManager();
 })(pvMapper || (pvMapper = {}));
+//@ sourceMappingURL=SiteManager.js.map

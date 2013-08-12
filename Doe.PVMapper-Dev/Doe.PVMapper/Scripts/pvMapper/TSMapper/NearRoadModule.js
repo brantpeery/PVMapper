@@ -42,7 +42,7 @@ var BYUModules;
             ]);
             var toEsriJson = new geoJsonConverter();
             var recObj = toEsriJson.toEsri(geoJsonObj);
-            var key = "roadModuleScore";
+            var key = "roadModuleScore"+ score.site.id;
             var esriJsonObj = {
                 "displayFieldName": "",
                 "features": [

@@ -6,6 +6,7 @@ module pvMapper {
     export class SiteManager {
         public siteAdded: pvMapper.Event = new pvMapper.Event();
         public siteRemoved: pvMapper.Event = new pvMapper.Event();
+        public siteLoaded: pvMapper.Event = new pvMapper.Event();
 
         private sites: Site[] = [];
         public getSites() {
@@ -21,6 +22,12 @@ module pvMapper {
             this.sites.push(site);
             this.siteAdded.fire(site, site);
         }
+        public loadSite(site: pvMapper.Site) {
+            this.sites.push(site);
+            //This function can be used to make specific load commands for various modules
+            //
+            this.siteAdded.fire(site, site);
+        }
 
         public createSite(feature: OpenLayers.SiteFeature) {
             if (console) console.log("Creating site");
@@ -28,6 +35,8 @@ module pvMapper {
             this.sites.push(aSite);
             this.siteAdded.fire(aSite, feature);
         }
+
+
 
         /**
         Removes a site from the sites array.
