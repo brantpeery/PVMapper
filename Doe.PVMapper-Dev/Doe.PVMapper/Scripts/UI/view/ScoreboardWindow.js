@@ -416,7 +416,7 @@ toolsStore.on({
               //this is the total summary line -- only time it pass the entire store records.
               var avgC = getColor(average);
               var avgM = getColor(minimum);
-              return '<span style="border-radius: 3px;font-weight:bold; background-color:' + avgM + '">&nbsp' + minimum.toFixed(0) + '&nbsp</span>' +
+              return '<hr><span style="border-radius: 3px;font-weight:bold; background-color:' + avgM + '">&nbsp' + minimum.toFixed(0) + '&nbsp</span>' +
                      '<br /> <span style="border-radius: 3px;font-weight:bold; background-color:' + avgC + '">&nbsp' + average.toFixed(0) + '&nbsp</span>'
             } else 
               return average;
