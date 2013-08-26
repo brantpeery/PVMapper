@@ -19,14 +19,14 @@ module pvMapper {
             //  throw ('The parameter "feature" must be an OpenLayers.Feature');
             this.self = this;
             this.id = feature.fid;
-            this.feature = feature;                                       
+            this.feature = feature;
             this.feature.site = this;
             this.geometry = feature.geometry;
             this.name = feature.attributes.name;
             this.description = feature.attributes.description;
         }
         public self: any; //Reference to this object 
-        public id: number; //The id that came from the DB
+        public id: string; //The id that came from the DB
         public site: OpenLayers.SiteFeature; //The site object from Open Layers
         public geometry: OpenLayers.Polygon; //The site boundry 
         public name: string; //The saved name of the site
