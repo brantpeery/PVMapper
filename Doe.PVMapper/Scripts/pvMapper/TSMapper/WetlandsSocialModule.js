@@ -85,7 +85,7 @@ var INLModules;
         //Note: this works only as well as our windowing scheme, which is to say poorly
         //var propsWindow = Ext.create('MainApp.view.Window', {
         propsWindow = Ext.create('Ext.window.Window', {
-            title: "Configure Nearest Transmission Line Tool",
+            title: "Configure Wetland Proximity Tool",
             closeAction: "hide",
             layout: "fit",
             items: [

@@ -150,7 +150,7 @@ var BYUModules;
         });
 
         propsWindow = Ext.create('Ext.window.Window', {
-            title: "Configure Nearest Transmission Line Tool",
+            title: "Configure Nearest Substation Tool",
             closeAction: "hide",
             layout: "fit",
             items: [
@@ -192,8 +192,8 @@ var BYUModules;
                             myToolLine = this;
                             propsWindow.show();
                         },
-                        title: "Nearest Power Sub Station",
-                        description: "Distance from a site boundary to the nearest known Power Sub Station, using data from OSM",
+                        title: "Nearest Substation",
+                        description: "Distance from a site boundary to the nearest known substation, using data from Open Street Map",
                         category: "Transmission Availability",
                         onScoreAdded: function (event, score) {
                         },
@@ -222,7 +222,7 @@ var BYUModules;
     var modinstance = new SubStationModule();
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
-   
+
 
     function updateScore(score) {
         var maxSearchDistanceInMeters = configProperties.maxSearchDistanceInKM * 1000;
@@ -230,24 +230,22 @@ var BYUModules;
         var bbox = new OpenLayers.Bounds(score.site.geometry.bounds.left - maxSearchDistanceInMeters - 1000, score.site.geometry.bounds.bottom - maxSearchDistanceInMeters - 1000, score.site.geometry.bounds.right + maxSearchDistanceInMeters + 1000, score.site.geometry.bounds.top + maxSearchDistanceInMeters + 1000);
         bbox = bbox.toArray();
         for (var i = 0; i < 4; i++) {
-            bbox[i] = bbox[i]/100000;
+            bbox[i] = bbox[i] / 100000;
         }
-        bbox = new OpenLayers.Bounds.fromArray(bbox).toBBOX(6,true);
-     
+        bbox = new OpenLayers.Bounds.fromArray(bbox).toBBOX(6, true);
+
 
         // use a genuine JSONP request, rather than a plain old GET request routed through the proxy.
         var request = OpenLayers.Request.GET({
             url: SubStationQueryUrl,
             params: {
-                data: "way[power=sub_station]("+bbox+");(._;>;);out;" 
-              },
+                data: "way[power=sub_station](" + bbox + ");(._;>;);out;"
+            },
             callback: function (response) {
                 if (response.status == 200) {
                     response = osm2geo(response.responseText);
-                  
-                    //Conversion of response
 
-                    
+                    //Conversion of response
                     for (var i = 0; i < response.features.length; i++) {
 
                         var cood = response.features[i].geometry.coordinates[0];
@@ -259,34 +257,33 @@ var BYUModules;
                             ele[1] = ele[1] * 100000;
                         }
                     }
-                       
+
                     var closestFeature = null;
                     var minDistance = maxSearchDistanceInMeters;
-                  
-                    var parser = new OpenLayers.Format.GeoJSON();
-                   // response = parser.parseGeometry(response);
 
-               
-        if (response.features) {
-        for (var i = 0; i < response.features.length; i++) {
-            
-            var distance = score.site.geometry.distanceTo(parser.parseGeometry(response.features[i].geometry));
+                    var parser = new OpenLayers.Format.GeoJSON();
+                    // response = parser.parseGeometry(response);
+
+
+                    if (response.features) {
+                        for (var i = 0; i < response.features.length; i++) {
+
+                            var distance = score.site.geometry.distanceTo(parser.parseGeometry(response.features[i].geometry));
                             if (distance < minDistance) {
                                 minDistance = distance;
                                 closestFeature = response.features[i];
                             }
                         }
                     }
-        if (closestFeature !== null) {
-            var name = "Power"
-            if (closestFeature.properties.name)
-            {
-                name = closestFeature.properties.name;
-            }
-                        score.popupMessage = (minDistance / 1000).toFixed(1) + " km to " + name + " Sub Station";
+                    if (closestFeature !== null) {
+                        var name = "nearest"
+                        if (closestFeature.properties.name) {
+                            name = closestFeature.properties.name;
+                        }
+                        score.popupMessage = (minDistance / 1000).toFixed(1) + " km to " + name + " substation";
                         score.updateValue(minDistance / 1000);
                     } else {
-                         score.popupMessage = "No Power SubStation found within " + configProperties.maxSearchDistanceInKM + " km";
+                        score.popupMessage = "No substation found within " + configProperties.maxSearchDistanceInKM + " km";
                         score.updateValue(configProperties.maxSearchDistanceInKM);
                     }
                 } else {
@@ -296,6 +293,6 @@ var BYUModules;
             }
         });
 
-  
+
     }
 })(BYUModules || (BYUModules = {}));

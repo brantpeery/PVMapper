@@ -54,7 +54,7 @@ module pvMapper {
         /**
         Removes a site from the sites array.
         */
-        public removeSiteById(siteId: number)
+        public removeSiteById(siteId: string)
         {
             var i: number;
             for (i = 0; i < this.sites.length; i++)
