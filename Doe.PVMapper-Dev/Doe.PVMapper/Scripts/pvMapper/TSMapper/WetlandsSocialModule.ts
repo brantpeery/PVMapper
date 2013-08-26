@@ -93,7 +93,7 @@ module INLModules {
 
         //var propsWindow = Ext.create('MainApp.view.Window', {
         propsWindow = Ext.create('Ext.window.Window', {
-            title: "Configure Nearest Transmission Line Tool",
+            title: "Configure Wetland Proximity Tool",
             closeAction: "hide", //"destroy",
             layout: "fit",
             items: [
