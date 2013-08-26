@@ -36,6 +36,14 @@ var BYUModules;
         }
 
         NearRoadModule.prototype.updateScore = function (score) {
+
+            //Fetch data from the cache if it exists. 
+            if ($.jStorage.get(key)) {
+                score.popupMessage = "<i>" + $.jStorage.get(key + "msg") + "</i>";
+                score.updateValue($.jStorage.get(key));
+            }
+
+
             var toGeoJson = new OpenLayers.Format.GeoJSON();
             var geoJsonObj = toGeoJson.extract.geometry.apply(toGeoJson, [
                 score.site.geometry
@@ -125,21 +133,6 @@ var BYUModules;
                                 }
                             });
                         }, 10000);
-
-                        //Fetch data from the cache if it exists. 
-
-
-                        if ($.jStorage.get(key))
-                        {
-                            score.popupMessage = "<i>" + $.jStorage.get(key + "msg") + "</i>";
-                            score.updateValue($.jStorage.get(key));
-                        }
-                        else
-                        {
-                            score.popupMessage = "Please Wait! Roads confuse me!";
-                            score.updateValue(Number.NaN);
-                        }
-
                      
                     } else {
                         score.popupMessage = "Error " + response.status;
