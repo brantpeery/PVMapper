@@ -120,20 +120,26 @@ module pvMapper {
 
             //this.self.scoreAddedEvent.fire(score, [{ score: score, site: site }, score]);
 
-            //TODO: uncomment this - it's testing code!!!!!!
-            //Set the initial value from the tool
-            try {
-                // request a score update
-                this.onSiteChange(undefined, score);
-            } catch (ex) {
-                if (console) console.error(ex);
-            }
+            // Check if we are testing; if so, skip the initial load of scores
+            //if (document.location.hostname === "localhost") {
+            //    //Set the initial value to 1
+            //    window.setTimeout(function () {
+            //        score.popupMessage = "localhost" +
+            //            " &nbsp (this appears only when running from localhost;" +
+            //            " it's an initial dummy value, where all scores are set to 1;" +
+            //            " to load actual scores, simply edit/change/drag a site vertex)";
+            //        score.updateValue.apply(score, [1]);
+            //    }, 2500 * Math.random());
 
-            //TODO: testing code - leave this commented out!!!
-            //window.setTimeout(function () {
-            //    score.popupMessage = "test value";
-            //    score.updateValue.apply(score, [1]);
-            //}, 2000 * Math.random());
+            //} else {
+                //Set the initial value from the tool
+                try {
+                    // request a score update
+                    this.onSiteChange(undefined, score);
+                } catch (ex) {
+                    if (console) console.error(ex);
+                }
+            //}
 
             return score;
         }

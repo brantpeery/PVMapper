@@ -38,7 +38,7 @@ module pvMapper {
     }
 
     export interface IToolLine extends ITool {
-        scores: IScore[];
+        scores: ISiteScore[];
 
         ////TODO: implementation option B
         ////Note: implemented once by the API

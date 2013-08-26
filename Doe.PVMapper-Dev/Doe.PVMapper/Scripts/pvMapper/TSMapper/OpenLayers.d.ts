@@ -23,7 +23,7 @@ declare module OpenLayers {
     }
 
     export class SiteFeature {
-        fid: number;
+        fid: string;
         geometry: Polygon;
         attributes: Attributes;
         site: any;
