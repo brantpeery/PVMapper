@@ -16,10 +16,14 @@ declare module OpenLayers {
 
     var Request: Request;
 
-
     export class Attributes {
         name: string;
         description: string;
+    }
+
+
+    interface Util {
+      getParameterString(any): string;
     }
 
     export class SiteFeature {
