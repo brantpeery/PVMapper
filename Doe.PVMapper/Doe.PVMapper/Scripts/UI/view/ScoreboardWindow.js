@@ -409,7 +409,9 @@ toolsStore.on({
                 // set the score's color as an attribute on the feature (note - this is at least partly a hack...)
                 feature.attributes.fillColor = (!isNaN(average)) ? getColor(average) : "";
                 // redraw the feature
-                feature.layer.drawFeature(feature);
+                if (feature.layer) {
+                    feature.layer.drawFeature(feature);
+                }
               }
             }
 

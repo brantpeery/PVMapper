@@ -288,7 +288,7 @@ var BYUModules;
                         score.updateValue(configProperties.maxSearchDistanceInKM);
                     }
                 } else {
-                    score.popupMessage = "Request error " + response.error.toString();
+                    score.popupMessage = "Error " + response.status + " " + response.statusText;
                     score.updateValue(Number.NaN);
                 }
             }
