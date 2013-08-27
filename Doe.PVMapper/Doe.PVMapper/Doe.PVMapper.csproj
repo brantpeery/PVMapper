@@ -219,6 +219,7 @@
     <Content Include="Content\OpenLayers\default\style.css" />
     <Content Include="Content\OpenLayers\default\style.tidy.css" />
     <Content Include="Content\jsxgraph.css" />
+    <Content Include="Images\printer.png" />
     <Content Include="Scripts\Esri-GeoJsonConverter.js" />
     <Content Include="Scripts\EsriGeoJSON.js" />
     <Content Include="Scripts\ExtJS.d.ts" />
@@ -240,6 +241,7 @@
       <DependentUpon>TotalsModule.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvExtensions\TotalsModule.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\CombinedNearModule.js" />
     <Content Include="Scripts\pvMapper\TSMapper\DataManager.js">
       <DependentUpon>DataManager.ts</DependentUpon>
     </Content>
@@ -283,6 +285,8 @@
       <DependentUpon>irradianceModule.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\LandUseModule.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\jstorage.d.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\jstorage.js" />
     <Content Include="Scripts\pvMapper\TSMapper\JXG.d.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\LandUseModule.js">
       <DependentUpon>LandUseModule.ts</DependentUpon>
@@ -303,8 +307,6 @@
       <DependentUpon>ModuleTemplate.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\ModuleTemplate.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\NearRiverModule.js" />
-    <Content Include="Scripts\pvMapper\TSMapper\NearRoadModule.js" />
     <Content Include="Scripts\pvMapper\TSMapper\Options.d.js">
       <DependentUpon>Options.d.ts</DependentUpon>
     </Content>

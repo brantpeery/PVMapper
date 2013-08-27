@@ -39,13 +39,19 @@ var BYUModules;
         }
 
         NearRiverModule.prototype.updateScore = function (score) {
+            var key = "riverModuleScore" + score.site.id;
+            if (isNaN(score.value) && $.jStorage.get(key)) {
+                score.popupMessage = "<i>" + $.jStorage.get(key + "msg") + "</i>";
+                score.updateValue($.jStorage.get(key));
+            }
+
+
             var toGeoJson = new OpenLayers.Format.GeoJSON();
             var geoJsonObj = toGeoJson.extract.geometry.apply(toGeoJson, [
                 score.site.geometry
             ]);
             var toEsriJson = new geoJsonConverter();
             var recObj = toEsriJson.toEsri(geoJsonObj);
-            var key = "riverModuleScore" + score.site.id;
             var esriJsonObj = {
                 "displayFieldName": "",
                 "features": [
@@ -133,21 +139,6 @@ var BYUModules;
                             });
                         }, 10000);
 
-
-                        //Fetch data from the cache if it exists. 
-
-
-                        if ($.jStorage.get(key)) {
-                            score.popupMessage = "<i>" + $.jStorage.get(key + "msg") + "</i>";
-                            score.updateValue($.jStorage.get(key));
-                        }
-                        else {
-                            score.popupMessage = "Please Wait! Lots of rivers!";
-                            score.updateValue(Number.NaN);
-                        }
-
-
-
                     } else {
                         score.popupMessage = "Error " + response.status;
                         score.updateValue(Number.NaN);
@@ -200,14 +191,14 @@ var BYUModules;
         NearRoadModule.prototype.updateScore = function (score) {
             var key = "roadModuleScore" + score.site.id;
             if (requestSent) {
-                if ($.jStorage.get(key)) {
+                if (isNaN(score.value) && $.jStorage.get(key)) {
                     score.popupMessage = "<i>" + $.jStorage.get(key + "msg") + "</i>";
                     score.updateValue($.jStorage.get(key));
                 }
-                else {
-                    score.popupMessage = "Please Wait! Roads confuse me!";
-                    score.updateValue(Number.NaN);
-                }
+                //else {
+                //    score.popupMessage = "Please Wait! Roads confuse me!";
+                //    score.updateValue(Number.NaN);
+                //}
 
                 //Wait for a few seconds, then fetch the job id and the results from that job. 
 
@@ -363,19 +354,6 @@ var BYUModules;
                             });
                         }, 10000);
 
-                        //Fetch data from the cache if it exists. 
-
-
-                        if ($.jStorage.get(key)) {
-                            score.popupMessage = "<i>" + $.jStorage.get(key + "msg") + "</i>";
-                            score.updateValue($.jStorage.get(key));
-                        }
-                        else {
-                            score.popupMessage = "Please Wait! Roads confuse me!";
-                            score.updateValue(Number.NaN);
-                        }
-
-
                     } else {
                         score.popupMessage = "Error " + response.status;
                         score.updateValue(Number.NaN);
@@ -385,12 +363,6 @@ var BYUModules;
         };
         return NearRoadModule;
     })();
-
-    function getScores() {
-        alert("Running Get scores");
-
-    }
-
 
     BYUModules.NearRoadModule = NearRoadModule;
     var modInstance = new BYUModules.NearRoadModule();
