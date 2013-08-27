@@ -134,7 +134,7 @@ var INLModules;
                             score.updateValue(_this.starRatingHelper.starRatings[_this.starRatingHelper.options.noCategoryLabel]);
                         }
                     } else {
-                        score.popupMessage = "Error " + response.status;
+                        score.popupMessage = "Error " + response.status + " " + response.statusText;
                         score.updateValue(Number.NaN);
                     }
                 }
@@ -340,14 +340,14 @@ var INLModules;
                                         }
                                     } else {
                                         clearInterval(resultSearcher);
-                                        score.popupMessage = "Error " + response.status;
+                                        score.popupMessage = "Error " + response.status + " " + response.statusText;
                                         score.updateValue(Number.NaN);
                                     }
                                 }
                             });
                         }, 10000);
                     } else {
-                        score.popupMessage = "Error " + response.status;
+                        score.popupMessage = "Error " + response.status + " " + response.statusText;
                         score.updateValue(Number.NaN);
                     }
                 }

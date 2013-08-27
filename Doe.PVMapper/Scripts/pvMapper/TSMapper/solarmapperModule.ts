@@ -206,7 +206,7 @@ module INLModules {
                         score.updateValue(Number.NaN);
                     }
                 } else {
-                    score.popupMessage = "Error " + response.status;
+                    score.popupMessage = "Error " + response.status + " " + response.statusText;
                     score.updateValue(Number.NaN);
                 }
             },
