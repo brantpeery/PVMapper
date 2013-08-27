@@ -194,7 +194,8 @@ var BYUModules;
                         },
                         title: "Nearest Substation",
                         description: "Distance from a site boundary to the nearest known substation, using data from Open Street Map",
-                        category: "Transmission Availability",
+                        //category: "Transmission Availability",
+                        category: "Power Infrastructure",
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (e, score) {
