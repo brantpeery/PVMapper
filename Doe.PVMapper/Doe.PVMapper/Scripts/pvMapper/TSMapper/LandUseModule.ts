@@ -174,7 +174,7 @@ module INLModules {
                                 this.starRatingHelper.options.noCategoryLabel]);
                         }
                     } else {
-                        score.popupMessage = "Error " + response.status;
+                        score.popupMessage = "Error " + response.status + " " + response.statusText;
                         score.updateValue(Number.NaN);
                     }
                 },
@@ -416,7 +416,7 @@ module INLModules {
                                         }
                                     } else {
                                         clearInterval(resultSearcher);
-                                        score.popupMessage = "Error " + response.status;
+                                        score.popupMessage = "Error " + response.status + " " + response.statusText;
                                         score.updateValue(Number.NaN);
                                     }
                                 }
@@ -424,7 +424,7 @@ module INLModules {
                         }, 10000);
 
                     } else {
-                        score.popupMessage = "Error " + response.status;
+                        score.popupMessage = "Error " + response.status + " " + response.statusText;
                         score.updateValue(Number.NaN);
                     }
                 },

@@ -161,7 +161,7 @@ var INLModules;
                         // having any nearby line is much better than having no nearby line, so let's reflect that.
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0, 50, 0.5, 100, 1, "% positive")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% positive")
                         },
                         weight: 10
                     }
@@ -222,8 +222,9 @@ var INLModules;
     function updateScore(score, searchDistanceInMi) {
         var searchDistanceInMeters = searchDistanceInMi * 1609.34;
 
-        // use a genuine JSONP request, rather than a plain old GET request routed through the proxy.
-        var jsonpProtocol = new OpenLayers.Protocol.Script({
+        //NOTE: can't use JSONP from an HTTP server when we are running HTTPS, so rely on a good old Proxy GET
+        //var jsonpProtocol = new OpenLayers.Protocol.Script(<any>{
+        var request = OpenLayers.Request.GET({
             url: esriQueryUrl,
             params: {
                 f: "json",
@@ -234,21 +235,24 @@ var INLModules;
                 //TODO: scaling is problematic - should use a constant-size search window
                 geometry: new OpenLayers.Bounds(score.site.geometry.bounds.left - searchDistanceInMeters - 1000, score.site.geometry.bounds.bottom - searchDistanceInMeters - 1000, score.site.geometry.bounds.right + searchDistanceInMeters + 1000, score.site.geometry.bounds.top + searchDistanceInMeters + 1000).toBBOX(0, false)
             },
-            format: new OpenLayers.Format.EsriGeoJSON(),
-            parseFeatures: function (data) {
-                return this.format.read(data);
-            },
+            proxy: "/Proxy/proxy.ashx?",
+            //format: new OpenLayers.Format.EsriGeoJSON(),
+            //parseFeatures: function (data) {
+            //    return this.format.read(data);
+            //},
             callback: function (response) {
-                if (response.success()) {
+                if (response.status === 200) {
                     var closestFeature = null;
                     var minDistance = searchDistanceInMeters;
 
-                    if (response.features) {
-                        for (var i = 0; i < response.features.length; i++) {
-                            var distance = score.site.geometry.distanceTo(response.features[i].geometry);
+                    var features = OpenLayers.Format.EsriGeoJSON.prototype.read(response.responseText);
+
+                    if (features) {
+                        for (var i = 0; i < features.length; i++) {
+                            var distance = score.site.geometry.distanceTo(features[i].geometry);
                             if (distance < minDistance) {
                                 minDistance = distance;
-                                closestFeature = response.features[i];
+                                closestFeature = features[i];
                             }
                         }
                     }
@@ -282,12 +286,10 @@ var INLModules;
                         score.updateValue(100);
                     }
                 } else {
-                    score.popupMessage = "Request error " + response.error.toString();
+                    score.popupMessage = "Error " + response.status + " " + response.statusText;
                     score.updateValue(Number.NaN);
                 }
             }
         });
-
-        var response = jsonpProtocol.read();
     }
 })(INLModules || (INLModules = {}));
