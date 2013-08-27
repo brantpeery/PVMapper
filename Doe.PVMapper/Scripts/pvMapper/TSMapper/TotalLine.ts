@@ -49,7 +49,7 @@ module pvMapper {
                 //Aggragate all the scoreline's values into an array
                 lines.forEach((line) => {
                     //TODO: This should be the weighted score
-                    if (line.scores && line.scores[idx] && line.scores[idx].utility){
+                    if (line.scores && line.scores[idx] && !isNaN(line.scores[idx].utility)) {
                         values.push({utility:line.scores[idx].utility, tool:line});
                     }
                 });

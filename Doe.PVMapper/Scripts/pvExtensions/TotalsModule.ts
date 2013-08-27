@@ -20,7 +20,7 @@ module pvMapper {
                     id: "TOTALS_TOOLS",
                     totalTools: [{
                         title: "Weighted Average Score",
-                        description: "The weighted arithmetic mean of all scores for a site, ",
+                        description: "The weighted arithmetic mean of all scores for a site",
                         category: "Totals",
                         
                         activate: () => { },

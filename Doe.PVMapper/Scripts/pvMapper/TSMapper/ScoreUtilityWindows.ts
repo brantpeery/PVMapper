@@ -203,7 +203,7 @@ module pvMapper {
                     renderTo: Ext.getBody(),
                     listeners: {
                         afterrender: function (combo) {
-                            if ((_this != "undefined") && (_this._xArgs != "undefined")) {
+                            if ((typeof _this !== "undefined") && (typeof _this._xArgs !== "undefined")) {
                                 this.setValue(_this._xArgs.metaInfo.name, true);
                                 this.fireEvent('select', this);
                             }

@@ -100,17 +100,18 @@ var scoreboardColumns = [{
     //Note: this fails when we allow grouping by arbitrary fields (and it fails in mysterious ways)
     //return records[0].get('category') + " subtotal: <input type='button' img='http://localhost:53465/Images/Pie Chart.png' value='Pie' onClick='scoreboardColumns[0].viewPie(\"" + records[0].get('category') + "\");' />";
     if (records.length > 0) {
-      if (records.length == scoreboardGrid.store.data.length) {
-        //this is the total of all category summary  .... HACK!!!!
-        return '<hr><br /><b>Summary Minimum:<br />Summary Average :</b>';
-      } else {
+      //if (records.length == scoreboardGrid.store.data.length) {
+      //  //this is the total of all category summary  .... HACK!!!!
+      //  return '<hr><br /><b>Summary Minimum:<br />Summary Average :</b>';
+      //} else {
         return records[0].get('category') +
           " (average): <input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
           records[0].get('category') + "\",null);' />";
-      }
+      //}
     }
-    else
-      return ' ';
+    else {
+        return ' ';
+    }
   },
 }, {
   header: 'Weight',
@@ -377,9 +378,9 @@ toolsStore.on({
           draggable: false,
 
           summaryType: function (records) {
-            var total = 0;
-            var count = 0, minimum = 9999, val = 0;
-
+              var total = 0;
+              var count = 0;
+            //var count = 0, minimum = 9999, val = 0;
             
             records.forEach(function (record) {
               var scoreLine = record.raw;
@@ -388,8 +389,8 @@ toolsStore.on({
                   val = scoreLine.scores[idx].utility * weight;
                   total += val;
                   count += weight;
-                  if (val > 0 )
-                    minimum = (minimum > val) ? val : minimum;
+                  //if (val > 0 )
+                  //  minimum = (minimum > val) ? val : minimum;
                 }
             });
 
@@ -412,13 +413,13 @@ toolsStore.on({
               }
             }
 
-            if (records.length == scoreboardGrid.store.data.length) {
-              //this is the total summary line -- only time it pass the entire store records.
-              var avgC = getColor(average);
-              var avgM = getColor(minimum);
-              return '<hr><span style="border-radius: 3px;font-weight:bold; background-color:' + avgM + '">&nbsp' + minimum.toFixed(0) + '&nbsp</span>' +
-                     '<br /> <span style="border-radius: 3px;font-weight:bold; background-color:' + avgC + '">&nbsp' + average.toFixed(0) + '&nbsp</span>'
-            } else 
+            //if (records.length == scoreboardGrid.store.data.length) {
+            //  //this is the total summary line -- only time it pass the entire store records.
+            //  var avgC = getColor(average);
+            //  var avgM = getColor(minimum);
+            //  return '<hr><span style="border-radius: 3px;font-weight:bold; background-color:' + avgM + '">&nbsp' + minimum.toFixed(0) + '&nbsp</span>' +
+            //         '<br /> <span style="border-radius: 3px;font-weight:bold; background-color:' + avgC + '">&nbsp' + average.toFixed(0) + '&nbsp</span>'
+            //} else 
               return average;
           },
           summaryRenderer: function (value) {
@@ -428,7 +429,7 @@ toolsStore.on({
               //+ "<input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
               //  scoreLine.Category + "\",\""+ scoreline.site.name +"\");' />";
             }
-            else return value;
+            else return '';
           },
 
         },
@@ -445,81 +446,81 @@ toolsStore.on({
 /***
 override the groupsummary class to display both grouping summary and summary.  
 ***/
-Ext.define('MainApp.view.GroupingSummaryWithTotal', {
-  extend: 'Ext.grid.feature.GroupingSummary',
-  alias: 'groupingsummarytotal',
-  getTableFragments: function () {
-    return {
-      closeRows: this.closeRows
-    };
-  },
-  closeRows: function () {
-    return '</tpl>{[this.recursiveCall ? "" : this.printTotalRow()]}';
-  },
-  getFragmentTpl: function () {
-    var me = this,
-      fragments = me.callParent();
-    me.totalData = this.generateTotalData();
-    Ext.apply(fragments, {
-      printTotalRow: Ext.bind(this.printTotalRow, this)
-    });
-    Ext.apply(fragments, {
-      recurse: function (values, reference) {
-        this.recursiveCall = true;
-        var returnValue = this.apply(reference ? values[reference] : values);
-        this.recursiveCall = false;
-        return returnValue;
-      }
-    });
-    return fragments;
-  },
-  printTotalRow: function () {
-    var inner = this.view.getTableChunker().metaRowTpl.join(''),
-      prefix = Ext.baseCSSPrefix;
-    inner = inner.replace(prefix + 'grid-row', prefix + 'grid-row-summary');
-    inner = inner.replace('{{id}}', '{gridSummaryValue}');
-    inner = inner.replace(this.nestedIdRe, '{id$1}');
-    inner = inner.replace('{[this.embedRowCls()]}', '{rowCls}');
-    inner = inner.replace('{[this.embedRowAttr()]}', '{rowAttr}');
-    inner = Ext.create('Ext.XTemplate', inner, {
-      firstOrLastCls: Ext.view.TableChunker.firstOrLastCls
-    });
-    return inner.applyTemplate({
-      columns: this.getTotalData()
-    });
-  },
-  getTotalData: function () {
-    var me = this,
-      columns = me.view.headerCt.getColumnsForTpl(),
-      i = 0,
-      length = columns.length,
-      data = [],
-      active = me.totalData,
-      column;
-    for (; i < length; ++i) {
-      column = columns[i];
-      column.gridSummaryValue = this.getColumnValue(column, active);
-      data.push(column);
-    }
-    return data;
-  },
-  generateTotalData: function () {
-    var me = this,
-      data = {},
-      store = me.view.store,
-      columns = me.view.headerCt.getColumnsForTpl(),
-      i = 0,
-      length = columns.length,
-      fieldData,
-      key,
-      comp;
-    for (i = 0, length = columns.length; i < length; ++i) {
-      comp = Ext.getCmp(columns[i].id);
-      data[comp.id] = me.getSummary(store, comp.summaryType, comp.dataIndex, false);
-    }
-    return data;
-  }
-});
+//Ext.define('MainApp.view.GroupingSummaryWithTotal', {
+//  extend: 'Ext.grid.feature.GroupingSummary',
+//  alias: 'groupingsummarytotal',
+//  getTableFragments: function () {
+//    return {
+//      closeRows: this.closeRows
+//    };
+//  },
+//  closeRows: function () {
+//    return '</tpl>{[this.recursiveCall ? "" : this.printTotalRow()]}';
+//  },
+//  getFragmentTpl: function () {
+//    var me = this,
+//      fragments = me.callParent();
+//    me.totalData = this.generateTotalData();
+//    Ext.apply(fragments, {
+//      printTotalRow: Ext.bind(this.printTotalRow, this)
+//    });
+//    Ext.apply(fragments, {
+//      recurse: function (values, reference) {
+//        this.recursiveCall = true;
+//        var returnValue = this.apply(reference ? values[reference] : values);
+//        this.recursiveCall = false;
+//        return returnValue;
+//      }
+//    });
+//    return fragments;
+//  },
+//  printTotalRow: function () {
+//    var inner = this.view.getTableChunker().metaRowTpl.join(''),
+//      prefix = Ext.baseCSSPrefix;
+//    inner = inner.replace(prefix + 'grid-row', prefix + 'grid-row-summary');
+//    inner = inner.replace('{{id}}', '{gridSummaryValue}');
+//    inner = inner.replace(this.nestedIdRe, '{id$1}');
+//    inner = inner.replace('{[this.embedRowCls()]}', '{rowCls}');
+//    inner = inner.replace('{[this.embedRowAttr()]}', '{rowAttr}');
+//    inner = Ext.create('Ext.XTemplate', inner, {
+//      firstOrLastCls: Ext.view.TableChunker.firstOrLastCls
+//    });
+//    return inner.applyTemplate({
+//      columns: this.getTotalData()
+//    });
+//  },
+//  getTotalData: function () {
+//    var me = this,
+//      columns = me.view.headerCt.getColumnsForTpl(),
+//      i = 0,
+//      length = columns.length,
+//      data = [],
+//      active = me.totalData,
+//      column;
+//    for (; i < length; ++i) {
+//      column = columns[i];
+//      column.gridSummaryValue = this.getColumnValue(column, active);
+//      data.push(column);
+//    }
+//    return data;
+//  },
+//  generateTotalData: function () {
+//    var me = this,
+//      data = {},
+//      store = me.view.store,
+//      columns = me.view.headerCt.getColumnsForTpl(),
+//      i = 0,
+//      length = columns.length,
+//      fieldData,
+//      key,
+//      comp;
+//    for (i = 0, length = columns.length; i < length; ++i) {
+//      comp = Ext.getCmp(columns[i].id);
+//      data[comp.id] = me.getSummary(store, comp.summaryType, comp.dataIndex, false);
+//    }
+//    return data;
+//  }
+//});
 
 // plugin for cell editing (Weight value)
 Ext.define('MainApp.view.ScoreWeightEditing', {
@@ -535,70 +536,91 @@ Ext.define('MainApp.view.ScoreWeightEditing', {
 
 //----------------The grid and window-----------------
 Ext.define('Ext.grid.ScoreboardGrid', {
-  //xtype:'Scoreboard',
-  extend: 'Ext.grid.Panel',
-  store: toolsStore,
-  //forceFit: true,
-  //width: '100%',
-  //height: 600,
-  //title: "Tools List",
-  columns: scoreboardColumns,
-  selModel: {
-    selType: 'cellmodel', //'rowmodel', //Note: use 'cellmodel' once we have cell editing worked out
-  },
-  plugins: [Ext.create('MainApp.view.ScoreWeightEditing')],
-  features: [
-    Ext.create('MainApp.view.GroupingSummaryWithTotal', {
-      groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
-      summaryType: 'average',
-    })
-  ],
-    //{
-  //  //Note: this feature provides per-group summary values, rather than repeating the global summary for each group.
-  //  groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
-  //  ftype: 'groupingsummary',
-  //  enableGroupingMenu: false,
-  //  //hideGroupedHeader: true, <-- this is handy, if we ever allow grouping by arbitrary fields
-  //  //onGroupClick: function(view, group, idx, foo, e) {}
+    //xtype:'Scoreboard',
+    extend: 'Ext.grid.Panel',
+    store: toolsStore,
+    //forceFit: true,
+    //width: '100%',
+    //height: 600,
+    //title: "Tools List",
+    columns: scoreboardColumns,
+    selModel: {
+        selType: 'cellmodel', //'rowmodel', //Note: use 'cellmodel' once we have cell editing worked out
+    },
+    plugins: [Ext.create('MainApp.view.ScoreWeightEditing')],
+    features: [
+        //Ext.create('MainApp.view.GroupingSummaryWithTotal', {
+        //  groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
+        //  summaryType: 'average',
+        //})
+        {
+            //Note: this feature provides per-group summary values, rather than repeating the global summary for each group.
+            groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
+            ftype: 'groupingsummary',
+            enableGroupingMenu: false,
+            //hideGroupedHeader: true, <-- this is handy, if we ever allow grouping by arbitrary fields
+            //onGroupClick: function(view, group, idx, foo, e) {}
+        },
+        //{ ftype: 'grouping' },
+        //{
+        //  ftype: 'summary',
+        //  dock: 'bottom'
+        //},
+    ],
 
+    listeners: {
+        afterlayout: function (sender, eOpts) {
+            var gridViewId = $('#' + this.getId() + ' .x-grid-view').attr('id');
 
-  //},
-  //    //{ ftype: 'grouping' },
-  //    //{
-  //    //  ftype: 'summary',
-  //    //  dock: 'bottom'
-  //    //},
-  //],
-  viewPie: function (cat, site) {
+            var $totalsHeader = $('#' + gridViewId + '-hd-Totals');
+            var $totalsRow = $('#' + gridViewId + '-bd-Totals');
+            var $totalsNext = $totalsRow.next();
 
-    var records = scoreboardGrid.store.getGroups(cat);
-    if (records.children.length > 0) {
-      pieStore.removeAll(); //delete all records in the score
-      records.children.forEach(function (record, index, array) {
-        pieStore.add({ Category: record.get('title'), Data: record.get('weight'), Color: "blue" });
-      });
-    }
+            // if the totals aren't at the bottom of their parent container...
+            if ($totalsNext.length) {
 
-    var pieWin = Ext.create('MainApp.view.PieWindow', {
-      dataStore: pieStore,
-      dataField: 'Data',
-      dataName: 'Category',
-      fillColor: 'Color',
-      title: 'Weight Percentage - ' + cat,
-      buttons: [{
-        xtype: 'button',
-        text: 'OK',
-        handler: function () {
-          //TODO: execute update function here.
+                if (!$totalsNext.attr('class').indexOf('x-grid-row-summary') >= 0) {
+                    // remove the unnecessary and needless row summary for the totals group
+                    $totalsNext.hide();
+                }
 
-
-          pieWin.close();
+                // move the totals to the bottom of their parent container
+                $totalsHeader.appendTo($totalsHeader.parent());
+                $totalsRow.appendTo($totalsHeader.parent());
+            }
         }
-      },
-      ]
-    }).show();
+    },
 
-  },
+    viewPie: function (cat, site) {
+
+        var records = scoreboardGrid.store.getGroups(cat);
+        if (records.children.length > 0) {
+            pieStore.removeAll(); //delete all records in the score
+            records.children.forEach(function (record, index, array) {
+                pieStore.add({ Category: record.get('title'), Data: record.get('weight'), Color: "blue" });
+            });
+        }
+
+        var pieWin = Ext.create('MainApp.view.PieWindow', {
+            dataStore: pieStore,
+            dataField: 'Data',
+            dataName: 'Category',
+            fillColor: 'Color',
+            title: 'Weight Percentage - ' + cat,
+            buttons: [{
+                xtype: 'button',
+                text: 'OK',
+                handler: function () {
+                    //TODO: execute update function here.
+
+
+                    pieWin.close();
+                }
+            },
+            ]
+        }).show();
+
+    },
 
 });
 
