@@ -242,8 +242,9 @@ module INLModules {
 
     function updateScore(score: pvMapper.ISiteScore, searchDistanceInMi) {
         var searchDistanceInMeters = searchDistanceInMi * 1609.34;
-        // use a genuine JSONP request, rather than a plain old GET request routed through the proxy.
-        var jsonpProtocol = new OpenLayers.Protocol.Script(<any>{
+        //NOTE: can't use JSONP from an HTTP server when we are running HTTPS, so rely on a good old Proxy GET
+        //var jsonpProtocol = new OpenLayers.Protocol.Script(<any>{
+        var request = OpenLayers.Request.GET({
             url: esriQueryUrl,
             params: {
                 f: "json",
@@ -259,22 +260,26 @@ module INLModules {
                     score.site.geometry.bounds.top + searchDistanceInMeters + 1000)
                     .toBBOX(0, false),
             },
-            format: new OpenLayers.Format.EsriGeoJSON(),
-            parseFeatures: function (data) {
-                return this.format.read(data);
-            },
-            callback: (response: OpenLayers.Response) => {
+            proxy: "/Proxy/proxy.ashx?",
+            //format: new OpenLayers.Format.EsriGeoJSON(),
+            //parseFeatures: function (data) {
+            //    return this.format.read(data);
+            //},
+            callback: (response: any) => {
                 //alert("Nearby features: " + response.features.length);
-                if (response.success()) {
+                if (response.status === 200) {
                     var closestFeature = null;
                     var minDistance: number = searchDistanceInMeters;
 
-                    if (response.features) {
-                        for (var i = 0; i < response.features.length; i++) {
-                            var distance: number = score.site.geometry.distanceTo(response.features[i].geometry);
+                    var features = OpenLayers.Format.EsriGeoJSON.prototype.read(response.responseText);
+                    //console.log("Near-ish features: " + (features ? features.length : 0));
+
+                    if (features) {
+                        for (var i = 0; i < features.length; i++) {
+                            var distance: number = score.site.geometry.distanceTo(features[i].geometry);
                             if (distance < minDistance) {
                                 minDistance = distance;
-                                closestFeature = response.features[i];
+                                closestFeature = features[i];
                             }
                         }
                     }
@@ -319,13 +324,13 @@ module INLModules {
                         score.updateValue(100);
                     }
                 } else {
-                    score.popupMessage = "Request error " + response.error.toString();
+                    score.popupMessage = "Error " + response.status + " " + response.statusText;
                     score.updateValue(Number.NaN);
                 }
             },
         });
 
-        var response: OpenLayers.Response = jsonpProtocol.read();
+        //var response: OpenLayers.Response = jsonpProtocol.read();
     }
 
 }
