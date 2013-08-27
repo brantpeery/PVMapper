@@ -38,7 +38,8 @@ var BYUModules;
         NearRoadModule.prototype.updateScore = function (score) {
 
             //Fetch data from the cache if it exists. 
-            if ($.jStorage.get(key)) {
+            var key = "roadModuleScore"+ score.site.id;
+            if (isNaN(score.value) && $.jStorage.get(key)) {
                 score.popupMessage = "<i>" + $.jStorage.get(key + "msg") + "</i>";
                 score.updateValue($.jStorage.get(key));
             }
@@ -50,7 +51,6 @@ var BYUModules;
             ]);
             var toEsriJson = new geoJsonConverter();
             var recObj = toEsriJson.toEsri(geoJsonObj);
-            var key = "roadModuleScore"+ score.site.id;
             var esriJsonObj = {
                 "displayFieldName": "",
                 "features": [
@@ -109,15 +109,10 @@ var BYUModules;
                                                 score.updateValue(distRoad);
 
                                                 //Save to local cache
-
-                                                
                                                 $.jStorage.deleteKey(key);
                                                 $.jStorage.deleteKey(key+"msg");
                                                 $.jStorage.set(key, distRoad);
                                                 $.jStorage.set(key+"msg", msgRoad);
-
-                                        
-
                                             }
                                             else {
                                                 score.popupMessage = "Error " + response.status;

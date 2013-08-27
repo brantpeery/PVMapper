@@ -38,7 +38,8 @@ var BYUModules;
         NearRiverModule.prototype.updateScore = function (score) {
 
             //Fetch data from the cache if it exists. 
-            if (Number.isNaN(score.value) && $.jStorage.get(key)) {
+            var key = "riverModuleScore" + score.site.id;
+            if (isNaN(score.value) && $.jStorage.get(key)) {
                 score.popupMessage = "<i>" + $.jStorage.get(key + "msg") + "</i>";
                 score.updateValue($.jStorage.get(key));
             }
@@ -50,7 +51,6 @@ var BYUModules;
             ]);
             var toEsriJson = new geoJsonConverter();
             var recObj = toEsriJson.toEsri(geoJsonObj);
-            var key = "riverModuleScore" + score.site.id;
             var esriJsonObj = {
                 "displayFieldName": "",
                 "features": [
@@ -108,14 +108,10 @@ var BYUModules;
                                                 var msgRiver = dist + " miles to " + parsedResponse.value.features[0].attributes.PNAME;
 
                                                 //Save to local cache
-
-                                                
-
                                                 $.jStorage.deleteKey(key);
                                                 $.jStorage.deleteKey(key + "msg");
                                                 $.jStorage.set(key, dist);
                                                 $.jStorage.set(key + "msg", msgRiver);
-
 
                                                 score.updateValue(dist);
                                             }
