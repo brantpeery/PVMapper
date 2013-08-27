@@ -19,6 +19,7 @@ module pvMapper {
                 var fnOfy;
                 _this._xArgs = Ext.Object.merge({}, args); //!Create a clone of the args for use in the graph
                 var gridPanel;
+                var cbxFunctions;
                 function loadboard() {
                     //Extras.loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
                     Extras.getScript("https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.97/jsxgraphcore.js", function () {
@@ -40,8 +41,8 @@ module pvMapper {
                             var y = fn(x, _this._xArgs);
                             return Math.max(0, Math.min(1, y)) * 100;
                         }, {
-                            strokeWidth: 3, strokeColor: "red",
-                        });
+                                strokeWidth: 3, strokeColor: "red",
+                            });
 
                         //draggable lines querying reflecting values.  By using the fn function to query the intersecting Y value, this should work for any utility function.
                         var bb = board.getBoundingBox();
@@ -63,7 +64,7 @@ module pvMapper {
                         vline.on("drag", function (e) {
                             board.suspendUpdate();
                             //var bb = board.getBoundingBox();
-                            
+
                             var y = fn(vline.point1.X(), _this._xArgs);
                             y = Math.max(0, Math.min(1, y)) * 100;
 
@@ -109,10 +110,10 @@ module pvMapper {
                         if (_this._xArgs.metaInfo.name == "ThreePointUtilityArgs") {
                             if (_this._xArgs.points != undefined && _this._xArgs.points.length > 0) {
                                 //create the points
-                               // var seg: any[] = new Array<any>();
+                                // var seg: any[] = new Array<any>();
                                 _this._xArgs.points.forEach(function (p, idx) {
                                     var point = board.create('point', [_this._xArgs[p].x, _this._xArgs[p].y * 100], { name: p, size: 3 });
-                                 //   seg.push(point);
+                                    //   seg.push(point);
                                     point.on("drag", function (e) {
                                         _this._xArgs[p].x = point.X();
                                         _this._xArgs[p].y = point.Y() / 100;
@@ -140,7 +141,7 @@ module pvMapper {
                                 updateGuideLines();
                             });
                         }
-                        else if (_this.xArgs.metaInfo.name == "SinusoidalUtilityArgs") {
+                        else if (_this._xArgs.metaInfo.name == "SinusoidalUtilityArgs") {
                             var minPoint = board.create('point', [_this._xArgs.minValue, 0], { name: 'Min', size: 3 });
                             var maxPoint = board.create('point', [_this._xArgs.maxValue, 100], { name: 'Max', size: 3 });
                             var targetPoint = board.create('point', [_this._xArgs.target, 50], { name: 'target', size: 3 });
@@ -181,6 +182,81 @@ module pvMapper {
 
                 panel.removeAll();
 
+
+                var equStore = Ext.create('Ext.data.Store', {
+                    fields: ['Name', 'Function'],
+                    data: [
+                        { "Name": "3 points", "Function": "ThreePointUtilityArgs" },
+                        { "Name": "Min-Max", "Function": "MinMaxUtilityArgs" },
+                        { "Name": "Less-More", "Function": "SinusoidalUtilityArgs" }
+                    ]
+                });
+
+                cbxFunctions = Ext.create('Ext.form.field.ComboBox', {
+                    fieldLabel: 'Utility Function',
+                    store: equStore,
+                    queryMode: 'local',
+                    displayField: 'Name',
+                    valueField: 'Function',
+                    //autoLoad: true,
+
+                    renderTo: Ext.getBody(),
+                    listeners: {
+                        afterrender: function (combo) {
+                            if ((typeof _this !== "undefined") && (typeof _this._xArgs !== "undefined")) {
+                                this.setValue(_this._xArgs.metaInfo.name, true);
+                                this.fireEvent('select', this);
+                            }
+                        },
+                        select: function (combo, records, eopts) {
+
+                            if (combo.value != _this._xArgs.metaInfo.name) {
+                                _this._xArgs.metaInfo.name = combo.value;
+                                switch (combo.value) {
+                                    case 'ThreePointUtilityArgs':
+                                        //alert(combo.value);
+                                        //TODO: create a 3 points xArgs and assign to _this._xArgs then refresh the screen
+
+                                        scoreObj.functionName = 'linear3pt';
+                                        scoreObj.functionArgs = new pvMapper.ThreePointUtilityArgs(0, 0.5, 180, 1, 360, 0.5, "degrees");
+                                        ScoreUtilityWindows.basicWindow.setup(panel, scoreObj);
+                                        panel.doLayout();
+                                        break;
+                                    case 'MinMaxUtilityArgs':
+                                        //alert(combo.value);
+                                        //TODO: see above
+                                        scoreObj.functionName = 'linear';
+                                        scoreObj.functionArgs = new pvMapper.MinMaxUtilityArgs(10, 0, "degrees");
+                                        ScoreUtilityWindows.basicWindow.setup(panel, scoreObj);
+                                        //_this._xArgs = new pvMapper.MinMaxUtilityArgs(10, 0, "degrees");
+                                        //gridPanel.source = _this._xArgs;
+                                        panel.doLayout();
+                                        break;
+                                    case 'SinusoidalUtilityArgs':
+                                        scoreObj.functionName = 'sinusoidal';
+                                        scoreObj.functionArgs = new pvMapper.SinusoidalUtilityArgs(0, 100, 0, 0, "degrees");
+                                        ScoreUtilityWindows.basicWindow.setup(panel, scoreObj);
+                                        panel.doLayout();
+                                        //TODO: see above
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                });
+
+                //var funcPanel = Ext.create('Ext.panel.Panel', {
+                //    layout: {
+                //        align: 'center',
+                //        pack: 'center',
+                //        type: 'vbox'
+                //    },
+                //    items: cbxFunctions
+
+                //});
+
+                panel.add(cbxFunctions);
+
                 gridPanel = Ext.create('Ext.grid.property.Grid', {
                     source: _this._xArgs,
                     tipValue: null,
@@ -204,7 +280,7 @@ module pvMapper {
                             if (this.source.metaInfo != undefined) {
                                 //TODO: this...?
                                 //this.tipValue = pvMapper.UtilityFunctions[this.source.functionName].tips[record.internalId];
-                                this.tipValue = this.source.metaInfo[record.internalId+"Tip"];
+                                this.tipValue = this.source.metaInfo[record.internalId + "Tip"];
                             } else {
                                 this.tipValue = "Property " + record.internalId;
                             }

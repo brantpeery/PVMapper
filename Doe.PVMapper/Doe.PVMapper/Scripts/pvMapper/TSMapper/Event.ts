@@ -15,7 +15,7 @@ interface EventArg {
   cancelable: boolean;
 }
 
-declare var EventArg: {
+declare var EventArg: {                                                             
   new (data?: any, parent?: any ): EventArg;
   prototype: EventArg;
 }

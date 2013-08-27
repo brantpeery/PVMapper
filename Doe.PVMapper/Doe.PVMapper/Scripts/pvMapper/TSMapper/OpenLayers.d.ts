@@ -16,14 +16,18 @@ declare module OpenLayers {
 
     var Request: Request;
 
-
     export class Attributes {
         name: string;
         description: string;
     }
 
+
+    interface Util {
+      getParameterString(any): string;
+    }
+
     export class SiteFeature {
-        fid: number;
+        fid: string;
         geometry: Polygon;
         attributes: Attributes;
         site: any;
@@ -50,7 +54,7 @@ declare module OpenLayers {
         move(x: number, y: number);
         rotate(angle: number, origin: Point);
         resize(scale: number, origin: Point, ratio: number): Geometry;
-        distanceTo(geometry: Geometry, options?: Boolean): number;
+        distanceTo(geometry: Geometry): number;
         distanceTo(geometry: Geometry, options?: Boolean): Distance;
         equals(geometry: Geometry): Boolean;
         transform(source: Projection, dest: Projection): Geometry;
@@ -63,7 +67,7 @@ declare module OpenLayers {
         getArea(): number;
         getGeodesicArea(projection: Projection): number;
         containsPoint(point: Point): Boolean;
-        containsPoint(point: Point): number;
+        //containsPoint(point: Point): number;   //this break in Typescript 0.9.1 ==> "Overloads cannot differ only by return type".
         intersects(geometry: Geometry): Boolean;
         distanceTo(geometry: Geometry): number;
         distanceTo(geometry: Geometry, options?: any): Distance;
@@ -97,8 +101,8 @@ declare module OpenLayers {
         splitWidth(geometry: Geometry, edge: Boolean): Geometry[];
         splitWidth(geometry: Geometry, tolerance: number): Geometry[];
         getVertices(nodes: Boolean): Geometry[];
-        distanceTo(geometry: Geometry, options?: Boolean): number;
-        distanceTo(geometry: Geometry, options?: Boolean): Distance;
+        distanceTo(geometry: Geometry): number;
+        distanceTo(geometry: Geometry, options?: Boolean): Distance; 
         simplify(tolerance: number): LineString;
     }
 
@@ -122,7 +126,7 @@ declare module OpenLayers {
         getArea(): number;
         getGeodesicArea(projection: Projection): number;
         containsPoint(point: Point): Boolean;
-        containsPoint(point: Point): number;
+        //containsPoint(point: Point): number; //this break in Typescript 0.9.1 ==> "Overloads cannot differ only by return type".
         intersects(geometry: Geometry): Boolean;
         getVertices(nodes: Boolean): Geometry[];
     }
@@ -271,8 +275,8 @@ declare module OpenLayers {
         x: number;
         y: number;
         clone(obj?: any): Point;
-        distanceTo(geometry: Geometry, details?: Boolean): number;
-        distanceTo(geometry: Geometry, edge?: Boolean): Distance;
+        distanceTo(geometry: Geometry): number;
+        distanceTo(geometry: Geometry, edge?: Boolean): Distance; //this break in Typescript 0.9.1 ==> "Overloads cannot differ only by return type".
         equals(geometry: Point): Boolean;
         toShortString(): string;
         move(x: number, y: number);
@@ -292,7 +296,7 @@ declare module OpenLayers {
         numberRegEx: string;
         isNumeric(value: number): Boolean;
         numericIf(value: number, trimWhitespace: Boolean): number;
-        numericIf(value: number, trimWhitespace: Boolean): string;
+        //numericIf(value: number, trimWhitespace: Boolean): string;  //this break in Typescript 0.9.1 ==> "Overloads cannot differ only by return type".
     }
 
     interface Number {

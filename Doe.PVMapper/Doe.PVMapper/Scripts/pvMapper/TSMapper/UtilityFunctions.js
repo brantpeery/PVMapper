@@ -12,7 +12,7 @@ var pvMapper;
             xBounds: function (args) {
                 return [Math.min(args.minValue, args.maxValue), Math.max(args.minValue, args.maxValue)];
             },
-            iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/wizard_icon.jpg",
+            iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/stats_icon.jpg",
             fn: function (x, args) {
                 var l = args.minValue;
                 var h = args.maxValue;
@@ -66,7 +66,7 @@ var pvMapper;
                     Math.max(args.p0.x, Math.max(args.p1.x, args.p2.x))
                 ];
             },
-            iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/document_icon.jpg",
+            iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/stats_icon.jpg",
             fn: function (x, args) {
                 //Note: clamping this value to the range 0-1 is handled by the run(x) function
                 //if (args == null) return 0;

@@ -4,6 +4,21 @@
 /// <reference path="Tools.ts" />
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
+/// <reference path="ScoreUtility.ts" />
+/// <reference path="Esri-GeoJsonConverter.js />
+/// <reference path="jstorage.d.ts" />
+/// <reference path="ScoreLine.ts" />
+/// <reference path="Scoreboard.ts" />
+/// <reference path="OpenLayers.d.ts" />
+/// <reference path="../../jquery.d.ts" />
+/// <reference path="common.ts" />
+/// <reference path="Event.ts" />
+
+interface geoJsonConverter { }
+declare var geoJsonConverter: {
+    new (): any;
+    prototype: geoJsonConverter;
+}
 
 module INLModules {
 
@@ -27,7 +42,7 @@ module INLModules {
                     activate: null,
                     deactivate: null,
                     destroy: null,
-                    init: null,                           
+                    init: null,
 
                     title: "Protected Areas",
                     description: "Overlapping protected areas, using PAD-US map data hosted by UI-GAP (gap.uidaho.edu)",
@@ -67,20 +82,20 @@ module INLModules {
 
         private addMap() {
             this.federalLandsLayer = new OpenLayers.Layer.WMS(
-                    "Protected Areas",
-                    this.federalLandsWmsUrl,
-                    {
-                        maxExtent: this.landBounds,
-                        layers: "0",
-                        layer_type: "polygon",
-                        transparent: "true",
-                        format: "image/gif",
-                        exceptions: "application/vnd.ogc.se_inimage",
-                        maxResolution: 156543.0339,
-                        srs: "EPSG:102113",
-                    },
-                    { isBaseLayer: false }
-                    );
+                "Protected Areas",
+                this.federalLandsWmsUrl,
+                {
+                    maxExtent: this.landBounds,
+                    layers: "0",
+                    layer_type: "polygon",
+                    transparent: "true",
+                    format: "image/gif",
+                    exceptions: "application/vnd.ogc.se_inimage",
+                    maxResolution: 156543.0339,
+                    srs: "EPSG:102113",
+                },
+                { isBaseLayer: false }
+                );
             this.federalLandsLayer.epsgOverride = "EPSG:102113";
             this.federalLandsLayer.setOpacity(0.3);
             this.federalLandsLayer.setVisibility(false);
@@ -176,8 +191,8 @@ module INLModules {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module({
                 id: "LandCoverModule",
-                author: "Leng Vang, INL",
-                version: "0.1.ts",
+                author: "Leng Vang, INL, Rohit Khattar BYU",
+                version: "0.2.ts",
 
                 activate: () => {
                     this.addMap();
@@ -195,7 +210,7 @@ module INLModules {
                     init: null,
 
                     title: "Land Cover",
-                    description: "The type of land cover found in the center of a site, using NLCD map data hosted by UI-GAP (gap.uidaho.edu)",
+                    description: "The types of Land cover found in the selected area. Using data hosted on Geoserver.byu.edu",
                     category: "Land Use",
                     //onScoreAdded: (e, score: pvMapper.Score) => {
                     //},
@@ -204,7 +219,7 @@ module INLModules {
                     },
 
                     getStarRatables: () => {
-                        return this.ratables;
+                        return this.starRatingHelper1.starRatings;
                     },
 
                     scoreUtilityOptions: {
@@ -218,8 +233,8 @@ module INLModules {
             });
         }
 
-        private ratables: pvMapper.IStarRatings = {};
-        private defaultRating: number = 3;
+        
+
 
         private landCoverRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/NAT_LC/1_NVC_class_landuse/MapServer/";
 
@@ -231,15 +246,15 @@ module INLModules {
 
         private addMap() {
             this.landCoverLayer = new OpenLayers.Layer.ArcGIS93Rest(
-                    "Land Cover",
-                    this.landCoverRestUrl + "export",
-                    {
-                        layers: "show:0,1,2", 
-                        format: "gif",
-                        srs: "3857", //"102100",
-                        transparent: "true",
-                    }//,{ isBaseLayer: false }
-                    );
+                "Land Cover",
+                this.landCoverRestUrl + "export",
+                {
+                    layers: "show:0,1,2",
+                    format: "gif",
+                    srs: "3857", //"102100",
+                    transparent: "true",
+                }//,{ isBaseLayer: false }
+                );
             this.landCoverLayer.setOpacity(0.3);
             this.landCoverLayer.epsgOverride = "3857"; //"EPSG:102100";
             this.landCoverLayer.setVisibility(false);
@@ -251,63 +266,163 @@ module INLModules {
             pvMapper.map.removeLayer(this.landCoverLayer, false);
         }
 
+
+        private starRatingHelper1: pvMapper.IStarRatingHelper = new pvMapper.StarRatingHelper({
+            defaultStarRating: 4,
+            //noCategoryRating: 4,
+            //noCategoryLabel: "None"
+        });
+
+
         private updateScore(score: pvMapper.Score) {
-            var params = {
-                mapExtent: score.site.geometry.bounds.toBBOX(6, false),
-                geometryType: "esriGeometryEnvelope",
-                geometry: score.site.geometry.bounds.toBBOX(6, false),
-                f: "json",
-                layers: "all",
-                tolerance: 0,
-                imageDisplay: "1, 1, 96",
-                returnGeometry: false,
+
+            //Fetch data from the cache if it exists. 
+            var key = "landCover" + score.site.id;
+            if (isNaN(score.value) && $.jStorage.get(key)) {
+                score.popupMessage = "<i>" + $.jStorage.get(key + "msg") + "</i>";
+                score.updateValue($.jStorage.get(key));
+            }
+
+
+            var _this = this;
+
+            var toGeoJson = new OpenLayers.Format.GeoJSON();
+            var geoJsonObj = toGeoJson.extract.geometry.apply(toGeoJson, [
+                score.site.geometry
+            ]);
+            var toEsriJson = new geoJsonConverter();
+            var recObj = toEsriJson.toEsri(geoJsonObj);
+            var esriJsonObj = {
+                "displayFieldName": "",
+                "features": [
+                    { "geometry": recObj }
+                ],
+
             };
 
-            var request = OpenLayers.Request.GET({
-                url: this.landCoverRestUrl + "identify",
+            var request = OpenLayers.Request.POST({
+                //Changing this to leverage the new service from arcgis servers
+
+                url: "https://geoserver.byu.edu/arcgis/rest/services/land_cover/GPServer/land_cover/submitJob",
                 proxy: "/Proxy/proxy.ashx?",
-                params: params,
+                data: OpenLayers.Util.getParameterString({ inpoly: JSON.stringify(esriJsonObj) }) + "+&env%3AoutSR=&env%3AprocessSR=&returnZ=false&returnM=false&f=pjson",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
                 callback: (response) => {
                     // update value
                     if (response.status === 200) {
-                        var esriJsonPerser = new OpenLayers.Format.JSON();
-                        esriJsonPerser.extractAttributes = true;
-                        var parsedResponse = esriJsonPerser.read(response.responseText);
+                        var esriJsonParser = new OpenLayers.Format.JSON();
+                        esriJsonParser.extractAttributes = true;
+                        var parsedResponse = esriJsonParser.read(response.responseText);
 
-                        if (parsedResponse && parsedResponse.results && parsedResponse.results.length > 0) {
-                            console.assert(parsedResponse.results.length === 1,
-                                "Warning: land cover score tool unexpectedly found more than one land cover type");
+                        //console.log("LandCoverModule Response: " + JSON.stringify(parsedResponse));
 
-                            var landCover = "";
-                            var lastText = null;
-                            for (var i = 0; i < parsedResponse.results.length; i++) {
-                                var newText = parsedResponse.results[i].attributes["NVC_DIV"];
-                                if (newText != lastText) {
-                                    if (lastText != null) {
-                                        landCover += ", \n";
+                        //Ohkay Great! Now we have the job Submitted. Lets get the Job ID and then Submit a request for the results. 
+                        var finalResponse = {};
+                        var mainObj = this;
+                        var jobId = parsedResponse.jobId;
+                        var resultSearcher = setInterval(function () {
+                            console.log("Job Still Processing");
+                            //Send out another request
+                            var resultRequestRepeat = OpenLayers.Request.GET({
+                                url: "https://geoserver.byu.edu/arcgis/rest/services/land_cover/GPServer/land_cover/" + "jobs/" + jobId + "/results/Extract_nlcd1_TableSelect?f=json",
+                                proxy: "/Proxy/proxy.ashx?",
+                                callback: function (response) {
+                                    if (response.status == 200) {
+                                        var esriJsonParser = new OpenLayers.Format.JSON();
+                                        esriJsonParser.extractAttributes = true;
+                                        var parsedResponse = esriJsonParser.read(response.responseText);
+                                        if (!parsedResponse.error) {
+                                            //Finally got Result. Lets Send it to the console for now and break from this stupid loop!
+                                            //  console.log(parsedResponse);
+                                            clearInterval(resultSearcher);
+
+                                            if (parsedResponse && parsedResponse.value.features[0].attributes.Value) {
+
+                                                var length = parsedResponse.value.features.length,
+                                                    element = null;
+                                                console.log(length);
+
+                                                var landCovers = [];
+                                                var ele = null;
+                                                for (var i = 0; i < length; i++) {
+                                                    ele = parsedResponse.value.features[i].attributes;
+                                                    var percentRound = Math.round(ele.Percent);
+                                                    if (percentRound > 1)
+                                                    {
+                                                        landCovers.push({ cover: ele.LandCover, percent: percentRound });
+
+                                                    }
+                                                }
+
+                                                function SortByPercent(x, y) {
+                                                    return x.percent - y.percent;
+                                                }
+                                                
+                                                landCovers.sort(SortByPercent);
+                                                landCovers.reverse();
+                                                //console.log(landCovers);
+
+                                                //Show a different row for each Type observed
+                                                //Maybe later to show different lines. Presently going with the Star Rating Approach
+
+                                                //var responseArray: string[] = [];
+                                                var overallScore = 0;
+                                                var totalPercent = 0; //TODO: why doesn't this always sum to 100 ??? is the server rounding?
+                                                var combinedText = '';
+
+                                                for (var i = 0; i < landCovers.length; i++) {
+                                                    
+                                                    if (typeof _this.starRatingHelper1.starRatings[landCovers[i].cover] === "undefined") {
+                                                        _this.starRatingHelper1.starRatings[landCovers[i].cover] =
+                                                        _this.starRatingHelper1.options.defaultStarRating;
+                                                    }
+
+                                                    // overall score is the average star rating weighted by the percentage of individual land covers
+                                                    var starRating = _this.starRatingHelper1.starRatings[landCovers[i].cover];
+
+                                                    totalPercent += landCovers[i].percent;
+                                                    overallScore += landCovers[i].percent * starRating;
+
+                                                    var newText = landCovers[i].percent + "% " + landCovers[i].cover +
+                                                        " [" + starRating + ((starRating === 1) ? " star]" : " stars]");
+
+                                                    combinedText += (combinedText.length ? ', ' : '') + newText;
+                                                }
+
+                                                overallScore = overallScore / totalPercent;
+
+                                                // use the combined rating string, and its lowest rating value
+
+                                                //console.log(this);
+
+                                                //var combinedText = _this.starRatingHelper1.sortRatableArray(responseArray);
+                                                score.popupMessage = combinedText;
+                                                //var scoreVal = _this.starRatingHelper1.starRatings[responseArray[0]];
+                                                score.updateValue(overallScore);
+                                                
+                                                //Save to local cache
+                                                $.jStorage.deleteKey(key);
+                                                $.jStorage.deleteKey(key + "msg");
+                                                $.jStorage.set(key, overallScore);
+                                                $.jStorage.set(key + "msg", combinedText);
+                                            } else {
+                                                // use the no category label, and its current star rating
+                                                score.popupMessage = "No landcover found";
+                                                score.updateValue(Number.NaN);
+                                            }
+
+                                        }
+                                    } else {
+                                        clearInterval(resultSearcher);
+                                        score.popupMessage = "Error " + response.status;
+                                        score.updateValue(Number.NaN);
                                     }
-                                    landCover += newText;
                                 }
-                                lastText = newText;
-                            }
+                            });
+                        }, 10000);
 
-                            var rating = this.ratables[landCover];
-
-                            if (typeof rating === "undefined") {
-                                var rating = this.ratables[landCover] = this.defaultRating;
-                            }
-
-                            score.popupMessage = landCover + " [" + rating + (rating === 1 ? " star]" : " stars]");
-                            score.updateValue(rating);
-                            //TODO: the server refuses to return more than one pixel value... how do we get %coverage?
-                            //      I'm afraid that we'll have to fetch the overlapping image and parse it ourselves...
-                            //      or at least run a few requests for different pixels and conbine the results.
-                            //      Either way, it'll be costly and inefficient. But, I can't find a better server,
-                            //      nor have I been successful at coaxing multiple results from this one. Curses.
-                        } else {
-                            score.popupMessage = "No data for this site";
-                            score.updateValue(Number.NaN);
-                        }
                     } else {
                         score.popupMessage = "Error " + response.status;
                         score.updateValue(Number.NaN);
