@@ -175,7 +175,7 @@ module INLModules {
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
                         functionArgs:
-                        new pvMapper.ThreePointUtilityArgs(0, 0, 50, 0.5, 100, 1, "% positive")
+                        new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% positive")
                     },
                     weight: 10
                 }],
