@@ -6,6 +6,7 @@ var pvMapper;
         function SiteManager() {
             this.siteAdded = new pvMapper.Event();
             this.siteRemoved = new pvMapper.Event();
+            this.siteLoaded = new pvMapper.Event();
             this.sites = [];
         }
         SiteManager.prototype.getSites = function () {
@@ -20,6 +21,13 @@ var pvMapper;
 
         SiteManager.prototype.addSite = function (site) {
             this.sites.push(site);
+            this.siteAdded.fire(site, site);
+        };
+        SiteManager.prototype.loadSite = function (site) {
+            this.sites.push(site);
+
+            //This function can be used to make specific load commands for various modules
+            //
             this.siteAdded.fire(site, site);
         };
 

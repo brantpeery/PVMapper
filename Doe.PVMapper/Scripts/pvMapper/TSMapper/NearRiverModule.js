@@ -25,8 +25,8 @@ var BYUModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            //TODO: what units is this distance in? kilometers? I'm guessing km...
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(100, 0, "km", "Minimum River threshold allowed.", "Maximum River threshold allowed.")
+                            //TODO: what units is this distance in? kilometers? I'm guessing km...-Its miles
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(100, 0, "Mi", "Minimum River threshold allowed.", "Maximum River threshold allowed.")
                         },
                         defaultWeight: 10
                     }
@@ -36,13 +36,21 @@ var BYUModules;
         }
 
         NearRiverModule.prototype.updateScore = function (score) {
+
+            //Fetch data from the cache if it exists. 
+            var key = "riverModuleScore" + score.site.id;
+            if (isNaN(score.value) && $.jStorage.get(key)) {
+                score.popupMessage = "<i>" + $.jStorage.get(key + "msg") + "</i>";
+                score.updateValue($.jStorage.get(key));
+            }
+
+
             var toGeoJson = new OpenLayers.Format.GeoJSON();
             var geoJsonObj = toGeoJson.extract.geometry.apply(toGeoJson, [
                 score.site.geometry
             ]);
             var toEsriJson = new geoJsonConverter();
             var recObj = toEsriJson.toEsri(geoJsonObj);
-        
             var esriJsonObj = {
                 "displayFieldName": "",
                 "features": [
@@ -50,9 +58,10 @@ var BYUModules;
                 ],
 
             };
+
             //Geometry Checked. Its fine. Now to Pass the Geometry to the service and since the service is running slow, figure out a way to repeat requests untill a response is obtained
 
-           // console.log("Converted Geometry:");
+            //console.log("Converted Geometry:");
             console.log("Esri Json: " + JSON.stringify(esriJsonObj));
 
             var request = OpenLayers.Request.POST({
@@ -77,7 +86,7 @@ var BYUModules;
                             console.log("Job Still Processing");
                             //Send out another request
                             var resultRequestRepeat = OpenLayers.Request.GET({
-                                url: "https://geoserver.byu.edu/arcgis/rest/services/near_river4/GPServer/near_join/" + "jobs/" + jobId + "/results/inpoly_FeatureToPoint1_Spati?f=json",
+                                url: "https://geoserver.byu.edu/arcgis/rest/services/near_river4/GPServer/near_join/" + "jobs/" + jobId + "/results/near_dist_Layer?f=json",
                                 proxy: "/Proxy/proxy.ashx?",
                                 callback: function (response) {
 
@@ -95,8 +104,15 @@ var BYUModules;
                                             if (parsedResponse && parsedResponse.value.features[0].attributes.PNAME) {
                                                
                                                 var dist = Math.round(parsedResponse.value.features[0].attributes.near_dist * 0.000621371);
-                                                score.popupMessage = dist + "km to " + parsedResponse.value.features[0].attributes.PNAME;
-                                         
+                                                score.popupMessage = dist + " miles to " + parsedResponse.value.features[0].attributes.PNAME;
+                                                var msgRiver = dist + " miles to " + parsedResponse.value.features[0].attributes.PNAME;
+
+                                                //Save to local cache
+                                                $.jStorage.deleteKey(key);
+                                                $.jStorage.deleteKey(key + "msg");
+                                                $.jStorage.set(key, dist);
+                                                $.jStorage.set(key + "msg", msgRiver);
+
                                                 score.updateValue(dist);
                                             }
                                             else {
@@ -114,8 +130,6 @@ var BYUModules;
                             });
                         }, 10000);
 
-                        score.popupMessage = "Please Wait! Lots of rivers!";
-                        score.updateValue(Number.NaN);
                     } else {
                         score.popupMessage = "Error " + response.status;
                         score.updateValue(Number.NaN);

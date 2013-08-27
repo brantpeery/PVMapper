@@ -67,6 +67,8 @@ Ext.define('MainApp.view.RatingTool', {
     extend: 'Ext.grid.Panel',
     columnLines: true,
     width: 250,
+    enableColumnHide: false,
+    enableColumnResize: false,
     //width: 600,
     //height: 300,
 
@@ -80,14 +82,14 @@ Ext.define('MainApp.view.RatingTool', {
                 //Ext.create('Ext.grid.column.Column', {
                 {
                     text: "Category",
-                    minWidth: 100,
+                    minWidth: 110,
                     flex: 1,
                     dataIndex: 'name'
                 //}),
                 },
                 Ext.create('MainApp.view.RatingColumn', {
                     //text: 'Rating',
-                    minWidth: 100,
+                    minWidth: 110,
                     dataIndex: 'value',
                 })
             ]

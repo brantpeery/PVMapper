@@ -168,6 +168,7 @@ var INLModules;
         mapLayer.setVisibility(false);
 
         pvMapper.map.addLayer(mapLayer);
+        //pvMapper.map.setLayerIndex(mapLayer, 0);
     }
 
     function removeAllMaps() {

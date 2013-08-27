@@ -264,6 +264,11 @@ var INLModules;
 
                             score.popupMessage = landCover + " [" + rating + (rating === 1 ? " star]" : " stars]");
                             score.updateValue(rating);
+                            //TODO: the server refuses to return more than one pixel value... how do we get %coverage?
+                            //      I'm afraid that we'll have to fetch the overlapping image and parse it ourselves...
+                            //      or at least run a few requests for different pixels and conbine the results.
+                            //      Either way, it'll be costly and inefficient. But, I can't find a better server,
+                            //      nor have I been successful at coaxing multiple results from this one. Curses.
                         } else {
                             score.popupMessage = "No data for this site";
                             score.updateValue(Number.NaN);

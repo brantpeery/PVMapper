@@ -116,11 +116,7 @@ var pvMapper;
                     console.error(ex);
             }
 
-            //TODO: testing code - leave this commented out!!!
-            //window.setTimeout(function () {
-            //    score.popupMessage = "test value";
-            //    score.updateValue.apply(score, [1]);
-            //}, 2000 * Math.random());
+            //}
             return score;
         };
 

@@ -126,7 +126,8 @@ module INLModules {
 
                     title: "Nearest Transmission Line",
                     description: "Distance from a site boundary to the nearest known transmission line, using data from SNL",
-                    category: "Transmission Availability",
+                    //category: "Transmission Availability",
+                    category: "Power Infrastructure",
                     //onScoreAdded: function (e, score: pvMapper.Score) {
                     //    scores.push(score);
                     //},
