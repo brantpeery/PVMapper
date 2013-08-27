@@ -253,9 +253,4 @@ pvMapper.onReady(function () {
         pvMapper.map.addLayer(wms);
         console.log(name + " Overlay added");
     }
-
-
-
-
-
 });
