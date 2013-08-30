@@ -67,13 +67,93 @@ module pvMapper {
                 }
             };
 
-            this.utilargs = new pvMapper.MinMaxUtilityArgs(0, 0, "", "");
+            this.utilargs = new pvMapper.MinMaxUtilityArgs(0, 10, "", "");
             this.scoreUtility = new pvMapper.ScoreUtility(options.scoreUtilityOptions);
 
             //Set the default weight of the tool
             this.weight = (typeof options.weight === "number") ? options.weight : 10;
 
+            //this.loadScore();
+
             this.loadAllSites();
+        }
+
+        public loadScore():any {
+
+            return;
+            //check to see if the browser supports IndexedDB.
+            if (!window.indexedDB) {
+                window.alert("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
+                return null;
+            }
+
+            var db;
+            var idbVersion = 1;
+            var request = indexedDB.open("PVMapperScores", idbVersion);
+            request.onerror = function (even: ErrorEvent):any {
+                alert("This browser is not allowed to maintain local storage, error code: ");// + event.target.errorCode); --not support in typescript lib.d.ts
+            };
+                                                 
+            request.onsuccess = function (event): any {
+                if (this.title == undefined) return null;
+
+                db = event.target.result;
+              
+                var trans = db.transaction(["PVMapperScore"],"readwrite");
+                var store = trans.objectStore("PVMapperScore");
+                var req = store.get(this.title);
+                req.onerror = function (event: ErrorEvent): any {
+                    console.log("Error getting local data for " + this.title);
+                };                                                                                            
+                req.onsuccess = function (event): any {
+                    var rdb = event.target.result;
+                    this.title = rdb.title;
+                    this.description = rdb.description;
+                    this.category = rdb.category;
+                    this.weight = rdb.weight;
+                    this.active = rdb.active;   
+                    this.scores = rdb.scores;
+                    return event;
+                };
+
+            }
+            return event;
+        }
+
+        public saveScore() : any {
+            var me = this;
+            //check to see if the browser supports IndexedDB.
+            if (!window.indexedDB) {
+                window.alert("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
+                return null;
+            }
+
+            var db;
+            var idbVersion = 1;
+            var request = window.indexedDB.open("PVMapperScores", idbVersion);
+            request.onerror = function (even: ErrorEvent): any {
+                alert("This browser is not allowed to maintain local storage, error code: ");// + event.target.errorCode); --not support in typescript lib.d.ts
+                return event;
+            };
+
+            request.onsuccess = function (event): any {
+                db = event.target.result;
+                //var trans = db.transaction(["PVMapperScore"],"readwrite");
+                
+                var store = db.createObjectStore("PVMapperScore", { autoIncrement: true });
+                store.createIndex("titleIndex", "title", { unique: true });
+                
+                store.add({
+                    title: me.title,
+                    description: me.description,
+                    category: me.category,
+                    weight: me.weight,
+                    active: me.active,
+                    scores: me.scores
+                });
+                return 0;
+            }
+            return event;
         }
 
         public utilargs: pvMapper.MinMaxUtilityArgs;
@@ -100,6 +180,7 @@ module pvMapper {
         public setWeight(value : number) {
             this.weight = value;
             this.scoreChangeEvent.fire(self, undefined); // score line changed
+            this.saveScore();
         }
 
         /**

@@ -11,11 +11,9 @@ var UtilConfig = (function () {
     return UtilConfig;
 })();
 
-var currentConfig = null;
-
+//var currentConfig = null;
 var UtilityFunctions = (function () {
     function UtilityFunctions() {
-        this.currentConfig = null;
     }
     UtilityFunctions.setConfig = function (obj) {
         this.currentConfig = obj;
@@ -26,7 +24,7 @@ var UtilityFunctions = (function () {
     };
 
     UtilityFunctions.LessIsBetter = function (x) {
-        if (!currentConfig) {
+        if (!this.currentConfig) {
             if (console)
                 console.log('No configuration setup.');
             return 0;
@@ -55,7 +53,7 @@ else
     };
 
     UtilityFunctions.NDBalance = function (x, r) {
-        if (!currentConfig) {
+        if (!this.currentConfig) {
             if (console)
                 console.log('No configuration setup.');
             return 0;
@@ -90,5 +88,6 @@ else
 
         return y;
     };
+    UtilityFunctions.currentConfig = null;
     return UtilityFunctions;
 })();

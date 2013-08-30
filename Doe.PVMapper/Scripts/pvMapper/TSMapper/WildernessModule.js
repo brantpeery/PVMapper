@@ -1,4 +1,4 @@
-﻿/// <reference path="ScoreUtility.ts" />
+/// <reference path="ScoreUtility.ts" />
 /// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
@@ -41,7 +41,7 @@ var BYUModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(1, 0, "parks", "Minimum Wilderness threshold allowed.", "Maximum Wilderness threshold allowed.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 1, "parks", "Minimum Wilderness threshold allowed.", "Maximum Wilderness threshold allowed.")
                         },
                         weight: 10
                     }
