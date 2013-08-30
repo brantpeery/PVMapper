@@ -32,9 +32,9 @@ var pvMapper;
 
                 var y = 0;
                 if (x >= h)
-                    y = 0;
-else if (x <= l)
                     y = 1;
+else if (x <= l)
+                    y = 0;
 else
                     y = (x < b) ? 1 / (1 + Math.pow((b - l) / (x - l), (2 * s * (b + x - 2 * l)))) : 1 - (1 / (1 + Math.pow((b - (2 * b - h)) / ((2 * b - x) - (2 * b - h)), (2 * s * (b + (2 * b - x) - 2 * (2 * b - h))))));
 

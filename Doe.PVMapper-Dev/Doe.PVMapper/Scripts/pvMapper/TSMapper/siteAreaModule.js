@@ -35,7 +35,7 @@ var INLModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "km2", "Minimum gross area to be considered.", "Maximum gross area to be considered.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 10, "km2", "Minimum gross area to be considered.", "Maximum gross area to be considered.")
                         },
                         weight: 0
                     }

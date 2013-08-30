@@ -17,11 +17,11 @@ class DataRecord {
       this.data = new DataRecord();
     } }
 
-var currentConfig = null;
+//var currentConfig = null;
 
 class UtilityFunctions {
     
-  currentConfig: UtilConfig = null;
+  public static currentConfig: UtilConfig = null;
   public static setConfig (obj : UtilConfig ) {
     this.currentConfig = obj;
   }
@@ -31,7 +31,7 @@ class UtilityFunctions {
   }
 
   public static LessIsBetter ( x: number ): number {
-    if (!currentConfig) {
+    if (!this.currentConfig) {
       if (console) console.log('No configuration setup.');
       return 0;
     }
@@ -55,7 +55,7 @@ class UtilityFunctions {
   }
 
   public static NDBalance ( x:number, r: number ):number {
-    if (!currentConfig) {
+    if (!this.currentConfig) {
       if (console) console.log('No configuration setup.');
       return 0;
     }

@@ -6,15 +6,19 @@
         }
         ScoreUtilityWindows.basicWindow = {
             _xArgs: {},
+            _scoreObj: {},
             setup: function (panel, scoreObj) {
+                var _this = this;
+                _this._scoreObj = scoreObj;
                 var args = scoreObj.functionArgs;
                 var fn = pvMapper.UtilityFunctions[scoreObj.functionName].fn;
                 var xBounds = pvMapper.UtilityFunctions[scoreObj.functionName].xBounds;
 
-                var _this = this;
                 var board;
                 var fnOfy;
                 _this._xArgs = Ext.Object.merge({}, args);
+
+                _this.functionName = scoreObj.functionName;
                 var gridPanel;
                 var cbxFunctions;
                 function loadboard() {
@@ -45,11 +49,18 @@
 
                         //draggable lines querying reflecting values.  By using the fn function to query the intersecting Y value, this should work for any utility function.
                         var bb = board.getBoundingBox();
-                        var dx = ((bb[2] - bb[0]) / 2.0) + bb[0];
+
+                        var dx;
+                        if ((_this._xArgs.metaInfo.vline == undefined) || (_this._xArgs.metaInfo.vline <= 0)) {
+                            dx = ((bb[2] - bb[0]) / 2.0) + bb[0];
+                            _this._xArgs.metaInfo.vline = dx;
+                        } else
+                            dx = _this._xArgs.metaInfo.vline;
+
                         var dy = fn(dx, _this._xArgs) * 100;
-                        var vline = board.create('segment', [[dx, 0], [dx, dy]], { name: (bb[2] / 2.0).toFixed(1) + " " + _this._xArgs.metaInfo.unitSymbol, withLabel: true, strokeColor: "blue", dash: 2, strokeOpacity: 0.15 });
+                        var vline = board.create('segment', [[dx, 0], [dx, dy]], { name: dx.toFixed(1) + " " + _this._xArgs.metaInfo.unitSymbol, withLabel: true, strokeColor: "blue", dash: 2, strokeOpacity: 0.15 });
                         var scoreColor = (pvMapper).getColorForScore(dy);
-                        var hline = board.create('segment', [[0, dy], [vline.point1.X(), dy]], { name: "Score: " + dy.toFixed(0), withLabel: true, strokeColor: scoreColor, dash: 2, strokeWidth: 4, strokeOpacity: 1 });
+                        var hline = board.create('segment', [[0, dy], [dx, dy]], { name: "Score: " + dy.toFixed(0), withLabel: true, strokeColor: scoreColor, dash: 2, strokeWidth: 4, strokeOpacity: 1 });
 
                         //TODO: make the line move on mouseover, rather than on drag (it's more intuitive)
                         //board.on("mousemove", function (e) {
@@ -61,6 +72,7 @@
                             board.suspendUpdate();
 
                             //var bb = board.getBoundingBox();
+                            _this._xArgs.metaInfo.vline = vline.point1.X();
                             var y = fn(vline.point1.X(), _this._xArgs);
                             y = Math.max(0, Math.min(1, y)) * 100;
 
@@ -136,22 +148,21 @@
                                 updateGuideLines();
                             });
                         } else if (_this._xArgs.metaInfo.name == "SinusoidalUtilityArgs") {
-                            var minPoint = board.create('point', [_this._xArgs.minValue, 0], { name: 'Min', size: 3 });
-                            var maxPoint = board.create('point', [_this._xArgs.maxValue, 100], { name: 'Max', size: 3 });
-                            var targetPoint = board.create('point', [_this._xArgs.target, 50], { name: 'target', size: 3 });
-                            var v = board.create('line', [targetPoint, [function () {
-                                        return targetPoint.X();
-                                    }, 0]], { dash: 2, size: 1, strokeOpacity: 0.15 });
-                            var h = board.create('line', [targetPoint, [0, function () {
-                                        return targetPoint.Y();
-                                    }]], { dash: 2, size: 1, strokeOpacity: 0.15 });
+                            var dmin = fn(_this._xArgs.minValue, _this._xArgs) * 100;
+                            var dmax = fn(_this._xArgs.maxValue, _this._xArgs) * 100;
+                            var dtar = fn(_this._xArgs.target, _this._xArgs) * 100;
+
+                            var minPoint = board.create('point', [_this._xArgs.minValue, dmin], { name: 'Min', size: 3 });
+                            var maxPoint = board.create('point', [_this._xArgs.maxValue, dmax], { name: 'Max', size: 3 });
+                            var targetPoint = board.create('point', [_this._xArgs.target, dtar], { name: 'target', size: 3 });
                             minPoint.on("drag", function (e) {
                                 var x = minPoint.X();
                                 if (x > targetPoint.X())
                                     x = targetPoint.X();
                                 _this._xArgs.minValue = x;
                                 board.update();
-                                minPoint.moveTo(x, minPoint.Y());
+                                minPoint.moveTo([x, dmin]);
+                                gridPanel.setSource(_this._xArgs);
                                 updateGuideLines();
                             });
                             maxPoint.on("drag", function (e) {
@@ -160,7 +171,8 @@
                                     x = targetPoint.X();
                                 _this._xArgs.maxValue = x;
                                 board.update();
-                                maxPoint.moveTo(x, maxPoint.Y());
+                                maxPoint.moveTo([x, dmax]);
+                                gridPanel.setSource(_this._xArgs);
                                 updateGuideLines();
                             });
                             targetPoint.on("drag", function (e) {
@@ -169,9 +181,10 @@
                                     x = minPoint.X();
                                 if (x > maxPoint.X())
                                     x = maxPoint.X();
-                                _this._xArgs.targetValue = x;
+                                _this._xArgs.target = x;
                                 board.update();
-                                targetPoint.moveTo(x, targetPoint.Y());
+                                targetPoint.moveTo([x, dtar]);
+                                gridPanel.setSource(_this._xArgs);
                                 updateGuideLines();
                             });
                         }
@@ -206,32 +219,64 @@
                         },
                         select: function (combo, records, eopts) {
                             if (combo.value != _this._xArgs.metaInfo.name) {
-                                _this._xArgs.metaInfo.name = combo.value;
+                                //NOTE: merge doesn't copy programmatic add variables,  Ext.apply does, it required param1 to be and existing object where properties can copy onto.
+                                var sobj = Ext.apply({}, scoreObj);
                                 switch (combo.value) {
                                     case 'ThreePointUtilityArgs':
-                                        //alert(combo.value);
-                                        //TODO: create a 3 points xArgs and assign to _this._xArgs then refresh the screen
-                                        scoreObj.functionName = 'linear3pt';
-                                        scoreObj.functionArgs = new pvMapper.ThreePointUtilityArgs(0, 0.5, 180, 1, 360, 0.5, "degrees");
-                                        ScoreUtilityWindows.basicWindow.setup(panel, scoreObj);
-                                        panel.doLayout();
+                                        if ((sobj.functionName != undefined) && (_this._xArgs != undefined))
+                                            sobj.fCache[sobj.functionName] = _this._xArgs;
+                                        sobj.functionName = 'linear3pt';
+                                        var tpArgs;
+                                        if (sobj.fCache[sobj.functionName] != undefined)
+                                            tpArgs = sobj.fCache[sobj.functionName];
+else {
+                                            tpArgs = new pvMapper.ThreePointUtilityArgs(0, 0.5, 180, 1, 360, 0.5, "degrees");
+                                            tpArgs.metaInfo.vline = 180;
+                                        }
+                                        sobj.functionArgs = tpArgs;
+                                        var utilityFn = pvMapper.UtilityFunctions[sobj.functionName];
+                                        utilityFn.windowSetup.apply(utilityFn, [panel, sobj]);
+                                        _this._scoreObj = sobj;
+                                        _this.functionName = sobj.functionName;
+                                        _this._xArgs = sobj.functionArgs;
+
                                         break;
                                     case 'MinMaxUtilityArgs':
-                                        //alert(combo.value);
-                                        //TODO: see above
-                                        scoreObj.functionName = 'linear';
-                                        scoreObj.functionArgs = new pvMapper.MinMaxUtilityArgs(10, 0, "degrees");
-                                        ScoreUtilityWindows.basicWindow.setup(panel, scoreObj);
+                                        if ((sobj.functionName != undefined) && (_this._xArgs != undefined))
+                                            sobj.fCache[sobj.functionName] = _this._xArgs;
+                                        sobj.functionName = 'linear';
+                                        var mmArgs;
+                                        if (sobj.fCache[sobj.functionName] != undefined)
+                                            mmArgs = sobj.fCache[sobj.functionName];
+else {
+                                            mmArgs = new pvMapper.MinMaxUtilityArgs(10, 0, "degrees");
+                                            mmArgs.metaInfo.vline = 5;
+                                        }
+                                        sobj.functionArgs = mmArgs;
+                                        var utilityFn = pvMapper.UtilityFunctions[sobj.functionName];
+                                        utilityFn.windowSetup.apply(utilityFn, [panel, sobj]);
+                                        _this._scoreObj = sobj;
+                                        _this.functionName = sobj.functionName;
+                                        _this._xArgs = sobj.functionArgs;
 
-                                        //_this._xArgs = new pvMapper.MinMaxUtilityArgs(10, 0, "degrees");
-                                        //gridPanel.source = _this._xArgs;
-                                        panel.doLayout();
                                         break;
                                     case 'SinusoidalUtilityArgs':
-                                        scoreObj.functionName = 'sinusoidal';
-                                        scoreObj.functionArgs = new pvMapper.SinusoidalUtilityArgs(0, 100, 0, 0, "degrees");
-                                        ScoreUtilityWindows.basicWindow.setup(panel, scoreObj);
-                                        panel.doLayout();
+                                        if ((sobj.functionName != undefined) && (_this._xArgs != undefined))
+                                            sobj.fCache[sobj.functionName] = _this._xArgs;
+                                        sobj.functionName = 'sinusoidal';
+                                        var sArgs;
+                                        if (sobj.fCache[sobj.functionName] != undefined)
+                                            sArgs = sobj.fCache[sobj.functionName];
+else {
+                                            sArgs = new pvMapper.SinusoidalUtilityArgs(0, 100, 50, 0.50, "degrees");
+                                            sArgs.metaInfo.vline = 50;
+                                        }
+                                        sobj.functionArgs = sArgs;
+                                        var utilityFn = pvMapper.UtilityFunctions[sobj.functionName];
+                                        utilityFn.windowSetup.apply(utilityFn, [panel, sobj]);
+                                        _this._scoreObj = sobj;
+                                        _this.functionName = sobj.functionName;
+                                        _this._xArgs = sobj.functionArgs;
 
                                         break;
                                 }
@@ -321,9 +366,11 @@
                         }
                     }
                 });
+                panel.doLayout();
             },
             okhandler: function (panel, args) {
-                Ext.apply(args, this._xArgs);
+                args.functionArgs = this._xArgs;
+                args.functionName = this.functionName;
             }
         };
         return ScoreUtilityWindows;

@@ -1,4 +1,4 @@
-﻿/// <reference path="ScoreUtility.ts" />
+/// <reference path="ScoreUtility.ts" />
 /// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
