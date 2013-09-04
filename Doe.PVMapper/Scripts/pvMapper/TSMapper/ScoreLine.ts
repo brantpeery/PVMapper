@@ -180,7 +180,7 @@ module pvMapper {
         public setWeight(value : number) {
             this.weight = value;
             this.scoreChangeEvent.fire(self, undefined); // score line changed
-            this.saveScore();
+            //this.saveScore();
         }
 
         /**
