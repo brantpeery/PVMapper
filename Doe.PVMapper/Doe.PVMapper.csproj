@@ -378,6 +378,9 @@
     <Content Include="Scripts\pvMapper\TSMapper\WetlandsSocialModule.js">
       <DependentUpon>WetlandsSocialModule.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\WetlandsSocialModule.min.js">
+      <DependentUpon>WetlandsSocialModule.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\WildernessModule.js">
       <DependentUpon>WildernessModule.ts</DependentUpon>
     </Content>
