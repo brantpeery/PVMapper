@@ -4,6 +4,7 @@
     ViewBag.Title = "Register";
 }
 
+<div class="infoTitles">
 <hgroup class="title">
     <h1>@ViewBag.Title.</h1>
     <h2>Use the form below to create a new account.</h2>
@@ -12,37 +13,134 @@
 <p class="message-info">
     Passwords are required to be a minimum of @Membership.MinRequiredPasswordLength characters in length.
 </p>
+</div>
 
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 
+<style type="text/css">
+    .main-content form
+    {
+        position: relative;
+        margin-left: 50%;
+        left: -200px;
+        width: 400px;
+    }
+
+    .main-content form #registrationForm
+    {
+        border: 2px solid darkorange;
+        border-radius: 5px;
+        moz-border-radius: 5px;
+        width: 100%;
+    }
+
+    .infoTitles {
+        position: relative;
+        margin-left: 50%;
+        left: -200px;
+        width: 400px;
+        border: 2px solid darkorange;
+        border-radius: 5px;
+        moz-border-radius: 5px;
+    }
+
+    #registrationBody li input
+    {
+        display: inline-block;
+        position: absolute;
+        left: 100px;
+    }
+
+    #registrationBody li label
+    {
+        display: inline-block;
+        height: 2em;
+    }
+
+    .main-content form legend
+    {
+        width: 100%;
+        font-size: 1.5em;
+        text-align: center;
+        font-weight: bold;
+        background-color: orange;
+        padding: 5px;
+        margin-bottom: 1em;
+    }
+
+    #registrationBody li
+    {
+        margin-left: 5px;
+    }
+
+    #registrationBody
+    {
+        margin: 5px;
+    }
+
+    #RegisterButton
+    {
+        width: 100%;
+        border-color: darkorange;
+        border-width: 2px;
+        border-style: solid;
+        -moz-border-radius: 1em 4em 1em 4em;
+        border-radius: 1em 4em 1em 4em;
+        background: orange;
+        font-size: 1.5em;
+    }
+
+    .error, .validation-summary-errors
+    {
+        color: red;
+    }
+
+    .validation-summary-errors
+    {
+        margin: 3px;
+
+</style>
+
 @using (Html.BeginForm((string)ViewBag.FormAction, "Account")) {
     @Html.ValidationSummary(true, "Account creation was unsuccessful. Please correct the errors and try again.")
 
+    <div id="registrationForm">
     <fieldset>
         <legend>Registration Form</legend>
+        <div id ="registrationBody">
         <ol>
             <li>
                 @Html.LabelFor(m => m.UserName)
                 @Html.TextBoxFor(m => m.UserName)
-                @Html.ValidationMessageFor(m => m.UserName)
+                <p class="error">
+                    @Html.ValidationMessageFor(m => m.UserName)
+                </p>
             </li>
             <li>
                 @Html.LabelFor(m => m.Email)
                 @Html.TextBoxFor(m => m.Email)
-                @Html.ValidationMessageFor(m => m.Email)
+                <p class="error">
+                    @Html.ValidationMessageFor(m => m.Email)
+                </p>
             </li>
             <li>
                 @Html.LabelFor(m => m.Password)
                 @Html.PasswordFor(m => m.Password)
-                @Html.ValidationMessageFor(m => m.Password)
+                <p class="error">
+                    @Html.ValidationMessageFor(m => m.Password)
+                </p>
             </li>
             <li>
                 @Html.LabelFor(m => m.ConfirmPassword)
                 @Html.PasswordFor(m => m.ConfirmPassword)
-                @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                <p class="error">
+                    @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                </p>
             </li>
         </ol>
-        <input type="submit" value="Register" />
+        <input id="RegisterButton" type="submit" value="Register" />
+        </div>
     </fieldset>
+    </div>
 }
