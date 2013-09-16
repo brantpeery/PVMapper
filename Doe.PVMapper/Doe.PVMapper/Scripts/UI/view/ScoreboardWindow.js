@@ -370,7 +370,7 @@ toolsStore.on({
             if (isNaN(value[idx].utility)) return '...';
 
             var val = (value[idx] && value[idx].utility) ? value[idx].utility : 0;
-            var c = getColor(val);
+            var c = pvMapper.getColorForScore(val);
             metaData.style = "text-align: center; border-radius: 5px; background-color:" + c;
 
             return value[idx].utility.toFixed(0);
@@ -396,24 +396,25 @@ toolsStore.on({
 
             var average = total / count;
 
-            // post the average score to the feature, so that it can render correctly on the map
-            //TODO: is this really the best place to be mucking about with the feature attributes?
-            if (records && records.length > 0 && records[0].raw &&
-                records[0].raw.scores && records[0].raw.scores.length > idx &&
-                records[0].raw.scores[idx].site && records[0].raw.scores[idx].site.feature) {
-              // test if the feature's average score value has changed
-              var feature = records[0].raw.scores[idx].site.feature;
-              //if (feature.attributes['overallScore'] !== average) {
-              if (feature.attributes.overallScore !== average) {
-                feature.attributes.overallScore = average;
-                // set the score's color as an attribute on the feature (note - this is at least partly a hack...)
-                feature.attributes.fillColor = (!isNaN(average)) ? getColor(average) : "";
-                // redraw the feature
-                if (feature.layer) {
-                    feature.layer.drawFeature(feature);
-                }
-              }
-            }
+            //Note: moved this, as the summary renderer now only calculates the score over groups, rather than for all score tools
+            //// post the average score to the feature, so that it can render correctly on the map
+            ////TODO: is this really the best place to be mucking about with the feature attributes?
+            //if (records && records.length > 0 && records[0].raw &&
+            //    records[0].raw.scores && records[0].raw.scores.length > idx &&
+            //    records[0].raw.scores[idx].site && records[0].raw.scores[idx].site.feature) {
+            //  // test if the feature's average score value has changed
+            //  var feature = records[0].raw.scores[idx].site.feature;
+            //  //if (feature.attributes['overallScore'] !== average) {
+            //  if (feature.attributes.overallScore !== average) {
+            //    feature.attributes.overallScore = average;
+            //    // set the score's color as an attribute on the feature (note - this is at least partly a hack...)
+            //    feature.attributes.fillColor = (!isNaN(average)) ? getColor(average) : "";
+            //    // redraw the feature
+            //    if (feature.layer) {
+            //        feature.layer.drawFeature(feature);
+            //    }
+            //  }
+            //}
 
             //if (records.length == scoreboardGrid.store.data.length) {
             //  //this is the total summary line -- only time it pass the entire store records.
@@ -424,9 +425,9 @@ toolsStore.on({
             //} else 
               return average;
           },
-          summaryRenderer: function (value) {
+          summaryRenderer: function (value, summaryRowValues) {
             if (typeof value === "number" && !isNaN(value)) {
-              var c = getColor(value);
+              var c = pvMapper.getColorForScore(value);
               return '<span style="border-radius: 3px; background-color:' + c + '">&nbsp' + value.toFixed(0) + '&nbsp</span>'
               //+ "<input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
               //  scoreLine.Category + "\",\""+ scoreline.site.name +"\");' />";
@@ -658,7 +659,7 @@ Ext.define('MainApp.view.ScoreboardWindow', {
   id: "ScoreboardWindowID",
   title: 'Main Scoreboard',
   width: 800,
-  height: 520,
+  height: 725,
   //cls: "propertyBoard", <-- this looked hokey, and conflicted with ext js's default styling.
   closeAction: 'hide',
   plugins: [{
@@ -724,48 +725,3 @@ Ext.define('MainApp.view.ScoreboardWindow', {
 
 
 //toolsStore.load(pvMapper.mainScoreboard.getTableData()); //Load the data to the panel
-
-function getColor(score) {
-  var min = Math.min;
-  var max = Math.max;
-  var round = Math.round;
-
-  var startColor = {
-    red: 255,
-    green: 0,
-    blue: 0
-  };
-  var midColor = {
-    red: 255,
-    green: 255,
-    blue: 100
-  };
-  var endColor = {
-    red: 173,
-    green: 255,
-    blue: 47
-  };
-
-  var scale = 0;
-  score = round(min(100, max(0, score)));
-  if (score > 50) {
-    startColor = midColor;
-    scale = score / 50 - 1;
-  } else {
-    endColor = midColor;
-    scale = score / 50;
-  }
-
-  //var r = startColor['red'] + scale * (endColor['red'] - startColor['red']);
-  //var b = startColor['blue'] + scale * (endColor['blue'] - startColor['blue']);
-  //var g = startColor['green'] + scale * (endColor['green'] - startColor['green']);
-  var r = startColor.red + scale * (endColor.red - startColor.red);
-  var b = startColor.blue + scale * (endColor.blue - startColor.blue);
-  var g = startColor.green + scale * (endColor.green - startColor.green);
-  r = round(min(255, max(0, r)));
-  b = round(min(255, max(0, b)));
-  g = round(min(255, max(0, g)));
-
-  return 'rgb(' + r + ',' + g + ',' + b + ')';
-}
-pvMapper.getColorForScore = getColor;

@@ -150,14 +150,144 @@ var INLModules;
     var LandCoverModule = (function () {
         function LandCoverModule() {
             var _this = this;
+            this.ratables = {};
+            this.defaultRating = 3;
+            this.landCoverRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/NAT_LC/1_NVC_class_landuse/MapServer/";
+            this.landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
+            var myModule = new pvMapper.Module({
+                id: "LandCoverModule",
+                author: "Leng Vang, INL",
+                version: "0.1.ts",
+                activate: function () {
+                    _this.addMap();
+                },
+                deactivate: function () {
+                    _this.removeMap();
+                },
+                destroy: null,
+                init: null,
+                scoringTools: [
+                    {
+                        activate: null,
+                        deactivate: null,
+                        destroy: null,
+                        init: null,
+                        title: "Land Cover",
+                        description: "The type of land cover found in the center of a site, using NLCD map data hosted by UI-GAP (gap.uidaho.edu)",
+                        category: "Land Use",
+                        //onScoreAdded: (e, score: pvMapper.Score) => {
+                        //},
+                        onSiteChange: function (e, score) {
+                            _this.updateScore(score);
+                        },
+                        getStarRatables: function () {
+                            return _this.ratables;
+                        },
+                        scoreUtilityOptions: {
+                            functionName: "linear",
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
+                        },
+                        weight: 10
+                    }
+                ],
+                infoTools: null
+            });
+        }
+        LandCoverModule.prototype.addMap = function () {
+            this.landCoverLayer = new OpenLayers.Layer.ArcGIS93Rest("Land Cover", this.landCoverRestUrl + "export", {
+                layers: "show:0,1,2",
+                format: "gif",
+                srs: "3857",
+                transparent: "true"
+            });
+            this.landCoverLayer.setOpacity(0.3);
+            this.landCoverLayer.epsgOverride = "3857";
+            this.landCoverLayer.setVisibility(false);
+
+            pvMapper.map.addLayer(this.landCoverLayer);
+        };
+
+        LandCoverModule.prototype.removeMap = function () {
+            pvMapper.map.removeLayer(this.landCoverLayer, false);
+        };
+
+        LandCoverModule.prototype.updateScore = function (score) {
+            var _this = this;
+            var params = {
+                mapExtent: score.site.geometry.bounds.toBBOX(6, false),
+                geometryType: "esriGeometryEnvelope",
+                geometry: score.site.geometry.bounds.toBBOX(6, false),
+                f: "json",
+                layers: "all",
+                tolerance: 0,
+                imageDisplay: "1, 1, 96",
+                returnGeometry: false
+            };
+
+            var request = OpenLayers.Request.GET({
+                url: this.landCoverRestUrl + "identify",
+                proxy: "/Proxy/proxy.ashx?",
+                params: params,
+                callback: function (response) {
+                    if (response.status === 200) {
+                        var esriJsonPerser = new OpenLayers.Format.JSON();
+                        esriJsonPerser.extractAttributes = true;
+                        var parsedResponse = esriJsonPerser.read(response.responseText);
+
+                        if (parsedResponse && parsedResponse.results && parsedResponse.results.length > 0) {
+                            console.assert(parsedResponse.results.length === 1, "Warning: land cover score tool unexpectedly found more than one land cover type");
+
+                            var landCover = "";
+                            var lastText = null;
+                            for (var i = 0; i < parsedResponse.results.length; i++) {
+                                var newText = parsedResponse.results[i].attributes["NVC_DIV"];
+                                if (newText != lastText) {
+                                    if (lastText != null) {
+                                        landCover += ", \n";
+                                    }
+                                    landCover += newText;
+                                }
+                                lastText = newText;
+                            }
+
+                            var rating = _this.ratables[landCover];
+
+                            if (typeof rating === "undefined") {
+                                var rating = _this.ratables[landCover] = _this.defaultRating;
+                            }
+
+                            score.popupMessage = landCover + " [" + rating + (rating === 1 ? " star]" : " stars]");
+                            score.updateValue(rating);
+                        } else {
+                            score.popupMessage = "No data for this site";
+                            score.updateValue(Number.NaN);
+                        }
+                    } else {
+                        score.popupMessage = "Error " + response.status + " " + response.statusText;
+                        score.updateValue(Number.NaN);
+                    }
+                }
+            });
+        };
+        return LandCoverModule;
+    })();
+    INLModules.LandCoverModule = LandCoverModule;
+
+    var landCoverInstance = new INLModules.LandCoverModule();
+
+    //============================================================
+    //============================================================
+    var LandCoverModuleV2 = (function () {
+        function LandCoverModuleV2() {
+            var _this = this;
             this.landCoverRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/NAT_LC/1_NVC_class_landuse/MapServer/";
             this.landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
             this.starRatingHelper1 = new pvMapper.StarRatingHelper({
                 defaultStarRating: 4
             });
             var myModule = new pvMapper.Module({
-                id: "LandCoverModule",
-                author: "Leng Vang, INL, Rohit Khattar BYU",
+                id: "LandCoverModuleV2",
+                author: "Rohit Khattar BYU",
                 version: "0.2.ts",
                 activate: function () {
                     _this.addMap();
@@ -194,7 +324,7 @@ var INLModules;
                 infoTools: null
             });
         }
-        LandCoverModule.prototype.addMap = function () {
+        LandCoverModuleV2.prototype.addMap = function () {
             this.landCoverLayer = new OpenLayers.Layer.ArcGIS93Rest("Land Cover", this.landCoverRestUrl + "export", {
                 layers: "show:0,1,2",
                 format: "gif",
@@ -208,11 +338,11 @@ var INLModules;
             pvMapper.map.addLayer(this.landCoverLayer);
         };
 
-        LandCoverModule.prototype.removeMap = function () {
+        LandCoverModuleV2.prototype.removeMap = function () {
             pvMapper.map.removeLayer(this.landCoverLayer, false);
         };
 
-        LandCoverModule.prototype.updateScore = function (score) {
+        LandCoverModuleV2.prototype.updateScore = function (score) {
             var _this = this;
             //Fetch data from the cache if it exists.
             var key = "landCover" + score.site.id;
@@ -353,9 +483,7 @@ var INLModules;
                 }
             });
         };
-        return LandCoverModule;
+        return LandCoverModuleV2;
     })();
-    INLModules.LandCoverModule = LandCoverModule;
-
-    var landCoverInstance = new INLModules.LandCoverModule();
+    INLModules.LandCoverModuleV2 = LandCoverModuleV2;
 })(INLModules || (INLModules = {}));

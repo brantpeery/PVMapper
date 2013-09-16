@@ -5,7 +5,7 @@
             var sitesLayer = pvMapper.getSiteLayer();
 
             for (var i = 0; i < sites.length; i++) {
-                if (console) console.log("Adding site " + sites[i].fid + " to the map");
+                //if (console) console.log("Adding site to the map");
 
                 var site = sites[i];
                 var poly = new OpenLayers.Format.WKT().read(site.polygonGeometry);

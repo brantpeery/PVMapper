@@ -58,10 +58,12 @@ var pvMapper;
             //    this.scoreAddedEvent.addHandler(options.onScoreAdded);
             //}
             pvMapper.siteManager.siteAdded.addHandler(function (event) {
-                if (console)
-                    console.log("Siteadded event detected in scoreline" + name);
-
+                //if (console) console.log("Siteadded event detected in scoreline" + name);
                 _this.addScore(event);
+            });
+
+            pvMapper.siteManager.siteRemoved.addHandler(function (site) {
+                _this.onSiteRemove(site);
             });
 
             if (options.scoreUtilityOptions == undefined) {

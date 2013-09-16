@@ -30,7 +30,7 @@ module pvMapper {
                         //addedToScoreboard: () => { },
                         //removedFromScoreboard: () => { },
 
-                        CalculateScore: function (values:IValueWeight[]) {
+                        CalculateScore: function (values:IValueWeight[], site: Site) {
                             var total = 0;
                             var count = 0; //Count including weight
                             
@@ -39,8 +39,24 @@ module pvMapper {
                                 count += v.tool.weight;
                             });
 
+                            var average = total / count;
+
+                            // post the average score to the feature, so that it can render correctly on the map
+                            //TODO: is this really the best place to be mucking about with the feature attributes?
+                            var feature = site.feature;
+                            // test if the feature's average score value has changed
+                            if (feature.attributes.overallScore !== average) {
+                                feature.attributes.overallScore = average;
+                                // set the score's color as an attribute on the feature (note - this is at least partly a hack...)
+                                feature.attributes.fillColor = (!isNaN(average)) ? pvMapper.getColorForScore(average) : "";
+                                // redraw the feature
+                                if (feature.layer) {
+                                    feature.layer.drawFeature(feature);
+                                }
+                            }
+
                             //Return the basic average 
-                            return { utility: total / count, popupMessage: "Average" };
+                            return { utility: average, popupMessage: "Average" };
                         }                      
                     }, {
                         title: "Lowest Score",
@@ -54,7 +70,7 @@ module pvMapper {
                         //addedToScoreboard: () => { },
                         //removedFromScoreboard: () => { },
 
-                        CalculateScore: function (values: IValueWeight[]) {
+                        CalculateScore: function (values: IValueWeight[], site: Site) {
                             var min = Number.POSITIVE_INFINITY;
                             var title;
                             values.forEach(function (v) {

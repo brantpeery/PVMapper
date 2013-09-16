@@ -125,12 +125,14 @@ module pvMapper {
                     //Note: selecting cells hoarks everything up unless we clear the selection before reloading the data
                     gp.getSelectionModel().deselectAll();
                     gp.store.loadRawData(mydata);
-                    pvMapper.floatingScoreboard.show();
+
+                    //Note: removed this as it's really annoying (scoreboard pops up from minimized, covers up other windows, etc)
+                    //pvMapper.floatingScoreboard.show();
                 }
-            }, 100);
+            }, 250);
             // queue is set to wait 1/10th of a second before it actually refreshes the scoreboard.
-        } else {
-            if (console) { console.log("Scoreboard update event safely (and efficiently) ignored."); }
+        //} else {
+        //    if (console) { console.log("Scoreboard update event safely (and efficiently) ignored."); }
         }
     });
 

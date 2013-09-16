@@ -135,10 +135,12 @@ var INLModules;
                         deactivate: null,
                         destroy: null,
                         init: null,
-                        showConfigWindow: function () {
-                            myToolLine = this;
-                            propsWindow.show();
-                        },
+                        //Note: removed prior to demo on request - mentioning acres confuses the point - they had nothing to do with
+                        //      the survey, and have nothing to do with the score.
+                        //showConfigWindow: function () {
+                        //    myToolLine = this; // fetch tool line, which was passed as 'this' parameter
+                        //    propsWindow.show();
+                        //},
                         title: "Wetland Proximity",
                         description: "Percentage of survey respondents who reported this distance from wetlands as acceptable",
                         category: "Social Acceptance",
@@ -161,7 +163,7 @@ var INLModules;
                         // having any nearby line is much better than having no nearby line, so let's reflect that.
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% positive")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor")
                         },
                         weight: 10
                     }
@@ -274,7 +276,23 @@ var INLModules;
 
                         var minDistanceStr = (minDistanceInMi < 1) ? minDistanceInMi.toFixed(2) : (minDistanceInMi < 10) ? minDistanceInMi.toFixed(1) : minDistanceInMi.toFixed(0);
 
-                        score.popupMessage = minDistanceStr + " mi to " + parseFloat(closestFeature.attributes['ACRES']).toFixed(1) + " acres of " + closestFeature.attributes['WETLAND_TYPE'] + "; " + percentOk.toFixed(1) + "% of respondents reported they would accept " + distanceOkStr + " mi or more.";
+                        //score.popupMessage = minDistanceStr + " mi to " +
+                        //    parseFloat(closestFeature.attributes['ACRES']).toFixed(1) + " acres of " +
+                        //    closestFeature.attributes['WETLAND_TYPE'] + "; " +
+                        //    percentOk.toFixed(1) + "% of respondents reported they would accept " +
+                        //    distanceOkStr + " mi or more.";
+                        //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept " +
+                        //    distanceOkStr + " mi or more; " + score.site.name + " is " +
+                        //    minDistanceStr + " mi from " +
+                        //    parseFloat(closestFeature.attributes['ACRES']).toFixed(1) + " acres of " +
+                        //    closestFeature.attributes['WETLAND_TYPE'];
+                        //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site " +
+                        //    minDistanceStr + " mi from a " +
+                        //    closestFeature.attributes['WETLAND_TYPE'] + "wetland";
+                        //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept this proximity. (site " +
+                        //    score.site.name + " is " + minDistanceStr + " mi from a " +
+                        //    closestFeature.attributes['WETLAND_TYPE'] + ")";
+                        score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site built " + distanceOkStr + " mi or more from a wetland. (The nearest wetland is a " + closestFeature.attributes['WETLAND_TYPE'] + " " + minDistanceStr + " mi away.)";
 
                         score.updateValue(percentOk);
                     } else if (searchDistanceInMi < 5000) {
@@ -282,7 +300,10 @@ var INLModules;
                         updateScore(score, searchDistanceInMi * 10);
                     } else {
                         // no wetland found in max search distance, so 100% of respondants are Ok with this.
-                        score.popupMessage = "over 5000 mi to any wetland; 100% of respondents reported they would accept this distance.";
+                        //score.popupMessage = "over 5000 mi to any wetland; 100% of respondents reported they would accept this distance.";
+                        //score.popupMessage = "100% of respondents reported they would accept this proximity. (site " +
+                        //    score.site.name + " is over 5000 mi from any wetland)";
+                        score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from a wetland." + " (There was no wetland found within 5000 mi.)";
                         score.updateValue(100);
                     }
                 } else {
