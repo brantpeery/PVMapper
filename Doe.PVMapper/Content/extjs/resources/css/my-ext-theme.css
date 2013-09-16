@@ -7427,34 +7427,34 @@ textarea.x-form-invalid-field {
 }
 
 /* line 277, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
-.x-nlg .x-panel-header-default-top {
+/*.x-nlg .x-panel-header-default-top {
   background-image: url('../images/default/panel-header/panel-header-default-top-bg.gif');
-}
+}*/
 
 /* line 281, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
-.x-nlg .x-panel-header-default-bottom {
+/*.x-nlg .x-panel-header-default-bottom {
   background-image: url('../images/default/panel-header/panel-header-default-bottom-bg.gif');
-}
+}*/
 
 /* line 285, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
-.x-nlg .x-panel-header-default-left {
+/*.x-nlg .x-panel-header-default-left {
   background-image: url('../images/default/panel-header/panel-header-default-left-bg.gif');
-}
+}*/
 
 /* line 289, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
-.x-nlg .x-panel-header-default-right {
+/*.x-nlg .x-panel-header-default-right {
   background-image: url('../images/default/panel-header/panel-header-default-right-bg.gif');
-}
+}*/
 
 /* line 293, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
-.x-nlg .x-panel-header-default-right {
+/*.x-nlg .x-panel-header-default-right {
   background-position: top right;
-}
+}*/
 
 /* line 297, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
-.x-nlg .x-panel-header-default-bottom {
+/*.x-nlg .x-panel-header-default-bottom {
   background-position: bottom left;
-}
+}*/
 
 /* line 338, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
 .x-panel-header-text-default {
@@ -7600,34 +7600,34 @@ textarea.x-form-invalid-field {
 }
 
 /* line 277, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
-.x-nlg .x-panel-header-default-framed-top {
+/*.x-nlg .x-panel-header-default-framed-top {
   background-image: url('../images/default/panel-header/panel-header-default-framed-top-bg.gif');
-}
+}*/
 
 /* line 281, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
-.x-nlg .x-panel-header-default-framed-bottom {
+/*.x-nlg .x-panel-header-default-framed-bottom {
   background-image: url('../images/default/panel-header/panel-header-default-framed-bottom-bg.gif');
-}
+}*/
 
 /* line 285, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
-.x-nlg .x-panel-header-default-framed-left {
+/*.x-nlg .x-panel-header-default-framed-left {
   background-image: url('../images/default/panel-header/panel-header-default-framed-left-bg.gif');
-}
+}*/
 
 /* line 289, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
-.x-nlg .x-panel-header-default-framed-right {
+/*.x-nlg .x-panel-header-default-framed-right {
   background-image: url('../images/default/panel-header/panel-header-default-framed-right-bg.gif');
-}
+}*/
 
 /* line 293, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
-.x-nlg .x-panel-header-default-framed-right {
+/*.x-nlg .x-panel-header-default-framed-right {
   background-position: top right;
-}
+}*/
 
 /* line 297, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
-.x-nlg .x-panel-header-default-framed-bottom {
+/*.x-nlg .x-panel-header-default-framed-bottom {
   background-position: bottom left;
-}
+}*/
 
 /* line 305, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
 .x-nbr .x-panel-header-default-framed {
@@ -7635,29 +7635,29 @@ textarea.x-form-invalid-field {
 }
 
 /* line 317, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
-.x-strict .x-ie9 .x-panel-header-default-framed-top,
+/*.x-strict .x-ie9 .x-panel-header-default-framed-top,
 .x-nlg.x-opera .x-panel-header-default-framed-top,
 .x-nlg.x-safari .x-panel-header-default-framed-top {
   background-image: url('../images/default/panel-header/panel-header-default-top-bg.gif');
-}
+}*/
 /* line 321, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
-.x-strict .x-ie9 .x-panel-header-default-framed-bottom,
+/*.x-strict .x-ie9 .x-panel-header-default-framed-bottom,
 .x-nlg.x-opera .x-panel-header-default-framed-bottom,
 .x-nlg.x-safari .x-panel-header-default-framed-bottom {
   background-image: url('../images/default/panel-header/panel-header-default-bottom-bg.gif');
-}
+}*/
 /* line 325, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
-.x-strict .x-ie9 .x-panel-header-default-framed-left,
+/*.x-strict .x-ie9 .x-panel-header-default-framed-left,
 .x-nlg.x-opera .x-panel-header-default-framed-left,
 .x-nlg.x-safari .x-panel-header-default-framed-left {
   background-image: url('../images/default/panel-header/panel-header-default-left-bg.gif');
-}
+}*/
 /* line 329, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
-.x-strict .x-ie9 .x-panel-header-default-framed-right,
+/*.x-strict .x-ie9 .x-panel-header-default-framed-right,
 .x-nlg.x-opera .x-panel-header-default-framed-right,
 .x-nlg.x-safari .x-panel-header-default-framed-right {
   background-image: url('../images/default/panel-header/panel-header-default-right-bg.gif');
-}
+}*/
 
 /* line 338, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_panel.scss */
 .x-panel-header-text-default-framed {
@@ -9073,10 +9073,10 @@ textarea.x-form-invalid-field {
 }
 
 /* line 155, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_toolbar.scss */
-.x-nlg .x-toolbar-default {
+/*.x-nlg .x-toolbar-default {
   background-image: url('../images/default/toolbar/toolbar-default-bg.gif') !important;
   background-repeat: repeat-x;
-}
+}*/
 
 /* line 123, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_toolbar.scss */
 .x-toolbar-plain {
@@ -9259,7 +9259,7 @@ textarea.x-form-invalid-field {
   background-position: 1000505px 1000505px;
 }
 /* line 147, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-default-tl,
+/*.x-nbr .x-window-default-tl,
 .x-nbr .x-window-default-bl,
 .x-nbr .x-window-default-tr,
 .x-nbr .x-window-default-br,
@@ -9269,15 +9269,15 @@ textarea.x-form-invalid-field {
 .x-nbr .x-window-default-mr {
   zoom: 1;
   background-image: url('../images/default/window/window-default-corners.gif');
-}
+}*/
 /* line 168, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-default-ml,
+/*.x-nbr .x-window-default-ml,
 .x-nbr .x-window-default-mr {
   zoom: 1;
   background-image: url('../images/default/window/window-default-sides.gif');
   background-position: 0 0;
   background-repeat: repeat-y;
-}
+}*/
 /* line 200, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
 .x-nbr .x-window-default-mc {
   padding: 0px 0px 0px 0px;
@@ -9352,7 +9352,7 @@ textarea.x-form-invalid-field {
   background-position: 1000505px 1000000px;
 }
 /* line 147, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-header-default-top-tl,
+/*.x-nbr .x-window-header-default-top-tl,
 .x-nbr .x-window-header-default-top-bl,
 .x-nbr .x-window-header-default-top-tr,
 .x-nbr .x-window-header-default-top-br,
@@ -9362,15 +9362,15 @@ textarea.x-form-invalid-field {
 .x-nbr .x-window-header-default-top-mr {
   zoom: 1;
   background-image: url('../images/default/window-header/window-header-default-top-corners.gif');
-}
+}*/
 /* line 168, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-header-default-top-ml,
+/*.x-nbr .x-window-header-default-top-ml,
 .x-nbr .x-window-header-default-top-mr {
   zoom: 1;
   background-image: url('../images/default/window-header/window-header-default-top-sides.gif');
   background-position: 0 0;
   background-repeat: repeat-y;
-}
+}*/
 /* line 200, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
 .x-nbr .x-window-header-default-top-mc {
   padding: 0px 1px 0 1px;
@@ -9421,7 +9421,7 @@ textarea.x-form-invalid-field {
   background-position: 1000005px 1000500px;
 }
 /* line 147, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-header-default-right-tl,
+/*.x-nbr .x-window-header-default-right-tl,
 .x-nbr .x-window-header-default-right-bl,
 .x-nbr .x-window-header-default-right-tr,
 .x-nbr .x-window-header-default-right-br,
@@ -9431,15 +9431,15 @@ textarea.x-form-invalid-field {
 .x-nbr .x-window-header-default-right-mr {
   zoom: 1;
   background-image: url('../images/default/window-header/window-header-default-right-corners.gif');
-}
+}*/
 /* line 168, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-header-default-right-ml,
+/*.x-nbr .x-window-header-default-right-ml,
 .x-nbr .x-window-header-default-right-mr {
   zoom: 1;
   background-image: url('../images/default/window-header/window-header-default-right-sides.gif');
   background-position: 0 0;
   background-repeat: repeat-y;
-}
+}*/
 /* line 200, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
 .x-nbr .x-window-header-default-right-mc {
   padding: 1px 0px 1px 0;
@@ -9490,7 +9490,7 @@ textarea.x-form-invalid-field {
   background-position: 1000000px 1000505px;
 }
 /* line 147, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-header-default-bottom-tl,
+/*.x-nbr .x-window-header-default-bottom-tl,
 .x-nbr .x-window-header-default-bottom-bl,
 .x-nbr .x-window-header-default-bottom-tr,
 .x-nbr .x-window-header-default-bottom-br,
@@ -9500,15 +9500,15 @@ textarea.x-form-invalid-field {
 .x-nbr .x-window-header-default-bottom-mr {
   zoom: 1;
   background-image: url('../images/default/window-header/window-header-default-bottom-corners.gif');
-}
+}*/
 /* line 168, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-header-default-bottom-ml,
+/*.x-nbr .x-window-header-default-bottom-ml,
 .x-nbr .x-window-header-default-bottom-mr {
   zoom: 1;
   background-image: url('../images/default/window-header/window-header-default-bottom-sides.gif');
   background-position: 0 0;
   background-repeat: repeat-y;
-}
+}*/
 /* line 200, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
 .x-nbr .x-window-header-default-bottom-mc {
   padding: 0 1px 0px 1px;
@@ -9559,7 +9559,7 @@ textarea.x-form-invalid-field {
   background-position: 1000500px 1000005px;
 }
 /* line 147, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-header-default-left-tl,
+/*.x-nbr .x-window-header-default-left-tl,
 .x-nbr .x-window-header-default-left-bl,
 .x-nbr .x-window-header-default-left-tr,
 .x-nbr .x-window-header-default-left-br,
@@ -9569,15 +9569,15 @@ textarea.x-form-invalid-field {
 .x-nbr .x-window-header-default-left-mr {
   zoom: 1;
   background-image: url('../images/default/window-header/window-header-default-left-corners.gif');
-}
+}*/
 /* line 168, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-header-default-left-ml,
+/*.x-nbr .x-window-header-default-left-ml,
 .x-nbr .x-window-header-default-left-mr {
   zoom: 1;
   background-image: url('../images/default/window-header/window-header-default-left-sides.gif');
   background-position: 0 0;
   background-repeat: repeat-y;
-}
+}*/
 /* line 200, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
 .x-nbr .x-window-header-default-left-mc {
   padding: 1px 0px 1px 0px;
@@ -9628,7 +9628,7 @@ textarea.x-form-invalid-field {
   background-position: 1000505px 1000505px;
 }
 /* line 147, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-header-default-collapsed-top-tl,
+/*.x-nbr .x-window-header-default-collapsed-top-tl,
 .x-nbr .x-window-header-default-collapsed-top-bl,
 .x-nbr .x-window-header-default-collapsed-top-tr,
 .x-nbr .x-window-header-default-collapsed-top-br,
@@ -9638,15 +9638,15 @@ textarea.x-form-invalid-field {
 .x-nbr .x-window-header-default-collapsed-top-mr {
   zoom: 1;
   background-image: url('../images/default/window-header/window-header-default-collapsed-top-corners.gif');
-}
+}*/
 /* line 168, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-header-default-collapsed-top-ml,
+/*.x-nbr .x-window-header-default-collapsed-top-ml,
 .x-nbr .x-window-header-default-collapsed-top-mr {
   zoom: 1;
   background-image: url('../images/default/window-header/window-header-default-collapsed-top-sides.gif');
   background-position: 0 0;
   background-repeat: repeat-y;
-}
+}*/
 /* line 200, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
 .x-nbr .x-window-header-default-collapsed-top-mc {
   padding: 0px 1px 0px 1px;
@@ -9697,7 +9697,7 @@ textarea.x-form-invalid-field {
   background-position: 1000505px 1000505px;
 }
 /* line 147, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-header-default-collapsed-right-tl,
+/*.x-nbr .x-window-header-default-collapsed-right-tl,
 .x-nbr .x-window-header-default-collapsed-right-bl,
 .x-nbr .x-window-header-default-collapsed-right-tr,
 .x-nbr .x-window-header-default-collapsed-right-br,
@@ -9707,15 +9707,15 @@ textarea.x-form-invalid-field {
 .x-nbr .x-window-header-default-collapsed-right-mr {
   zoom: 1;
   background-image: url('../images/default/window-header/window-header-default-collapsed-right-corners.gif');
-}
+}*/
 /* line 168, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-header-default-collapsed-right-ml,
+/*.x-nbr .x-window-header-default-collapsed-right-ml,
 .x-nbr .x-window-header-default-collapsed-right-mr {
   zoom: 1;
   background-image: url('../images/default/window-header/window-header-default-collapsed-right-sides.gif');
   background-position: 0 0;
   background-repeat: repeat-y;
-}
+}*/
 /* line 200, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
 .x-nbr .x-window-header-default-collapsed-right-mc {
   padding: 1px 0px 1px 0px;
@@ -9766,7 +9766,7 @@ textarea.x-form-invalid-field {
   background-position: 1000505px 1000505px;
 }
 /* line 147, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-header-default-collapsed-bottom-tl,
+/*.x-nbr .x-window-header-default-collapsed-bottom-tl,
 .x-nbr .x-window-header-default-collapsed-bottom-bl,
 .x-nbr .x-window-header-default-collapsed-bottom-tr,
 .x-nbr .x-window-header-default-collapsed-bottom-br,
@@ -9776,15 +9776,15 @@ textarea.x-form-invalid-field {
 .x-nbr .x-window-header-default-collapsed-bottom-mr {
   zoom: 1;
   background-image: url('../images/default/window-header/window-header-default-collapsed-bottom-corners.gif');
-}
+}*/
 /* line 168, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-header-default-collapsed-bottom-ml,
+/*.x-nbr .x-window-header-default-collapsed-bottom-ml,
 .x-nbr .x-window-header-default-collapsed-bottom-mr {
   zoom: 1;
   background-image: url('../images/default/window-header/window-header-default-collapsed-bottom-sides.gif');
   background-position: 0 0;
   background-repeat: repeat-y;
-}
+}*/
 /* line 200, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
 .x-nbr .x-window-header-default-collapsed-bottom-mc {
   padding: 0px 1px 0px 1px;
@@ -9835,7 +9835,7 @@ textarea.x-form-invalid-field {
   background-position: 1000505px 1000505px;
 }
 /* line 147, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-header-default-collapsed-left-tl,
+/*.x-nbr .x-window-header-default-collapsed-left-tl,
 .x-nbr .x-window-header-default-collapsed-left-bl,
 .x-nbr .x-window-header-default-collapsed-left-tr,
 .x-nbr .x-window-header-default-collapsed-left-br,
@@ -9845,15 +9845,15 @@ textarea.x-form-invalid-field {
 .x-nbr .x-window-header-default-collapsed-left-mr {
   zoom: 1;
   background-image: url('../images/default/window-header/window-header-default-collapsed-left-corners.gif');
-}
+}*/
 /* line 168, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
-.x-nbr .x-window-header-default-collapsed-left-ml,
+/*.x-nbr .x-window-header-default-collapsed-left-ml,
 .x-nbr .x-window-header-default-collapsed-left-mr {
   zoom: 1;
   background-image: url('../images/default/window-header/window-header-default-collapsed-left-sides.gif');
   background-position: 0 0;
   background-repeat: repeat-y;
-}
+}*/
 /* line 200, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/mixins/_frame.scss */
 .x-nbr .x-window-header-default-collapsed-left-mc {
   padding: 1px 0px 1px 0px;

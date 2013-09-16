@@ -191,7 +191,159 @@ module INLModules {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module({
                 id: "LandCoverModule",
-                author: "Leng Vang, INL, Rohit Khattar BYU",
+                author: "Leng Vang, INL",
+                version: "0.1.ts",
+
+                activate: () => {
+                    this.addMap();
+                },
+                deactivate: () => {
+                    this.removeMap();
+                },
+                destroy: null,
+                init: null,
+
+                scoringTools: [{
+                    activate: null,
+                    deactivate: null,
+                    destroy: null,
+                    init: null,
+
+                    title: "Land Cover",
+                    description: "The type of land cover found in the center of a site, using NLCD map data hosted by UI-GAP (gap.uidaho.edu)",
+                    category: "Land Use",
+                    //onScoreAdded: (e, score: pvMapper.Score) => {
+                    //},
+                    onSiteChange: (e, score: pvMapper.Score) => {
+                        this.updateScore(score);
+                    },
+
+                    getStarRatables: () => {
+                        return this.ratables;
+                    },
+
+                    scoreUtilityOptions: {
+                        functionName: "linear",
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
+                    },
+                    weight: 10
+                }],
+
+                infoTools: null
+            });
+        }
+
+        private ratables: pvMapper.IStarRatings = {};
+        private defaultRating: number = 3;
+
+        private landCoverRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/NAT_LC/1_NVC_class_landuse/MapServer/";
+
+        //TODO: try switching to WMS source instead, to support Identify and Legend functions. WMS url:
+        //      http://dingo.gapanalysisprogram.com/ArcGIS/services/NAT_LC/6_Ecol_Sys_landuseNocache/MapServer/WMSServer?request=GetCapabilities&service=WMS
+
+        private landCoverLayer;
+        private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
+
+        private addMap() {
+            this.landCoverLayer = new OpenLayers.Layer.ArcGIS93Rest(
+                "Land Cover",
+                this.landCoverRestUrl + "export",
+                {
+                    layers: "show:0,1,2",
+                    format: "gif",
+                    srs: "3857", //"102100",
+                    transparent: "true",
+                }//,{ isBaseLayer: false }
+                );
+            this.landCoverLayer.setOpacity(0.3);
+            this.landCoverLayer.epsgOverride = "3857"; //"EPSG:102100";
+            this.landCoverLayer.setVisibility(false);
+
+            pvMapper.map.addLayer(this.landCoverLayer);
+        }
+
+        private removeMap() {
+            pvMapper.map.removeLayer(this.landCoverLayer, false);
+        }
+
+        private updateScore(score: pvMapper.Score) {
+            var params = {
+                mapExtent: score.site.geometry.bounds.toBBOX(6, false),
+                geometryType: "esriGeometryEnvelope",
+                geometry: score.site.geometry.bounds.toBBOX(6, false),
+                f: "json",
+                layers: "all",
+                tolerance: 0,
+                imageDisplay: "1, 1, 96",
+                returnGeometry: false,
+            };
+
+            var request = OpenLayers.Request.GET({
+                url: this.landCoverRestUrl + "identify",
+                proxy: "/Proxy/proxy.ashx?",
+                params: params,
+                callback: (response) => {
+                    // update value
+                    if (response.status === 200) {
+                        var esriJsonPerser = new OpenLayers.Format.JSON();
+                        esriJsonPerser.extractAttributes = true;
+                        var parsedResponse = esriJsonPerser.read(response.responseText);
+
+                        if (parsedResponse && parsedResponse.results && parsedResponse.results.length > 0) {
+                            console.assert(parsedResponse.results.length === 1,
+                                "Warning: land cover score tool unexpectedly found more than one land cover type");
+
+                            var landCover = "";
+                            var lastText = null;
+                            for (var i = 0; i < parsedResponse.results.length; i++) {
+                                var newText = parsedResponse.results[i].attributes["NVC_DIV"];
+                                if (newText != lastText) {
+                                    if (lastText != null) {
+                                        landCover += ", \n";
+                                    }
+                                    landCover += newText;
+                                }
+                                lastText = newText;
+                            }
+
+                            var rating = this.ratables[landCover];
+
+                            if (typeof rating === "undefined") {
+                                var rating = this.ratables[landCover] = this.defaultRating;
+                            }
+
+                            score.popupMessage = landCover + " [" + rating + (rating === 1 ? " star]" : " stars]");
+                            score.updateValue(rating);
+                            //TODO: the server refuses to return more than one pixel value... how do we get %coverage?
+                            //      I'm afraid that we'll have to fetch the overlapping image and parse it ourselves...
+                            //      or at least run a few requests for different pixels and conbine the results.
+                            //      Either way, it'll be costly and inefficient. But, I can't find a better server,
+                            //      nor have I been successful at coaxing multiple results from this one. Curses.
+                        } else {
+                            score.popupMessage = "No data for this site";
+                            score.updateValue(Number.NaN);
+                        }
+                    } else {
+                        score.popupMessage = "Error " + response.status + " " + response.statusText;
+                        score.updateValue(Number.NaN);
+                    }
+                },
+            });
+        }
+    }
+
+    var landCoverInstance = new INLModules.LandCoverModule();
+
+    //============================================================
+
+
+    //============================================================
+
+    export class LandCoverModuleV2 {
+        constructor() {
+            var myModule: pvMapper.Module = new pvMapper.Module({
+                id: "LandCoverModuleV2",
+                author: "Rohit Khattar BYU",
                 version: "0.2.ts",
 
                 activate: () => {
@@ -432,7 +584,9 @@ module INLModules {
         }
     }
 
-    var landCoverInstance = new INLModules.LandCoverModule();
+    //NOTE: removed prior to demo - the speed issue is too critical.
+    //TODO: re-add this once the request takes under 1000 ms
+    //var landCoverInstance = new INLModules.LandCoverModuleV2();
 
     //============================================================
 

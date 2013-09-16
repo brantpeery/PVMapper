@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="x-border-box x-strict">
 <head>
     <meta charset="utf-8" />
     <title>@ViewBag.Title - PV Mapper</title>
@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="~/Content/extjs/resources/css/my-ext-theme.css" />
     @*<link rel="stylesheet" type="text/css"  href="~/theme/default/style.css" />*@
 </head>
-<body>
+<body class="x-body x-reset">
     <header>
         <div class="content-wrapper">
             <div class="float-left" id="Logo">
@@ -27,9 +27,11 @@
                 </section>
                 <nav>
                     <ul id="menu">
-                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>@Html.ActionLink("About", "About", "Home")</li>
-                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                        @*<li>@Html.ActionLink("Home", "Index", "Home")</li>*@
+                        @*<li>@Html.ActionLink("About", "About", "Home")</li>*@
+                        @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
+                        <li><a href="https://pvmapper.codeplex.com/">About</a></li>
+                        <li><a href="https://pvmapper.codeplex.com/team/view">Contact</a></li>
                     </ul>
                 </nav>
             </div>

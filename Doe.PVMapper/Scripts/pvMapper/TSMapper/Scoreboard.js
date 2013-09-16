@@ -105,13 +105,8 @@ var pvMapper;
                     //Note: selecting cells hoarks everything up unless we clear the selection before reloading the data
                     gp.getSelectionModel().deselectAll();
                     gp.store.loadRawData(mydata);
-                    pvMapper.floatingScoreboard.show();
                 }
-            }, 100);
-        } else {
-            if (console) {
-                console.log("Scoreboard update event safely (and efficiently) ignored.");
-            }
+            }, 250);
         }
     });
 

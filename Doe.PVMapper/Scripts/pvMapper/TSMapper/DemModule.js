@@ -102,15 +102,7 @@ var BYUModules;
     var topoMapLayer;
 
     function addMap() {
-        topoMapLayer = new OpenLayers.Layer.ArcGIS93Rest("World Topography", topoMapRestUrl + "export", {
-            layers: "visible",
-            format: "gif",
-            srs: "3857"
-        }, { isBaseLayer: true });
-
-        //topoMapLayer.setOpacity(0.3);
-        topoMapLayer.epsgOverride = "3857";
-        topoMapLayer.setVisibility(false);
+        topoMapLayer = new OpenLayers.Layer.XYZ("ESRI Topography", "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/${z}/${y}/${x}", { transitionEffect: "resize", buffer: 1, sphericalMercator: true });
         pvMapper.map.addLayer(topoMapLayer);
     }
 

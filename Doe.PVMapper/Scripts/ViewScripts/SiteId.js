@@ -20,18 +20,18 @@ pvMapper.onReady(function () {
         //...
         //output: 'object', // <-- this didn't help at all... but it might help, a little, if we implement our own OpenLayers.Format object
         //...
-        maxFeatures: 3,
+        maxFeatures: 1, //HACK: using 1 here, to hopefully side-step several remaining issues: missing layer names, no drillDown, and incorrect field names
         eventListeners: {
             getfeatureinfo: function (e) {
                 console.log("Identify WMS GetFeatureInfo Function");
                 var items = [];
-                Ext.each(e.features, function (feature) {
-                    items.push({
-                        xtype: "propertygrid",
-                        title: feature.fid,
-                        source: feature.attributes
-                    });
-                });
+                //Ext.each(e.features, function (feature) {
+                //    items.push({
+                //        xtype: "propertygrid",
+                //        title: feature.fid,
+                //        source: feature.attributes
+                //    });
+                //});
 
                 ////////////////////////////////////////////////
                 // Begin shabby code block:
@@ -63,8 +63,10 @@ pvMapper.onReady(function () {
                     //Note: it returns empty because it's the header row: a <tr> element whose children are <th> elements, not <td> elements)
                     if (!jQuery.isEmptyObject(myRow)) {
                         // format a cute title... kinda (ought to add differentiation between layers here)
-                        var title = "Feature parsed from HTML table";
-                        if (myRow['fid']) {
+                        var title = "Feature";
+                        if (myRow['NAME']) {
+                            title += " (" + myRow['NAME'] + ")";
+                        } else if (myRow['fid']) {
                             title += " (" + myRow['fid'] + ")";
                         } else if (myRow['OBJECTID']) {
                             title += " (" + myRow['OBJECTID'] + ")";
@@ -79,7 +81,7 @@ pvMapper.onReady(function () {
                 });
 
                 
-                /* For Testing Purposes
+                /* For Testing Purposes * /
                 // hack hack... show any returned html 'natively'
                 if (e.text.indexOf('html') >= 0) {
                     items.push({
@@ -94,33 +96,55 @@ pvMapper.onReady(function () {
                     xtype: "propertygrid",
                     title: "Raw value returned",
                     source: { url: e.object.url, features: e.features.length, text: e.text, textLength: e.text.length }
-                });*/
+                });//*/
 
                 // End shabby code block.
                 ////////////////////////////////////////////////
+                
+                //Hacky hack hack...
+                var layerNameGuess = "";
+                for (var i = pvMapper.map.layers.length - 1; i >= 0; i--) {
+                    var layer = pvMapper.map.layers[i];
+                    if (!layer.isBaseLayer && layer.getVisibility() && layer != pvMapper.siteLayer) {
+                        layerNameGuess = layer.name;
+                        break;
+                    }
+                }
+                //End hacky hack.
+                
+                if (items.length <= 0) {
+                    if (layerNameGuess.length >= 0) {
+                        Ext.MessageBox.alert('Identify', 'No features found on topmost visible layer (' + layerNameGuess + ').');
+                    } else {
+                        Ext.MessageBox.alert('Identify', 'No visible layer to identify.');
+                    }
+                } else {
+                    //Hack: if we can't reliably get multiple header sets, instead lets only show the first feature. A cop-out, for sure.
+                    items = [items[0]]; //TODO: remove this when/if we get this header parsing business working again.
 
-                var wiz = new Ext.create('Ext.window.Window', {
-                    layout: 'accordion',
-                    modal: true,
-                    //collapsible: false, // <-- this didn't seem to do much
-                    id: "iden",
-                    title: "Identify Point",
-                    bodyPadding: '5 5 0',
-                    width: 350,
-                    height: 450,
-                    items: items,
-                    buttons: [{
-                        text: 'Close',
-                        handler: function (b, e) {
-                            //control.deactivate(); // <-- this disables the control, but it doesn't disable our button - a little confusing
-                            //b.pressed = false;
-                            wiz.destroy();
-                        }
-                    }]
+                    var wiz = new Ext.create('Ext.window.Window', {
+                        layout: 'accordion',
+                        modal: true,
+                        //collapsible: false, // <-- this didn't seem to do much
+                        id: "iden",
+                        title: layerNameGuess ? layerNameGuess : "Identify",
+                        bodyPadding: '5 5 0',
+                        width: 350,
+                        height: 450,
+                        items: items,
+                        buttons: [{
+                            text: 'Close',
+                            handler: function (b, e) {
+                                //control.deactivate(); // <-- this disables the control, but it doesn't disable our button - a little confusing
+                                //b.pressed = false;
+                                wiz.destroy();
+                            }
+                        }]
 
-                });
+                    });
 
-                wiz.show();
+                    wiz.show();
+                }
 
                 //Note: this is a total hack. But without it, the control will only ever send requests to the first layer it sent a request to.
                 control.url = null; //TODO: hack hack hack hack...!

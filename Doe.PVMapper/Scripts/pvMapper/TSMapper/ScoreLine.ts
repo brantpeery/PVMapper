@@ -49,14 +49,14 @@ module pvMapper {
             //}
 
             siteManager.siteAdded.addHandler((event: Site) => {
-                if (console) console.log("Siteadded event detected in scoreline" + name);
+                //if (console) console.log("Siteadded event detected in scoreline" + name);
 
                 this.addScore(event);
             });
 
-            //siteManager.siteRemoved.addHandler((site: Site) => {
-            //    this.onSiteRemove(site);
-            //});
+            siteManager.siteRemoved.addHandler((site: Site) => {
+                this.onSiteRemove(site);
+            });
 
             //Set default scoreUtilityOptions object if none was provided
             if (options.scoreUtilityOptions == undefined) {

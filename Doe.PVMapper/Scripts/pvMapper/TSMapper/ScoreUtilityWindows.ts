@@ -1,4 +1,5 @@
-﻿/// <reference path="UtilityFunctions.ts" />
+﻿/// <reference path="pvMapper.ts" />
+/// <reference path="UtilityFunctions.ts" />
 declare var Ext: any;
 declare var JXG: any;
 declare var Extras: any;
@@ -50,7 +51,7 @@ module pvMapper {
                         var dy = fn(dx, _this._xArgs) * 100;
                         var vline = board.create('segment', [[dx, 0], [dx, dy]],
                             { name: (bb[2] / 2.0).toFixed(1) + " " + _this._xArgs.metaInfo.unitSymbol, withLabel: true, strokeColor: "blue", dash: 2, strokeOpacity: 0.15 });
-                        var scoreColor = (<any>pvMapper).getColorForScore(dy);
+                        var scoreColor = pvMapper.getColorForScore(dy);
                         var hline = board.create('segment', [[0, dy], [vline.point1.X(), dy]],
                             { name: "Score: " + dy.toFixed(0), withLabel: true, strokeColor: scoreColor, dash: 2, strokeWidth: 4, strokeOpacity: 1 });
 
@@ -76,7 +77,7 @@ module pvMapper {
 
                             hline.labelColor("red");
                             hline.setLabelText("Score: " + y.toFixed(0));
-                            hline.visProp.strokecolor = (<any>pvMapper).getColorForScore(y);
+                            hline.visProp.strokecolor = pvMapper.getColorForScore(y);
 
                             hline.point1.moveTo([0, y]);
                             hline.point2.moveTo([vline.point1.X(), y]);
@@ -102,7 +103,7 @@ module pvMapper {
                             hline.setLabelText("Score: " + y.toFixed(2));
                             hline.point1.moveTo([0, y]);
                             hline.point2.moveTo([vline.point1.X(), y]);
-                            hline.visProp.strokecolor = (<any>pvMapper).getColorForScore(y);
+                            hline.visProp.strokecolor = pvMapper.getColorForScore(y);
                             board.unsuspendUpdate();
                         };
 
@@ -255,7 +256,10 @@ module pvMapper {
 
                 //});
 
-                panel.add(cbxFunctions);
+                //Note: Removed this for the demo, as it is not stable or bug-free.
+                //      Bug fixes exist for this on the Dev branch, but those fixes also cause bugs (due to merge issues, mostly).
+                //      Until there is time to sort out the Dev branch, this is the safest solution available.
+                //panel.add(cbxFunctions);
 
                 gridPanel = Ext.create('Ext.grid.property.Grid', {
                     source: _this._xArgs,
