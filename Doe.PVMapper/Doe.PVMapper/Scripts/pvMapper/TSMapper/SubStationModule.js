@@ -9,94 +9,17 @@
 //Substation Module fetching data from OSM and calculating the nearest distance
 
 
-//Conversion Function 
-
-var osm2geo = function (osm) {
-    // Check wether the argument is a Jquery object and act accordingly
-    // Assuming it as a raw server response for now
-    var $xml = jQuery(osm);
-    // Initialize the empty GeoJSON object
-    var geo = {
-        "type": "FeatureCollection",
-        "features": []
-    };
-    // setting the bounding box [minX,minY,maxX,maxY]; x -> long, y -> lat
-    function getBounds(bounds) {
-        var bbox = new Array;
-        bbox.push(parseFloat(bounds.attr("minlon")));
-        bbox.push(parseFloat(bounds.attr("minlat")));
-        bbox.push(parseFloat(bounds.attr("maxlon")));
-        bbox.push(parseFloat(bounds.attr("maxlat")));
-        return bbox;
-    }
-    geo["bbox"] = getBounds($xml.find("bounds"));
-
-    // Function to set props for a feature
-    function setProps(element) {
-        var properties = {};
-        var tags = $(element).find("tag");
-        tags.each(function (index, tag) {
-            properties[$(tag).attr("k")] = $(tag).attr("v");
-        });
-        return properties;
-    }
-    // Generic function to create a feature of given type
-    function getFeature(element, type) {
-        return {
-            "geometry": {
-                "type": type,
-                "coordinates": []
-            },
-            "type": "Feature",
-            "properties": setProps(element)
-        };
-    }
-    // Ways
-    var $ways = $("way", $xml);
-    $ways.each(function (index, ele) {
-        var feature = new Object;
-        // List all the nodes
-        var nodes = $(ele).find("nd");
-        // If first and last nd are same, then its a polygon
-        if ($(nodes).last().attr("ref") === $(nodes).first().attr("ref")) {
-            feature = getFeature(ele, "Polygon");
-            feature.geometry.coordinates.push([]);
-        } else {
-            feature = getFeature(ele, "LineString");
-        }
-        nodes.each(function (index, nd) {
-            var node = $xml.find("node[id='" + $(nd).attr("ref") + "']"); // find the node with id ref'ed in way
-            var cords = [parseFloat(node.attr("lon")), parseFloat(node.attr("lat"))]; // get the lat,lon of the node
-            // If polygon push it inside the cords[[]]
-            if (feature.geometry.type === "Polygon") {
-                feature.geometry.coordinates[0].push(cords);
-            }// if just Line push inside cords[]
-            else {
-                feature.geometry.coordinates.push(cords);
-            }
-        });
-        // Save the LineString in the Main object
-        geo.features.push(feature);
-    });
-
-    // Points (POI)
-    var $points = $("node:has('tag')", $xml);
-    $points.each(function (index, ele) {
-        var feature = getFeature(ele, "Point");
-        feature.geometry.coordinates.push(parseFloat($(ele).attr('lon')));
-        feature.geometry.coordinates.push(parseFloat($(ele).attr('lat')));
-        // Save the point in Main object
-        geo.features.push(feature);
-    });
-    // Finally return the GeoJSON object
-    return geo;
-
-};
-
 var BYUModules;
 (function (BYUModules) {
     var configProperties = {
-        maxSearchDistanceInKM: 100
+        maxSearchDistanceInKM: 30
+    }
+
+    var lineConfigProperties = {
+        minimumVoltage: 230, //Note: common voltages include 230, 345, 500, 765
+        maximumVoltage: 765,
+
+        onlyKnownVoltages: false,
     };
 
     var myToolLine;
@@ -126,7 +49,7 @@ var BYUModules;
         var propsGrid = new Ext.grid.PropertyGrid({
             nameText: 'Properties Grid',
             minWidth: 300,
-            source: configProperties,
+            source: lineConfigProperties,
             customRenderers: {
                 maxSearchDistanceInKM: function (v) {
                     return v + " km";
@@ -140,15 +63,15 @@ var BYUModules;
             },
             propertyNames: {
                 maxSearchDistanceInKM: "search distance",
-                minimumVoltage: 'minimum voltage ',
-                maximumVoltage: 'maximum voltage '
+                minimumVoltage: 'minimum voltage',
+                maximumVoltage: 'maximum voltage',
+                onlyKnownVoltages: 'known kV only'
             },
             customEditors: {
                 'minimumVoltage': new Ext.form.ComboBox(comboConfig),
                 'maximumVoltage': new Ext.form.ComboBox(comboConfig)
             }
         });
-
         propsWindow = Ext.create('Ext.window.Window', {
             title: "Configure Nearest Substation Tool",
             closeAction: "hide",
@@ -158,7 +81,10 @@ var BYUModules;
             ],
             listeners: {
                 beforehide: function () {
-                    myToolLine.scores.forEach(updateScore);
+                    //Note: this no longer works on substations, since I changed how updateScore works... might fix it sometime.
+                    myToolLine.scores.forEach(function (score) {
+                        updateScore(score, '"power"="line"', 'transmission line');
+                    });
                 }
             },
             buttons: [
@@ -174,6 +100,7 @@ var BYUModules;
         });
     });
 
+    var substationsMap;
 
     var SubStationModule = (function () {
         function SubStationModule() {
@@ -184,22 +111,59 @@ var BYUModules;
                 author: "Rohit Khattar, BYU",
                 version: "0.1",
                 iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/home_icon.jpg",
+
+                activate: function () {
+                    //http://t0.beta.itoworld.com/4/317c99f331113b90c57c41ccdb137030/${z}/${x}/${y}.png
+                    substationsMap = new OpenLayers.Layer.XYZ("Power Infrastructure",
+                        "http://t0.beta.itoworld.com/4/317c99f331113b90c57c41ccdb137030/${z}/${x}/${y}.png",
+                            { transitionEffect: null, buffer: 1, sphericalMercator: true, isBaseLayer: false, visibility: false });
+                    pvMapper.map.addLayer(substationsMap);
+
+                    //addAllMaps();
+                },
+                deactivate: function() {
+                    pvMapper.map.removeLayer(substationsMap, false);
+                    //removeAllMaps();
+                },
+        
                 destroy: null,
                 init: null,
                 scoringTools: [
                     {
-                        showConfigWindow: function () {
-                            myToolLine = this;
-                            propsWindow.show();
-                        },
+                        //Note: this no longer works on substations, since I changed how updateScore works... might fix it sometime.
+                        //showConfigWindow: function () {
+                        //    myToolLine = this;
+                        //    propsWindow.show();
+                        //},
                         title: "Nearest Substation",
-                        description: "Distance from a site boundary to the nearest known substation, using data from Open Street Map",
+                        description: "Distance from a site boundary to the center of the nearest known substation, using data from OpenStreetMap",
                         //category: "Transmission Availability",
                         category: "Power Infrastructure",
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (e, score) {
-                            _this.updateScore(score);
+                            _this.updateScore(score, '"power"~"sub_station|station"', 'substation');
+                        },
+                        // having any nearby line is much better than having no nearby line, so let's reflect that.
+                        scoreUtilityOptions: {
+                            functionName: "linear3pt",
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInKM - 1), 0.5, configProperties.maxSearchDistanceInKM, 0.25, "km")
+                        },
+                        weight: 10
+                    },
+                    {
+                        showConfigWindow: function () {
+                            myToolLine = this;
+                            propsWindow.show();
+                        },
+                        title: "Nearest Transmission Line",
+                        description: "Distance from a site boundary to the nearest known transmission line, using data from OpenStreetMap",
+                        //category: "Transmission Availability",
+                        category: "Power Infrastructure",
+                        onScoreAdded: function (event, score) {
+                        },
+                        onSiteChange: function (e, score) {
+                            _this.updateScore(score, '"power"="line"', 'transmission line');
                         },
                         // having any nearby line is much better than having no nearby line, so let's reflect that.
                         scoreUtilityOptions: {
@@ -213,8 +177,8 @@ var BYUModules;
             });
         }
 
-        SubStationModule.prototype.updateScore = function (score) {
-            updateScore(score);
+        SubStationModule.prototype.updateScore = function (score, wayQueryKey, objectType) {
+            updateScore(score, wayQueryKey, objectType);
         }
 
         return SubStationModule;
@@ -224,67 +188,102 @@ var BYUModules;
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
+    // projections we'll need...
+    var projWGS84 = new OpenLayers.Projection("EPSG:4326");
+    var proj900913 = new OpenLayers.Projection("EPSG:900913");
 
-    function updateScore(score) {
+
+    function updateScore(score, wayQueryKey, objectType) {
         var maxSearchDistanceInMeters = configProperties.maxSearchDistanceInKM * 1000;
+        var maxSearchDistanceInMeters = 30 * 1000;
         var SubStationQueryUrl = "http://overpass.osm.rambler.ru/cgi/interpreter";
-        var bbox = new OpenLayers.Bounds(score.site.geometry.bounds.left - maxSearchDistanceInMeters - 1000, score.site.geometry.bounds.bottom - maxSearchDistanceInMeters - 1000, score.site.geometry.bounds.right + maxSearchDistanceInMeters + 1000, score.site.geometry.bounds.top + maxSearchDistanceInMeters + 1000);
-        bbox = bbox.toArray();
-        for (var i = 0; i < 4; i++) {
-            bbox[i] = bbox[i] / 100000;
-        }
-        bbox = new OpenLayers.Bounds.fromArray(bbox).toBBOX(6, true);
+        var bounds = new OpenLayers.Bounds(
+            score.site.geometry.bounds.left - maxSearchDistanceInMeters - 1000,
+            score.site.geometry.bounds.bottom - maxSearchDistanceInMeters - 1000,
+            score.site.geometry.bounds.right + maxSearchDistanceInMeters + 1000,
+            score.site.geometry.bounds.top + maxSearchDistanceInMeters + 1000);
+        var bbox = bounds.transform(proj900913, projWGS84).toBBOX(6, true);
 
 
         // use a genuine JSONP request, rather than a plain old GET request routed through the proxy.
         var request = OpenLayers.Request.GET({
             url: SubStationQueryUrl,
             params: {
-                data: "way[power=sub_station](" + bbox + ");(._;>;);out;"
+                //Note: some substations are classified as 'sub_station' and some are classified as 'station'
+                //see http://wiki.openstreetmap.org/wiki/Key:power
+                data: 'way[' + wayQueryKey + '](' + bbox + ');(._;>;);out;'
             },
             callback: function (response) {
                 if (response.status == 200) {
-                    response = osm2geo(response.responseText);
+                    response.features = OpenLayers.Format.OSM.prototype.read(response.responseText);
 
                     //Conversion of response
                     for (var i = 0; i < response.features.length; i++) {
+                        // change all geometries into points transformed into our native projection
+                        response.features[i].geometry = response.features[i].geometry.getCentroid().transform(projWGS84, proj900913);
 
-                        var cood = response.features[i].geometry.coordinates[0];
-                        for (var j = 0; j < cood.length; j++) {
-
-                            var ele = cood[j];
-
-                            ele[0] = ele[0] * 100000;
-                            ele[1] = ele[1] * 100000;
+                        // parse voltage, in case it's a string for some reason...
+                        if (typeof response.features[i].attributes.voltage === "string") {
+                            response.features[i].attributes.voltage = parseInt(response.features[i].attributes.voltage);
                         }
                     }
 
                     var closestFeature = null;
                     var minDistance = maxSearchDistanceInMeters;
 
-                    var parser = new OpenLayers.Format.GeoJSON();
+                    //var parser = new OpenLayers.Format.GeoJSON();
                     // response = parser.parseGeometry(response);
 
 
                     if (response.features) {
                         for (var i = 0; i < response.features.length; i++) {
+                            var feature = response.features[i];
 
-                            var distance = score.site.geometry.distanceTo(parser.parseGeometry(response.features[i].geometry));
+                            // check line-specific filters (just filtering lines for now...)
+                            if (objectType === 'transmission line') {
+                                if (!isNaN(feature.attributes.voltage)) {
+                                    var convertedVoltage = feature.attributes.voltage / 1000;
+                                    if (convertedVoltage < lineConfigProperties.minimumVoltage ||
+                                        convertedVoltage > lineConfigProperties.maximumVoltage) {
+                                        // voltage is beyond our preset range, so let's skip this line
+                                        continue;
+                                    }
+                                } else if (lineConfigProperties.onlyKnownVoltages) {
+                                    // unknown voltage, and we're supposed to skip those, so let's skip those
+                                    continue;
+                                }
+                            }
+
+                            //var distance = score.site.geometry.distanceTo(parser.parseGeometry(response.features[i].geometry));
+                            var distance = score.site.geometry.distanceTo(feature.geometry);
                             if (distance < minDistance) {
                                 minDistance = distance;
-                                closestFeature = response.features[i];
+                                closestFeature = feature;
                             }
                         }
                     }
                     if (closestFeature !== null) {
                         var name = "nearest"
-                        if (closestFeature.properties.name) {
-                            name = closestFeature.properties.name;
+                        if (closestFeature.attributes.name) {
+                            name = closestFeature.attributes.name;
                         }
-                        score.popupMessage = (minDistance / 1000).toFixed(1) + " km to " + name + " substation";
+                        var message = (minDistance / 1000).toFixed(1) + " km to " + name + " " + objectType;
+
+                        if (!isNaN(closestFeature.attributes.voltage)) {
+                            message += ", " + (closestFeature.attributes.voltage / 1000).toFixed(0) + " kV";
+                        } else {
+                            message += ", unknown kV";
+                        }
+
+                        if (closestFeature.attributes.operator) {
+                            message += ", operated by " + closestFeature.attributes.operator;
+                        }
+
+                        message += ".";
+                        score.popupMessage = message;
                         score.updateValue(minDistance / 1000);
                     } else {
-                        score.popupMessage = "No substation found within " + configProperties.maxSearchDistanceInKM + " km";
+                        score.popupMessage = "No " + objectType + " found within " + configProperties.maxSearchDistanceInKM + " km";
                         score.updateValue(configProperties.maxSearchDistanceInKM);
                     }
                 } else {
