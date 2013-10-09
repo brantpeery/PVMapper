@@ -19,6 +19,8 @@ declare module OpenLayers {
     export class Attributes {
         name: string;
         description: string;
+        overallScore: number;
+        fillColor: string;
     }
 
 
@@ -26,13 +28,9 @@ declare module OpenLayers {
       getParameterString(any): string;
     }
 
-    export class SiteFeature {
-        fid: string;
-        geometry: Polygon;
+    interface SiteFeature extends FVector {
         attributes: Attributes;
         site: any;
-        name: string;
-        description: string;
     }
 
     interface Collection extends Geometry {
@@ -1416,6 +1414,9 @@ declare module OpenLayers {
             new (name: string, url: string, options: any, params?: any): any;
             prototype: ArcGIS93Rest;
         }
+        XYZ: {
+            new (name: string, url: string, params: any): any;
+        }
         //ArcGIS93Rest(name: string, url: string[], params: any):any;
         //ArcGIS93Rest(name: string, url: string, options: any, params?: any):any;
         //ArcGIS93Rest(name: string, url: string[], params: WMSParams, layerParams: WMSOptions ): any;
@@ -1652,7 +1653,7 @@ declare module OpenLayers {
         removeFeatures(features: FVector[], options: any);
         removeAllFeatures(silent: Boolean);
         destroyFeatures(features: FVector[], options: any);
-        drawFeature(feature: FVector, style: string);
+        drawFeature(feature: FVector, style?: string);
         eraseFeature(feature: FVector);
         getFeatureFromEvent(evt: Event): FVector;
         getFeatureBy(property: string, value: string): FVector;
@@ -1886,6 +1887,8 @@ declare module OpenLayers {
 
         //Constants
         style: Style;
+
+        layer: Vector;
     }
 
     var Feature: {

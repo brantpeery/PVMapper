@@ -46,7 +46,7 @@ module pvMapper {
             var idx: number = this.sites.indexOf(site);
             if (idx !== -1) {
                 this.sites.splice(idx, 1);
-                this.siteRemoved.fire(undefined, site);
+                this.siteRemoved.fire(site, site);
                 //site.destroy();
             }
         }
@@ -66,7 +66,7 @@ module pvMapper {
             if (i < this.sites.length)
             {
                 var site = this.sites.splice(i, 1)[0];
-                this.siteRemoved.fire(undefined, site);
+                this.siteRemoved.fire(site, site);
             }
         }
 

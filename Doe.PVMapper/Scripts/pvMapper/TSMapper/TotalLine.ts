@@ -32,7 +32,7 @@ module pvMapper {
 
         public category = "Totals";
         public scores: IScore[] = [];
-        public CalculateScore: (values: IValueWeight[]) => IScore;
+        public CalculateScore: (values: IValueWeight[], site: Site) => IScore;
         public UpdateScores(lines: ScoreLine[]) {
             //Setup an array of sites(scores) that contain all the scoringTool values
             var numSites: number = (lines.length > 0) ? lines[0].scores.length : 0;
@@ -44,13 +44,15 @@ module pvMapper {
             
             //Loop through all the sites on the scoreboard
             for (var idx = 0; idx < numSites; idx++) {
+                var site: Site = null;
                 var values: IValueWeight[] = [];
-
+                
                 //Aggragate all the scoreline's values into an array
                 lines.forEach((line) => {
                     //TODO: This should be the weighted score
                     if (line.scores && line.scores[idx] && !isNaN(line.scores[idx].utility)) {
-                        values.push({utility:line.scores[idx].utility, tool:line});
+                        site = line.scores[idx].site; // during this loop, this will (should?) always be the same site
+                        values.push({ utility: line.scores[idx].utility, tool: line });
                     }
                 });
 
@@ -60,7 +62,7 @@ module pvMapper {
                 }
 
                 //Update the score on the total line using the tools CalculateScore method
-                this.scores[idx] = this.CalculateScore(values);
+                this.scores[idx] = this.CalculateScore(values, site);
             }
         }
     }

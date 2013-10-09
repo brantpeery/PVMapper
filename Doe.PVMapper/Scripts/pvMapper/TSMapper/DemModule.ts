@@ -94,6 +94,11 @@ module BYUModules {
     var topoMapLayer;
 
     function addMap() {
+        topoMapLayer = new OpenLayers.Layer.XYZ("ESRI Topography",
+            "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/${z}/${y}/${x}",
+            { transitionEffect: "resize", buffer: 1, sphericalMercator: true });
+        pvMapper.map.addLayer(topoMapLayer);
+        /*
         topoMapLayer = new OpenLayers.Layer.ArcGIS93Rest(
             "World Topography",
             topoMapRestUrl + "export",
@@ -109,6 +114,7 @@ module BYUModules {
         topoMapLayer.epsgOverride = "3857"; //"102100";
         topoMapLayer.setVisibility(false);
         pvMapper.map.addLayer(topoMapLayer);
+        */
     }
 
     function removeMap() {

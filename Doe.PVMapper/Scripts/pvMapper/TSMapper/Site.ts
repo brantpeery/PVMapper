@@ -27,7 +27,7 @@ module pvMapper {
         }
         public self: any; //Reference to this object 
         public id: string; //The id that came from the DB
-        public site: OpenLayers.SiteFeature; //The site object from Open Layers
+        //public site: OpenLayers.SiteFeature; //The site object from Open Layers
         public geometry: OpenLayers.Polygon; //The site boundry 
         public name: string; //The saved name of the site
         public description: string; //The long description of the site
