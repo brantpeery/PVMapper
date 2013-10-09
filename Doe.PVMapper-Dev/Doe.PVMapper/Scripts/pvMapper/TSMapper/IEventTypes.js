@@ -1,1 +1,1 @@
-﻿/// <reference path="Score.ts" />
+﻿

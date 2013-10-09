@@ -51,7 +51,6 @@ var pvMapper;
                 this.infoTools.map(function (tool, idx, toolbar) {
                     if (console)
                         console.log("Loading info tool " + tool.title + " into the API");
-                    //TODO: Tie to the data model when ready
                 });
             }
 
