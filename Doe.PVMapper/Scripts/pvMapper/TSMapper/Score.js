@@ -46,7 +46,6 @@ var pvMapper;
         //Sets the utility value for the score. Fires the utilityChanged event
         Score.prototype.setUtility = function (value) {
             this.utility = value;
-            //TODO: fire some kind of utilityChangedEvent, or somehting?
         };
 
         /**

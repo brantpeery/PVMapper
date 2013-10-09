@@ -1,6 +1,4 @@
-﻿/// <reference path="OpenLayers.d.ts" />
-/// <reference path="Event.ts" />
-var pvMapper;
+﻿var pvMapper;
 (function (pvMapper) {
     var Site = (function () {
         //The parameter list:    //test
@@ -16,7 +14,7 @@ var pvMapper;
             //if (!feature instanceof(OpenLayers.Feature))
             //  throw ('The parameter "feature" must be an OpenLayers.Feature');
             this.self = this;
-            this.id = +feature.fid;
+            this.id = feature.fid;
             this.feature = feature;
             this.feature.site = this;
             this.geometry = feature.geometry;

@@ -1,3 +1,9 @@
+/// <reference path="pvMapper.ts" />
+/// <reference path="Site.ts" />
+/// <reference path="Score.ts" />
+/// <reference path="Tools.ts" />
+/// <reference path="Options.d.ts" />
+/// <reference path="Module.ts" />
 var INLModules;
 (function (INLModules) {
     var SiteAreaModule = (function () {
@@ -22,7 +28,6 @@ var INLModules;
                         category: "Geography",
                         onScoreAdded: function (e, score) {
                         },
-                     
                         onSiteChange: function (e, score) {
                             if (console)
                                 console.log("Site change detected in tool Gross Area. Updating the value.");
@@ -33,9 +38,11 @@ var INLModules;
                             score.popupMessage = area.toFixed(3) + " km2";
                             score.updateValue(area);
                         },
+                        //TODO: we have no idea what their ideal size is... we don't even know if more is better or worse. damn.
+                        // for now, this is a constant value (always returns the max, why not)
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 10, "km2", "Minimum gross area to be considered.", "Maximum gross area to be considered.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "km2", "Minimum gross area to be considered.", "Maximum gross area to be considered.")
                         },
                         weight: 0
                     }
@@ -48,6 +55,7 @@ var INLModules;
 
     var modinstance = new SiteAreaModule();
 
+    //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
     var offsetFeature, setbackLength, setbackLayer;
     setbackLength = 30;
 
@@ -60,6 +68,7 @@ var INLModules;
         return kmArea;
     }
 
+    //Handles the button click for the buttons for this tool
     function onButtonClicked(event) {
     }
     ;
@@ -81,6 +90,7 @@ var INLModules;
         }
 
         if (site.offsetFeature) {
+            //Redraw the polygon
             setbackLayer.removeFeatures(site.offsetFeature);
             site.offsetFeature.geometry = newGeometry;
         } else {
@@ -100,6 +110,7 @@ var INLModules;
     }
 
     function calculateSiteArea(site) {
+        //Use the geometry of the OpenLayers feature to get the area
         var val = calculateArea(site.feature.geometry);
 
         return val;

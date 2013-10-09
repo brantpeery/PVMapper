@@ -212,7 +212,7 @@
                     renderTo: Ext.getBody(),
                     listeners: {
                         afterrender: function (combo) {
-                            if ((_this != "undefined") && (_this._xArgs != "undefined")) {
+                            if ((typeof _this !== "undefined") && (typeof _this._xArgs !== "undefined")) {
                                 this.setValue(_this._xArgs.metaInfo.name, true);
                                 this.fireEvent('select', this);
                             }
@@ -228,8 +228,7 @@
                                         sobj.functionName = 'linear3pt';
                                         var tpArgs;
                                         if (sobj.fCache[sobj.functionName] != undefined)
-                                            tpArgs = sobj.fCache[sobj.functionName];
-else {
+                                            tpArgs = sobj.fCache[sobj.functionName]; else {
                                             tpArgs = new pvMapper.ThreePointUtilityArgs(0, 0.5, 180, 1, 360, 0.5, "degrees");
                                             tpArgs.metaInfo.vline = 180;
                                         }
@@ -247,8 +246,7 @@ else {
                                         sobj.functionName = 'linear';
                                         var mmArgs;
                                         if (sobj.fCache[sobj.functionName] != undefined)
-                                            mmArgs = sobj.fCache[sobj.functionName];
-else {
+                                            mmArgs = sobj.fCache[sobj.functionName]; else {
                                             mmArgs = new pvMapper.MinMaxUtilityArgs(10, 0, "degrees");
                                             mmArgs.metaInfo.vline = 5;
                                         }
@@ -266,8 +264,7 @@ else {
                                         sobj.functionName = 'sinusoidal';
                                         var sArgs;
                                         if (sobj.fCache[sobj.functionName] != undefined)
-                                            sArgs = sobj.fCache[sobj.functionName];
-else {
+                                            sArgs = sobj.fCache[sobj.functionName]; else {
                                             sArgs = new pvMapper.SinusoidalUtilityArgs(0, 100, 50, 0.50, "degrees");
                                             sArgs.metaInfo.vline = 50;
                                         }
@@ -307,11 +304,9 @@ else {
                             //Update the xArgs
                             //Already handled by the prperty grid :)
                             board.update();
-                            //TODO: updateGuideLines() isn't called here... but it need to be
                         },
                         propertychange: function (source, recordId, value, oldValue, eOpts) {
                             board.update();
-                            //TODO: updateGuideLines() isn't called here... but it need to be
                         },
                         //======= Add to support tool tip =============
                         itemmouseenter: function (grid, record, item, index, e, opts) {

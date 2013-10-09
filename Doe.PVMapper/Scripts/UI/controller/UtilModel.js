@@ -1,4 +1,4 @@
-﻿if (typeof Ext == 'undefined')
+if (typeof Ext == 'undefined')
     var Ext = Ext || {};
 
 // Interface
@@ -84,8 +84,7 @@ var UtilityModel;
         };
         DictionaryCollection.prototype.valueOf = function (aName) {
             if (aName in this._dictionary)
-                return this._dictionary[aName];
-else
+                return this._dictionary[aName]; else
                 return null;
         };
         return DictionaryCollection;

@@ -26,45 +26,45 @@
  */
 OpenLayers.Format.EsriGeoJSON = OpenLayers.Class(OpenLayers.Format.GeoJSON, {
 
-    /**
-     * Constructor: OpenLayers.Format.EsriGeoJSON
-     * Create a new parser for EsriGeoJSON.
-     *
-     * Parameters:
-     * options - {Object} An optional object whose properties will be set on
-     *     this instance.
-     */
-    initialize: function(options) {
-        OpenLayers.Format.GeoJSON.prototype.initialize.apply(this, [options]);
-    },
+	/**
+	 * Constructor: OpenLayers.Format.EsriGeoJSON
+	 * Create a new parser for EsriGeoJSON.
+	 *
+	 * Parameters:
+	 * options - {Object} An optional object whose properties will be set on
+	 *     this instance.
+	 */
+	initialize: function(options) {
+		OpenLayers.Format.GeoJSON.prototype.initialize.apply(this, [options]);
+	},
 
-    /**
-     * APIMethod: read
-     * Deserialize a EsriGeoJSON string.
-     *
-     * Parameters:
-     * json - {String} A EsriGeoJSON string
-     * Returns: 
-     * {Object} an array of <OpenLayers.Feature.Vector>
-     */
-    read: function(json) {
-        var results = null;
-        var obj = null;
-        if (typeof json == "string") {
-            obj = OpenLayers.Format.JSON.prototype.read.apply(this,
-                                                              [json]);
-        } else { 
-            obj = json;
-        }    
-        if(!obj) {
-            OpenLayers.Console.error("Bad JSON: " + json);
-        } else{
-            results = this.parseEsriGeoJSON2OL(obj);
-        }
-        return results;
-    },
-    
-    parseEsriGeoJSON2OL: function (esri_geojson) {//parse Esri GeoJSON to the OpenLayers GeoJSON
+	/**
+	 * APIMethod: read
+	 * Deserialize a EsriGeoJSON string.
+	 *
+	 * Parameters:
+	 * json - {String} A EsriGeoJSON string
+	 * Returns: 
+	 * {Object} an array of <OpenLayers.Feature.Vector>
+	 */
+	read: function(json) {
+		var results = null;
+		var obj = null;
+		if (typeof json == "string") {
+			obj = OpenLayers.Format.JSON.prototype.read.apply(this,
+															  [json]);
+		} else { 
+			obj = json;
+		}    
+		if(!obj) {
+			OpenLayers.Console.error("Bad JSON: " + json);
+		} else{
+			results = this.parseEsriGeoJSON2OL(obj);
+		}
+		return results;
+	},
+	
+	parseEsriGeoJSON2OL: function (esri_geojson) {//parse Esri GeoJSON to the OpenLayers GeoJSON
 		var geom_type = esri_geojson.geometryType;
 		var epsg_code = esri_geojson.spatialReference.wkid;
 
@@ -301,7 +301,7 @@ OpenLayers.Format.EsriGeoJSON = OpenLayers.Class(OpenLayers.Format.GeoJSON, {
 	
 	esriDeserialize: function (geojson) {
 		var features = OpenLayers.Format.GeoJSON.prototype.read.apply(this,
-                                                              [geojson]);
+															  [geojson]);
 		if(features) 
 		{
 			if(features.constructor != Array) {
@@ -314,51 +314,51 @@ OpenLayers.Format.EsriGeoJSON = OpenLayers.Class(OpenLayers.Format.GeoJSON, {
 		}
 	},
 
-    /**
-     * APIMethod: write
-     * Serialize a feature, geometry, array of features into a GeoJSON string.
-     *
-     * Parameters:
-     * obj - {Object} An <OpenLayers.Feature.Vector>, <OpenLayers.Geometry>,
-     *     or an array of features.
-     * pretty - {Boolean} Structure the output with newlines and indentation.
-     *     Default is false.
-     *
-     * Returns:
-     * {String} The GeoJSON string representation of the input geometry,
-     *     features, or array of features.
-     */
-    write: function(obj, pretty) {
-        var geojson = {
-            "type": null
-        };
-        if(obj instanceof Array) {
-            geojson.type = "FeatureCollection";
-            var numFeatures = obj.length;
-            geojson.features = new Array(numFeatures);
-            for(var i=0; i<numFeatures; ++i) {
-                var element = obj[i];
-                if(!element instanceof OpenLayers.Feature.Vector) {
-                    var msg = "FeatureCollection only supports collections " +
-                              "of features: " + element;
-                    throw msg;
-                }
-                geojson.features[i] = this.extract.feature.apply(
-                    this, [element]
-                );
-            }
-        } else if (obj.CLASS_NAME.indexOf("OpenLayers.Geometry") == 0) {
-            geojson = this.extract.geometry.apply(this, [obj]);
-        } else if (obj instanceof OpenLayers.Feature.Vector) {
-            geojson = this.extract.feature.apply(this, [obj]);
-            if(obj.layer && obj.layer.projection) {
-                geojson.crs = this.createCRSObject(obj);
-            }
-        }
-        return OpenLayers.Format.JSON.prototype.write.apply(this,
-                                                            [geojson, pretty]);
-    },
+	/**
+	 * APIMethod: write
+	 * Serialize a feature, geometry, array of features into a GeoJSON string.
+	 *
+	 * Parameters:
+	 * obj - {Object} An <OpenLayers.Feature.Vector>, <OpenLayers.Geometry>,
+	 *     or an array of features.
+	 * pretty - {Boolean} Structure the output with newlines and indentation.
+	 *     Default is false.
+	 *
+	 * Returns:
+	 * {String} The GeoJSON string representation of the input geometry,
+	 *     features, or array of features.
+	 */
+	write: function(obj, pretty) {
+		var geojson = {
+			"type": null
+		};
+		if(obj instanceof Array) {
+			geojson.type = "FeatureCollection";
+			var numFeatures = obj.length;
+			geojson.features = new Array(numFeatures);
+			for(var i=0; i<numFeatures; ++i) {
+				var element = obj[i];
+				if(!element instanceof OpenLayers.Feature.Vector) {
+					var msg = "FeatureCollection only supports collections " +
+							  "of features: " + element;
+					throw msg;
+				}
+				geojson.features[i] = this.extract.feature.apply(
+					this, [element]
+				);
+			}
+		} else if (obj.CLASS_NAME.indexOf("OpenLayers.Geometry") == 0) {
+			geojson = this.extract.geometry.apply(this, [obj]);
+		} else if (obj instanceof OpenLayers.Feature.Vector) {
+			geojson = this.extract.feature.apply(this, [obj]);
+			if(obj.layer && obj.layer.projection) {
+				geojson.crs = this.createCRSObject(obj);
+			}
+		}
+		return OpenLayers.Format.JSON.prototype.write.apply(this,
+															[geojson, pretty]);
+	},
 
-    CLASS_NAME: "OpenLayers.Format.EsriGeoJSON" 
+	CLASS_NAME: "OpenLayers.Format.EsriGeoJSON" 
 
 });     
