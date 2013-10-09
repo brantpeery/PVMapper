@@ -6,7 +6,7 @@
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width" />
     <link rel="stylesheet" type="text/css" href="/Content/extjs/resources/css/my-ext-theme.css" />
-    @Styles.Render("~/Content/css", "~/Content/themes/ui-lightness/jquery-ui-1.8.21.custom.css")
+    @Styles.Render("~/Content/css", "~/Content/themes/ui-lightness/jquery-ui-1.8.21.custom.css", "/Content/jsxgraph.css")
     @Scripts.Render("~/bundles/jquery")
 
     <script type="text/javascript" src="~/Scripts/jQueryExtentions/jquery.jgrowl_minimized.js"></script>
@@ -25,6 +25,9 @@
     <!-- These scripts would be loaded by Ext, but placing them here makes them easier to debug. -->
     <script type="text/javascript" src="~/Scripts/GeoExt/GeoExt.js"></script>
 
+    @*<script type="text/javascript" src="/Scripts/jsxgraphcore-0.93.js"></script>*@
+    @*<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.96/jsxgraphcore.js"></script>*@
+
 </head>
 <body>
     <div id="Header">
@@ -39,9 +42,11 @@
             </section>
             <nav>
                 <ul id="menu">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    @*<li>@Html.ActionLink("Home", "Index", "Home")</li>*@
+                    @*<li>@Html.ActionLink("About", "About", "Home")</li>*@
+                    @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
+                    <li><a href="https://pvmapper.codeplex.com/">About</a></li>
+                    <li><a href="https://pvmapper.codeplex.com/team/view">Contact</a></li>
                 </ul>
             </nav>
         </div>

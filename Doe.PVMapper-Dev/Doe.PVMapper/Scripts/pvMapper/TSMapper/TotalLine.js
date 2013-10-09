@@ -36,11 +36,13 @@ var pvMapper;
             }
 
             for (var idx = 0; idx < numSites; idx++) {
+                var site = null;
                 var values = [];
 
                 //Aggragate all the scoreline's values into an array
                 lines.forEach(function (line) {
                     if (line.scores && line.scores[idx] && !isNaN(line.scores[idx].utility)) {
+                        site = line.scores[idx].site;
                         values.push({ utility: line.scores[idx].utility, tool: line });
                     }
                 });
@@ -50,7 +52,7 @@ var pvMapper;
                 }
 
                 //Update the score on the total line using the tools CalculateScore method
-                this.scores[idx] = this.CalculateScore(values);
+                this.scores[idx] = this.CalculateScore(values, site);
             }
         };
         return TotalLine;

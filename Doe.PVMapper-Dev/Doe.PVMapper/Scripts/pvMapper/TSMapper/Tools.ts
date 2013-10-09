@@ -92,7 +92,7 @@ module pvMapper {
         @param values: array of numbers. The scores for a single site that is to be aggregated.
          Returns a number that is the result of the aggragate.
         */
-        CalculateScore: (values: IValueWeight[]) => IScore;
+        CalculateScore: (values: IValueWeight[], site: Site) => IScore;
     }
 
     export interface IToolAction {

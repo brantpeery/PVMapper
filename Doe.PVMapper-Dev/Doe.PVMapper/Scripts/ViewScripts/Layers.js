@@ -35,8 +35,8 @@ pvMapper.onReady(function () {
     var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);
 
     var resolutions = OpenLayers.Layer.Bing.prototype.serverResolutions.slice(4, 19);
-    var osm = new OpenLayers.Layer.OSM("OpenStreetMap", null, { isBaseLayer:true, zoomOffset: 4, resolutions: resolutions });
-    $.jGrowl("Adding OpenStreetMap");
+    var osm = new OpenLayers.Layer.OSM("OpenStreetMap", null, { isBaseLayer: true, zoomOffset: 4, resolutions: resolutions, sphericalMercator: true });
+    //$.jGrowl("Adding OpenStreetMap");
     pvMapper.map.addLayer(osm);
 
     var usBounds = new OpenLayers.Bounds(-14020385.47423, 2768854.9122167, -7435794.1105484, 6506319.8467284);
@@ -105,6 +105,11 @@ pvMapper.onReady(function () {
 
 
     //Note: this map is pretty ugly...
+    var esriWorldTerrain = new OpenLayers.Layer.XYZ("Shaded Relief",
+        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/${z}/${y}/${x}",
+            { transitionEffect: "resize", buffer: 1, sphericalMercator: true });
+    pvMapper.map.addLayer(esriWorldTerrain);
+    /*
     var esriWorldTerrain = new OpenLayers.Layer.ArcGIS93Rest(
         "Shaded Relief",
         "http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/export",
@@ -117,6 +122,17 @@ pvMapper.onReady(function () {
     esriWorldTerrain.setIsBaseLayer(true);
     esriWorldTerrain.epsgOverride = "3857";
     pvMapper.map.addLayer(esriWorldTerrain);
+    */
+
+    var esriImagery = new OpenLayers.Layer.XYZ("World Imagery", 
+        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}",
+            { transitionEffect: "resize", buffer: 1, numZoomLevels: 20, sphericalMercator: true });
+    pvMapper.map.addLayer(esriImagery);
+
+    var esriStreet = new OpenLayers.Layer.XYZ("ESRI Street Map",
+        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}",
+            { transitionEffect: "resize", buffer: 1, sphericalMercator: true });
+    pvMapper.map.addLayer(esriStreet);
 
 
     //Set up the layer for the site polys

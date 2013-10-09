@@ -110,7 +110,7 @@ var scoreboardColumns = [{
       //}
     }
     else
-      return ' ';
+        return ' ';
   },
 }, {
   header: 'Weight',
@@ -369,7 +369,7 @@ toolsStore.on({
             if (isNaN(value[idx].utility)) return '...';
 
             var val = (value[idx] && value[idx].utility) ? value[idx].utility : 0;
-            var c = getColor(val);
+            var c = pvMapper.getColorForScore(val);
             metaData.style = "text-align: center; border-radius: 5px; background-color:" + c;
 
             return value[idx].utility.toFixed(0);
@@ -377,43 +377,44 @@ toolsStore.on({
           draggable: false,
 
           summaryType: function (records) {
-            var total = 0;
-            var count = 0;
+              var total = 0;
+              var count = 0;
             //var count = 0, minimum = 9999, val = 0;
-
+            
 
             records.forEach(function (record) {
               var scoreLine = record.raw;
-              if (scoreLine.scores[idx] && !isNaN(scoreLine.scores[idx].utility)) {
-                var weight = (scoreLine.weight != undefined) ? scoreLine.weight : 1;
-                val = scoreLine.scores[idx].utility * weight;
-                total += val;
-                count += weight;
+                if (scoreLine.scores[idx] && !isNaN(scoreLine.scores[idx].utility)) {
+                  var weight = (scoreLine.weight != undefined) ? scoreLine.weight : 1;
+                  val = scoreLine.scores[idx].utility * weight;
+                  total += val;
+                  count += weight;
                 //if (val > 0)
-                //  minimum = (minimum > val) ? val : minimum;
-              }
+                  //  minimum = (minimum > val) ? val : minimum;
+                }
             });
 
             var average = total / count;
 
-            // post the average score to the feature, so that it can render correctly on the map
-            //TODO: is this really the best place to be mucking about with the feature attributes?
-            if (records && records.length > 0 && records[0].raw &&
-                records[0].raw.scores && records[0].raw.scores.length > idx &&
-                records[0].raw.scores[idx].site && records[0].raw.scores[idx].site.feature) {
-              // test if the feature's average score value has changed
-              var feature = records[0].raw.scores[idx].site.feature;
-              //if (feature.attributes['overallScore'] !== average) {
-              if (feature.attributes.overallScore !== average) {
-                feature.attributes.overallScore = average;
-                // set the score's color as an attribute on the feature (note - this is at least partly a hack...)
-                feature.attributes.fillColor = (!isNaN(average)) ? getColor(average) : "";
-                // redraw the feature
-                if (feature.layer) {
-                  feature.layer.drawFeature(feature);
-                }
-              }
-            }
+            //Note: moved this, as the summary renderer now only calculates the score over groups, rather than for all score tools
+            //// post the average score to the feature, so that it can render correctly on the map
+            ////TODO: is this really the best place to be mucking about with the feature attributes?
+            //if (records && records.length > 0 && records[0].raw &&
+            //    records[0].raw.scores && records[0].raw.scores.length > idx &&
+            //    records[0].raw.scores[idx].site && records[0].raw.scores[idx].site.feature) {
+            //  // test if the feature's average score value has changed
+            //  var feature = records[0].raw.scores[idx].site.feature;
+            //  //if (feature.attributes['overallScore'] !== average) {
+            //  if (feature.attributes.overallScore !== average) {
+            //    feature.attributes.overallScore = average;
+            //    // set the score's color as an attribute on the feature (note - this is at least partly a hack...)
+            //    feature.attributes.fillColor = (!isNaN(average)) ? getColor(average) : "";
+            //    // redraw the feature
+            //    if (feature.layer) {
+            //        feature.layer.drawFeature(feature);
+            //    }
+            //  }
+            //}
 
             //if (records.length == scoreboardGrid.store.data.length) {
             //  //this is the total summary line -- only time it pass the entire store records.
@@ -421,12 +422,12 @@ toolsStore.on({
             //  var avgM = getColor(minimum);
             //  return '<hr><span style="border-radius: 3px;font-weight:bold; background-color:' + avgM + '">&nbsp' + minimum.toFixed(0) + '&nbsp</span>' +
             //         '<br /> <span style="border-radius: 3px;font-weight:bold; background-color:' + avgC + '">&nbsp' + average.toFixed(0) + '&nbsp</span>'
-            //} else
+            //} else 
               return average;
           },
-          summaryRenderer: function (value) {
+          summaryRenderer: function (value, summaryRowValues) {
             if (typeof value === "number" && !isNaN(value)) {
-              var c = getColor(value);
+              var c = pvMapper.getColorForScore(value);
               return '<span style="border-radius: 3px; background-color:' + c + '">&nbsp' + value.toFixed(0) + '&nbsp</span>'
               //+ "<input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
               //  scoreLine.Category + "\",\""+ scoreline.site.name +"\");' />";
@@ -538,91 +539,91 @@ Ext.define('MainApp.view.ScoreWeightEditing', {
 
 //----------------The grid and window-----------------
 Ext.define('Ext.grid.ScoreboardGrid', {
-  //xtype:'Scoreboard',
-  extend: 'Ext.grid.Panel',
-  store: toolsStore,
-  //forceFit: true,
-  //width: '100%',
-  //height: 600,
-  //title: "Tools List",
-  columns: scoreboardColumns,
-  selModel: {
-    selType: 'cellmodel', //'rowmodel', //Note: use 'cellmodel' once we have cell editing worked out
-  },
-  plugins: [Ext.create('MainApp.view.ScoreWeightEditing')],
-  features: [
-      //Ext.create('MainApp.view.GroupingSummaryWithTotal', {
-      //  groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
-      //  summaryType: 'average',
-      //})
-      {
-          //Note: this feature provides per-group summary values, rather than repeating the global summary for each group.
-          groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
-          ftype: 'groupingsummary',
-          enableGroupingMenu: false,
-          //hideGroupedHeader: true, <-- this is handy, if we ever allow grouping by arbitrary fields
-          //onGroupClick: function(view, group, idx, foo, e) {}
-      },
-      //{ ftype: 'grouping' },
-      //{
-      //  ftype: 'summary',
-      //  dock: 'bottom'
-      //},
-  ],
+    //xtype:'Scoreboard',
+    extend: 'Ext.grid.Panel',
+    store: toolsStore,
+    //forceFit: true,
+    //width: '100%',
+    //height: 600,
+    //title: "Tools List",
+    columns: scoreboardColumns,
+    selModel: {
+        selType: 'cellmodel', //'rowmodel', //Note: use 'cellmodel' once we have cell editing worked out
+    },
+    plugins: [Ext.create('MainApp.view.ScoreWeightEditing')],
+    features: [
+        //Ext.create('MainApp.view.GroupingSummaryWithTotal', {
+        //  groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
+        //  summaryType: 'average',
+        //})
+        {
+            //Note: this feature provides per-group summary values, rather than repeating the global summary for each group.
+            groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
+            ftype: 'groupingsummary',
+            enableGroupingMenu: false,
+            //hideGroupedHeader: true, <-- this is handy, if we ever allow grouping by arbitrary fields
+            //onGroupClick: function(view, group, idx, foo, e) {}
+        },
+        //{ ftype: 'grouping' },
+        //{
+        //  ftype: 'summary',
+        //  dock: 'bottom'
+        //},
+    ],
 
-  listeners: {
-      afterlayout: function (sender, eOpts) {
-          var gridViewId = $('#' + this.getId() + ' .x-grid-view').attr('id');
+    listeners: {
+        afterlayout: function (sender, eOpts) {
+            var gridViewId = $('#' + this.getId() + ' .x-grid-view').attr('id');
 
-          var $totalsHeader = $('#' + gridViewId + '-hd-Totals');
-          var $totalsRow = $('#' + gridViewId + '-bd-Totals');
-          var $totalsNext = $totalsRow.next();
+            var $totalsHeader = $('#' + gridViewId + '-hd-Totals');
+            var $totalsRow = $('#' + gridViewId + '-bd-Totals');
+            var $totalsNext = $totalsRow.next();
 
-          // if the totals aren't at the bottom of their parent container...
-          if ($totalsNext.length) {
+            // if the totals aren't at the bottom of their parent container...
+            if ($totalsNext.length) {
 
-              if (!$totalsNext.attr('class').indexOf('x-grid-row-summary') >= 0) {
-                  // remove the unnecessary and needless row summary for the totals group
-                  $totalsNext.hide();
-              }
+                if (!$totalsNext.attr('class').indexOf('x-grid-row-summary') >= 0) {
+                    // remove the unnecessary and needless row summary for the totals group
+                    $totalsNext.hide();
+                }
 
-              // move the totals to the bottom of their parent container
-              $totalsHeader.appendTo($totalsHeader.parent());
-              $totalsRow.appendTo($totalsHeader.parent());
-          }
-      }
-  },
-
-  viewPie: function (cat, site) {
-
-    var records = scoreboardGrid.store.getGroups(cat);
-    if (records.children.length > 0) {
-      pieStore.removeAll(); //delete all records in the score
-      records.children.forEach(function (record, index, array) {
-        pieStore.add({ Category: record.get('title'), Data: record.get('weight'), Color: "blue" });
-      });
-    }
-
-    var pieWin = Ext.create('MainApp.view.PieWindow', {
-      dataStore: pieStore,
-      dataField: 'Data',
-      dataName: 'Category',
-      fillColor: 'Color',
-      title: 'Weight Percentage - ' + cat,
-      buttons: [{
-        xtype: 'button',
-        text: 'OK',
-        handler: function () {
-          //TODO: execute update function here.
-
-
-          pieWin.close();
+                // move the totals to the bottom of their parent container
+                $totalsHeader.appendTo($totalsHeader.parent());
+                $totalsRow.appendTo($totalsHeader.parent());
+            }
         }
-      },
-      ]
-    }).show();
+    },
 
-  },
+    viewPie: function (cat, site) {
+
+        var records = scoreboardGrid.store.getGroups(cat);
+        if (records.children.length > 0) {
+            pieStore.removeAll(); //delete all records in the score
+            records.children.forEach(function (record, index, array) {
+                pieStore.add({ Category: record.get('title'), Data: record.get('weight'), Color: "blue" });
+            });
+        }
+
+        var pieWin = Ext.create('MainApp.view.PieWindow', {
+            dataStore: pieStore,
+            dataField: 'Data',
+            dataName: 'Category',
+            fillColor: 'Color',
+            title: 'Weight Percentage - ' + cat,
+            buttons: [{
+                xtype: 'button',
+                text: 'OK',
+                handler: function () {
+                    //TODO: execute update function here.
+
+
+                    pieWin.close();
+                }
+            },
+            ]
+        }).show();
+
+    },
 
 });
 
@@ -658,7 +659,7 @@ Ext.define('MainApp.view.ScoreboardWindow', {
   id: "ScoreboardWindowID",
   title: 'Main Scoreboard',
   width: 800,
-  height: 520,
+  height: 725,
   //cls: "propertyBoard", <-- this looked hokey, and conflicted with ext js's default styling.
   closeAction: 'hide',
   plugins: [{
@@ -724,48 +725,3 @@ Ext.define('MainApp.view.ScoreboardWindow', {
 
 
 //toolsStore.load(pvMapper.mainScoreboard.getTableData()); //Load the data to the panel
-
-function getColor(score) {
-  var min = Math.min;
-  var max = Math.max;
-  var round = Math.round;
-
-  var startColor = {
-    red: 255,
-    green: 0,
-    blue: 0
-  };
-  var midColor = {
-    red: 255,
-    green: 255,
-    blue: 100
-  };
-  var endColor = {
-    red: 173,
-    green: 255,
-    blue: 47
-  };
-
-  var scale = 0;
-  score = round(min(100, max(0, score)));
-  if (score > 50) {
-    startColor = midColor;
-    scale = score / 50 - 1;
-  } else {
-    endColor = midColor;
-    scale = score / 50;
-  }
-
-  //var r = startColor['red'] + scale * (endColor['red'] - startColor['red']);
-  //var b = startColor['blue'] + scale * (endColor['blue'] - startColor['blue']);
-  //var g = startColor['green'] + scale * (endColor['green'] - startColor['green']);
-  var r = startColor.red + scale * (endColor.red - startColor.red);
-  var b = startColor.blue + scale * (endColor.blue - startColor.blue);
-  var g = startColor.green + scale * (endColor.green - startColor.green);
-  r = round(min(255, max(0, r)));
-  b = round(min(255, max(0, b)));
-  g = round(min(255, max(0, g)));
-
-  return 'rgb(' + r + ',' + g + ',' + b + ')';
-}
-pvMapper.getColorForScore = getColor;

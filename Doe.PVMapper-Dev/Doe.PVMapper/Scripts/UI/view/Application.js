@@ -35,6 +35,19 @@ var app = Ext.application({
     autoCreateViewport: true,
 
     launch: function () {
+        // Test for IE 8
+        if (Ext.isIE6 || Ext.isIE7 || Ext.isIE8) {
+            // found IE 8 - produce fail message (it's better than failing without a message)
+            Ext.MessageBox.show({
+                title: 'Browser Support',
+                closable: false,
+                msg: "We're sorry, but the present version of PV Mapper does not support Internet Explorer 8.<br>" +
+                    "Please bear with us as we expand browser comatability after the beta test period.",
+                buttons: [],
+            });
+            return;
+        } 
+
         if (console) console.log('launching application');
 
         // set the theme for OpenLayers
