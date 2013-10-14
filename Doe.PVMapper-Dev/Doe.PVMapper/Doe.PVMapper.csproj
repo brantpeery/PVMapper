@@ -1154,6 +1154,11 @@
     <Content Include="Scripts\ViewScripts\SiteDetail.js" />
     <Content Include="Scripts\ViewScripts\testscripts.js" />
     <Content Include="Scripts\ViewScripts\ZoomAction.js" />
+    <None Include="TestPages\SummaryReport.scss" />
+    <Content Include="TestPages\SummaryReportTemplate.html" />
+    <Content Include="TestPages\SummaryReport.css" />
+    <Content Include="TestPages\SummaryReport.html" />
+    <Content Include="TestPages\site.png" />
     <Content Include="TestPages\UtilityFunctions.html" />
     <Content Include="TestPages\UtilityWeights.html" />
     <Content Include="favicon.ico" />
