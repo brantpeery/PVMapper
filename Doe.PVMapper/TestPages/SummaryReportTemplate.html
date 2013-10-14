@@ -1,0 +1,29 @@
+﻿<tpl for="scoreboard">
+<div id="SiteSummaryReport">
+    <tpl for="sites">
+    <div class="siteRow">
+        <div class="siteImage rowPart">
+            <img src="{siteImgURL}" />
+        </div>
+        <div class="siteInfo rowPart">
+            <div class="topTools">
+                <h3>{name}</h3>
+                <tpl for="topScores">
+                <p><span class="icon">{trend}</span><span class="toolName">{name}</span><span class="toolScore">{divergence}%</span></p>
+                </tpl>
+                <p class="topToolInfo infoColor">Divergence from Mean</p>
+            </div>
+        </div>
+        <div class="rowPart">
+            <div class="siteScore">
+                <span class="siteBigScore">{siteScore}</span>
+                <span class="siteScoreUnit">%</span>
+                <span class="siteDivergenceArrow">{siteTrend};</span>
+                <span class="siteDivergence">{siteDivergence}%</span>
+                <p class="totalInfo infoColor">AVERAGE</p>
+            </div>
+        </div>
+    </div>
+    </tpl>
+</div>
+</tpl>
