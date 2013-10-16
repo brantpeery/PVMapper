@@ -195,7 +195,6 @@ var BYUModules;
 
     function updateScore(score, wayQueryKey, objectType) {
         var maxSearchDistanceInMeters = configProperties.maxSearchDistanceInKM * 1000;
-        var maxSearchDistanceInMeters = 30 * 1000;
         var SubStationQueryUrl = "http://overpass.osm.rambler.ru/cgi/interpreter";
         var bounds = new OpenLayers.Bounds(
             score.site.geometry.bounds.left - maxSearchDistanceInMeters - 1000,
