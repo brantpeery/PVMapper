@@ -25,4 +25,24 @@
   });
 
   pvMapper.mapToolbar.add(distanceBtn);
+
+
+  var customTool = new Ext.Button({
+    text: 'Custom Tool',
+    enabledToggle: false,
+    handler: function () {
+      //var localInstance = new INLModules.LocalLayerModule();
+      var fileDialogBox = document.getElementById('fileDialogBox');
+      //fileDialogBox.addEventListener('change', localInstance.readTextFile, false);
+      fileDialogBox.addEventListener('change', function (evt) {
+        var localLayer = new INLModules.LocalLayerModule();
+        localLayer.readTextFile(evt.target.files[0]);
+      }, false);
+      fileDialogBox.click();
+      //$('input[id="fileDialogBox"]').click();
+    }
+  });
+  
+  pvMapper.mapToolbar.add(customTool);
+
 });

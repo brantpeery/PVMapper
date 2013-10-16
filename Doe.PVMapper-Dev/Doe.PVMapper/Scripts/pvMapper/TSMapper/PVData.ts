@@ -3,8 +3,8 @@
 
 
 
-if (typeof (Ext) == 'undefined')
-  var Ext = new Ext();
+//if (typeof (Ext) == 'undefined')
+//  var Ext = new Ext();
 
 module pvMapper {
 
@@ -27,7 +27,7 @@ module pvMapper {
     public select(tableName: string, fields: any[], predicate: string[]): any { }
 
     public refreshTree() : any {
-      var ts: Ext_data_TreeStore = pvMapper.treeStore;
+      var ts: Ext.data.ITreeStore = pvMapper.treeStore;
       ts.root.removeAll(); //Remove all records (children)
       //TreeStore start with ModuleStore.
       var aRoot = ts.getRootNode();

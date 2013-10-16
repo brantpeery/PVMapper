@@ -1,8 +1,5 @@
 /// <reference path="UtilityFunctions.ts" />
 /// <reference path="ScoreUtilityWindows.ts" />
-//declare var Ext;
-//declare var JXG;
-//declare var Extras;
 var pvMapper;
 (function (pvMapper) {
     var MinMaxUtilityArgs = (function () {

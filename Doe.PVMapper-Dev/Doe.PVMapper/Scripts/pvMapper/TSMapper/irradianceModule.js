@@ -1,4 +1,4 @@
-/// <reference path="pvMapper.ts" />
+﻿/// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Tools.ts" />
@@ -203,6 +203,7 @@ var INLModules;
                         // success
                         score.popupMessage = result.toFixed(2) + " kWh/m2/day" + "\n(" + megaWatts.toFixed(3) + " MW)";
                         score.updateValue(result);
+                        //score.updateValue(megaWatts); //TODO: duh...? want give two scores...
                     } else {
                         // error
                         score.popupMessage = "No data for this site";
