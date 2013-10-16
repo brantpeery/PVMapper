@@ -187,6 +187,10 @@
       <DependentUpon>TotalsModule.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvExtensions\TotalsModule.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\AgricultureSocialModule.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\AgricultureSocialModule.js">
+      <DependentUpon>AgricultureSocialModule.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\CombinedNearModule.js" />
     <Content Include="Scripts\pvMapper\TSMapper\DataManager.js">
       <DependentUpon>DataManager.ts</DependentUpon>

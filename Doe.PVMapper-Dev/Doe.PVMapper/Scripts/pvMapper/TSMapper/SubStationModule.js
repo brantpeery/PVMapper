@@ -255,7 +255,8 @@ var BYUModules;
                             }
 
                             //var distance = score.site.geometry.distanceTo(parser.parseGeometry(response.features[i].geometry));
-                            var distance = score.site.geometry.distanceTo(feature.geometry);
+                            var distance = score.site.geometry.distanceTo(feature.geometry,
+                                (objectType === 'transmission line') ? {} : { edge: false }); //HACK: this allows distances of 0 for sites entirely contained within a substation ...!
                             if (distance < minDistance) {
                                 minDistance = distance;
                                 closestFeature = feature;
