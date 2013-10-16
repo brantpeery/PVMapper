@@ -64,6 +64,9 @@
       <DependentUpon>OpenLayers-tests.ts</DependentUpon>
     </Content>
     <CodeAnalysisDictionary Include="Openlayers\OpenLayers.d.ts" />
+    <Content Include="Openlayers\OpenLayers-tests.min.js">
+      <DependentUpon>OpenLayers-tests.ts</DependentUpon>
+    </Content>
     <Content Include="Openlayers\Readme.txt" />
     <TypeScriptCompile Include="Openlayers\OpenLayers-tests.ts" />
   </ItemGroup>

@@ -1,6 +1,7 @@
-if (typeof (Ext) == 'undefined')
-    var Ext = new Ext();
-
+﻿/// <reference path="../../ExtJS.d.ts" />
+/// <reference path="../../jquery.d.ts" />
+//if (typeof (Ext) == 'undefined')
+//  var Ext = new Ext();
 var pvMapper;
 (function (pvMapper) {
     var PVData = (function () {
@@ -57,6 +58,7 @@ var pvMapper;
                         parentNode: moduleNode
                     });
                     moduleNode.appendChild(toolNode);
+                    // scoreStore is not required for the tree menu.
                 });
             });
             return projectNode;

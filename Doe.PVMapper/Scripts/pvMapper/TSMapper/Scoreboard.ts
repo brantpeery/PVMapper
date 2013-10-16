@@ -31,7 +31,7 @@ module pvMapper {
         private self: ScoreBoard;
         public scoreLines: ScoreLine[] = new Array<ScoreLine>();//ScoreLine[]();  <<-- TS0.9.0 doesn't like this.
         public totalLines: TotalLine[] = new Array<TotalLine>();
-
+        public isScoreLoaded: boolean = false;
         //Events -----------
         public changedEvent: pvMapper.Event = new pvMapper.Event();
         public scoresInvalidatedEvent: pvMapper.Event = new pvMapper.Event();
@@ -95,8 +95,7 @@ module pvMapper {
 
     }
 
-    declare var Ext: any; //So we can use it
-
+    //declare var Ext: any; //So we can use it
     export var floatingScoreboard: any; //The EXTjs window
     export var mainScoreboard = new ScoreBoard(); //API Element
 
@@ -115,6 +114,7 @@ module pvMapper {
                 var mydata = mainScoreboard.getTableData();
                 if (!pvMapper.floatingScoreboard) {
 
+
                     pvMapper.floatingScoreboard = Ext.create('MainApp.view.ScoreboardWindow', {
                         data: mydata
                     });
@@ -131,14 +131,21 @@ module pvMapper {
                 }
             }, 250);
             // queue is set to wait 1/10th of a second before it actually refreshes the scoreboard.
-        //} else {
-        //    if (console) { console.log("Scoreboard update event safely (and efficiently) ignored."); }
+        } else {
+            if (console) { console.log("Scoreboard update event safely (and efficiently) ignored."); }
+            
+            if ((ClientDB.db != null) && (!mainScoreboard.isScoreLoaded)) {
+                mainScoreboard.scoreLines.forEach(function (sc) {
+                    sc.loadScore();
+                });
+                mainScoreboard.isScoreLoaded = true;
+            }
         }
     });
 
     //Create the scoreboard onscreen
     pvMapper.onReady(function () {
-        //mainScoreboard.changedEvent.fire(mainScoreboard, {});
+
     });
 
 }

@@ -50,6 +50,9 @@ var app = Ext.application({
 
         if (console) console.log('launching application');
 
+    //connect to local indexedDB database.
+    pvMapper.ClientDB.initClientDB();
+
         // set the theme for OpenLayers
         OpenLayers.ImgPath = "/Content/OpenLayers/default/img/";
 
@@ -116,7 +119,7 @@ var app = Ext.application({
                                     !record.raw.isReferenceLayer;
                             }
                         }
-                    } ]
+          }]
                 }, {
                     text: "Reference",
                     expanded: true,
@@ -176,7 +179,7 @@ var app = Ext.application({
         var mapPanel = Ext.create('GeoExt.panel.Map', {
             id: 'mapPanel',
             title: null,
-            header:false,
+      header: false,
             map: map,
             extent: usBounds, // <-- this doesn't actually change the visible extent of our map at all
             stateful: true,

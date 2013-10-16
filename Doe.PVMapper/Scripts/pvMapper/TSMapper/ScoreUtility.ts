@@ -1,11 +1,6 @@
 /// <reference path="UtilityFunctions.ts" />
 /// <reference path="ScoreUtilityWindows.ts" />
 
-//declare var Ext;
-//declare var JXG;
-//declare var Extras;
-
-
 module pvMapper {
 
     export interface ICustomFunctionCallback {
@@ -34,7 +29,7 @@ module pvMapper {
     //}
 
     export interface IWindowOkCallback {
-        (panel: any, args: any);
+        (panel: any, args: any);                                             
     }
     //export declare var IWindowOkCallback: {
     //    new (panel: any, args: any);
@@ -180,7 +175,7 @@ module pvMapper {
         public fCache: any = {};
 
         //An options object might be better here. Then a call to a static function with options would be possible 
-        public run(x) {
+        public run(x: number) {
             if (isNaN(x)) return Number.NaN;
 
             //Run the function that the user needs run
