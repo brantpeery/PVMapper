@@ -209,7 +209,7 @@ var INLModules;
                         //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept this proximity. (site " +
                         //    score.site.name + " is " + minDistanceStr + " mi from a " +
                         //    closestFeature.attributes['WETLAND_TYPE'] + ")";
-                        score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site built " + distanceOkStr + " mi or more from a agriculture. (The nearest agriculture is " + minDistanceStr + " mi away.)";
+                        score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site built " + distanceOkStr + " mi or more from agriculture. (The nearest agriculture is " + minDistanceStr + " mi away.)";
 
                         score.updateValue(percentOk);
                     } else if (searchDistanceInMi < 5000) {
@@ -220,7 +220,7 @@ var INLModules;
                         //score.popupMessage = "over 5000 mi to any agriculture; 100% of respondents reported they would accept this distance.";
                         //score.popupMessage = "100% of respondents reported they would accept this proximity. (site " +
                         //    score.site.name + " is over 5000 mi from any agriculture)";
-                        score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from a agriculture." + " (There was no agriculture found within 5000 mi.)";
+                        score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from agriculture." + " (There was no agriculture found within 5000 mi.)";
                         score.updateValue(100);
                     }
                 } else {

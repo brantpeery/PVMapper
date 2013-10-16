@@ -276,7 +276,7 @@ module INLModules {
                         //    closestFeature.attributes['WETLAND_TYPE'] + ")";
 
                         score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site built " +
-                            distanceOkStr + " mi or more from a agriculture. (The nearest agriculture is " +
+                            distanceOkStr + " mi or more from agriculture. (The nearest agriculture is " +
                             minDistanceStr + " mi away.)";
 
                         score.updateValue(percentOk);
@@ -289,7 +289,7 @@ module INLModules {
                         //score.popupMessage = "over 5000 mi to any agriculture; 100% of respondents reported they would accept this distance.";
                         //score.popupMessage = "100% of respondents reported they would accept this proximity. (site " +
                         //    score.site.name + " is over 5000 mi from any agriculture)";
-                        score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from a agriculture." +
+                        score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from agriculture." +
                         " (There was no agriculture found within 5000 mi.)";
                         score.updateValue(100);
                     }
