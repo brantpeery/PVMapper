@@ -16,9 +16,12 @@ declare module OpenLayers {
 
     var Request: Request;
 
-    export class Attributes {
+    export class Attributes {                                                                         
         name: string;
         description: string;
+        overallScore: number;
+        fillColor: string;
+
     }
 
 
@@ -26,7 +29,7 @@ declare module OpenLayers {
       getParameterString(any): string;
     }
 
-    export class SiteFeature {
+    interface SiteFeature extends FVector {
         fid: string;
         geometry: Polygon;
         attributes: Attributes;
@@ -1422,6 +1425,9 @@ declare module OpenLayers {
             new (name: string, url: string, options: any, params?: any): any;
             prototype: ArcGIS93Rest;
         }
+        XYZ: {
+            new (name: string, url: string, params: any): any;
+        }
         //ArcGIS93Rest(name: string, url: string[], params: any):any;
         //ArcGIS93Rest(name: string, url: string, options: any, params?: any):any;
         //ArcGIS93Rest(name: string, url: string[], params: WMSParams, layerParams: WMSOptions ): any;
@@ -1473,7 +1479,7 @@ declare module OpenLayers {
         new (options?: any): Strategy;
         (options?: any): Strategy;
         prototype: Strategy;
-        Fixed(): void;
+        Fixed(): any;
     }
   interface Format {
         options: any;
@@ -1779,8 +1785,6 @@ declare module OpenLayers {
         onFeatureInsert: (feature: FVector) => any;
         preFeatureInsert: (feature: FVector) => any;
         getDataExtent(): Bounds;
-
-
     }
 
     var Vector: {
@@ -2004,6 +2008,8 @@ declare module OpenLayers {
 
         //Constants
         style: Style;
+
+        layer: Vector;
     }
 
     var Feature: {
@@ -2019,9 +2025,6 @@ declare module OpenLayers {
             prototype: FVector;
         };
     }
-
-
-
 }
 
 
