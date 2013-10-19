@@ -8,116 +8,61 @@
 var INLModules;
 (function (INLModules) {
     var surveyResults = [
-        { mi: 0, percentOk: 4.166666667 },
-        { mi: 0.003787879, percentOk: 4.375 },
-        { mi: 0.018939394, percentOk: 5 },
-        { mi: 0.028409091, percentOk: 5.208333333 },
-        { mi: 0.037878788, percentOk: 5.416666667 },
-        { mi: 0.05, percentOk: 5.625 },
-        { mi: 0.056818182, percentOk: 6.041666667 },
-        { mi: 0.075757576, percentOk: 6.25 },
-        { mi: 0.09469697, percentOk: 6.666666667 },
-        { mi: 0.170454546, percentOk: 6.875 },
-        { mi: 0.189393939, percentOk: 7.708333333 },
-        { mi: 0.227272727, percentOk: 7.916666667 },
-        { mi: 0.25, percentOk: 9.166666667 },
-        { mi: 0.5, percentOk: 10.83333333 },
-        { mi: 0.568181818, percentOk: 11.25 },
-        { mi: 1, percentOk: 22.91666667 },
-        { mi: 2, percentOk: 31.04166667 },
-        { mi: 3, percentOk: 36.25 },
-        { mi: 4, percentOk: 37.70833333 },
-        { mi: 4.349598346, percentOk: 37.91666667 },
-        { mi: 5, percentOk: 52.08333333 },
-        { mi: 6, percentOk: 52.70833333 },
-        { mi: 7, percentOk: 53.125 },
-        { mi: 8, percentOk: 55.625 },
-        { mi: 9.5, percentOk: 55.83333333 },
-        { mi: 10, percentOk: 68.33333333 },
-        { mi: 12, percentOk: 68.54166667 },
-        { mi: 15, percentOk: 71.45833333 },
-        { mi: 20, percentOk: 77.91666667 },
-        { mi: 21, percentOk: 78.125 },
-        { mi: 25, percentOk: 82.08333333 },
-        { mi: 30, percentOk: 85 },
-        { mi: 35, percentOk: 85.41666667 },
-        { mi: 40, percentOk: 86.875 },
-        { mi: 45, percentOk: 87.29166667 },
-        { mi: 50, percentOk: 92.5 },
-        { mi: 60, percentOk: 92.70833333 },
-        { mi: 70, percentOk: 92.91666667 },
-        { mi: 75, percentOk: 93.33333333 },
-        { mi: 90, percentOk: 93.54166667 },
-        { mi: 100, percentOk: 97.70833333 },
-        { mi: 120, percentOk: 97.91666667 },
-        { mi: 150, percentOk: 98.33333333 },
-        { mi: 200, percentOk: 98.75 },
-        { mi: 500, percentOk: 99.16666667 },
-        { mi: 1000, percentOk: 99.79166667 },
+        { mi: 0, percentOk: 11.51385928 },
+        { mi: 0.000189394, percentOk: 11.72707889 },
+        { mi: 0.000378788, percentOk: 11.94029851 },
+        { mi: 0.001136364, percentOk: 12.15351812 },
+        { mi: 0.001893939, percentOk: 12.57995736 },
+        { mi: 0.003787879, percentOk: 12.79317697 },
+        { mi: 0.005681818, percentOk: 13.43283582 },
+        { mi: 0.009469697, percentOk: 13.85927505 },
+        { mi: 0.018939394, percentOk: 15.99147122 },
+        { mi: 0.028409091, percentOk: 16.20469083 },
+        { mi: 0.037878788, percentOk: 16.63113006 },
+        { mi: 0.056818182, percentOk: 17.27078891 },
+        { mi: 0.09469697, percentOk: 18.12366738 },
+        { mi: 0.142045455, percentOk: 18.33688699 },
+        { mi: 0.170454546, percentOk: 18.55010661 },
+        { mi: 0.189393939, percentOk: 19.18976546 },
+        { mi: 0.227272727, percentOk: 19.61620469 },
+        { mi: 0.25, percentOk: 21.53518124 },
+        { mi: 0.284090909, percentOk: 21.74840085 },
+        { mi: 0.5, percentOk: 25.58635394 },
+        { mi: 0.568181818, percentOk: 25.79957356 },
+        { mi: 1, percentOk: 42.85714286 },
+        { mi: 2, percentOk: 47.76119403 },
+        { mi: 3, percentOk: 50.74626866 },
+        { mi: 4, percentOk: 50.95948827 },
+        { mi: 5, percentOk: 66.73773987 },
+        { mi: 6, percentOk: 67.1641791 },
+        { mi: 7, percentOk: 67.59061834 },
+        { mi: 8, percentOk: 70.14925373 },
+        { mi: 10, percentOk: 78.03837953 },
+        { mi: 12, percentOk: 78.25159915 },
+        { mi: 14, percentOk: 78.46481876 },
+        { mi: 14.2, percentOk: 78.67803838 },
+        { mi: 15, percentOk: 81.23667377 },
+        { mi: 20, percentOk: 86.35394456 },
+        { mi: 25, percentOk: 88.91257996 },
+        { mi: 30, percentOk: 92.53731343 },
+        { mi: 35, percentOk: 92.75053305 },
+        { mi: 40, percentOk: 93.81663113 },
+        { mi: 50, percentOk: 97.01492537 },
+        { mi: 100, percentOk: 99.14712154 },
+        { mi: 129, percentOk: 99.36034115 },
+        { mi: 200, percentOk: 99.78678038 },
         { mi: 5000, percentOk: 100 }
     ];
 
     //var initialSearchDistanceInMi = 5;
     //var maxSearchDistanceInMi = 5000;
-    var configProperties = {
-        mininumAcres: 10
-    };
-
-    var myToolLine;
-
-    var propsWindow;
-
-    Ext.onReady(function () {
-        var propsGrid = new Ext.grid.PropertyGrid({
-            minWidth: 300,
-            source: configProperties,
-            //customRenderers: {
-            //    maxSearchDistanceInKM: function (v) { return v + " km"; },
-            //    minimumVoltage: function (v) { return v + " kV"; },
-            //    maximumVoltage: function (v) { return v + " kV"; },
-            //},
-            propertyNames: {
-                mininumAcres: "minimum acres"
-            }
-        });
-
-        // display a cute little properties window describing our doodle here.
-        //Note: this works only as well as our windowing scheme, which is to say poorly
-        //var propsWindow = Ext.create('MainApp.view.Window', {
-        propsWindow = Ext.create('Ext.window.Window', {
-            title: "Configure Wetland Proximity Tool",
-            closeAction: "hide",
-            layout: "fit",
-            items: [
-                propsGrid
-            ],
-            listeners: {
-                beforehide: function () {
-                    for (var i = myToolLine.scores.length - 1; i >= 0; i--) {
-                        updateScore(myToolLine.scores[i], 0.5);
-                    }
-                }
-            },
-            buttons: [
-                {
-                    xtype: 'button',
-                    text: 'OK',
-                    handler: function () {
-                        propsWindow.hide();
-                    }
-                }
-            ],
-            constrain: true
-        });
-    });
-
-    // cache for the last distance found to a wetland, used so that our search isn't criminally inefficient
+    // cache for the last distance found to a agriculture, used so that our search isn't criminally inefficient
     var lastDistanceCache = {};
 
-    var WetlandsSocialModule = (function () {
-        function WetlandsSocialModule() {
+    var AgricultureSocialModule = (function () {
+        function AgricultureSocialModule() {
             var myModule = new pvMapper.Module({
-                id: "WetlandsSocialModule",
+                id: "AgricultureSocialModule",
                 author: "Scott Brown, INL",
                 version: "0.1.ts",
                 iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/home_icon.jpg",
@@ -141,8 +86,8 @@ var INLModules;
                         //    myToolLine = this; // fetch tool line, which was passed as 'this' parameter
                         //    propsWindow.show();
                         //},
-                        title: "Wetland Proximity",
-                        description: "Percentage of survey respondents who reported this distance from wetlands as acceptable",
+                        title: "Agriculture Proximity",
+                        description: "Percentage of survey respondents who reported this distance from agriculture as acceptable",
                         category: "Social Acceptance",
                         //onScoreAdded: function (e, score: pvMapper.Score) {
                         //    scores.push(score);
@@ -171,54 +116,26 @@ var INLModules;
                 infoTools: null
             });
         }
-        return WetlandsSocialModule;
+        return AgricultureSocialModule;
     })();
 
-    var modinstance = new WetlandsSocialModule();
+    var modinstance = new AgricultureSocialModule();
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
-    var wmsServerUrl = "http://107.20.228.18/ArcGIS/services/FWS_Wetlands_WMS/mapserver/wmsserver?";
-    var esriExportUrl = "http://107.20.228.18/ArcGIS/rest/services/Wetlands/MapServer/export";
-    var esriQueryUrl = "http://107.20.228.18/ArcGIS/rest/services/Wetlands/MapServer/0/query";
+    var wmsServerUrl = "http://129.174.131.7/cgi/wms_cdlall.cgi?";
+    var esriExportUrl = "http://gis-ext.inl.gov/ArcGIS/rest/services/Ag_Lands/MapServer/export";
+    var esriQueryUrl = "http://gis-ext.inl.gov/ArcGIS/rest/services/Ag_Lands/MapServer/0/query";
 
     var mapLayer;
 
     function addAllMaps() {
-        // add as ESRI REST layer
-        //mapLayer = new OpenLayers.Layer.ArcGIS93Rest(
-        //    "Wetlands",
-        //    esriExportUrl,
-        //    {
-        //        layers: "show:0", //"show:2",
-        //        format: "gif",
-        //        srs: "3857", //"102100",
-        //        transparent: "true",
-        //    }//,{ isBaseLayer: false }
-        //    );
-        //mapLayer.setOpacity(0.3);
-        //mapLayer.epsgOverride = "3857"; //"EPSG:102100";
-        //mapLayer.setVisibility(false);
-        //
-        //pvMapper.map.addLayer(mapLayer);
-        // add as WMS layer
-        mapLayer = new OpenLayers.Layer.WMS("Wetlands", wmsServerUrl, {
-            layers: "17",
-            transparent: "true",
-            format: "image/png",
-            exceptions: "application/vnd.ogc.se_inimage",
-            //maxResolution: 156543.0339,
-            srs: "EPSG:3857"
-        }, { isBaseLayer: false });
-
-        mapLayer.setOpacity(0.3);
-        mapLayer.setVisibility(false);
-        mapLayer.epsgOverride = "EPSG:3857";
-
-        pvMapper.map.addLayer(mapLayer);
     }
 
     function removeAllMaps() {
-        pvMapper.map.removeLayer(mapLayer, false);
+        if (mapLayer !== null) {
+            pvMapper.map.removeLayer(mapLayer, false);
+            mapLayer = null;
+        }
     }
 
     function updateScore(score, searchDistanceInMi) {
@@ -230,7 +147,7 @@ var INLModules;
             url: esriQueryUrl,
             params: {
                 f: "json",
-                where: "ACRES >= " + configProperties.mininumAcres,
+                //where: "ACRES >= " + configProperties.mininumAcres,
                 //TODO: should request specific out fields, instead of '*' here.
                 outFields: "*",
                 geometryType: "esriGeometryEnvelope",
@@ -288,22 +205,22 @@ var INLModules;
                         //    closestFeature.attributes['WETLAND_TYPE'];
                         //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site " +
                         //    minDistanceStr + " mi from a " +
-                        //    closestFeature.attributes['WETLAND_TYPE'] + "wetland";
+                        //    closestFeature.attributes['WETLAND_TYPE'] + "agriculture";
                         //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept this proximity. (site " +
                         //    score.site.name + " is " + minDistanceStr + " mi from a " +
                         //    closestFeature.attributes['WETLAND_TYPE'] + ")";
-                        score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site built " + distanceOkStr + " mi or more from a wetland. (The nearest wetland is a " + closestFeature.attributes['WETLAND_TYPE'] + " " + minDistanceStr + " mi away.)";
+                        score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site built " + distanceOkStr + " mi or more from agriculture. (The nearest agriculture is " + minDistanceStr + " mi away.)";
 
                         score.updateValue(percentOk);
                     } else if (searchDistanceInMi < 5000) {
-                        // call recursively to find the nearest wetland...
+                        // call recursively to find the nearest agriculture...
                         updateScore(score, searchDistanceInMi * 10);
                     } else {
-                        // no wetland found in max search distance, so 100% of respondants are Ok with this.
-                        //score.popupMessage = "over 5000 mi to any wetland; 100% of respondents reported they would accept this distance.";
+                        // no agriculture found in max search distance, so 100% of respondants are Ok with this.
+                        //score.popupMessage = "over 5000 mi to any agriculture; 100% of respondents reported they would accept this distance.";
                         //score.popupMessage = "100% of respondents reported they would accept this proximity. (site " +
-                        //    score.site.name + " is over 5000 mi from any wetland)";
-                        score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from a wetland." + " (There was no wetland found within 5000 mi.)";
+                        //    score.site.name + " is over 5000 mi from any agriculture)";
+                        score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from agriculture." + " (There was no agriculture found within 5000 mi.)";
                         score.updateValue(100);
                     }
                 } else {

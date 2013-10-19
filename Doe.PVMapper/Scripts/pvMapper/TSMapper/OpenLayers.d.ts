@@ -53,7 +53,7 @@ declare module OpenLayers {
         rotate(angle: number, origin: Point);
         resize(scale: number, origin: Point, ratio: number): Geometry;
         distanceTo(geometry: Geometry): number;
-        distanceTo(geometry: Geometry, options?: Boolean): Distance;
+        distanceTo(geometry: Geometry, options?: Boolean): number;
         equals(geometry: Geometry): Boolean;
         transform(source: Projection, dest: Projection): Geometry;
         intersects(geometry: Geometry): Boolean;
@@ -68,7 +68,7 @@ declare module OpenLayers {
         //containsPoint(point: Point): number;   //this break in Typescript 0.9.1 ==> "Overloads cannot differ only by return type".
         intersects(geometry: Geometry): Boolean;
         distanceTo(geometry: Geometry): number;
-        distanceTo(geometry: Geometry, options?: any): Distance;
+        distanceTo(geometry: Geometry, options?: any): number;
         createRegularPolygon(origin: Point, radius: number, sides: number, rotation: number);
     }
 
@@ -232,7 +232,7 @@ declare module OpenLayers {
         getBounds(): Bounds;
         calculateBounds();
         distanceTo(geometry: Geometry): number;
-        distanceTo(geometry: Geometry, options?: any): Distance;
+        distanceTo(geometry: Geometry, options?: any): number;
         getVertices(nodes: Boolean): Geometry[];
         atPoint(lonlat: LonLat, toleranceLon: number, toleranceLat: number): Boolean;
         getLength(): number;
