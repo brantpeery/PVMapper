@@ -1,97 +1,301 @@
 ﻿@{
-    ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout2.cshtml";
+    ViewBag.Title = "PVMapper";
+    Layout = "~/Views/Shared/_BasicLayout.cshtml";
 }
-<link href="~/Content/themes/OpenLayers/default/style.css" rel="stylesheet" type="text/css" />
-<link href="~/Content/themes/OpenLayers/google.css" rel="stylesheet" type="text/css" />
-<script src="http://maps.google.com/maps/api/js?v=3&sensor=false"></script>
-<script src="~/Scripts/Tools/debug_log.js" type="text/javascript"></script>
-<script src="~/Scripts/jQueryExtentions/popout_tab.js" type="text/javascript"></script>
-<script src="~/Scripts/jQueryExtentions/minimize_dialog.js" type="text/javascript"></script>
-<script src="~/Scripts/ViewScripts/SiteDetail.js" type="text/javascript"></script>
+
+@section header{
+    <link rel="stylesheet" href="/lpresources/css/style2.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/lpresources/layerslider/css/layerslider.css" type="text/css">
+
+    <script src="/lpresources/js/respond.min.js" type="text/javascript"></script>
+    <script src="/lpresources/js/jquery.easing.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        function Users_Registration() {
+            var reg = /^([A-Za-z0-9_\-\.])+\@@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+            var fullnames = $("#fullnames").val();
+            var emails = $("#emails").val();
+
+            if (fullnames == "") {
+                $("#signup_status").html('<div class="info">Please enter your fullname in the required field to proceed.</div>');
+                $("#fullnames").focus();
+            }
+            else if (emails == "") {
+                $("#signup_status").html('<div class="info">Please enter your email address to proceed.</div>');
+                $("#emails").focus();
+            }
+            else if (reg.test(emails) == false) {
+                $("#signup_status").html('<div class="info">Please enter a valid email address to proceed.</div>');
+                $("#emails").focus();
+            }
+
+            else {
+                var dataString = 'fullnames=' + fullnames + '&emails=' + emails + '&page=signup';
+                $.ajax({
+                    type: "POST",
+                    url: "https://docs.google.com/forms/d/1lmxGF3vYJsIRHfaQsAiejsPZxpyutD2oT6nl97GDqGQ/formResponse",
+                    data: { "entry.539070251": fullnames, "entry.1867509773": emails, draftResponse: [], pageHistory: 0 },
+                    cache: false,
+                    dataType: "xml",
+                    beforeSend: function () {
+                        $("#signup_status").html('<br clear="all"><div style="padding-left:115px;"><font style="font-family:Verdana, Geneva, sans-serif; font-size:12px; color:black;">Please wait</font> <img src="/lpresources/images/loadings.gif" alt="Loading...." align="absmiddle" title="Loading...."/></div><br clear="all">');
+                    },
+                    statusCode: {
+                        0: function () {
+                            var response = "asdasdASD";
+                            $("#signup_status").hide().fadeIn('slow').html("Thank you for registering for updates.");
+                            $("#fullnames").val("");
+                            $("#emails").val("");
+                        }
+                    }
+
+                });
+            }
+        }
+
+    </script>
+}
+
+
+<!--Toprow Begin-->
+<div id="toprow">
+    <div class="center">
+        <div class="box" style="width: 45%">
+            <div style="-webkit-border-radius: 35px; -moz-border-radius: 35px; border-radius: 35px; border: 3px solid #DBDBDB; background: rgba(255,255,255,0.7); -webkit-box-shadow: #B3B3B3 3px 3px 3px; -moz-box-shadow: #B3B3B3 3px 3px 3px; box-shadow: #B3B3B3 3px 3px 3px;">
+                <div style="margin-left: 30%;">
+                    <h1 style="text-shadow: 1px 1px 0 rgba(255,255,0,0.2); font-weight: normal; color: #1BB9D1; background-color: #FAEC2A; border: 1px outset #b5a759; letter-spacing: 0pt; word-spacing: 2pt; font-size: 33px; text-align: center; font-family: times new roman, times, serif; line-height: 1; margin: 9px; padding: 4px; width: 148px; height: 37px;">PVMapper</h1>
+                </div>
+                <div style="text-align: center;">
+                    PVMapper is a web-based Geographic Information System (GIS) project planning application designed to help solar energy developers better locate and plan large-scale solar utility projects.
+                        <br />
+                    <br />
+
+                    <a class="menuButton" style="font-size: 16px; font-weight: bold; font-style: normal; height: 60px; line-height: 60px; width: 180px;"
+                        href="https://pvmapper.apphb.com" target="_blank"><span>Launch PVMapper</span></a>
+                </div>
+                <div class="tab">
+                    <ul class="tabs">
+                        <li><a href="#"><span>Search for Sites</span></a></li>
+                        <li><a href="#"><span>Site Comparision</span></a></li>
+                        <li><a href="#"><span>Detailed Reports</span></a></li>
+
+                    </ul>
+                    <div class="tab_content">
+                        <div class="tabs_tab">
+                            <br />
+                            <figure class="fr">
+                                <img src="/lpresources/images/search.jpg" width="130" height="115" alt="" />
+                            </figure>
+                            <h4>Search for Sites</h4>
+                            <p>Large-scale maps of US for identifying hot spots based on various factors such as solar insolation, slope, land usage types, nearby geographical features. </p>
+
+                        </div>
+                        <div class="tabs_tab" style="display: none;">
+                            <figure class="alignleft">
+                                <img src="/lpresources/images/compare.jpg" width="115" height="108" alt="" />
+                            </figure>
+                            <h4>Site Comparision</h4>
+                            <p>Side-by-side comparison of costs and benefits for selected sites, where various cost items with user defined weights are used to calculate overall site scores.</p>
+                        </div>
+                        <div class="tabs_tab" style="display: none;">
+                            <figure class="alignleft">
+                                <img src="/lpresources/images/performanalyses.gif" width="115" height="106" alt="" />
+                            </figure>
+                            <h4>Detailed Reports</h4>
+                            <p>Data from multiple sources is used to generate detailed reports. You can select from a list of GIS Layers such as Land Use, Geography, Subsurface, etc.</p>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="box" style="width: 2%">
+        </div>
+        <div class="box last" style="width: 45%;">
+            <div style="-webkit-border-radius: 35px; -moz-border-radius: 35px; border-radius: 35px; border: 3px solid #DBDBDB; background: rgba(255,255,255,0.7); -webkit-box-shadow: #B3B3B3 3px 3px 3px; -moz-box-shadow: #B3B3B3 3px 3px 3px; box-shadow: #B3B3B3 3px 3px 3px;">
+                <div style="margin-left: 30%;">
+                    <h1 style="text-shadow: 1px 1px 0 rgba(255,255,0,0.2); font-weight: normal; color: #1BB9D1; background-color: #FAEC2A; border: 1px outset #b5a759; letter-spacing: 0pt; word-spacing: 2pt; font-size: 33px; text-align: center; font-family: times new roman, times, serif; line-height: 1; margin: 9px; padding: 4px; width: 148px; height: 37px;">PVDesktop</h1>
+                </div>
+                <div style="text-align: center;">
+                    PVDesktop is the desktop extension of the PVMapper online application. It is a tool for designing and analyzing a specific site and evaluating the amount of power that can be produced from that site.
+                        <br />
+                    <br />
+
+                    <a class="menuButton" style="font-size: 16px; font-weight: bold; font-style: normal; height: 60px; line-height: 60px; width: 180px;"
+                        href="http://pvdesktop.codeplex.com/releases/view/113497" target="_blank"><span>Get PvDesktop</span></a>
+                </div>
+                <div class="tab">
+                    <ul class="tabs">
+                        <li><a href="#"><span>Accurate Mapping</span></a></li>
+                        <li><a href="#"><span>GIS Data</span></a></li>
+
+                        <li><a href="#"><span>Design Panels</span></a></li>
+
+                    </ul>
+                    <div class="tab_content">
+                        <div class="tabs_tab" style="display: none;">
+                            <figure class="alignleft">
+                                <h4>Map objects in 3-D</h4>
+                                <img src="/lpresources/images/shadow.png" width="320" height="200" alt="" />
+                            </figure>
+
+                            <p style="width: 100%;">The program allows you to map nearby structures and trees so that it may be able to calculate the impact of the shadows resulting from these objects. This gives a higher level of accuracy to the reports.</p>
+                        </div>
+                        <div class="tabs_tab">
+                            <br />
+
+                            <h4>Import GIS data easily</h4>
+                            <p style="width: 100%;">Professional users can easily import external GIS data into the application for more accurate reports.</p>
+
+                        </div>
+
+                        <div class="tabs_tab" style="display: none;">
+                            <figure class="alignleft">
+                                <img src="/lpresources/images/panel.png" width="320" height="200" alt="" />
+                            </figure>
+                            <h4>Outputs Panel Arrangement</h4>
+                            <p style="width: 100%;">The software divivdes the selected site according to the input specifications and generates a panel arrangement, which can be modified in terms of their directions and azimuthal angle to obtain the optimum arrangement for fixed panels </p>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Toprow END-->
+<!--MiddleRow Begin-->
+<div id="midrow">
+</div>
+<!--MiddleRow END-->
+<!--BottomRow Begin-->
+<div id="bottomrow">
+    <div class="box" style="width: 45%">
+        <div class="textbox">
+            <h1>Register for Updates</h1>
+
+            <div class="vpb_main_wrapper">
+                <br clear="all">
+
+                <div style="width: 115px; padding-top: 10px; float: left;" align="left">Your Fullname:</div>
+                <div style="width: 300px; float: left;" align="left">
+                    <input type="text" id="fullnames" name="fullnames" value="" class="vpb_textAreaBoxInputs">
+                </div>
+                <br clear="all">
+                <br clear="all">
+
+                <div style="width: 115px; padding-top: 10px; float: left;" align="left">Email Address:</div>
+                <div style="width: 300px; float: left;" align="left">
+                    <input type="text" id="emails" name="emails" value="" class="vpb_textAreaBoxInputs">
+                </div>
+                <br clear="all">
+                <br clear="all">
+
+                <div style="width: 115px; padding-top: 10px; float: left;" align="left">&nbsp;</div>
+                <div style="width: 300px; float: left;" align="left">
+                    <a href="javascript:void(0);" class="menuButton" onclick="Users_Registration();">Submit</a>
+                </div>
+
+                <br clear="all">
+                <br clear="all">
+
+                <div align="left" id="signup_status" style="width: 45%;"></div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="box last" style="width: 55%;">
+        <div class="textbox">
+            <h1>Developers</h1>
+            <br />
+            <p style="width: 55%;">
+                This tool is developed through the collaborative effort of the following organisations:<br>
+                <br>
+                <br>
+
+                <img src="/lpresources/images/bs.jpg" alt="Boise State" width="176" height="51" />
+                <img src="/lpresources/images/byu.png" alt="BYU" width="160" height="51" /><br />
+                <img src="/lpresources/images/inl.jpg" alt="INL" width="160" height="51" />
+                <img src="/lpresources/images/ui.png" alt="UofI" width="160" height="51" />
+        </div>
+
+    </div>
+</div>
+<!--BottomRow END-->
+<script src="/lpresources/layerslider/js/layerslider.kreaturamedia.jquery.js" type="text/javascript"></script>
 <script type="text/javascript">
+    $(document).ready(function () {
+        $('#layerslider').layerSlider({
+            skinsPath: 'layerslider/skins/',
+            skin: 'lightskin',
+            navButtons: false
+        });
+    });
+
+    /* Toggle */
+    (function ($) {
+        $('.togg a.tog').click(function (i) {
+            var dropDown = $(this).parent().find('.tab_content');
+
+            $(this).parent().find('.tab_content').not(dropDown).slideUp();
+
+            if ($(this).hasClass('current')) {
+                $(this).removeClass('current');
+            } else {
+                $(this).addClass('current');
+            }
+
+            dropDown.stop(false, true).slideToggle().css({ display: 'block' });
+
+            i.preventDefault();
+        });
+    })(jQuery);
+
+
+
+    /* Accordion */
+    (function ($) {
+        $('.accordion a.tog').click(function (j) {
+            var dropDown = $(this).parent().find('.tab_content');
+
+            $(this).parent().parent().find('.tab_content').not(dropDown).slideUp();
+
+            if ($(this).hasClass('current')) {
+                $(this).removeClass('current');
+            } else {
+                $(this).parent().parent().find('.tog').removeClass('current');
+                $(this).addClass('current');
+            }
+
+            dropDown.stop(false, true).slideToggle().css({ display: 'block' });
+
+            j.preventDefault();
+        });
+    })(jQuery);
+
+
+
+    /* Tabs */
+    (function ($) {
+        $('.tab ul.tabs li:first-child').addClass('current');
+        $('.tab .tab_content div.tabs_tab:first-child').show();
+
+        $('.tab ul.tabs li').click(function (g) {
+            var tab = $(this).parent().parent(),
+                index = $(this).index();
+
+            tab.find('ul.tabs').find('li').removeClass('current');
+            $(this).addClass('current');
+
+            tab.find('.tab_content').find('div.tabs_tab').not('div.tabs_tab:eq(' + index + ')').slideUp();
+            tab.find('.tab_content').find('div.tabs_tab:eq(' + index + ')').slideDown();
+
+            g.preventDefault();
+        });
+    })(jQuery);
+
 
 </script>
-
-<style type="text/css">
-    #map
-    {
-        border: 2px #f0a103 solid;
-        border-radius: 10px;
-        position: relative;
-        width: 90%;
-        height: 500px;
-    }
-
-    .olMapViewport
-    {
-        border-radius: 10px;
-    }
-
-    #map.compact
-    {
-        width: 40%;
-        height: 250px;
-        right: 0px;
-    }
-
-    #MapToolbox
-    {
-        width: 200px;
-    }
-
-    div.mapToolbox, div#MapToolbar, .toolbox-content
-    {
-        background: rgba(0,0,0,.6);
-        padding: 0;
-        width: 165px;
-        border: grey 2px solid;
-        color: White;
-    }
-    .mapToolbox li.link
-    {
-        color: White;
-    }
-
-    .mapToolbox .link
-    {
-        cursor: pointer;
-    }
-
-    .mapToolbox div.ui-dialog-titlebar
-    {
-        border-radius: 0px;
-        border-bottom-left-radius: 0px;
-        border-bottom-right-radius: 0px;
-        font-size: .75em;
-        padding: 2px;
-    }
-    .mapToolbox div.ui-dialog-titlebar span
-    {
-        color: Black;
-    }
-
-    #map.mapSpot1
-    {
-        width: 400px;
-        height: 300px;
-        left: 216px;
-        top: 216px;
-    }
-
-    .mapToolbox .inactiveToolboxText
-    {
-        color: gray !important;
-    }
-    
-    
-    
-</style>
-
-<!--Start page HTML -->
-<h1 id="title" style="display: none;">
-    Select your site!</h1>
-<div id='map'>
-</div>
-<div id='MapToolbox' class="olControlEditingToolbar" title="Site Editing Toolbox">
-</div>
