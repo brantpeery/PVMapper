@@ -20,9 +20,14 @@ namespace Doe.PVMapper
             );
 
             routes.MapRoute(
+                "App",
+                "App/{action}/{id}",
+                new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+            );
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "SiteDetail", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

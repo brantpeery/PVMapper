@@ -10,13 +10,14 @@ namespace Doe.PVMapper.Controllers
     {
         //
         // GET: /SiteDetail/
-
+        [AllowAnonymous]
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult Test()
+        [AllowAnonymous]
+        public ActionResult Feedback()
         {
             return View();
         }
