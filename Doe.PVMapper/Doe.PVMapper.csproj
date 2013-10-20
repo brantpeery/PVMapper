@@ -319,6 +319,7 @@
     <Content Include="Scripts\pvMapper\TSMapper\Options.d.min.js">
       <DependentUpon>Options.d.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\OSMSocialModule.js" />
     <Content Include="Scripts\pvMapper\TSMapper\PVData.js">
       <DependentUpon>PVData.ts</DependentUpon>
     </Content>
