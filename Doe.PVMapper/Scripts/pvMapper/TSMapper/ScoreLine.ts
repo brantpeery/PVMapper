@@ -19,12 +19,12 @@ module pvMapper {
             public weight: number,
             public active: boolean,
             public scoreUtility: ScoreUtility,
-            public rateTable: IStarRatings 
+            public rateTable: IStarRatings
             )
-//            public scores: Score[]) 
+        //            public scores: Score[]) 
         {
         }
-    }                                               
+    }
 
     // Class
     export class ScoreLine implements IToolLine {
@@ -41,17 +41,17 @@ module pvMapper {
 
             if ($.isFunction(options.onSiteChange)) {
                 this.onSiteChange = () => { return options.onSiteChange.apply(this, arguments); }
-            }
+			}
 
             // star rating functions
             if ($.isFunction(options.getStarRatables)) {
                 this.getStarRatables = () => { return options.getStarRatables.apply(this, arguments); }
-            }
+			}
 
             // config window
             if ($.isFunction(options.showConfigWindow)) {
                 this.showConfigWindow = () => { options.showConfigWindow.apply(this, arguments); }
-            }
+			}
 
             this.valueChangeHandler = (event: IScoreValueChangedEvent) => {
                 //Update the utility score for the score that just changed it's value.
@@ -60,11 +60,11 @@ module pvMapper {
                 this.scoreChangeEvent.fire(this, event);
             }
 
-            //if ($.isFunction(options.onScoreAdded)) {
-            //    this.scoreAddedEvent.addHandler(options.onScoreAdded);
-            //}
+			//if ($.isFunction(options.onScoreAdded)) {
+			//    this.scoreAddedEvent.addHandler(options.onScoreAdded);
+			//}
 
-            siteManager.siteAdded.addHandler((event: Site) => {
+			siteManager.siteAdded.addHandler((event: Site) => {
                 //if (console) console.log("Siteadded event detected in scoreline" + name);
 
                 this.addScore(event);
@@ -77,12 +77,12 @@ module pvMapper {
             //Set default scoreUtilityOptions object if none was provided
             if (options.scoreUtilityOptions == undefined) {
                 options.scoreUtilityOptions = {
-                    functionName: "random",                                     
+                    functionName: "random",
                     functionArgs: { className: "Random" },
                     iconURL: null
                 }
-            };
-                                           
+			};
+            
             this.utilargs = new pvMapper.MinMaxUtilityArgs(0, 10, "", "");
             this.scoreUtility = new pvMapper.ScoreUtility(options.scoreUtilityOptions);
 
@@ -214,7 +214,7 @@ module pvMapper {
 
         private onSiteRemove(site: Site) {
             console.log('Attempting to remove a site/score from the scoreline')
-            for (var i = 0; i < this.scores.length; i++) {
+			for (var i = 0; i < this.scores.length; i++) {
                 var score: Score = this.scores[i];
                 if (score.site == site) {
                     // remove site from scoreline.
@@ -226,6 +226,18 @@ module pvMapper {
                 }
             }
         }
+
+        public toJSON(): any {
+			return {
+                title: this.title,
+                weight: this.weight,
+                description: this.description,
+                category: this.category,
+                scoreUtility: this.scoreUtility,
+                scores: this.scores
+            }
+		}
+
 
         //private onSiteAdded = 
 
@@ -292,12 +304,12 @@ module pvMapper {
                         me.updateScores();
                     }
                 }
-            }
+			}
         }
 
         public loadScore(): any {
             if (ClientDB.db == null) return;
-            try {    
+            try {
                 this.getScore();
             }
             catch (e) {
