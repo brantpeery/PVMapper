@@ -19,7 +19,7 @@ module pvMapper {
             //  throw ('The parameter "feature" must be an OpenLayers.Feature');
             this.self = this;
             this.id = feature.fid;
-            this.feature = feature;                                       
+            this.feature = feature;
             this.feature.site = this;
             this.geometry = feature.geometry;
             this.name = feature.attributes.name;
@@ -33,6 +33,30 @@ module pvMapper {
         public description: string; //The long description of the site
         public offsetFeature: OpenLayers.FVector = null; //The offset Open Layers feature (depreciated)
         public popupHTML: string = ''; //The short description in HTML that will show as a tooltip or popup bubble
+
+
+        /**
+        *  This function is a helper function that is called by JSON.stringify() to properly stringify this object
+        *  It basically sends back a simplified object that removes all the non essential properties
+        */ 
+        public toJSON(): any {
+            var o = {
+                id: this.id,
+                geometry: this.geometry.toString(),
+                name: this.name,
+                description: this.description,
+                popupHTML: this.popupHTML   
+            }
+            return o;
+        }
+
+        /* Consumes the object created when a saved JSON string is parsed. 
+        *  Repopulates this object with the stuff from the JSON parse
+        *
+        */
+        public fromJSON() {
+
+        }
 
 
 

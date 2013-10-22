@@ -93,6 +93,13 @@ module pvMapper {
             Error("Function not implemented yet!");
         }
 
+        public toJSON() {
+            return {
+                scoreLines: this.scoreLines,
+                totalLines: this.totalLines
+            }
+        }
+
     }
 
     //declare var Ext: any; //So we can use it
