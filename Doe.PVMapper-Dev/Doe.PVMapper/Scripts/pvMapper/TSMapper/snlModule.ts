@@ -42,7 +42,7 @@ module INLModules {
             selectOnFocus: true
         };
 
-        var propsGrid = new Ext.grid.PropertyGrid({
+        var propsGrid: Ext.grid.property.IGrid = Ext.create('propertygrid', {
             nameText: 'Properties Grid',
             minWidth: 300,
             //autoHeight: true,
@@ -62,8 +62,8 @@ module INLModules {
             //    scrollOffset: 2 // the grid will never have scrollbars
             //},
             customEditors: {
-                'minimumVoltage': new Ext.form.ComboBox(comboConfig),
-                'maximumVoltage': new Ext.form.ComboBox(comboConfig)
+                'minimumVoltage': Ext.create('Ext.form.ComboBox', comboConfig),
+                'maximumVoltage': Ext.create('Ext.form.ComboBox', comboConfig)
             }
         });
 
