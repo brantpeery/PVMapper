@@ -223,13 +223,9 @@
     <Content Include="lpresources\assets\ajax-loader.gif" />
     <Content Include="lpresources\assets\error.gif" />
     <Content Include="lpresources\assets\success.gif" />
-    <Content Include="lpresources\contact.php">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="lpresources\contact.php" />
     <Content Include="lpresources\css\style2.css" />
-    <Content Include="lpresources\image.php">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="lpresources\image.php" />
     <Content Include="lpresources\images\accessdata.png" />
     <Content Include="lpresources\images\arrow_content_slider.png" />
     <Content Include="lpresources\images\arrow_list.png" />
@@ -343,9 +339,7 @@
     <Content Include="lpresources\verify\1.png" />
     <Content Include="lpresources\verify\2.png" />
     <Content Include="lpresources\verify\3.png" />
-    <Content Include="lpresources\verify\ajax_check.php">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="lpresources\verify\ajax_check.php" />
     <Content Include="Scripts\Esri-GeoJsonConverter.js" />
     <Content Include="Scripts\EsriGeoJSON.js" />
     <Content Include="Scripts\ExtJS.d.ts" />
