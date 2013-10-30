@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -47,6 +48,16 @@ namespace Doe.PVMapper.WebApi
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest));
             }
 
+            if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings.Get("STATSMIX_URL")))
+            {
+                // STATSMIX_URL is populated by AppHarbor, so we must be in deployment; log this event to our StatsMix metrics
+                StatsMix.Client smClient = new StatsMix.Client("3cc98589f0c307a4096b");
+                Dictionary<string, string> properties = new Dictionary<string, string>(0);
+                Dictionary<string, string> meta = new Dictionary<string, string>(1);
+                meta.Add("User", User.Identity.Name);
+                smClient.track("Add Site", 1, properties, meta);
+            }
+
             value.UserId = User.Identity.Name;
             ProjectSite site = _db.Add(value);
 
@@ -90,8 +101,8 @@ namespace Doe.PVMapper.WebApi
                     throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden));
                 }
             }
-            // According to the HTTP specification, the DELETE method must be idempotent, meaning that several DELETE requests to the same URI must have the same effect as a single DELETE request. Therefore, the method should not return an error code if the book was already deleted.
-            // If a DELETE request succeeds, it can return status 200 (OK) with an entity-body that describes the status, or status 202 (Accepted) if the deletion is still pending, or status 204 (No Content) with no entity body. In this example, the method returns status 204.
+            // According to the HTTP specification, the DELETE method must be idempotent, meaning that several DELETE requests to the same URI must have the same effect as a single DELETE request. Therefore, the method should not return an error code if the site was already deleted.
+            // If a DELETE request succeeds, it can return status 200 (OK) with an entity-body that describes the status, or status 202 (Accepted) if the deletion is still pending, or status 204 (No Content) with no entity body. In this case, the method returns status 204.
             return new HttpResponseMessage(HttpStatusCode.NoContent);
         }
     }
