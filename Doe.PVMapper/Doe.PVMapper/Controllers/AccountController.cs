@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -33,6 +34,16 @@ namespace Doe.PVMapper.Controllers
             {
                 if (Membership.ValidateUser(model.UserName, model.Password))
                 {
+                    if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings.Get("STATSMIX_URL")))
+                    {
+                        // STATSMIX_URL is populated by AppHarbor, so we must be in deployment; log this event to our StatsMix metrics
+                        StatsMix.Client smClient = new StatsMix.Client("3cc98589f0c307a4096b");
+                        Dictionary<string, string> properties = new Dictionary<string, string>(0);
+                        Dictionary<string, string> meta = new Dictionary<string, string>(1);
+                        meta.Add("User", model.UserName);
+                        smClient.track("Login", 1, properties, meta);
+                    }
+
                     FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
                     return Json(new { success = true, redirect = returnUrl });
                 }
@@ -57,6 +68,16 @@ namespace Doe.PVMapper.Controllers
             {
                 if (Membership.ValidateUser(model.UserName, model.Password))
                 {
+                    if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings.Get("STATSMIX_URL")))
+                    {
+                        // STATSMIX_URL is populated by AppHarbor, so we must be in deployment; log this event to our StatsMix metrics
+                        StatsMix.Client smClient = new StatsMix.Client("3cc98589f0c307a4096b");
+                        Dictionary<string, string> properties = new Dictionary<string, string>(0);
+                        Dictionary<string, string> meta = new Dictionary<string, string>(1);
+                        meta.Add("User", model.UserName);
+                        smClient.track("Login", 1, properties, meta);
+                    }
+
                     FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
                     if (Url.IsLocalUrl(returnUrl))
                     {
@@ -111,6 +132,13 @@ namespace Doe.PVMapper.Controllers
 
                 if (createStatus == MembershipCreateStatus.Success)
                 {
+                    if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings.Get("STATSMIX_URL")))
+                    {
+                        // STATSMIX_URL is populated by AppHarbor, so we must be in deployment; log this event to our StatsMix metrics
+                        StatsMix.Client smClient = new StatsMix.Client("3cc98589f0c307a4096b");
+                        smClient.track("Register", 1);
+                    }
+
                     FormsAuthentication.SetAuthCookie(model.UserName, createPersistentCookie: false);
                     return Json(new { success = true });
                 }
@@ -139,6 +167,13 @@ namespace Doe.PVMapper.Controllers
 
                 if (createStatus == MembershipCreateStatus.Success)
                 {
+                    if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings.Get("STATSMIX_URL")))
+                    {
+                        // STATSMIX_URL is populated by AppHarbor, so we must be in deployment; log this event to our StatsMix metrics
+                        StatsMix.Client smClient = new StatsMix.Client("3cc98589f0c307a4096b");
+                        smClient.track("Register", 1);
+                    }
+
                     FormsAuthentication.SetAuthCookie(model.UserName, createPersistentCookie: false);
                     return RedirectToAction("Index", "Home");
                 }
@@ -168,7 +203,6 @@ namespace Doe.PVMapper.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 // ChangePassword will throw an exception rather
                 // than return false in certain failure scenarios.
                 bool changePasswordSucceeded;
