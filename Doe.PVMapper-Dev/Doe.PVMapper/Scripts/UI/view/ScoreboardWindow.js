@@ -100,19 +100,15 @@ var scoreboardColumns = [{
         //Note: this fails when we allow grouping by arbitrary fields (and it fails in mysterious ways)
         //return records[0].get('category') + " subtotal: <input type='button' img='http://localhost:53465/Images/Pie Chart.png' value='Pie' onClick='scoreboardColumns[0].viewPie(\"" + records[0].get('category') + "\");' />";
         if (records.length > 0) {
-            if (records.length == scoreboardGrid.store.data.length) {
-                //this is the total of all category summary  .... HACK!!!!
-                return '<hr><br /><b>Summary Minimum:<br />Summary Average :</b>';
-            } else {
-                return records[0].get('category') +
-                  " (average): <input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
-                  records[0].get('category') + "\",null);' />";
-            }
+            return records[0].get('category') +
+              " (average): <input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
+              records[0].get('category') + "\",null);' />";
+
         }
         else
             return ' ';
     },
-}, {
+    } , {
     header: 'Weight',
     //text: 'Weight',
     width: 45,
@@ -148,11 +144,6 @@ var scoreboardColumns = [{
         tooltip: "Edit score utility function",
         height: 24,
         width: 24,
-        //renderer: function (value, metadata, record) {
-        //    var fn = record.get('utilityFnName');
-        //    if (fn) { this.icon = pvMapper.UtilityFunctions[fn].iconURL; }
-        //    //return value;
-        //},
         getClass: function (value, metadata, record, rowIndex, colIndex, store) {
             if (!(record.get('utility'))) {
                 return "x-item-disabled";
@@ -303,10 +294,6 @@ var scoreboardColumns = [{
     text: undefined,
     sealed: true,
     menuText: "Sites",
-    //defaults: {
-    //    flex: 1, //Will stretch with the size of the window
-    //    width: 100
-    //},
     columns: siteColumns
 }];
 
@@ -380,7 +367,7 @@ toolsStore.on({
 
                     summaryType: function (records) {
                         var total = 0;
-                        var count = 0, minimum = 9999, val = 0;
+                        var count = 0;
 
 
                         records.forEach(function (record) {
@@ -390,16 +377,14 @@ toolsStore.on({
                                 val = scoreLine.scores[idx].utility * weight;
                                 total += val;
                                 count += weight;
-                                if (val > 0)
-                                    minimum = (minimum > val) ? val : minimum;
                             }
                         });
 
                         var average = total / count;
 
                         //Note: moved this, as the summary renderer now only calculates the score over groups, rather than for all score tools
-                        // post the average score to the feature, so that it can render correctly on the map
-                        //TODO: is this really the best place to be mucking about with the feature attributes?
+                        //// post the average score to the feature, so that it can render correctly on the map
+                        ////TODO: is this really the best place to be mucking about with the feature attributes?
                         //if (records && records.length > 0 && records[0].raw &&
                         //    records[0].raw.scores && records[0].raw.scores.length > idx &&
                         //    records[0].raw.scores[idx].site && records[0].raw.scores[idx].site.feature) {
@@ -417,14 +402,7 @@ toolsStore.on({
                         //  }
                         //}
 
-                        if (records.length == scoreboardGrid.store.data.length) {
-                            //this is the total summary line -- only time it pass the entire store records.
-                            var avgC = pvMapper.getColorForScore(average);
-                            var avgM = pvMapper.getColorForScore(minimum);
-                            return '<hr><span style="border-radius: 3px;font-weight:bold; background-color:' + avgM + '">&nbsp' + minimum.toFixed(0) + '&nbsp</span>' +
-                                   '<br /> <span style="border-radius: 3px;font-weight:bold; background-color:' + avgC + '">&nbsp' + average.toFixed(0) + '&nbsp</span>'
-                        } else
-                         return average;
+                        return average;
                     },
                     summaryRenderer: function (value, summaryRowValues) {
                         if (typeof value === "number" && !isNaN(value)) {
@@ -433,7 +411,7 @@ toolsStore.on({
                             //+ "<input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
                             //  scoreLine.Category + "\",\""+ scoreline.site.name +"\");' />";
                         }
-                        else return value; // if value is a string, must return as is.
+                        else return '';
                     },
 
                 },
@@ -446,88 +424,6 @@ toolsStore.on({
     }
 
 });
-
-/***
-override the groupsummary class to display both grouping summary and summary.  
-***/
-Ext.define('MainApp.view.GroupingSummaryWithTotal', {
-    extend: 'Ext.grid.feature.GroupingSummary',
-    alias: 'groupingsummarytotal',
-    getTableFragments: function () {
-        return {
-            closeRows: this.closeRows
-        };
-    },
-    closeRows: function () {
-        return '</tpl>{[this.recursiveCall ? "" : this.printTotalRow()]}';
-    },
-    getFragmentTpl: function () {
-        var me = this,
-          fragments = me.callParent();
-        me.totalData = this.generateTotalData();
-        Ext.apply(fragments, {
-            printTotalRow: Ext.bind(this.printTotalRow, this)
-        });
-        Ext.apply(fragments, {
-            recurse: function (values, reference) {
-                this.recursiveCall = true;
-                var returnValue = this.apply(reference ? values[reference] : values);
-                this.recursiveCall = false;
-                return returnValue;
-            }
-        });
-        return fragments;
-    },
-
-    //For printing the Summary Minimum and Summary Average at the bottom of the view.
-    printTotalRow: function () {
-        var inner = this.view.getTableChunker().metaRowTpl.join(''),
-          prefix = Ext.baseCSSPrefix;
-        inner = inner.replace(prefix + 'grid-row', prefix + 'grid-row-summary');
-        inner = inner.replace('{{id}}', '{gridSummaryValue}');
-        inner = inner.replace(this.nestedIdRe, '{id$1}');
-        inner = inner.replace('{[this.embedRowCls()]}', '{rowCls}');
-        inner = inner.replace('{[this.embedRowAttr()]}', '{rowAttr}');
-        inner = Ext.create('Ext.XTemplate', inner, {
-            firstOrLastCls: Ext.view.TableChunker.firstOrLastCls
-        });
-        return inner.applyTemplate({
-            columns: this.getTotalData()
-        });
-    },
-    getTotalData: function () {
-        var me = this,
-          columns = me.view.headerCt.getColumnsForTpl(),
-          i = 0,
-          length = columns.length,
-          data = [],
-          active = me.totalData,
-          column;
-        for (; i < length; ++i) {
-            column = columns[i];
-            column.gridSummaryValue = this.getColumnValue(column, active);
-            data.push(column);
-        }
-        return data;
-    },
-    generateTotalData: function () {
-        var me = this,
-          data = {},
-          store = me.view.store,
-          columns = me.view.headerCt.getColumnsForTpl(),
-          i = 0,
-          length = columns.length,
-          fieldData,
-          key,
-          comp;
-        for (i = 0, length = columns.length; i < length; ++i) {
-            comp = Ext.getCmp(columns[i].id);
-            data[comp.id] = me.getSummary(store, comp.summaryType, comp.dataIndex, false);
-        }
-        return data;
-    }
-});
-
 // plugin for cell editing (Weight value)
 Ext.define('MainApp.view.ScoreWeightEditing', {
     extend: 'Ext.grid.plugin.CellEditing',
@@ -555,19 +451,47 @@ Ext.define('Ext.grid.ScoreboardGrid', {
     },
     plugins: [Ext.create('MainApp.view.ScoreWeightEditing')],
     features: [
-      Ext.create('MainApp.view.GroupingSummaryWithTotal', {
-          groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
-          summaryType: 'average',
-      })
+        //Ext.create('MainApp.view.GroupingSummaryWithTotal', {
+        //  groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
+        //  summaryType: 'average',
+        //})
+        {
+            //Note: this feature provides per-group summary values, rather than repeating the global summary for each group.
+            groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
+            ftype: 'groupingsummary',
+            enableGroupingMenu: false,
+            //hideGroupedHeader: true, <-- this is handy, if we ever allow grouping by arbitrary fields
+            //onGroupClick: function(view, group, idx, foo, e) {}
+        },
+        //{ ftype: 'grouping' },
+        //{
+        //  ftype: 'summary',
+        //  dock: 'bottom'
+        //},
     ],
-    //{
-    //  //Note: this feature provides per-group summary values, rather than repeating the global summary for each group.
-    //  groupHeaderTpl: '{name} ({rows.length} {[values.rows.length != 1 ? "Tools" : "Tool"]})',
-    //  ftype: 'groupingsummary',
-    //  enableGroupingMenu: false,
-    //  //hideGroupedHeader: true, <-- this is handy, if we ever allow grouping by arbitrary fields
-    //  //onGroupClick: function(view, group, idx, foo, e) {}
 
+    listeners: {
+        afterlayout: function (sender, eOpts) {
+            var gridViewId = $('#' + this.getId() + ' .x-grid-view').attr('id');
+
+            var $totalsHeader = $('#' + gridViewId + '-hd-Totals');
+            var $totalsRow = $('#' + gridViewId + '-bd-Totals');
+            var $totalsNext = $totalsRow.next();
+
+            // if the totals aren't at the bottom of their parent container...
+            if ($totalsNext.length) {
+
+                if (!$totalsNext.attr('class').indexOf('x-grid-row-summary') >= 0) {
+                    // remove the unnecessary and needless row summary for the totals group
+                    $totalsNext.hide();
+                }
+
+                // move the totals to the bottom of their parent container
+                $totalsHeader.appendTo($totalsHeader.parent());
+                $totalsRow.appendTo($totalsHeader.parent());
+            }
+        }
+    },
 
     viewPie: function (cat, site) {
 
@@ -634,7 +558,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
                             printWindow.print();
                         }
                     }
-                ]
+            ]
             }]
         }).show();
 
@@ -740,48 +664,3 @@ Ext.define('MainApp.view.ScoreboardWindow', {
 
 
 //toolsStore.load(pvMapper.mainScoreboard.getTableData()); //Load the data to the panel
-
-function getColor(score) {
-    var min = Math.min;
-    var max = Math.max;
-    var round = Math.round;
-
-    var startColor = {
-        red: 255,
-        green: 0,
-        blue: 0
-    };
-    var midColor = {
-        red: 255,
-        green: 255,
-        blue: 100
-    };
-    var endColor = {
-        red: 173,
-        green: 255,
-        blue: 47
-    };
-
-    var scale = 0;
-    score = round(min(100, max(0, score)));
-    if (score > 50) {
-        startColor = midColor;
-        scale = score / 50 - 1;
-    } else {
-        endColor = midColor;
-        scale = score / 50;
-    }
-
-    //var r = startColor['red'] + scale * (endColor['red'] - startColor['red']);
-    //var b = startColor['blue'] + scale * (endColor['blue'] - startColor['blue']);
-    //var g = startColor['green'] + scale * (endColor['green'] - startColor['green']);
-    var r = startColor.red + scale * (endColor.red - startColor.red);
-    var b = startColor.blue + scale * (endColor.blue - startColor.blue);
-    var g = startColor.green + scale * (endColor.green - startColor.green);
-    r = round(min(255, max(0, r)));
-    b = round(min(255, max(0, b)));
-    g = round(min(255, max(0, g)));
-
-    return 'rgb(' + r + ',' + g + ',' + b + ')';
-}
-pvMapper.getColorForScore = getColor;
