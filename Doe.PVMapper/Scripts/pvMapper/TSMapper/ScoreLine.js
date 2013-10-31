@@ -5,15 +5,31 @@
 /// <reference path="Options.d.ts" />
 /// <reference path="SiteManager.ts" />
 /// <reference path="Tools.ts" />
+///<reference path="DataManager.ts"/>
 // Module
 var pvMapper;
 (function (pvMapper) {
     //  import pvM = pvMapper;
+    var DBScore = (function () {
+        function DBScore(title, description, category, weight, active, scoreUtility, rateTable) {
+            this.title = title;
+            this.description = description;
+            this.category = category;
+            this.weight = weight;
+            this.active = active;
+            this.scoreUtility = scoreUtility;
+            this.rateTable = rateTable;
+        }
+        return DBScore;
+    })();
+    pvMapper.DBScore = DBScore;
+
     // Class
     var ScoreLine = (function () {
-        // Constructor
+        //#region "Constructor"
         function ScoreLine(options) {
             var _this = this;
+            this.weight = 0;
             this.scores = new Array();
             //public updateScore: ICallback = options.updateScoreCallback;
             this.active = true;
@@ -78,89 +94,14 @@ var pvMapper;
             this.utilargs = new pvMapper.MinMaxUtilityArgs(0, 10, "", "");
             this.scoreUtility = new pvMapper.ScoreUtility(options.scoreUtilityOptions);
 
-            //Set the default weight of the tool
-            this.weight = (typeof options.weight === "number") ? options.weight : 10;
-
-            //this.loadScore();
+            //if (ClientDB.db == null)
+            //    ClientDB.initClientDB();
             this.loadAllSites();
+
+            // this.loadScore();
+            //Set the default weight of the tool
+            this.weight = (this.weight < 0) ? (typeof options.weight === "number") ? options.weight : 10 : this.weight;
         }
-        ScoreLine.prototype.loadScore = function () {
-            return;
-
-            if (!window.indexedDB) {
-                window.alert("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
-                return null;
-            }
-
-            var db;
-            var idbVersion = 1;
-            var request = indexedDB.open("PVMapperScores", idbVersion);
-            request.onerror = function (even) {
-                alert("This browser is not allowed to maintain local storage, error code: ");
-            };
-
-            request.onsuccess = function (event) {
-                if (this.title == undefined)
-                    return null;
-
-                db = event.target.result;
-
-                var trans = db.transaction(["PVMapperScore"], "readwrite");
-                var store = trans.objectStore("PVMapperScore");
-                var req = store.get(this.title);
-                req.onerror = function (event) {
-                    console.log("Error getting local data for " + this.title);
-                };
-                req.onsuccess = function (event) {
-                    var rdb = event.target.result;
-                    this.title = rdb.title;
-                    this.description = rdb.description;
-                    this.category = rdb.category;
-                    this.weight = rdb.weight;
-                    this.active = rdb.active;
-                    this.scores = rdb.scores;
-                    return event;
-                };
-            };
-            return event;
-        };
-
-        ScoreLine.prototype.saveScore = function () {
-            var me = this;
-
-            if (!window.indexedDB) {
-                window.alert("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
-                return null;
-            }
-
-            var db;
-            var idbVersion = 1;
-            var request = window.indexedDB.open("PVMapperScores", idbVersion);
-            request.onerror = function (even) {
-                alert("This browser is not allowed to maintain local storage, error code: ");
-                return event;
-            };
-
-            request.onsuccess = function (event) {
-                db = event.target.result;
-
-                //var trans = db.transaction(["PVMapperScore"],"readwrite");
-                var store = db.createObjectStore("PVMapperScore", { autoIncrement: true });
-                store.createIndex("titleIndex", "title", { unique: true });
-
-                store.add({
-                    title: me.title,
-                    description: me.description,
-                    category: me.category,
-                    weight: me.weight,
-                    active: me.active,
-                    scores: me.scores
-                });
-                return 0;
-            };
-            return event;
-        };
-
         ScoreLine.prototype.getUtilityScore = function (x) {
             return this.scoreUtility.run(x);
         };
@@ -170,6 +111,7 @@ var pvMapper;
         ScoreLine.prototype.setWeight = function (value) {
             this.weight = value;
             this.scoreChangeEvent.fire(self, undefined);
+            this.saveScore();
         };
 
         /**
@@ -225,9 +167,10 @@ var pvMapper;
         };
 
         ScoreLine.prototype.loadAllSites = function () {
+            var _this = this;
             var allSites = pvMapper.siteManager.getSites();
             $.each(allSites, function (idx, site) {
-                this.addScore(site);
+                _this.addScore(site);
             });
         };
 
@@ -243,6 +186,83 @@ var pvMapper;
                     this.scoreChangeEvent.fire(self, undefined);
                     break;
                 }
+            }
+        };
+
+        ScoreLine.prototype.toJSON = function () {
+            return {
+                title: this.title,
+                weight: this.weight,
+                description: this.description,
+                category: this.category,
+                scoreUtility: this.scoreUtility,
+                scores: this.scores
+            };
+        };
+
+        //private onSiteAdded =
+        //private onSiteUpdated(event: EventArg) {
+        //    if (event.data instanceof Site)
+        //        updateScore(event.data);
+        //}
+        //#region "Client indexedDB storage"
+        ScoreLine.prototype.putScore = function () {
+            var me = this;
+            if (pvMapper.ClientDB.db) {
+                try  {
+                    var txn = pvMapper.ClientDB.db.transaction(pvMapper.ClientDB.STORE_NAME, "readwrite");
+                    var store = txn.objectStore(pvMapper.ClientDB.STORE_NAME);
+                    var dbScore = new DBScore(me.title, me.description, me.category, me.weight, me.active, me.scoreUtility, me.getStarRatables());
+
+                    var req = store.add(dbScore, dbScore.title);
+                } catch (e) {
+                    console.log("pubDBObject failed, cause: " + e.message);
+                }
+            }
+        };
+
+        ScoreLine.prototype.saveScore = function () {
+            if (pvMapper.ClientDB.db == null)
+                return;
+            try  {
+                this.putScore();
+            } catch (e) {
+                console.log("Error: " + e.message);
+            }
+        };
+
+        ScoreLine.prototype.getScore = function () {
+            var me = this;
+            if (pvMapper.ClientDB.db) {
+                var txn = pvMapper.ClientDB.db.transaction(pvMapper.ClientDB.STORE_NAME, "readonly");
+                var store = txn.objectStore(pvMapper.ClientDB.STORE_NAME);
+                var request = store.get(me.title);
+                request.onsuccess = function (evt) {
+                    if (request.result != undefined) {
+                        me.title = request.result.title;
+                        me.description = request.result.description;
+                        me.category = request.result.category;
+                        me.weight = request.result.weight;
+                        me.active = request.result.active;
+
+                        me.scoreUtility.functionName = request.result.scoreUtility.functionName;
+                        me.scoreUtility.functionArgs = request.result.scoreUtility.functionArgs;
+                        me.scoreUtility.iconURL = request.result.scoreUtility.iconURL;
+                        me.scoreUtility.fCache = request.result.scoreUtility.fCache;
+
+                        me.updateScores();
+                    }
+                };
+            }
+        };
+
+        ScoreLine.prototype.loadScore = function () {
+            if (pvMapper.ClientDB.db == null)
+                return;
+            try  {
+                this.getScore();
+            } catch (e) {
+                console.log("Error: " + e.message);
             }
         };
         return ScoreLine;
