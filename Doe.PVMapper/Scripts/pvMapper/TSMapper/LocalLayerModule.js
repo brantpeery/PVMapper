@@ -95,7 +95,6 @@ var INLModules;
                 imageDisplay: "1, 1, 96",
                 returnGeometry: false
             };
-            //console.log("LandUseModule.ts: " + score.site.geometry.bounds.toBBOX(6, false));
         };
         return LocalLayerModule;
     })();

@@ -39,14 +39,10 @@ var pvMapper;
             //console.log("Adding scoreline " + scoreline.name);
             scoreline.scoreChangeEvent.addHandler(this.onScoreChanged);
             this.scoreLines.push(scoreline);
-            //this.changedEvent.fire(this,null);
         };
 
         ScoreBoard.prototype.addTotalLine = function (line) {
             line.ValueChangedEvent.addHandler(function (event) {
-                //Do what ever needs to be done for updating the GUI when
-                //the total line recalculates
-                //IGNORED for now
             });
 
             this.totalLines.push(line);
@@ -76,6 +72,13 @@ var pvMapper;
             //let all the other modules that care know that a score changed
             //Create an event that holds the information about score and utility that changed it
             Error("Function not implemented yet!");
+        };
+
+        ScoreBoard.prototype.toJSON = function () {
+            return {
+                scoreLines: this.scoreLines,
+                totalLines: this.totalLines
+            };
         };
         return ScoreBoard;
     })();
@@ -111,11 +114,8 @@ var pvMapper;
                     //Note: selecting cells hoarks everything up unless we clear the selection before reloading the data
                     gp.getSelectionModel().deselectAll();
                     gp.store.loadRawData(mydata);
-                    //Note: removed this as it's really annoying (scoreboard pops up from minimized, covers up other windows, etc)
-                    //pvMapper.floatingScoreboard.show();
                 }
             }, 250);
-            // queue is set to wait 1/10th of a second before it actually refreshes the scoreboard.
         } else {
             if (console) {
                 console.log("Scoreboard update event safely (and efficiently) ignored.");
