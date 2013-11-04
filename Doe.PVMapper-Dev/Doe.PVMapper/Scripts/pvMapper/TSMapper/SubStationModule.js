@@ -142,6 +142,8 @@ var BYUModules;
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (e, score) {
+                            //Note: some substations are classified as 'sub_station' and some are classified as 'station'
+                            //see http://wiki.openstreetmap.org/wiki/Key:power
                             _this.updateScore(score, '"power"~"sub_station|station"', 'substation');
                         },
                         // having any nearby line is much better than having no nearby line, so let's reflect that.
@@ -208,8 +210,6 @@ var BYUModules;
         var request = OpenLayers.Request.GET({
             url: SubStationQueryUrl,
             params: {
-                //Note: some substations are classified as 'sub_station' and some are classified as 'station'
-                //see http://wiki.openstreetmap.org/wiki/Key:power
                 data: 'way[' + wayQueryKey + '](' + bbox + ');(._;>;);out;'
             },
             callback: function (response) {
@@ -218,8 +218,8 @@ var BYUModules;
 
                     //Conversion of response
                     for (var i = 0; i < response.features.length; i++) {
-                        // change all geometries into points transformed into our native projection
-                        response.features[i].geometry = response.features[i].geometry.getCentroid().transform(projWGS84, proj900913);
+                        // transform into our native projection
+                        response.features[i].geometry = response.features[i].geometry.transform(projWGS84, proj900913);
 
                         // parse voltage, in case it's a string for some reason...
                         if (typeof response.features[i].attributes.voltage === "string") {

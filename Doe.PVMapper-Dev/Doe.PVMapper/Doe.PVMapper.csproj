@@ -484,6 +484,7 @@
     <Content Include="Scripts\pvMapper\TSMapper\StarRatingHelper.min.js">
       <DependentUpon>StarRatingHelper.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\SubStationModule.js" />
     <Content Include="Scripts\pvMapper\TSMapper\Tools.js">
       <DependentUpon>Tools.ts</DependentUpon>
     </Content>
