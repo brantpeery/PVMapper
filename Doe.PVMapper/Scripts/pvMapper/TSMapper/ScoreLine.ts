@@ -20,15 +20,15 @@ module pvMapper {
             public active: boolean,
             public scoreUtility: ScoreUtility,
             public rateTable: IStarRatings
+            //public scores: Score[]
             )
-        //            public scores: Score[]) 
         {
         }
     }
 
     // Class
     export class ScoreLine implements IToolLine {
-        //#region "Constructor"
+        // Constructor
         constructor(options: IScoreToolOptions) {
             //console.log("Adding a scoreline for " + options.title);
             this.self = this;
@@ -88,19 +88,19 @@ module pvMapper {
 
             //if (ClientDB.db == null)     
             //    ClientDB.initClientDB();
+
             this.loadAllSites();
             // this.loadScore();
 
             //Set the default weight of the tool
-            this.weight = (this.weight <= 0) ? (typeof options.weight === "number") ? options.weight : 10 : this.weight;
-
+            //Note: a weight of 0 is possible and valid
+            this.weight = (typeof options.weight === "number") ? options.weight : 10;
         }
-        //#endregion "Constructor"
 
         public utilargs: pvMapper.MinMaxUtilityArgs;
         public scoreUtility: ScoreUtility;
         public title: string;
-        public weight: number = 0;
+        public weight: number;
         public description: string;
         public category: string;
         public scores: Score[] = new Array<Score>(); //  new Score[](); <<-- TS0.9.0 doesn't like this.
@@ -116,7 +116,7 @@ module pvMapper {
         public scoreChangeEvent: pvMapper.Event = new pvMapper.Event();
         public updatingScoresEvent: pvMapper.Event = new pvMapper.Event();
 
-        public getUtilityScore(x: number) { return this.scoreUtility.run(x); }
+        public getUtilityScore(x: number): number { return this.scoreUtility.run(x); }
         public getWeight(): number { return this.weight; }
         public setWeight(value: number) {
             this.weight = value;
