@@ -44,7 +44,7 @@ module pvMapper {
 
         //End Events---------
 
-        public tableRenderer: any = new pvMapper.Renderer.HTML.Table();
+        //public tableRenderer = new pvMapper.Table();
 
         public addLine(scoreline: ScoreLine) {
             //console.log("Adding scoreline " + scoreline.name);
