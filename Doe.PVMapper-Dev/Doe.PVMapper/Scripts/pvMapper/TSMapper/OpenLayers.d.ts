@@ -30,12 +30,8 @@ declare module OpenLayers {
     }
 
     interface SiteFeature extends FVector {
-        fid: string;
-        geometry: Polygon;
         attributes: Attributes;
         site: any;
-        name: string;
-        description: string;
     }
 
     interface Collection extends Geometry {
@@ -58,7 +54,7 @@ declare module OpenLayers {
         rotate(angle: number, origin: Point);
         resize(scale: number, origin: Point, ratio: number): Geometry;
         distanceTo(geometry: Geometry): number;
-        distanceTo(geometry: Geometry, options?: Boolean): Distance;
+        distanceTo(geometry: Geometry, options?: Boolean): number;
         equals(geometry: Geometry): Boolean;
         transform(source: Projection, dest: Projection): Geometry;
         intersects(geometry: Geometry): Boolean;
@@ -73,7 +69,7 @@ declare module OpenLayers {
         //containsPoint(point: Point): number;   //this break in Typescript 0.9.1 ==> "Overloads cannot differ only by return type".
         intersects(geometry: Geometry): Boolean;
         distanceTo(geometry: Geometry): number;
-        distanceTo(geometry: Geometry, options?: any): Distance;
+        distanceTo(geometry: Geometry, options?: any): number;
         createRegularPolygon(origin: Point, radius: number, sides: number, rotation: number);
     }
 
@@ -243,7 +239,7 @@ declare module OpenLayers {
         getBounds(): Bounds;
         calculateBounds();
         distanceTo(geometry: Geometry): number;
-        distanceTo(geometry: Geometry, options?: any): Distance;
+        distanceTo(geometry: Geometry, options?: any): number;
         getVertices(nodes: Boolean): Geometry[];
         atPoint(lonlat: LonLat, toleranceLon: number, toleranceLat: number): Boolean;
         getLength(): number;
@@ -562,33 +558,33 @@ declare module OpenLayers {
 
         documentDrag: boolean;
         layer: Vector;
-        feature: Vector;
+        feature: FVector;
         dragCallbacks: any;
         featureCallbacks: any;
         lastPixel: Pixel;
 
         /// {Function } Define this function if you want to know when a drag starts.The function should expect to receive two arguments: the feature that is about to be dragged and the pixel location of the mouse.
-        onStart(feature: Vector, pixel: Pixel);
+        onStart(feature: FVector, pixel: Pixel);
         //{Function} Define this function if you want to know about each move of a feature.  The function should expect to receive two arguments: the feature that is being dragged and the pixel location of the mouse.
-        onDrag(feature: Vector, pixel: Pixel);
+        onDrag(feature: FVector, pixel: Pixel);
         //{Function} Define this function if you want to know when a feature is done dragging.  The function should expect to receive two arguments: the feature that is being dragged and the pixel location of the mouse.
-        onComplete(feature: Vector, pixel: Pixel);
+        onComplete(feature: FVector, pixel: Pixel);
         //{Function } Define this function if you want to know when the mouse goes over a feature and thereby makes this feature a candidate for dragging.
-        onEnter(feature: Vector);
+        onEnter(feature: FVector);
         //{Function} Define this function if you want to know when the mouse goes out of the feature that was dragged.
-        onLeave(feature: Vector);
+        onLeave(feature: FVector);
 
-        clickFeature(feature: Vector);
-        clickoutFeature(feature: Vector);
+        clickFeature(feature: FVector);
+        clickoutFeature(feature: FVector);
         destroy();
         activate(): boolean;
         deactivate(): boolean;
-        overFeature(feature: Vector): boolean;
+        overFeature(feature: FVector): boolean;
         downFeature(pixel: Pixel);
         moveFeature(pixel: Pixel);
         upFeature(pixel: Pixel);
         doneDragging(pixel: Pixel);
-        outFeature(feature: Vector);
+        outFeature(feature: FVector);
         cancel();
         setMap(map: IMap);
 
@@ -721,11 +717,11 @@ declare module OpenLayers {
         request(bounds: Bounds, options: any);
 
         //hover {Boolean } Do the selection for the hover handler.
-        selectBestFeature(features: Vector, clickPosition: LonLat, options: any);
+        selectBestFeature(features: FVector, clickPosition: LonLat, options: any);
         setModifiers(evt: Event);
-        select(features: Vector[]);
-        hoverSelect(feature: Vector);
-        unselect(feature: Vector);
+        select(features: FVector[]);
+        hoverSelect(feature: FVector);
+        unselect(feature: FVector);
         unselectAll();
         setMap(map: IMap);
         pixelToBounds(pixel: Pixel);
@@ -836,7 +832,7 @@ declare module OpenLayers {
         updateHandler(handler: ICallback, options: any);
         measureComplete(geometry: Geometry);
         measurePartial(point: Point, geometry: Geometry);
-        measureImmidiate(point: Point, feature: Vector, drawing: boolean);
+        measureImmidiate(point: Point, feature: FVector, drawing: boolean);
         cancelDelay();
         measuer(geometry: Geometry, eventType: string);
         getBestArea(geometry: Geometry): ValueUnit[];
@@ -1494,6 +1490,7 @@ declare module OpenLayers {
     }
 
     interface EsriGeoJSONP {
+        read(data: string): FVector[];
     }
 
     interface GeoJSON {
@@ -1526,8 +1523,8 @@ declare module OpenLayers {
         extractAttributes: boolean;
         creator: string;
 
-        read(doc: Element): Vector[];
-        write(features: Vector[], options?: any);
+        read(doc: Element): FVector[];
+        write(features: FVector[], options?: any);
     }
     interface JSON {
         indent: string;
@@ -1647,11 +1644,11 @@ declare module OpenLayers {
         destroy();
         filterToParams(filter: Filter): any;
         read(options?: any): Response;
-        create(features: Vector[], options?: any): Response;
-        create(features: Vector, options?: any): Response;
-        update(feature: Vector, options?: any): Response;
-        delete(feature: Vector, options?: any): Response;
-        commit(features: Vector[], options?: any): Response;
+        create(features: FVector[], options?: any): Response;
+        create(features: FVector, options?: any): Response;
+        update(feature: FVector, options?: any): Response;
+        delete(feature: FVector, options?: any): Response;
+        commit(features: FVector[], options?: any): Response;
         abort(response: Response);
     }
 
@@ -1745,7 +1742,7 @@ declare module OpenLayers {
         events: Events;
         isBaseLayer: Boolean;
         isFixed: Boolean;
-        features: Vector[];
+        features: FVector[];
         filter: Filter;
         selectedFeatures: FVector[];
         unrenderedFeatures: any;
@@ -1776,7 +1773,7 @@ declare module OpenLayers {
         removeFeatures(features: FVector[], options?: any);
         removeAllFeatures(silent: Boolean);
         destroyFeatures(features: FVector[], options?: any);
-        drawFeature(feature: FVector, style: string);
+        drawFeature(feature: FVector, style?: string);
         eraseFeature(feature: FVector);
         getFeatureFromEvent(evt: Event): FVector;
         getFeatureBy(property: string, value: string): FVector;
