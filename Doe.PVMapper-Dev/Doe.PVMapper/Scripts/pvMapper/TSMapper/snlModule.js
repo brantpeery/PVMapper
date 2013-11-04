@@ -1,4 +1,4 @@
-﻿/// <reference path="pvMapper.ts" />
+/// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Tools.ts" />
@@ -39,7 +39,7 @@ var INLModules;
             selectOnFocus: true
         };
 
-        var propsGrid = new Ext.grid.PropertyGrid({
+        var propsGrid = Ext.create('propertygrid', {
             nameText: 'Properties Grid',
             minWidth: 300,
             //autoHeight: true,
@@ -65,8 +65,8 @@ var INLModules;
             //    scrollOffset: 2 // the grid will never have scrollbars
             //},
             customEditors: {
-                'minimumVoltage': new Ext.form.ComboBox(comboConfig),
-                'maximumVoltage': new Ext.form.ComboBox(comboConfig)
+                'minimumVoltage': Ext.create('Ext.form.ComboBox', comboConfig),
+                'maximumVoltage': Ext.create('Ext.form.ComboBox', comboConfig)
             }
         });
 

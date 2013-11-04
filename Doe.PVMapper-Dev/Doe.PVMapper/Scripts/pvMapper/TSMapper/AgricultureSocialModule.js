@@ -1,4 +1,4 @@
-﻿/// <reference path="pvMapper.ts" />
+/// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Tools.ts" />
@@ -129,42 +129,6 @@ var INLModules;
     var mapLayer;
 
     function addAllMaps() {
-        // add as ESRI REST layer
-        ////TODO: test map - hide this
-        //mapLayer = new OpenLayers.Layer.ArcGIS93Rest(
-        //    "Agriculture TEST",
-        //    esriExportUrl,
-        //    {
-        //        layers: "show:0", //"show:2",
-        //        format: "gif",
-        //        srs: "3857", //"102100",
-        //        transparent: "true",
-        //    }//,{ isBaseLayer: false }
-        //    );
-        //mapLayer.setOpacity(0.3);
-        //mapLayer.epsgOverride = "3857"; //"EPSG:102100";
-        //mapLayer.setVisibility(false);
-        //pvMapper.map.addLayer(mapLayer);
-        // add as WMS layer
-        ////TODO: this server doesn't offer EPSG:3857. Should find a different server?
-        //mapLayer = new OpenLayers.Layer.WMS(
-        //    "Agriculture",
-        //    wmsServerUrl,
-        //    {
-        //        layers: "cdl_2012",
-        //        transparent: "true",
-        //        format: "image/png",
-        //        exceptions: "application/vnd.ogc.se_inimage", //TODO: DEBUG = remove before deploy...
-        //        //maxResolution: 156543.0339,
-        //        //srs: "EPSG:3857",
-        //        srs: "EPSG:4326",
-        //    },
-        //    { isBaseLayer: false }
-        //    );
-        //mapLayer.setOpacity(0.3);
-        //mapLayer.setVisibility(false);
-        //mapLayer.epsgOverride = "EPSG:4326"; //"EPSG:3857";
-        //pvMapper.map.addLayer(mapLayer);
     }
 
     function removeAllMaps() {
@@ -265,6 +229,5 @@ var INLModules;
                 }
             }
         });
-        //var response: OpenLayers.Response = jsonpProtocol.read();
     }
 })(INLModules || (INLModules = {}));

@@ -26,10 +26,9 @@ var pvMapper;
 
     // Class
     var ScoreLine = (function () {
-        //#region "Constructor"
+        // Constructor
         function ScoreLine(options) {
             var _this = this;
-            this.weight = 0;
             this.scores = new Array();
             //public updateScore: ICallback = options.updateScoreCallback;
             this.active = true;
@@ -100,7 +99,8 @@ var pvMapper;
 
             // this.loadScore();
             //Set the default weight of the tool
-            this.weight = (this.weight < 0) ? (typeof options.weight === "number") ? options.weight : 10 : this.weight;
+            //Note: a weight of 0 is possible and valid
+            this.weight = (typeof options.weight === "number") ? options.weight : 10;
         }
         ScoreLine.prototype.getUtilityScore = function (x) {
             return this.scoreUtility.run(x);

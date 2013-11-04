@@ -1,6 +1,4 @@
-﻿/// <reference path="OpenLayers.d.ts" />
-/// <reference path="Event.ts" />
-var pvMapper;
+﻿var pvMapper;
 (function (pvMapper) {
     var Site = (function () {
         //The parameter list:    //test
@@ -23,6 +21,27 @@ var pvMapper;
             this.name = feature.attributes.name;
             this.description = feature.attributes.description;
         }
+        /**
+        *  This function is a helper function that is called by JSON.stringify() to properly stringify this object
+        *  It basically sends back a simplified object that removes all the non essential properties
+        */
+        Site.prototype.toJSON = function () {
+            var o = {
+                id: this.id,
+                geometry: this.geometry.toString(),
+                name: this.name,
+                description: this.description,
+                popupHTML: this.popupHTML
+            };
+            return o;
+        };
+
+        /* Consumes the object created when a saved JSON string is parsed.
+        *  Repopulates this object with the stuff from the JSON parse
+        *
+        */
+        Site.prototype.fromJSON = function () {
+        };
         return Site;
     })();
     pvMapper.Site = Site;

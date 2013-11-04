@@ -1,6 +1,4 @@
-﻿/// <reference path="common.ts" />
-/// <reference path="../../jquery.d.ts" />
-var pvMapper;
+﻿var pvMapper;
 (function (pvMapper) {
     /*
     Is a publish point. Uses the handlers and fire method to publish events
@@ -42,13 +40,6 @@ var pvMapper;
                 if (typeof (func) != 'undefined') {
                     //try {
                     func.apply(context, eventArgs);
-                    //} catch (e) {
-                    //    if (console) {
-                    //        console.log("Error caught while in an event: " + e.message + " : file: " + e.fileName + " line: " + e.lineNumber);
-                    //        console.log(context);
-                    //        console.error(e);
-                    //    }
-                    //}
                 }
             });
         };
