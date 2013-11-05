@@ -39,7 +39,7 @@ var INLModules;
             selectOnFocus: true
         };
 
-        var propsGrid = Ext.create('propertygrid', {
+        var propsGrid = Ext.create('Ext.grid.property.Grid', {
             nameText: 'Properties Grid',
             minWidth: 300,
             //autoHeight: true,
