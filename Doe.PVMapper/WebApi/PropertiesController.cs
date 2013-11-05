@@ -108,7 +108,7 @@ namespace Doe.PVMapper.Controllers
 
             // According to the HTTP specification, the DELETE method must be idempotent, meaning that several DELETE
             // requests to the same URI must have the same effect as a single DELETE request. Therefore, the method 
-            // should not return an error code if the book was already deleted.
+            // should not return an error code if the properties object was already deleted.
             if (prop != null)
             {
                 if (prop.UserId == User.Identity.Name)

@@ -68,7 +68,7 @@ var INLModules;
     var propsWindow;
 
     Ext.onReady(function () {
-        var propsGrid = Ext.create('propertygrid', {
+        var propsGrid = Ext.create('Ext.grid.property.Grid', {
             minWidth: 300,
             source: configProperties,
             //customRenderers: {
