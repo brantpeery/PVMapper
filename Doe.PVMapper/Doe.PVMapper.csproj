@@ -473,6 +473,9 @@
     <Content Include="Scripts\pvMapper\TSMapper\Renderer.min.js">
       <DependentUpon>Renderer.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\reports\DataProccessor.js" />
+    <Content Include="Scripts\pvMapper\TSMapper\reports\DataProccessor.min.js" />
+    <Content Include="Scripts\pvMapper\TSMapper\reports\DataProccessor.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\Score.min.js">
       <DependentUpon>Score.ts</DependentUpon>
     </Content>
@@ -1340,6 +1343,9 @@
     <Content Include="Scripts\ViewScripts\SiteDetail.js" />
     <Content Include="Scripts\ViewScripts\testscripts.js" />
     <Content Include="Scripts\ViewScripts\ZoomAction.js" />
+    <Content Include="Scripts\pvMapper\TSMapper\DataManager.js.map">
+      <DependentUpon>DataManager.ts</DependentUpon>
+    </Content>
     <None Include="TestPages\SummaryReport.scss" />
     <Content Include="TestPages\SummaryReportTemplate.html" />
     <Content Include="TestPages\SummaryReport.css" />
