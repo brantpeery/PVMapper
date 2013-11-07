@@ -22,6 +22,15 @@ Ext.override(Ext.XTemplate, {
  * http://www.sencha.com/forum/showthread.php?135442-Ext.grid.feature.Summary-amp-amp-Ext.grid.feature.Grouping
  */
 
+// This fix stops tooltips from disappearing after a short time - instead they will persist during hover.
+Ext.onReady(function () {
+    Ext.QuickTips.init();
+    Ext.apply(Ext.QuickTips.getQuickTip(), {
+        dismissDelay: 0
+        //showDelay: 100
+    });
+});
+
 var toolModel = Ext.define('Tools', {
     extend: 'Ext.data.Model',
     xtype: 'Tools',
