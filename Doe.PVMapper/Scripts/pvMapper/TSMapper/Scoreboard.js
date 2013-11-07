@@ -22,8 +22,6 @@ var pvMapper;
             Fires when a total line tool is added to the totalLines
             */
             this.totalLineAddedEvent = new pvMapper.Event();
-            //End Events---------
-            this.tableRenderer = new pvMapper.Renderer.HTML.Table();
             this.self = this;
 
             this.onScoreChanged = function (event) {
@@ -35,6 +33,8 @@ var pvMapper;
                 _this.changedEvent.fire(_this, event);
             };
         }
+        //End Events---------
+        //public tableRenderer = new pvMapper.Table();
         ScoreBoard.prototype.addLine = function (scoreline) {
             //console.log("Adding scoreline " + scoreline.name);
             scoreline.scoreChangeEvent.addHandler(this.onScoreChanged);
