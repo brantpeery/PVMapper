@@ -542,6 +542,10 @@
       <DependentUpon>solarmapperModule.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\StarRatingHelper.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\SolarPlantSocialModule.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\SolarPlantSocialModule.js">
+      <DependentUpon>SolarPlantSocialModule.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\StarRatingHelper.js">
       <DependentUpon>StarRatingHelper.ts</DependentUpon>
     </Content>

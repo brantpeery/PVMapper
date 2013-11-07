@@ -238,6 +238,7 @@ OpenLayers.Format.EsriGeoJSON = OpenLayers.Class(OpenLayers.Format.GeoJSON, {
 				
 				//get the geometry
 				var o = feat.geometry;
+				if (typeof o.points !== 'undefined') { o = o.points; }
 				var geojsonstart = '{"type":"Feature", "properties":' + feature_property + ', "geometry":{"type":"MultiPoint", "coordinates":['	                
 				var geojsonend = ']}, "crs":{"type":"EPSG", "properties":{"code":' + epsg_code + '}}}';
 				
@@ -248,10 +249,16 @@ OpenLayers.Format.EsriGeoJSON = OpenLayers.Class(OpenLayers.Format.GeoJSON, {
 					//the coordinates for this ring
 					var coords = o[s];
 					
-					//loop through each coordinate
-					var coordPair="[" + coords.x + "," + coords.y;
+				    //loop through each coordinate
+					if (typeof coords[0] === 'number') {
+					    // it's an array
+					    var coordPair = "[" + coords[0] + "," + coords[1];
+					} else {
+                        // it's not an array
+					    var coordPair = "[" + coords.x + "," + coords.y;
+					}
 					
-					if(s === path_count - 1) {
+					if (s === o.length - 1) {
 						coordPair += "]";
 					} else {
 						coordPair += "],";
