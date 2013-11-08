@@ -45,7 +45,7 @@ module INLModules {
                     init: null,
 
                     title: "Protected Areas",
-                    description: "Overlapping protected areas, using PAD-US map data hosted by UI-GAP (gap.uidaho.edu)",
+                    description: "Overlapping protected areas, using PAD-US map data hosted by gapanalysisprogram.com, using GAP status codes as the default star rating",
                     category: "Land Use",
                     //onScoreAdded: (e, score: pvMapper.Score) => {
                     //},
@@ -69,8 +69,8 @@ module INLModules {
         }
 
         private starRatingHelper: pvMapper.IStarRatingHelper = new pvMapper.StarRatingHelper({
-            defaultStarRating: 2,
-            noCategoryRating: 4,
+            defaultStarRating: 4,
+            noCategoryRating: 5,
             noCategoryLabel: "None"
         });
 
@@ -139,6 +139,7 @@ module INLModules {
 
                                 var owner = parsedResponse.results[i].attributes["Owner Name"];
                                 var manager = parsedResponse.results[i].attributes["Manager Name"];
+                                var gapStatusCode = parseInt(parsedResponse.results[i].attributes["GAP Status Code"], 10);
 
                                 var newText = "";
 
@@ -160,6 +161,14 @@ module INLModules {
                                 // add this to the array of responses we've received
                                 if (responseArray.indexOf(newText) < 0) {
                                     responseArray.push(newText);
+                                }
+
+                                // if we have a valid gap status code, and no current star rating,
+                                // then let's go ahead and use the gap status code as the star rating.
+                                // (gap status codes defined: http://www.gap.uidaho.edu/padus/gap_iucn.html)
+                                if (typeof this.starRatingHelper.starRatings[newText] === "undefined" &&
+                                    !isNaN(gapStatusCode) && gapStatusCode > 0 && gapStatusCode <= 5) {
+                                    this.starRatingHelper.starRatings[newText] = gapStatusCode;
                                 }
                             }
 
