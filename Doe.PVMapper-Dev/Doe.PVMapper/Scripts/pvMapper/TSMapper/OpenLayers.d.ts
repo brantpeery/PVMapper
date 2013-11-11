@@ -1019,6 +1019,7 @@ declare module OpenLayers {
         };
     }
 
+    //NOTE: This version implement the upcoming release of OpenLayers currently in development.
   interface IMap {
         //constant
         Z_INDEX_BASE: any;
@@ -1117,11 +1118,11 @@ declare module OpenLayers {
         getZooom(): number;
         pan(dx: number, dy: number, options: any);
         panTo(lonlat: LonLat);
-        setCenter(lonlat: LonLat, zoom: number, dragging: Boolean, forceZoomChange: Boolean);
+        setCenter(lonlat: LonLat, zoom: number, dragging?: Boolean, forceZoomChange?: Boolean);
         moveByPx(dx: number, dy: number);
         adjustZoom(zoom: number): number;
         getMinZoom(): number;
-        moveTo(lonlat: LonLat, zoom: number, options: any);
+        moveTo(lonlat: LonLat, zoom: number, options?: any);
         centerLayerContainer(lonlat: LonLat);
         isValidZoomLevel(zoomLevel: number): Boolean;
         isValidLonLat(lonlat: LonLat): Boolean;
@@ -1398,23 +1399,53 @@ declare module OpenLayers {
         getTilesBounds();
     }
 
-    interface ArcGIS93Rest {
+    interface XYZ extends Grid {
+        isBaseLayer: boolean;
+        sphericalMercator: boolean;
+        zoomOffset: number;
+        serverResolutions: any[]; //array : a list of all resolutions available on the server.
+
+        clone(obj: any): XYZ;
+        getURL(bounds: Bounds): string;
+        getXYZ(bounds: Bounds): any; //an object with x, y and z properties
+        setMap(map: IMap);
+    }
+    interface WMS extends Grid {
+        DEFAULT_PARAMS: any;
+        isBaseLayer: boolean;
+        encodeBBOX: boolean;
+        noMagic: boolean;
+        yz: any;
+
+        clone(obj): WMS;
+        reverseAxisOrder(): boolean;
+        getURL(bounds: Bounds): string;
+        mergeNewParams(newParams: any);
+        getFullRequestString(newParams: any, altUrl: string): string;
+    }
+
+    interface OSM extends XYZ {
+        name: string;
+        url: string;
+        attribution: string;
+        sphericalMercator: boolean;
+        wrapDateLine: boolean;
+        tileOptions: Tile;
+        clone(obj: any): OSM;
     }
 
     var Layer: {
-        new (value?: any): Layer;
         new (name: string, options: any): Layer;
         (value?: any): Layer;
         (name: string, options: any): Layer;
         prototype: Layer;
         Vector: {
-            new (value?: any): Vector;
-            (value?: any): Vector;
             new (name: string, options?: any): Vector;
             prototype: Vector;
         };
         WMS: {
             new (name: string, url: string, params: any, options?: any): any;
+            prototype: WMS;
         }
         ArcGIS93Rest: {
             new (name: string, url: string[], params: any): any;
@@ -1422,7 +1453,8 @@ declare module OpenLayers {
             prototype: ArcGIS93Rest;
         }
         XYZ: {
-            new (name: string, url: string, params: any): any;
+            new (name: string, url: string, options: any): any;
+            prototype: XYZ;
         }
         //ArcGIS93Rest(name: string, url: string[], params: any):any;
         //ArcGIS93Rest(name: string, url: string, options: any, params?: any):any;
@@ -1434,7 +1466,12 @@ declare module OpenLayers {
         Grid: {
             (): Grid;
             prototype: Grid;
-        };
+        }
+        OSM: {
+            new (): OSM;
+            new(name: string, url: string, options:any):OSM;
+            prototype: OSM;
+        }
     }
 
   interface Filter {
@@ -1471,12 +1508,68 @@ declare module OpenLayers {
         deactivate(): Boolean;
     }
 
+    interface BBOX {
+        bounds: Bounds;
+        resolution: number;
+        ratio: number;
+        resFactor: number;
+        response: Response;
+
+        activate(): boolean;
+        deactivate(): boolean;
+        update(options?: any);   //validate: force: boolean - if true, new data must be unconditionally read.  noAbort: boolean - if true, do not abort previous requests.
+        getMapBounds(): Bounds;
+        invalidBounds(mapBounds: Bounds): boolean;
+        calculateBounds(mapBounds: Bounds);
+        triggerRead(options: any): Response;
+        createFilter(): Filter;
+        merge(resp: Response);
+    }
+
+    interface Cluster {
+        distance: number;
+        threshold: number;
+        features: FVector[];
+        clusters: FVector[];
+        clustering: boolean;
+        resolution: number;
+
+        activate(): boolean;
+        deactivate(): boolean;
+        cacheFeatures(evt: any): boolean;
+        clearCache();
+        cluster(evt: any);
+        clustersExist(): boolean;
+        shouldCluster(cluster: FVector, feature: FVector);
+
+    }
+
+    interface Fixed{
+        preload: Boolean;
+        activate(): Boolean;
+        deactivate(): Boolean;
+        load(options?: any);
+        merge(resp: Response);
+    }
+
+
     var Strategy: {
         new (options?: any): Strategy;
         (options?: any): Strategy;
         prototype: Strategy;
-        Fixed(): any;
+        BBOX: {
+            new (options?: any): BBOX;
+            (options?: any): BBOX;
+            prototype: BBOX;
+        }
+        Fixed: {
+            new (options?: any): Fixed;
+            (options?: any): Fixed;
+            prototype: Fixed;
+        }
+
     }
+
   interface Format {
         options: any;
         externalProjection: Projection;
@@ -1738,6 +1831,7 @@ declare module OpenLayers {
     }
 
 
+  //support 2.13.1
   interface Vector extends Layer {
         events: Events;
         isBaseLayer: Boolean;
@@ -1752,7 +1846,7 @@ declare module OpenLayers {
         strategies: Strategy[];
         protocol: Protocol;
         renderers: string[];
-        renders: Renderer;
+        renderer: Renderer;
         rendererOptions: any;
         geometryType: string;
         drawn: Boolean;
@@ -1785,10 +1879,8 @@ declare module OpenLayers {
     }
 
     var Vector: {
-        new (value?: any): Vector;
-        (value?: any): Vector;
-        new (name: string, options: any): Vector;
-        (name: string, options: any): Vector;
+        new (name: string, options?: any): Vector;
+        (name: string, options?: any): Vector;
         prototype: Vector;
     }
 
@@ -1813,9 +1905,8 @@ declare module OpenLayers {
         isDraw(): Boolean;
     }
 
+    //NOTE  2.13.1 version.
     var Icon: {
-        new (value?: any): Icon;
-        (value?: any): Icon;
         new (url: string, size: Size, offset: Pixel, calculateOffset: ICallback): Icon;
         (url: string, size: Size, offset: Pixel, calculateOffset: ICallback): Icon;
         prototype: Icon;
@@ -1980,6 +2071,7 @@ declare module OpenLayers {
 
     }
 
+    //NOTE: FVector is for all features related object.  There are a 'Vector' class which is use for layer only.
     interface FVector extends Feature {
         //Properties
         fid: string;
