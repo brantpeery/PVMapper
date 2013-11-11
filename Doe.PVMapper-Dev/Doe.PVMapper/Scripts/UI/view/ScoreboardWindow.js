@@ -607,7 +607,7 @@ Ext.define('MainApp.view.ScoreboardWindow', {
     id: "ScoreboardWindowID",
     title: 'Main Scoreboard',
     width: 800,
-    height: 725,
+    height: 600,
     //cls: "propertyBoard", <-- this looked hokey, and conflicted with ext js's default styling.
     closeAction: 'hide',
     plugins: [{
