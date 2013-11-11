@@ -587,6 +587,10 @@
       <DependentUpon>WildernessModule.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\WildernessModule.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\WildlifeSocialModule.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\WildlifeSocialModule.js">
+      <DependentUpon>WildlifeSocialModule.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\Utility.min.js">
       <DependentUpon>Utility.ts</DependentUpon>
     </Content>

@@ -219,7 +219,7 @@ module INLModules {
                     init: null,
 
                     title: "Land Cover",
-                    description: "The type of land cover found in the center of a site, using NLCD map data hosted by UI-GAP (gap.uidaho.edu)",
+                    description: "The type of land cover found in the center of a site, using NLCD map data hosted by gapanalysisprogram.com",
                     category: "Land Use",
                     //onScoreAdded: (e, score: pvMapper.Score) => {
                     //},
