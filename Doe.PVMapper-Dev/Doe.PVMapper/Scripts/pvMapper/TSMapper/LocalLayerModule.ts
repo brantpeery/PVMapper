@@ -32,8 +32,8 @@ module INLModules {
                     destroy: null,
                     init: null,
 
-                    title: "Custom Local Module",
-                    description: "Customized user module (local layer)",
+                    title: "Custom Distance Tool",
+                    description: "Calculates the distance to the nearest feature loaded from a KML file.",
                     category: "Custom",
                     //onScoreAdded: (e, score: pvMapper.Score) => {
                     //},
@@ -41,13 +41,9 @@ module INLModules {
                         this.updateScore(score);
                     },
 
-                    getStarRatables: () => {
-                        return this.starRatingHelper.starRatings;
-                    },
-
                     scoreUtilityOptions: {
-                        functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
+                        functionName: "linear3pt",
+                        functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 10000, 0, "km")
                     },
                     weight: 10,
                 }],
@@ -62,31 +58,49 @@ module INLModules {
             noCategoryLabel: "None"
         });
 
-        private localUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/services/PADUS/PADUS_owner/MapServer/WMSServer";
+        //private localUrl = "";
 
-        private localLayer: OpenLayers.Vector;
-        private localFormat: OpenLayers.KML;
-        private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
+        private localLayer: OpenLayers.Vector = null;
+        private localFormat: OpenLayers.KML = null;
+        //private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
 
         //============================================================
+        // blob is the file attribute and file handle.
+        private kmlFile = null;
         public readTextFile(blob: Blob) {
             var _this = this;
             var reader = new FileReader();
+            this.kmlFile = blob;
             reader.readAsText(blob);
             reader.onload = function (evt) {
+                var kml_projection = new OpenLayers.Projection("EPSG:4326");
+                var map_projection = new OpenLayers.Projection("EPSG:3857");
+
+                //var osm: OpenLayers.OSM = new OpenLayers.Layer.OSM();
+
                 _this.localFormat = new OpenLayers.Format.KML({
                     extractStyles: true,               //user KML style
                     extractAttributes: true,           //user KML attributes
-                    maxDepth: 2
+                    internalProjection: map_projection,
+                    externalProjection: kml_projection,
                 });
 
-                _this.localLayer = new OpenLayers.Layer.Vector("KML Custom Layer",
+                _this.localLayer = new OpenLayers.Layer.Vector("KML (" + _this.kmlFile.name + ")",
                     {
-                        strategies: OpenLayers.Strategy.Fixed()
+                        strategies: OpenLayers.Strategy.Fixed(),
+                        style: {
+                            fillColor: "darkred", strokeColor: "red", strokeWidth: 5,
+                            strokeOpacity: 0.5, pointRadius: 5
+                        }
                     });
+                
+                var feature: OpenLayers.FVector[] = _this.localFormat.read(evt.target.result);
+                _this.localLayer.addFeatures(feature);
+                var isOk = pvMapper.map.addLayer(_this.localLayer);
 
-                _this.localLayer.addFeatures(_this.localFormat.read(evt.target.result));
-                pvMapper.map.addLayer(_this.localLayer);
+                if (_this.scoreObj !== null) {
+                    _this.updateScore(_this.scoreObj);
+                }
             }
         }
 
@@ -98,83 +112,33 @@ module INLModules {
             pvMapper.map.removeLayer(this.localLayer, false);
         }
 
+        private scoreObj: pvMapper.Score = null;
         private updateScore(score: pvMapper.Score) {
-            var params = {
-                mapExtent: score.site.geometry.bounds.toBBOX(6, false),
-                geometryType: "esriGeometryEnvelope",
-                geometry: score.site.geometry.bounds.toBBOX(6, false),
-                f: "json",
-                layers: "0",
-                tolerance: 0,
-                imageDisplay: "1, 1, 96",
-                returnGeometry: false,
-            };
-
-            //console.log("LandUseModule.ts: " + score.site.geometry.bounds.toBBOX(6, false));
-
+            this.scoreObj = score;
+            if (this.localLayer == null) return; // the feature not yet loaded.
+            var closestFeature: OpenLayers.FVector = null;
+            var minDistance: number = Number.MAX_VALUE;
+                     
+            if (this.localLayer.features) {
+                for (var i = 0; i < this.localLayer.features.length; i++) {
+                    if (this.localLayer.features[i].geometry !== null) {  //don't check non-polygon features.
+                        var distance: number = score.site.geometry.distanceTo(this.localLayer.features[i].geometry);
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            closestFeature = this.localLayer.features[i];
+                        }
+                    }
+                }
+            }
+            if (closestFeature !== null) {
+                score.popupMessage = (minDistance / 1000).toFixed(1) + " km to nearest feature.";
+                score.updateValue(minDistance / 1000);
+            } else {
+                score.popupMessage = "No features loaded.";
+                score.updateValue(Number.NaN);
+            }
         }
 
     }
-
-    //var localInstance = new INLModules.LocalLayerModule();
-
-    //=========================================================== 
-    // WMS: new (name: string, url: string, params: any, options: any): any;
-
-    //private testing() {
-
-    //    var customLayer = new OpenLayers.Layer.WMS(
-    //        "WMS",
-    //        "http://vmap0.tiles.osgeo.org/wms/vmap0",
-    //        { layers: "basic" }
-    //        );
-
-    //    var kmlFormat = new OpenLayers.Format.KML({
-    //        extractStyles: true,               //user KML style
-    //        extractAttributes: true,           //user KML attributes
-    //        maxDepth: 2
-    //    });
-
-    //    var kmlObj: string = readTextFile("file:///c:/clientlocalpath/kmllayerfile.kml");
-    //    if (kmlObj) {
-    //        kmlFormat.read(kmlObj); // deserialize features.
-    //        pvMapper.map.addLayer(kmlFormat);
-    //    };
-
-
-    //    // use with protocol ...
-    //    var kmlCustomLayer = new OpenLayers.Layer.Vector("KML Layer", {
-    //        strategies: [new OpenLayers.Strategy.Fixed()], //load all features at once
-    //        protocol: new OpenLayers.Protocol.HTTP({
-    //            url: "file:///kml/kmllayer.kml",                  //path to file
-    //            format: new OpenLayers.Format.KML({    //use KML parser
-    //                extractStyles: true,               //user KML style
-    //                extractAttributes: true,           //user KML attributes
-    //                maxDepth: 2
-    //            })
-    //        })
-    //    });
-
-    //    pvMapper.map.addLayers([customLayer, kmlCustomLayer]);
-
-    //    //==========================================
-    //    // Add the Layer with the GPX Track
-    //    var layerGPS = new OpenLayers.Layer.Vector("GPX-Track", {
-    //        strategies: [new OpenLayers.Strategy.Fixed()],
-    //        protocol: new OpenLayers.Protocol.HTTP({
-    //            url: "gpx_uploaded/20130825.gpx",
-    //            format: new OpenLayers.Format.GPX()
-    //        }),
-    //        style: {
-    //            fillColor: "darkred", strokeColor: "red", strokeWidth: 5,
-    //            strokeOpacity: 0.5, pointRadius: 5
-    //        },
-    //        projection: new OpenLayers.Projection("EPSG:4326")
-    //    });
-    //    pvMapper.map.addLayer(layerGPS);
-
-    //}
-
-
 
 }
