@@ -29,6 +29,8 @@ declare module OpenLayers {
       getParameterString(any): string;
     }
 
+    var Util: Util;
+
     interface SiteFeature extends FVector {
         attributes: Attributes;
         site: any;
