@@ -13,7 +13,7 @@ module INLModules {
     export class LocalLayerModule {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module({
-                id: "Custom Local Module",
+                id: "LocalLayerModule",
                 author: "Leng Vang, INL",
                 version: "0.1.ts",
 
