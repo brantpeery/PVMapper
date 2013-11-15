@@ -39,6 +39,9 @@ declare module OpenLayers {
     interface Collection extends Geometry {
         components: Geometry[];
         componentTypes: string[];
+
+        constructor(components?: Geometry[]);
+
         destroy();
         clone(): Collection;
         getComponentsString(): string;
@@ -50,12 +53,12 @@ declare module OpenLayers {
         getLength(): number;
         getArea(): number;
         getGeodesicArea(projection: Projection): number;
-        getCentroid(weighted?: Boolean): Point;
+        getCentroid(): Point;
         getGeodesicLength(projection: Projection): number;
         move(x: number, y: number);
         rotate(angle: number, origin: Point);
         resize(scale: number, origin: Point, ratio: number): Geometry;
-        distanceTo(geometry: Geometry): number;
+        //distanceTo(geometry: Geometry): number;
         distanceTo(geometry: Geometry, options?: Boolean): number;
         equals(geometry: Geometry): Boolean;
         transform(source: Projection, dest: Projection): Geometry;
@@ -66,6 +69,10 @@ declare module OpenLayers {
     interface Polygon extends Geometry, Collection {
         compontTypes: string[];
         getArea(): number;
+
+        constructor(components?: Geometry[]);
+        constructor(components: LinearRing);
+
         getGeodesicArea(projection: Projection): number;
         containsPoint(point: Point): Boolean;
         //containsPoint(point: Point): number;   //this break in Typescript 0.9.1 ==> "Overloads cannot differ only by return type".
@@ -240,7 +247,7 @@ declare module OpenLayers {
         extendBounds(newBounds: Bounds);
         getBounds(): Bounds;
         calculateBounds();
-        distanceTo(geometry: Geometry): number;
+        //distanceTo(geometry: Geometry): number;
         distanceTo(geometry: Geometry, options?: any): number;
         getVertices(nodes: Boolean): Geometry[];
         atPoint(lonlat: LonLat, toleranceLon: number, toleranceLat: number): Boolean;
@@ -254,6 +261,54 @@ declare module OpenLayers {
         segmentsIntersect(seg1: Segment, seg2: Segment, point: Boolean): Boolean;
         segmentsIntersect(seg1: Segment, seg2: Segment, tolerance: number): Point;
         distanceToSegment(point: Point, segment: Segment): Point;
+    }
+
+    var Geometry: {
+        new (): Geometry;
+        (): Geometry;
+        protytype: Geometry;
+        Collection: {
+            new (components: Geometry[]): Collection;
+            (components: Geometry[]): Collection;
+            prototype: Collection;
+        }
+        Curve: {
+            new (point: Point): Curve;
+        }
+        Point: {
+            new (x: number, y: number): Point;
+            prototype: Point;
+        }
+        LinearRing: {
+            new (points: Point[]): LinearRing;
+            (points: Point[]): LinearRing;
+            prototype: LinearRing;
+        }
+        LineString: {
+            new (points: Point[]): LineString;
+            (points: Point[]): LineString;
+            prototype: LineString;
+        }
+        MultiLineString: {
+            new (components: LineString[]): MultiLineString;
+            (components: LineString[]): MultiLineString;
+            prototype: MultiLineString;
+        }
+        MultiPoint: {
+            new (components: Point[]): MultiPoint;
+            (components: Point[]): MultiPoint;
+            prototype: MultiPoint;
+        }
+        MultiPolygon: {
+            new (components: Polygon[]): MultiPolygon;
+            (components: Polygon[]): MultiPolygon;
+            prototype: MultiPolygon;
+        }
+        Polygon: {
+            new (components: LinearRing[]): Polygon;
+            (components: LinearRing[]): Polygon;
+            prototype: Polygon;
+        }
     }
 
     interface Projection {
@@ -1594,43 +1649,140 @@ declare module OpenLayers {
         write(obj: any, pretty: boolean): string;
     }
 
-    interface KML {
+    interface ParseGeometry {
+        point(node: DOMElement): Point;
+        linestring(node: DOMElement): LineString;
+        polygon(node: DOMElement): Polygon;
+        multigeometry(node: DOMElement): Collection;
+    }
+
+    interface BuildGeometry{
+        point(geometry: DOMElement): DOMElement;
+        multipoint(geometry: Point): DOMElement;
+        linestring(geometry: LineString): DOMElement;
+        multilinestring(geometry: Point): DOMElement;
+        linearring(geometry: LinearRing): DOMElement;
+        polygon(geometry: Polygon): DOMElement;
+        multipolygon(geometry: Point): DOMElement;
+        collection(geometry: Collection): DOMElement;
+        buildCoordinatesNode(geometry: Geometry): DOMElement;
+        buildCoordinates(point: Point): string;
+        buildExtendedData(attributes: any): DOMElement;
+    }
+
+
+    interface KML extends XML {
+        namespaces: any;
         kmlns: string;
         placemarksDesc: string;
         foldersName: string;
         foldersDesc: string;
         extractAttributes: boolean;
         kvpAttributes: boolean;
+        extractStyles: boolean;
         extractTracks: boolean;
         trackAttributes: any[];
+        internalns: string;
+        features: FVector[];
+        styles: any[];
+        styleBaseUrl: string;
+        feteched: any;
         maxDepth: number;
+        readers: any;
 
         read(data: string): FVector[];
+        parseData(data: string, options: any): FVector[];
+        parseLinks(nodes: DOMElement[], options: any);
+        fetchLink(href: string);
+        parseStyles(nodes: DOMElement[], options: any);
+        parseKmlColor(kmlcolor: string): any;
+        parseStyle(node: DOMElement);
+        parseStyleMaps(nodes: DOMElement[], options: any);
+        parseFeatures(nodes: DOMElement[], options: any);
+        parseFeature(node: DOMElement): FVector;
+        getStyle(styleUrl: string, options: any): any;
+        parseAttributres(node: DOMElement): any;
+        parseExtendedData(node: DOMElement): any;
+        parseProperty(xmlNode: DOMElement, namespace: string, tagName: string): string;
         write(features: FVector[]): string;
+        write(node: DOMElement): string; //extends override
+        createFolderXML(): DOMElement;
+        createPlacemarkXML(feature: FVector): DOMElement;
+        buildGeometryNode(geometry: Geometry): DOMElement;
+        buildCoordinatesNode(geometry: Geometry): DOMElement;
+        buildCoordinates(point: Point): string;
+        buildExtentedData(attributes: any): DOMElement;
+
+        parseGeometry: ParseGeometry;
+        buildGeometry: BuildGeometry;
     }
 
 
-    interface GPX {
+    interface GPX extends XML {
         defaultDesc: string;
         extractWaypoints: boolean;
         extractTracks: boolean;
         extractRoutes: boolean;
         extractAttributes: boolean;
+        namespaces: any;  //Mapping of namespaces aliases to namespaces URIs.
+        schemaLocation: string;
         creator: string;
 
+        read(data: string): any;
         read(doc: Element): FVector[];
-        write(features: FVector[], options?: any);
+        extractSegment(segment: DOMElement, segmentType: string): LineString;
+        parseAttributes(node: DOMElement): any;
+        write(object: any): string;
+        write(features: FVector[], meata: any);
+        buildMetadataNode(metadata: any): DOMElement;
+        buildFeatureNode(feature: FVector): DOMElement;
+        buildTrkSegNode(geometry: Geometry): DOMElement;
+        buildTrkPtNode(point: Point): DOMElement;
+        buildWptNode(geometry: Point): DOMElement;
+        appendAttributesNode(node: DOMElement, feature: FVector);
     }
-    interface JSON {
+
+    interface JSONSerialize {
+        object(obj: any): string;
+        array(arr: any[]): string;
+        string(str: string): string;
+        number(num: number): string;
+        boolean(boo: boolean): string;
+        object(date: Date): string;
+        
+    }
+
+
+    interface JSON extends Format {
         indent: string;
         space: string;
         newline: string;
+        level: number;
+        pretty: boolean;
+        nativeJSON: boolean;
+
+        read(data: string): any;  //Override from Format.
         read(json: string, filter: ICallback): any;
+        write(object: any): string;  //override from Format
         write(value: string, pretty: boolean): string;
+        writeIndent(): string;
+        writeNewLine(): string;
+
+        serialize: JSONSerialize;
     }
 
-    interface XML {
+    interface XML extends Format {
+        namespaces: any;
+        namespaceAlias: any;
+        defaultPrefix: string;
+        readers: any;
+        writers: any;
+        xmldom: any; //  the actual type is XMLDom -- not defined any where in OpenLayers.
+        document: XMLDocument;
+
+
         destroy();
+        setNameSpace(alias: string, uri: string);
         write(node: DOMElement): string;
         createElementNS(uri: string, name: string): Element;
         createDocumentFragment(): Element;
@@ -1643,8 +1795,16 @@ declare module OpenLayers {
         contentType(node: DOMElement): number;
         hasAttributeNS(node: Element, uri: string, name: string): boolean;
         setAttributeNS(node: Element, uri: string, name: string, value: string);
-        getChildEl(node: DOMElement, name: string, uri: string): DOMElement;
+        createElementNSPlus(name: string, options?: any): Element;
+        setAttributes(node: Element, obj: any);
+        readNode(node: DOMElement, obj: any): any;
+        readChildNodes(node: DOMElement, obj: any): any;
+        writeNode(name: string, obj: any, parent: DOMElement): DOMElement;
+        getChildEl(node: DOMElement, name?: string, uri?: string): DOMElement;
+        getNextEl(node: DOMElement, name?: string, uri?: string): DOMElement;
+        getThisOrNextEl(node: DOMElement, name?: string, uri?: string)
         lookupNamespaceURI(node: DOMElement, prefix: string): string;
+        getXMLDoc(): XMLDocument;
     }
 
     var Format: {
@@ -1740,7 +1900,7 @@ declare module OpenLayers {
         filterToParams(filter: Filter): any;
         read(options?: any): Response;
         create(features: FVector[], options?: any): Response;
-        create(features: FVector, options?: any): Response;
+        //create(features: FVector, options?: any): Response;
         update(feature: FVector, options?: any): Response;
         delete(feature: FVector, options?: any): Response;
         commit(features: FVector[], options?: any): Response;

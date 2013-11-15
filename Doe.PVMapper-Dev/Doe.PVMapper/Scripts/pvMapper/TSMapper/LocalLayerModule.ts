@@ -93,7 +93,7 @@ module INLModules {
                             strokeOpacity: 0.5, pointRadius: 5
                         }
                     });
-                
+
                 var feature: OpenLayers.FVector[] = _this.localFormat.read(evt.target.result);
                 _this.localLayer.addFeatures(feature);
                 var isOk = pvMapper.map.addLayer(_this.localLayer);
@@ -118,7 +118,7 @@ module INLModules {
             if (this.localLayer == null) return; // the feature not yet loaded.
             var closestFeature: OpenLayers.FVector = null;
             var minDistance: number = Number.MAX_VALUE;
-                     
+
             if (this.localLayer.features) {
                 for (var i = 0; i < this.localLayer.features.length; i++) {
                     if (this.localLayer.features[i].geometry !== null) {  //don't check non-polygon features.
@@ -140,5 +140,4 @@ module INLModules {
         }
 
     }
-
 }
