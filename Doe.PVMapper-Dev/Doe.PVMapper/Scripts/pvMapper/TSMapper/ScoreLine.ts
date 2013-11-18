@@ -255,6 +255,9 @@ module pvMapper {
                 try {
                     var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.STORE_NAME, "readwrite");
                     var store = txn.objectStore(ClientDB.STORE_NAME);
+                    var stb = null;
+                    if (me.getStarRatables !== undefined)
+                       stb = me.getStarRatables(); // call the module for the rating value.
                     var dbScore: DBScore = new DBScore(
                         me.title,
                         me.description,
@@ -262,12 +265,12 @@ module pvMapper {
                         me.weight,
                         me.active,
                         me.scoreUtility,
-                        me.getStarRatables()
+                        stb
                         );
 
                     var req = store.add(dbScore, dbScore.title);
                 } catch (e) {
-                    console.log("pubDBObject failed, cause: " + e.message);
+                    console.log("putScore failed, cause: " + e.message);
                 }
             }
         }
@@ -300,6 +303,8 @@ module pvMapper {
                         me.scoreUtility.functionArgs = request.result.scoreUtility.functionArgs;
                         me.scoreUtility.iconURL = request.result.scoreUtility.iconURL;
                         me.scoreUtility.fCache = request.result.scoreUtility.fCache;
+                        //This won't work.  No way to write back to the module's rateTable.
+                        //me.getStarRatables = request.result.rateTable;
 
                         me.updateScores();
                     }
