@@ -5,16 +5,13 @@
 module pvMapper {
    export module Data {
         export class ScoreboardProcessor {
-            constructor(scoreboard: ScoreBoard) {
-                this.scoreboard = scoreboard;
-            }
-            private scoreboard: ScoreBoard;
-            public getCleanObject() {
-                var j = JSON.stringify(this.scoreboard);
+            
+            static getCleanObject(scoreboard) {
+                var j = JSON.stringify(scoreboard);
                 return JSON.parse(j);
             }
-            public getCleanObjectTransposed() {
-                var obj = this.getCleanObject();
+            static getCleanObjectTransposed(scoreboard) {
+                var obj = this.getCleanObject(scoreboard);
                 var newObj = {
                     sites: []
                 };
@@ -32,8 +29,6 @@ module pvMapper {
                 });
                 return newObj;
             }
-            public toJSON() { }
-            public fromJSON() { }
         }    
     }
 }
