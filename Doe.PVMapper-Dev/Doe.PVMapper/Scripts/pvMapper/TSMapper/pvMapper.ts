@@ -1,8 +1,13 @@
-﻿/// <reference path="OpenLayers.d.ts" />
+﻿/// <reference path="Tools.ts" />
+/// <reference path="InfoTools.ts" />
+/// <reference path="OpenLayers.d.ts" />
 /// <reference path="Event.ts" />
 
 module pvMapper {
     export var readyEvent: pvMapper.Event = new pvMapper.Event;
+    export var mapToolbar: any;//The main toolbar above the map
+    export var infoTools: IInfoTool[] = [];
+
     export function onReady(fn:ICallback) {
         readyEvent.addHandler(fn);
     }
@@ -53,4 +58,18 @@ module pvMapper {
 
         return 'rgb(' + r + ',' + g + ',' + b + ')';
     }
+
+    export function addInfoTool(tool:IInfoTool) {
+        infoTools.push(tool);
+        tool.init();
+    }
+
+    readyEvent.addHandler(function () {
+        //Activate all the info tools
+        infoTools.map(function (tool, idx) {
+            tool.activate();
+        });
+    })
+
+
 }

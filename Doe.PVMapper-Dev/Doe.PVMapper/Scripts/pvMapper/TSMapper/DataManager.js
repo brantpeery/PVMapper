@@ -115,6 +115,7 @@ var pvMapper;
                 data: data,
                 type: "PUT"
             });
+            //pvMapper.displayMessage("The site has been updated.","Info");
         };
 
         //Deletes a site from the datastore

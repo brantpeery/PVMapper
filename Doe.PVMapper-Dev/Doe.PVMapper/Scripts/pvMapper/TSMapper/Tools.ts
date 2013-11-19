@@ -47,6 +47,11 @@ module pvMapper {
         //onStarRatingChange: (scores: Score[]) => void; //...?
     }
 
+
+    export interface IInfoToolOptions extends ITool {
+
+    }
+
     export interface IScoreToolOptions extends ITool {
         /**
         The function that will be called by the API everytime the tool should
@@ -93,6 +98,10 @@ module pvMapper {
          Returns a number that is the result of the aggragate.
         */
         CalculateScore: (values: IValueWeight[], site: Site) => IScore;
+    }
+
+    export interface IInfoTool extends ITool {
+
     }
 
     export interface IToolAction {

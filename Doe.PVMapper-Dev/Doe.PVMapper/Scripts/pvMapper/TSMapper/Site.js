@@ -1,4 +1,6 @@
-﻿var pvMapper;
+﻿/// <reference path="OpenLayers.d.ts" />
+/// <reference path="Event.ts" />
+var pvMapper;
 (function (pvMapper) {
     var Site = (function () {
         //The parameter list:    //test
