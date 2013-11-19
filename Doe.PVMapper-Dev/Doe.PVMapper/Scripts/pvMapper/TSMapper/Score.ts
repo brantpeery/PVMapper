@@ -120,7 +120,7 @@ module pvMapper {
             return {
                 popupMessage: this.popupMessage,
                 value: this.value,
-                utilitiy: this.utility,
+                utility: this.utility,
                 site:this.site //This will call the toJSON() in the site to simplify the site object
             }
         }
