@@ -608,25 +608,27 @@ pvMapper.onReady(function () {
 
         // add a button on the tool bar to launch a file picker to load local KML file.
         //first, create an input with type='file' and add it to the body of the page.
-        Ext.MessageBox.prompt('Save file as', 'Please enter the filename for the export sites.',
+        Ext.MessageBox.prompt('Save file as', 'Please enter a filename for the export sites.',
             function (btn, filename) {
-                filename = filename || 'sites.kml';
+                if (btn === 'ok') {
+                    filename = filename || 'sites.kml';
 
-                var filenameSpecialChars = new RegExp("[~#%&*{}<>;?/+|\"]");
-                if (filename.match(filenameSpecialChars))  {
-                    Ext.MessageBox.alert('Invlaid filename','A filename can not contains any of the following characters [~#%&*{}<>;?/+|\"]');
-                    return;
+                    var filenameSpecialChars = new RegExp("[~#%&*{}<>;?/+|\"]");
+                    if (filename.match(filenameSpecialChars)) {
+                        Ext.MessageBox.alert('Invlaid filename', 'A filename can not contains any of the following characters [~#%&*{}<>;?/+|\"]');
+                        return;
+                    }
+
+                    //check to make sure that the file has '.kml' extension.
+                    var dotindex = filename.lastIndexOf('.');
+                    dotindex = dotindex == -1 ? filename.length : dotindex;
+                    filename = filename.substr(0, dotindex, dotindex) + '.kml';
+
+                    var blob = CustomBlob(content, null);
+                    blob.data = content;
+                    blob.type = 'data:application/vnd.google-earth.kml+xml';
+                    saveAs(blob, filename);
                 }
-
-                //check to make sure that the file has '.kml' extension.
-                var dotindex = filename.lastIndexOf('.');
-                dotindex = dotindex == -1 ? filename.length : dotindex;
-                filename = filename.substr(0, dotindex, dotindex) + '.kml';
-
-                var blob = CustomBlob(content, null);
-                blob.data = content;
-                blob.type = 'data:application/vnd.google-earth.kml+xml';
-                saveAs(blob, filename);
             }, this, false, 'Sites.kml');
 
         //This code below works too, but always save with a file name of "Download.kml".
