@@ -56,6 +56,7 @@ module pvMapper {
                 this.infoTools.map((tool, idx, toolbar) => {
                     if (console) console.log("Loading info tool " + tool.title + " into the API");
 
+                    pvMapper.addInfoTool(new InfoTool(tool));
                     //TODO: Tie to the data model when ready 
 
                 });

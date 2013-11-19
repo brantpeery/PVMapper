@@ -167,6 +167,7 @@
     <Compile Include="Controllers\ExtensionsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProjectSiteController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\RepositoryControllerBase.cs" />
     <Compile Include="Controllers\SiteDetailController.cs" />
     <Compile Include="Models\ProjectSite.cs" />
@@ -225,6 +226,7 @@
     <Content Include="Content\OpenLayers\default\style.css" />
     <Content Include="Content\OpenLayers\default\style.tidy.css" />
     <Content Include="Content\jsxgraph.css" />
+    <Content Include="Content\Reports\SummaryReport.css" />
     <Content Include="Images\printer.png" />
     <Content Include="lpresources\assets\ajax-loader.gif" />
     <Content Include="lpresources\assets\error.gif" />
@@ -357,6 +359,9 @@
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreLine.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\common.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\DataManager.ts" />
+    <Content Include="Scripts\pvExtensions\Reports.js">
+      <DependentUpon>Reports.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvExtensions\TotalsModule.js">
       <DependentUpon>TotalsModule.ts</DependentUpon>
     </Content>
@@ -411,6 +416,10 @@
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Options.d.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Module.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\irradianceModule.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\InfoTools.js">
+      <DependentUpon>InfoTools.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\InfoTools.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\irradianceModule.js">
       <DependentUpon>irradianceModule.ts</DependentUpon>
     </Content>
@@ -1248,6 +1257,7 @@
     <Content Include="Scripts\GeoExt\window\Popup.js" />
     <Content Include="Notes\FeatureChange Event Pipeline.mm" />
     <Content Include="Notes\FeatureChanged event and update score.pdf" />
+    <Content Include="Content\Reports\SummaryReport.scss" />
     <None Include="Properties\PublishProfiles\Defualt.pubxml" />
     <None Include="Properties\PublishProfiles\PVMAPPER.pubxml" />
     <Content Include="Proxy\proxy.ashx" />
@@ -1362,6 +1372,13 @@
     <Content Include="Scripts\pvMapper\TSMapper\Score.js.map">
       <DependentUpon>Score.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvExtensions\Reports.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\pvMapper.js.map">
+      <DependentUpon>pvMapper.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Module.js.map">
+      <DependentUpon>Module.ts</DependentUpon>
+    </Content>
     <None Include="TestPages\SummaryReport.scss" />
     <Content Include="TestPages\SummaryReportTemplate.html" />
     <Content Include="TestPages\SummaryReport.css" />
@@ -1434,6 +1451,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_BasicLayout.cshtml" />
     <Content Include="Views\SiteDetail\Feedback.cshtml" />
+    <Content Include="Views\Report\Summary.cshtml" />
+    <Content Include="Views\Shared\_ReportLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
