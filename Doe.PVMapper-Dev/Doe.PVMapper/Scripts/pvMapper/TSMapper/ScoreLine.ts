@@ -48,6 +48,10 @@ module pvMapper {
                 this.getStarRatables = () => { return options.getStarRatables.apply(this, arguments); }
 			}
 
+            if ($.isFunction(options.setStarRatables)) {
+                this.setStarRatables = (rateTable: IStarRatings) => { options.setStarRatables.apply(this, arguments); }
+			}
+
             // config window
             if ($.isFunction(options.showConfigWindow)) {
                 this.showConfigWindow = () => { options.showConfigWindow.apply(this, arguments); }
@@ -94,7 +98,7 @@ module pvMapper {
 
             //Set the default weight of the tool
             //Note: a weight of 0 is possible and valid
-            this.weight = (typeof options.weight === "number") ? options.weight : 10;
+            this.weight = (typeof options.weight === "number") ? options.weight : 0;
         }
 
         public utilargs: pvMapper.MinMaxUtilityArgs;
@@ -108,6 +112,7 @@ module pvMapper {
         public active: boolean = true;
 
         getStarRatables: () => IStarRatings;
+        setStarRatables: (rateTable: IStarRatings)=>void;
 
         showConfigWindow: () => void;
 
@@ -268,7 +273,14 @@ module pvMapper {
                         stb
                         );
 
-                    var req = store.add(dbScore, dbScore.title);
+                    var request = store.get(me.title);
+                    request.onsuccess = function (evt): any {
+                        if (request.result != undefined) { // if already exists, update
+                            store.put(dbScore, dbScore.title);
+                        }
+                        else
+                            store.add(dbScore, dbScore.title); // if new, add
+                    }
                 } catch (e) {
                     console.log("putScore failed, cause: " + e.message);
                 }
@@ -305,6 +317,10 @@ module pvMapper {
                         me.scoreUtility.fCache = request.result.scoreUtility.fCache;
                         //This won't work.  No way to write back to the module's rateTable.
                         //me.getStarRatables = request.result.rateTable;
+
+                        if ((me.setStarRatables !== undefined) && (request.result.rateTable !== null)) {
+                            me.setStarRatables(request.result.rateTable);
+                        }
 
                         me.updateScores();
                     }

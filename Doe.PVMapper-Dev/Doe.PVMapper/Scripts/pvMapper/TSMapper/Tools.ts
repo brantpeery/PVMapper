@@ -63,7 +63,7 @@ module pvMapper {
 
         // optional members for star ratings (qualitative) tools...
         getStarRatables?: () => IStarRatings;
-        //setStarRatables?: (ratables: IStarRatings) => void;
+        setStarRatables?: (ratables: IStarRatings) => void;
         //getStarRating: (name: string) => number;
 
         // optional method, implemented on configurable tools, which will show a configuration menu

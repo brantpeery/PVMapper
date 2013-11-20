@@ -44,6 +44,10 @@ module INLModules {
                         return starRatingHelper.starRatings;
                     },
 
+                    setStarRatables: (rateTable: pvMapper.IStarRatings) => {
+                        starRatingHelper.starRatings = rateTable;
+                    },
+
                     // for now, no land management agencies is best, any one is bad, and multiple are worse
                     //scoreUtilityOptions: <pvMapper.IThreePointUtilityOptions>{
                     //    functionName: "linear3pt",

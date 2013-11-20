@@ -49,7 +49,10 @@ pvMapper.showRatingWindow = function (ratables, onAccepted, title) {
       onCancel: function () {
         window.close();
       },
-      onOK: onAccepted
+      onOK: function (){
+        onAccepted();
+        window.close();
+      }
     }
   });
 

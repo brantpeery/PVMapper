@@ -1,3 +1,4 @@
+/// <reference path="StarRatingHelper.ts" />
 /// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
@@ -55,6 +56,9 @@ module INLModules {
 
                     getStarRatables: () => {
                         return this.starRatingHelper.starRatings;
+                    },
+                    setStarRatables: (rateTable: pvMapper.IStarRatings) => {
+                        this.starRatingHelper.starRatings = rateTable;
                     },
 
                     scoreUtilityOptions: {
@@ -231,6 +235,9 @@ module INLModules {
                         return this.ratables;
                     },
 
+                    setStarRatables: (rateTable: pvMapper.IStarRatings) => {
+                        this.ratables = rateTable;
+                    },
                     scoreUtilityOptions: {
                         functionName: "linear",
                         functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
@@ -380,9 +387,11 @@ module INLModules {
                     },
 
                     getStarRatables: () => {
-                        return this.starRatingHelper1.starRatings;
+                        return this.starRatingHelper.starRatings;
                     },
-
+                    setStarRatables: (rateTable: pvMapper.IStarRatings) => {
+                        this.starRatingHelper.starRatings = rateTable;
+                    },
                     scoreUtilityOptions: {
                         functionName: "linear",
                         functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
@@ -428,7 +437,7 @@ module INLModules {
         }
 
 
-        private starRatingHelper1: pvMapper.IStarRatingHelper = new pvMapper.StarRatingHelper({
+        private starRatingHelper: pvMapper.IStarRatingHelper = new pvMapper.StarRatingHelper({
             defaultStarRating: 4,
             //noCategoryRating: 4,
             //noCategoryLabel: "None"
@@ -535,13 +544,13 @@ module INLModules {
 
                                                 for (var i = 0; i < landCovers.length; i++) {
 
-                                                    if (typeof _this.starRatingHelper1.starRatings[landCovers[i].cover] === "undefined") {
-                                                        _this.starRatingHelper1.starRatings[landCovers[i].cover] =
-                                                        _this.starRatingHelper1.options.defaultStarRating;
+                                                    if (typeof _this.starRatingHelper.starRatings[landCovers[i].cover] === "undefined") {
+                                                        _this.starRatingHelper.starRatings[landCovers[i].cover] =
+                                                        _this.starRatingHelper.options.defaultStarRating;
                                                     }
 
                                                     // overall score is the average star rating weighted by the percentage of individual land covers
-                                                    var starRating = _this.starRatingHelper1.starRatings[landCovers[i].cover];
+                                                    var starRating = _this.starRatingHelper.starRatings[landCovers[i].cover];
 
                                                     totalPercent += landCovers[i].percent;
                                                     overallScore += landCovers[i].percent * starRating;
