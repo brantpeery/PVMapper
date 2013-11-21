@@ -33,10 +33,9 @@
   height: 90%;
   width: 33%;
   margin-left: 0.5em; }
-
-.siteImage img {
-  height: 100%;
-  box-shadow: rgba(0, 0, 0, 0.6) 0.5em 0.5em 2em 0.3em; }
+  .siteImage div.siteMap {
+    height: 100%;
+    box-shadow: rgba(0, 0, 0, 0.6) 0.5em 0.5em 2em 0.3em; }
 
 .siteInfo {
   width: 33%; }

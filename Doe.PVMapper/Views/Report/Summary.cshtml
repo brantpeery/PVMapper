@@ -24,6 +24,7 @@
             for (skey in data.sites) {
                 var site = data.sites[skey];
                 count++;
+                var totalWeights = 0;
                 for (key in site.scores) {
                     var score = site.scores[key];
                    
@@ -37,9 +38,11 @@
 
                     //The total of all scores by scoreline for each site
                     if (site["totalUtility"] == undefined) { site["totalUtility"] = 0;}
-                    site["totalUtility"] += score.utility;
+                    site["totalUtility"] += score.utility * score.scoreLine.weight;
+
+                    totalWeights += score.scoreLine.weight;
                 }
-                site['meanUtility'] = site["totalUtility"] / site.scores.length;
+                site['meanUtility'] = site["totalUtility"] / totalWeights;
 
                 //Total mean scores across all sites
                 total += site['meanUtility'];
@@ -69,14 +72,62 @@
             return data;
         }
 
+      
+
+       //polygon is OpenLayers.Geometry.Polygon  GeoJSON format: String.
+        function getMap(divName,polygon) {
+            //create a map.
+            var map = new OpenLayers.Map({
+                // These projections are all webmercator, but the openlayers layer wants 900913 specifically
+                projection: new OpenLayers.Projection("EPSG:3857"), //3857 //4326            900913
+                units: "m",
+                numZoomLevels: 16,
+                //maxExtent: usBounds, <-- that stopped base layers from drawing out of bounds
+                //restrictedExtent: usBounds, <-- this was annoying
+                //center: '-10723197, 4500612',
+                controls: null,
+                theme: "/Content/OpenLayers/default/style.css",
+                div:divName
+            });
+          var osmlayer = new OpenLayers.Layer.OSM("OSM Map");
+          map.addLayer(osmlayer);
+          
+          var layer = new OpenLayers.Layer.Vector("Overlay", { isBaseLayer: false});
+
+          //since the data is in GeoJSON, we need to deserialize it.
+          var fvector = new OpenLayers.Format.WKT().read(polygon,"Geometry");
+
+          var polyfeature = new OpenLayers.Feature.Vector(fvector,null);
+          layer.addFeatures([polyfeature]);
+          map.addLayer(layer);
+          
+          //map.zoomToExtent(layer.getDataExtent(),true);
+
+          //map.setCenter(
+          //  new OpenLayers.LonLat(data.LonLat.lon, data.LonLat.lat).transform(
+          //        new OpenLayers.Projection("EPSG:3857"),
+          //        map.getProjectionObject()),
+          //      12);
+          
+        }
+
         function createHTML(data) {
+            var maps=[];
+
             var panel = Ext.create('Ext.Panel', {
                 width: 950,
                 renderTo: 'Report',
                 style: "margin:15px",
                 bodyStyle: "padding:5px;font-size:11px;",
                 title: 'Report',
-                html: '<p>The Report is Rendering...</p>'
+                html: '<p>The Report is Rendering...</p>',
+                listeners: {
+                    afterlayout: function () {
+                        maps.map(function (value, idx) {
+                            getMap(value.div, value.data);
+                        });
+                    }
+                }
             });
 
 
@@ -85,7 +136,7 @@
                 '    <tpl for="sites">',
                 '    <div class="siteRow">',
                 '        <div class="siteImage rowPart">',
-                '            <img src="site.png" />',
+                '            <div id="{id}-Map" class="siteMap">{[this.drawMap(values.id+"-Map", values.geometry)]}</div>',
                 '        </div>',
                 '        <div class="siteInfo rowPart">',
                 '            <div class="topTools">',
@@ -101,7 +152,7 @@
                 '        <div class="rowPart">',
                 '            <div class="siteScore">',
                 '                <span class="siteBigScore">{[this.round(values.meanUtility)]}</span>',
-                '                <span class="siteScoreUnit">%</span>',
+                '                <span class="siteScoreUnit"></span>',
                 '                <span class="siteDivergenceArrow">{[this.divergenceSymbol(values.divergence)]}</span>',
                 '                <span class="siteDivergence">{[this.round(values.divergence)]}%</span>',
                 '                <p class="totalInfo infoColor">AVERAGE</p>',
@@ -116,8 +167,10 @@
                     },
                     round: function (value) {
                         return Math.round(value);
+                    },
+                    drawMap: function(div, data) {
+                        maps.push({ div: div, data: data });
                     }
-
                 }
             );
 
