@@ -110,8 +110,9 @@ var scoreboardColumns = [{
         //return records[0].get('category') + " subtotal: <input type='button' img='http://localhost:53465/Images/Pie Chart.png' value='Pie' onClick='scoreboardColumns[0].viewPie(\"" + records[0].get('category') + "\");' />";
         if (records.length > 0) {
             return records[0].get('category') +
-              " (average): <input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
-              records[0].get('category') + "\",null);' />";
+//If we ever need pie view again, uncomment this line and comment the next line.
+//              " (average): <input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
+              " (average): ";
 
         }
         else
@@ -502,76 +503,76 @@ Ext.define('Ext.grid.ScoreboardGrid', {
         }
     },
 
-    viewPie: function (cat, site) {
+    //viewPie: function (cat, site) {
 
-        var records = scoreboardGrid.store.getGroups(cat);
-        if (records.children.length > 0) {
-            pieStore.removeAll(); //delete all records in the score
-            records.children.forEach(function (record, index, array) {
-                pieStore.add({ Category: record.get('title'), Data: record.get('weight'), Color: "blue" });
-            });
-        }
+    //    var records = scoreboardGrid.store.getGroups(cat);
+    //    if (records.children.length > 0) {
+    //        pieStore.removeAll(); //delete all records in the score
+    //        records.children.forEach(function (record, index, array) {
+    //            pieStore.add({ Category: record.get('title'), Data: record.get('weight'), Color: "blue" });
+    //        });
+    //    }
 
-        var pieWin = Ext.create('MainApp.view.PieWindow', {
-            dataStore: pieStore,
-            dataField: 'Data',
-            dataName: 'Category',
-            fillColor: 'Color',
-            title: 'Weight Percentage - ' + cat,
-            buttons: [{
-                xtype: 'button',
-                text: 'OK',
-                handler: function () {
-                    //TODO: execute update function here.
+    //    var pieWin = Ext.create('MainApp.view.PieWindow', {
+    //        dataStore: pieStore,
+    //        dataField: 'Data',
+    //        dataName: 'Category',
+    //        fillColor: 'Color',
+    //        title: 'Weight Percentage - ' + cat,
+    //        buttons: [{
+    //            xtype: 'button',
+    //            text: 'OK',
+    //            handler: function () {
+    //                //TODO: execute update function here.
 
 
-                    pieWin.close();
-                }
-            }],
-            plugins: [{
-                ptype: "headericons",
-                index: 1,
-                headerButtons: [
-                    {
-                        xtype: 'button',
-                        iconCls: 'x-ux-grid-printer',
-                        width: 24,
-                        height: 15,
-                        //scope: this,
-                        handler: function () {
-                            //var win = Ext.WindowManager.getActive();
-                            //if (win) {
-                            //  win.toggleMaximize();
-                            //}
-                            var style = ''; var link = '';
-                            var printContent = document.getElementById(pieWin.body.id); //TODO: change to get the ID, rather than use 'magic' ID
-                            var printWindow = window.open('', '', ''); // 'left=10, width=800, height=520');
+    //                pieWin.close();
+    //            }
+    //        }],
+    //        plugins: [{
+    //            ptype: "headericons",
+    //            index: 1,
+    //            headerButtons: [
+    //                {
+    //                    xtype: 'button',
+    //                    iconCls: 'x-ux-grid-printer',
+    //                    width: 24,
+    //                    height: 15,
+    //                    //scope: this,
+    //                    handler: function () {
+    //                        //var win = Ext.WindowManager.getActive();
+    //                        //if (win) {
+    //                        //  win.toggleMaximize();
+    //                        //}
+    //                        var style = ''; var link = '';
+    //                        var printContent = document.getElementById(pieWin.body.id); //TODO: change to get the ID, rather than use 'magic' ID
+    //                        var printWindow = window.open('', '', ''); // 'left=10, width=800, height=520');
 
-                            var html = printContent.outerHTML; //TODO: must change to innerHTML ???
-                            $("link").each(function () {
-                                link += $(this)[0].outerHTML;
-                            });
-                            $("style").each(function () {
-                                style += $(this)[0].outerHTML;
-                            });
+    //                        var html = printContent.outerHTML; //TODO: must change to innerHTML ???
+    //                        $("link").each(function () {
+    //                            link += $(this)[0].outerHTML;
+    //                        });
+    //                        $("style").each(function () {
+    //                            style += $(this)[0].outerHTML;
+    //                        });
 
-                            // var script = '<script> window.onmouseover = function(){window.close();}</script>';
-                            printWindow.document.write('<!DOCTYPE html><html lang="en"><head><title>PV Mapper: ' + pieWin.title + '</title>' + link + style + ' </head><body>' + html + '</body>');
-                            $('div', printWindow.document).each(function () {
-                                if (($(this).css('overflow') == 'hidden') || ($(this).css('overflow') == 'auto')) {
-                                    $(this).css('overflow', 'visible');
+    //                        // var script = '<script> window.onmouseover = function(){window.close();}</script>';
+    //                        printWindow.document.write('<!DOCTYPE html><html lang="en"><head><title>PV Mapper: ' + pieWin.title + '</title>' + link + style + ' </head><body>' + html + '</body>');
+    //                        $('div', printWindow.document).each(function () {
+    //                            if (($(this).css('overflow') == 'hidden') || ($(this).css('overflow') == 'auto')) {
+    //                                $(this).css('overflow', 'visible');
 
-                                }
-                            });
-                            printWindow.document.close();
-                            printWindow.print();
-                        }
-                    }
-            ]
-            }]
-        }).show();
+    //                            }
+    //                        });
+    //                        printWindow.document.close();
+    //                        printWindow.print();
+    //                    }
+    //                }
+    //        ]
+    //        }]
+    //    }).show();
 
-    },
+    //},
 
 });
 
@@ -645,20 +646,6 @@ Ext.define('MainApp.view.ScoreboardWindow', {
 
                         }
                     });
-                    //-- if we want to control auto sizing.
-                    //$('.x-panel, .x-grid-header-ct', printWindow.document).css('overflow', 'visible');
-                    //$('.x-window-body,.x-panel, .x-grid-header-ct', printWindow.document).width('inherit');
-                    //$('.x-panel, .x-grid-header-ct', printWindow.document).height('auto');
-                    //$('.x-window-body', printWindow.document).height('inherit');
-                    //$('.x-box-inner', printWindow.document).css('overflow','visible');
-                    //$('.x-box-inner', printWindow.document).width('inherit');
-                    //$('.x-box-inner', printWindow.document).height('inherit');
-
-                    //$('.x-panel-body,.x-grid-body,.x-grid-view', printWindow.document).css('overflow','visible');
-                    //$('.x-panel-body,.x-grid-view', printWindow.document).width('inherit');
-                    //$('.x-panel-body,.x-grid-view', printWindow.document).height('auto');
-                    //--
-
                     printWindow.document.close();
                     printWindow.print();
 
