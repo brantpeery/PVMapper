@@ -1,4 +1,4 @@
-/// <reference path="pvMapper.ts" />
+﻿/// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Tools.ts" />
@@ -53,6 +53,9 @@ var INLModules;
                         },
                         getStarRatables: function () {
                             return _this.starRatingHelper.starRatings;
+                        },
+                        setStarRatables: function (rateTable) {
+                            _this.starRatingHelper.starRatings = rateTable;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
