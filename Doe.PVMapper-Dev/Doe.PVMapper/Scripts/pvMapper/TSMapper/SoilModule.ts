@@ -50,7 +50,9 @@ module INLModules {
                     getStarRatables: () => {
                         return this.starRatingHelper.starRatings;
                     },
-
+                    setStarRatables: (rateTable: pvMapper.IStarRatings) => {
+                        this.starRatingHelper.starRatings = rateTable;
+                    },
                     scoreUtilityOptions: {
                         functionName: "linear",
                         functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
