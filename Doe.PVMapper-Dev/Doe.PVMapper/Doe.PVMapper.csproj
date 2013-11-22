@@ -348,6 +348,7 @@
     <Content Include="lpresources\verify\2.png" />
     <Content Include="lpresources\verify\3.png" />
     <Content Include="lpresources\verify\ajax_check.php" />
+    <Content Include="Notes\reportMockup.svg" />
     <Content Include="Scripts\Esri-GeoJsonConverter.js" />
     <Content Include="Scripts\EsriGeoJSON.js" />
     <Content Include="Scripts\ExtJS.d.ts" />
