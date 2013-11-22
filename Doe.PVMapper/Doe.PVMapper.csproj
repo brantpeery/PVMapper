@@ -1454,6 +1454,7 @@
     <Content Include="Views\SiteDetail\Feedback.cshtml" />
     <Content Include="Views\Report\Summary.cshtml" />
     <Content Include="Views\Shared\_ReportLayout.cshtml" />
+    <Content Include="Views\Report\SiteDetailReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -21,5 +21,10 @@ namespace Doe.PVMapper.Controllers
             return View();
         }
 
+        public ActionResult SiteDetail()
+        {
+            return View();
+        }
+
     }
 }
