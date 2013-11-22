@@ -33,7 +33,7 @@ module pvMapper {
                                                 var url: string = window.location.href;
                                                 var arr:string[] = url.split("/");
                                                 var origin: string = arr[0] + "//" + arr[2];
-                                                win.postMessage(pvMapper.Data.ScoreboardProcessor.getCleanObjectTransposed(pvMapper.mainScoreboard), origin);
+                                                win.postMessage(JSON.stringify(pvMapper.Data.ScoreboardProcessor.getCleanObjectTransposed(pvMapper.mainScoreboard)), origin);
                                             };
                                             var win = window.open('/Report/Summary', 'Report');
                                            

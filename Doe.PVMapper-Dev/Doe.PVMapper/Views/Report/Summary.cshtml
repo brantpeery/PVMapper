@@ -3,172 +3,194 @@
     Layout = "~/Views/Shared/_ReportLayout.cshtml";
 }
 
-    <link href="/Content/Reports/SummaryReport.css" rel="stylesheet" />
-    <script type="text/javascript">
-
-        function receiveMessage(event) {
-            if (event.origin == this.window.location.origin) { //Only from the same domain
-                var data = prepData(event.data);
-                createHTML(data);
-            }
+<link href="/Content/Reports/SummaryReport.css" rel="stylesheet" />
+<script type="text/javascript">
+    function eventHack(event, fn, addOn) {
+        if (window.addEventListener) {
+            window.addEventListener(event, fn, false);
+        } else {
+            //Do it the IE way. #stupid     
+            window.attachEvent((addon)?"on":"" + event, fn);
         }
-        window.addEventListener("message", receiveMessage, false);
-        //Hack: Tell the originating window that we are ready. This assumes that the originating window has a SummaryReportReady function
-        window.addEventListener("load", function () { window.opener.SummaryReportReady(); }, false);
+    }
 
-        function prepData(data){
-            var total = 0;
-            var mean;
+    function receiveMessage(event) {
+        if (event.origin == this.window.location.origin) { //Only from the same domain
+            var data;
 
-            var count = 0;
-            for (skey in data.sites) {
-                var site = data.sites[skey];
-                count++;
-                var totalWeights = 0;
-                for (key in site.scores) {
-                    var score = site.scores[key];
-                   
-                    //The total of all the scores by sites for this tool
-                    //The scoreLine objects are shared between all site.scores
-                    if (score.scoreLine["totalSiteUtility"] == undefined) { score.scoreLine["totalSiteUtility"] = 0;}
-                    score.scoreLine["totalSiteUtility"] += score.utility;
-
-                    //Update the mean when a score is added to the total
-                    score.scoreLine["meanSiteUtility"] = score.scoreLine["totalSiteUtility"] / count;
-
-                    //The total of all scores by scoreline for each site
-                    if (site["totalUtility"] == undefined) { site["totalUtility"] = 0;}
-                    site["totalUtility"] += score.utility * score.scoreLine.weight;
-
-                    totalWeights += score.scoreLine.weight;
-                }
-                site['meanUtility'] = site["totalUtility"] / totalWeights;
-
-                //Total mean scores across all sites
-                total += site['meanUtility'];
-                //The mean score for all sites
-                mean = total / count;
-            }
-
-            //Now add in the divergence
-            for (skey in data.sites) {
-                var site = data.sites[skey];
-                count++;
-                for (key in site.scores) {
-                    var score = site.scores[key];
-                    //calculate the score's divergence for this site compared to other sites for the same scoreLine
-                    score['divergence'] = Math.round(score.utility - score.scoreLine["meanSiteUtility"]);
-                }
-
-                //Sort the divergence for this site descending
-                site.scores.sort(function (a, b) {
-                    return Math.abs(b.divergence) - Math.abs(a.divergence);
-                });
-
-                //Calculate the mean score divergence from the project mean for this site compared to other sites
-                site['divergence'] = Math.round(site['meanUtility'] - mean);
-            }
-
-            return data;
+            //Try to convert the data
+            data = JSON.parse(event.data);
+            data = prepData(data);
+            createHTML(data);
         }
+    }
 
-      
 
-       //polygon is OpenLayers.Geometry.Polygon  GeoJSON format: String.
-        function showMap(divName,polygon) {
-          //create a map.
-            var map = new OpenLayers.Map({
-                // These projections are all webmercator, but the openlayers layer wants 900913 specifically
-                projection: new OpenLayers.Projection("EPSG:3857"), //3857 //4326            900913
-                units: "m",
-                numZoomLevels: 16,
-                controls: {},
-                theme: "/Content/OpenLayers/default/style.css",
-                div:divName
-            });
-          var osmlayer = new OpenLayers.Layer.OSM();
-          map.addLayer(osmlayer);
-          
-          var layer = new OpenLayers.Layer.Vector();
+    eventHack("message", receiveMessage);
+    //Hack: Tell the originating window that we are ready. This assumes that the originating window has a SummaryReportReady function
+    eventHack("load", function () {
+        var pvMapper = window.opener.pvMapper;
+        var jsondata = pvMapper.Data.ScoreboardProcessor.getCleanObjectTransposedJSON(pvMapper.mainScoreboard)
 
-          //since the data is in GeoJSON, we need to deserialize it.
-          var fvector = new OpenLayers.Format.WKT().read(polygon);
+        data = prepData(JSON.parse(jsondata));
+        createHTML(data);
+        //window.opener.SummaryReportReady();
+    }
+    );
 
-          layer.addFeatures([fvector]);
-          map.addLayer(layer);
-         
-          var bound = layer.getDataExtent();
-          map.zoomToExtent(bound, false);
+    function prepData(data) {
+        var total = 0;
+        var mean;
+
+        var count = 0;
+        for (skey in data.sites) {
+            var site = data.sites[skey];
+            count++;
+            var totalWeights = 0;
+            for (key in site.scores) {
+                var score = site.scores[key];
+
+                //The total of all the scores by sites for this tool
+                //The scoreLine objects are shared between all site.scores
+                if (score.scoreLine["totalSiteUtility"] == undefined) { score.scoreLine["totalSiteUtility"] = 0; }
+                score.scoreLine["totalSiteUtility"] += score.utility;
+
+                //Update the mean when a score is added to the total
+                score.scoreLine["meanSiteUtility"] = score.scoreLine["totalSiteUtility"] / count;
+
+                //The total of all scores by scoreline for each site
+                if (site["totalUtility"] == undefined) { site["totalUtility"] = 0; }
+                site["totalUtility"] += score.utility * score.scoreLine.weight;
+
+                totalWeights += score.scoreLine.weight;
+            }
+            site['meanUtility'] = site["totalUtility"] / totalWeights;
+
+            //Total mean scores across all sites
+            total += site['meanUtility'];
+            //The mean score for all sites
+            mean = total / count;
         }
 
-        function createHTML(data) {
-            var maps=[];
+        //Now add in the divergence
+        for (skey in data.sites) {
+            var site = data.sites[skey];
+            count++;
+            for (key in site.scores) {
+                var score = site.scores[key];
+                //calculate the score's divergence for this site compared to other sites for the same scoreLine
+                score['divergence'] = Math.round(score.utility - score.scoreLine["meanSiteUtility"]);
+            }
 
-            var panel = Ext.create('Ext.Panel', {
-                width: 950,
-                renderTo: 'Report',
-                style: "margin:15px",
-                bodyStyle: "padding:5px;font-size:11px;",
-                title: 'Report',
-                html: '<p>The Report is Rendering...</p>',
-                listeners: {
-                    afterlayout: function () {
-                        maps.map(function (value, idx) {
-                            showMap(value.div, value.data);
-                        });
-                    }
-                }
+            //Sort the divergence for this site descending
+            site.scores.sort(function (a, b) {
+                return Math.abs(b.divergence) - Math.abs(a.divergence);
             });
 
+            //Calculate the mean score divergence from the project mean for this site compared to other sites
+            site['divergence'] = Math.round(site['meanUtility'] - mean);
+        }
 
-            var tpl = new Ext.XTemplate (                
-                '<div id="SiteSummaryReport">',
-                '    <tpl for="sites">',
-                '    <div class="siteRow">',
-                '        <div class="siteImage rowPart">',
-                '            <div id="{id}-Map" class="siteMap" style="height: 165px;border-style:solid;border-width: 1px;" >{[this.drawMap(values.id+"-Map", values.geometry)]}</div>',
-                '        </div>',
-                '        <div class="siteInfo rowPart">',
-                '            <div class="topTools">',
-                '                <h3>{name}</h3>',
-                '                <tpl for="scores">',
-                '                <tpl if ="[xindex] &lt; 5">', 
-                '                <p><span class="icon">{[this.divergenceSymbol(values.divergence)]}</span><span class="toolName">{scoreLine.title}</span><span class="toolScore">{divergence}%</span></p>',
-                '                </tpl>',
-                '                </tpl>',
-                '                <p class="topToolInfo infoColor">Divergence from Mean</p>',
-                '            </div>',
-                '        </div>',
-                '        <div class="rowPart">',
-                '            <div class="siteScore">',
-                '                <span class="siteBigScore">{[this.round(values.meanUtility)]}</span>',
-                '                <span class="siteScoreUnit"></span>',
-                '                <span class="siteDivergenceArrow">{[this.divergenceSymbol(values.divergence)]}</span>',
-                '                <span class="siteDivergence">{[this.round(values.divergence)]}%</span>',
-                '                <p class="totalInfo infoColor">AVERAGE</p>',
-                '            </div>',
-                '        </div>',
-                '    </div>',
-                '    </tpl>',
-                '</div>',
-                {
-                    divergenceSymbol: function (val) {
-                        return (val < 0) ? '&#8595;' : '&#8593;';
-                    },
-                    round: function (value) {
-                        return Math.round(value);
-                    },
-                    drawMap: function(div, data) {
-                        maps.push({ div: div, data: data });
-                    }
+        return data;
+    }
+
+
+
+    //polygon is OpenLayers.Geometry.Polygon  GeoJSON format: String.
+    function showMap(divName, polygon) {
+        //create a map.
+        var map = new OpenLayers.Map({
+            // These projections are all webmercator, but the openlayers layer wants 900913 specifically
+            projection: new OpenLayers.Projection("EPSG:3857"), //3857 //4326            900913
+            units: "m",
+            numZoomLevels: 16,
+            controls: {},
+            theme: "/Content/OpenLayers/default/style.css",
+            div: divName
+        });
+        var osmlayer = new OpenLayers.Layer.OSM();
+        map.addLayer(osmlayer);
+
+        var layer = new OpenLayers.Layer.Vector();
+
+        //since the data is in GeoJSON, we need to deserialize it.
+        var fvector = new OpenLayers.Format.WKT().read(polygon);
+
+        layer.addFeatures([fvector]);
+        map.addLayer(layer);
+
+        var bound = layer.getDataExtent();
+        map.zoomToExtent(bound, false);
+    }
+
+    function createHTML(data) {
+        var maps = [];
+
+        var panel = Ext.create('Ext.Panel', {
+            width: 950,
+            renderTo: 'Report',
+            style: "margin:15px",
+            bodyStyle: "padding:5px;font-size:11px;",
+            title: 'Report',
+            html: '<p>The Report is Rendering...</p>',
+            listeners: {
+                afterlayout: function () {
+                    maps.map(function (value, idx) {
+                        showMap(value.div, value.data);
+                    });
                 }
-            );
+            }
+        });
 
-            tpl.overwrite(panel.body, data);
-            panel.doComponentLayout();
-        };
-    </script>
+
+        var tpl = new Ext.XTemplate(
+            '<div id="SiteSummaryReport">',
+            '    <tpl for="sites">',
+            '    <div class="siteRow">',
+            '        <div class="siteImage rowPart">',
+            '            <div id="{id}-Map" class="siteMap" >{[this.drawMap(values.id+"-Map", values.geometry)]}</div>',
+            '        </div>',
+            '        <div class="siteInfo rowPart">',
+            '            <div class="topTools">',
+            '                <h3>{name}</h3>',
+            '                <tpl for="scores">',
+            '                <tpl if ="[xindex] &lt; 5">',
+            '                <p><span class="icon">{[this.divergenceSymbol(values.divergence)]}</span><span class="toolName">{scoreLine.title}</span><span class="toolScore">{divergence}%</span></p>',
+            '                </tpl>',
+            '                </tpl>',
+            '                <p class="topToolInfo infoColor">Divergence from Mean</p>',
+            '            </div>',
+            '        </div>',
+            '        <div class="rowPart">',
+            '            <div class="siteScore">',
+            '                <span class="siteBigScore">{[this.round(values.meanUtility)]}</span>',
+            '                <span class="siteScoreUnit"></span>',
+            '                <span class="siteDivergenceArrow">{[this.divergenceSymbol(values.divergence)]}</span>',
+            '                <span class="siteDivergence">{[this.round(values.divergence)]}%</span>',
+            '                <p class="totalInfo infoColor">AVERAGE</p>',
+            '            </div>',
+            '        </div>',
+            '    </div>',
+            '    </tpl>',
+            '</div>',
+            {
+                divergenceSymbol: function (val) {
+                    return (val < 0) ? '&#8595;' : '&#8593;';
+                },
+                round: function (value) {
+                    return Math.round(value);
+                },
+                drawMap: function (div, data) {
+                    maps.push({ div: div, data: data });
+                }
+            }
+        );
+
+        tpl.overwrite(panel.body, data);
+        panel.doComponentLayout();
+    };
+</script>
 <h2>Summary Report</h2>
-    <div id="Report">
-     </div>
+<div id="Report">
+</div>
 

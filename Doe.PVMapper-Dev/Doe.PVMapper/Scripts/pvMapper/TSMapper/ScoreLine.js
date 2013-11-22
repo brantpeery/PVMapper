@@ -56,6 +56,12 @@ var pvMapper;
                 };
             }
 
+            if ($.isFunction(options.setStarRatables)) {
+                this.setStarRatables = function (rateTable) {
+                    options.setStarRatables.apply(_this, arguments);
+                };
+            }
+
             if ($.isFunction(options.showConfigWindow)) {
                 this.showConfigWindow = function () {
                     options.showConfigWindow.apply(_this, arguments);
@@ -100,7 +106,7 @@ var pvMapper;
             // this.loadScore();
             //Set the default weight of the tool
             //Note: a weight of 0 is possible and valid
-            this.weight = (typeof options.weight === "number") ? options.weight : 10;
+            this.weight = (typeof options.weight === "number") ? options.weight : 0;
         }
         ScoreLine.prototype.getUtilityScore = function (x) {
             return this.scoreUtility.run(x);
@@ -212,11 +218,20 @@ var pvMapper;
                 try  {
                     var txn = pvMapper.ClientDB.db.transaction(pvMapper.ClientDB.STORE_NAME, "readwrite");
                     var store = txn.objectStore(pvMapper.ClientDB.STORE_NAME);
-                    var dbScore = new DBScore(me.title, me.description, me.category, me.weight, me.active, me.scoreUtility, me.getStarRatables());
+                    var stb = null;
+                    if (me.getStarRatables !== undefined)
+                        stb = me.getStarRatables();
+                    var dbScore = new DBScore(me.title, me.description, me.category, me.weight, me.active, me.scoreUtility, stb);
 
-                    var req = store.add(dbScore, dbScore.title);
+                    var request = store.get(me.title);
+                    request.onsuccess = function (evt) {
+                        if (request.result != undefined) {
+                            store.put(dbScore, dbScore.title);
+                        } else
+                            store.add(dbScore, dbScore.title);
+                    };
                 } catch (e) {
-                    console.log("pubDBObject failed, cause: " + e.message);
+                    console.log("putScore failed, cause: " + e.message);
                 }
             }
         };
@@ -249,6 +264,10 @@ var pvMapper;
                         me.scoreUtility.functionArgs = request.result.scoreUtility.functionArgs;
                         me.scoreUtility.iconURL = request.result.scoreUtility.iconURL;
                         me.scoreUtility.fCache = request.result.scoreUtility.fCache;
+
+                        if ((me.setStarRatables !== undefined) && (request.result.rateTable !== null)) {
+                            me.setStarRatables(request.result.rateTable);
+                        }
 
                         me.updateScores();
                     }

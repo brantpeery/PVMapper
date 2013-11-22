@@ -30,12 +30,14 @@
   overflow: hidden; }
 
 .siteImage {
-  height: 90%;
+  height: 100%;
   width: 33%;
-  margin-left: 0.5em; }
+  margin-left: 0; }
   .siteImage div.siteMap {
-    height: 100%;
-    box-shadow: rgba(0, 0, 0, 0.6) 0.5em 0.5em 2em 0.3em; }
+    height: 93%;
+    width: 80%;
+    box-shadow: rgba(0, 0, 0, 0.6) 0.5em 0.5em 2em 0.3em;
+    margin: 0.2em 0 0 1em !important; }
 
 .siteInfo {
   width: 33%; }

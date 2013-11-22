@@ -35,7 +35,7 @@ var pvMapper;
                                                         var url = window.location.href;
                                                         var arr = url.split("/");
                                                         var origin = arr[0] + "//" + arr[2];
-                                                        win.postMessage(pvMapper.Data.ScoreboardProcessor.getCleanObjectTransposed(pvMapper.mainScoreboard), origin);
+                                                        win.postMessage(JSON.stringify(pvMapper.Data.ScoreboardProcessor.getCleanObjectTransposed(pvMapper.mainScoreboard)), origin);
                                                     };
                                                     var win = window.open('/Report/Summary', 'Report');
                                                 }
