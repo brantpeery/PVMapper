@@ -4,85 +4,35 @@
 */
 
 pvMapper.onReady(function () {
-    var relatedLinksWindow = new Ext.window.Window({
-        title: 'Related Sites',
-        height: 200,
-        width: 100,
-        layout: 'fit',
-        items: [{
-            xtype: 'box',
-            autoEl: {
-                tag: 'a',
-                html: 'PVWatts',
-                href: 'http://www.nrel.gov/rredc/pvwatts/',
-                target: '_blank'
-            }
-        }, {
-            xtype: 'box',
-            autoEl: {
-                tag: 'a',
-                html: 'SAM',
-                href: 'https://sam.nrel.gov/',
-                target: '_blank'
-            }
-        }, {
-            xtype: 'box',
-            autoEl: {
-                tag: 'a',
-                html: 'EISPC EZ Mapping Tool',
-                href: 'http://eispctools.anl.gov/',
-                target: '_blank'
-            }
-        }, {
-            xtype: 'box',
-            autoEl: {
-                tag: 'a',
-                html: 'ANL Solar Mapper',
-                href: 'http://solarmapper.anl.gov/',
-                target: '_blank'
-            }
-        }, {
-            xtype: 'box',
-            autoEl: {
-                tag: 'a',
-                html: 'DSIRE Database',
-                href: 'http://www.dsireusa.org/',
-                target: '_blank'
-            }
-        }]
-    });
-
-    var RelatedLinksButton = new Ext.Button({
-        text: "Related Links",
-        enableToggle: false,
+    pvMapper.linksToolbarMenu.add([{
+        text: 'PVWatts',
+        tooltip: 'A calculator to determine the energy production and cost savings of grid-connected photovoltaic (PV) energy systems throughout the world',
         handler: function () {
-            Ext.create('Ext.window.Window', {
-                title: 'Related Sites',
-                height: 200,
-                width: 250,
-                layout: 'fit',
-                autoShow: true,
-                items: [{
-                    xtype: 'panel',
-                    html: "<a href='http://www.nrel.gov/rredc/pvwatts/' target='_blank>PVWatts</a><br>"
-                }, {
-                    xtype: 'panel',
-                    html: "<a href='https://sam.nrel.gov/' target='_blank>SAM</a><br>"
-                }, {
-                    xtype: 'panel',
-                    html: "<a href='http://eispctools.anl.gov/' target='_blank>EISPC EZ Mapping Tool</a><br>"
-                }, {
-                    xtype: 'panel',
-                    html: "<a href='http://solarmapper.anl.gov/' target='_blank>ANL Solar Mapper</a><br>"
-                }, {
-                    xtype: 'panel',
-                    html: "<a href='http://www.dsireusa.org/' target='_blank>DSIRE Database</a><br>"
-                }]
-            });
+            window.open('http://www.nrel.gov/rredc/pvwatts/');
         }
-    });
-
-    pvMapper.mapToolbar.add('-');
-    pvMapper.mapToolbar.add(RelatedLinksButton);
-    pvMapper.mapToolbar.add('-');
+    }, {
+        text: 'System Advisor Model (SAM)',
+        tooltip: 'A modeling tool for performance predictions and cost of energy estimates for grid-connected power projects based on installation and operating costs and system design parameters',
+        handler: function () {
+            window.open('https://sam.nrel.gov/');
+        }
+    }, {
+        text: 'EISPC EZ Mapping Tool',
+        tooltip: 'A map‑based tool for identifying areas within the eastern United States that may be suitable for clean power generation',
+        handler: function () {
+            window.open('http://eispctools.anl.gov/');
+        }
+    }, {
+        text: 'ANL Solar Mapper',
+        tooltip: 'A web-based application that displays environmental data for the southwest U.S. in the context of utility-scale solar energy development',
+        handler: function () {
+            window.open('http://solarmapper.anl.gov/');
+        }
+    }, {
+        text: 'DSIRE Database',
+        tooltip: 'A comprehensive source of information on incentives and policies that support renewables and energy efficiency in the United States',
+        handler: function () {
+            window.open('http://www.dsireusa.org/');
+        }
+    }]);
 });

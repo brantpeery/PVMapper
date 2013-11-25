@@ -210,6 +210,12 @@ var app = Ext.application({
 
         ///--------------------------Set the toolbar stuff up--------------------------------------------
         pvMapper.mapToolbar = Ext.ComponentQuery.query('#maintoolbar')[0];
+
+        pvMapper.sitesToolbarMenu = Ext.ComponentQuery.query('#maintoolbar-sitessmenu')[0].menu;
+        pvMapper.scoreboardToolsToolbarMenu = Ext.ComponentQuery.query('#maintoolbar-scoreboardtoolsmenu')[0].menu;
+        pvMapper.reportsToolbarMenu = Ext.ComponentQuery.query('#maintoolbar-reportsmenu')[0].menu;
+        pvMapper.linksToolbarMenu = Ext.ComponentQuery.query('#maintoolbar-linksmenu')[0].menu;
+
         //Ext.ComponentQuery.query('#maincontent').add(mapPanel);
 
         if (console) console.log('Signaling that the pvMapper object is ready to go');

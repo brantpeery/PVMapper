@@ -26,7 +26,7 @@ pvMapper.onReady(function () {
         }
     });
 
-    pvMapper.mapToolbar.add(distanceBtn);
+    pvMapper.mapToolbar.add(3, distanceBtn);
 
 
     // add a button on the tool bar to launch a file picker to load local KML file.
@@ -63,16 +63,17 @@ pvMapper.onReady(function () {
 
 
     //create the actual button and put on the tool bar.
-    var customTool = new Ext.Button({
-        text: 'Add KML Distance Score',
-        enabledToggle: false,
+    var customTool = Ext.create('Ext.Action', {
+        text: 'Add Distance Score From KML',
+        tooltip: "Add a new layer using features from a KML file, and add a score line for the distance from each site to the nearest feature in the KML layer",
+        //enabledToggle: false,
         handler: function () {
             fileDialogBox.removeEventListener('change', handleSiteKML, false);  //disable the site KML event.
             fileDialogBox.addEventListener('change', handleCustomKML, false);  // enable the distance KML event.
             fileDialogBox.click();
         }
     });
-    pvMapper.mapToolbar.add(customTool);
+    pvMapper.scoreboardToolsToolbarMenu.add(customTool);
 
 
     function handleSiteKML(evt) {
@@ -168,16 +169,17 @@ pvMapper.onReady(function () {
             });
     }
 
-    var siteImportBtn = new Ext.Button({
-        text: 'Load Sites from KML',
-        enabledToggle: false,
+    var siteImportAction = Ext.create('Ext.Action', {
+        text: 'Load Sites From KML',
+        tooltip: "Import site polygons from a KML file",
         handler: function () {
             fileDialogBox.removeEventListener('change', handleCustomKML, false);  //enable the site KML event.
             fileDialogBox.addEventListener('change', handleSiteKML, false);  // disable the distance KML event.
             fileDialogBox.click();
         }
     });
-    pvMapper.mapToolbar.add(siteImportBtn);
+    pvMapper.sitesToolbarMenu.add('-');
+    pvMapper.sitesToolbarMenu.add(siteImportAction);
 
 
 
@@ -231,14 +233,14 @@ pvMapper.onReady(function () {
         //newWindow = window.open(uriContent, 'sites.kml');
     }
 
-    var kmlExportBtn = new Ext.Button({
+    var kmlExportBtn = Ext.create('Ext.Action', {
         text: 'Save Sites to KML',
-        enabledToggle: false,
+        tooltip: "Export site polygons and scores to a KML file",
         handler: function () {
             ExportToXML();
         }
     });
-    pvMapper.mapToolbar.add(kmlExportBtn);
+    pvMapper.sitesToolbarMenu.add(kmlExportBtn);
 
 });
 
