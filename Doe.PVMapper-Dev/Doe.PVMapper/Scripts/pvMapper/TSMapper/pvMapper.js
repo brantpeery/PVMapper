@@ -5,7 +5,14 @@
 var pvMapper;
 (function (pvMapper) {
     pvMapper.readyEvent = new pvMapper.Event();
+
     pvMapper.mapToolbar;
+
+    pvMapper.sitesToolbarMenu;
+    pvMapper.scoreboardToolsToolbarMenu;
+    pvMapper.reportsToolbarMenu;
+    pvMapper.linksToolbarMenu;
+
     pvMapper.infoTools = [];
 
     function onReady(fn) {

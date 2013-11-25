@@ -35,9 +35,13 @@ var INLModules;
                         //},
                         onSiteChange: function (e, score) {
                             identifyFeature(score);
+                            //s.updateValue(status.toString());
                         },
                         getStarRatables: function () {
                             return starRatingHelper.starRatings;
+                        },
+                        setStarRatables: function (rateTable) {
+                            starRatingHelper.starRatings = rateTable;
                         },
                         // for now, no land management agencies is best, any one is bad, and multiple are worse
                         //scoreUtilityOptions: <pvMapper.IThreePointUtilityOptions>{
@@ -90,6 +94,7 @@ var INLModules;
         mapLayer.epsgOverride = "3857";
         mapLayer.setVisibility(false);
         pvMapper.map.addLayer(mapLayer);
+        //pvMapper.map.setLayerIndex(mapLayer, 0);
     }
 
     function removeMapLayer() {

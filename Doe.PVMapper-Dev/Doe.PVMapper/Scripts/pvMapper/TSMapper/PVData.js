@@ -58,6 +58,7 @@ var pvMapper;
                         parentNode: moduleNode
                     });
                     moduleNode.appendChild(toolNode);
+                    // scoreStore is not required for the tree menu.
                 });
             });
             return projectNode;

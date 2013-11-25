@@ -14,10 +14,16 @@ var INLModules;
                 noCategoryRating: 4,
                 noCategoryLabel: "None"
             });
-            this.localUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/services/PADUS/PADUS_owner/MapServer/WMSServer";
-            this.landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
+            //private localUrl = "";
+            this.localLayer = null;
+            this.localFormat = null;
+            //private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
+            //============================================================
+            // blob is the file attribute and file handle.
+            this.kmlFile = null;
+            this.scoreObj = null;
             var myModule = new pvMapper.Module({
-                id: "Custom Local Module",
+                id: "LocalLayerModule",
                 author: "Leng Vang, INL",
                 version: "0.1.ts",
                 activate: function () {
@@ -34,20 +40,17 @@ var INLModules;
                         deactivate: null,
                         destroy: null,
                         init: null,
-                        title: "Custom Local Module",
-                        description: "Customized user module (local layer)",
+                        title: "Custom Distance Tool",
+                        description: "Calculates the distance to the nearest feature loaded from a KML file.",
                         category: "Custom",
                         //onScoreAdded: (e, score: pvMapper.Score) => {
                         //},
                         onSiteChange: function (e, score) {
                             _this.updateScore(score);
                         },
-                        getStarRatables: function () {
-                            return _this.starRatingHelper.starRatings;
-                        },
                         scoreUtilityOptions: {
-                            functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
+                            functionName: "linear3pt",
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 10000, 0, "km")
                         },
                         weight: 10
                     }
@@ -55,24 +58,41 @@ var INLModules;
                 infoTools: null
             });
         }
-        //============================================================
         LocalLayerModule.prototype.readTextFile = function (blob) {
             var _this = this;
             var reader = new FileReader();
+            this.kmlFile = blob;
             reader.readAsText(blob);
             reader.onload = function (evt) {
+                var kml_projection = new OpenLayers.Projection("EPSG:4326");
+                var map_projection = new OpenLayers.Projection("EPSG:3857");
+
+                //var osm: OpenLayers.OSM = new OpenLayers.Layer.OSM();
                 _this.localFormat = new OpenLayers.Format.KML({
                     extractStyles: true,
                     extractAttributes: true,
-                    maxDepth: 2
+                    internalProjection: map_projection,
+                    externalProjection: kml_projection
                 });
 
-                _this.localLayer = new OpenLayers.Layer.Vector("KML Custom Layer", {
-                    strategies: OpenLayers.Strategy.Fixed()
+                _this.localLayer = new OpenLayers.Layer.Vector("KML (" + _this.kmlFile.name + ")", {
+                    strategies: OpenLayers.Strategy.Fixed(),
+                    style: {
+                        fillColor: "darkred",
+                        strokeColor: "red",
+                        strokeWidth: 5,
+                        strokeOpacity: 0.5,
+                        pointRadius: 5
+                    }
                 });
 
-                _this.localLayer.addFeatures(_this.localFormat.read(evt.target.result));
-                pvMapper.map.addLayer(_this.localLayer);
+                var feature = _this.localFormat.read(evt.target.result);
+                _this.localLayer.addFeatures(feature);
+                var isOk = pvMapper.map.addLayer(_this.localLayer);
+
+                if (_this.scoreObj !== null) {
+                    _this.updateScore(_this.scoreObj);
+                }
             };
         };
 
@@ -85,16 +105,30 @@ var INLModules;
         };
 
         LocalLayerModule.prototype.updateScore = function (score) {
-            var params = {
-                mapExtent: score.site.geometry.bounds.toBBOX(6, false),
-                geometryType: "esriGeometryEnvelope",
-                geometry: score.site.geometry.bounds.toBBOX(6, false),
-                f: "json",
-                layers: "0",
-                tolerance: 0,
-                imageDisplay: "1, 1, 96",
-                returnGeometry: false
-            };
+            this.scoreObj = score;
+            if (this.localLayer == null)
+                return;
+            var closestFeature = null;
+            var minDistance = Number.MAX_VALUE;
+
+            if (this.localLayer.features) {
+                for (var i = 0; i < this.localLayer.features.length; i++) {
+                    if (this.localLayer.features[i].geometry !== null) {
+                        var distance = score.site.geometry.distanceTo(this.localLayer.features[i].geometry);
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            closestFeature = this.localLayer.features[i];
+                        }
+                    }
+                }
+            }
+            if (closestFeature !== null) {
+                score.popupMessage = (minDistance / 1000).toFixed(1) + " km to nearest feature.";
+                score.updateValue(minDistance / 1000);
+            } else {
+                score.popupMessage = "No features loaded.";
+                score.updateValue(Number.NaN);
+            }
         };
         return LocalLayerModule;
     })();

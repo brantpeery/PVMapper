@@ -22,41 +22,36 @@ var pvMapper;
                     infoTools: [
                         {
                             activate: function () {
-                                pvMapper.mapToolbar.add(Ext.create('Ext.button.Split', {
-                                    text: 'Reports',
-                                    menu: Ext.create('Ext.menu.Menu', {
-                                        items: [
-                                            {
-                                                text: 'Summary Report',
-                                                handler: function () {
-                                                    ////Catch the event when the SumaryReport window is ready and send it the data.
-                                                    ////This only works on same domain JS and window.
-                                                    //window['SummaryReportReady'] = function () {
-                                                    //    var url: string = window.location.href;
-                                                    //    var arr: string[] = url.split("/");
-                                                    //    var origin: string = arr[0] + "//" + arr[2];
-                                                    //    win.postMessage(JSON.stringify(pvMapper.Data.ScoreboardProcessor.getCleanObjectTransposed(pvMapper.mainScoreboard)), origin);
-                                                    //};
-                                                    var win = window.open('/Report/Summary', 'Report');
-                                                }
-                                            },
-                                            {
-                                                text: 'Site Detail Report',
-                                                handler: function () {
-                                                    ////Catch the event when the SumaryReport window is ready and send it the data.
-                                                    ////This only works on same domain JS and window.
-                                                    //window['SummaryReportReady'] = function () {
-                                                    //    var url: string = window.location.href;
-                                                    //    var arr: string[] = url.split("/");
-                                                    //    var origin: string = arr[0] + "//" + arr[2];
-                                                    //    win.postMessage(JSON.stringify(pvMapper.Data.ScoreboardProcessor.getCleanObjectTransposed(pvMapper.mainScoreboard)), origin);
-                                                    //};
-                                                    var win = window.open('/Report/SiteDetail', 'Report');
-                                                }
-                                            }
-                                        ]
-                                    })
-                                }));
+                                pvMapper.reportsToolbarMenu.add([
+                                    {
+                                        text: 'Summary Report',
+                                        handler: function () {
+                                            ////Catch the event when the SumaryReport window is ready and send it the data.
+                                            ////This only works on same domain JS and window.
+                                            //window['SummaryReportReady'] = function () {
+                                            //    var url: string = window.location.href;
+                                            //    var arr: string[] = url.split("/");
+                                            //    var origin: string = arr[0] + "//" + arr[2];
+                                            //    win.postMessage(JSON.stringify(pvMapper.Data.ScoreboardProcessor.getCleanObjectTransposed(pvMapper.mainScoreboard)), origin);
+                                            //};
+                                            var win = window.open('/Report/Summary', 'Report');
+                                        }
+                                    },
+                                    {
+                                        text: 'Site Detail Report',
+                                        handler: function () {
+                                            ////Catch the event when the SumaryReport window is ready and send it the data.
+                                            ////This only works on same domain JS and window.
+                                            //window['SummaryReportReady'] = function () {
+                                            //    var url: string = window.location.href;
+                                            //    var arr: string[] = url.split("/");
+                                            //    var origin: string = arr[0] + "//" + arr[2];
+                                            //    win.postMessage(JSON.stringify(pvMapper.Data.ScoreboardProcessor.getCleanObjectTransposed(pvMapper.mainScoreboard)), origin);
+                                            //};
+                                            var win = window.open('/Report/SiteDetail', 'Report');
+                                        }
+                                    }
+                                ]);
                             },
                             init: function () {
                             },

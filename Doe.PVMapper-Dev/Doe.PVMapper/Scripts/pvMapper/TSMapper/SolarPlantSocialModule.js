@@ -95,7 +95,7 @@ var INLModules;
                 propsGrid
             ],
             listeners: {
-                afterhide: function () {
+                beforehide: function () {
                     if (configProperties.maxSearchDistanceInMI > nearestFeatureCache_searchDistanceInMi) {
                         // we've enlarged our search distance - clear the cache and requery each score from the server.
                         nearestFeatureCache = [];
@@ -145,7 +145,7 @@ var INLModules;
                             propsWindow.show();
                         },
                         title: "Existing Solar Proximity",
-                        description: "Distance from a site boundary to the nearest existing solar plant",
+                        description: "Percentage of survey respondents who reported this distance from existing solar plants as acceptable",
                         category: "Social Acceptance",
                         //onScoreAdded: function (e, score: pvMapper.Score) {
                         //    scores.push(score);
@@ -188,6 +188,7 @@ var INLModules;
         mapLayer.setVisibility(false);
 
         pvMapper.map.addLayer(mapLayer);
+        //pvMapper.map.setLayerIndex(mapLayer, 0);
     }
 
     function removeAllMaps() {
