@@ -1,0 +1,162 @@
+﻿@{
+    ViewBag.Title = "SiteDetailReport";
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+}
+
+@section Header{
+    <link href="~/Content/Reports/SiteDetailReport.css" rel="stylesheet" />
+
+    <script type="text/javascript">
+        function eventHack(event, fn, addOn) {
+            if (window.addEventListener) {
+                window.addEventListener(event, fn, false);
+            } else {
+                //Do it the IE way. #stupid     
+                window.attachEvent((addon) ? "on" : "" + event, fn);
+            }
+        }
+
+        eventHack("load", function () {
+            var pvMapper = window.opener.pvMapper;
+
+            var data = pvMapper.Data.ScoreboardProcessor.getCleanObjectTransposed(pvMapper.mainScoreboard);
+            data = prepData(data);
+            createHTML(data);
+        });
+
+        function prepData(data) {
+            var pvMapper = window.opener.pvMapper;
+            data = pvMapper.Data.ScoreboardProcessor.addSummaryAndDivergence(data);
+            data = pvMapper.Data.ScoreboardProcessor.sortScoresByDivergence(data);
+            return data;
+        }
+
+        //polygon is OpenLayers.Geometry.Polygon  GeoJSON format: String.
+        function showMap(divName, polygon) {
+            //create a map.
+            var map = new OpenLayers.Map({
+                // These projections are all webmercator, but the openlayers layer wants 900913 specifically
+                projection: new OpenLayers.Projection("EPSG:3857"), //3857 //4326            900913
+                units: "m",
+                numZoomLevels: 16,
+                controls: {},
+                theme: "/Content/OpenLayers/default/style.css",
+                div: divName
+            });
+            var osmlayer = new OpenLayers.Layer.OSM();
+            map.addLayer(osmlayer);
+
+            var layer = new OpenLayers.Layer.Vector();
+
+            //since the data is in GeoJSON, we need to deserialize it.
+            var fvector = new OpenLayers.Format.WKT().read(polygon);
+
+            layer.addFeatures([fvector]);
+            map.addLayer(layer);
+
+            var bound = layer.getDataExtent();
+            map.zoomToExtent(bound, false);
+        }
+
+
+        //EXT Template stuff
+        function createHTML(data) {
+            var maps = [];
+
+            //var panel = Ext.create('Ext.Panel', {
+            //    width: 950,
+            //    renderTo: 'Report',
+            //    style: "margin:15px",
+            //    bodyStyle: "padding:5px;font-size:11px;",
+            //    title: 'Report',
+            //    html: '<p>The Report is Rendering...</p>',
+            //    listeners: {
+            //        afterlayout: function () {
+            //            maps.map(function (value, idx) {
+            //                showMap(value.div, value.data);
+            //            });
+            //        }
+            //    }
+            //});
+
+
+            var tpl = new Ext.XTemplate(
+                '<div id="ReportTemplate">',
+                '    <tpl for="sites">',
+                '    <section class="reportPage">',
+                '        <div id="ReportHead">',
+                '            <div id="SiteImage">',
+                '                <div id="{id}-Map" class="siteMap" >{[this.drawMap(values.id+"-Map", values.geometry)]}</div>',
+                '            </div>',
+                '            <div id="SiteInfo">',
+                '                <h1 class="ribbonHeader">{name}<span class="ribbon-leftside"></span></h1>',
+                '                <div id="SiteDescription">',
+                '                    <h1 class="label">SITE DESCRIPTION:</h1>',
+                '                     {description}',
+                '                </div>',
+                '                <div id="SiteScore">',
+                '                    <span class="label">Score</span>',
+                '                    <span class="value">{[this.round(values.meanUtility)]}</span>',
+                '                    <span class="divergence">{[this.divergenceSymbol(values.divergence)]}{[this.round(values.divergence)]}</span>',
+                '                </div>',
+                '            </div>',
+                '        </div>',
+                '        <div id="ScoreDetailSection">',
+                '            <h1 class="ribbonHeader"><span class="ribbon-rightside"></span>Score Detail</h1>',
+                '            <tpl for="scores">',
+                '            <div class="toolDetail">',
+                '                <h1>{scoreLine.title}</h1>',
+                '                <div class="utilityScoreField">',
+                '                    <label>Utility Score: </label>',
+                '                    <span class="value">{utility}</span>',
+                '                </div>',
+                '                <div class="weightField">',
+                '                    <label>Weight: </label>',
+                '                    <span class="value">{scoreLine.weight}/{parent.totalWeights}</span>',
+                '                </div>',
+                '                <div class="valueField">',
+                '                    <label>Value: </label>',
+                '                    <span class="value">{value}</span>',
+                '                </div>',
+                '',
+                '                <div class="toolNotesField">',
+                '                    <label>Tool Notes:</label>',
+                '                    <div class="value">',
+                '                        {scoreLine.description}',
+                '                    </div>',
+                '                </div>',
+                '            </div>',
+                '            </tpl>',
+                '        </div>',
+                '    </section>',
+                '    </tpl>',
+                '</div>',
+                {
+                    divergenceSymbol: function (val) {
+                        return (val < 0) ? '&#8595;' : '&#8593;';
+                    },
+                    round: function (value) {
+                        return Math.round(value);
+                    },
+                    drawMap: function (div, data) {
+                        maps.push({ div: div, data: data });
+                    }
+                }
+            );
+
+            tpl.overwrite("Report", data);
+            //panel.doComponentLayout();
+
+            //Update the maps
+            maps.map(function (value, idx) {
+                showMap(value.div, value.data);
+            });
+        };
+    </script>
+
+}
+
+<h2>SiteDetailReport</h2>
+<div id="Report">
+</div>
+

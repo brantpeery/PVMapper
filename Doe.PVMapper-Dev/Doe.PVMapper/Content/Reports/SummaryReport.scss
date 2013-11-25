@@ -13,6 +13,7 @@ $font-size: calc( #{$width} / 50);
 {
     width: $width;
     font: $width / 50 Arial;
+	page-break-inside: avoid;
 }
 
 .infoColor
