@@ -2,7 +2,8 @@
     set the font-size to overall width / 50  */
 #SiteSummaryReport {
   width: 900px;
-  font: 18px Arial; }
+  font: 18px Arial;
+  page-break-inside: avoid; }
 
 .infoColor {
   color: #336699;

@@ -10,87 +10,39 @@
             window.addEventListener(event, fn, false);
         } else {
             //Do it the IE way. #stupid     
-            window.attachEvent((addon)?"on":"" + event, fn);
+            window.attachEvent((addon) ? "on" : "" + event, fn);
         }
     }
 
-    function receiveMessage(event) {
-        if (event.origin == this.window.location.origin) { //Only from the same domain
-            var data;
+    //function receiveMessage(event) {
+    //    if (event.origin == this.window.location.origin) { //Only from the same domain
+    //        var data;
 
-            //Try to convert the data
-            data = JSON.parse(event.data);
-            data = prepData(data);
-            createHTML(data);
-        }
-    }
+    //        //Try to convert the data
+    //        data = JSON.parse(event.data);
+    //        data = prepData(data);
+    //        createHTML(data);
+    //    }
+    //}
 
 
-    eventHack("message", receiveMessage);
-    //Hack: Tell the originating window that we are ready. This assumes that the originating window has a SummaryReportReady function
+    //eventHack("message", receiveMessage);
+
     eventHack("load", function () {
         var pvMapper = window.opener.pvMapper;
-        var jsondata = pvMapper.Data.ScoreboardProcessor.getCleanObjectTransposedJSON(pvMapper.mainScoreboard)
+        //var jsondata = pvMapper.Data.ScoreboardProcessor.getCleanObjectTransposedJSON(pvMapper.mainScoreboard)
 
-        data = prepData(JSON.parse(jsondata));
+        var data = pvMapper.Data.ScoreboardProcessor.getCleanObjectTransposed(pvMapper.mainScoreboard);
+        data = prepData(data);
         createHTML(data);
         //window.opener.SummaryReportReady();
     }
     );
 
     function prepData(data) {
-        var total = 0;
-        var mean;
-
-        var count = 0;
-        for (skey in data.sites) {
-            var site = data.sites[skey];
-            count++;
-            var totalWeights = 0;
-            for (key in site.scores) {
-                var score = site.scores[key];
-
-                //The total of all the scores by sites for this tool
-                //The scoreLine objects are shared between all site.scores
-                if (score.scoreLine["totalSiteUtility"] == undefined) { score.scoreLine["totalSiteUtility"] = 0; }
-                score.scoreLine["totalSiteUtility"] += score.utility;
-
-                //Update the mean when a score is added to the total
-                score.scoreLine["meanSiteUtility"] = score.scoreLine["totalSiteUtility"] / count;
-
-                //The total of all scores by scoreline for each site
-                if (site["totalUtility"] == undefined) { site["totalUtility"] = 0; }
-                site["totalUtility"] += score.utility * score.scoreLine.weight;
-
-                totalWeights += score.scoreLine.weight;
-            }
-            site['meanUtility'] = site["totalUtility"] / totalWeights;
-
-            //Total mean scores across all sites
-            total += site['meanUtility'];
-            //The mean score for all sites
-            mean = total / count;
-        }
-
-        //Now add in the divergence
-        for (skey in data.sites) {
-            var site = data.sites[skey];
-            count++;
-            for (key in site.scores) {
-                var score = site.scores[key];
-                //calculate the score's divergence for this site compared to other sites for the same scoreLine
-                score['divergence'] = Math.round(score.utility - score.scoreLine["meanSiteUtility"]);
-            }
-
-            //Sort the divergence for this site descending
-            site.scores.sort(function (a, b) {
-                return Math.abs(b.divergence) - Math.abs(a.divergence);
-            });
-
-            //Calculate the mean score divergence from the project mean for this site compared to other sites
-            site['divergence'] = Math.round(site['meanUtility'] - mean);
-        }
-
+        var pvMapper = window.opener.pvMapper;
+        data = pvMapper.Data.ScoreboardProcessor.addSummaryAndDivergence(data);
+        data = pvMapper.Data.ScoreboardProcessor.sortScoresByDivergence(data);
         return data;
     }
 
@@ -166,7 +118,7 @@
             '                <span class="siteBigScore">{[this.round(values.meanUtility)]}</span>',
             '                <span class="siteScoreUnit"></span>',
             '                <span class="siteDivergenceArrow">{[this.divergenceSymbol(values.divergence)]}</span>',
-            '                <span class="siteDivergence">{[this.round(values.divergence)]}%</span>',
+            '                <span class="siteDivergence">{[this.round(values.divergence)]}</span>',
             '                <p class="totalInfo infoColor">AVERAGE</p>',
             '            </div>',
             '        </div>',

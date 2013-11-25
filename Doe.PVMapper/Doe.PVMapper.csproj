@@ -226,6 +226,10 @@
     <Content Include="Content\OpenLayers\default\style.css" />
     <Content Include="Content\OpenLayers\default\style.tidy.css" />
     <Content Include="Content\jsxgraph.css" />
+    <None Include="Content\Reports\SiteDetailReport.scss" />
+    <Content Include="Content\Reports\SiteDetailReport.css">
+      <DependentUpon>SiteDetailReport.scss</DependentUpon>
+    </Content>
     <Content Include="Content\Reports\SummaryReport.css" />
     <Content Include="Images\printer.png" />
     <Content Include="lpresources\assets\ajax-loader.gif" />
@@ -1455,7 +1459,7 @@
     <Content Include="Views\SiteDetail\Feedback.cshtml" />
     <Content Include="Views\Report\Summary.cshtml" />
     <Content Include="Views\Shared\_ReportLayout.cshtml" />
-    <Content Include="Views\Report\SiteDetailReport.cshtml" />
+    <Content Include="Views\Report\SiteDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
