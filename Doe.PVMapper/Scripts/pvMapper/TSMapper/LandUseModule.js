@@ -1,11 +1,27 @@
+/// <reference path="StarRatingHelper.ts" />
+/// <reference path="pvMapper.ts" />
+/// <reference path="Site.ts" />
+/// <reference path="Score.ts" />
+/// <reference path="Tools.ts" />
+/// <reference path="Options.d.ts" />
+/// <reference path="Module.ts" />
+/// <reference path="ScoreUtility.ts" />
+/// <reference path="Esri-GeoJsonConverter.js />
+/// <reference path="jstorage.d.ts" />
+/// <reference path="ScoreLine.ts" />
+/// <reference path="Scoreboard.ts" />
+/// <reference path="OpenLayers.d.ts" />
+/// <reference path="../../jquery.d.ts" />
+/// <reference path="common.ts" />
+/// <reference path="Event.ts" />
 var INLModules;
 (function (INLModules) {
     var ProtectedAreasModule = (function () {
         function ProtectedAreasModule() {
             var _this = this;
             this.starRatingHelper = new pvMapper.StarRatingHelper({
-                defaultStarRating: 2,
-                noCategoryRating: 4,
+                defaultStarRating: 4,
+                noCategoryRating: 5,
                 noCategoryLabel: "None"
             });
             this.federalLandsWmsUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/services/PADUS/PADUS_owner/MapServer/WMSServer";
@@ -30,7 +46,7 @@ var INLModules;
                         destroy: null,
                         init: null,
                         title: "Protected Areas",
-                        description: "Overlapping protected areas, using PAD-US map data hosted by UI-GAP (gap.uidaho.edu)",
+                        description: "Overlapping protected areas, using PAD-US map data hosted by gapanalysisprogram.com, using GAP status codes as the default star rating",
                         category: "Land Use",
                         //onScoreAdded: (e, score: pvMapper.Score) => {
                         //},
@@ -39,6 +55,9 @@ var INLModules;
                         },
                         getStarRatables: function () {
                             return _this.starRatingHelper.starRatings;
+                        },
+                        setStarRatables: function (rateTable) {
+                            _this.starRatingHelper.starRatings = rateTable;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
@@ -103,6 +122,7 @@ var INLModules;
 
                                 var owner = parsedResponse.results[i].attributes["Owner Name"];
                                 var manager = parsedResponse.results[i].attributes["Manager Name"];
+                                var gapStatusCode = parseInt(parsedResponse.results[i].attributes["GAP Status Code"], 10);
 
                                 var newText = "";
 
@@ -121,6 +141,10 @@ var INLModules;
 
                                 if (responseArray.indexOf(newText) < 0) {
                                     responseArray.push(newText);
+                                }
+
+                                if (typeof _this.starRatingHelper.starRatings[newText] === "undefined" && !isNaN(gapStatusCode) && gapStatusCode > 0 && gapStatusCode <= 5) {
+                                    _this.starRatingHelper.starRatings[newText] = gapStatusCode;
                                 }
                             }
 
@@ -173,7 +197,7 @@ var INLModules;
                         destroy: null,
                         init: null,
                         title: "Land Cover",
-                        description: "The type of land cover found in the center of a site, using NLCD map data hosted by UI-GAP (gap.uidaho.edu)",
+                        description: "The type of land cover found in the center of a site, using NLCD map data hosted by gapanalysisprogram.com",
                         category: "Land Use",
                         //onScoreAdded: (e, score: pvMapper.Score) => {
                         //},
@@ -182,6 +206,9 @@ var INLModules;
                         },
                         getStarRatables: function () {
                             return _this.ratables;
+                        },
+                        setStarRatables: function (rateTable) {
+                            _this.ratables = rateTable;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
@@ -258,6 +285,11 @@ var INLModules;
 
                             score.popupMessage = landCover + " [" + rating + (rating === 1 ? " star]" : " stars]");
                             score.updateValue(rating);
+                            //TODO: the server refuses to return more than one pixel value... how do we get %coverage?
+                            //      I'm afraid that we'll have to fetch the overlapping image and parse it ourselves...
+                            //      or at least run a few requests for different pixels and conbine the results.
+                            //      Either way, it'll be costly and inefficient. But, I can't find a better server,
+                            //      nor have I been successful at coaxing multiple results from this one. Curses.
                         } else {
                             score.popupMessage = "No data for this site";
                             score.updateValue(Number.NaN);
@@ -282,7 +314,7 @@ var INLModules;
             var _this = this;
             this.landCoverRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/NAT_LC/1_NVC_class_landuse/MapServer/";
             this.landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
-            this.starRatingHelper1 = new pvMapper.StarRatingHelper({
+            this.starRatingHelper = new pvMapper.StarRatingHelper({
                 defaultStarRating: 4
             });
             var myModule = new pvMapper.Module({
@@ -312,7 +344,10 @@ var INLModules;
                             _this.updateScore(score);
                         },
                         getStarRatables: function () {
-                            return _this.starRatingHelper1.starRatings;
+                            return _this.starRatingHelper.starRatings;
+                        },
+                        setStarRatables: function (rateTable) {
+                            _this.starRatingHelper.starRatings = rateTable;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
@@ -432,12 +467,12 @@ var INLModules;
                                                 var combinedText = '';
 
                                                 for (var i = 0; i < landCovers.length; i++) {
-                                                    if (typeof _this.starRatingHelper1.starRatings[landCovers[i].cover] === "undefined") {
-                                                        _this.starRatingHelper1.starRatings[landCovers[i].cover] = _this.starRatingHelper1.options.defaultStarRating;
+                                                    if (typeof _this.starRatingHelper.starRatings[landCovers[i].cover] === "undefined") {
+                                                        _this.starRatingHelper.starRatings[landCovers[i].cover] = _this.starRatingHelper.options.defaultStarRating;
                                                     }
 
                                                     // overall score is the average star rating weighted by the percentage of individual land covers
-                                                    var starRating = _this.starRatingHelper1.starRatings[landCovers[i].cover];
+                                                    var starRating = _this.starRatingHelper.starRatings[landCovers[i].cover];
 
                                                     totalPercent += landCovers[i].percent;
                                                     overallScore += landCovers[i].percent * starRating;

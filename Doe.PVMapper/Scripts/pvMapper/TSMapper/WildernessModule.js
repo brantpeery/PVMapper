@@ -1,3 +1,11 @@
+/// <reference path="ScoreUtility.ts" />
+/// <reference path="pvMapper.ts" />
+/// <reference path="Site.ts" />
+/// <reference path="Score.ts" />
+/// <reference path="Tools.ts" />
+/// <reference path="Options.d.ts" />
+/// <reference path="Module.ts" />
+/// <reference path="Esri-GeoJsonConverter.js />
 var BYUModules;
 (function (BYUModules) {
     var WildernessModule = (function () {

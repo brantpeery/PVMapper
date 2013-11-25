@@ -312,5 +312,6 @@ var INLModules;
                 }
             }
         });
+        //var response: OpenLayers.Response = jsonpProtocol.read();
     }
 })(INLModules || (INLModules = {}));
