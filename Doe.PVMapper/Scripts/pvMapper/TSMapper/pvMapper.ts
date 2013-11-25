@@ -5,7 +5,14 @@
 
 module pvMapper {
     export var readyEvent: pvMapper.Event = new pvMapper.Event;
-    export var mapToolbar: any;//The main toolbar above the map
+
+    export var mapToolbar: Ext.toolbar.IToolbar; // The main toolbar above the map
+
+    export var sitesToolbarMenu: Ext.menu.IMenu; // The site sub-menu in the toolbar
+    export var scoreboardToolsToolbarMenu: Ext.menu.IMenu; // The scoreboard tools sub-menu in the toolbar
+    export var reportsToolbarMenu: Ext.menu.IMenu; // The Reports sub-menu in the toolbar
+    export var linksToolbarMenu: Ext.menu.IMenu; // The links sub-menu in the toolbar
+
     export var infoTools: IInfoTool[] = [];
 
     export function onReady(fn:ICallback) {
