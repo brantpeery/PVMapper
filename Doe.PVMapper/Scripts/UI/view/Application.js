@@ -22,7 +22,9 @@ Ext.require([
     'GeoExt.container.WmsLegend',
     'GeoExt.container.VectorLegend',
     'GeoExt.container.UrlLegend',
-    'GeoExt.tree.Column'
+    'GeoExt.tree.Column',
+    'MainApp.view.Window',
+    'MainApp.view.Viewport'
 ]);
 
 var app = Ext.application({
