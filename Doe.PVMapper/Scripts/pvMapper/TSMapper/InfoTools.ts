@@ -8,6 +8,7 @@ module pvMapper{
             this.title = options.title;
             //this.name = options.name;
             this.description = options.description;
+            this.longDescription = options.longDescription;
 
             this.init = options.init || function () { };
             this.destroy = options.destroy || function () { };
@@ -23,6 +24,7 @@ module pvMapper{
         public title: string;
         //public name: string;
         public description: string;
+        public longDescription: string;
 
         public category = "Totals";
     }

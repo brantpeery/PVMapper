@@ -15,9 +15,14 @@ module pvMapper {
         title: string;
 
         /**
-         The description of the tool. This will be visible in reports and as a tool tip
+         A short description of the tool: perhaps one sentence with a few clauses. This will be shown in a scoreboard tool tip.
         */
         description: string;
+
+        /**
+         The long-form description of the tool: perhaps two paragraphs, with basic HTML tags. This will be shown in reports.
+        */
+        longDescription: string;
 
         /**
          * The category of this tool, for hierarchical sorting

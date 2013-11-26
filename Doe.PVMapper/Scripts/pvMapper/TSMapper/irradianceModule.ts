@@ -29,8 +29,9 @@ module INLModules {
                     init: null,
 
                     title: "Direct-Normal Irradiance",
-                    description: "The average annual DNI for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)",
                     category: "Meteorology",
+                    description: "The average annual DNI for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)",
+                    longDescription: '<p>This tool reports the daily total direct-normal irradiance at a site, averaged over a 12 year period and over a 0.1 degree square area. The insolation values represent the resource available to concentrating systems that track the sun throughout the day. The data are created using the SUNY Satellite Solar Radiation model (Perez, et.al., 2002). The data are averaged from hourly model output over 12 years (1998-2009). This model uses hourly radiance images from geostationary weather satellites, daily snow cover data, and monthly averages of atmospheric water vapor, trace gases, and the amount of aerosols in the atmosphere to calculate the hourly total insolation (sun and sky) falling on a horizontal surface. The direct beam radiation is then calculated using the atmospheric water vapor, trace gases, and aerosols, which are derived from a variety of sources. For further information, see DATA.gov (api.data.gov/docs/nrel/solar/solar-resource-v1) and NREL (www.nrel.gov/gis).</p>',
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, score: pvMapper.Score) {
@@ -39,10 +40,7 @@ module INLModules {
 
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 8, "kWh/m2/day",
-                            //override the default for specific message.
-                            "Minimum Direct-Normal Irradiation allowed.",
-                            "Maximum Direct-Normal Irradiation allowed." )
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 8, "kWh/m2/day")
                     },
                     weight: 10
 
@@ -53,8 +51,9 @@ module INLModules {
                     init: null,
 
                     title: "Global-Horizontal Irradiance",
-                    description: "The average annual flat plate GHI for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)",
                     category: "Meteorology",
+                    description: "The average annual flat plate GHI for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)",
+                    longDescription: '<p>This tool reports the daily total flat plate global-horizontal irradiance at a site, averaged over a 12 year period and over a 0.1 degree square area. The insolation values represent the global horizontal resource - the geometric sum of direct normal and diffuse irradiance components, representing total energy available on a planar surface. The data are created using the SUNY Satellite Solar Radiation model (Perez, et.al., 2002). The data are averaged from hourly model output over 12 years (1998-2009). This model uses hourly radiance images from geostationary weather satellites, daily snow cover data, and monthly averages of atmospheric water vapor, trace gases, and the amount of aerosols in the atmosphere to calculate the hourly total insolation (sun and sky) falling on a horizontal surface. The direct beam radiation is then calculated using the atmospheric water vapor, trace gases, and aerosols, which are derived from a variety of sources. For further information, see DATA.gov (api.data.gov/docs/nrel/solar/solar-resource-v1) and NREL GIS (www.nrel.gov/gis).</p>',
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, score: pvMapper.Score) {
@@ -73,8 +72,9 @@ module INLModules {
                     init: null,
 
                     title: "Tilted flat-plate Irradiance",
-                    description: "The average annual tilt irradiance for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)",
                     category: "Meteorology",
+                    description: "The average annual tilt irradiance for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)",
+                    longDescription: '<p>This tool reports the daily total tilted flat plate irradiance at a site, averaged over a 12 year period and over a 0.1 degree square area. The insolation values represent the resource available to fixed flat plate system tilted towards the equator at an angle equal to the latitude. The data are created using the SUNY Satellite Solar Radiation model (Perez, et.al., 2002). The data are averaged from hourly model output over 12 years (1998-2009). This model uses hourly radiance images from geostationary weather satellites, daily snow cover data, and monthly averages of atmospheric water vapor, trace gases, and the amount of aerosols in the atmosphere to calculate the hourly total insolation (sun and sky) falling on a horizontal surface. The direct beam radiation is then calculated using the atmospheric water vapor, trace gases, and aerosols, which are derived from a variety of sources. For further information, see DATA.gov (api.data.gov/docs/nrel/solar/solar-resource-v1) and NREL GIS (www.nrel.gov/gis).</p>',
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, score: pvMapper.Score) {
@@ -104,9 +104,9 @@ module INLModules {
     //declare var Ext: any;
 
     // references to layer objects (used for later querying and removal)
-    var dniSuny: any;
-    var ghiSuny: any;
-    var tiltSuny: any;
+    var dniSuny: OpenLayers.Layer;
+    var ghiSuny: OpenLayers.Layer;
+    var tiltSuny: OpenLayers.Layer;
 
     function addAllMaps() {
         //var solarBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
@@ -123,8 +123,8 @@ module INLModules {
         pvMapper.map.addLayer(tiltSuny);
     }
 
-    function addMapsDbMap(name:string, description: string) {
-        var newLayer = new OpenLayers.Layer.WMS(
+    function addMapsDbMap(name: string, description: string): OpenLayers.WMS {
+        var newLayer: OpenLayers.WMS = new OpenLayers.Layer.WMS(
             description, //"Solar GHI 10km by SUNY", //"Solar Radiation",
             MapsDbUrl,
             {

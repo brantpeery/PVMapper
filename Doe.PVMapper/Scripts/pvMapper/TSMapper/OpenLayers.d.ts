@@ -1267,7 +1267,7 @@ declare module OpenLayers {
         prototype: Events;
     }
 
-  interface Layer {
+    interface Layer {
         //properties
         id: string;
         name: string;
@@ -1418,11 +1418,11 @@ declare module OpenLayers {
     }
 
 
-  interface HTTPRequestLayer extends Layer {
+    interface HTTPRequest extends Layer {
         //TODO: flush out the rest.
     }
 
-    interface GridLayer extends HTTPRequestLayer {
+    interface Grid extends HTTPRequest {
         narrowToGridLayer(gridLayer: JSObject);
         setBuffer(buffer: number);
         setNumLoadingTile(numLoadingTiles: number);
@@ -1435,7 +1435,7 @@ declare module OpenLayers {
 
     }
 
-    interface ArcGIS93Rest extends GridLayer {
+    interface ArcGIS93Rest extends Grid {
         DEFAULT_PARAMS: Object;
         isBaseLayer: Boolean;
         narrowToArcGIS93Rest(arcgis93Rest: JSObject);
@@ -1451,10 +1451,10 @@ declare module OpenLayers {
         epsgOverride: string;
     }
 
-    interface Grid {
-        getGridBounds(); // deprecated.
-        getTilesBounds();
-    }
+    //interface Grid extends GridLayer {
+    //    getGridBounds(); // deprecated.
+    //    getTilesBounds();
+    //}
 
     interface XYZ extends Grid {
         isBaseLayer: boolean;
@@ -1501,32 +1501,31 @@ declare module OpenLayers {
             prototype: Vector;
         };
         WMS: {
-            new (name: string, url: string, params: any, options?: any): any;
+            new (name: string, url: string, params: any, options?: any): WMS;
             prototype: WMS;
         }
         ArcGIS93Rest: {
-            new (name: string, url: string[], params: any): any;
-            new (name: string, url: string, options: any, params?: any): any;
+            new (name: string, url: string[], params: any): ArcGIS93Rest;
+            new (name: string, url: string, options: any, params?: any): ArcGIS93Rest;
             prototype: ArcGIS93Rest;
         }
         XYZ: {
-            new (name: string, url: string, options: any): any;
+            new (name: string, url: string, options: any): XYZ;
             prototype: XYZ;
         }
         //ArcGIS93Rest(name: string, url: string[], params: any):any;
         //ArcGIS93Rest(name: string, url: string, options: any, params?: any):any;
         //ArcGIS93Rest(name: string, url: string[], params: WMSParams, layerParams: WMSOptions ): any;
         //ArcGIS93Rest(name: string, url: string, params: WMSParams, options: ArcGIS93RestOptions): any;
-        GridLayer(gridLayer: JSObject): any;
-        GridLayer(name: string, url: string, params: WMSParams);
-        GridLayer(name: string, url: string, params: WMSParams, options: GridLayerOptions);
         Grid: {
-            (): Grid;
+            new (): Grid;
+            new (name: string, url: string, params: WMSParams): Grid;
+            new (name: string, url: string, params: WMSParams, options: GridLayerOptions): Grid;
             prototype: Grid;
         }
         OSM: {
             new (): OSM;
-            new(name: string, url: string, options:any):OSM;
+            new (name: string, url: string, options:any): OSM;
             prototype: OSM;
         }
     }

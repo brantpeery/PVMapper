@@ -5,6 +5,7 @@
 
 @section Header{
     <link href="~/Content/Reports/SiteDetailReport.css" rel="stylesheet" />
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet" />
 
     <script type="text/javascript">
         function eventHack(event, fn, addOn) {
@@ -55,6 +56,7 @@
             map.addLayer(layer);
 
             var bound = layer.getDataExtent();
+            bound = bound.scale(3); // Let's get a little more context for the neighborhood, here.
             map.zoomToExtent(bound, false);
         }
 
@@ -106,23 +108,23 @@
                 '            <tpl for="scores">',
                 '            <div class="toolDetail">',
                 '                <h1>{scoreLine.title}</h1>',
+                '                <div class="valueField">',
+                '                    <label>Value: </label>',
+                '                    <span class="value">{popupMessage}</span>',
+                '                </div>',
                 '                <div class="utilityScoreField">',
-                '                    <label>Utility Score: </label>',
-                '                    <span class="value">{utility}</span>',
+                '                    <label>Score: </label>',
+                '                    <span class="value">{[this.round(values.utility)]}</span>',
                 '                </div>',
                 '                <div class="weightField">',
                 '                    <label>Weight: </label>',
-                '                    <span class="value">{scoreLine.weight}/{parent.totalWeights}</span>',
-                '                </div>',
-                '                <div class="valueField">',
-                '                    <label>Value: </label>',
-                '                    <span class="value">{value}</span>',
+                '                    <span class="value">{scoreLine.weight}</span>',
                 '                </div>',
                 '',
                 '                <div class="toolNotesField">',
-                '                    <label>Tool Notes:</label>',
+                //'                    <label>Tool Notes:</label>',
                 '                    <div class="value">',
-                '                        {scoreLine.description}',
+                '                        {scoreLine.longDescription}',
                 '                    </div>',
                 '                </div>',
                 '            </div>',
@@ -156,7 +158,7 @@
 
 }
 
-<h2>SiteDetailReport</h2>
+@*<h2>SiteDetailReport</h2>*@
 <div id="Report">
 </div>
 

@@ -37,6 +37,9 @@ module pvMapper {
             if (options.description) {
                 this.description = options.description;
             }
+            if (options.longDescription) {
+                this.longDescription = options.longDescription;
+            }
             this.category = (typeof (options.category) === 'string') ? options.category : 'Other';
 
             if ($.isFunction(options.onSiteChange)) {
@@ -97,8 +100,8 @@ module pvMapper {
             // this.loadScore();
 
             //Set the default weight of the tool
-            //Note: a weight of 0 is possible and valid
-            this.weight = (typeof options.weight === "number") ? options.weight : 0;
+            //Note: a weight of 0 is possible and valid. The default weight is 10.
+            this.weight = (typeof options.weight === "number") ? options.weight : 10;
         }
 
         public utilargs: pvMapper.MinMaxUtilityArgs;
@@ -106,6 +109,7 @@ module pvMapper {
         public title: string;
         public weight: number;
         public description: string;
+        public longDescription: string;
         public category: string;
         public scores: Score[] = new Array<Score>(); //  new Score[](); <<-- TS0.9.0 doesn't like this.
         //public updateScore: ICallback = options.updateScoreCallback;
@@ -237,6 +241,7 @@ module pvMapper {
                 title: this.title,
                 weight: this.weight,
                 description: this.description,
+                longDescription: this.longDescription,
                 category: this.category,
                 scoreUtility: this.scoreUtility,
                 scores: this.scores
