@@ -25,6 +25,7 @@ section.reportPage {
 	font-style: italic; }
 
 #ReportHead {
+  margin-top: 2em;
   position: relative;
   width: 100%;
   height: 19.2em; }
