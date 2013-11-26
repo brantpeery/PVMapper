@@ -106,12 +106,10 @@ var scoreboardColumns = [{
     //tooltip: '{description}',
     //editor: 'textfield', <-- don't edit this field - that would be silly
     summaryType: function (records) {
-        //Note: this fails when we allow grouping by arbitrary fields (and it fails in mysterious ways)
-        //return records[0].get('category') + " subtotal: <input type='button' img='http://localhost:53465/Images/Pie Chart.png' value='Pie' onClick='scoreboardColumns[0].viewPie(\"" + records[0].get('category') + "\");' />";
         if (records.length > 0) {
             return records[0].get('category') +
 //If we ever need pie view again, uncomment this line and comment the next line.
-//              " (average): <input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
+//              " (average): <input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" + records[0].get('category') + "\",0);' />";
               " (average): ";
 
         }
@@ -412,14 +410,26 @@ toolsStore.on({
                         //  }
                         //}
 
-                        return average;
+                        //return average;
+                        var c = pvMapper.getColorForScore(average);
+                        var sumContent = "<span style='border-radius: 3px; background-color:" + c + "'>&nbsp" + average.toFixed(0) + "&nbsp"
+                           + "<input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
+                             records[0].get('category') + "\"," + idx.toString() + ");' /></span>";
+                        return sumContent;
+
                     },
                     summaryRenderer: function (value, summaryRowValues) {
                         if (typeof value === "number" && !isNaN(value)) {
                             var c = pvMapper.getColorForScore(value);
-                            return '<span style="border-radius: 3px; background-color:' + c + '">&nbsp' + value.toFixed(0) + '&nbsp</span>'
+                            var sumContent = "<span style='border-radius: 3px; background-color:" + c + "'>&nbsp" + value.toFixed(0) + "&nbsp</span>";
+                           // var cStr = "<input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" + records[0].get('category') + "\"," + idx.toString() + "); />";
+                           // sumContent += cStr;
+                            return sumContent;
+
                             //+ "<input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
                             //  scoreLine.Category + "\",\""+ scoreline.site.name +"\");' />";
+                        } else if (typeof value === "string" && value !== null) {
+                            return value;
                         }
                         else return '';
                     },
@@ -503,76 +513,79 @@ Ext.define('Ext.grid.ScoreboardGrid', {
         }
     },
 
-    //viewPie: function (cat, site) {
+    viewPie: function (cat, site) {
 
-    //    var records = scoreboardGrid.store.getGroups(cat);
-    //    if (records.children.length > 0) {
-    //        pieStore.removeAll(); //delete all records in the score
-    //        records.children.forEach(function (record, index, array) {
-    //            pieStore.add({ Category: record.get('title'), Data: record.get('weight'), Color: "blue" });
-    //        });
-    //    }
+        var records = scoreboardGrid.store.getGroups(cat);
+        if ((records.children.length <= 0) || (site == null)) {
+            Ext.MessageBox.alert("Empty!", "There is no data in this group.");
+            return;
+        }
+        pieStore.removeAll(); //delete all records in the score
+        records.children.forEach(function (record, index, array) {
+            pieStore.add({ Category: record.get('title'), Data: record.raw.scores[site].utility, Color: pvMapper.getColorForScore(record.raw.scores[site].utility) });
+        });
+        
 
-    //    var pieWin = Ext.create('MainApp.view.PieWindow', {
-    //        dataStore: pieStore,
-    //        dataField: 'Data',
-    //        dataName: 'Category',
-    //        fillColor: 'Color',
-    //        title: 'Weight Percentage - ' + cat,
-    //        buttons: [{
-    //            xtype: 'button',
-    //            text: 'OK',
-    //            handler: function () {
-    //                //TODO: execute update function here.
+        var pieWin = Ext.create('MainApp.view.PieWindow', {
+            dataStore: pieStore,
+            dataField: 'Data',
+            dataName: 'Category',
+            fillColor: 'Color',
+            title: 'Weighted Scores - ' + cat + ' : ' + siteColumns[site].text,
+            buttons: [{
+                xtype: 'button',
+                text: 'OK',
+                handler: function () {
+                    //TODO: execute update function here.
 
 
-    //                pieWin.close();
-    //            }
-    //        }],
-    //        plugins: [{
-    //            ptype: "headericons",
-    //            index: 1,
-    //            headerButtons: [
-    //                {
-    //                    xtype: 'button',
-    //                    iconCls: 'x-ux-grid-printer',
-    //                    width: 24,
-    //                    height: 15,
-    //                    //scope: this,
-    //                    handler: function () {
-    //                        //var win = Ext.WindowManager.getActive();
-    //                        //if (win) {
-    //                        //  win.toggleMaximize();
-    //                        //}
-    //                        var style = ''; var link = '';
-    //                        var printContent = document.getElementById(pieWin.body.id); //TODO: change to get the ID, rather than use 'magic' ID
-    //                        var printWindow = window.open('', '', ''); // 'left=10, width=800, height=520');
+                    pieWin.close();
+                }
+            }],
+            plugins: [{
+                ptype: "headericons",
+                index: 1,
+                headerButtons: [
+                    {
+                        xtype: 'button',
+                        iconCls: 'x-ux-grid-printer',
+                        width: 24,
+                        height: 15,
+                        //scope: this,
+                        handler: function () {
+                            //var win = Ext.WindowManager.getActive();
+                            //if (win) {
+                            //  win.toggleMaximize();
+                            //}
+                            var style = ''; var link = '';
+                            var printContent = document.getElementById(pieWin.body.id); //TODO: change to get the ID, rather than use 'magic' ID
+                            var printWindow = window.open('', '', ''); // 'left=10, width=800, height=520');
 
-    //                        var html = printContent.outerHTML; //TODO: must change to innerHTML ???
-    //                        $("link").each(function () {
-    //                            link += $(this)[0].outerHTML;
-    //                        });
-    //                        $("style").each(function () {
-    //                            style += $(this)[0].outerHTML;
-    //                        });
+                            var html = printContent.outerHTML; //TODO: must change to innerHTML ???
+                            $("link").each(function () {
+                                link += $(this)[0].outerHTML;
+                            });
+                            $("style").each(function () {
+                                style += $(this)[0].outerHTML;
+                            });
 
-    //                        // var script = '<script> window.onmouseover = function(){window.close();}</script>';
-    //                        printWindow.document.write('<!DOCTYPE html><html lang="en"><head><title>PV Mapper: ' + pieWin.title + '</title>' + link + style + ' </head><body>' + html + '</body>');
-    //                        $('div', printWindow.document).each(function () {
-    //                            if (($(this).css('overflow') == 'hidden') || ($(this).css('overflow') == 'auto')) {
-    //                                $(this).css('overflow', 'visible');
+                            // var script = '<script> window.onmouseover = function(){window.close();}</script>';
+                            printWindow.document.write('<!DOCTYPE html><html lang="en"><head><title>PV Mapper: ' + pieWin.title + '</title>' + link + style + ' </head><body>' + html + '</body>');
+                            $('div', printWindow.document).each(function () {
+                                if (($(this).css('overflow') == 'hidden') || ($(this).css('overflow') == 'auto')) {
+                                    $(this).css('overflow', 'visible');
 
-    //                            }
-    //                        });
-    //                        printWindow.document.close();
-    //                        printWindow.print();
-    //                    }
-    //                }
-    //        ]
-    //        }]
-    //    }).show();
+                                }
+                            });
+                            printWindow.document.close();
+                            printWindow.print();
+                        }
+                    }
+            ]
+            }]
+        }).show();
 
-    //},
+    },
 
 });
 
