@@ -40,6 +40,7 @@ module BYUModules {
                     
                     title: "Wilderness",
                     description: "Overlapping national parks, using data hosted by BYU",
+                    longDescription: '<p>Overlapping national parks, using data hosted by BYU.</p>',
                     category: "Land Use",
                     onScoreAdded: (event:EventArg, score: pvMapper.Score) => { },
                     onSiteChange: (event: EventArg, score: pvMapper.Score) => {

@@ -23,7 +23,7 @@ module pvMapper {
             this.feature.site = this;
             this.geometry = feature.geometry;
             this.name = feature.attributes.name;
-            this.description = feature.attributes.description;
+            this.description = feature.attributes.description || ""; // default to empty string (not null)
         }
         public self: any; //Reference to this object 
         public id: string; //The id that came from the DB

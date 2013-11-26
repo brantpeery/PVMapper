@@ -3,7 +3,10 @@
   /*
 			To set the width of the report, set the font to desired width / 48
 			*/
-  font: 12pt Arial;
+            /*font: 12pt Arial;*/
+  font-size: 12pt;
+  font-family: 'Source Sans Pro', sans-serif;
+  line-height: 1.5em;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -12,6 +15,14 @@
 
 section.reportPage {
   page-break-after: always; }
+
+#ReportTemplate p {
+	margin-top: 1em;
+    /*margin-bottom: 1em;*/ }
+
+#ReportTemplate .toolDetail label {
+	margin-right: 0.5em;
+	font-style: italic; }
 
 #ReportHead {
   position: relative;

@@ -27,8 +27,8 @@ module pvMapper {
         public activate: ICallback;
         public deactivate: ICallback;
         public title: string;
-        //public name: string;
         public description: string;
+        public longDescription: string;
 
         public category = "Totals";
         public scores: IScore[] = [];

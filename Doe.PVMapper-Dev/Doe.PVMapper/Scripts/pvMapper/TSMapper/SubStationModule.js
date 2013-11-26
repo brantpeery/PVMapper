@@ -136,9 +136,9 @@ var BYUModules;
                         //    propsWindow.show();
                         //},
                         title: "Nearest Substation",
-                        description: "Distance from a site boundary to the center of the nearest known substation, using data from OpenStreetMap",
-                        //category: "Transmission Availability",
                         category: "Power Infrastructure",
+                        description: "Distance from a site boundary to the center of the nearest known substation, using data from OpenStreetMap",
+                        longDescription: '<p>This tool reports the distance from a site to the nearest known substation. The substation is identified using OpenStreetMap. All map features using the "power" key with values of "station" and "sub_station" are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:power).</p>',
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (e, score) {
@@ -159,9 +159,9 @@ var BYUModules;
                             propsWindow.show();
                         },
                         title: "Nearest Transmission Line",
-                        description: "Distance from a site boundary to the nearest known transmission line, using data from OpenStreetMap",
-                        //category: "Transmission Availability",
                         category: "Power Infrastructure",
+                        description: "Distance from a site boundary to the nearest known transmission line, using data from OpenStreetMap",
+                        longDescription: '<p>This tool reports the distance from a site to the nearest known transmission line. The line is identified using OpenStreetMap. All map features using the "power" key with a value of "line" are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:power).</p>',
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (e, score) {
