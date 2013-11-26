@@ -50,21 +50,25 @@ module pvMapper {
                     count++;
                     var totalWeights = 0;
                     site.scores.map(function (score, idx) {
+                        // NaN / null utility scores indicate that the tool could not derive a score for this site
+                        // (either due to a lack of data or to a server communication error)
+                        if (score.utility !== null && !isNaN(score.utility)) {
+                            //The total of all the scores by sites for this tool (not weighted)
+                            //The scoreLine objects are shared between all site.scores
+                            if (score.scoreLine["totalSiteUtility"] == undefined) { score.scoreLine["totalSiteUtility"] = 0; }
+                            score.scoreLine["totalSiteUtility"] += score.utility;
 
+                            score.scoreLine["countSiteUtility"] = (score.scoreLine["countSiteUtility"] || 0) + 1;
 
-                        //The total of all the scores by sites for this tool (not weighted)
-                        //The scoreLine objects are shared between all site.scores
-                        if (score.scoreLine["totalSiteUtility"] == undefined) { score.scoreLine["totalSiteUtility"] = 0; }
-                        score.scoreLine["totalSiteUtility"] += score.utility;
+                            //Update the mean when a score is added to the total
+                            score.scoreLine["meanSiteUtility"] = score.scoreLine["totalSiteUtility"] / score.scoreLine["countSiteUtility"];
 
-                        //Update the mean when a score is added to the total
-                        score.scoreLine["meanSiteUtility"] = score.scoreLine["totalSiteUtility"] / count;
+                            //The total of all scores by scoreline for each site (weighted)
+                            if (site["totalUtility"] == undefined) { site["totalUtility"] = 0; }
+                            site["totalUtility"] += score.utility * score.scoreLine.weight;
 
-                        //The total of all scores by scoreline for each site (weighted)
-                        if (site["totalUtility"] == undefined) { site["totalUtility"] = 0; }
-                        site["totalUtility"] += score.utility * score.scoreLine.weight;
-
-                        totalWeights += score.scoreLine.weight;
+                            totalWeights += score.scoreLine.weight;
+                        }
                     });
                     site['meanUtility'] = site["totalUtility"] / totalWeights;
                     site['totalWeights'] = totalWeights;//The total of all the weights for all the scores
@@ -79,8 +83,13 @@ module pvMapper {
                 data.sites.map(function (site, idx) {
                     count++;
                     site.scores.map(function (score, idx) {
-                        //calculate the score's divergence for this site compared to other sites for the same scoreLine
-                        score['divergence'] = Math.round(score.utility - score.scoreLine["meanSiteUtility"]);
+                        // NaN / null utility scores indicate that the tool could not derive a score for this site
+                        // (either due to a lack of data or to a server communication error)
+                        if (score.utility !== null && !isNaN(score.utility)) {
+                            //calculate the score's divergence for this site compared to other sites for the same scoreLine
+                            score['divergence'] = Math.round(score.utility - score.scoreLine["meanSiteUtility"]);
+                            score['weightedDivergence'] = score['divergence'] * score.scoreLine.weight;
+                        }
                     });
 
                     //Calculate the mean score divergence from the project mean for this site compared to other sites
@@ -92,10 +101,10 @@ module pvMapper {
             }
 
             static sortScoresByDivergence(data) {
-                //Sort the divergence for this site descending
+                //Sort the weighted divergence for this site descending
                 data.sites.map(function (site, idx) {
                     site.scores.sort(function (a, b) {
-                        return Math.abs(b.divergence) - Math.abs(a.divergence);
+                        return Math.abs(b.weightedDivergence) - Math.abs(a.weightedDivergence);
                     });
                 });
                 return data;
