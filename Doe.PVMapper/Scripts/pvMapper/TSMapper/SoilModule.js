@@ -22,7 +22,7 @@ var INLModules;
                 defaultStarRating: 3
             });
             this.soilRestUrl = "http://server.arcgisonline.com/ArcGIS/rest/services/Specialty/Soil_Survey_Map/MapServer/";
-            this.soilSurveyQueryUrl = "http://server.arcgisonline.com/ArcGIS/rest/services/Specialty/Soil_Survey_Map/MapServer/0/query";
+            this.soilSurveyQueryUrl = "https://server.arcgisonline.com/ArcGIS/rest/services/Specialty/Soil_Survey_Map/MapServer/0/query";
             // cache for features we've found from which we can find a nearest feature.
             this.nearestFeatureCache = {};
             var myModule = new pvMapper.Module({
