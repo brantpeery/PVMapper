@@ -354,13 +354,22 @@ toolsStore.on({
                             return "";
                         }
                     },
-                    draggable: false
+                    draggable: false,
+                    
+                    summaryType: function (records) {
+                        return "<div style='text-align: right;'>" +
+                            "<input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show pie chart' onClick='scoreboardGrid.viewPie(\"" +
+                             records[0].get('category') + "\"," + idx.toString() + ");' /></div>";
+                    },
+                    //summaryRenderer: function (value, summaryRowValues) {
+                    //    return value;
+                    //}
                 }, {
                     text: "Score",
                     dataIndex: "sites",
                     //flex: 1, //Will stretch with the size of the window
                     //maxWidth: 500,
-                    width:  60,
+                    width: 40,
                     renderer: function (value, metaData) {
                         if (value.length <= idx) return '...'; //Avoid the index out of range error
                         if (isNaN(value[idx].utility)) return '...';
@@ -377,7 +386,6 @@ toolsStore.on({
                         var total = 0;
                         var count = 0;
 
-
                         records.forEach(function (record) {
                             var scoreLine = record.raw;
                             if (scoreLine.scores[idx] && !isNaN(scoreLine.scores[idx].utility)) {
@@ -390,45 +398,12 @@ toolsStore.on({
 
                         var average = total / count;
 
-                        //Note: moved this, as the summary renderer now only calculates the score over groups, rather than for all score tools
-                        //// post the average score to the feature, so that it can render correctly on the map
-                        ////TODO: is this really the best place to be mucking about with the feature attributes?
-                        //if (records && records.length > 0 && records[0].raw &&
-                        //    records[0].raw.scores && records[0].raw.scores.length > idx &&
-                        //    records[0].raw.scores[idx].site && records[0].raw.scores[idx].site.feature) {
-                        //  // test if the feature's average score value has changed
-                        //  var feature = records[0].raw.scores[idx].site.feature;
-                        //  //if (feature.attributes['overallScore'] !== average) {
-                        //  if (feature.attributes.overallScore !== average) {
-                        //    feature.attributes.overallScore = average;
-                        //    // set the score's color as an attribute on the feature (note - this is at least partly a hack...)
-                        //    feature.attributes.fillColor = (!isNaN(average)) ? getColor(average) : "";
-                        //    // redraw the feature
-                        //    if (feature.layer) {
-                        //        feature.layer.drawFeature(feature);
-                        //    }
-                        //  }
-                        //}
-
-                        //return average;
-                        var c = pvMapper.getColorForScore(average);
-                        var sumContent = "<span style='border-radius: 3px; background-color:" + c + "'><input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
-                             records[0].get('category') + "\"," + idx.toString() + ");' />&nbsp&nbsp" + average.toFixed(0) + "&nbsp</span>";
-                        return sumContent;
-
+                        return average;
                     },
                     summaryRenderer: function (value, summaryRowValues) {
                         if (typeof value === "number" && !isNaN(value)) {
                             var c = pvMapper.getColorForScore(value);
-                            var sumContent = "<span style='border-radius: 3px; background-color:" + c + "'>&nbsp" + value.toFixed(0) + "&nbsp</span>";
-                           // var cStr = "<input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" + records[0].get('category') + "\"," + idx.toString() + "); />";
-                           // sumContent += cStr;
-                            return sumContent;
-
-                            //+ "<input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
-                            //  scoreLine.Category + "\",\""+ scoreline.site.name +"\");' />";
-                        } else if (typeof value === "string" && value !== null) {
-                            return value;
+                            return '<span style="border-radius: 3px; background-color:' + c + '">&nbsp' + value.toFixed(0) + '&nbsp</span>'
                         }
                         else return '';
                     },
