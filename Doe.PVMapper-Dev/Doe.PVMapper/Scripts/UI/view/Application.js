@@ -31,7 +31,21 @@ var app = Ext.application({
     name: 'MainApp',
     requires: [
         'Ext.container.Viewport',
-        'GeoExt.panel.Map'
+        'Ext.layout.container.Border',
+        'GeoExt.tree.Panel',
+        //'Ext.tree.plugin.TreeViewDragDrop',
+        'GeoExt.panel.Map',
+        'GeoExt.tree.OverlayLayerContainer',
+        'GeoExt.tree.BaseLayerContainer',
+        'GeoExt.tree.View',
+        'GeoExt.data.LayerTreeModel',
+        'GeoExt.container.LayerLegend',
+        'GeoExt.container.WmsLegend',
+        'GeoExt.container.VectorLegend',
+        'GeoExt.container.UrlLegend',
+        'GeoExt.tree.Column',
+        'MainApp.view.Window',
+        'MainApp.view.Viewport'
     ],
     appFolder: '/Scripts/UI',
     autoCreateViewport: true,
