@@ -42,6 +42,9 @@ var pvMapper;
             if (options.description) {
                 this.description = options.description;
             }
+            if (options.longDescription) {
+                this.longDescription = options.longDescription;
+            }
             this.category = (typeof (options.category) === 'string') ? options.category : 'Other';
 
             if ($.isFunction(options.onSiteChange)) {
@@ -105,8 +108,8 @@ var pvMapper;
 
             // this.loadScore();
             //Set the default weight of the tool
-            //Note: a weight of 0 is possible and valid
-            this.weight = (typeof options.weight === "number") ? options.weight : 0;
+            //Note: a weight of 0 is possible and valid. The default weight is 10.
+            this.weight = (typeof options.weight === "number") ? options.weight : 10;
         }
         ScoreLine.prototype.getUtilityScore = function (x) {
             return this.scoreUtility.run(x);
@@ -200,6 +203,7 @@ var pvMapper;
                 title: this.title,
                 weight: this.weight,
                 description: this.description,
+                longDescription: this.longDescription,
                 category: this.category,
                 scoreUtility: this.scoreUtility,
                 scores: this.scores
