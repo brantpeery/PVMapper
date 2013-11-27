@@ -1,6 +1,4 @@
-if (typeof Ext == 'undefined')
-    var Ext = Ext || {};
-
+/// <reference path="../../ExtJS.d.ts" />
 // Interface
 Ext.define('MyApp.data.UtilConfig', {
     extend: 'Ext.data.Model',
@@ -18,25 +16,23 @@ Ext.define('MyApp.data.UtilConfig', {
     idProperty: 'functionName'
 });
 
-if (typeof (Ext.data.JsonStore) == 'undefined') {
-    Ext.define("Ext.data.JsonStore", {
-        extend: "Ext.data.Store",
-        alias: "store.json",
-        requires: ["Ext.data.proxy.Ajax", "Ext.data.reader.Json", "Ext.data.writer.Json"],
-        constructor: function (a) {
-            a = Ext.apply({
-                proxy: {
-                    type: "ajax",
-                    reader: "json",
-                    writer: "json"
-                }
-            }, a);
-            this.callParent([a]);
-        }
-    });
-}
+Ext.define("Ext.data.JsonStore", {
+    extend: "Ext.data.Store",
+    alias: "store.json",
+    requires: ["Ext.data.proxy.Ajax", "Ext.data.reader.Json", "Ext.data.writer.Json"],
+    constructor: function (a) {
+        a = Ext.apply({
+            proxy: {
+                type: "ajax",
+                reader: "json",
+                writer: "json"
+            }
+        }, a);
+        this.callParent([a]);
+    }
+});
 
-var configStore = Ext.Create('Ext.data.JsonStore', {
+var configStore = Ext.create('Ext.data.JsonStore', {
     model: 'MyApp.data.UtilConfig',
     autoLoad: false,
     autoSave: false,
@@ -89,6 +85,7 @@ var UtilityModel;
         };
         return DictionaryCollection;
     })();
+    UtilityModel.DictionaryCollection = DictionaryCollection;
 
     // Class
     var UtilModel = (function () {

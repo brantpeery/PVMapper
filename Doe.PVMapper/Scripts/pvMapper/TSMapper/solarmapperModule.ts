@@ -31,8 +31,9 @@ module INLModules {
                     init: null,
 
                     title: "Land Management",
-                    description: "Checks solarmapper.anl.gov for intersecting land management polygons",
                     category: "Land Use",
+                    description: "Checks solarmapper.anl.gov for intersecting land management polygons",
+                    longDescription: '<p>This star rating tool identifies the management agency of any federal land overlapping the proposed site. These agencies are defined in the Surface Management Agency (SMA) dataset. A management agency refers to a Federal agency with administrative jurisdiction over the surface of Federal lands. The SMA feature class currently covers all or the BLM Western State Offices including Alaska. This layer is a dynamic assembly of spatial data layers and Federal land status records maintained at various federal and local government offices. The official Federal land status records of the appropriate surface land managing agency should be consulted concerning ownership details. See the US Department of the Interior, Bureau of Land Management, National Operations Center for more information (www.geocommunicator.gov).</p><p>This tool depends on a user-defined star rating for each SMA found at a site, on a scale of 0-5 stars. The default rating for any SMA is two stars. The default rating for no intersecting SMA is four stars. These ratings should be adjusted by the user.</p><p>When a site overlaps a single SMA, its score is based on the star rating of that SMA (so overlapping a five-star SMA might give a score of 100, while overlapping a one-star SMA may give a score of 20). If a site includes more than one SMA, the lowest star rating is used to calculate its score (so a site with both a one-star and a five-star SMA might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>',
                     //onScoreAdded: (e, score: pvMapper.Score) => {
                     //},
                     onSiteChange: function (e, score) {
@@ -42,6 +43,10 @@ module INLModules {
                     
                     getStarRatables: () => {
                         return starRatingHelper.starRatings;
+                    },
+
+                    setStarRatables: (rateTable: pvMapper.IStarRatings) => {
+                        starRatingHelper.starRatings = rateTable;
                     },
 
                     // for now, no land management agencies is best, any one is bad, and multiple are worse
@@ -77,6 +82,7 @@ module INLModules {
         noCategoryLabel: "None"
     });
 
+    //TODO: use http://www.geocommunicator.gov/ArcGIS/rest/services/SurfaceManagementAgency/MapServer instead.
     var solarmapperRestBaseUrl = "http://solarmapper.anl.gov/ArcGIS/rest/services/PV_Mapper_SDE/MapServer/";
     var solarmapperWmsUrl = "http://solarmapper.anl.gov/ArcGIS/services/PV_Mapper_SDE/MapServer/WMSServer";
     //declare var Ext: any;

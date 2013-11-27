@@ -1,11 +1,6 @@
 /// <reference path="UtilityFunctions.ts" />
 /// <reference path="ScoreUtilityWindows.ts" />
 
-//declare var Ext;
-//declare var JXG;
-//declare var Extras;
-
-
 module pvMapper {
 
     export interface ICustomFunctionCallback {
@@ -34,7 +29,7 @@ module pvMapper {
     //}
 
     export interface IWindowOkCallback {
-        (panel: any, args: any);
+        (panel: any, args: any);                                             
     }
     //export declare var IWindowOkCallback: {
     //    new (panel: any, args: any);
@@ -61,14 +56,15 @@ module pvMapper {
 
         constructor(public minValue: number = 0,
             public maxValue: number = 100,
-            unit: string = "",
+                    unit: string = "",
             minTip: string = "The minimum value.",
             maxTip: string = "The maximum value."
             ) {
 //            this.tips = { minValue: minTip, maxValue: maxTip };
-            this.metaInfo = { name: "MinMaxUtilityArgs", unitSymbol: unit, minValueTip: minTip, maxValueTip: maxTip };
+            this.metaInfo = { name: "MinMaxUtilityArgs", unitSymbol: unit, minValueTip: minTip, maxValueTip: maxTip, vline: 0 };
 
         }
+
         //public tips: {
         //    minValue: string;
         //    maxValue: string;
@@ -78,6 +74,7 @@ module pvMapper {
             unitSymbol: string;
             minValueTip: string;
             maxValueTip: string;
+            vline: number;
         }
     }
 
@@ -103,7 +100,8 @@ module pvMapper {
                 targetTip: targetTip,
                 slopeTip: slopeTip,
                 minValueTip: minTip,
-                maxValueTip: maxTip
+                maxValueTip: maxTip,
+                vline: 0
             };
         }
 
@@ -120,6 +118,7 @@ module pvMapper {
             slopeTip: string;
             minValueTip: string;
             maxValueTip: string;
+            vline: number;
         }
     }
 
@@ -132,17 +131,17 @@ module pvMapper {
             this.p0 = { x: p0x, y: p0y };
             this.p1 = { x: p1x, y: p1y };
             this.p2 = { x: p2x, y: p2y };
-            this.metaInfo = { name: "ThreePointUtilityArgs", unitSymbol: unit };
+            this.metaInfo = { name: "ThreePointUtilityArgs", unitSymbol: unit, vline: 0 };
         }
         public p0: { x: number; y: number; };
         public p1: { x: number; y: number; };
         public p2: { x: number; y: number; };
 
-
         public points: string[] = ["p0", "p1", "p2"];
         public metaInfo: {
             name: string;
             unitSymbol: string;
+            vline: number;
         }
     }
 
@@ -173,9 +172,10 @@ module pvMapper {
         public functionName: string;
         public functionArgs: IScoreUtilityArgs;
         public iconURL: string;
+        public fCache: any = {};
 
         //An options object might be better here. Then a call to a static function with options would be possible 
-        public run(x) {
+        public run(x: number) {
             if (isNaN(x)) return Number.NaN;
 
             //Run the function that the user needs run

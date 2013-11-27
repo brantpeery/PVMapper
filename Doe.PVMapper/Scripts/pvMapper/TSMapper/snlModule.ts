@@ -42,7 +42,7 @@ module INLModules {
             selectOnFocus: true
         };
 
-        var propsGrid = new Ext.grid.PropertyGrid({
+        var propsGrid: Ext.grid.property.IGrid = Ext.create('Ext.grid.property.Grid', {
             nameText: 'Properties Grid',
             minWidth: 300,
             //autoHeight: true,
@@ -62,8 +62,8 @@ module INLModules {
             //    scrollOffset: 2 // the grid will never have scrollbars
             //},
             customEditors: {
-                'minimumVoltage': new Ext.form.ComboBox(comboConfig),
-                'maximumVoltage': new Ext.form.ComboBox(comboConfig)
+                'minimumVoltage': Ext.create('Ext.form.ComboBox', comboConfig),
+                'maximumVoltage': Ext.create('Ext.form.ComboBox', comboConfig)
             }
         });
 
@@ -125,9 +125,9 @@ module INLModules {
                     },
 
                     title: "Nearest Transmission Line",
-                    description: "Distance from a site boundary to the nearest known transmission line, using data from SNL",
-                    //category: "Transmission Availability",
                     category: "Power Infrastructure",
+                    description: "Distance from a site boundary to the nearest known transmission line, using data from SNL",
+                    longDescription: '<p>This tool reports the distance from a site to the nearest known transmission line. The line is identified using SNL data. See SNL for more information (snl.com).</p>',
                     //onScoreAdded: function (e, score: pvMapper.Score) {
                     //    scores.push(score);
                     //},

@@ -10,59 +10,75 @@ Ext.define('MainApp.view.RatingView', {
   minimizable: false,
   collapsible: false,
   modal: true,
-    buttons: [{
-        xtype: 'button',
-        text: 'OK',
-        handler: function () {
-            var win = Ext.WindowManager.getActive();
-            if (win) {
-                win.close();
-            }
-        }
-    }],
-
+  buttons: [{
+    xtype: 'button',
+    text: 'OK',
+    handler: function () {
+      this.up('window').fireEvent('onOk');
+    }
+  },
+  {
+    xtype: 'button',
+    text: 'Cancel',
+    handler: function () {
+      this.up('window').fireEvent('onCancel');
+    }
+  }],
+  initComponent: function () {
+    this.addEvents({
+      "onCancel": true,
+      "onOk": true
+    });
+    this.callParent(arguments);
+  }
 });
 
-pvMapper.showRatingWindow = function (ratables, onClose, title) {
-    var store = new Ext.grid.property.Store(null, ratables);
-    store.autoLoad = true;
-    store.autoSync = true;
+pvMapper.showRatingWindow = function (ratables, onAccepted, title) {
+  var store = new Ext.grid.property.Store(null, ratables);
+  store.autoLoad = true;
+  store.autoSync = true;
 
-    var window = Ext.create('MainApp.view.RatingView', {
-        title: title || "Category Ratings",
-        items: [
-            Ext.create('MainApp.view.RatingTool', {
-                store: store
-            })
-        ],
-        listeners: {
-            beforeclose: onClose
-        },
-    });
+  var window = Ext.create('MainApp.view.RatingView', {
+    title: title || "Category Ratings",
+    items: [
+        Ext.create('MainApp.view.RatingTool', {
+          store: store
+        })
+    ],
+    listeners: {
+      onCancel: function () {
+        window.close();
+      },
+      onOK: function (){
+        onAccepted();
+        window.close();
+      }
+    }
+  });
 
-    window.show();
+  window.show();
 };
 
 
 var ratingPanel = function () {
-    return Ext.create('MainApp.view.RatingTool', {
-        store: ratingStore(),
-    });
-    //return Ext.create('MainApp.view.Window', {
-    //    title: "Category Ratings",
-    //    layout: "fit",
-    //    //modal: true,
-    //    closeAction: 'destroy',
-    //    constrain: true,
+  return Ext.create('MainApp.view.RatingTool', {
+    store: ratingStore(),
+  });
+  //return Ext.create('MainApp.view.Window', {
+  //    title: "Category Ratings",
+  //    layout: "fit",
+  //    //modal: true,
+  //    closeAction: 'destroy',
+  //    constrain: true,
 
-    //    items: [
-    //        Ext.create('MainApp.view.RatingTool', {
-    //            store: ratingStore(),
-    //        })
-    //    ],
-    //    listeners: {
-    //        beforeclose: onClose
-    //    },
+  //    items: [
+  //        Ext.create('MainApp.view.RatingTool', {
+  //            store: ratingStore(),
+  //        })
+  //    ],
+  //    listeners: {
+  //        beforeclose: onClose
+  //    },
 
-    //});
+  //});
 };

@@ -167,6 +167,6 @@ pvMapper.onReady(function () {
             }
         }
     });
-    pvMapper.mapToolbar.add(IdentifyTool);
+    pvMapper.mapToolbar.add(2, IdentifyTool);
 
 });

@@ -80,6 +80,15 @@ var pvMapper;
                 return "No value";
             }
         };
+
+        Score.prototype.toJSON = function () {
+            return {
+                popupMessage: this.popupMessage,
+                value: this.value,
+                utility: this.utility,
+                site: this.site
+            };
+        };
         return Score;
     })();
     pvMapper.Score = Score;

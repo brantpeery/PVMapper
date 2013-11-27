@@ -1,0 +1,170 @@
+﻿<html>
+<head>
+    <script src="../Scripts/ext-all.js"></script>
+    <link href="SummaryReport.css" rel="stylesheet" />
+    <script type="text/javascript">
+
+        function receiveMessage(event) {
+            if (event.origin == this.window.location.origin) { //Only from the same domain
+                var data = prepData(event.data);
+                createHTML(data);
+            }
+        }
+        window.addEventListener("message", receiveMessage, false);
+
+
+        function prepData(data){
+            var total = 0;
+            var mean;
+
+            var count = 0;
+            for (skey in data.sites) {
+                var site = data.sites[skey];
+                count++;
+                for (key in site.scores) {
+                    var score = site.scores[key];
+                    
+
+                    //The total of all the scores by sites for this tool
+                    //The scoreLine objects are shared between all site.scores
+                    if (score.scoreLine["totalSiteUtility"] == undefined) { score.scoreLine["totalSiteUtility"] = 0;}
+                    score.scoreLine["totalSiteUtility"] += score.utility;
+
+                    //Update the mean when a score is added to the total
+                    score.scoreLine["meanSiteUtility"] = score.scoreLine["totalSiteUtility"] / count;
+
+                    //The total of all scores by scoreline for each site
+                    if (site["totalUtility"] == undefined) { site["totalUtility"] = 0;}
+                    site["totalUtility"] += score.utility;
+                }
+                site['meanUtility'] = site["totalUtility"] / site.scores.length;
+
+                //Total mean scores across all sites
+                total += site['meanUtility'];
+                //The mean score for all sites
+                mean = total / count;
+            }
+
+            //Now add in the divergence
+            for (skey in data.sites) {
+                var site = data.sites[skey];
+                count++;
+                for (key in site.scores) {
+                    var score = site.scores[key];
+                    //calculate the score's divergence for this site compared to other sites for the same scoreLine
+                    score['divergence'] = Math.round(score.utility - score.scoreLine["meanSiteUtility"]);
+                }
+
+                //Sort the divergence for this site descending
+                site.scores.sort(function (a, b) {
+                    return Math.abs(b.divergence) - Math.abs(a.divergence);
+                });
+
+                //Calculate the mean score divergence from the project mean for this site compared to other sites
+                site['divergence'] = Math.round(site['meanUtility'] - mean);
+            }
+
+            return data;
+        }
+
+        function createHTML(data) {
+            var panel = Ext.create('Ext.Panel', {
+                width: 950,
+                renderTo: 'Report',
+                style: "margin:15px",
+                bodyStyle: "padding:5px;font-size:11px;",
+                title: 'Report',
+                tbar: [{
+                    text: 'Apply Template',
+
+
+
+                }],
+                html: '<p>Send message to see results here</p>'
+            });
+
+
+            var tpl = new Ext.XTemplate (                
+                '<div id="SiteSummaryReport">',
+                '    <tpl for="sites">',
+                '    <div class="siteRow">',
+                '        <div class="siteImage rowPart">',
+                '            <img src="site.png" />',
+                '        </div>',
+                '        <div class="siteInfo rowPart">',
+                '            <div class="topTools">',
+                '                <h3>{name}</h3>',
+                '                <tpl for="scores">',
+                '                <tpl if ="[xindex] &lt; 5">', 
+                '                <p><span class="icon">{[this.divergenceSymbol(values.divergence)]}</span><span class="toolName">{scoreLine.title}</span><span class="toolScore">{divergence}%</span></p>',
+                '                </tpl>',
+                '                </tpl>',
+                '                <p class="topToolInfo infoColor">Divergence from Mean</p>',
+                '            </div>',
+                '        </div>',
+                '        <div class="rowPart">',
+                '            <div class="siteScore">',
+                '                <span class="siteBigScore">{[this.round(values.meanUtility)]}</span>',
+                '                <span class="siteScoreUnit">%</span>',
+                '                <span class="siteDivergenceArrow">{[this.divergenceSymbol(values.divergence)]}</span>',
+                '                <span class="siteDivergence">{[this.round(values.divergence)]}%</span>',
+                '                <p class="totalInfo infoColor">AVERAGE</p>',
+                '            </div>',
+                '        </div>',
+                '    </div>',
+                '    </tpl>',
+                '</div>',
+                {
+                    divergenceSymbol: function (val) {
+                        return (val < 0) ? '&#8595;' : '&#8593;';
+                    },
+                    round: function (value) {
+                        return Math.round(value);
+                    }
+
+                }
+            );
+
+          //  '<div id="SiteSummaryReport">',
+          //'    <tpl for="sites">',
+          //'    <div class="siteRow">',
+          //'        <div class="siteImage rowPart">',
+          //'            <img src="{siteImgURL}" />',
+          //'        </div>',
+          //'        <div class="siteInfo rowPart">',
+          //'            <div class="topTools">',
+          //'                <h3>{name}</h3>',
+          //'                <tpl for="scores">',
+          //'                <p><span class="icon">74{trend}</span><span class="toolName">{scoreLine.title}</span><span class="toolScore">3{divergence}%</span></p>',
+          //'                </tpl>',
+          //'                <p class="topToolInfo infoColor">Divergence from Mean</p>',
+          //'            </div>',
+          //'        </div>',
+          //'        <div class="rowPart">',
+          //'            <div class="siteScore">',
+          //'                <span class="siteBigScore">{siteScore}</span>',
+          //'                <span class="siteScoreUnit">%</span>',
+          //'                <span class="siteDivergenceArrow">{siteTrend};</span>',
+          //'                <span class="siteDivergence">{siteDivergence}%</span>',
+          //'                <p class="totalInfo infoColor">AVERAGE</p>',
+          //'            </div>',
+          //'        </div>',
+          //'    </div>',
+          //'    </tpl>',
+          //'</div>',
+          //'</tpl>'
+
+
+            tpl.overwrite(panel.body, data);
+            panel.doComponentLayout();
+
+        };
+
+    </script>
+</head>
+<body>
+    <div id="Report">
+        <h1>Not here yet</h1>
+    </div>
+</body>
+</html>

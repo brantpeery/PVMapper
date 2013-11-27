@@ -13,6 +13,7 @@ var pvMapper;
             var _this = this;
             this.scoreLines = new Array();
             this.totalLines = new Array();
+            this.isScoreLoaded = false;
             //Events -----------
             this.changedEvent = new pvMapper.Event();
             this.scoresInvalidatedEvent = new pvMapper.Event();
@@ -21,8 +22,6 @@ var pvMapper;
             Fires when a total line tool is added to the totalLines
             */
             this.totalLineAddedEvent = new pvMapper.Event();
-            //End Events---------
-            this.tableRenderer = new pvMapper.Renderer.HTML.Table();
             this.self = this;
 
             this.onScoreChanged = function (event) {
@@ -34,14 +33,20 @@ var pvMapper;
                 _this.changedEvent.fire(_this, event);
             };
         }
+        //End Events---------
+        //public tableRenderer = new pvMapper.Table();
         ScoreBoard.prototype.addLine = function (scoreline) {
             //console.log("Adding scoreline " + scoreline.name);
             scoreline.scoreChangeEvent.addHandler(this.onScoreChanged);
             this.scoreLines.push(scoreline);
+            //this.changedEvent.fire(this,null);
         };
 
         ScoreBoard.prototype.addTotalLine = function (line) {
             line.ValueChangedEvent.addHandler(function (event) {
+                //Do what ever needs to be done for updating the GUI when
+                //the total line recalculates
+                //IGNORED for now
             });
 
             this.totalLines.push(line);
@@ -72,10 +77,18 @@ var pvMapper;
             //Create an event that holds the information about score and utility that changed it
             Error("Function not implemented yet!");
         };
+
+        ScoreBoard.prototype.toJSON = function () {
+            return {
+                scoreLines: this.scoreLines,
+                totalLines: this.totalLines
+            };
+        };
         return ScoreBoard;
     })();
     pvMapper.ScoreBoard = ScoreBoard;
 
+    //declare var Ext: any; //So we can use it
     pvMapper.floatingScoreboard;
     pvMapper.mainScoreboard = new ScoreBoard();
 
@@ -105,8 +118,22 @@ var pvMapper;
                     //Note: selecting cells hoarks everything up unless we clear the selection before reloading the data
                     gp.getSelectionModel().deselectAll();
                     gp.store.loadRawData(mydata);
+                    //Note: removed this as it's really annoying (scoreboard pops up from minimized, covers up other windows, etc)
+                    //pvMapper.floatingScoreboard.show();
                 }
             }, 250);
+            // queue is set to wait 1/10th of a second before it actually refreshes the scoreboard.
+        } else {
+            if (console) {
+                console.log("Scoreboard update event safely (and efficiently) ignored.");
+            }
+
+            if ((pvMapper.ClientDB.db != null) && (!pvMapper.mainScoreboard.isScoreLoaded)) {
+                pvMapper.mainScoreboard.scoreLines.forEach(function (sc) {
+                    sc.loadScore();
+                });
+                pvMapper.mainScoreboard.isScoreLoaded = true;
+            }
         }
     });
 

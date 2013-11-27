@@ -16,19 +16,22 @@ declare module OpenLayers {
 
     var Request: Request;
 
-
     export class Attributes {
         name: string;
         description: string;
+        overallScore: number;
+        fillColor: string;
+
     }
 
-    export class SiteFeature {
-        fid: number;
-        geometry: Polygon;
+
+    interface Util {
+        getParameterString(any): string;
+    }
+
+    interface SiteFeature extends FVector {
         attributes: Attributes;
         site: any;
-        name: string;
-        description: string;
     }
 
     interface Collection extends Geometry {
@@ -50,8 +53,8 @@ declare module OpenLayers {
         move(x: number, y: number);
         rotate(angle: number, origin: Point);
         resize(scale: number, origin: Point, ratio: number): Geometry;
+        distanceTo(geometry: Geometry): number;
         distanceTo(geometry: Geometry, options?: Boolean): number;
-        distanceTo(geometry: Geometry, options?: Boolean): Distance;
         equals(geometry: Geometry): Boolean;
         transform(source: Projection, dest: Projection): Geometry;
         intersects(geometry: Geometry): Boolean;
@@ -63,10 +66,10 @@ declare module OpenLayers {
         getArea(): number;
         getGeodesicArea(projection: Projection): number;
         containsPoint(point: Point): Boolean;
-        containsPoint(point: Point): number;
+        //containsPoint(point: Point): number;   //this break in Typescript 0.9.1 ==> "Overloads cannot differ only by return type".
         intersects(geometry: Geometry): Boolean;
         distanceTo(geometry: Geometry): number;
-        distanceTo(geometry: Geometry, options?: any): Distance;
+        distanceTo(geometry: Geometry, options?: any): number;
         createRegularPolygon(origin: Point, radius: number, sides: number, rotation: number);
     }
 
@@ -97,7 +100,7 @@ declare module OpenLayers {
         splitWidth(geometry: Geometry, edge: Boolean): Geometry[];
         splitWidth(geometry: Geometry, tolerance: number): Geometry[];
         getVertices(nodes: Boolean): Geometry[];
-        distanceTo(geometry: Geometry, options?: Boolean): number;
+        distanceTo(geometry: Geometry): number;
         distanceTo(geometry: Geometry, options?: Boolean): Distance;
         simplify(tolerance: number): LineString;
     }
@@ -122,7 +125,7 @@ declare module OpenLayers {
         getArea(): number;
         getGeodesicArea(projection: Projection): number;
         containsPoint(point: Point): Boolean;
-        containsPoint(point: Point): number;
+        //containsPoint(point: Point): number; //this break in Typescript 0.9.1 ==> "Overloads cannot differ only by return type".
         intersects(geometry: Geometry): Boolean;
         getVertices(nodes: Boolean): Geometry[];
     }
@@ -202,6 +205,12 @@ declare module OpenLayers {
         fromArray(arr: number[]): LonLat;
     }
 
+    var LonLat: {
+        new (lon: number, lat: number): LonLat;
+        new (location: number[]): LonLat;
+        prototype: LonLat;
+    }
+
     interface Segment {
         x1: number;
         y1: number;
@@ -230,7 +239,7 @@ declare module OpenLayers {
         getBounds(): Bounds;
         calculateBounds();
         distanceTo(geometry: Geometry): number;
-        distanceTo(geometry: Geometry, options?: any): Distance;
+        distanceTo(geometry: Geometry, options?: any): number;
         getVertices(nodes: Boolean): Geometry[];
         atPoint(lonlat: LonLat, toleranceLon: number, toleranceLat: number): Boolean;
         getLength(): number;
@@ -271,8 +280,8 @@ declare module OpenLayers {
         x: number;
         y: number;
         clone(obj?: any): Point;
-        distanceTo(geometry: Geometry, details?: Boolean): number;
-        distanceTo(geometry: Geometry, edge?: Boolean): Distance;
+        distanceTo(geometry: Geometry): number;
+        distanceTo(geometry: Geometry, edge?: Boolean): Distance; //this break in Typescript 0.9.1 ==> "Overloads cannot differ only by return type".
         equals(geometry: Point): Boolean;
         toShortString(): string;
         move(x: number, y: number);
@@ -292,7 +301,7 @@ declare module OpenLayers {
         numberRegEx: string;
         isNumeric(value: number): Boolean;
         numericIf(value: number, trimWhitespace: Boolean): number;
-        numericIf(value: number, trimWhitespace: Boolean): string;
+        //numericIf(value: number, trimWhitespace: Boolean): string;  //this break in Typescript 0.9.1 ==> "Overloads cannot differ only by return type".
     }
 
     interface Number {
@@ -465,8 +474,8 @@ declare module OpenLayers {
         };
     }
 
-//* controls inherites from Control
-interface ArgParser extends Control {
+  //* controls inherites from Control
+  interface ArgParser extends Control {
         center: LonLat;
         zoom: number;
         layers: string;
@@ -549,33 +558,33 @@ interface ArgParser extends Control {
 
         documentDrag: boolean;
         layer: Vector;
-        feature: Vector;
+        feature: FVector;
         dragCallbacks: any;
         featureCallbacks: any;
         lastPixel: Pixel;
 
         /// {Function } Define this function if you want to know when a drag starts.The function should expect to receive two arguments: the feature that is about to be dragged and the pixel location of the mouse.
-        onStart(feature: Vector, pixel: Pixel);
+        onStart(feature: FVector, pixel: Pixel);
         //{Function} Define this function if you want to know about each move of a feature.  The function should expect to receive two arguments: the feature that is being dragged and the pixel location of the mouse.
-        onDrag(feature: Vector, pixel: Pixel);
+        onDrag(feature: FVector, pixel: Pixel);
         //{Function} Define this function if you want to know when a feature is done dragging.  The function should expect to receive two arguments: the feature that is being dragged and the pixel location of the mouse.
-        onComplete(feature: Vector, pixel: Pixel);
+        onComplete(feature: FVector, pixel: Pixel);
         //{Function } Define this function if you want to know when the mouse goes over a feature and thereby makes this feature a candidate for dragging.
-        onEnter(feature: Vector);
+        onEnter(feature: FVector);
         //{Function} Define this function if you want to know when the mouse goes out of the feature that was dragged.
-        onLeave(feature: Vector);
+        onLeave(feature: FVector);
 
-        clickFeature(feature: Vector);
-        clickoutFeature(feature: Vector);
+        clickFeature(feature: FVector);
+        clickoutFeature(feature: FVector);
         destroy();
         activate(): boolean;
         deactivate(): boolean;
-        overFeature(feature: Vector): boolean;
+        overFeature(feature: FVector): boolean;
         downFeature(pixel: Pixel);
         moveFeature(pixel: Pixel);
         upFeature(pixel: Pixel);
         doneDragging(pixel: Pixel);
-        outFeature(feature: Vector);
+        outFeature(feature: FVector);
         cancel();
         setMap(map: IMap);
 
@@ -708,11 +717,11 @@ interface ArgParser extends Control {
         request(bounds: Bounds, options: any);
 
         //hover {Boolean } Do the selection for the hover handler.
-        selectBestFeature(features: Vector, clickPosition: LonLat, options: any);
+        selectBestFeature(features: FVector, clickPosition: LonLat, options: any);
         setModifiers(evt: Event);
-        select(features: Vector[]);
-        hoverSelect(feature: Vector);
-        unselect(feature: Vector);
+        select(features: FVector[]);
+        hoverSelect(feature: FVector);
+        unselect(feature: FVector);
         unselectAll();
         setMap(map: IMap);
         pixelToBounds(pixel: Pixel);
@@ -823,7 +832,7 @@ interface ArgParser extends Control {
         updateHandler(handler: ICallback, options: any);
         measureComplete(geometry: Geometry);
         measurePartial(point: Point, geometry: Geometry);
-        measureImmidiate(point: Point, feature: Vector, drawing: boolean);
+        measureImmidiate(point: Point, feature: FVector, drawing: boolean);
         cancelDelay();
         measuer(geometry: Geometry, eventType: string);
         getBestArea(geometry: Geometry): ValueUnit[];
@@ -837,6 +846,7 @@ interface ArgParser extends Control {
         prototype: Measure;
     }
     interface ModifyFeature extends Control {
+
     }
     interface MousePosition extends Control {
     }
@@ -1009,6 +1019,7 @@ interface ArgParser extends Control {
         };
     }
 
+    //NOTE: This version implement the upcoming release of OpenLayers currently in development.
   interface IMap {
         //constant
         Z_INDEX_BASE: any;
@@ -1107,11 +1118,11 @@ interface ArgParser extends Control {
         getZooom(): number;
         pan(dx: number, dy: number, options: any);
         panTo(lonlat: LonLat);
-        setCenter(lonlat: LonLat, zoom: number, dragging: Boolean, forceZoomChange: Boolean);
+        setCenter(lonlat: LonLat, zoom: number);//, dragging?: Boolean, forceZoomChange?: Boolean);
         moveByPx(dx: number, dy: number);
         adjustZoom(zoom: number): number;
         getMinZoom(): number;
-        moveTo(lonlat: LonLat, zoom: number, options: any);
+        moveTo(lonlat: LonLat, zoom: number, options?: any);
         centerLayerContainer(lonlat: LonLat);
         isValidZoomLevel(zoomLevel: number): Boolean;
         isValidLonLat(lonlat: LonLat): Boolean;
@@ -1388,28 +1399,62 @@ interface ArgParser extends Control {
         getTilesBounds();
     }
 
-    interface ArcGIS93Rest {
+    interface XYZ extends Grid {
+        isBaseLayer: boolean;
+        sphericalMercator: boolean;
+        zoomOffset: number;
+        serverResolutions: any[]; //array : a list of all resolutions available on the server.
+
+        clone(obj: any): XYZ;
+        getURL(bounds: Bounds): string;
+        getXYZ(bounds: Bounds): any; //an object with x, y and z properties
+        setMap(map: IMap);
+    }
+    interface WMS extends Grid {
+        DEFAULT_PARAMS: any;
+        isBaseLayer: boolean;
+        encodeBBOX: boolean;
+        noMagic: boolean;
+        yz: any;
+
+        clone(obj): WMS;
+        reverseAxisOrder(): boolean;
+        getURL(bounds: Bounds): string;
+        mergeNewParams(newParams: any);
+        getFullRequestString(newParams: any, altUrl: string): string;
+    }
+
+    interface OSM extends XYZ {
+        name: string;
+        url: string;
+        attribution: string;
+        sphericalMercator: boolean;
+        wrapDateLine: boolean;
+        tileOptions: Tile;
+        clone(obj: any): OSM;
     }
 
     var Layer: {
-        new (value?: any): Layer;
         new (name: string, options: any): Layer;
         (value?: any): Layer;
         (name: string, options: any): Layer;
         prototype: Layer;
         Vector: {
-            new (value?: any): Vector;
-            (value?: any): Vector;
             new (name: string, options?: any): Vector;
             prototype: Vector;
         };
         WMS: {
-            new (name: string, url: string, params: any, options: any): any;
+            new (name: string, url: string, params: any, options?: any): any;
+            prototype: WMS;
         }
         ArcGIS93Rest: {
             new (name: string, url: string[], params: any): any;
             new (name: string, url: string, options: any, params?: any): any;
             prototype: ArcGIS93Rest;
+        }
+        XYZ: {
+            new (name: string, url: string, options: any): any;
+            prototype: XYZ;
         }
         //ArcGIS93Rest(name: string, url: string[], params: any):any;
         //ArcGIS93Rest(name: string, url: string, options: any, params?: any):any;
@@ -1421,7 +1466,12 @@ interface ArgParser extends Control {
         Grid: {
             (): Grid;
             prototype: Grid;
-        };
+        }
+        OSM: {
+            new (): OSM;
+            new (name: string, url: string, options: any): OSM;
+            prototype: OSM;
+        }
     }
 
   interface Filter {
@@ -1458,12 +1508,68 @@ interface ArgParser extends Control {
         deactivate(): Boolean;
     }
 
+    interface BBOX {
+        bounds: Bounds;
+        resolution: number;
+        ratio: number;
+        resFactor: number;
+        response: Response;
+
+        activate(): boolean;
+        deactivate(): boolean;
+        update(options?: any);   //validate: force: boolean - if true, new data must be unconditionally read.  noAbort: boolean - if true, do not abort previous requests.
+        getMapBounds(): Bounds;
+        invalidBounds(mapBounds: Bounds): boolean;
+        calculateBounds(mapBounds: Bounds);
+        triggerRead(options: any): Response;
+        createFilter(): Filter;
+        merge(resp: Response);
+    }
+
+    interface Cluster {
+        distance: number;
+        threshold: number;
+        features: FVector[];
+        clusters: FVector[];
+        clustering: boolean;
+        resolution: number;
+
+        activate(): boolean;
+        deactivate(): boolean;
+        cacheFeatures(evt: any): boolean;
+        clearCache();
+        cluster(evt: any);
+        clustersExist(): boolean;
+        shouldCluster(cluster: FVector, feature: FVector);
+
+    }
+
+    interface Fixed {
+        preload: Boolean;
+        activate(): Boolean;
+        deactivate(): Boolean;
+        load(options?: any);
+        merge(resp: Response);
+    }
+
+
     var Strategy: {
         new (options?: any): Strategy;
         (options?: any): Strategy;
         prototype: Strategy;
-        Fixed(): any;
+        BBOX: {
+            new (options?: any): BBOX;
+            (options?: any): BBOX;
+            prototype: BBOX;
+        }
+        Fixed: {
+            new (options?: any): Fixed;
+            (options?: any): Fixed;
+            prototype: Fixed;
+        }
+
     }
+
   interface Format {
         options: any;
         externalProjection: Projection;
@@ -1477,19 +1583,88 @@ interface ArgParser extends Control {
     }
 
     interface EsriGeoJSONP {
+        read(data: string): FVector[];
     }
+
     interface GeoJSON {
+        ignoreExtraDims: boolean;
+        read(json: string, type: string, filter: ICallback): any;
+        write(obj: any, pretty: boolean): string;
     }
+
+    interface KML {
+        kmlns: string;
+        placemarksDesc: string;
+        foldersName: string;
+        foldersDesc: string;
+        extractAttributes: boolean;
+        kvpAttributes: boolean;
+        extractTracks: boolean;
+        trackAttributes: any[];
+        maxDepth: number;
+
+        read(data: string): FVector[];
+        write(features: FVector[]): string;
+    }
+
+
+    interface GPX {
+        defaultDesc: string;
+        extractWaypoints: boolean;
+        extractTracks: boolean;
+        extractRoutes: boolean;
+        extractAttributes: boolean;
+        creator: string;
+
+        read(doc: Element): FVector[];
+        write(features: FVector[], options?: any);
+    }
+    interface JSON {
+        indent: string;
+        space: string;
+        newline: string;
+        read(json: string, filter: ICallback): any;
+        write(value: string, pretty: boolean): string;
+    }
+
+    interface XML {
+        destroy();
+        write(node: DOMElement): string;
+        createElementNS(uri: string, name: string): Element;
+        createDocumentFragment(): Element;
+        createTextNode(text: string): DOMElement;
+        getElementsByTagNameNS(node: Element, uri: string, name: string): NodeList;
+        getAttributeNodeNS(node: Element, uri: string, name: string): DOMElement;
+        getAttributeNS(node: Element, uri: string, name: string): string;
+        getChildValue(node: DOMElement, def: string): string;
+        isSimpleContent(node: DOMElement): boolean;
+        contentType(node: DOMElement): number;
+        hasAttributeNS(node: Element, uri: string, name: string): boolean;
+        setAttributeNS(node: Element, uri: string, name: string, value: string);
+        getChildEl(node: DOMElement, name: string, uri: string): DOMElement;
+        lookupNamespaceURI(node: DOMElement, prefix: string): string;
+    }
+
     var Format: {
         new (options?: any): Format;
         (options?: any): Format;
         prototype: Format;
-
         GML: any;
-        XML: any;
-
+        XML: {
+            new (options?: any): XML;
+            prototype: XML;
+        }
+        KML: {
+            new (options?: any): KML;
+            prototype: KML;
+        }
+        GPX: {
+            new (options?: any): GPX;
+            prototype: GPX;
+        }
         JSON: {
             new (): any;
+            prototype: JSON;
         }
         GeoJSON: {
             new (): any;
@@ -1537,8 +1712,43 @@ interface ArgParser extends Control {
 
     }
     interface Script {
+        url: string;
+        params: any;
+        callback: ICallback;
+        callbackTemplate: string;
+        callbackKey: string;
+        callbackPrefix: string;
+        scope?: any;
+        format: Format;
+        srsInBBOX: boolean;
+
         read(): Response;
+        filterToParams(options?: any): Response;
+        abort(response: Response);
+        destroy();
     }
+
+    interface HTTP {
+        readWithPOST: boolean;
+        updateWithPOST: boolean;
+        deleteWithPOST: boolean;
+        srsInBBOX: boolean;
+
+        destroy();
+        filterToParams(filter: Filter): any;
+        read(options?: any): Response;
+        create(features: FVector[], options?: any): Response;
+        create(features: FVector, options?: any): Response;
+        update(feature: FVector, options?: any): Response;
+        delete(feature: FVector, options?: any): Response;
+        commit(features: FVector[], options?: any): Response;
+        abort(response: Response);
+    }
+
+    interface WFS {
+    }
+
+
     var Protocol: {
         new (value?: any): Protocol;
         (value?: any): Protocol;
@@ -1552,6 +1762,16 @@ interface ArgParser extends Control {
             new (params: any): any;
             prototype: Script;
         }
+        HTTP: {
+            new (options?: any): HTTP;
+            prototype: HTTP;
+
+        }
+        WFS: {
+            new (options?: any): WFS;
+            prototype: WFS;
+        }
+
         //Script(url: string, params: any, callback: (response: any) => {}, scope?: any): any;
     }
 
@@ -1611,11 +1831,12 @@ interface ArgParser extends Control {
     }
 
 
+  //support 2.13.1
   interface Vector extends Layer {
         events: Events;
         isBaseLayer: Boolean;
         isFixed: Boolean;
-        features: Vector[];
+        features: FVector[];
         filter: Filter;
         selectedFeatures: FVector[];
         unrenderedFeatures: any;
@@ -1625,7 +1846,7 @@ interface ArgParser extends Control {
         strategies: Strategy[];
         protocol: Protocol;
         renderers: string[];
-        renders: Renderer;
+        renderer: Renderer;
         rendererOptions: any;
         geometryType: string;
         drawn: Boolean;
@@ -1642,11 +1863,11 @@ interface ArgParser extends Control {
         onMapResize: () => any;
         moveTo(bounds: Bounds, zoomChanged: Boolean, dragging: Boolean);
         display(display: Boolean);
-        addFeatures(features: FVector[], options: any);
-        removeFeatures(features: FVector[], options: any);
+        addFeatures(features: FVector[], options?: any);
+        removeFeatures(features: FVector[], options?: any);
         removeAllFeatures(silent: Boolean);
-        destroyFeatures(features: FVector[], options: any);
-        drawFeature(feature: FVector, style: string);
+        destroyFeatures(features: FVector[], options?: any);
+        drawFeature(feature: FVector, style?: string);
         eraseFeature(feature: FVector);
         getFeatureFromEvent(evt: Event): FVector;
         getFeatureBy(property: string, value: string): FVector;
@@ -1655,15 +1876,11 @@ interface ArgParser extends Control {
         onFeatureInsert: (feature: FVector) => any;
         preFeatureInsert: (feature: FVector) => any;
         getDataExtent(): Bounds;
-
-
     }
 
     var Vector: {
-        new (value?: any): Vector;
-        (value?: any): Vector;
-        new (name: string, options: any): Vector;
-        (name: string, options: any): Vector;
+        new (name: string, options?: any): Vector;
+        (name: string, options?: any): Vector;
         prototype: Vector;
     }
 
@@ -1688,9 +1905,8 @@ interface ArgParser extends Control {
         isDraw(): Boolean;
     }
 
+    //NOTE  2.13.1 version.
     var Icon: {
-        new (value?: any): Icon;
-        (value?: any): Icon;
         new (url: string, size: Size, offset: Pixel, calculateOffset: ICallback): Icon;
         (url: string, size: Size, offset: Pixel, calculateOffset: ICallback): Icon;
         prototype: Icon;
@@ -1855,6 +2071,7 @@ interface ArgParser extends Control {
 
     }
 
+    //NOTE: FVector is for all features related object.  There are a 'Vector' class which is use for layer only.
     interface FVector extends Feature {
         //Properties
         fid: string;
@@ -1880,6 +2097,8 @@ interface ArgParser extends Control {
 
         //Constants
         style: Style;
+
+        layer: Vector;
     }
 
     var Feature: {
@@ -1895,8 +2114,6 @@ interface ArgParser extends Control {
             prototype: FVector;
         };
     }
-
-
 }
 
 

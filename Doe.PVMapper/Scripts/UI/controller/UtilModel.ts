@@ -1,11 +1,4 @@
-
-/*    /  /  <reference path="Ext-all-src.js"/> */
-
-///<reference path="C:\Workspace\Dotnet\WebDev\pvmapper\Doe.PVMapper\Doe.PVMapper\Scripts\pvMapper\Utility.ts" />
-
-if (typeof Ext == 'undefined')
-  var Ext = Ext || {};
-
+/// <reference path="../../ExtJS.d.ts" />
 
 // Interface
 Ext.define('MyApp.data.UtilConfig', {
@@ -23,7 +16,6 @@ Ext.define('MyApp.data.UtilConfig', {
   idProperty: 'functionName'
 });
 
-if (typeof (Ext.data.JsonStore) == 'undefined') {
   Ext.define("Ext.data.JsonStore", {
     extend: "Ext.data.Store",
     alias: "store.json",
@@ -39,9 +31,8 @@ if (typeof (Ext.data.JsonStore) == 'undefined') {
       this.callParent([a])
     }
   });
-}
 
-var configStore = Ext.Create('Ext.data.JsonStore', {
+var configStore = Ext.create('Ext.data.JsonStore', {
   model: 'MyApp.data.UtilConfig',
   autoLoad: false,
   autoSave: false,
@@ -77,7 +68,7 @@ module UtilityModel {
     indexOf(aValue: any, fn: any): any;
   }
 
-  class DictionaryCollection implements IDictionary {
+ export class DictionaryCollection implements IDictionary {
     _dictionary: { [index: string]: any; } = {};
 
     //fn is a callback function to perform the comparison.

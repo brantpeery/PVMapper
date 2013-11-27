@@ -1,8 +1,5 @@
 /// <reference path="UtilityFunctions.ts" />
 /// <reference path="ScoreUtilityWindows.ts" />
-//declare var Ext;
-//declare var JXG;
-//declare var Extras;
 var pvMapper;
 (function (pvMapper) {
     var MinMaxUtilityArgs = (function () {
@@ -15,7 +12,7 @@ var pvMapper;
             this.minValue = minValue;
             this.maxValue = maxValue;
             //            this.tips = { minValue: minTip, maxValue: maxTip };
-            this.metaInfo = { name: "MinMaxUtilityArgs", unitSymbol: unit, minValueTip: minTip, maxValueTip: maxTip };
+            this.metaInfo = { name: "MinMaxUtilityArgs", unitSymbol: unit, minValueTip: minTip, maxValueTip: maxTip, vline: 0 };
         }
         return MinMaxUtilityArgs;
     })();
@@ -48,7 +45,8 @@ var pvMapper;
                 targetTip: targetTip,
                 slopeTip: slopeTip,
                 minValueTip: minTip,
-                maxValueTip: maxTip
+                maxValueTip: maxTip,
+                vline: 0
             };
         }
         return SinusoidalUtilityArgs;
@@ -68,7 +66,7 @@ var pvMapper;
             this.p0 = { x: p0x, y: p0y };
             this.p1 = { x: p1x, y: p1y };
             this.p2 = { x: p2x, y: p2y };
-            this.metaInfo = { name: "ThreePointUtilityArgs", unitSymbol: unit };
+            this.metaInfo = { name: "ThreePointUtilityArgs", unitSymbol: unit, vline: 0 };
         }
         return ThreePointUtilityArgs;
     })();
@@ -76,6 +74,7 @@ var pvMapper;
 
     var ScoreUtility = (function () {
         function ScoreUtility(options) {
+            this.fCache = {};
             if (options['functionCallback']) {
                 //Load up the ScoreUtility with the custom function + window callbacks
                 var copt = options;

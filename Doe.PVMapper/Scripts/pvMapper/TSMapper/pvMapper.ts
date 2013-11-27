@@ -1,8 +1,20 @@
-﻿/// <reference path="OpenLayers.d.ts" />
+﻿/// <reference path="Tools.ts" />
+/// <reference path="InfoTools.ts" />
+/// <reference path="OpenLayers.d.ts" />
 /// <reference path="Event.ts" />
 
 module pvMapper {
     export var readyEvent: pvMapper.Event = new pvMapper.Event;
+
+    export var mapToolbar: Ext.toolbar.IToolbar; // The main toolbar above the map
+
+    export var sitesToolbarMenu: Ext.menu.IMenu; // The site sub-menu in the toolbar
+    export var scoreboardToolsToolbarMenu: Ext.menu.IMenu; // The scoreboard tools sub-menu in the toolbar
+    export var reportsToolbarMenu: Ext.menu.IMenu; // The Reports sub-menu in the toolbar
+    export var linksToolbarMenu: Ext.menu.IMenu; // The links sub-menu in the toolbar
+
+    export var infoTools: IInfoTool[] = [];
+
     export function onReady(fn:ICallback) {
         readyEvent.addHandler(fn);
     }
@@ -53,4 +65,18 @@ module pvMapper {
 
         return 'rgb(' + r + ',' + g + ',' + b + ')';
     }
+
+    export function addInfoTool(tool:IInfoTool) {
+        infoTools.push(tool);
+        tool.init();
+    }
+
+    readyEvent.addHandler(function () {
+        //Activate all the info tools
+        infoTools.map(function (tool, idx) {
+            tool.activate();
+        });
+    })
+
+
 }

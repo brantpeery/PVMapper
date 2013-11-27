@@ -16,17 +16,20 @@ declare module OpenLayers {
 
     var Request: Request;
 
-    export class Attributes {
+    export class Attributes {                                                                         
         name: string;
         description: string;
         overallScore: number;
         fillColor: string;
+
     }
 
 
     interface Util {
       getParameterString(any): string;
     }
+
+    var Util: Util;
 
     interface SiteFeature extends FVector {
         attributes: Attributes;
@@ -36,6 +39,9 @@ declare module OpenLayers {
     interface Collection extends Geometry {
         components: Geometry[];
         componentTypes: string[];
+
+        constructor(components?: Geometry[]);
+
         destroy();
         clone(): Collection;
         getComponentsString(): string;
@@ -47,12 +53,12 @@ declare module OpenLayers {
         getLength(): number;
         getArea(): number;
         getGeodesicArea(projection: Projection): number;
-        getCentroid(weighted?: Boolean): Point;
+        getCentroid(): Point;
         getGeodesicLength(projection: Projection): number;
         move(x: number, y: number);
         rotate(angle: number, origin: Point);
         resize(scale: number, origin: Point, ratio: number): Geometry;
-        distanceTo(geometry: Geometry): number;
+        //distanceTo(geometry: Geometry): number;
         distanceTo(geometry: Geometry, options?: Boolean): number;
         equals(geometry: Geometry): Boolean;
         transform(source: Projection, dest: Projection): Geometry;
@@ -63,6 +69,10 @@ declare module OpenLayers {
     interface Polygon extends Geometry, Collection {
         compontTypes: string[];
         getArea(): number;
+
+        constructor(components?: Geometry[]);
+        constructor(components: LinearRing);
+
         getGeodesicArea(projection: Projection): number;
         containsPoint(point: Point): Boolean;
         //containsPoint(point: Point): number;   //this break in Typescript 0.9.1 ==> "Overloads cannot differ only by return type".
@@ -204,6 +214,12 @@ declare module OpenLayers {
         fromArray(arr: number[]): LonLat;
     }
 
+    var LonLat: {
+        new (lon: number, lat: number): LonLat;
+        new (location: number[]): LonLat;
+        prototype: LonLat;
+    }
+
     interface Segment {
         x1: number;
         y1: number;
@@ -231,7 +247,7 @@ declare module OpenLayers {
         extendBounds(newBounds: Bounds);
         getBounds(): Bounds;
         calculateBounds();
-        distanceTo(geometry: Geometry): number;
+        //distanceTo(geometry: Geometry): number;
         distanceTo(geometry: Geometry, options?: any): number;
         getVertices(nodes: Boolean): Geometry[];
         atPoint(lonlat: LonLat, toleranceLon: number, toleranceLat: number): Boolean;
@@ -245,6 +261,54 @@ declare module OpenLayers {
         segmentsIntersect(seg1: Segment, seg2: Segment, point: Boolean): Boolean;
         segmentsIntersect(seg1: Segment, seg2: Segment, tolerance: number): Point;
         distanceToSegment(point: Point, segment: Segment): Point;
+    }
+
+    var Geometry: {
+        new (): Geometry;
+        (): Geometry;
+        protytype: Geometry;
+        Collection: {
+            new (components: Geometry[]): Collection;
+            (components: Geometry[]): Collection;
+            prototype: Collection;
+        }
+        Curve: {
+            new (point: Point): Curve;
+        }
+        Point: {
+            new (x: number, y: number): Point;
+            prototype: Point;
+        }
+        LinearRing: {
+            new (points: Point[]): LinearRing;
+            (points: Point[]): LinearRing;
+            prototype: LinearRing;
+        }
+        LineString: {
+            new (points: Point[]): LineString;
+            (points: Point[]): LineString;
+            prototype: LineString;
+        }
+        MultiLineString: {
+            new (components: LineString[]): MultiLineString;
+            (components: LineString[]): MultiLineString;
+            prototype: MultiLineString;
+        }
+        MultiPoint: {
+            new (components: Point[]): MultiPoint;
+            (components: Point[]): MultiPoint;
+            prototype: MultiPoint;
+        }
+        MultiPolygon: {
+            new (components: Polygon[]): MultiPolygon;
+            (components: Polygon[]): MultiPolygon;
+            prototype: MultiPolygon;
+        }
+        Polygon: {
+            new (components: LinearRing[]): Polygon;
+            (components: LinearRing[]): Polygon;
+            prototype: Polygon;
+        }
     }
 
     interface Projection {
@@ -710,9 +774,9 @@ declare module OpenLayers {
         request(bounds: Bounds, options: any);
 
         //hover {Boolean } Do the selection for the hover handler.
-        selectBestFeature(features: Vector, clickPosition: LonLat, options: any);
+        selectBestFeature(features: FVector, clickPosition: LonLat, options: any);
         setModifiers(evt: Event);
-        select(features: Vector[]);
+        select(features: FVector[]);
         hoverSelect(feature: FVector);
         unselect(feature: FVector);
         unselectAll();
@@ -1012,6 +1076,7 @@ declare module OpenLayers {
         };
     }
 
+    //NOTE: This version implement the upcoming release of OpenLayers currently in development.
   interface IMap {
         //constant
         Z_INDEX_BASE: any;
@@ -1110,11 +1175,11 @@ declare module OpenLayers {
         getZooom(): number;
         pan(dx: number, dy: number, options: any);
         panTo(lonlat: LonLat);
-        setCenter(lonlat: LonLat, zoom: number, dragging: Boolean, forceZoomChange: Boolean);
+        setCenter(lonlat: LonLat, zoom: number, dragging?: Boolean, forceZoomChange?: Boolean);
         moveByPx(dx: number, dy: number);
         adjustZoom(zoom: number): number;
         getMinZoom(): number;
-        moveTo(lonlat: LonLat, zoom: number, options: any);
+        moveTo(lonlat: LonLat, zoom: number, options?: any);
         centerLayerContainer(lonlat: LonLat);
         isValidZoomLevel(zoomLevel: number): Boolean;
         isValidLonLat(lonlat: LonLat): Boolean;
@@ -1202,7 +1267,7 @@ declare module OpenLayers {
         prototype: Events;
     }
 
-  interface Layer {
+    interface Layer {
         //properties
         id: string;
         name: string;
@@ -1353,11 +1418,11 @@ declare module OpenLayers {
     }
 
 
-  interface HTTPRequestLayer extends Layer {
+    interface HTTPRequest extends Layer {
         //TODO: flush out the rest.
     }
 
-    interface GridLayer extends HTTPRequestLayer {
+    interface Grid extends HTTPRequest {
         narrowToGridLayer(gridLayer: JSObject);
         setBuffer(buffer: number);
         setNumLoadingTile(numLoadingTiles: number);
@@ -1370,7 +1435,7 @@ declare module OpenLayers {
 
     }
 
-    interface ArcGIS93Rest extends GridLayer {
+    interface ArcGIS93Rest extends Grid {
         DEFAULT_PARAMS: Object;
         isBaseLayer: Boolean;
         narrowToArcGIS93Rest(arcgis93Rest: JSObject);
@@ -1386,48 +1451,83 @@ declare module OpenLayers {
         epsgOverride: string;
     }
 
-    interface Grid {
-        getGridBounds(); // deprecated.
-        getTilesBounds();
+    //interface Grid extends GridLayer {
+    //    getGridBounds(); // deprecated.
+    //    getTilesBounds();
+    //}
+
+    interface XYZ extends Grid {
+        isBaseLayer: boolean;
+        sphericalMercator: boolean;
+        zoomOffset: number;
+        serverResolutions: any[]; //array : a list of all resolutions available on the server.
+
+        clone(obj: any): XYZ;
+        getURL(bounds: Bounds): string;
+        getXYZ(bounds: Bounds): any; //an object with x, y and z properties
+        setMap(map: IMap);
+    }
+    interface WMS extends Grid {
+        DEFAULT_PARAMS: any;
+        isBaseLayer: boolean;
+        encodeBBOX: boolean;
+        noMagic: boolean;
+        yz: any;
+
+        clone(obj): WMS;
+        reverseAxisOrder(): boolean;
+        getURL(bounds: Bounds): string;
+        mergeNewParams(newParams: any);
+        getFullRequestString(newParams: any, altUrl: string): string;
     }
 
-    interface ArcGIS93Rest {
+    interface OSM extends XYZ {
+        name: string;
+        url: string;
+        attribution: string;
+        sphericalMercator: boolean;
+        wrapDateLine: boolean;
+        tileOptions: Tile;
+        clone(obj: any): OSM;
     }
 
     var Layer: {
-        new (value?: any): Layer;
         new (name: string, options: any): Layer;
         (value?: any): Layer;
         (name: string, options: any): Layer;
         prototype: Layer;
         Vector: {
-            new (value?: any): Vector;
-            (value?: any): Vector;
             new (name: string, options?: any): Vector;
             prototype: Vector;
         };
         WMS: {
-            new (name: string, url: string, params: any, options: any): any;
+            new (name: string, url: string, params: any, options?: any): WMS;
+            prototype: WMS;
         }
         ArcGIS93Rest: {
-            new (name: string, url: string[], params: any): any;
-            new (name: string, url: string, options: any, params?: any): any;
+            new (name: string, url: string[], params: any): ArcGIS93Rest;
+            new (name: string, url: string, options: any, params?: any): ArcGIS93Rest;
             prototype: ArcGIS93Rest;
         }
         XYZ: {
-            new (name: string, url: string, params: any): any;
+            new (name: string, url: string, options: any): XYZ;
+            prototype: XYZ;
         }
         //ArcGIS93Rest(name: string, url: string[], params: any):any;
         //ArcGIS93Rest(name: string, url: string, options: any, params?: any):any;
         //ArcGIS93Rest(name: string, url: string[], params: WMSParams, layerParams: WMSOptions ): any;
         //ArcGIS93Rest(name: string, url: string, params: WMSParams, options: ArcGIS93RestOptions): any;
-        GridLayer(gridLayer: JSObject): any;
-        GridLayer(name: string, url: string, params: WMSParams);
-        GridLayer(name: string, url: string, params: WMSParams, options: GridLayerOptions);
         Grid: {
-            (): Grid;
+            new (): Grid;
+            new (name: string, url: string, params: WMSParams): Grid;
+            new (name: string, url: string, params: WMSParams, options: GridLayerOptions): Grid;
             prototype: Grid;
-        };
+        }
+        OSM: {
+            new (): OSM;
+            new (name: string, url: string, options:any): OSM;
+            prototype: OSM;
+        }
     }
 
   interface Filter {
@@ -1464,12 +1564,68 @@ declare module OpenLayers {
         deactivate(): Boolean;
     }
 
+    interface BBOX {
+        bounds: Bounds;
+        resolution: number;
+        ratio: number;
+        resFactor: number;
+        response: Response;
+
+        activate(): boolean;
+        deactivate(): boolean;
+        update(options?: any);   //validate: force: boolean - if true, new data must be unconditionally read.  noAbort: boolean - if true, do not abort previous requests.
+        getMapBounds(): Bounds;
+        invalidBounds(mapBounds: Bounds): boolean;
+        calculateBounds(mapBounds: Bounds);
+        triggerRead(options: any): Response;
+        createFilter(): Filter;
+        merge(resp: Response);
+    }
+
+    interface Cluster {
+        distance: number;
+        threshold: number;
+        features: FVector[];
+        clusters: FVector[];
+        clustering: boolean;
+        resolution: number;
+
+        activate(): boolean;
+        deactivate(): boolean;
+        cacheFeatures(evt: any): boolean;
+        clearCache();
+        cluster(evt: any);
+        clustersExist(): boolean;
+        shouldCluster(cluster: FVector, feature: FVector);
+
+    }
+
+    interface Fixed{
+        preload: Boolean;
+        activate(): Boolean;
+        deactivate(): Boolean;
+        load(options?: any);
+        merge(resp: Response);
+    }
+
+
     var Strategy: {
         new (options?: any): Strategy;
         (options?: any): Strategy;
         prototype: Strategy;
-        Fixed(): any;
+        BBOX: {
+            new (options?: any): BBOX;
+            (options?: any): BBOX;
+            prototype: BBOX;
+        }
+        Fixed: {
+            new (options?: any): Fixed;
+            (options?: any): Fixed;
+            prototype: Fixed;
+        }
+
     }
+
   interface Format {
         options: any;
         externalProjection: Projection;
@@ -1485,18 +1641,191 @@ declare module OpenLayers {
     interface EsriGeoJSONP {
         read(data: string): FVector[];
     }
+
     interface GeoJSON {
+        ignoreExtraDims: boolean;
+        read(json: string, type: string, filter: ICallback): any;
+        write(obj: any, pretty: boolean): string;
     }
+
+    interface ParseGeometry {
+        point(node: DOMElement): Point;
+        linestring(node: DOMElement): LineString;
+        polygon(node: DOMElement): Polygon;
+        multigeometry(node: DOMElement): Collection;
+    }
+
+    interface BuildGeometry{
+        point(geometry: DOMElement): DOMElement;
+        multipoint(geometry: Point): DOMElement;
+        linestring(geometry: LineString): DOMElement;
+        multilinestring(geometry: Point): DOMElement;
+        linearring(geometry: LinearRing): DOMElement;
+        polygon(geometry: Polygon): DOMElement;
+        multipolygon(geometry: Point): DOMElement;
+        collection(geometry: Collection): DOMElement;
+        buildCoordinatesNode(geometry: Geometry): DOMElement;
+        buildCoordinates(point: Point): string;
+        buildExtendedData(attributes: any): DOMElement;
+    }
+
+
+    interface KML extends XML {
+        namespaces: any;
+        kmlns: string;
+        placemarksDesc: string;
+        foldersName: string;
+        foldersDesc: string;
+        extractAttributes: boolean;
+        kvpAttributes: boolean;
+        extractStyles: boolean;
+        extractTracks: boolean;
+        trackAttributes: any[];
+        internalns: string;
+        features: FVector[];
+        styles: any[];
+        styleBaseUrl: string;
+        feteched: any;
+        maxDepth: number;
+        readers: any;
+
+        read(data: string): FVector[];
+        parseData(data: string, options: any): FVector[];
+        parseLinks(nodes: DOMElement[], options: any);
+        fetchLink(href: string);
+        parseStyles(nodes: DOMElement[], options: any);
+        parseKmlColor(kmlcolor: string): any;
+        parseStyle(node: DOMElement);
+        parseStyleMaps(nodes: DOMElement[], options: any);
+        parseFeatures(nodes: DOMElement[], options: any);
+        parseFeature(node: DOMElement): FVector;
+        getStyle(styleUrl: string, options: any): any;
+        parseAttributres(node: DOMElement): any;
+        parseExtendedData(node: DOMElement): any;
+        parseProperty(xmlNode: DOMElement, namespace: string, tagName: string): string;
+        write(features: FVector[]): string;
+        write(node: DOMElement): string; //extends override
+        createFolderXML(): DOMElement;
+        createPlacemarkXML(feature: FVector): DOMElement;
+        buildGeometryNode(geometry: Geometry): DOMElement;
+        buildCoordinatesNode(geometry: Geometry): DOMElement;
+        buildCoordinates(point: Point): string;
+        buildExtentedData(attributes: any): DOMElement;
+
+        parseGeometry: ParseGeometry;
+        buildGeometry: BuildGeometry;
+    }
+
+
+    interface GPX extends XML {
+        defaultDesc: string;
+        extractWaypoints: boolean;
+        extractTracks: boolean;
+        extractRoutes: boolean;
+        extractAttributes: boolean;
+        namespaces: any;  //Mapping of namespaces aliases to namespaces URIs.
+        schemaLocation: string;
+        creator: string;
+
+        read(data: string): any;
+        read(doc: Element): FVector[];
+        extractSegment(segment: DOMElement, segmentType: string): LineString;
+        parseAttributes(node: DOMElement): any;
+        write(object: any): string;
+        write(features: FVector[], meata: any);
+        buildMetadataNode(metadata: any): DOMElement;
+        buildFeatureNode(feature: FVector): DOMElement;
+        buildTrkSegNode(geometry: Geometry): DOMElement;
+        buildTrkPtNode(point: Point): DOMElement;
+        buildWptNode(geometry: Point): DOMElement;
+        appendAttributesNode(node: DOMElement, feature: FVector);
+    }
+
+    interface JSONSerialize {
+        object(obj: any): string;
+        array(arr: any[]): string;
+        string(str: string): string;
+        number(num: number): string;
+        boolean(boo: boolean): string;
+        object(date: Date): string;
+        
+    }
+
+
+    interface JSON extends Format {
+        indent: string;
+        space: string;
+        newline: string;
+        level: number;
+        pretty: boolean;
+        nativeJSON: boolean;
+
+        read(data: string): any;  //Override from Format.
+        read(json: string, filter: ICallback): any;
+        write(object: any): string;  //override from Format
+        write(value: string, pretty: boolean): string;
+        writeIndent(): string;
+        writeNewLine(): string;
+
+        serialize: JSONSerialize;
+    }
+
+    interface XML extends Format {
+        namespaces: any;
+        namespaceAlias: any;
+        defaultPrefix: string;
+        readers: any;
+        writers: any;
+        xmldom: any; //  the actual type is XMLDom -- not defined any where in OpenLayers.
+        document: XMLDocument;
+
+
+        destroy();
+        setNameSpace(alias: string, uri: string);
+        write(node: DOMElement): string;
+        createElementNS(uri: string, name: string): Element;
+        createDocumentFragment(): Element;
+        createTextNode(text: string): DOMElement;
+        getElementsByTagNameNS(node: Element, uri: string, name: string): NodeList;
+        getAttributeNodeNS(node: Element, uri: string, name: string): DOMElement;
+        getAttributeNS(node: Element, uri: string, name: string): string;
+        getChildValue(node: DOMElement, def: string): string;
+        isSimpleContent(node: DOMElement): boolean;
+        contentType(node: DOMElement): number;
+        hasAttributeNS(node: Element, uri: string, name: string): boolean;
+        setAttributeNS(node: Element, uri: string, name: string, value: string);
+        createElementNSPlus(name: string, options?: any): Element;
+        setAttributes(node: Element, obj: any);
+        readNode(node: DOMElement, obj: any): any;
+        readChildNodes(node: DOMElement, obj: any): any;
+        writeNode(name: string, obj: any, parent: DOMElement): DOMElement;
+        getChildEl(node: DOMElement, name?: string, uri?: string): DOMElement;
+        getNextEl(node: DOMElement, name?: string, uri?: string): DOMElement;
+        getThisOrNextEl(node: DOMElement, name?: string, uri?: string)
+        lookupNamespaceURI(node: DOMElement, prefix: string): string;
+        getXMLDoc(): XMLDocument;
+    }
+
     var Format: {
         new (options?: any): Format;
         (options?: any): Format;
         prototype: Format;
-
         GML: any;
-        XML: any;
-
+        XML: {
+            new (options?: any): XML;
+            prototype: XML;
+        }
+        KML: {
+            new (options?: any): KML;
+            prototype: KML;
+        }
+        GPX: {
+            new (options?: any): GPX;
+            prototype: GPX;
+        }
         JSON: {
             new (): any;
+            prototype: JSON;
         }
         GeoJSON: {
             new (): any;
@@ -1544,8 +1873,43 @@ declare module OpenLayers {
 
     }
     interface Script {
+        url: string;
+        params: any;
+        callback: ICallback;
+        callbackTemplate: string;
+        callbackKey: string;
+        callbackPrefix: string;
+        scope?: any;
+        format: Format;
+        srsInBBOX: boolean;
+
         read(): Response;
+        filterToParams(options?: any): Response;
+        abort(response: Response);
+        destroy();
     }
+
+    interface HTTP {
+        readWithPOST: boolean;
+        updateWithPOST: boolean;
+        deleteWithPOST: boolean;
+        srsInBBOX: boolean;
+
+        destroy();
+        filterToParams(filter: Filter): any;
+        read(options?: any): Response;
+        create(features: FVector[], options?: any): Response;
+        //create(features: FVector, options?: any): Response;
+        update(feature: FVector, options?: any): Response;
+        delete(feature: FVector, options?: any): Response;
+        commit(features: FVector[], options?: any): Response;
+        abort(response: Response);
+    }
+
+    interface WFS {
+    }
+    
+
     var Protocol: {
         new (value?: any): Protocol;
         (value?: any): Protocol;
@@ -1559,6 +1923,16 @@ declare module OpenLayers {
             new (params: any): any;
             prototype: Script;
         }
+        HTTP: {
+            new (options?: any): HTTP;
+            prototype: HTTP;
+
+        }
+        WFS: {
+            new (options?: any): WFS;
+            prototype: WFS;
+        }
+
         //Script(url: string, params: any, callback: (response: any) => {}, scope?: any): any;
     }
 
@@ -1618,11 +1992,12 @@ declare module OpenLayers {
     }
 
 
+  //support 2.13.1
   interface Vector extends Layer {
         events: Events;
         isBaseLayer: Boolean;
         isFixed: Boolean;
-        features: Vector[];
+        features: FVector[];
         filter: Filter;
         selectedFeatures: FVector[];
         unrenderedFeatures: any;
@@ -1632,7 +2007,7 @@ declare module OpenLayers {
         strategies: Strategy[];
         protocol: Protocol;
         renderers: string[];
-        renders: Renderer;
+        renderer: Renderer;
         rendererOptions: any;
         geometryType: string;
         drawn: Boolean;
@@ -1649,10 +2024,10 @@ declare module OpenLayers {
         onMapResize: () => any;
         moveTo(bounds: Bounds, zoomChanged: Boolean, dragging: Boolean);
         display(display: Boolean);
-        addFeatures(features: FVector[], options: any);
-        removeFeatures(features: FVector[], options: any);
+        addFeatures(features: FVector[], options?: any);
+        removeFeatures(features: FVector[], options?: any);
         removeAllFeatures(silent: Boolean);
-        destroyFeatures(features: FVector[], options: any);
+        destroyFeatures(features: FVector[], options?: any);
         drawFeature(feature: FVector, style?: string);
         eraseFeature(feature: FVector);
         getFeatureFromEvent(evt: Event): FVector;
@@ -1662,15 +2037,11 @@ declare module OpenLayers {
         onFeatureInsert: (feature: FVector) => any;
         preFeatureInsert: (feature: FVector) => any;
         getDataExtent(): Bounds;
-
-
     }
 
     var Vector: {
-        new (value?: any): Vector;
-        (value?: any): Vector;
-        new (name: string, options: any): Vector;
-        (name: string, options: any): Vector;
+        new (name: string, options?: any): Vector;
+        (name: string, options?: any): Vector;
         prototype: Vector;
     }
 
@@ -1695,9 +2066,8 @@ declare module OpenLayers {
         isDraw(): Boolean;
     }
 
+    //NOTE  2.13.1 version.
     var Icon: {
-        new (value?: any): Icon;
-        (value?: any): Icon;
         new (url: string, size: Size, offset: Pixel, calculateOffset: ICallback): Icon;
         (url: string, size: Size, offset: Pixel, calculateOffset: ICallback): Icon;
         prototype: Icon;
@@ -1862,6 +2232,7 @@ declare module OpenLayers {
 
     }
 
+    //NOTE: FVector is for all features related object.  There are a 'Vector' class which is use for layer only.
     interface FVector extends Feature {
         //Properties
         fid: string;
@@ -1904,8 +2275,6 @@ declare module OpenLayers {
             prototype: FVector;
         };
     }
-
-
 }
 
 
