@@ -24,8 +24,9 @@ var INLModules;
                         destroy: null,
                         init: null,
                         title: "Gross Area",
-                        description: "The raw area of a site polygon",
                         category: "Geography",
+                        description: "The raw area of a site polygon",
+                        longDescription: '<p>This tool calculates the raw area of a site polygon in km<sup>2</sup>.</p>',
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {

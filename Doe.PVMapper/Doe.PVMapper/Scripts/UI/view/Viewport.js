@@ -48,6 +48,14 @@ Ext.define( 'MainApp.view.Viewport', {
                 margins: '0',
                 padding: '0',
                 items: [
+                    { text: 'Sites', id: 'maintoolbar-sitessmenu', menu: { items: [] } },
+                    '-',
+                    '-',
+                    { text: 'Scoreboard Tools', id: 'maintoolbar-scoreboardtoolsmenu', menu: { items: [] } },
+                    '-',
+                    { text: 'Reports', id: 'maintoolbar-reportsmenu', menu: { items: [] } },
+                    '->',
+                    { text: 'Related Links', id: 'maintoolbar-linksmenu', menu: { items: [] } },
                 ]
             },
             {

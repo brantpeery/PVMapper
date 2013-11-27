@@ -9,6 +9,60 @@ module pvMapper {
    //to by pass development time compiler
 //   if (typeof(Ext) === 'undefined') var Ext: ;
 
+    export class ClientDB {
+
+        public static DB_NAME: string = "PVMapperData";
+        public static STORE_NAME: string = "PVMapperScores";
+        public static db: IDBDatabase = null;
+        public static DBVersion = 2;
+
+        public static indexedDB: IDBFactory = window.indexedDB || window.msIndexedDB; // || window.webkitIndexedDB || window.mozIndexedDB 
+
+        public static isDBCreating = false;
+        public static clientDBError: boolean = false;
+        public static initClientDB() {
+            var me = this;
+            if (!ClientDB.indexedDB) {
+                window.alert("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
+                return;                         
+            }
+
+            if (ClientDB.db) return;//already have database object.
+
+            try {
+                if (!ClientDB.isDBCreating) {
+                    ClientDB.isDBCreating = true;
+                    var dbreq: IDBOpenDBRequest = ClientDB.indexedDB.open(ClientDB.DB_NAME, ClientDB.DBVersion);
+                    dbreq.onsuccess = function (evt): any {
+                        console.log("Database [PVMapperScores] is open sucessful.");
+                        ClientDB.db = evt.currentTarget.result;
+                        
+                    }
+
+                    dbreq.onerror = function (event: ErrorEvent): any {
+                        me.clientDBError = true;
+                        console.log("indexedDB open error: " + event.message);
+                    }
+
+                    dbreq.onupgradeneeded = function (evt): any {
+                        try {
+                            var objStore = evt.currentTarget.result.createObjectStore(ClientDB.STORE_NAME, { keypath: "title" });
+                            //objStore.createIndex("title", "title", { unique: true });
+                            ClientDB.db = evt.currentTarget.result;
+                        }
+                        catch (e) {
+                            console.log("Creating object store failed, cause: " + e.message);
+                        }
+                    }
+                }
+            }
+            catch (e) {
+                console.log("initDB error, cause: " + e.message);
+            }
+            return null;
+        }
+    }
+
 
   export class SiteData{
     id: string;
@@ -30,8 +84,7 @@ module pvMapper {
           // refresh scoreboard.
           //Ext.getCmp('scoreboard-grid-id')).store.load();
           //Ext.getCmp('scoreboard-grid-id').getView().refresh();
-          //var grid: Ext.panel = Ext.getCmp('scoreboard-grid-id');
-          var grid: any = Ext.getCmp('scoreboard-grid-id');
+          var grid: Ext.grid.IPanel = Ext.getCmp('scoreboard-grid-id');
           grid.store.load();
           grid.getView().refresh();
         });
@@ -88,4 +141,6 @@ module pvMapper {
       });
     }
   }
+
 }
+

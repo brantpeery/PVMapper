@@ -22,14 +22,30 @@ Ext.require([
     'GeoExt.container.WmsLegend',
     'GeoExt.container.VectorLegend',
     'GeoExt.container.UrlLegend',
-    'GeoExt.tree.Column'
+    'GeoExt.tree.Column',
+    'MainApp.view.Window',
+    'MainApp.view.Viewport'
 ]);
 
 var app = Ext.application({
     name: 'MainApp',
     requires: [
         'Ext.container.Viewport',
-        'GeoExt.panel.Map'
+        'Ext.layout.container.Border',
+        'GeoExt.tree.Panel',
+        //'Ext.tree.plugin.TreeViewDragDrop',
+        'GeoExt.panel.Map',
+        'GeoExt.tree.OverlayLayerContainer',
+        'GeoExt.tree.BaseLayerContainer',
+        'GeoExt.tree.View',
+        'GeoExt.data.LayerTreeModel',
+        'GeoExt.container.LayerLegend',
+        'GeoExt.container.WmsLegend',
+        'GeoExt.container.VectorLegend',
+        'GeoExt.container.UrlLegend',
+        'GeoExt.tree.Column',
+        'MainApp.view.Window',
+        'MainApp.view.Viewport'
     ],
     appFolder: '/Scripts/UI',
     autoCreateViewport: true,
@@ -49,6 +65,9 @@ var app = Ext.application({
         } 
 
         if (console) console.log('launching application');
+
+    //connect to local indexedDB database.
+    pvMapper.ClientDB.initClientDB();
 
         // set the theme for OpenLayers
         OpenLayers.ImgPath = "/Content/OpenLayers/default/img/";
@@ -116,7 +135,7 @@ var app = Ext.application({
                                     !record.raw.isReferenceLayer;
                             }
                         }
-                    } ]
+          }]
                 }, {
                     text: "Reference",
                     expanded: true,
@@ -176,7 +195,7 @@ var app = Ext.application({
         var mapPanel = Ext.create('GeoExt.panel.Map', {
             id: 'mapPanel',
             title: null,
-            header:false,
+      header: false,
             map: map,
             extent: usBounds, // <-- this doesn't actually change the visible extent of our map at all
             stateful: true,
@@ -207,6 +226,12 @@ var app = Ext.application({
 
         ///--------------------------Set the toolbar stuff up--------------------------------------------
         pvMapper.mapToolbar = Ext.ComponentQuery.query('#maintoolbar')[0];
+
+        pvMapper.sitesToolbarMenu = Ext.ComponentQuery.query('#maintoolbar-sitessmenu')[0].menu;
+        pvMapper.scoreboardToolsToolbarMenu = Ext.ComponentQuery.query('#maintoolbar-scoreboardtoolsmenu')[0].menu;
+        pvMapper.reportsToolbarMenu = Ext.ComponentQuery.query('#maintoolbar-reportsmenu')[0].menu;
+        pvMapper.linksToolbarMenu = Ext.ComponentQuery.query('#maintoolbar-linksmenu')[0].menu;
+
         //Ext.ComponentQuery.query('#maincontent').add(mapPanel);
 
         if (console) console.log('Signaling that the pvMapper object is ready to go');

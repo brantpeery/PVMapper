@@ -25,8 +25,9 @@ module INLModules {
                     init: null,
 
                     title: "Gross Area",
-                    description:"The raw area of a site polygon",
                     category: "Geography",
+                    description: "The raw area of a site polygon",
+                    longDescription: '<p>This tool calculates the raw area of a site polygon in km<sup>2</sup>.</p>',
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, score: pvMapper.Score) {
@@ -42,7 +43,7 @@ module INLModules {
                     // for now, this is a constant value (always returns the max, why not)
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "km2",
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "km2", // <-- This isn't an error - don't "fix" it.
                             "Minimum gross area to be considered.",
                             "Maximum gross area to be considered.")
                     },

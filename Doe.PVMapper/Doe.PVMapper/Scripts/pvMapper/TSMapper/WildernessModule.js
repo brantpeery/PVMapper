@@ -1,3 +1,11 @@
+/// <reference path="ScoreUtility.ts" />
+/// <reference path="pvMapper.ts" />
+/// <reference path="Site.ts" />
+/// <reference path="Score.ts" />
+/// <reference path="Tools.ts" />
+/// <reference path="Options.d.ts" />
+/// <reference path="Module.ts" />
+/// <reference path="Esri-GeoJsonConverter.js />
 var BYUModules;
 (function (BYUModules) {
     var WildernessModule = (function () {
@@ -25,6 +33,7 @@ var BYUModules;
                         //init: null,
                         title: "Wilderness",
                         description: "Overlapping national parks, using data hosted by BYU",
+                        longDescription: '<p>Overlapping national parks, using data hosted by BYU.</p>',
                         category: "Land Use",
                         onScoreAdded: function (event, score) {
                         },

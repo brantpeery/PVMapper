@@ -5,10 +5,26 @@
 /// <reference path="Options.d.ts" />
 /// <reference path="SiteManager.ts" />
 /// <reference path="Tools.ts" />
+///<reference path="DataManager.ts"/>
 
 // Module
 module pvMapper {
     //  import pvM = pvMapper;
+
+    export class DBScore {
+        constructor(
+            public title: string,
+            public description: string,
+            public category: string,
+            public weight: number,
+            public active: boolean,
+            public scoreUtility: ScoreUtility,
+            public rateTable: IStarRatings
+            //public scores: Score[]
+            )
+        {
+        }
+    }
 
     // Class
     export class ScoreLine implements IToolLine {
@@ -21,34 +37,41 @@ module pvMapper {
             if (options.description) {
                 this.description = options.description;
             }
+            if (options.longDescription) {
+                this.longDescription = options.longDescription;
+            }
             this.category = (typeof (options.category) === 'string') ? options.category : 'Other';
 
             if ($.isFunction(options.onSiteChange)) {
                 this.onSiteChange = () => { return options.onSiteChange.apply(this, arguments); }
-            }
+			}
 
             // star rating functions
             if ($.isFunction(options.getStarRatables)) {
                 this.getStarRatables = () => { return options.getStarRatables.apply(this, arguments); }
-            }
+			}
+
+            if ($.isFunction(options.setStarRatables)) {
+                this.setStarRatables = (rateTable: IStarRatings) => { options.setStarRatables.apply(this, arguments); }
+			}
 
             // config window
             if ($.isFunction(options.showConfigWindow)) {
                 this.showConfigWindow = () => { options.showConfigWindow.apply(this, arguments); }
-            }
+			}
 
             this.valueChangeHandler = (event: IScoreValueChangedEvent) => {
                 //Update the utility score for the score that just changed it's value.
                 event.score.setUtility(this.getUtilityScore(event.newValue));
-                
+
                 this.scoreChangeEvent.fire(this, event);
             }
 
-            //if ($.isFunction(options.onScoreAdded)) {
-            //    this.scoreAddedEvent.addHandler(options.onScoreAdded);
-            //}
+			//if ($.isFunction(options.onScoreAdded)) {
+			//    this.scoreAddedEvent.addHandler(options.onScoreAdded);
+			//}
 
-            siteManager.siteAdded.addHandler((event: Site) => {
+			siteManager.siteAdded.addHandler((event: Site) => {
                 //if (console) console.log("Siteadded event detected in scoreline" + name);
 
                 this.addScore(event);
@@ -62,18 +85,23 @@ module pvMapper {
             if (options.scoreUtilityOptions == undefined) {
                 options.scoreUtilityOptions = {
                     functionName: "random",
-                    functionArgs: {className: "Random"},
+                    functionArgs: { className: "Random" },
                     iconURL: null
                 }
-            };
-
-            this.utilargs = new pvMapper.MinMaxUtilityArgs(0, 0, "", "");
+			};
+            
+            this.utilargs = new pvMapper.MinMaxUtilityArgs(0, 10, "", "");
             this.scoreUtility = new pvMapper.ScoreUtility(options.scoreUtilityOptions);
 
-            //Set the default weight of the tool
-            this.weight = (typeof options.weight === "number") ? options.weight : 10;
+            //if (ClientDB.db == null)     
+            //    ClientDB.initClientDB();
 
             this.loadAllSites();
+            // this.loadScore();
+
+            //Set the default weight of the tool
+            //Note: a weight of 0 is possible and valid. The default weight is 10.
+            this.weight = (typeof options.weight === "number") ? options.weight : 10;
         }
 
         public utilargs: pvMapper.MinMaxUtilityArgs;
@@ -81,12 +109,14 @@ module pvMapper {
         public title: string;
         public weight: number;
         public description: string;
+        public longDescription: string;
         public category: string;
-        public scores: Score[] = new Array<Score>(); //new Score[](); <<-- TS0.9.0 doesn't like this.
+        public scores: Score[] = new Array<Score>(); //  new Score[](); <<-- TS0.9.0 doesn't like this.
         //public updateScore: ICallback = options.updateScoreCallback;
-        public active: Boolean = true;
+        public active: boolean = true;
 
         getStarRatables: () => IStarRatings;
+        setStarRatables: (rateTable: IStarRatings)=>void;
 
         showConfigWindow: () => void;
 
@@ -95,11 +125,12 @@ module pvMapper {
         public scoreChangeEvent: pvMapper.Event = new pvMapper.Event();
         public updatingScoresEvent: pvMapper.Event = new pvMapper.Event();
 
-        public getUtilityScore(x) { return this.scoreUtility.run(x); }  number;
+        public getUtilityScore(x: number): number { return this.scoreUtility.run(x); }
         public getWeight(): number { return this.weight; }
-        public setWeight(value : number) {
+        public setWeight(value: number) {
             this.weight = value;
             this.scoreChangeEvent.fire(self, undefined); // score line changed
+            this.saveScore();
         }
 
         /**
@@ -132,13 +163,13 @@ module pvMapper {
             //    }, 2500 * Math.random());
 
             //} else {
-                //Set the initial value from the tool
-                try {
-                    // request a score update
-                    this.onSiteChange(undefined, score);
-                } catch (ex) {
-                    if (console) console.error(ex);
-                }
+            //Set the initial value from the tool
+            try {
+                // request a score update
+                this.onSiteChange(undefined, score);
+            } catch (ex) {
+                if (console) console.error(ex);
+            }
             //}
 
             return score;
@@ -183,15 +214,16 @@ module pvMapper {
         private onSiteChange: ICallback;
 
         private loadAllSites() {
+            var _this = this;
             var allSites = siteManager.getSites();
             $.each(allSites, function (idx, site) {
-                this.addScore(site);
+                _this.addScore(site);
             });
         }
 
         private onSiteRemove(site: Site) {
             console.log('Attempting to remove a site/score from the scoreline')
-            for (var i = 0; i < this.scores.length; i++) {
+			for (var i = 0; i < this.scores.length; i++) {
                 var score: Score = this.scores[i];
                 if (score.site == site) {
                     // remove site from scoreline.
@@ -204,6 +236,19 @@ module pvMapper {
             }
         }
 
+        public toJSON(): any {
+			return {
+                title: this.title,
+                weight: this.weight,
+                description: this.description,
+                longDescription: this.longDescription,
+                category: this.category,
+                scoreUtility: this.scoreUtility,
+                scores: this.scores
+            }
+		}
+
+
         //private onSiteAdded = 
 
         //private onSiteUpdated(event: EventArg) {
@@ -211,6 +256,94 @@ module pvMapper {
         //        updateScore(event.data);
         //}
 
+
+
+        //#region "Client indexedDB storage"
+        public putScore(): any {
+            var me = this;
+            if (ClientDB.db) {
+                try {
+                    var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.STORE_NAME, "readwrite");
+                    var store = txn.objectStore(ClientDB.STORE_NAME);
+                    var stb = null;
+                    if (me.getStarRatables !== undefined)
+                       stb = me.getStarRatables(); // call the module for the rating value.
+                    var dbScore: DBScore = new DBScore(
+                        me.title,
+                        me.description,
+                        me.category,
+                        me.weight,
+                        me.active,
+                        me.scoreUtility,
+                        stb
+                        );
+
+                    var request = store.get(me.title);
+                    request.onsuccess = function (evt): any {
+                        if (request.result != undefined) { // if already exists, update
+                            store.put(dbScore, dbScore.title);
+                        }
+                        else
+                            store.add(dbScore, dbScore.title); // if new, add
+                    }
+                } catch (e) {
+                    console.log("putScore failed, cause: " + e.message);
+                }
+            }
+        }
+
+        public saveScore(): any {
+            if (ClientDB.db == null) return;
+            try {
+                this.putScore();
+            }
+            catch (e) {
+                console.log("Error: " + e.message);
+            }
+        }
+
+        public getScore(): any {
+            var me = this;
+            if (ClientDB.db) {
+                var txn = ClientDB.db.transaction(ClientDB.STORE_NAME, "readonly");
+                var store = txn.objectStore(ClientDB.STORE_NAME);
+                var request = store.get(me.title);
+                request.onsuccess = function (evt): any {
+                    if (request.result != undefined) {
+                        me.title = request.result.title;
+                        me.description = request.result.description;
+                        me.category = request.result.category;
+                        me.weight = request.result.weight;
+                        me.active = request.result.active;
+
+                        me.scoreUtility.functionName = request.result.scoreUtility.functionName;
+                        me.scoreUtility.functionArgs = request.result.scoreUtility.functionArgs;
+                        me.scoreUtility.iconURL = request.result.scoreUtility.iconURL;
+                        me.scoreUtility.fCache = request.result.scoreUtility.fCache;
+                        //This won't work.  No way to write back to the module's rateTable.
+                        //me.getStarRatables = request.result.rateTable;
+
+                        if ((me.setStarRatables !== undefined) && (request.result.rateTable !== null)) {
+                            me.setStarRatables(request.result.rateTable);
+                        }
+
+                        me.updateScores();
+                    }
+                }
+			}
+        }
+
+        public loadScore(): any {
+            if (ClientDB.db == null) return;
+            try {
+                this.getScore();
+            }
+            catch (e) {
+                console.log("Error: " + e.message);
+            }
+        }
+
+        //#endregion "Client indexedDB storage"
     }
 
 }

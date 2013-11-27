@@ -29,8 +29,9 @@ module BYUModules {
                     init: null,
 
                     title: "Slope",
-                    description: "The slope at the center of a site, using data from ArcGIS Online",
                     category: "Geography",
+                    description: "The slope at the center of a site, using data from ArcGIS Online",
+                    longDescription: '<p>This tool reports the slope at the center point of a site. The slope is retrieved from the World Topographic Map on ArcGIS Online. Note that the slope at the center point of a site may not be representative of the overall slope at that site. See ArcGIS Online for more information (www.arcgis.com).</p>',
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:3", "degrees"); },
                     //TODO: is this degrees? or maybe it's grade?
@@ -48,8 +49,9 @@ module BYUModules {
                     init: null,
 
                     title: "Aspect",
-                    description: "The horizontal aspect at the center of a site, using data from ArcGIS Online",
                     category: "Geography",
+                    description: "The horizontal aspect at the center of a site, using data from ArcGIS Online",
+                    longDescription: '<p>This tool reports the aspect at the center point of a site, an angular measure where 0 degrees indicates a northerly aspect and 90 degrees indicates an easterly aspect. This measure is retrieved from the World Topographic Map on ArcGIS Online. Note that the aspect at the center point of a site may not be representative of the overall aspect of a site. Note also that aspect is integrally related to slope. See ArcGIS Online for more information (www.arcgis.com).</p>',
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:4", "degrees"); },
                     //TODO: is this degrees? it's not radian.
@@ -69,8 +71,9 @@ module BYUModules {
                     init: null,
 
                     title: "Elevation",
-                    description: "The elevation at the center of a site, using data from ArcGIS Online",
                     category: "Geography",
+                    description: "The elevation at the center of a site, using data from ArcGIS Online",
+                    longDescription: '<p>This tool reports the elevation at the center point of a site. This measure is retrieved from the World Topographic Map on ArcGIS Online. See ArcGIS Online for more information (www.arcgis.com).</p>',
                     onScoreAdded: (event, score) => { },
                     onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:1", "m"); },
                     //Note: I have no idea why, but the server will not find the correct layer if we don't include "any:"
@@ -91,7 +94,7 @@ module BYUModules {
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
     var topoMapRestUrl = "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/";
-    var topoMapLayer;
+    var topoMapLayer: OpenLayers.Layer;
 
     function addMap() {
         topoMapLayer = new OpenLayers.Layer.XYZ("ESRI Topography",

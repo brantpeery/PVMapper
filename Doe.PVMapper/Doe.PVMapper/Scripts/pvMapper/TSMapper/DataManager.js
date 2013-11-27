@@ -7,6 +7,62 @@ var pvMapper;
     //Just to trick TypeScript into believing that we are creating an Ext object
     //to by pass development time compiler
     //   if (typeof(Ext) === 'undefined') var Ext: ;
+    var ClientDB = (function () {
+        function ClientDB() {
+        }
+        ClientDB.initClientDB = function () {
+            var me = this;
+            if (!ClientDB.indexedDB) {
+                window.alert("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
+                return;
+            }
+
+            if (ClientDB.db)
+                return;
+
+            try  {
+                if (!ClientDB.isDBCreating) {
+                    ClientDB.isDBCreating = true;
+                    var dbreq = ClientDB.indexedDB.open(ClientDB.DB_NAME, ClientDB.DBVersion);
+                    dbreq.onsuccess = function (evt) {
+                        console.log("Database [PVMapperScores] is open sucessful.");
+                        ClientDB.db = evt.currentTarget.result;
+                    };
+
+                    dbreq.onerror = function (event) {
+                        me.clientDBError = true;
+                        console.log("indexedDB open error: " + event.message);
+                    };
+
+                    dbreq.onupgradeneeded = function (evt) {
+                        try  {
+                            var objStore = evt.currentTarget.result.createObjectStore(ClientDB.STORE_NAME, { keypath: "title" });
+
+                            //objStore.createIndex("title", "title", { unique: true });
+                            ClientDB.db = evt.currentTarget.result;
+                        } catch (e) {
+                            console.log("Creating object store failed, cause: " + e.message);
+                        }
+                    };
+                }
+            } catch (e) {
+                console.log("initDB error, cause: " + e.message);
+            }
+            return null;
+        };
+        ClientDB.DB_NAME = "PVMapperData";
+        ClientDB.STORE_NAME = "PVMapperScores";
+        ClientDB.db = null;
+        ClientDB.DBVersion = 2;
+
+        ClientDB.indexedDB = window.indexedDB || window.msIndexedDB;
+
+        ClientDB.isDBCreating = false;
+        ClientDB.clientDBError = false;
+        return ClientDB;
+    })();
+    pvMapper.ClientDB = ClientDB;
+
     var SiteData = (function () {
         function SiteData() {
         }
@@ -24,7 +80,6 @@ var pvMapper;
                 // refresh scoreboard.
                 //Ext.getCmp('scoreboard-grid-id')).store.load();
                 //Ext.getCmp('scoreboard-grid-id').getView().refresh();
-                //var grid: Ext.panel = Ext.getCmp('scoreboard-grid-id');
                 var grid = Ext.getCmp('scoreboard-grid-id');
                 grid.store.load();
                 grid.getView().refresh();
@@ -60,6 +115,7 @@ var pvMapper;
                 data: data,
                 type: "PUT"
             });
+            //pvMapper.displayMessage("The site has been updated.","Info");
         };
 
         //Deletes a site from the datastore

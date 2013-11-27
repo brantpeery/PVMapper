@@ -1,13 +1,16 @@
-﻿//Creates the variable references for the frameworks that we are using. This should 
+﻿/// <reference path="ExtJS.d.ts" />
+
+
+//Creates the variable references for the frameworks that we are using. This should 
 //allow the use of the frameworks in the .ts files without the compiler complaining.
 
 //Use an include to include this file in your .ts files
 
 declare var OpenLayers;
 declare var GeoExt;
-declare var Ext;
+//declare var Ext;
 
-module pvMapper {
+declare module pvMapper {
   export class Site {
     constructor (site: any);
   };

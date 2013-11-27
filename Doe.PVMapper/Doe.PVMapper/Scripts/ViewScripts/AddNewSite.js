@@ -14,7 +14,7 @@ var tools = [];
 pvMapper.onReady(function () {
     var thisTool = new addSite(pvMapper.map, pvMapper.getSiteLayer());
     tools.push(thisTool);
-    var addSiteTool = new Ext.Button({
+    var addSiteToolButton = new Ext.Button({
         text: "Add Site",
         enableToggle: true,
         toggleGroup: "editToolbox",
@@ -27,7 +27,7 @@ pvMapper.onReady(function () {
                 //Note: restricting this to a particular scale is silly.
                 //if (pvMapper.map.getScale() < 60000) {
                     //Make sure the user is seeing the map
-                    pvMapper.showMapTab();
+                    //pvMapper.showMapTab();
                     thisTool.activateDrawSite();
                     thisTool.button = this;
                     this.toggle(true);
@@ -36,12 +36,35 @@ pvMapper.onReady(function () {
                 //    this.cancel;
                 //}
             }
-
-
         }
-        
     });
-    pvMapper.mapToolbar.add(addSiteTool);
+    //pvMapper.mapToolbar.add(addSiteToolButton);
+    pvMapper.mapToolbar.insert(0, addSiteToolButton); // add this to the start of the tool list
+
+    //var addSiteToolCheckItem = new Ext.create('Ext.menu.CheckItem', {
+    //    text: "Add Site",
+    //    toggleGroup: "editToolbox",
+    //    handler: function () {
+    //        if (thisTool.mapControl.active) {
+    //            thisTool.deactivateDrawSite();
+    //            this.setChecked(false);
+    //        }
+    //        else {
+    //            //Note: restricting this to a particular scale is silly.
+    //            //if (pvMapper.map.getScale() < 60000) {
+    //            //Make sure the user is seeing the map
+    //            //pvMapper.showMapTab();
+    //            thisTool.activateDrawSite();
+    //            thisTool.button = this;
+    //            this.setChecked(true);
+    //            //} else {
+    //            //   pvMapper.displayMessage("The Add Site tool can only be used when the map is zoomed in. Try zooming the map in more to add a site", "warning");
+    //            //    this.cancel;
+    //            //}
+    //        }
+    //    }
+    //});
+    //pvMapper.sitesToolbarMenu.add(addSiteToolCheckItem);
 });
 
 //The main plugin object. Conforms to the plugin definition set by the framework

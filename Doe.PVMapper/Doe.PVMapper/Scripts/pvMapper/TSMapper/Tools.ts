@@ -15,9 +15,14 @@ module pvMapper {
         title: string;
 
         /**
-         The description of the tool. This will be visible in reports and as a tool tip
+         A short description of the tool: perhaps one sentence with a few clauses. This will be shown in a scoreboard tool tip.
         */
         description: string;
+
+        /**
+         The long-form description of the tool: perhaps two paragraphs, with basic HTML tags. This will be shown in reports.
+        */
+        longDescription: string;
 
         /**
          * The category of this tool, for hierarchical sorting
@@ -47,6 +52,11 @@ module pvMapper {
         //onStarRatingChange: (scores: Score[]) => void; //...?
     }
 
+
+    export interface IInfoToolOptions extends ITool {
+
+    }
+
     export interface IScoreToolOptions extends ITool {
         /**
         The function that will be called by the API everytime the tool should
@@ -58,7 +68,7 @@ module pvMapper {
 
         // optional members for star ratings (qualitative) tools...
         getStarRatables?: () => IStarRatings;
-        //setStarRatables?: (ratables: IStarRatings) => void;
+        setStarRatables?: (ratables: IStarRatings) => void;
         //getStarRating: (name: string) => number;
 
         // optional method, implemented on configurable tools, which will show a configuration menu
@@ -93,6 +103,10 @@ module pvMapper {
          Returns a number that is the result of the aggragate.
         */
         CalculateScore: (values: IValueWeight[], site: Site) => IScore;
+    }
+
+    export interface IInfoTool extends ITool {
+
     }
 
     export interface IToolAction {

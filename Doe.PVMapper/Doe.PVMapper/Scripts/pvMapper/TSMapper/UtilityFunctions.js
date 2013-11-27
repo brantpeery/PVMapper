@@ -32,8 +32,10 @@ var pvMapper;
 
                 var y = 0;
                 if (x >= h)
-                    y = 0; else if (x <= l)
-                    y = 1; else
+                    y = 1;
+else if (x <= l)
+                    y = 0;
+else
                     y = (x < b) ? 1 / (1 + Math.pow((b - l) / (x - l), (2 * s * (b + x - 2 * l)))) : 1 - (1 / (1 + Math.pow((b - (2 * b - h)) / ((2 * b - x) - (2 * b - h)), (2 * s * (b + (2 * b - x) - 2 * (2 * b - h))))));
 
                 //Note: clamping this value to the range 0-1 is handled by the run(x) function
@@ -52,7 +54,8 @@ var pvMapper;
             iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/stats_icon.jpg",
             fn: function (x, args) {
                 if (args != null)
-                    return ((x - args.minValue) / (args.maxValue - args.minValue)); else
+                    return ((x - args.minValue) / (args.maxValue - args.minValue));
+else
                     return 0;
             }
         };
@@ -75,9 +78,12 @@ var pvMapper;
                 });
 
                 if (x < sortedPts[0].x)
-                    return sortedPts[0].y; else if (x < sortedPts[1].x)
-                    return sortedPts[0].y + ((sortedPts[1].y - sortedPts[0].y) * (x - sortedPts[0].x) / (sortedPts[1].x - sortedPts[0].x)); else if (x < sortedPts[2].x)
-                    return sortedPts[1].y + ((sortedPts[2].y - sortedPts[1].y) * (x - sortedPts[1].x) / (sortedPts[2].x - sortedPts[1].x)); else
+                    return sortedPts[0].y;
+else if (x < sortedPts[1].x)
+                    return sortedPts[0].y + ((sortedPts[1].y - sortedPts[0].y) * (x - sortedPts[0].x) / (sortedPts[1].x - sortedPts[0].x));
+else if (x < sortedPts[2].x)
+                    return sortedPts[1].y + ((sortedPts[2].y - sortedPts[1].y) * (x - sortedPts[1].x) / (sortedPts[2].x - sortedPts[1].x));
+else
                     return sortedPts[2].y;
             }
         };

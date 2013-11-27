@@ -1,8 +1,20 @@
-﻿/// <reference path="OpenLayers.d.ts" />
+﻿/// <reference path="Tools.ts" />
+/// <reference path="InfoTools.ts" />
+/// <reference path="OpenLayers.d.ts" />
 /// <reference path="Event.ts" />
 var pvMapper;
 (function (pvMapper) {
     pvMapper.readyEvent = new pvMapper.Event();
+
+    pvMapper.mapToolbar;
+
+    pvMapper.sitesToolbarMenu;
+    pvMapper.scoreboardToolsToolbarMenu;
+    pvMapper.reportsToolbarMenu;
+    pvMapper.linksToolbarMenu;
+
+    pvMapper.infoTools = [];
+
     function onReady(fn) {
         pvMapper.readyEvent.addHandler(fn);
     }
@@ -55,4 +67,17 @@ var pvMapper;
         return 'rgb(' + r + ',' + g + ',' + b + ')';
     }
     pvMapper.getColorForScore = getColorForScore;
+
+    function addInfoTool(tool) {
+        pvMapper.infoTools.push(tool);
+        tool.init();
+    }
+    pvMapper.addInfoTool = addInfoTool;
+
+    pvMapper.readyEvent.addHandler(function () {
+        //Activate all the info tools
+        pvMapper.infoTools.map(function (tool, idx) {
+            tool.activate();
+        });
+    });
 })(pvMapper || (pvMapper = {}));

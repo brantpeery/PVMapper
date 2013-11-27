@@ -1,0 +1,149 @@
+﻿@{
+    ViewBag.Title = "Report";
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+}
+
+<link href="/Content/Reports/SummaryReport.css" rel="stylesheet" />
+<script type="text/javascript">
+    function eventHack(event, fn, addOn) {
+        if (window.addEventListener) {
+            window.addEventListener(event, fn, false);
+        } else {
+            //Do it the IE way. #stupid     
+            window.attachEvent((addon) ? "on" : "" + event, fn);
+        }
+    }
+
+    //function receiveMessage(event) {
+    //    if (event.origin == this.window.location.origin) { //Only from the same domain
+    //        var data;
+
+    //        //Try to convert the data
+    //        data = JSON.parse(event.data);
+    //        data = prepData(data);
+    //        createHTML(data);
+    //    }
+    //}
+
+
+    //eventHack("message", receiveMessage);
+
+    eventHack("load", function () {
+        var pvMapper = window.opener.pvMapper;
+        //var jsondata = pvMapper.Data.ScoreboardProcessor.getCleanObjectTransposedJSON(pvMapper.mainScoreboard)
+
+        var data = pvMapper.Data.ScoreboardProcessor.getCleanObjectTransposed(pvMapper.mainScoreboard);
+        data = prepData(data);
+        createHTML(data);
+        //window.opener.SummaryReportReady();
+    }
+    );
+
+    function prepData(data) {
+        var pvMapper = window.opener.pvMapper;
+        data = pvMapper.Data.ScoreboardProcessor.addSummaryAndDivergence(data);
+        data = pvMapper.Data.ScoreboardProcessor.sortScoresByDivergence(data);
+        return data;
+    }
+
+
+
+    //polygon is OpenLayers.Geometry.Polygon  GeoJSON format: String.
+    function showMap(divName, polygon) {
+        //create a map.
+        var map = new OpenLayers.Map({
+            // These projections are all webmercator, but the openlayers layer wants 900913 specifically
+            projection: new OpenLayers.Projection("EPSG:3857"), //3857 //4326            900913
+            units: "m",
+            numZoomLevels: 16,
+            controls: {},
+            theme: "/Content/OpenLayers/default/style.css",
+            div: divName
+        });
+        var osmlayer = new OpenLayers.Layer.OSM();
+        map.addLayer(osmlayer);
+
+        var layer = new OpenLayers.Layer.Vector();
+
+        //since the data is in GeoJSON, we need to deserialize it.
+        var fvector = new OpenLayers.Format.WKT().read(polygon);
+
+        layer.addFeatures([fvector]);
+        map.addLayer(layer);
+
+        var bound = layer.getDataExtent();
+        bound = bound.scale(1.1); // Let's get a little more context for the neighborhood, here.
+        map.zoomToExtent(bound, false);
+    }
+
+    function createHTML(data) {
+        var maps = [];
+
+        var panel = Ext.create('Ext.Panel', {
+            width: 950,
+            renderTo: 'Report',
+            style: "margin:15px",
+            bodyStyle: "padding:5px;font-size:11px;",
+            title: 'Report',
+            html: '<p>The Report is Rendering...</p>',
+            listeners: {
+                afterlayout: function () {
+                    maps.map(function (value, idx) {
+                        showMap(value.div, value.data);
+                    });
+                }
+            }
+        });
+
+
+        var tpl = new Ext.XTemplate(
+            '<div id="SiteSummaryReport">',
+            '    <tpl for="sites">',
+            '    <div class="siteRow">',
+            '        <div class="siteImage rowPart">',
+            '            <div id="{id}-Map" class="siteMap" >{[this.drawMap(values.id+"-Map", values.geometry)]}</div>',
+            '        </div>',
+            '        <div class="siteInfo rowPart">',
+            '            <div class="topTools">',
+            '                <h3>{name}</h3>',
+            '                <tpl for="scores">',
+            '                <tpl if ="[xindex] &lt; 5">',
+            '                <p><span class="icon">{[this.divergenceSymbol(values.divergence)]}</span><span class="toolName">{scoreLine.title}</span><span class="toolScore">{divergence}%</span></p>',
+            '                </tpl>',
+            '                </tpl>',
+            '                <p class="topToolInfo infoColor">Divergence from Mean (Weighted)</p>',
+            '            </div>',
+            '        </div>',
+            '        <div class="rowPart">',
+            '            <div class="siteScore">',
+            '                <span class="siteBigScore">{[this.round(values.meanUtility)]}</span>',
+            '                <span class="siteScoreUnit"></span>',
+            '                <span class="siteDivergenceArrow">{[this.divergenceSymbol(values.divergence)]}</span>',
+            '                <span class="siteDivergence">{[this.round(values.divergence)]}</span>',
+            '                <p class="totalInfo infoColor">AVERAGE</p>',
+            '            </div>',
+            '        </div>',
+            '    </div>',
+            '    </tpl>',
+            '</div>',
+            {
+                divergenceSymbol: function (val) {
+                    return (val < 0) ? '&#8595;' : '&#8593;';
+                },
+                round: function (value) {
+                    return Math.round(value);
+                },
+                drawMap: function (div, data) {
+                    maps.push({ div: div, data: data });
+                }
+            }
+        );
+
+        tpl.overwrite(panel.body, data);
+        panel.doComponentLayout();
+    };
+</script>
+@*<h2>Summary Report</h2>*@
+<div id="Report">
+</div>
+

@@ -178,30 +178,32 @@ var INLModules;
                 destroy: null,
                 init: null,
                 scoringTools: [
-                    {
-                        activate: null,
-                        deactivate: null,
-                        destroy: null,
-                        init: null,
-                        //showConfigWindow: function () {
-                        //    myToolLine = this; // fetch tool line, which was passed as 'this' parameter
-                        //    propsWindow.show();
-                        //},
-                        title: "Residential Proximity",
-                        description: "Percentage of survey respondents who reported this distance from residential areas as acceptable",
-                        category: "Social Acceptance",
-                        //onScoreAdded: function (e, score: pvMapper.Score) {
-                        //    scores.push(score);
-                        //},
-                        onSiteChange: function (e, score) {
-                            updateScore(score, '"landuse"="residential"', 'residential', 'a residential area');
-                        },
-                        scoreUtilityOptions: {
-                            functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor")
-                        },
-                        weight: 10
-                    },
+                    //Note: Residential social tool removed until we can find better quality map data for it (at least include city boundaries... or something?).
+                    //{
+                    //    activate: null,
+                    //    deactivate: null,
+                    //    destroy: null,
+                    //    init: null,
+                    //    //showConfigWindow: function () {
+                    //    //    myToolLine = this; // fetch tool line, which was passed as 'this' parameter
+                    //    //    propsWindow.show();
+                    //    //},
+                    //    title: "Residential Proximity",
+                    //    category: "Social Acceptance",
+                    //    description: "Percentage of survey respondents who reported this distance from residential areas as acceptable",
+                    //    longDescription: '',
+                    //    //onScoreAdded: function (e, score: pvMapper.Score) {
+                    //    //    scores.push(score);
+                    //    //},
+                    //    onSiteChange: function (e, score) {
+                    //        updateScore(score, '"landuse"="residential"', 'residential', 'a residential area');
+                    //    },
+                    //    scoreUtilityOptions: {
+                    //        functionName: "linear3pt",
+                    //        functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor")
+                    //    },
+                    //    weight: 10
+                    //},
                     {
                         activate: null,
                         deactivate: null,
@@ -212,8 +214,9 @@ var INLModules;
                         //    propsWindow.show();
                         //},
                         title: "Historic Proximity",
-                        description: "Percentage of survey respondents who reported this distance from cultural or historic landmarks as acceptable",
                         category: "Social Acceptance",
+                        description: "Percentage of survey respondents who reported this distance from cultural or historic landmarks as acceptable",
+                        longDescription: '<p>This tool calculates the distance from a site to the nearest historic area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 477 respondents from six counties in Southern California answered Question 16 which asked "How much buffer distance is acceptable between a large solar facility and an area of cultural or historical importance?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "historic" key are considered. The accuracy of OSM data is limited by its contributors, and classification of historic or cultural sites may be highly subjective. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Historic).</p>',
                         //onScoreAdded: function (e, score: pvMapper.Score) {
                         //    scores.push(score);
                         //},
@@ -236,8 +239,9 @@ var INLModules;
                         //    propsWindow.show();
                         //},
                         title: "Recreational Proximity",
-                        description: "Percentage of survey respondents who reported this distance from recreational areas as acceptable",
                         category: "Social Acceptance",
+                        description: "Percentage of survey respondents who reported this distance from recreational areas as acceptable",
+                        longDescription: '<p>This tool calculates the distance from a site to the nearest recreational area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 488 respondents from six counties in Southern California answered Question 19 which asked "How much buffer distance is acceptable between a large solar facility and recreation areas such as hunting, fishing, or hiking locations?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "leisure" key are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:leisure).</p>',
                         //onScoreAdded: function (e, score: pvMapper.Score) {
                         //    scores.push(score);
                         //},

@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+
+     @Styles.Render("~/Content/OpenLayers/default/style.css")
+    <link rel="stylesheet" type="text/css" href="~/Content/extjs/resources/css/my-ext-theme.css" />
+
+    <script src="/Scripts/ext-all.js"></script>
+    <script type="text/javascript" src="~/Scripts/OpenLayers.js"></script>
+
+    @RenderSection("header", false)
+
+</head>
+<body>
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>

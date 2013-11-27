@@ -84,7 +84,7 @@ pvMapper.onReady(function () {
     //});
     var renameAction = Ext.create('Ext.Action', {
         text: 'Rename Selected Site',
-        tooltip: "Edit the attributes of a site. (Name, Discription, Color...)",
+        tooltip: "Edit the attributes of a site (Name, Discription, Color...)",
         //control: st2,
         //map: pvMapper.map,
         disabled: true,
@@ -141,7 +141,7 @@ pvMapper.onReady(function () {
             renameAction.setDisabled(pvMapper.siteLayer.selectedFeatures.length != 1);
         });
 
-    pvMapper.mapToolbar.add([new Ext.Button(renameAction), new Ext.Button(delAction)]);
+    pvMapper.sitesToolbarMenu.add([renameAction, delAction]);
 
     // instead of commented code we tuck these in the edit menu.
     //var editTools = [new Ext.Button(delAction), new Ext.Button(editAction), new Ext.Button(renameAction)];

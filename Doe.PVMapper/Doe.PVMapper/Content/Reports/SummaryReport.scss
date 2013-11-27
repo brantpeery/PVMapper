@@ -1,0 +1,167 @@
+﻿$dark-accent: #336699; 
+$light-accent: #AFC9E4;
+$odd-color:#d9d9d9; 
+$even-color:#f2f2f2; 
+
+$width: 900px;
+$height: $width / 4.5;
+$font-size: calc( #{$width} / 50);
+
+/*The formula for keeping everything in scale
+    set the font-size to overall width / 50  */
+#SiteSummaryReport
+{
+    width: $width;
+    font: $width / 50 Arial;
+	page-break-inside: avoid;
+}
+
+.infoColor
+{
+    color: $dark-accent;
+    font-weight: bold;
+    font-size: .8em;
+}
+
+#SiteSummaryReport .oddRow
+{
+    background: $odd-color;
+}
+
+
+
+    #SiteSummaryReport > div
+    {
+        height: $height;
+        width: 100%;
+        background: $even-color;
+        border: black solid 1px;
+        border-collapse: collapse;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+.rowPart
+{
+    position: relative;
+    width: 30%;
+    height: 10em;
+    float: left;
+    padding: .5em 0;
+    overflow: hidden;
+}
+
+.siteImage
+{
+    height: 100%;
+    width: 33%;
+    margin-left: 0;
+
+    div.siteMap 
+    {
+        height: 93%;
+		width: 80%;
+        box-shadow: rgba(0,0,0,0.6) .5em .5em 2em .3em;
+		margin: 0.2em 0 0 1em !important;
+    }
+}
+.siteInfo
+{
+    width: 33%;
+}
+
+.topTools
+{
+    h3
+    {
+        text-decoration: underline;
+        font-size: 1.5em;
+        font-weight: bold;
+        margin-top: 0;
+        margin: .3em 0;
+        padding-top: 0;
+        text-align: center;
+		white-space:nowrap;
+		overflow:hidden;
+
+    }
+
+    
+    p:nth-child(odd)
+    {
+        background: $odd-color;
+    }
+    p:nth-child(even)
+    {
+        background: $even-color;
+    }
+
+
+    .icon
+    {
+        color: $dark-accent;
+        font-weight:bold;
+    }
+
+    .toolName, .icon
+    {
+        display: inline-block;
+        float: left;
+    }
+
+    .toolScore
+    {
+        display: inline-block;
+        float: right;
+    }
+
+    & > p
+    {   
+        height: 1.4em;
+        clear: both;
+        padding-top:0.1em;
+        margin:0;
+    }
+
+    p.topToolInfo
+    {
+        font-size: .8em;
+        background: none;
+
+    }
+}
+
+.siteScore
+{
+    position: absolute;
+    top: 1.5em;
+    left: 50%;
+    margin-left: -3em;
+    width: 11.11em;
+}
+
+    .siteScore .siteBigScore
+    {
+        font-size: 6em;
+        font-weight: bold;
+        float: left;
+    }
+
+.siteScoreUnit
+{
+    display: block;
+    font-size: 2em;
+    font-weight: bold;
+    padding-top: .95em;
+}
+
+.totalInfo
+{
+    font-size: 0.8em;
+}
+.siteDivergenceArrow {font-weight:bold}
+.siteScore .siteDivergenceArrow,
+.siteScore .siteDivergence
+{
+    display: inline-block;
+}
