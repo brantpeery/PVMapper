@@ -30,8 +30,9 @@ var BYUModules;
                         destroy: null,
                         init: null,
                         title: "Slope",
-                        description: "The slope at the center of a site, using data from ArcGIS Online",
                         category: "Geography",
+                        description: "The slope at the center of a site, using data from ArcGIS Online",
+                        longDescription: '<p>This tool reports the slope at the center point of a site. The slope is retrieved from the World Topographic Map on ArcGIS Online. Note that the slope at the center point of a site may not be representative of the overall slope at that site. See ArcGIS Online for more information (www.arcgis.com).</p>',
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
@@ -51,8 +52,9 @@ var BYUModules;
                         destroy: null,
                         init: null,
                         title: "Aspect",
-                        description: "The horizontal aspect at the center of a site, using data from ArcGIS Online",
                         category: "Geography",
+                        description: "The horizontal aspect at the center of a site, using data from ArcGIS Online",
+                        longDescription: '<p>This tool reports the aspect at the center point of a site, an angular measure where 0 degrees indicates a northerly aspect and 90 degrees indicates an easterly aspect. This measure is retrieved from the World Topographic Map on ArcGIS Online. Note that the aspect at the center point of a site may not be representative of the overall aspect of a site. Note also that aspect is integrally related to slope. See ArcGIS Online for more information (www.arcgis.com).</p>',
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
@@ -74,8 +76,9 @@ var BYUModules;
                         destroy: null,
                         init: null,
                         title: "Elevation",
-                        description: "The elevation at the center of a site, using data from ArcGIS Online",
                         category: "Geography",
+                        description: "The elevation at the center of a site, using data from ArcGIS Online",
+                        longDescription: '<p>This tool reports the elevation at the center point of a site. This measure is retrieved from the World Topographic Map on ArcGIS Online. See ArcGIS Online for more information (www.arcgis.com).</p>',
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
@@ -104,6 +107,23 @@ var BYUModules;
     function addMap() {
         topoMapLayer = new OpenLayers.Layer.XYZ("ESRI Topography", "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/${z}/${y}/${x}", { transitionEffect: "resize", buffer: 1, sphericalMercator: true });
         pvMapper.map.addLayer(topoMapLayer);
+        /*
+        topoMapLayer = new OpenLayers.Layer.ArcGIS93Rest(
+        "World Topography",
+        topoMapRestUrl + "export",
+        {
+        layers: "visible", //"2",
+        format: "gif",
+        srs: "3857", //"102100",
+        //transparent: "true",
+        },
+        { isBaseLayer: true } //Note: this looks awful as an overlay - let's use it as a base layer, as nature intended
+        );
+        //topoMapLayer.setOpacity(0.3);
+        topoMapLayer.epsgOverride = "3857"; //"102100";
+        topoMapLayer.setVisibility(false);
+        pvMapper.map.addLayer(topoMapLayer);
+        */
     }
 
     function removeMap() {

@@ -44,6 +44,7 @@ String.prototype.format = function (args) {
 String.prototype.isNullOrEmpty = function () {
     var value = this;
     if ((typeof (value) === 'undefined') || (value.length == 0))
-        return true; else
+        return true;
+else
         return false;
 };

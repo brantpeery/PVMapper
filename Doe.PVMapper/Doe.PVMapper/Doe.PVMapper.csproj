@@ -552,6 +552,9 @@
     <Content Include="Scripts\pvMapper\TSMapper\SoilModule.js">
       <DependentUpon>SoilModule.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\SoilModule.min.js">
+      <DependentUpon>SoilModule.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\solarmapperModule.js">
       <DependentUpon>solarmapperModule.ts</DependentUpon>
     </Content>
@@ -1373,16 +1376,6 @@
     <Content Include="Scripts\ViewScripts\SiteDetail.js" />
     <Content Include="Scripts\ViewScripts\testscripts.js" />
     <Content Include="Scripts\ViewScripts\ZoomAction.js" />
-    <Content Include="Scripts\pvMapper\TSMapper\Score.js.map">
-      <DependentUpon>Score.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvExtensions\Reports.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\pvMapper.js.map">
-      <DependentUpon>pvMapper.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Module.js.map">
-      <DependentUpon>Module.ts</DependentUpon>
-    </Content>
     <None Include="TestPages\SummaryReport.scss" />
     <Content Include="TestPages\SummaryReportTemplate.html" />
     <Content Include="TestPages\SummaryReport.css" />
