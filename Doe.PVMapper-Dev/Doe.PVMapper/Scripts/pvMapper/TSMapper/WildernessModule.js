@@ -33,6 +33,7 @@ var BYUModules;
                         //init: null,
                         title: "Wilderness",
                         description: "Overlapping national parks, using data hosted by BYU",
+                        longDescription: '<p>Overlapping national parks, using data hosted by BYU.</p>',
                         category: "Land Use",
                         onScoreAdded: function (event, score) {
                         },

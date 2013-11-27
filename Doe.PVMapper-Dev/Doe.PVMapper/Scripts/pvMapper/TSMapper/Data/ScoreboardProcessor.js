@@ -44,20 +44,24 @@ var pvMapper;
                     count++;
                     var totalWeights = 0;
                     site.scores.map(function (score, idx) {
-                        if (score.scoreLine["totalSiteUtility"] == undefined) {
-                            score.scoreLine["totalSiteUtility"] = 0;
+                        if (score.utility !== null && !isNaN(score.utility)) {
+                            if (score.scoreLine["totalSiteUtility"] == undefined) {
+                                score.scoreLine["totalSiteUtility"] = 0;
+                            }
+                            score.scoreLine["totalSiteUtility"] += score.utility;
+
+                            score.scoreLine["countSiteUtility"] = (score.scoreLine["countSiteUtility"] || 0) + 1;
+
+                            //Update the mean when a score is added to the total
+                            score.scoreLine["meanSiteUtility"] = score.scoreLine["totalSiteUtility"] / score.scoreLine["countSiteUtility"];
+
+                            if (site["totalUtility"] == undefined) {
+                                site["totalUtility"] = 0;
+                            }
+                            site["totalUtility"] += score.utility * score.scoreLine.weight;
+
+                            totalWeights += score.scoreLine.weight;
                         }
-                        score.scoreLine["totalSiteUtility"] += score.utility;
-
-                        //Update the mean when a score is added to the total
-                        score.scoreLine["meanSiteUtility"] = score.scoreLine["totalSiteUtility"] / count;
-
-                        if (site["totalUtility"] == undefined) {
-                            site["totalUtility"] = 0;
-                        }
-                        site["totalUtility"] += score.utility * score.scoreLine.weight;
-
-                        totalWeights += score.scoreLine.weight;
                     });
                     site['meanUtility'] = site["totalUtility"] / totalWeights;
                     site['totalWeights'] = totalWeights;
@@ -73,8 +77,11 @@ var pvMapper;
                 data.sites.map(function (site, idx) {
                     count++;
                     site.scores.map(function (score, idx) {
-                        //calculate the score's divergence for this site compared to other sites for the same scoreLine
-                        score['divergence'] = Math.round(score.utility - score.scoreLine["meanSiteUtility"]);
+                        if (score.utility !== null && !isNaN(score.utility)) {
+                            //calculate the score's divergence for this site compared to other sites for the same scoreLine
+                            score['divergence'] = Math.round(score.utility - score.scoreLine["meanSiteUtility"]);
+                            score['weightedDivergence'] = score['divergence'] * score.scoreLine.weight;
+                        }
                     });
 
                     //Calculate the mean score divergence from the project mean for this site compared to other sites
@@ -85,10 +92,10 @@ var pvMapper;
             };
 
             ScoreboardProcessor.sortScoresByDivergence = function (data) {
-                //Sort the divergence for this site descending
+                //Sort the weighted divergence for this site descending
                 data.sites.map(function (site, idx) {
                     site.scores.sort(function (a, b) {
-                        return Math.abs(b.divergence) - Math.abs(a.divergence);
+                        return Math.abs(b.weightedDivergence) - Math.abs(a.weightedDivergence);
                     });
                 });
                 return data;

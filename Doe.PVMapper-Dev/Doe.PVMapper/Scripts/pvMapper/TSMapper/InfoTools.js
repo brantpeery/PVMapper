@@ -9,6 +9,7 @@ var pvMapper;
 
             //this.name = options.name;
             this.description = options.description;
+            this.longDescription = options.longDescription;
 
             this.init = options.init || function () {
             };

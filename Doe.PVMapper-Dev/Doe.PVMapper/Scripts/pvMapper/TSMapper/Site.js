@@ -21,7 +21,7 @@ var pvMapper;
             this.feature.site = this;
             this.geometry = feature.geometry;
             this.name = feature.attributes.name;
-            this.description = feature.attributes.description;
+            this.description = feature.attributes.description || "";
         }
         /**
         *  This function is a helper function that is called by JSON.stringify() to properly stringify this object

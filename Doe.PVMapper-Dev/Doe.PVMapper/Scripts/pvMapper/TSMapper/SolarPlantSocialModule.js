@@ -145,8 +145,9 @@ var INLModules;
                             propsWindow.show();
                         },
                         title: "Existing Solar Proximity",
-                        description: "Percentage of survey respondents who reported this distance from existing solar plants as acceptable",
                         category: "Social Acceptance",
+                        description: "Percentage of survey respondents who reported this distance from existing solar plants as acceptable",
+                        longDescription: '<p>This tool calculates the distance from a site to the nearest existing solar plant, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 441 respondents from six counties in Southern California answered Question 21 which asked "How much buffer distance is acceptable between a large solar facility and an existing large solar facility?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest existing solar installation is identified using map data from SEIA. See their Research &amp; Resources page for more information (www.seia.org/research-resources).</p>',
                         //onScoreAdded: function (e, score: pvMapper.Score) {
                         //    scores.push(score);
                         //},

@@ -41,8 +41,9 @@ var INLModules;
                         destroy: null,
                         init: null,
                         title: "Custom Distance Tool",
-                        description: "Calculates the distance to the nearest feature loaded from a KML file.",
                         category: "Custom",
+                        description: "Calculates the distance to the nearest feature loaded from a KML file.",
+                        longDescription: '<p>Calculates the distance to the nearest feature loaded from a KML file.</p>',
                         //onScoreAdded: (e, score: pvMapper.Score) => {
                         //},
                         onSiteChange: function (e, score) {
