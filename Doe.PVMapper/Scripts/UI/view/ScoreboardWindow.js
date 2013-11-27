@@ -360,7 +360,7 @@ toolsStore.on({
                     dataIndex: "sites",
                     //flex: 1, //Will stretch with the size of the window
                     //maxWidth: 500,
-                    width: 40,
+                    width:  60,
                     renderer: function (value, metaData) {
                         if (value.length <= idx) return '...'; //Avoid the index out of range error
                         if (isNaN(value[idx].utility)) return '...';
@@ -412,9 +412,8 @@ toolsStore.on({
 
                         //return average;
                         var c = pvMapper.getColorForScore(average);
-                        var sumContent = "<span style='border-radius: 3px; background-color:" + c + "'>&nbsp" + average.toFixed(0) + "&nbsp"
-                           + "<input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
-                             records[0].get('category') + "\"," + idx.toString() + ");' /></span>";
+                        var sumContent = "<span style='border-radius: 3px; background-color:" + c + "'><input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" +
+                             records[0].get('category') + "\"," + idx.toString() + ");' />&nbsp&nbsp" + average.toFixed(0) + "&nbsp</span>";
                         return sumContent;
 
                     },
@@ -521,8 +520,14 @@ Ext.define('Ext.grid.ScoreboardGrid', {
             return;
         }
         pieStore.removeAll(); //delete all records in the score
+        var pieColor = '';
         records.children.forEach(function (record, index, array) {
-            pieStore.add({ Category: record.get('title'), Data: record.raw.scores[site].utility, Color: pvMapper.getColorForScore(record.raw.scores[site].utility) });
+            var val = record.raw.scores[site].utility;
+            if (isNaN(val))
+                pieColor = 'white';
+            else
+                pieColor = pvMapper.getColorForScore(val);
+            pieStore.add({ Category: record.get('title'), Data: record.get('weight'), Color: pieColor });
         });
         
 
@@ -531,7 +536,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
             dataField: 'Data',
             dataName: 'Category',
             fillColor: 'Color',
-            title: 'Weighted Scores - ' + cat + ' : ' + siteColumns[site].text,
+            title: 'Weighted Percentage - ' + cat + ' : ' + siteColumns[site].text,
             buttons: [{
                 xtype: 'button',
                 text: 'OK',
