@@ -188,7 +188,7 @@ declare module OpenLayers {
         containsLonLat(ll: LonLat, inclusive?: Boolean): Boolean;
         containsLonLat(ll: LonLat, worldBounds?: Bounds): Boolean;
         containsPixel(px: Pixel, inclusive: Boolean): Boolean;
-        contains(x: number, y: number, inclusive: Boolean): Boolean;
+        contains(x: number, y: number, inclusive?: Boolean): Boolean;
         intersectsBounds(bounds: Bounds, inclusive?: Boolean): Boolean;
         intersectsBounds(bounds: Bounds, worldBounds?: Bounds): Boolean;
         containsBounds(bounds: Bounds, partial: Boolean, inclusive: Boolean): Boolean;
@@ -2270,8 +2270,8 @@ declare module OpenLayers {
         prototype: Feature;
 
         Vector: {
-            new (geometry: Geometry, attributes: any, style: any): FVector;
-            (geometry: Geometry, attributes: any, style: any): FVector;
+            new (geometry: Geometry, attributes?: any, style?: any): FVector;
+            (geometry: Geometry, attributes?: any, style?: any): FVector;
             prototype: FVector;
         };
     }
