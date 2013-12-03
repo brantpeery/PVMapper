@@ -224,14 +224,14 @@ var INLModules;
                         }
                     }
 
-                    if (layerOperating.features.length) {
-                        pvMapper.map.addLayer(layerOperating);
+                    if (layerDevelopment.features.length) {
+                        pvMapper.map.addLayer(layerDevelopment);
                     }
                     if (layerConstruction.features.length) {
                         pvMapper.map.addLayer(layerConstruction);
                     }
-                    if (layerDevelopment.features.length) {
-                        pvMapper.map.addLayer(layerDevelopment);
+                    if (layerOperating.features.length) {
+                        pvMapper.map.addLayer(layerOperating);
                     }
 
                     while (scoresWaitingOnRequest.length) {
