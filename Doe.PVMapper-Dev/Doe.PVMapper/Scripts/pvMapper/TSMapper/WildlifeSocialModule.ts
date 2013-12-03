@@ -231,6 +231,7 @@ module INLModules {
             url: fwsQueryUrl,
             params: {
                 f: "json",
+                maxAllowableOffset: 20, // <-- magic! ArcGIS Server will generalize the geometries in real time. Fancy that. I think this is in meters; it's based on the outSR.
                 outFields: "comname,status,type", 
                 geometryType: "esriGeometryEnvelope",
                 geometry: new OpenLayers.Bounds(
