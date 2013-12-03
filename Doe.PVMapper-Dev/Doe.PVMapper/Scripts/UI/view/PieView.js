@@ -4,10 +4,8 @@ Ext.define('PieModel', {
     extend: 'Ext.data.Model',
     fields: [
       { name: 'Title', type: 'string' },
-      { name: 'Weight', type: 'int' },
-      { name: 'Color', type: 'string' },
-      { name: 'Score', type: 'int' },
-      { name: 'ScoreText', type: 'string' }
+      { name: 'Data', type: 'int' },
+      { name: 'Color', type: 'string' }
     ],
 });
 
@@ -50,13 +48,11 @@ Ext.define('MainApp.view.PieWindow', {
         if ((site == '') || (group == ''))  return;  //no group or site set, do nothing.
        // if ((group == this.groupName) && (site == this.siteName)) return;
 
-        console.log('PieView: refresh data for [' + group + ',' + site + ']');
+        //console.log('PieView: refresh data for [' + group + ',' + site + ']');
         this.setTitle('Weighted Percentage - ' + group + ' : ' + site);
         var records = this.scoreBoardStore.getGroups(group);
         if (records.children.length == 0) return;
         var pieColor = '';
-        
-        this.myChart.store = null;
 
         pieStore.removeAll();
 
@@ -71,26 +67,16 @@ Ext.define('MainApp.view.PieWindow', {
         
         if (siteIndex > -1) {
             records.children.forEach(function (record, index, array) {
-                if (record.get('weight')) {
-                    var utilScore = record.raw.scores[siteIndex].utility;
-                    if (isNaN(utilScore) || utilScore === null)
-                        pieColor = 'rgb(153,153,153)';
-                    else
-                        pieColor = pvMapper.getColorForScore(utilScore);
-
-                    pieStore.add({
-                        Title: record.get('title'),
-                        Weight: record.get('weight'),
-                        Color: pieColor,
-                        Score: utilScore.toFixed(0),
-                        ScoreText: record.raw.scores[siteIndex].popupMessage
-                    });
-                }
+                var val = record.raw.scores[siteIndex].utility;
+                if (isNaN(val))
+                    pieColor = 'white';
+                else
+                    pieColor = pvMapper.getColorForScore(val);
+                pieStore.add({ Title: record.get('title'), Data: record.get('weight'), Color: pieColor });
             });
         }
         this.groupName = group;
         this.siteName = site;
-        this.myChart.store = pieStore;
     },
     initComponent: function () {
         var me = this;
@@ -115,7 +101,6 @@ Ext.define('MainApp.view.PieWindow', {
                     name: 'rbGroup',
                     inputValue: record.name,
                     checked: false,
-                    //id: 'rb-' + (rid++).toString(),
                     listeners: {
                         change: function (rb, newVal, oldVal, opts) {
                             if (newVal)
@@ -156,7 +141,6 @@ Ext.define('MainApp.view.PieWindow', {
                     name: 'rbSite',
                     inputValue: scoreLine.site.name,
                     checked: false,
-                    //id: 'rb-' + (rid++).toString(),
                     listeners: {
                         change: function (rb, newVal, oldVal, opts) {
                             if (newVal)
@@ -194,14 +178,14 @@ Ext.define('MainApp.view.PieWindow', {
                 layout: 'vbox',
                 autoWidth: true,
                 autoHeight: true,
-                items: [pnSite, pnGroup]
+                items: [pnGroup, pnSite]
             }]
         });
 
 
         var myPie = {
             type: 'pie',
-            angleField: 'Weight',
+            angleField: 'Data',
             showInLegend: true,
 
             getLegendColor: function (idx) {
@@ -222,21 +206,15 @@ Ext.define('MainApp.view.PieWindow', {
                     //calculate and display percentage on hover
                     var total = 0;
                     pieStore.each(function (rec) {
-                        total += rec.get('Weight');
+                        total += rec.get(me.dataField);
                     });
-                    if (storeItem.get('Weight'))
-                        this.setTitle(storeItem.get('Title') +
-                            '; Score: ' + storeItem.get('Score') +
-                            '; Weight: ' + storeItem.get('Weight') + ' (' + Math.round(storeItem.get('Weight') / total * 100) +
-                            '%); Value: ' + storeItem.get('ScoreText'));
-                    else
-                        this.setTitle(storeItem.get('Title'));
+                    this.setTitle(storeItem.get('Title') + ': ' + storeItem.get('Data') + ' (' + Math.round(storeItem.get('Data') / total * 100) + '%)');
                 }
             },
 
             //pull the color to fill the pie from the datastore.
             renderer: function (sprite, record, attr, index, store) {
-                return Ext.apply(attr, { fill: record.get('Color'), stroke: record.get('Color'), 'stroke-width': 3, 'stroke-opacity': 0.25, 'stroke-linejoin': 'round' });
+                return Ext.apply(attr, { fill: record.get('Color'), stroke: 'blue', 'stroke-width': 1 });
             },
             label: {
                 field: 'Title',
@@ -266,7 +244,7 @@ Ext.define('MainApp.view.PieWindow', {
             shadow: true,
             store: pieStore,
             series: [myPie],
-            interactions: ['rotate']
+            //interactions: ['rotate']
         };
 
         var piePanel = Ext.create('Ext.form.Panel', {
@@ -288,6 +266,9 @@ Ext.define('MainApp.view.PieWindow', {
             this.initMode = false;
             this.siteGroup_Changed(this.groupName, this.siteName);
             return true;
+        },
+        beforedestroy: function(wnd, opt) {
+            pieStore.removeAll();
         }
     }
 });
