@@ -72,7 +72,7 @@
         map.addLayer(layer);
 
         var bound = layer.getDataExtent();
-        bound = bound.scale(1.1); // Let's get a little more context for the neighborhood, here.
+        bound = bound.scale(1.25); // Let's get a little more context for the neighborhood, here.
         map.zoomToExtent(bound, false);
     }
 
