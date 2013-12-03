@@ -56,7 +56,7 @@ Ext.define('MainApp.view.PieWindow', {
         if (records.children.length == 0) return;
         var pieColor = '';
         
-        this.myChart.store = null;
+        //this.myChart.store = null;
 
         pieStore.removeAll();
 
@@ -90,7 +90,7 @@ Ext.define('MainApp.view.PieWindow', {
         }
         this.groupName = group;
         this.siteName = site;
-        this.myChart.store = pieStore;
+        //this.myChart.store = pieStore;
     },
     initComponent: function () {
         var me = this;
@@ -266,7 +266,7 @@ Ext.define('MainApp.view.PieWindow', {
             shadow: true,
             store: pieStore,
             series: [myPie],
-            interactions: ['rotate']
+            //interactions: ['rotate']
         };
 
         var piePanel = Ext.create('Ext.form.Panel', {
@@ -288,6 +288,9 @@ Ext.define('MainApp.view.PieWindow', {
             this.initMode = false;
             this.siteGroup_Changed(this.groupName, this.siteName);
             return true;
+        },
+        beforedestroy: function (wnd, opt) {
+            pieStore.removeAll();
         }
     }
 });
