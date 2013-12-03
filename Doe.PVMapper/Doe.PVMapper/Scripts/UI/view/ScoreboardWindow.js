@@ -489,32 +489,32 @@ Ext.define('Ext.grid.ScoreboardGrid', {
 
     viewPie: function (cat, site) {
 
+        var pieColor = '';
         var records = scoreboardGrid.store.getGroups(cat);
         if ((records.children.length <= 0) || (site == null)) {
             Ext.MessageBox.alert("Empty!", "There is no data in this group.");
             return;
         }
-        pieStore.removeAll(); //delete all records in the score
-        var pieColor = '';
-        records.children.forEach(function (record, index, array) {
-            var val = record.raw.scores[site].utility;
-            if (isNaN(val))
-                pieColor = 'white';
-            else
-                pieColor = pvMapper.getColorForScore(val);
-            pieStore.add({ Category: record.get('title'), Data: record.get('weight'), Color: pieColor });
-        });
+        var sitename = records.children[0].raw.scores[site].site.name;
+        //pieStore.removeAll();
+        //records.children.forEach(function (record, index, array) {
+        //    var val = record.raw.scores[site].utility;
+        //    if (isNaN(val))
+        //        pieColor = 'white';
+        //    else
+        //        pieColor = pvMapper.getColorForScore(val);
+        //    pieStore.add({Title: record.get('title'), Data: record.get('weight'), Color: pieColor });
+        //});
         
-
         var pieWin = Ext.create('MainApp.view.PieWindow', {
-            dataStore: pieStore,
-            dataField: 'Data',
-            dataName: 'Category',
-            fillColor: 'Color',
+            //dataStore: pieStore,
+            scoreBoardStore: scoreboardGrid.store,
+            siteName: sitename,
+            groupName: cat,
             title: 'Weighted Percentage - ' + cat + ' : ' + siteColumns[site].text,
             buttons: [{
                 xtype: 'button',
-                text: 'OK',
+                text: 'Close',
                 handler: function () {
                     //TODO: execute update function here.
 

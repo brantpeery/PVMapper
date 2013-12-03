@@ -21,6 +21,10 @@ var pvMapper;
                     init: null,
                     infoTools: [
                         {
+                            title: "Basic Reports",
+                            description: "Tool for creating printable reports",
+                            longDescription: "Tool for creating printable reports",
+
                             activate: function () {
                                 pvMapper.reportsToolbarMenu.add([
                                     {
