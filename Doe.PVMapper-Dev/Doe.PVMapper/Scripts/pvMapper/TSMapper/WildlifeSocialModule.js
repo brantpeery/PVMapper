@@ -232,6 +232,8 @@ var INLModules;
             },
             format: new OpenLayers.Format.EsriGeoJSON(),
             parseFeatures: function (data) {
+                if (data.error)
+                    return null;
                 return this.format.read(data);
             },
             callback: function (response) {
@@ -240,6 +242,9 @@ var INLModules;
                     nearestFeatureCache[score.site.id] = response.features || [];
                     nearestFeatureCache_searchDistanceInMi = configProperties.maxSearchDistanceInMI;
                     updateScoreFromCache(score);
+                } else if (response.data.error) {
+                    score.popupMessage = "Server error " + response.data.error.toString();
+                    score.updateValue(Number.NaN);
                 } else {
                     score.popupMessage = "Request error " + response.error.toString();
                     score.updateValue(Number.NaN);
