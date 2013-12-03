@@ -223,6 +223,7 @@ var INLModules;
             url: fwsQueryUrl,
             params: {
                 f: "json",
+                maxAllowableOffset: 20,
                 outFields: "comname,status,type",
                 geometryType: "esriGeometryEnvelope",
                 geometry: new OpenLayers.Bounds(score.site.geometry.bounds.left - maxSearchDistanceInMeters - 1000, score.site.geometry.bounds.bottom - maxSearchDistanceInMeters - 1000, score.site.geometry.bounds.right + maxSearchDistanceInMeters + 1000, score.site.geometry.bounds.top + maxSearchDistanceInMeters + 1000).toBBOX(0, false),
