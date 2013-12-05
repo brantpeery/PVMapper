@@ -68,40 +68,36 @@ module INLModules {
         //============================================================
         // blob is the file attribute and file handle.
         private kmlFile = null;
-        public readTextFile(blob: Blob) {
-            var _this = this;
-            var reader = new FileReader();
-            this.kmlFile = blob;
-            reader.readAsText(blob);
-            reader.onload = function (evt) {
-                var kml_projection = new OpenLayers.Projection("EPSG:4326");
-                var map_projection = new OpenLayers.Projection("EPSG:3857");
+        public readTextFile(kmlString, kmlName) {
+            this.kmlFile = kmlString;
+            var kml_projection = new OpenLayers.Projection("EPSG:4326");
+            var map_projection = new OpenLayers.Projection("EPSG:3857");
 
-                //var osm: OpenLayers.OSM = new OpenLayers.Layer.OSM();
+            //var osm: OpenLayers.OSM = new OpenLayers.Layer.OSM();
 
-                _this.localFormat = new OpenLayers.Format.KML({
-                    extractStyles: true,               //user KML style
-                    extractAttributes: true,           //user KML attributes
-                    internalProjection: map_projection,
-                    externalProjection: kml_projection,
+            this.localFormat = this.localFormat || new OpenLayers.Format.KML({
+                extractStyles: true,               //user KML style
+                extractAttributes: true,           //user KML attributes
+                internalProjection: map_projection,
+                externalProjection: kml_projection,
+            });
+
+            this.localLayer = this.localLayer || new OpenLayers.Layer.Vector(kmlName || "KML File",
+                {
+                    strategies: OpenLayers.Strategy.Fixed(),
+                    style: {
+                        fillColor: "darkred", strokeColor: "red", strokeWidth: 5,
+                        strokeOpacity: 0.5, pointRadius: 5
+                    }
                 });
 
-                _this.localLayer = new OpenLayers.Layer.Vector("KML (" + _this.kmlFile.name + ")",
-                    {
-                        strategies: OpenLayers.Strategy.Fixed(),
-                        style: {
-                            fillColor: "darkred", strokeColor: "red", strokeWidth: 5,
-                            strokeOpacity: 0.5, pointRadius: 5
-                        }
-                    });
+            var feature: OpenLayers.FVector[] = this.localFormat.read(kmlString);
+            this.localLayer.addFeatures(feature);
+            var isOk = pvMapper.map.addLayer(this.localLayer);
 
-                var feature: OpenLayers.FVector[] = _this.localFormat.read(evt.target.result);
-                _this.localLayer.addFeatures(feature);
-                var isOk = pvMapper.map.addLayer(_this.localLayer);
-
-                if (_this.scoreObj !== null) {
-                    _this.updateScore(_this.scoreObj);
-                }
+            var queuedScore = null;
+            while (queuedScore = this.queuedScores.pop()) {
+                this.updateScore(queuedScore);
             }
         }
 
@@ -113,10 +109,15 @@ module INLModules {
             pvMapper.map.removeLayer(this.localLayer, false);
         }
 
-        private scoreObj: pvMapper.Score = null;
+        private queuedScores: pvMapper.Score[] = [];
+
         private updateScore(score: pvMapper.Score) {
-            this.scoreObj = score;
-            if (this.localLayer == null) return; // the feature not yet loaded.
+            if (this.localLayer == null) {
+                if (this.queuedScores.indexOf(score) < 0)
+                    this.queuedScores.push(score);
+                return; // the feature not yet loaded.
+            }
+
             var closestFeature: OpenLayers.FVector = null;
             var minDistance: number = Number.MAX_VALUE;
 
