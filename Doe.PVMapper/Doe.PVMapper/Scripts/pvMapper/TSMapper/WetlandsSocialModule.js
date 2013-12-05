@@ -149,11 +149,7 @@ var INLModules;
                         //    scores.push(score);
                         //},
                         onSiteChange: function (e, score) {
-                            if (lastDistanceCache[score.site.id] > 500) {
-                                updateScore(score, 5000);
-                            } else if (lastDistanceCache[score.site.id] > 50) {
-                                updateScore(score, 500);
-                            } else if (lastDistanceCache[score.site.id] > 5) {
+                            if (lastDistanceCache[score.site.id] > 5) {
                                 updateScore(score, 50);
                             } else if (lastDistanceCache[score.site.id] > 0.5) {
                                 updateScore(score, 5);
@@ -296,7 +292,7 @@ var INLModules;
                         score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site built " + distanceOkStr + " mi or more from a wetland. (The nearest wetland is a " + closestFeature.attributes['WETLAND_TYPE'] + " " + minDistanceStr + " mi away.)";
 
                         score.updateValue(percentOk);
-                    } else if (searchDistanceInMi < 5000) {
+                    } else if (searchDistanceInMi <= 5) {
                         // call recursively to find the nearest wetland...
                         updateScore(score, searchDistanceInMi * 10);
                     } else {
@@ -304,8 +300,11 @@ var INLModules;
                         //score.popupMessage = "over 5000 mi to any wetland; 100% of respondents reported they would accept this distance.";
                         //score.popupMessage = "100% of respondents reported they would accept this proximity. (site " +
                         //    score.site.name + " is over 5000 mi from any wetland)";
-                        score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from a wetland." + " (There was no wetland found within 5000 mi.)";
-                        score.updateValue(100);
+                        //score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from a wetland." +
+                        //    " (There was no wetland found within 5000 mi.)";
+                        //score.updateValue(100);
+                        score.popupMessage = "There was no wetland found within 50 mi.";
+                        score.updateValue(Number.NaN);
                     }
                 } else {
                     score.popupMessage = "Error " + response.status + " " + response.statusText;
