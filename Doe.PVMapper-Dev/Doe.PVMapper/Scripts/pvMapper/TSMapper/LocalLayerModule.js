@@ -21,7 +21,7 @@ var INLModules;
             //============================================================
             // blob is the file attribute and file handle.
             this.kmlFile = null;
-            this.scoreObj = null;
+            this.queuedScores = [];
             var myModule = new pvMapper.Module({
                 id: "LocalLayerModule",
                 author: "Leng Vang, INL",
@@ -59,42 +59,38 @@ var INLModules;
                 infoTools: null
             });
         }
-        LocalLayerModule.prototype.readTextFile = function (blob) {
-            var _this = this;
-            var reader = new FileReader();
-            this.kmlFile = blob;
-            reader.readAsText(blob);
-            reader.onload = function (evt) {
-                var kml_projection = new OpenLayers.Projection("EPSG:4326");
-                var map_projection = new OpenLayers.Projection("EPSG:3857");
+        LocalLayerModule.prototype.readTextFile = function (kmlString, kmlName) {
+            this.kmlFile = kmlString;
+            var kml_projection = new OpenLayers.Projection("EPSG:4326");
+            var map_projection = new OpenLayers.Projection("EPSG:3857");
 
-                //var osm: OpenLayers.OSM = new OpenLayers.Layer.OSM();
-                _this.localFormat = new OpenLayers.Format.KML({
-                    extractStyles: true,
-                    extractAttributes: true,
-                    internalProjection: map_projection,
-                    externalProjection: kml_projection
-                });
+            //var osm: OpenLayers.OSM = new OpenLayers.Layer.OSM();
+            this.localFormat = this.localFormat || new OpenLayers.Format.KML({
+                extractStyles: true,
+                extractAttributes: true,
+                internalProjection: map_projection,
+                externalProjection: kml_projection
+            });
 
-                _this.localLayer = new OpenLayers.Layer.Vector("KML (" + _this.kmlFile.name + ")", {
-                    strategies: OpenLayers.Strategy.Fixed(),
-                    style: {
-                        fillColor: "darkred",
-                        strokeColor: "red",
-                        strokeWidth: 5,
-                        strokeOpacity: 0.5,
-                        pointRadius: 5
-                    }
-                });
-
-                var feature = _this.localFormat.read(evt.target.result);
-                _this.localLayer.addFeatures(feature);
-                var isOk = pvMapper.map.addLayer(_this.localLayer);
-
-                if (_this.scoreObj !== null) {
-                    _this.updateScore(_this.scoreObj);
+            this.localLayer = this.localLayer || new OpenLayers.Layer.Vector(kmlName || "KML File", {
+                strategies: OpenLayers.Strategy.Fixed(),
+                style: {
+                    fillColor: "darkred",
+                    strokeColor: "red",
+                    strokeWidth: 5,
+                    strokeOpacity: 0.5,
+                    pointRadius: 5
                 }
-            };
+            });
+
+            var feature = this.localFormat.read(kmlString);
+            this.localLayer.addFeatures(feature);
+            var isOk = pvMapper.map.addLayer(this.localLayer);
+
+            var queuedScore = null;
+            while (queuedScore = this.queuedScores.pop()) {
+                this.updateScore(queuedScore);
+            }
         };
 
         //============================================================
@@ -106,9 +102,12 @@ var INLModules;
         };
 
         LocalLayerModule.prototype.updateScore = function (score) {
-            this.scoreObj = score;
-            if (this.localLayer == null)
+            if (this.localLayer == null) {
+                if (this.queuedScores.indexOf(score) < 0)
+                    this.queuedScores.push(score);
                 return;
+            }
+
             var closestFeature = null;
             var minDistance = Number.MAX_VALUE;
 

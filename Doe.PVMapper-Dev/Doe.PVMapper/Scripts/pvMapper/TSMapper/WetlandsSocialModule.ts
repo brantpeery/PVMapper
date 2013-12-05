@@ -161,11 +161,12 @@ module INLModules {
                     //    scores.push(score);
                     //},
                     onSiteChange: function (e, score: pvMapper.Score) {
-                        if (lastDistanceCache[score.site.id] > 500) {
-                            updateScore(score, 5000);                            
-                        } else if (lastDistanceCache[score.site.id] > 50) {
-                            updateScore(score, 500);                            
-                        } else if (lastDistanceCache[score.site.id] > 5) {
+                        //if (lastDistanceCache[score.site.id] > 500) {
+                        //    updateScore(score, 5000);                            
+                        //} else if (lastDistanceCache[score.site.id] > 50) {
+                        //    updateScore(score, 500);                            
+                        //} else
+                        if (lastDistanceCache[score.site.id] > 5) {
                             updateScore(score, 50);                            
                         } else if (lastDistanceCache[score.site.id] > 0.5) {
                             updateScore(score, 5);                            
@@ -335,7 +336,7 @@ module INLModules {
                             closestFeature.attributes['WETLAND_TYPE'] + " " + minDistanceStr + " mi away.)";
 
                         score.updateValue(percentOk);
-                    } else if (searchDistanceInMi < 5000) {
+                    } else if (searchDistanceInMi <= 5 /* < 5000 */) { //TODO: //HACK: changed last minute to improve this performance issue
                         // call recursively to find the nearest wetland...
                         updateScore(score, searchDistanceInMi * 10); 
                     } else {
@@ -344,9 +345,14 @@ module INLModules {
                         //score.popupMessage = "over 5000 mi to any wetland; 100% of respondents reported they would accept this distance.";
                         //score.popupMessage = "100% of respondents reported they would accept this proximity. (site " +
                         //    score.site.name + " is over 5000 mi from any wetland)";
-                        score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from a wetland." +
-                            " (There was no wetland found within 5000 mi.)";
-                        score.updateValue(100);
+
+                        //score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from a wetland." +
+                        //    " (There was no wetland found within 5000 mi.)";
+                        //score.updateValue(100);
+
+                        score.popupMessage = "There was no wetland found within 50 mi.";
+                        score.updateValue(Number.NaN);
+
                     }
                 } else {
                     score.popupMessage = "Error " + response.status + " " + response.statusText;

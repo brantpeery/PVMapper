@@ -34,33 +34,45 @@ pvMapper.onReady(function () {
     var fileDialogBox = document.createElement('input');
     fileDialogBox.type = 'file';
     fileDialogBox.style = 'display:none';
-    fileDialogBox.accept = "application/vnd.google-earth.kml+xml"; //only support in chrome and IE.  FF doesn't work.
+    fileDialogBox.accept = "application/vnd.google-earth.kml+xml,application/vnd.google-earth.kmz"; //only support in chrome and IE.  FF doesn't work.
 
     document.body.appendChild(fileDialogBox);
 
     //listen to a file pick selection <OK> button on the file dialog box clicked.
     function handleCustomKML(evt) {
-        var afile = evt.target.files[0];
-        if (afile.type !== "application/vnd.google-earth.kml+xml") {
-            Ext.MessageBox.alert("File type unknown.", "The file [" + afile.name + "] is not a KML format.");
+        if (!evt.target.files || !evt.target.files[0])
             return;
-        }
+
+        var afile = evt.target.files[0];
 
         //we probably don't want to load hug file.  Limit is about 2MB.
         if (afile.size > 2000000) {
             Ext.MessageBox.confirm("File too big", "The file [" + afile.name + " with size: " + afile.size.toString() + "] is larger then 2000000 bytes (2 MB), do you want to continue loading?",
                 function (btn) {
                     if (btn === 'yes') {
-                        var localLayer = new INLModules.LocalLayerModule();
-                        isFileRead = localLayer.readTextFile(evt.target.files[0]);
+                        continueHandlingCustomKML(afile);
                     }
                 });
         } else {
-            var localLayer = new INLModules.LocalLayerModule();
-            isFileRead = localLayer.readTextFile(evt.target.files[0]);
+            continueHandlingCustomKML(afile);
         }
     }
 
+    function continueHandlingCustomKML(afile) {
+        if (afile.type === "application/vnd.google-earth.kmz") {
+            var localLayer = new INLModules.LocalLayerModule();
+            var reader = new FileReader();
+            reader.onload = function (evt) { uncompressZip(evt.target.result, function (kmlResult) { localLayer.readTextFile(kmlResult, afile.name); }); }
+            reader.readAsArrayBuffer(afile);
+        } else if (afile.type === "application/vnd.google-earth.kml+xml") {
+            var localLayer = new INLModules.LocalLayerModule();
+            var reader = new FileReader();
+            reader.onload = function (evt) { localLayer.readTextFile(evt.target.result, afile.name); }
+            reader.readAsText(afile);
+        } else {
+            Ext.MessageBox.alert("Unknown File Type", "The file [" + afile.name + "] is not a KML format.");
+        }
+    }
 
     //create the actual button and put on the tool bar.
     var customTool = Ext.create('Ext.Action', {
@@ -77,66 +89,120 @@ pvMapper.onReady(function () {
 
 
     function handleSiteKML(evt) {
-        var afile = evt.target.files[0];
-        if (afile.type !== "application/vnd.google-earth.kml+xml") {
-            Ext.MessageBox.alert("File type unknown.", "The file [" + afile.name + "] is not a KML format.");
+        if (!evt.target.files || !evt.target.files[0])
             return;
-        }
+
+        var afile = evt.target.files[0];
 
         //we probably don't want to load hug file.  Limit is about 2MB.
         if (afile.size > 2000000) {
-            Ext.MessageBox.confirm("File too big", "The file [" + afile.name + " with size: " + afile.size.toString() + "] is larger then 2000000 bytes (2 MB), do you want to continue loading?",
+            Ext.MessageBox.confirm("File Size Warning", "The file [" + afile.name + " with size: " + afile.size.toString() + "] is larger then 2000000 bytes (2 MB); do you want to try loading it anyway?",
                 function (btn) {
                     if (btn === 'yes') {
-                        importLocalSite(afile);
+                        continueHandlingSiteKML(afile);
                     }
                 });
         } else {
-            importLocalSite(afile);
+            continueHandlingSiteKML(afile);
         }
     }
 
-    function importLocalSite(kmlFile) {
-        var reader = new FileReader();
+    function continueHandlingSiteKML(afile) {
 
-        reader.readAsText(kmlFile);
-        reader.onload = function (evt) {
-            var kml_projection = new OpenLayers.Projection("EPSG:4326");
-            var map_projection = new OpenLayers.Projection("EPSG:3857");
-
-            //var osm: OpenLayers.OSM = new OpenLayers.Layer.OSM();
-            var kmlFormat = new OpenLayers.Format.KML({
-                extractStyles: true,
-                extractAttributes: true,
-                internalProjection: map_projection,
-                externalProjection: kml_projection
-            });
-
-            //OpenLayers.Feature.Vector
-            var features = kmlFormat.read(evt.target.result);
-            var polys = [];
-            for (i = 0; i < features.length; i++) {
-                if (features[i].geometry && features[i].geometry.CLASS_NAME === "OpenLayers.Geometry.Polygon") {
-                    polys.push(features[i]);
-                }
-            }
-
-            if (polys.length >= 10) {
-                Ext.MessageBox.confirm("Too many sites", "There are more then 10 sites to be save, do you want to continue?",
-                    function (btn) {
-                        if (btn === 'yes') {
-                            for (var i = 0; i < polys.length; i++) {
-                                AddSite(polys[i]);
-                            }
-                        }
-                    });
-            } else {
-                for (var i = 0; i < polys.length; i++) {
-                    AddSite(polys[i]);
-                }
-            }
-        };
+        if (afile.type === "application/vnd.google-earth.kmz") {
+            var reader = new FileReader();
+            reader.onload = function (evt) { uncompressZip(evt.target.result, function (kmlResult) { importLocalSiteFromString(kmlResult, afile.name); }); }
+            reader.readAsArrayBuffer(afile);
+        } else if (afile.type === "application/vnd.google-earth.kml+xml") {
+            var reader = new FileReader();
+            reader.onload = function (evt) { importLocalSiteFromString(evt.target.result, afile.name); }
+            reader.readAsText(afile);
+        } else {
+            Ext.MessageBox.alert("Unknown File Type", "The file [" + afile.name + "] is not a KML format.");
+        }
     }
+
+    //function importLocalSite(kmlFile) {
+    //}
+
+    function uncompressZip(kmzFile, kmlHandler) {
+        //var $title = $("<h3>", {
+        //    text: theFile.name
+        //});
+        //$result.append($title);
+        //var $ul = $("<ul>");
+        try {
+
+            //var dateBefore = new Date();
+            // read the content of the file with JSZip
+            var zip = new JSZip(kmzFile);
+            //var dateAfter = new Date();
+
+            //$title.append($("<span>", {
+            //    text: " (parsed in " + (dateAfter - dateBefore) + "ms)"
+            //}));
+
+            // that, or a good ol' for(var entryName in zip.files)
+            $.each(zip.files, function (index, zipEntry) {
+                if (zipEntry.name.substr(zipEntry.name.length - '.kml'.length).toLowerCase() === '.kml') {
+                    kmlHandler(zipEntry.asText() /*, zipEntry.name*/ );
+                }
+                //$ul.append("<li>" + zipEntry.name + "</li>");
+                // the content is here : zipEntry.asText()
+            });
+            // end of the magic !
+
+        } catch (e) {
+            Ext.MessageBox.alert("Compression Error", "The KMZ file could not be unzipped.");
+            //$ul.append("<li class='error'>Error reading " + theFile.name + " : " + e.message + "</li>");
+        }
+        //$result.append($ul);
+    }
+
+    function importLocalSiteFromString(kmlString, kmlName) {
+        var kml_projection = new OpenLayers.Projection("EPSG:4326");
+        var map_projection = new OpenLayers.Projection("EPSG:3857");
+
+        //var osm: OpenLayers.OSM = new OpenLayers.Layer.OSM();
+        var kmlFormat = new OpenLayers.Format.KML({
+            extractStyles: true,
+            extractAttributes: true,
+            internalProjection: map_projection,
+            externalProjection: kml_projection
+        });
+
+        var features = kmlFormat.read(kmlString);
+        var polyFeatures = [];
+        var feature;
+        while (feature = features.pop()) {
+            if (feature.geometry.CLASS_NAME === "OpenLayers.Geometry.Polygon") {
+                polyFeatures.push(feature);
+            } else if (feature.geometry.CLASS_NAME === "OpenLayers.Geometry.Collection") {
+                for (var i = 0; i < feature.geometry.components.length; i++) {
+                    var subFeature = feature.clone();
+                    subFeature.geometry = feature.geometry.components[i];
+                    features.push(subFeature);
+                }
+            }
+        }
+
+        if (polyFeatures.length >= 10) {
+            Ext.MessageBox.confirm("Numerous Sites Warning", "There are more then 10 sites to add; do you want to add them anyway?",
+                function (btn) {
+                    if (btn === 'yes') {
+                        for (var i = 0; i < polyFeatures.length; i++) {
+                            AddSite(polyFeatures[i]);
+                        }
+                    }
+                });
+        } else if (polyFeatures.length <= 0) {
+            Ext.MessageBox.alert("No Sites Found", "Failed to extract any KML polygons from the file provided.");
+        } else {
+            for (var i = 0; i < polyFeatures.length; i++) {
+                AddSite(polyFeatures[i]);
+            }
+        }
+    };
 
     function AddSite(kmlFeature) {
         var name = kmlFeature.attributes.name ? kmlFeature.attributes.name : "KML site";

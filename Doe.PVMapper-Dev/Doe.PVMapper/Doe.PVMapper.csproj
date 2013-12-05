@@ -357,6 +357,9 @@
     <Content Include="Scripts\EsriGeoJSON.js" />
     <Content Include="Scripts\ExtJS.d.ts" />
     <Content Include="Scripts\jquery.d.ts" />
+    <Content Include="Scripts\JSZip\jszip-inflate.js" />
+    <Content Include="Scripts\JSZip\jszip-load.js" />
+    <Content Include="Scripts\JSZip\jszip.js" />
     <Content Include="Scripts\lib.d.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\OpenLayers.d.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreLine.ts" />

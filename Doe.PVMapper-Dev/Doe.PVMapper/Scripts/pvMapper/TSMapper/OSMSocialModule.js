@@ -353,7 +353,7 @@ var INLModules;
                     }
 
                     // if we've reached here, there were no features in range
-                    if (searchDistanceInMi < 5000) {
+                    if (searchDistanceInMi <= 10 /* < 5000*/) { //TODO: //HACK: quick change to only search 10 miles and 50 miles... fix this later on...!
                         // didn't find the features we're looking for - run the query again with a larger search area.
                         updateScoreFromOSM(score, searchDistanceInMi * 5, wayQueryKey, objectType, objectTypeDescription);
                     } else {
@@ -436,10 +436,13 @@ var INLModules;
             //score.popupMessage = "over 5000 mi to any agriculture; 100% of respondents reported they would accept this distance.";
             //score.popupMessage = "100% of respondents reported they would accept this proximity. (site " +
             //    score.site.name + " is over 5000 mi from any agriculture)";
-            score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from " + objectTypeDescription +
-                ". (Didn't find " + objectTypeDescription + " within 5000 mi.)";
 
-            score.updateValue(100);
+            //score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from " + objectTypeDescription +
+            //    ". (Didn't find " + objectTypeDescription + " within 5000 mi.)";
+
+            score.popupMessage = "Didn't find " + objectTypeDescription + " within 50 mi.";
+
+            score.updateValue(Number.NaN);
         }
     }
 
