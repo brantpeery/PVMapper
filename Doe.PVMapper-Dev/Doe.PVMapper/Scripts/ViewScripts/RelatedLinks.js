@@ -1,6 +1,7 @@
 ﻿/*
     Adds dropdown for related links to toolbar
     Author: Darian Ramage, BYU
+    Edited By Scott Brown, INL
 */
 
 pvMapper.onReady(function () {
