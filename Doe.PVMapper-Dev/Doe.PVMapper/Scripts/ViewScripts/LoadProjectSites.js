@@ -5,27 +5,31 @@
             var sitesLayer = pvMapper.getSiteLayer();
 
             for (var i = 0; i < sites.length; i++) {
-                //if (console) console.log("Adding site to the map");
+                try {
+                    //if (console) console.log("Adding site to the map");
 
-                var site = sites[i];
-                var poly = new OpenLayers.Format.WKT().read(site.polygonGeometry);
-                if (poly) { //Make sure the poly was created before trying to set properties    
-                    poly.fid = site.siteId;
-                    poly.attributes = {
-                        name: site.name,
-                        description: site.description,
-                        // buffer tool prototype
-                        //innerGeometry: innerPolygon.geometry
-                    };
-                    sitesLayer.addFeatures([poly], {});
+                    var site = sites[i];
+                    var poly = new OpenLayers.Format.WKT().read(site.polygonGeometry);
+                    if (poly) { //Make sure the poly was created before trying to set properties    
+                        poly.fid = site.siteId;
+                        poly.attributes = {
+                            name: site.name,
+                            description: site.description,
+                            // buffer tool prototype
+                            //innerGeometry: innerPolygon.geometry
+                        };
+                        sitesLayer.addFeatures([poly], {});
 
-                    s = new pvMapper.Site(poly);
-                    pvMapper.siteManager.loadSite(s);
+                        s = new pvMapper.Site(poly);
+                        pvMapper.siteManager.loadSite(s);
                    
 
-                    if (console) console.log('Added ' + s.name + ' to the site manager');
-                } else {
-                    if (console) console.log("Unable to add the site. Unable to create the openlayers feature");
+                        if (console) console.log('Added ' + s.name + ' to the site manager');
+                    } else {
+                        if (console) console.log("Unable to add the site. Unable to create the openlayers feature");
+                    }
+                } catch (e) {
+                    if (console) { console.warn("Error loading site from database: "); console.log(e); }
                 }
             }
 
