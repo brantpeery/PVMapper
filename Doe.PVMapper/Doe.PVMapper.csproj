@@ -445,6 +445,13 @@
       <DependentUpon>Renderer.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Data\ScoreboardProcessor.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\riverDistance.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\riverDistance.js">
+      <DependentUpon>riverDistance.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Score.min.js">
+      <DependentUpon>Score.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Scoreboard.js">
       <DependentUpon>Scoreboard.ts</DependentUpon>
     </Content>
