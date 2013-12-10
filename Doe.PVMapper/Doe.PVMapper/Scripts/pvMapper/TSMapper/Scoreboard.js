@@ -109,6 +109,7 @@ var pvMapper;
                 var mydata = pvMapper.mainScoreboard.getTableData();
                 if (!pvMapper.floatingScoreboard) {
                     pvMapper.floatingScoreboard = Ext.create('MainApp.view.ScoreboardWindow', {
+                        height: Math.min(900, (Ext.getBody().getViewSize().height - 140)),
                         data: mydata
                     });
                     pvMapper.floatingScoreboard.show();

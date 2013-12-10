@@ -123,6 +123,7 @@ module pvMapper {
 
 
                     pvMapper.floatingScoreboard = Ext.create('MainApp.view.ScoreboardWindow', {
+                        height: Math.min(900, (Ext.getBody().getViewSize().height - 140)), // initial scoreboard height proportional to window height
                         data: mydata
                     });
                     pvMapper.floatingScoreboard.show();
