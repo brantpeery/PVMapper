@@ -30,17 +30,22 @@ declare module OpenLayers {
     }
 
     var Util: Util;
-
+                                              
     interface SiteFeature extends FVector {
         attributes: Attributes;
         site: any;
+    }
+
+    export var SiteFeature: {
+        new (attr?: Attributes): SiteFeature;
+        prototype: SiteFeature;
     }
 
     interface Collection extends Geometry {
         components: Geometry[];
         componentTypes: string[];
 
-        constructor(components?: Geometry[]);
+        constructor(components: Geometry[]);
 
         destroy();
         clone(): Collection;

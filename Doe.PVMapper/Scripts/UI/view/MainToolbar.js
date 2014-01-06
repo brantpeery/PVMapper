@@ -366,7 +366,7 @@ pvMapper.onReady(function () {
     /// find an object in an array that match the srcObj  using the fn function to compare.
     /// provide function: as fn(obj1, scrObj) : integer.  if obj1 == scrObj return 0, else return -1.
     /// if found, return the matching object, if no element found, it returns null.
-    
+
     if (Array.prototype.find === undefined) {
         Array.prototype.find = function (fn) {
             if (fn) {
@@ -416,7 +416,7 @@ pvMapper.onReady(function () {
             }
         }
     }
-    
+
     function importScoreboardFromJSON(scoreboardJSON) {
         var obj = JSON.parse(scoreboardJSON);
 
@@ -466,17 +466,17 @@ pvMapper.onReady(function () {
             //now add the project sites into siteLayer.
             var count = 0;
             allSites.forEach(function (site, idx) {
-               feature = new OpenLayers.Feature.Vector(
-                    OpenLayers.Geometry.fromWKT(site.geometry),
-                    {
-                        name: site.name,
-                        description: site.description
-                    },
-                    pvMapper.siteLayer.style
-               );
-               AddScoreboardSite(feature, function () {
-                   count++;
-               });
+                feature = new OpenLayers.Feature.Vector(
+                     OpenLayers.Geometry.fromWKT(site.geometry),
+                     {
+                         name: site.name,
+                         description: site.description
+                     },
+                     pvMapper.siteLayer.style
+                );
+                AddScoreboardSite(feature, function () {
+                    count++;
+                });
             });
 
             //This is  a hack synchronize to wait until all sites have been added before updating data to the scoreboard.
@@ -512,7 +512,7 @@ pvMapper.onReady(function () {
             Ext.MessageBox.alert("Unrecognize data structure", "The file [" + afile.name + "] doesn't seems to be a PVMapper project file.");
         }
     }
-    
+
 
     var loadScoreboardBtn = Ext.create('Ext.Action', {
         text: 'Load Project',
@@ -527,7 +527,45 @@ pvMapper.onReady(function () {
     //----------------------------------------------------------------------------------------
 
     function saveScoreboardConfig() {
+        Ext.MessageBox.prompt('Save file as', 'Please enter a configuraton filename(.cfg).',
+            function (btn, filename) {
+                if (btn === 'ok') {
+                    filename = filename || 'PVMapperConfig.cfg';
 
+                    var filenameSpecialChars = new RegExp("[~#%&*{}<>;?/+|\"]");
+                    if (filename.match(filenameSpecialChars)) {
+                        Ext.MessageBox.alert('Invlaid filename', 'A filename can not contains any of the following characters [~#%&*{}<>;?/+|\"]');
+                        return;
+                    }
+
+                    //check to make sure that the file has '.kml' extension.
+                    var dotindex = filename.lastIndexOf('.');
+                    dotindex = dotindex == -1 ? filename.length : dotindex;
+                    filename = filename.substr(0, dotindex, dotindex) + '.cfg';
+
+                    var config = {configLines: []};
+                    var aUtility, aStarRatables, aWeight, aTitle, aCat = null;
+
+
+                    pvMapper.mainScoreboard.scoreLines.forEach(
+                        function (scrline, idx, scoreLines) {
+                            aUtility = scrline.scoreUtility;
+                            aWeight = scrline.weight;
+                            aTitle = scrline.title;
+                            aCat = scrline.category;
+                            aStarRatables = null;
+                            if (scrline.getStarRatables !== undefined) {
+                                aStarRatables = scrline.getStarRatables();
+                            }
+                            config.configLines.push({title: aTitle, category: aCat, utility: aUtility, starRatables: aStarRatables, weight: aWeight });
+                        });
+                    var content = JSON.stringify(config);
+                    var blob = CustomBlob(content, null);
+                    blob.data = content;
+                    blob.type = 'data:application/cfg';
+                    saveAs(blob, filename);
+                }
+            }, this, false, 'PVMapperConfig.cfg');
     }
     //----------------------------------------------------------------------------------------
 
@@ -542,15 +580,67 @@ pvMapper.onReady(function () {
     pvMapper.scoreboardToolsToolbarMenu.add(2, '-');
     pvMapper.scoreboardToolsToolbarMenu.add(3, saveConfigBtn);
     //----------------------------------------------------------------------------------------
-    function loadScoreboardConfig() {
+
+    
+    var configDialogBox = document.createElement('input');
+    configDialogBox.type = 'file';
+    configDialogBox.style = 'display:none';
+    configDialogBox.accept = "application/cfg"; //only support in chrome and IE.  FF doesn't work.
+    configDialogBox.addEventListener('change', handleLoadScoreboardConfig, false);
+    document.body.appendChild(configDialogBox);
+
+    function handleLoadScoreboardConfig(evt) {
+        if (!evt.target.files || !evt.target.files[0])
+            return;
+
+        var afile = evt.target.files[0];
+        var afilename = afile.name;
+        //check to make sure that the file has '.kml' extension.
+        var dotindex = afilename.lastIndexOf('.');
+        dotindex = dotindex == -1 ? afilename.length : dotindex;
+        var name = afilename.substr(0, dotindex, dotindex);
+        var extension = afilename.replace(name, "");
+
+        if (extension === ".cfg") {
+            var reader = new FileReader();
+            reader.onload = function (evt) { loadScoreboardConfig(evt.target.result); }
+            reader.readAsText(afile);
+        } else {
+            Ext.MessageBox.alert("Unrecognize File Type", "The file [" + afile.name + "] is not a PVMapper configuration file.");
+        }
 
     }
+    function loadScoreboardConfig(configJSON) {
+        var obj = JSON.parse(configJSON);
+
+        if ((obj.configLines !== undefined) && (obj.configLines.length > 0)) {
+            //first remove all sites from sitelayer and from the database
+            var scLine;
+            obj.configLines.forEach(
+                function (cfgLine, idx, configLines) {
+                    scLine = pvMapper.mainScoreboard.scoreLines.find(
+                        function (a) {
+                            if ((a.category === cfgLine.category) && (a.title === cfgLine.title)) return true;
+                            else return false;
+                        });
+
+                    if (scLine !== null) {
+                        scLine.updateConfiguration(cfgLine.utility, cfgLine.starRatables, cfgLine.weight);
+                    }
+                });
+        }
+        else {
+            Ext.MessageBox.alert("Unrecognize structure", "The file [" + afile.name + "] doesn't seems to be a PVMapper configuration file.");
+        }
+
+    }
+
     //----------------------------------------------------------------------------------------
     var loadConfigBtn = Ext.create('Ext.Action', {
         text: "Load Configuration",
         tooltip: "Load a Scoreboard Utility configuration from a local file.",
         handler: function () {
-            loadScoreboardConfig();
+            configDialogBox.click();
         }
     });
     pvMapper.scoreboardToolsToolbarMenu.add(4, loadConfigBtn);

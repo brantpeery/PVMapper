@@ -183,12 +183,28 @@ module pvMapper {
             return Math.max(0, Math.min(1, y)) * 100;
         }
 
+        public toJSON(): any {
+            var o = {
+                functionName: this.functionName,
+                functionArgs: this.functionArgs,
+                iconURL: this.iconURL,
+                fCache: this.fCache
+            }
+          return o;
+        }
 
-        public serialize() {
-            throw "Serialize not implemented yet for this object";
+        public fromJSON(o: any) {
+            this.functionName = o.functionName;
+
+            this.functionArgs = o.functionArgs;
+            this.iconURL = o.iconURL;
+            this.fCache = o.fCache;
         }
-        public deserialize() {
-            throw "Deserialize is not implemented yet for this object";
-        }
+        //public serialize() {
+        //    throw "Serialize not implemented yet for this object";
+        //}
+        //public deserialize() {
+        //    throw "Deserialize is not implemented yet for this object";
+        //}
     }
 }

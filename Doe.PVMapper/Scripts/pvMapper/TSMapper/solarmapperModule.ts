@@ -41,8 +41,13 @@ module INLModules {
                         //s.updateValue(status.toString());
                     },
                     
-                    getStarRatables: () => {
-                        return starRatingHelper.starRatings;
+                    getStarRatables: (mode?: string) => {
+                        if ((mode !== undefined) && (mode === "default")) {
+                            return starRatingHelper.defaultStarRatings;
+                        }
+                        else {
+                            return starRatingHelper.starRatings;
+                        }
                     },
 
                     setStarRatables: (rateTable: pvMapper.IStarRatings) => {
@@ -204,8 +209,10 @@ module INLModules {
                             score.updateValue(minStarValue);
                         } else {
                             score.popupMessage = starRatingHelper.options.noCategoryLabel;
-                            score.updateValue(starRatingHelper.starRatings[
-                                starRatingHelper.options.noCategoryLabel]);
+                            if (starRatingHelper.starRatings !== undefined) {
+                                score.updateValue(starRatingHelper.starRatings[
+                                    starRatingHelper.options.noCategoryLabel]);
+                            }
                         }
                     } else {
                         score.popupMessage = "Parse error";

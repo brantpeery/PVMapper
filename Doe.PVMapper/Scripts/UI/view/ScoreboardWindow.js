@@ -235,7 +235,7 @@ var scoreboardColumns = [{
 
                         //record.store.update();  //Is there a reason for this
                         record.raw.updateScores();
-                        record.raw.saveScore();  //save scoreline configuration to local database.
+                        record.raw.saveConfiguration();  //save scoreline configuration to local database.
                         windows.close();
                     }
                 }, {
@@ -276,7 +276,7 @@ var scoreboardColumns = [{
                             record.raw.onSiteChange(undefined, record.raw.scores[i]);
                             //record.raw.scores.forEach(updateScore);
                         }
-                        record.raw.saveScore();
+                        record.raw.saveConfiguration();
                     },
                     record.get('title') + " Categories"
                 );

@@ -1,4 +1,4 @@
-/// <reference path="IEventTypes.ts" />
+﻿/// <reference path="IEventTypes.ts" />
 /// <reference path="ScoreUtility.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Site.ts" />
@@ -32,6 +32,7 @@ var pvMapper;
             this.scores = new Array();
             //public updateScore: ICallback = options.updateScoreCallback;
             this.active = true;
+            this.suspendEvent = false;
             //public scoreAddedEvent: pvMapper.Event = new pvMapper.Event();
             this.scoreChangeEvent = new pvMapper.Event();
             this.updatingScoresEvent = new pvMapper.Event();
@@ -101,12 +102,10 @@ var pvMapper;
 
             this.utilargs = new pvMapper.MinMaxUtilityArgs(0, 10, "", "");
             this.scoreUtility = new pvMapper.ScoreUtility(options.scoreUtilityOptions);
+            this.defaultScoreUtility = new pvMapper.ScoreUtility(options.scoreUtilityOptions);
 
-            //if (ClientDB.db == null)
-            //    ClientDB.initClientDB();
             this.loadAllSites();
 
-            // this.loadScore();
             //Set the default weight of the tool
             //Note: a weight of 0 is possible and valid. The default weight is 10.
             this.weight = (typeof options.weight === "number") ? options.weight : 10;
@@ -120,7 +119,7 @@ var pvMapper;
         ScoreLine.prototype.setWeight = function (value) {
             this.weight = value;
             this.scoreChangeEvent.fire(self, undefined);
-            this.saveScore();
+            this.saveConfiguration();
         };
 
         /**
@@ -139,15 +138,16 @@ var pvMapper;
 
             this.scores.push(score);
 
-            try  {
-                // request a score update
-                this.onSiteChange(undefined, score);
-            } catch (ex) {
-                if (console)
-                    console.error(ex);
+            if (!this.suspendEvent) {
+                try  {
+                    // request a score update
+                    this.onSiteChange(undefined, score);
+                } catch (ex) {
+                    if (console)
+                        console.error(ex);
+                }
+                //}
             }
-
-            //}
             return score;
         };
 
@@ -199,24 +199,49 @@ var pvMapper;
         };
 
         ScoreLine.prototype.toJSON = function () {
-            return {
+            var stb = null;
+            if (this.getStarRatables !== undefined)
+                stb = this.getStarRatables();
+            var o = {
                 title: this.title,
                 weight: this.weight,
                 description: this.description,
                 longDescription: this.longDescription,
                 category: this.category,
                 scoreUtility: this.scoreUtility,
-                scores: this.scores
+                scores: this.scores,
+                starRateTable: stb
             };
+            return o;
         };
 
-        //private onSiteAdded =
-        //private onSiteUpdated(event: EventArg) {
-        //    if (event.data instanceof Site)
-        //        updateScore(event.data);
-        //}
+        ScoreLine.prototype.fromJSON = function (o) {
+            this.title = o.title;
+            this.weight = o.weight;
+            this.description = o.description;
+            this.longDescription = o.longDescription;
+            this.category = o.category;
+            this.scoreUtility.fromJSON(o.scoreUtility);
+            this.scores = new Array();
+
+            var asite;
+            var ascore = null;
+
+            for (var i = 0; i < o.scores.length; i++) {
+                asite = pvMapper.siteManager.getSiteByName(o.scores[i].site.name);
+                if (asite !== null) {
+                    ascore = this.addScore(asite);
+                    ascore.fromJSON(o.scores[i]);
+                }
+            }
+
+            if ((this.setStarRatables !== undefined) && (o.starRateTable !== null)) {
+                this.setStarRatables(o.starRateTable);
+            }
+        };
+
         //#region "Client indexedDB storage"
-        ScoreLine.prototype.putScore = function () {
+        ScoreLine.prototype.putConfiguration = function () {
             var me = this;
             if (pvMapper.ClientDB.db) {
                 try  {
@@ -240,17 +265,17 @@ var pvMapper;
             }
         };
 
-        ScoreLine.prototype.saveScore = function () {
+        ScoreLine.prototype.saveConfiguration = function () {
             if (pvMapper.ClientDB.db == null)
                 return;
             try  {
-                this.putScore();
+                this.putConfiguration();
             } catch (e) {
                 console.log("Error: " + e.message);
             }
         };
 
-        ScoreLine.prototype.getScore = function () {
+        ScoreLine.prototype.getConfiguration = function () {
             var me = this;
             if (pvMapper.ClientDB.db) {
                 var txn = pvMapper.ClientDB.db.transaction(pvMapper.ClientDB.STORE_NAME, "readonly");
@@ -279,14 +304,26 @@ var pvMapper;
             }
         };
 
-        ScoreLine.prototype.loadScore = function () {
+        ScoreLine.prototype.loadConfiguration = function () {
             if (pvMapper.ClientDB.db == null)
                 return;
             try  {
-                this.getScore();
+                this.getConfiguration();
             } catch (e) {
                 console.log("Error: " + e.message);
             }
+        };
+
+        ScoreLine.prototype.updateConfiguration = function (utility, starRatables, weight) {
+            this.scoreUtility.functionName = utility.functionName;
+            this.scoreUtility.functionArgs = utility.functionArgs;
+            this.scoreUtility.iconURL = utility.iconURL;
+            this.scoreUtility.fCache = utility.fCache;
+
+            if ((this.setStarRatables !== undefined) && (starRatables !== undefined)) {
+                this.setStarRatables(starRatables);
+            }
+            this.setWeight(weight);
         };
         return ScoreLine;
     })();

@@ -1,4 +1,4 @@
-/// <reference path="pvMapper.ts" />
+﻿/// <reference path="pvMapper.ts" />
 /// <reference path="../../jquery.d.ts" />
 /// <reference path="Event.ts" />
 /// <reference path="ScoreLine.ts" />
@@ -84,6 +84,16 @@ var pvMapper;
                 totalLines: this.totalLines
             };
         };
+
+        ScoreBoard.prototype.fromJSON = function (o) {
+            for (var i = 0; i < o.scoreLines.length; i++) {
+                this.scoreLines[i].fromJSON(o.scoreLines[i]);
+            }
+
+            for (var i = 0; i < o.totalLines.length; i++) {
+                this.totalLines[i].fromJSON(o.totalLines[i]);
+            }
+        };
         return ScoreBoard;
     })();
     pvMapper.ScoreBoard = ScoreBoard;
@@ -131,7 +141,7 @@ var pvMapper;
 
             if ((pvMapper.ClientDB.db != null) && (!pvMapper.mainScoreboard.isScoreLoaded)) {
                 pvMapper.mainScoreboard.scoreLines.forEach(function (sc) {
-                    sc.loadScore();
+                    sc.loadConfiguration();
                 });
                 pvMapper.mainScoreboard.isScoreLoaded = true;
             }

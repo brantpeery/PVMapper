@@ -32,6 +32,26 @@ module pvMapper {
 
         public category = "Totals";
         public scores: IScore[] = [];
+
+        public toJSON(): any {
+            var o = {
+                title: this.title,
+                description: this.description,
+                longDescription: this.longDescription,
+                category: this.category,
+                scores: this.scores
+            }
+            return o;
+        }
+
+        public fromJSON(o: any) {
+            this.title = o.title;
+            this.description = o.description;
+            this.longDescription = o.longDescription;
+            this.category = o.category;
+            this.scores = o.scores;
+        }
+
         public CalculateScore: (values: IValueWeight[], site: Site) => IScore;
         public UpdateScores(lines: ScoreLine[]) {
             //Setup an array of sites(scores) that contain all the scoringTool values
