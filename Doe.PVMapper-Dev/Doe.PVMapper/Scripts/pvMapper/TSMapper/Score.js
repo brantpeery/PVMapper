@@ -90,6 +90,14 @@ var pvMapper;
                 site: this.site
             };
         };
+
+        Score.prototype.fromJSON = function (o) {
+            this.popupMessage = o.popupMessage;
+            this.value = o.value;
+            this.utility = o.utility;
+            //The site should have been created.
+            //this.site.fromJSON(o.site);
+        };
         return Score;
     })();
     pvMapper.Score = Score;

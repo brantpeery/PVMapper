@@ -124,6 +124,14 @@ module pvMapper {
                 site:this.site //This will call the toJSON() in the site to simplify the site object
             }
         }
+
+        public fromJSON(o: any) {
+            this.popupMessage = o.popupMessage;
+            this.value = o.value;
+            this.utility = o.utility;
+            //The site should have been created.
+            //this.site.fromJSON(o.site);   
+        }
     }
 
 }

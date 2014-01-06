@@ -1,4 +1,4 @@
-/// <reference path="StarRatingHelper.ts" />
+﻿/// <reference path="StarRatingHelper.ts" />
 /// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
@@ -57,8 +57,12 @@ var INLModules;
                         onSiteChange: function (e, score) {
                             _this.updateScore(score);
                         },
-                        getStarRatables: function () {
-                            return _this.starRatingHelper.starRatings;
+                        getStarRatables: function (mode) {
+                            if ((mode !== undefined) && (mode === "default")) {
+                                return _this.starRatingHelper.starRatings;
+                            } else {
+                                return _this.starRatingHelper.defaultStarRatings;
+                            }
                         },
                         setStarRatables: function (rateTable) {
                             _this.starRatingHelper.starRatings = rateTable;
@@ -157,9 +161,10 @@ var INLModules;
                             score.popupMessage = combinedText;
                             score.updateValue(_this.starRatingHelper.starRatings[responseArray[0]]);
                         } else {
-                            // use the no category label, and its current star rating
-                            score.popupMessage = _this.starRatingHelper.options.noCategoryLabel;
-                            score.updateValue(_this.starRatingHelper.starRatings[_this.starRatingHelper.options.noCategoryLabel]);
+                            if (_this.starRatingHelper.starRatings !== undefined) {
+                                score.popupMessage = _this.starRatingHelper.options.noCategoryLabel;
+                                score.updateValue(_this.starRatingHelper.starRatings[_this.starRatingHelper.options.noCategoryLabel]);
+                            }
                         }
                     } else {
                         score.popupMessage = "Error " + response.status + " " + response.statusText;
@@ -178,7 +183,11 @@ var INLModules;
     var LandCoverModule = (function () {
         function LandCoverModule() {
             var _this = this;
-            this.ratables = {};
+            this.starRatingHelper = new pvMapper.StarRatingHelper({
+                defaultStarRating: 4,
+                noCategoryRating: 5,
+                noCategoryLabel: "None"
+            });
             this.defaultRating = 3;
             this.landCoverRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/NAT_LC/1_NVC_class_landuse/MapServer/";
             this.landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
@@ -209,11 +218,15 @@ var INLModules;
                         onSiteChange: function (e, score) {
                             _this.updateScore(score);
                         },
-                        getStarRatables: function () {
-                            return _this.ratables;
+                        getStarRatables: function (mode) {
+                            if ((mode !== undefined) && (mode === "default")) {
+                                return _this.starRatingHelper.defaultStarRatings;
+                            } else {
+                                return _this.starRatingHelper.starRatings;
+                            }
                         },
                         setStarRatables: function (rateTable) {
-                            _this.ratables = rateTable;
+                            _this.starRatingHelper.starRatings = rateTable;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
@@ -282,10 +295,16 @@ var INLModules;
                                 lastText = newText;
                             }
 
-                            var rating = _this.ratables[landCover];
+                            var rating = undefined;
+                            if (_this.starRatingHelper.starRatings !== undefined) {
+                                rating = _this.starRatingHelper.starRatings[landCover];
+                            }
 
                             if (typeof rating === "undefined") {
-                                var rating = _this.ratables[landCover] = _this.defaultRating;
+                                if (_this.starRatingHelper.starRatings === undefined) {
+                                    _this.starRatingHelper.starRatings = {};
+                                }
+                                rating = _this.starRatingHelper.starRatings[landCover] = _this.defaultRating;
                             }
 
                             score.popupMessage = landCover + " [" + rating + (rating === 1 ? " star]" : " stars]");
@@ -349,8 +368,12 @@ var INLModules;
                         onSiteChange: function (e, score) {
                             _this.updateScore(score);
                         },
-                        getStarRatables: function () {
-                            return _this.starRatingHelper.starRatings;
+                        getStarRatables: function (mode) {
+                            if ((mode !== undefined) && (mode === "default")) {
+                                return _this.starRatingHelper.defaultStarRatings;
+                            } else {
+                                return _this.starRatingHelper.starRatings;
+                            }
                         },
                         setStarRatables: function (rateTable) {
                             _this.starRatingHelper.starRatings = rateTable;

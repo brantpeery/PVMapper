@@ -1,4 +1,4 @@
-/// <reference path="ScoreUtility.ts" />
+﻿/// <reference path="ScoreUtility.ts" />
 /// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
@@ -38,8 +38,12 @@ var INLModules;
                             identifyFeature(score);
                             //s.updateValue(status.toString());
                         },
-                        getStarRatables: function () {
-                            return starRatingHelper.starRatings;
+                        getStarRatables: function (mode) {
+                            if ((mode !== undefined) && (mode === "default")) {
+                                return starRatingHelper.defaultStarRatings;
+                            } else {
+                                return starRatingHelper.starRatings;
+                            }
                         },
                         setStarRatables: function (rateTable) {
                             starRatingHelper.starRatings = rateTable;
@@ -184,7 +188,9 @@ var INLModules;
                             score.updateValue(minStarValue);
                         } else {
                             score.popupMessage = starRatingHelper.options.noCategoryLabel;
-                            score.updateValue(starRatingHelper.starRatings[starRatingHelper.options.noCategoryLabel]);
+                            if (starRatingHelper.starRatings !== undefined) {
+                                score.updateValue(starRatingHelper.starRatings[starRatingHelper.options.noCategoryLabel]);
+                            }
                         }
                     } else {
                         score.popupMessage = "Parse error";

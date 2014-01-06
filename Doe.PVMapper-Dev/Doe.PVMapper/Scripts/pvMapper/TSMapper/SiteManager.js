@@ -39,6 +39,15 @@ var pvMapper;
             this.siteAdded.fire(aSite, feature);
         };
 
+        SiteManager.prototype.getSiteByName = function (siteName) {
+            for (var i = 0; i < this.sites.length; i++) {
+                if (this.sites[i].name === siteName) {
+                    return this.sites[i];
+                }
+            }
+            return null;
+        };
+
         /**
         Removes a site from the sites array.
         */

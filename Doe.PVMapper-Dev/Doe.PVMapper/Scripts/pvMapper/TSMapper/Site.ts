@@ -42,7 +42,7 @@ module pvMapper {
         public toJSON(): any {
             var o = {
                 id: this.id,
-                geometry: this.geometry.toString(),
+                geometry: this.geometry.toString(), //retturn a WKT format.
                 name: this.name,
                 description: this.description,
                 popupHTML: this.popupHTML   
@@ -54,8 +54,12 @@ module pvMapper {
         *  Repopulates this object with the stuff from the JSON parse
         *
         */
-        public fromJSON() {
-
+        public fromJSON(o: any) {
+            this.id = o.id;
+            this.geometry = <OpenLayers.Polygon>(this.geometry.fromWKT(o.geometry));  //convert WKT string into 
+            this.name = o.name;
+            this.description = o.decription;
+            this.popupHTML = o.popupHTML;
         }
 
 

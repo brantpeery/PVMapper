@@ -44,21 +44,21 @@ module pvMapper {
 
             if ($.isFunction(options.onSiteChange)) {
                 this.onSiteChange = () => { return options.onSiteChange.apply(this, arguments); }
-			}
+            }
 
             // star rating functions
             if ($.isFunction(options.getStarRatables)) {
                 this.getStarRatables = () => { return options.getStarRatables.apply(this, arguments); }
-			}
+            }
 
             if ($.isFunction(options.setStarRatables)) {
                 this.setStarRatables = (rateTable: IStarRatings) => { options.setStarRatables.apply(this, arguments); }
-			}
+            }
 
             // config window
             if ($.isFunction(options.showConfigWindow)) {
                 this.showConfigWindow = () => { options.showConfigWindow.apply(this, arguments); }
-			}
+            }
 
             this.valueChangeHandler = (event: IScoreValueChangedEvent) => {
                 //Update the utility score for the score that just changed it's value.
@@ -67,11 +67,11 @@ module pvMapper {
                 this.scoreChangeEvent.fire(this, event);
             }
 
-			//if ($.isFunction(options.onScoreAdded)) {
-			//    this.scoreAddedEvent.addHandler(options.onScoreAdded);
-			//}
+            //if ($.isFunction(options.onScoreAdded)) {
+            //    this.scoreAddedEvent.addHandler(options.onScoreAdded);
+            //}
 
-			siteManager.siteAdded.addHandler((event: Site) => {
+            siteManager.siteAdded.addHandler((event: Site) => {
                 //if (console) console.log("Siteadded event detected in scoreline" + name);
 
                 this.addScore(event);
@@ -88,16 +88,13 @@ module pvMapper {
                     functionArgs: { className: "Random" },
                     iconURL: null
                 }
-			};
-            
+            };
+
             this.utilargs = new pvMapper.MinMaxUtilityArgs(0, 10, "", "");
             this.scoreUtility = new pvMapper.ScoreUtility(options.scoreUtilityOptions);
-
-            //if (ClientDB.db == null)     
-            //    ClientDB.initClientDB();
+            this.defaultScoreUtility = new pvMapper.ScoreUtility(options.scoreUtilityOptions);
 
             this.loadAllSites();
-            // this.loadScore();
 
             //Set the default weight of the tool
             //Note: a weight of 0 is possible and valid. The default weight is 10.
@@ -106,6 +103,7 @@ module pvMapper {
 
         public utilargs: pvMapper.MinMaxUtilityArgs;
         public scoreUtility: ScoreUtility;
+        public defaultScoreUtility: ScoreUtility;
         public title: string;
         public weight: number;
         public description: string;
@@ -114,9 +112,10 @@ module pvMapper {
         public scores: Score[] = new Array<Score>(); //  new Score[](); <<-- TS0.9.0 doesn't like this.
         //public updateScore: ICallback = options.updateScoreCallback;
         public active: boolean = true;
+        public suspendEvent: boolean = false;
 
-        getStarRatables: () => IStarRatings;
-        setStarRatables: (rateTable: IStarRatings)=>void;
+        getStarRatables: (mode?: string) => IStarRatings;
+        setStarRatables: (rateTable: IStarRatings) => void;
 
         showConfigWindow: () => void;
 
@@ -130,7 +129,7 @@ module pvMapper {
         public setWeight(value: number) {
             this.weight = value;
             this.scoreChangeEvent.fire(self, undefined); // score line changed
-            this.saveScore();
+            this.saveConfiguration();
         }
 
         /**
@@ -163,15 +162,16 @@ module pvMapper {
             //    }, 2500 * Math.random());
 
             //} else {
-            //Set the initial value from the tool
-            try {
-                // request a score update
-                this.onSiteChange(undefined, score);
-            } catch (ex) {
-                if (console) console.error(ex);
+            if (!this.suspendEvent) {
+                //Set the initial value from the tool
+                try {
+                    // request a score update
+                    this.onSiteChange(undefined, score);
+                } catch (ex) {
+                    if (console) console.error(ex);
+                }
+                //}
             }
-            //}
-
             return score;
         }
 
@@ -223,7 +223,7 @@ module pvMapper {
 
         private onSiteRemove(site: Site) {
             console.log('Attempting to remove a site/score from the scoreline')
-			for (var i = 0; i < this.scores.length; i++) {
+            for (var i = 0; i < this.scores.length; i++) {
                 var score: Score = this.scores[i];
                 if (score.site == site) {
                     // remove site from scoreline.
@@ -237,29 +237,49 @@ module pvMapper {
         }
 
         public toJSON(): any {
-			return {
+            var stb = null;
+            if (this.getStarRatables !== undefined)
+                stb = this.getStarRatables(); // call the module for the rating value.
+            var o = {
                 title: this.title,
                 weight: this.weight,
                 description: this.description,
                 longDescription: this.longDescription,
                 category: this.category,
                 scoreUtility: this.scoreUtility,
-                scores: this.scores
+                scores: this.scores,
+                starRateTable: stb
             }
-		}
+          return o;
+        }
 
+        public fromJSON(o: any) {
+            this.title = o.title;
+            this.weight = o.weight;
+            this.description = o.description;
+            this.longDescription = o.longDescription;
+            this.category = o.category;
+            this.scoreUtility.fromJSON(o.scoreUtility);
+            this.scores = new Array<Score>();
 
-        //private onSiteAdded = 
+            var asite;
+            var ascore: pvMapper.Score = null;
 
-        //private onSiteUpdated(event: EventArg) {
-        //    if (event.data instanceof Site)
-        //        updateScore(event.data);
-        //}
+            for (var i = 0; i < o.scores.length; i++) {
+                asite = pvMapper.siteManager.getSiteByName(o.scores[i].site.name);
+                if (asite !== null) {
+                    ascore = this.addScore(asite);
+                    ascore.fromJSON(o.scores[i]);
+                }
+            }
 
-
+            if ((this.setStarRatables !== undefined) && (o.starRateTable !== null)) {
+                this.setStarRatables(o.starRateTable);
+            }
+        }
 
         //#region "Client indexedDB storage"
-        public putScore(): any {
+        public putConfiguration(): any {
             var me = this;
             if (ClientDB.db) {
                 try {
@@ -267,7 +287,7 @@ module pvMapper {
                     var store = txn.objectStore(ClientDB.STORE_NAME);
                     var stb = null;
                     if (me.getStarRatables !== undefined)
-                       stb = me.getStarRatables(); // call the module for the rating value.
+                        stb = me.getStarRatables(); // call the module for the rating value.
                     var dbScore: DBScore = new DBScore(
                         me.title,
                         me.description,
@@ -292,17 +312,17 @@ module pvMapper {
             }
         }
 
-        public saveScore(): any {
+        public saveConfiguration(): any {
             if (ClientDB.db == null) return;
             try {
-                this.putScore();
+                this.putConfiguration();
             }
             catch (e) {
                 console.log("Error: " + e.message);
             }
         }
 
-        public getScore(): any {
+        public getConfiguration(): any {
             var me = this;
             if (ClientDB.db) {
                 var txn = ClientDB.db.transaction(ClientDB.STORE_NAME, "readonly");
@@ -330,19 +350,30 @@ module pvMapper {
                         me.updateScores();
                     }
                 }
-			}
+            }
         }
 
-        public loadScore(): any {
+        public loadConfiguration(): any {
             if (ClientDB.db == null) return;
             try {
-                this.getScore();
+                this.getConfiguration();
             }
             catch (e) {
                 console.log("Error: " + e.message);
             }
         }
 
+        public updateConfiguration(utility: ScoreUtility, starRatables: IStarRatings, weight: number) {
+            this.scoreUtility.functionName = utility.functionName;
+            this.scoreUtility.functionArgs = utility.functionArgs;
+            this.scoreUtility.iconURL = utility.iconURL;
+            this.scoreUtility.fCache = utility.fCache;
+
+            if ((this.setStarRatables !== undefined) && (starRatables !== undefined)) {
+                this.setStarRatables(starRatables);
+            }
+            this.setWeight(weight);
+        }
         //#endregion "Client indexedDB storage"
     }
 

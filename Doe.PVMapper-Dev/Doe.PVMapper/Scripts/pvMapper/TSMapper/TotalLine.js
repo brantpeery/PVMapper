@@ -26,6 +26,25 @@ var pvMapper;
             this.deactivate = options.deactivate || function () {
             };
         }
+        TotalLine.prototype.toJSON = function () {
+            var o = {
+                title: this.title,
+                description: this.description,
+                longDescription: this.longDescription,
+                category: this.category,
+                scores: this.scores
+            };
+            return o;
+        };
+
+        TotalLine.prototype.fromJSON = function (o) {
+            this.title = o.title;
+            this.description = o.description;
+            this.longDescription = o.longDescription;
+            this.category = o.category;
+            this.scores = o.scores;
+        };
+
         TotalLine.prototype.UpdateScores = function (lines) {
             //Setup an array of sites(scores) that contain all the scoringTool values
             var numSites = (lines.length > 0) ? lines[0].scores.length : 0;

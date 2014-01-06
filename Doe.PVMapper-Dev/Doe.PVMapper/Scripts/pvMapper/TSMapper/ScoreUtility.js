@@ -104,11 +104,22 @@ var pvMapper;
             return Math.max(0, Math.min(1, y)) * 100;
         };
 
-        ScoreUtility.prototype.serialize = function () {
-            throw "Serialize not implemented yet for this object";
+        ScoreUtility.prototype.toJSON = function () {
+            var o = {
+                functionName: this.functionName,
+                functionArgs: this.functionArgs,
+                iconURL: this.iconURL,
+                fCache: this.fCache
+            };
+            return o;
         };
-        ScoreUtility.prototype.deserialize = function () {
-            throw "Deserialize is not implemented yet for this object";
+
+        ScoreUtility.prototype.fromJSON = function (o) {
+            this.functionName = o.functionName;
+
+            this.functionArgs = o.functionArgs;
+            this.iconURL = o.iconURL;
+            this.fCache = o.fCache;
         };
         return ScoreUtility;
     })();

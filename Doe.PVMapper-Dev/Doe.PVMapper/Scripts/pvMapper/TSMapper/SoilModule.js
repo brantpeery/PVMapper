@@ -1,4 +1,4 @@
-/// <reference path="pvMapper.ts" />
+﻿/// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Tools.ts" />
@@ -52,8 +52,11 @@ var INLModules;
                         onSiteChange: function (e, score) {
                             _this.updateScore(score);
                         },
-                        getStarRatables: function () {
-                            return _this.starRatingHelper.starRatings;
+                        getStarRatables: function (mode) {
+                            if ((mode !== undefined) && (mode === "default"))
+                                return _this.starRatingHelper.defaultStarRatings;
+else
+                                return _this.starRatingHelper.starRatings;
                         },
                         setStarRatables: function (rateTable) {
                             _this.starRatingHelper.starRatings = rateTable;

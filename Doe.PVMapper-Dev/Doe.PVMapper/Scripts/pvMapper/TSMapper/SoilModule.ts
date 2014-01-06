@@ -48,8 +48,11 @@ module INLModules {
                         this.updateScore(score);
                     },
 
-                    getStarRatables: () => {
-                        return this.starRatingHelper.starRatings;
+                    getStarRatables: (mode?: string) => {
+                        if ((mode !== undefined) && (mode === "default"))
+                            return this.starRatingHelper.defaultStarRatings;
+                        else
+                            return this.starRatingHelper.starRatings;
                     },
                     setStarRatables: (rateTable: pvMapper.IStarRatings) => {
                         this.starRatingHelper.starRatings = rateTable;
