@@ -3,6 +3,15 @@
 pvMapper.onReady(function () {
 
     //----------------------------------------------------------------------------------------
+    // place name and address search box
+    var searchComboBox = Ext.create('Heron.widgets.search.NominatimSearchCombo', {
+        map: pvMapper.map,
+        width: 400,
+    });
+
+    pvMapper.mapToolbar.add(9, searchComboBox);
+
+    //----------------------------------------------------------------------------------------
     //#region Measure distance tool
     var control = new OpenLayers.Control.Measure(OpenLayers.Handler.Path, {
         eventListeners: {
