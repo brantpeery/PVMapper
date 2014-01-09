@@ -235,8 +235,7 @@ Ext.define('Heron.widgets.search.NominatimSearchCombo', {
                     value = this.displayTplObj.apply(result);
                 }
 
-                this.setValue(value); // put the selected name in the box
-                // var position = new OpenLayers.LonLat(result.lon, result.lat);
+                this.setValue(''); // clear the search box
 
                 /**
                  * Create var for boundingbox
