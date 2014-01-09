@@ -110,6 +110,20 @@ var pvMapper;
                 });
                 return data;
             };
+
+            ScoreboardProcessor.sortSitesByUtility = /**
+            Sorts the sites by the utility score
+            Order 1 = ascending
+            Order -1 = descending
+            Order 0 = do not sort
+            */
+            function (data, ascending) {
+                if (typeof ascending === "undefined") { ascending = false; }
+                data.sites.sort(function (a, b) {
+                    return (Math.abs(a.meanUtility) - Math.abs(b.meanUtility)) * ((ascending) ? 1 : -1);
+                });
+                return data;
+            };
             return ScoreboardProcessor;
         })();
         Data.ScoreboardProcessor = ScoreboardProcessor;
