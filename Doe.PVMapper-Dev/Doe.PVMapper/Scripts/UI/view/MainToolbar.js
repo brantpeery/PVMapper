@@ -93,6 +93,7 @@ pvMapper.onReady(function () {
         tooltip: "Add a new layer using features from a KML file, and add a score line for the distance from each site to the nearest feature in the KML layer",
         //enabledToggle: false,
         handler: function () {
+            fileDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
             fileDialogBox.removeEventListener('change', handleSiteKML, false);  //disable the site KML event.
             fileDialogBox.addEventListener('change', handleCustomKML, false);  // enable the distance KML event.
             fileDialogBox.click();
@@ -228,9 +229,10 @@ pvMapper.onReady(function () {
     }
 
     var siteImportAction = Ext.create('Ext.Action', {
-        text: 'Load Sites From KML',
+        text: 'Load Sites from KML',
         tooltip: "Import site polygons from a KML file",
         handler: function () {
+            fileDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
             fileDialogBox.removeEventListener('change', handleCustomKML, false);  //enable the site KML event.
             fileDialogBox.addEventListener('change', handleSiteKML, false);  // disable the distance KML event.
             fileDialogBox.click();
@@ -264,7 +266,7 @@ pvMapper.onReady(function () {
         Ext.MessageBox.prompt('Save file as', 'Please enter a filename for the export sites.',
             function (btn, filename) {
                 if (btn === 'ok') {
-                    filename = filename || 'sites.kml';
+                    filename = (filename || 'PVMapper Sites') + '.kml';
 
                     var filenameSpecialChars = new RegExp("[~#%&*{}<>;?/+|\"]");
                     if (filename.match(filenameSpecialChars)) {
@@ -282,7 +284,7 @@ pvMapper.onReady(function () {
                     blob.type = 'data:application/vnd.google-earth.kml+xml';
                     saveAs(blob, filename);
                 }
-            }, this, false, 'Sites.kml');
+            }, this, false, 'PVMapper Sites');
 
         //This code below works too, but always save with a file name of "Download.kml".
         //uriContent = 'data:application/vnd.google-earth.kml+xml;headers=Content-Disposition:attachment;filename="sites.kml",' + encodeURIComponent(content);
@@ -304,10 +306,10 @@ pvMapper.onReady(function () {
 
         // add a button on the tool bar to launch a file picker to load local KML file.
         //first, create an input with type='file' and add it to the body of the page.
-        Ext.MessageBox.prompt('Save file as', 'Please enter a filename for the export sites (.jso).',
+        Ext.MessageBox.prompt('Save file as', 'Please enter a filename for the export sites (.pvProj).',
             function (btn, filename) {
                 if (btn === 'ok') {
-                    filename = filename || 'PVMapperProject.jso';
+                    filename = (filename || 'PVMapper Project') + '.pvProj';
 
                     var filenameSpecialChars = new RegExp("[~#%&*{}<>;?/+|\"]");
                     if (filename.match(filenameSpecialChars)) {
@@ -315,18 +317,13 @@ pvMapper.onReady(function () {
                         return;
                     }
 
-                    //check to make sure that the file has '.kml' extension.
-                    var dotindex = filename.lastIndexOf('.');
-                    dotindex = dotindex == -1 ? filename.length : dotindex;
-                    filename = filename.substr(0, dotindex, dotindex) + '.jso';
-
                     var content = JSON.stringify(pvMapper.mainScoreboard);
                     var blob = CustomBlob(content, null);
                     blob.data = content;
-                    blob.type = 'data:application/jso';
+                    blob.type = 'data:application/json';
                     saveAs(blob, filename);
                 }
-            }, this, false, 'PVMapperProject.jso');
+            }, this, false, 'PVMapper Project');
 
         //This code below works too, but always save with a file name of "Download.kml".
         //uriContent = 'data:application/vnd.google-earth.kml+xml;headers=Content-Disposition:attachment;filename="sites.kml",' + encodeURIComponent(content);
@@ -347,7 +344,7 @@ pvMapper.onReady(function () {
     var fDialogBox = document.createElement('input');
     fDialogBox.type = 'file';
     fDialogBox.style = 'display:none';
-    fDialogBox.accept = "application/jso"; //only support in chrome and IE.  FF doesn't work.
+    fDialogBox.accept = ".pvProj"; //only support in chrome and IE.  FF doesn't work.
     fDialogBox.addEventListener('change', handleLoadScoreboard, false);
     document.body.appendChild(fDialogBox);
 
@@ -363,7 +360,7 @@ pvMapper.onReady(function () {
         var name = afilename.substr(0, dotindex, dotindex);
         var extension = afilename.replace(name, "");
 
-        if (extension === ".jso") {
+        if (extension === ".pvProj") {
             var reader = new FileReader();
             reader.onload = function (evt) { importScoreboardFromJSON(evt.target.result); }
             reader.readAsText(afile);
@@ -527,6 +524,7 @@ pvMapper.onReady(function () {
         text: 'Load Project',
         tooltip: "Load a saved scoreboard project and use it as a default.",
         handler: function () {
+            fDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
             fDialogBox.click();
         }
     });
@@ -536,10 +534,10 @@ pvMapper.onReady(function () {
     //----------------------------------------------------------------------------------------
 
     function saveScoreboardConfig() {
-        Ext.MessageBox.prompt('Save file as', 'Please enter a configuraton filename(.cfg).',
+        Ext.MessageBox.prompt('Save file as', 'Please enter a configuraton filename (.pvCfg).',
             function (btn, filename) {
                 if (btn === 'ok') {
-                    filename = filename || 'PVMapperConfig.cfg';
+                    filename = (filename || 'PVMapper Config') + '.pvCfg';
 
                     var filenameSpecialChars = new RegExp("[~#%&*{}<>;?/+|\"]");
                     if (filename.match(filenameSpecialChars)) {
@@ -547,14 +545,8 @@ pvMapper.onReady(function () {
                         return;
                     }
 
-                    //check to make sure that the file has '.kml' extension.
-                    var dotindex = filename.lastIndexOf('.');
-                    dotindex = dotindex == -1 ? filename.length : dotindex;
-                    filename = filename.substr(0, dotindex, dotindex) + '.cfg';
-
                     var config = {configLines: []};
                     var aUtility, aStarRatables, aWeight, aTitle, aCat = null;
-
 
                     pvMapper.mainScoreboard.scoreLines.forEach(
                         function (scrline, idx, scoreLines) {
@@ -571,10 +563,10 @@ pvMapper.onReady(function () {
                     var content = JSON.stringify(config);
                     var blob = CustomBlob(content, null);
                     blob.data = content;
-                    blob.type = 'data:application/cfg';
+                    blob.type = 'data:application/json';
                     saveAs(blob, filename);
                 }
-            }, this, false, 'PVMapperConfig.cfg');
+            }, this, false, 'PVMapper Config');
     }
     //----------------------------------------------------------------------------------------
 
@@ -594,7 +586,7 @@ pvMapper.onReady(function () {
     var configDialogBox = document.createElement('input');
     configDialogBox.type = 'file';
     configDialogBox.style = 'display:none';
-    configDialogBox.accept = "application/cfg"; //only support in chrome and IE.  FF doesn't work.
+    configDialogBox.accept = ".pvCfg"; //only support in chrome and IE.  FF doesn't work.
     configDialogBox.addEventListener('change', handleLoadScoreboardConfig, false);
     document.body.appendChild(configDialogBox);
 
@@ -610,7 +602,7 @@ pvMapper.onReady(function () {
         var name = afilename.substr(0, dotindex, dotindex);
         var extension = afilename.replace(name, "");
 
-        if (extension === ".cfg") {
+        if (extension === ".pvCfg") {
             var reader = new FileReader();
             reader.onload = function (evt) { loadScoreboardConfig(evt.target.result); }
             reader.readAsText(afile);
@@ -649,6 +641,7 @@ pvMapper.onReady(function () {
         text: "Load Configuration",
         tooltip: "Load a Scoreboard Utility configuration from a local file.",
         handler: function () {
+            configDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
             configDialogBox.click();
         }
     });
@@ -662,13 +655,14 @@ pvMapper.onReady(function () {
                 scrLine.scoreUtility = scrLine.defaultScoreUtility;
                 if ((scrLine.setStarRatables !== undefined) && (scrLine.getStarRatables !== undefined))
                     scrLine.setStarRatables(scrLine.getStarRatables("default"));
-                scrLine.setWeight(10);
+                scrLine.setWeight(10); //TODO: not all score lines have a default weight of 10.
+                //TODO: some score lines have their own config menues, which should also be reset.
             });
     }
 
     var resetScoreboardBtn = Ext.create('Ext.Action', {
-        text: 'Reset Scoreboard Configuration',
-        tooltip: "Export site polygons and scores to a KML file",
+        text: 'Reset Configuration',
+        tooltip: "Reset the scoreboard to the default configuration",
         handler: function () {
             resetScoreboardConfig();
         }
