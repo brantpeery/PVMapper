@@ -43,6 +43,7 @@
         var pvMapper = window.opener.pvMapper;
         data = pvMapper.Data.ScoreboardProcessor.addSummaryAndDivergence(data);
         data = pvMapper.Data.ScoreboardProcessor.sortScoresByDivergence(data);
+        data = pvMapper.Data.ScoreboardProcessor.sortSitesByUtility(data);
         return data;
     }
 
