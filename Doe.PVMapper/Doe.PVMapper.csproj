@@ -542,7 +542,6 @@
     <Content Include="Scripts\UnitTests\PVMapper.Site.js" />
     <Content Include="Scripts\UnitTests\pvMapper.SiteManager.js" />
     <Content Include="Scripts\UnitTests\string_extensions.js" />
-    <Content Include="Scripts\ViewScripts\DistanceTool.js" />
     <Content Include="Scripts\ViewScripts\IdentifySite.js" />
     <Content Include="Scripts\_frameworkobjects.d.ts" />
     <Compile Include="WebApi\MongoHelper.cs" />
