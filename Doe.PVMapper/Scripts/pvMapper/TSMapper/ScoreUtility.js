@@ -96,7 +96,7 @@ var pvMapper;
         }
         //An options object might be better here. Then a call to a static function with options would be possible
         ScoreUtility.prototype.run = function (x) {
-            if (isNaN(x))
+            if (typeof x !== "number" || isNaN(x))
                 return Number.NaN;
 
             //Run the function that the user needs run

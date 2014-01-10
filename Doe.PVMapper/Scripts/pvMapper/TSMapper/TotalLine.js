@@ -60,7 +60,7 @@ var pvMapper;
 
                 //Aggragate all the scoreline's values into an array
                 lines.forEach(function (line) {
-                    if (line.scores && line.scores[idx] && !isNaN(line.scores[idx].utility)) {
+                    if (line.scores && line.scores[idx] && typeof line.scores[idx].utility === "number" && !isNaN(line.scores[idx].utility)) {
                         site = line.scores[idx].site;
                         values.push({ utility: line.scores[idx].utility, tool: line });
                     }
