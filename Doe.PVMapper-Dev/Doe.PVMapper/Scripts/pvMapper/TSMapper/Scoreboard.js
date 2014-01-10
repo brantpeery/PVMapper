@@ -1,4 +1,4 @@
-﻿/// <reference path="pvMapper.ts" />
+/// <reference path="pvMapper.ts" />
 /// <reference path="../../jquery.d.ts" />
 /// <reference path="Event.ts" />
 /// <reference path="ScoreLine.ts" />
