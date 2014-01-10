@@ -70,7 +70,7 @@ module pvMapper {
                 //Aggragate all the scoreline's values into an array
                 lines.forEach((line) => {
                     //TODO: This should be the weighted score
-                    if (line.scores && line.scores[idx] && !isNaN(line.scores[idx].utility)) {
+                    if (line.scores && line.scores[idx] && typeof line.scores[idx].utility === "number" && !isNaN(line.scores[idx].utility)) {
                         site = line.scores[idx].site; // during this loop, this will (should?) always be the same site
                         values.push({ utility: line.scores[idx].utility, tool: line });
                     }

@@ -372,7 +372,7 @@ toolsStore.on({
                     width: 40,
                     renderer: function (value, metaData) {
                         if (value.length <= idx) return '...'; //Avoid the index out of range error
-                        if (isNaN(value[idx].utility)) return '...';
+                        if (typeof value[idx].utility !== "number" || isNaN(value[idx].utility)) return '...';
 
                         var val = (value[idx] && value[idx].utility) ? value[idx].utility : 0;
                         var c = pvMapper.getColorForScore(val);
@@ -388,7 +388,7 @@ toolsStore.on({
 
                         records.forEach(function (record) {
                             var scoreLine = record.raw;
-                            if (scoreLine.scores[idx] && !isNaN(scoreLine.scores[idx].utility)) {
+                            if (scoreLine.scores[idx] && typeof scoreLine.scores[idx].utility === "number" && !isNaN(scoreLine.scores[idx].utility)) {
                                 var weight = (scoreLine.weight != undefined) ? scoreLine.weight : 1;
                                 val = scoreLine.scores[idx].utility * weight;
                                 total += val;
