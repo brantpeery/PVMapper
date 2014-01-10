@@ -75,7 +75,7 @@ var pvMapper;
         Score.prototype.toString = function () {
             if (this.popupMessage && this.popupMessage.trim().length > 0) {
                 return this.popupMessage;
-            } else if (typeof this.value !== "undefined" && !isNaN(this.value)) {
+            } else if (typeof this.value !== "undefined" && this.value !== null && !isNaN(this.value)) {
                 return this.value.toString();
             } else {
                 return "No value";
@@ -89,6 +89,14 @@ var pvMapper;
                 utility: this.utility,
                 site: this.site
             };
+        };
+
+        Score.prototype.fromJSON = function (o) {
+            this.popupMessage = o.popupMessage;
+            this.value = o.value;
+            this.utility = o.utility;
+            //The site should have been created.
+            //this.site.fromJSON(o.site);
         };
         return Score;
     })();

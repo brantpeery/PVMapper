@@ -119,6 +119,20 @@ module pvMapper {
                 });
                 return data;
             }
+
+            /**
+                Sorts the sites by the utility score
+                Order 1 = ascending
+                Order -1 = descending
+                Order 0 = do not sort
+            */
+            static sortSitesByUtility(data, ascending:boolean = false) {
+
+                data.sites.sort(function (a, b) {
+                    return (Math.abs(a.meanUtility) - Math.abs(b.meanUtility)) * ((ascending) ? 1 : -1);
+                });
+                return data;
+            }
         }
     }
 }

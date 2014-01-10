@@ -67,7 +67,7 @@ module pvMapper {
         onSiteChange: (event: EventArg, score: Score) => void;
 
         // optional members for star ratings (qualitative) tools...
-        getStarRatables?: () => IStarRatings;
+        getStarRatables?: (mode?:string) => IStarRatings;
         setStarRatables?: (ratables: IStarRatings) => void;
         //getStarRating: (name: string) => number;
 

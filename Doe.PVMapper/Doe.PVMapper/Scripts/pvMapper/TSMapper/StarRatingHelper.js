@@ -54,6 +54,7 @@ var pvMapper;
 
                 return allText;
             };
+            this.defaultStarRatings = this.starRatings;
         }
         return StarRatingHelper;
     })();

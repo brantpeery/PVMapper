@@ -176,19 +176,36 @@ module pvMapper {
 
         //An options object might be better here. Then a call to a static function with options would be possible 
         public run(x: number) {
-            if (isNaN(x)) return Number.NaN;
+            if (typeof x !== "number" || isNaN(x))
+                return Number.NaN;
 
             //Run the function that the user needs run
             var y: number = pvMapper.UtilityFunctions[this.functionName].fn(x, this.functionArgs);
             return Math.max(0, Math.min(1, y)) * 100;
         }
 
+        public toJSON(): any {
+            var o = {
+                functionName: this.functionName,
+                functionArgs: this.functionArgs,
+                iconURL: this.iconURL,
+                fCache: this.fCache
+            }
+          return o;
+        }
 
-        public serialize() {
-            throw "Serialize not implemented yet for this object";
+        public fromJSON(o: any) {
+            this.functionName = o.functionName;
+
+            this.functionArgs = o.functionArgs;
+            this.iconURL = o.iconURL;
+            this.fCache = o.fCache;
         }
-        public deserialize() {
-            throw "Deserialize is not implemented yet for this object";
-        }
+        //public serialize() {
+        //    throw "Serialize not implemented yet for this object";
+        //}
+        //public deserialize() {
+        //    throw "Deserialize is not implemented yet for this object";
+        //}
     }
 }

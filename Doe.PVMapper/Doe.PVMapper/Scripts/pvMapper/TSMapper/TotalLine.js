@@ -26,6 +26,25 @@ var pvMapper;
             this.deactivate = options.deactivate || function () {
             };
         }
+        TotalLine.prototype.toJSON = function () {
+            var o = {
+                title: this.title,
+                description: this.description,
+                longDescription: this.longDescription,
+                category: this.category,
+                scores: this.scores
+            };
+            return o;
+        };
+
+        TotalLine.prototype.fromJSON = function (o) {
+            this.title = o.title;
+            this.description = o.description;
+            this.longDescription = o.longDescription;
+            this.category = o.category;
+            this.scores = o.scores;
+        };
+
         TotalLine.prototype.UpdateScores = function (lines) {
             //Setup an array of sites(scores) that contain all the scoringTool values
             var numSites = (lines.length > 0) ? lines[0].scores.length : 0;
@@ -41,7 +60,7 @@ var pvMapper;
 
                 //Aggragate all the scoreline's values into an array
                 lines.forEach(function (line) {
-                    if (line.scores && line.scores[idx] && !isNaN(line.scores[idx].utility)) {
+                    if (line.scores && line.scores[idx] && typeof line.scores[idx].utility === "number" && !isNaN(line.scores[idx].utility)) {
                         site = line.scores[idx].site;
                         values.push({ utility: line.scores[idx].utility, tool: line });
                     }

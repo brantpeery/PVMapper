@@ -4,7 +4,9 @@ Ext.Loader.setConfig({
     disableCaching: false,
     paths: {
         GeoExt: "/Scripts/GeoExt",
-        MainApp: "/Scripts/UI"
+        MainApp: "/Scripts/UI",
+        //Heron: { widgets: { search: "/Scripts" } }
+        Heron: "/Scripts/Heron"
     }
 });
 
@@ -23,6 +25,7 @@ Ext.require([
     'GeoExt.container.VectorLegend',
     'GeoExt.container.UrlLegend',
     'GeoExt.tree.Column',
+    'Heron.widgets.search.NominatimSearchCombo',
     'MainApp.view.Window',
     'MainApp.view.Viewport'
 ]);
@@ -44,6 +47,7 @@ var app = Ext.application({
         'GeoExt.container.VectorLegend',
         'GeoExt.container.UrlLegend',
         'GeoExt.tree.Column',
+        'Heron.widgets.search.NominatimSearchCombo',
         'MainApp.view.Window',
         'MainApp.view.Viewport'
     ],
