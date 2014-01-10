@@ -109,7 +109,7 @@ module pvMapper {
         public toString() {
             if (this.popupMessage && this.popupMessage.trim().length > 0) {
                 return this.popupMessage;
-            } else if (typeof this.value !== "undefined" && !isNaN(this.value)) {
+            } else if (typeof this.value !== "undefined" && this.value !== null && !isNaN(this.value)) {
                 return this.value.toString();
             } else {
                 return "No value";

@@ -176,7 +176,8 @@ module pvMapper {
 
         //An options object might be better here. Then a call to a static function with options would be possible 
         public run(x: number) {
-            if (isNaN(x)) return Number.NaN;
+            if (typeof x !== "number" || isNaN(x))
+                return Number.NaN;
 
             //Run the function that the user needs run
             var y: number = pvMapper.UtilityFunctions[this.functionName].fn(x, this.functionArgs);
