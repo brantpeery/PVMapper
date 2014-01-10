@@ -25,7 +25,7 @@ module pvMapper {
 
         // dictionary mapping ratable category names to star ratings
         starRatings: IStarRatings;
-
+        defaultStarRatings: IStarRatings;
         // returns the lowest rated category of those passed in,
         // and also a combined string of all categories with their star values, sorted from lowest to highest
         sortRatableArray: (ratables: string[]) => string;
@@ -86,11 +86,13 @@ module pvMapper {
 
                 return allText;
             }
+            this.defaultStarRatings = this.starRatings;
         }
 
         public options: IStarRatingOptions;
 
         public starRatings: IStarRatings;
+        public defaultStarRatings: IStarRatings;
 
         private sortRatings: (a: string, b: string) => number;
 

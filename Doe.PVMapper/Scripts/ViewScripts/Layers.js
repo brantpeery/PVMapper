@@ -66,6 +66,9 @@ pvMapper.onReady(function () {
     //addBYUServerLayer("Indian Reservations", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 6);
     //addBYUServerLayer("States", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 7);
 
+    addArcLayer("Solar Energy Zones", "http://solarmapper.anl.gov/ArcGIS/rest/services/SEZ_Map_Service_SDE/MapServer", "1,2");
+
+
     //var slope = new OpenLayers.Layer.WMS(
     //        "Slope",
     //        "http://mapsdb.nrel.gov/jw_router/DNI_slope_3/tile",
@@ -222,7 +225,7 @@ pvMapper.onReady(function () {
     //map.addControl(selectSiteControl);
 
 
-    function addBYUServerLayer(name, url, layerNumber) {
+    function addArcLayer(name, url, layerNumber) {
 
         var layer = new OpenLayers.Layer.ArcGIS93Rest(
             name,
@@ -230,15 +233,17 @@ pvMapper.onReady(function () {
             {
                 f: "image",
                 layers: "show: " + layerNumber,
-                bbox: "-1.4206537879290022E7,4093175.1430570777,-7133549.99921288,7889772.508363001",
+                //bbox: "-1.4206537879290022E7,4093175.1430570777,-7133549.99921288,7889772.508363001",
                 transparent: true,
                 format: "gif",
+                srs: "3857", //"102100",
             },
             {
                 isBaseLayer: false,
             }
         );
         layer.setOpacity(0.5);
+        layer.epsgOverride = "3857"; //"EPSG:102100";
         layer.setVisibility(false);
         layer.isReferenceLayer = true;
         pvMapper.map.addLayer(layer);

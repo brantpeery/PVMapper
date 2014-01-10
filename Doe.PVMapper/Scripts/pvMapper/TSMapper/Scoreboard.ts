@@ -100,6 +100,17 @@ module pvMapper {
             }
         }
 
+        public fromJSON(o: any) {
+            for (var i = 0; i < o.scoreLines.length; i++) {
+                this.scoreLines[i].fromJSON(o.scoreLines[i]);
+            }
+
+            for (var i = 0; i < o.totalLines.length; i++) {
+                this.totalLines[i].fromJSON(o.totalLines[i]);  
+            }
+          
+        }
+
     }
 
     //declare var Ext: any; //So we can use it
@@ -144,7 +155,7 @@ module pvMapper {
             
             if ((ClientDB.db != null) && (!mainScoreboard.isScoreLoaded)) {
                 mainScoreboard.scoreLines.forEach(function (sc) {
-                    sc.loadScore();
+                    sc.loadConfiguration();
                 });
                 mainScoreboard.isScoreLoaded = true;
             }

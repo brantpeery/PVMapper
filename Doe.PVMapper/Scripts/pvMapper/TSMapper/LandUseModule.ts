@@ -55,8 +55,13 @@ module INLModules {
                         this.updateScore(score);
                     },
 
-                    getStarRatables: () => {
-                        return this.starRatingHelper.starRatings;
+                    getStarRatables: (mode?: string) => {
+                        if ((mode !== undefined) && (mode === "default")) {
+                            return this.starRatingHelper.starRatings;
+                        }
+                        else {
+                            return this.starRatingHelper.defaultStarRatings;
+                        }
                     },
                     setStarRatables: (rateTable: pvMapper.IStarRatings) => {
                         this.starRatingHelper.starRatings = rateTable;
@@ -186,9 +191,10 @@ module INLModules {
                             score.updateValue(this.starRatingHelper.starRatings[responseArray[0]]);
                         } else {
                             // use the no category label, and its current star rating
-                            score.popupMessage = this.starRatingHelper.options.noCategoryLabel;
-                            score.updateValue(this.starRatingHelper.starRatings[
-                                this.starRatingHelper.options.noCategoryLabel]);
+                            if (this.starRatingHelper.starRatings !== undefined) {
+                                score.popupMessage = this.starRatingHelper.options.noCategoryLabel;
+                                score.updateValue(this.starRatingHelper.starRatings[this.starRatingHelper.options.noCategoryLabel]);
+                            }
                         }
                     } else {
                         score.popupMessage = "Error " + response.status + " " + response.statusText;
@@ -236,12 +242,17 @@ module INLModules {
                         this.updateScore(score);
                     },
 
-                    getStarRatables: () => {
-                        return this.ratables;
+                    getStarRatables: (mode?: string) => {
+                        if ((mode !== undefined) && (mode === "default")) {
+                            return this.starRatingHelper.defaultStarRatings;
+                        }
+                        else {
+                            return this.starRatingHelper.starRatings;
+                        }
                     },
 
                     setStarRatables: (rateTable: pvMapper.IStarRatings) => {
-                        this.ratables = rateTable;
+                        this.starRatingHelper.starRatings = rateTable;
                     },
                     scoreUtilityOptions: {
                         functionName: "linear",
@@ -254,7 +265,12 @@ module INLModules {
             });
         }
 
-        private ratables: pvMapper.IStarRatings = {};
+        private starRatingHelper: pvMapper.IStarRatingHelper = new pvMapper.StarRatingHelper({
+            defaultStarRating: 4,
+            noCategoryRating: 5,
+            noCategoryLabel: "None"
+        });
+        
         private defaultRating: number = 3;
 
         private landCoverRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/NAT_LC/1_NVC_class_landuse/MapServer/";
@@ -327,10 +343,16 @@ module INLModules {
                                 lastText = newText;
                             }
 
-                            var rating = this.ratables[landCover];
+                            var rating = undefined;
+                            if (this.starRatingHelper.starRatings !== undefined) {
+                                rating = this.starRatingHelper.starRatings[landCover];
+                            }
 
                             if (typeof rating === "undefined") {
-                                var rating = this.ratables[landCover] = this.defaultRating;
+                                if (this.starRatingHelper.starRatings === undefined) {
+                                    this.starRatingHelper.starRatings = {};
+                                }
+                               rating = this.starRatingHelper.starRatings[landCover] = this.defaultRating;
                             }
 
                             score.popupMessage = landCover + " [" + rating + (rating === 1 ? " star]" : " stars]");
@@ -392,8 +414,13 @@ module INLModules {
                         this.updateScore(score);
                     },
 
-                    getStarRatables: () => {
-                        return this.starRatingHelper.starRatings;
+                    getStarRatables: (mode?: string) => {
+                        if ((mode !== undefined) && (mode === "default")) {
+                            return this.starRatingHelper.defaultStarRatings;
+                        }
+                        else {
+                            return this.starRatingHelper.starRatings;
+                        }
                     },
                     setStarRatables: (rateTable: pvMapper.IStarRatings) => {
                         this.starRatingHelper.starRatings = rateTable;

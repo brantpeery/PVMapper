@@ -42,7 +42,12 @@ var pvMapper;
         *  Repopulates this object with the stuff from the JSON parse
         *
         */
-        Site.prototype.fromJSON = function () {
+        Site.prototype.fromJSON = function (o) {
+            this.id = o.id;
+            this.geometry = (this.geometry.fromWKT(o.geometry));
+            this.name = o.name;
+            this.description = o.decription;
+            this.popupHTML = o.popupHTML;
         };
         return Site;
     })();
