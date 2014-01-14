@@ -38,6 +38,7 @@ module pvMapper {
     //}
 
     export interface IScoreUtilityArgs {
+        stringify(): string;
     }
     export interface IScoreUtilityOptions {
         functionName: string;
@@ -76,6 +77,13 @@ module pvMapper {
             maxValueTip: string;
             vline: number;
         }
+        public stringify() {
+            var str = "";
+            //str += "name: " + this.metaInfo.name;
+            str += ", min: " + this.minValue.toFixed(0);
+            str += ", max: " + this.maxValue.toFixed(0);
+            return str; 
+        }
     }
 
     export class SinusoidalUtilityArgs implements IScoreUtilityArgs {// IMinMaxUtilityArgs {
@@ -102,7 +110,7 @@ module pvMapper {
                 minValueTip: minTip,
                 maxValueTip: maxTip,
                 vline: 0
-            };
+            };                                                 
         }
 
         //public tips: {
@@ -119,6 +127,16 @@ module pvMapper {
             minValueTip: string;
             maxValueTip: string;
             vline: number;
+        }
+
+        public stringify() {
+            var str = "";
+            //str += "name: " + this.metaInfo.name;
+            str += "min: " + this.minValue.toFixed(0);
+            str += ", max: " + this.maxValue.toFixed(0);
+            str += ", slope: " + this.slope.toFixed(0);
+            str += ", target: " + this.target.toFixed(0);
+            return str;
         }
     }
 
@@ -140,8 +158,17 @@ module pvMapper {
         public points: string[] = ["p0", "p1", "p2"];
         public metaInfo: {
             name: string;
-            unitSymbol: string;
+            unitSymbol: string;                        
             vline: number;
+        }
+        public stringify() {
+            var str = "";;
+            //str += "name: " + this.metaInfo.name;
+            str += "points: ["
+            str += "(" + this.p0.x.toFixed(0) + "," + this.p0.y.toFixed(0) + "),";
+            str += "(" + this.p1.x.toFixed(0) + "," + this.p1.y.toFixed(0) + "),";
+            str += "(" + this.p2.x.toFixed(0) + "," + this.p2.y.toFixed(0) + ")]";
+            return str;
         }
     }
 
@@ -163,9 +190,9 @@ module pvMapper {
 
             //Attach the named function and window
             this.functionName = options.functionName;
-            this.functionArgs = options.functionArgs;
+            this.functionArgs = this.createArg(options.functionName);
+            $.extend(this.functionArgs, options.functionArgs);
             this.iconURL = options.iconURL;
-
         }
 
         //public scoreUtilityOptions: IScoreUtilityOptions;
@@ -194,12 +221,35 @@ module pvMapper {
           return o;
         }
 
+
+        public createArg(fn: string):IScoreUtilityArgs {
+            switch (fn) {
+                case "linear": 
+                    return new MinMaxUtilityArgs();
+                case "sinusoidal": 
+                    return new SinusoidalUtilityArgs();
+                case "linear3pt":
+                    return new ThreePointUtilityArgs();
+            }
+        }
+
         public fromJSON(o: any) {
             this.functionName = o.functionName;
 
-            this.functionArgs = o.functionArgs;
+            this.functionArgs = this.createArg(o.functionName);
+            $.extend(this.functionArgs, o.functionArgs);
             this.iconURL = o.iconURL;
             this.fCache = o.fCache;
+        }
+
+        public stringify() {
+            var str = "";
+            str += this.functionName;
+            //Ok, here is a little hack to get functionArgs to recognize stringify.  I don't know why functionArgs is not a class object here.
+            var fn = this.createArg(this.functionName);
+            $.extend(fn, this.functionArgs);  //merge the data to fn.
+            str += "("+fn.stringify()+")";  
+            return str;   
         }
         //public serialize() {
         //    throw "Serialize not implemented yet for this object";

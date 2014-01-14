@@ -116,7 +116,7 @@ var scoreboardColumns = [{
         else
             return ' ';
     },
-    } , {
+}, {
     header: 'Weight',
     //text: 'Weight',
     width: 45,
@@ -305,14 +305,56 @@ var scoreboardColumns = [{
     columns: siteColumns
 }];
 
+//this is for the grid.column header context menu.
+function showHeaderCTMenu(xy, site) {
+    var siteName = ((site === undefined) || (site === null)) ? "this site" : "site: " + site.name;
+    var headerCtContext = Ext.create("Ext.menu.Menu", {
+        items: [Ext.create("Ext.menu.Item",{
+            text: "Zoom to " + siteName,
+            iconCls: "x-zoomin-menu-icon",
+            handler: function () {
+                pvMapper.map.zoomToExtent(site.geometry.bounds, false);
+            }
+        }), Ext.create("Ext.menu.Item",{
+            text: "Zoom to project",
+            iconCls: "x-zoomout-menu-icon",
+            handler: function () {
+                pvMapper.map.zoomToExtent(pvMapper.siteLayer.getDataExtent(), false);
+            }
+        }),
+        Ext.create("Ext.menu.Separator",{
+        }),
+        Ext.create("Ext.menu.Item",{
+            text: "Delete " + siteName,
+            iconCls: "x-delete-menu-icon",
+            handler: function () {
+                Ext.MessageBox.confirm("Delete " + siteName, "Deleting a site is permenant, are you sure?", function (btn) {
+                    if (btn === "yes") {
+                        pvMapper.deleteSite(site.id);
+                        pvMapper.siteManager.removeSite(site);
+                        var feature = pvMapper.siteLayer.features.find(
+                           function (a) {
+                               if (a.attributes.name === site.name) return true;
+                               else return false;
+                           });
+                        pvMapper.siteLayer.removeFeatures([feature], { silent: true });
+                    }
+                });
+            }
+        })
 
+        ]
+    });
+    headerCtContext.showAt(xy);
+}
 //Use this store to maintain the panel list of sites
 toolsStore.on({
     load: function () {
         siteColumns.length = 0; //Empty the array
         var rec0 = this.first();
         rec0.get('sites').forEach(function (scoreLine, idx) {
-            siteColumns.push({
+            var siteColumn = {
+                id: scoreLine.site.name,
                 text: scoreLine.site.name,
                 sealed: true,
                 //flex: 1, //Will stretch with the size of the window
@@ -355,10 +397,10 @@ toolsStore.on({
                         }
                     },
                     draggable: false,
-                    
+
                     summaryType: function (records) {
                         return "<div style='text-align: right;'>" +
-                            "<input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show pie chart' onClick='scoreboardGrid.viewPie(\"" +
+                            "<input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show pie chart' onClick='pvMapper.scoreboardGrid.viewPie(\"" +
                              records[0].get('category') + "\"," + idx.toString() + ");' /></div>";
                     },
                     //summaryRenderer: function (value, summaryRowValues) {
@@ -408,13 +450,33 @@ toolsStore.on({
                         else return '';
                     },
 
-                },
-                ]
-            });
+                }]
+            };
+            siteColumns.push(siteColumn);
         });
 
         //Now update the sites section of the grid
-        scoreboardGrid.reconfigure(this, scoreboardColumns);
+        pvMapper.scoreboardGrid.reconfigure(this, scoreboardColumns);
+
+        //The columns has been configured, Els for each column is now available.  
+        //We can attach conttext menu to the header.
+        var rec0 = this.first();
+        rec0.get('sites').forEach(function (scoreLine, idx) {
+            var col = Ext.getCmp(scoreLine.site.name);
+            if (col) {
+                var el = col.getEl();
+                if (el) {
+                    el.on({
+                        'contextmenu': function (e, col, opt) {
+                            e.stopEvent();
+                            showHeaderCTMenu(e.getXY(), scoreLine.site);
+                            return false;
+                        },
+                        scope: this
+                    });
+                }
+            }
+        });
     }
 
 });
@@ -428,7 +490,6 @@ Ext.define('MainApp.view.ScoreWeightEditing', {
         }
     }
 });
-
 
 //----------------The grid and window-----------------
 Ext.define('Ext.grid.ScoreboardGrid', {
@@ -490,7 +551,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
     viewPie: function (cat, site) {
 
         var pieColor = '';
-        var records = scoreboardGrid.store.getGroups(cat);
+        var records = pvMapper.scoreboardGrid.store.getGroups(cat);
         if ((records.children.length <= 0) || (site == null)) {
             Ext.MessageBox.alert("Empty!", "There is no data in this group.");
             return;
@@ -505,10 +566,10 @@ Ext.define('Ext.grid.ScoreboardGrid', {
         //        pieColor = pvMapper.getColorForScore(val);
         //    pieStore.add({Title: record.get('title'), Data: record.get('weight'), Color: pieColor });
         //});
-        
+
         var pieWin = Ext.create('MainApp.view.PieWindow', {
             //dataStore: pieStore,
-            scoreBoardStore: scoreboardGrid.store,
+            scoreBoardStore: pvMapper.scoreboardGrid.store,
             siteName: sitename,
             groupName: cat,
             title: 'Weighted Percentage - ' + cat + ' : ' + siteColumns[site].text,
@@ -561,7 +622,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
                             printWindow.print();
                         }
                     }
-            ]
+                ]
             }]
         }).show();
 
@@ -569,7 +630,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
 
 });
 
-var scoreboardGrid = Ext.create('Ext.grid.ScoreboardGrid', {
+pvMapper.scoreboardGrid = Ext.create('Ext.grid.ScoreboardGrid', {
 });
 
 //define a plugin to use to insert a button onto the window panel's header area.
@@ -647,7 +708,7 @@ Ext.define('MainApp.view.ScoreboardWindow', {
             }
         ]
     }],
-    items: scoreboardGrid,
+    items: pvMapper.scoreboardGrid,
     constrain: true
 });
 
