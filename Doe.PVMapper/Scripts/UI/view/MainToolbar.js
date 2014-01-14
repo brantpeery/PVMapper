@@ -232,7 +232,7 @@ pvMapper.onReady(function () {
     }
 
     var siteImportAction = Ext.create('Ext.Action', {
-        text: 'Load Sites From KML',
+        text: 'Load Sites from KML',
         iconCls: 'x-open-menu-icon',
         tooltip: "Import site polygons from a KML file",
         handler: function () {
@@ -661,7 +661,7 @@ pvMapper.onReady(function () {
 
     var resetScoreboardBtn = Ext.create('Ext.Action', {
         text: 'Reset Scoreboard Configuration',
-        tooltip: "Export site polygons and scores to a KML file",
+        tooltip: "Reset the scoreboard to the default configuration",
         handler: function () {
             resetScoreboardConfig();
         }
