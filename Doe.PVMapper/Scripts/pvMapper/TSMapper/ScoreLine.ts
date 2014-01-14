@@ -85,7 +85,7 @@ module pvMapper {
             if (options.scoreUtilityOptions == undefined) {
                 options.scoreUtilityOptions = {
                     functionName: "random",
-                    functionArgs: { className: "Random" },
+                    functionArgs: null,
                     iconURL: null
                 }
             };

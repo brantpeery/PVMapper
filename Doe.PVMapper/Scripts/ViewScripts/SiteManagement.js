@@ -19,6 +19,7 @@ pvMapper.onReady(function () {
     //});
     var delAction = Ext.create('Ext.Action', {
         text: 'Delete Selected Site',
+        iconCls: "x-delete-menu-icon",
         tooltip: "Delete a site from the database",
         //control: st1,
         //map: pvMapper.map,
@@ -84,6 +85,7 @@ pvMapper.onReady(function () {
     //});
     var renameAction = Ext.create('Ext.Action', {
         text: 'Rename Selected Site',
+        iconCls: "x-edit-menu-icon",
         tooltip: "Edit the attributes of a site (Name, Discription, Color...)",
         //control: st2,
         //map: pvMapper.map,

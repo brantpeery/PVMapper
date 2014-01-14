@@ -69,6 +69,7 @@ pvMapper.onReady(function () {
         } else {
             continueHandlingCustomKML(afile);
         }
+        fileDialogBox.value = "";
     }
 
     function continueHandlingCustomKML(afile) {
@@ -90,6 +91,7 @@ pvMapper.onReady(function () {
     //create the actual button and put on the tool bar.
     var customTool = Ext.create('Ext.Action', {
         text: 'Add Distance Score From KML',
+        iconCls: "x-open-menu-icon",
         tooltip: "Add a new layer using features from a KML file, and add a score line for the distance from each site to the nearest feature in the KML layer",
         //enabledToggle: false,
         handler: function () {
@@ -120,6 +122,7 @@ pvMapper.onReady(function () {
         } else {
             continueHandlingSiteKML(afile);
         }
+        fileDialogBox.value = "";
     }
 
     function continueHandlingSiteKML(afile) {
@@ -229,7 +232,8 @@ pvMapper.onReady(function () {
     }
 
     var siteImportAction = Ext.create('Ext.Action', {
-        text: 'Load Sites from KML',
+        text: 'Load Sites From KML',
+        iconCls: 'x-open-menu-icon',
         tooltip: "Import site polygons from a KML file",
         handler: function () {
             fileDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
@@ -293,6 +297,7 @@ pvMapper.onReady(function () {
 
     var kmlExportBtn = Ext.create('Ext.Action', {
         text: 'Save Sites to KML',
+        iconCls: 'x-save-menu-icon',
         tooltip: "Export site polygons and scores to a KML file",
         handler: function () {
             ExportToXML();
@@ -332,6 +337,7 @@ pvMapper.onReady(function () {
 
     var loadScoreboardBtn = Ext.create('Ext.Action', {
         text: 'Save Project',
+        iconCls: 'x-saveproject-menu-icon',
         tooltip: "Save the Scoreboard project to local file.",
         handler: function () {
             saveScoreboardAs();
@@ -347,7 +353,6 @@ pvMapper.onReady(function () {
     fDialogBox.accept = ".pvProj"; //only support in chrome and IE.  FF doesn't work.
     fDialogBox.addEventListener('change', handleLoadScoreboard, false);
     document.body.appendChild(fDialogBox);
-
     function handleLoadScoreboard(evt) {
         if (!evt.target.files || !evt.target.files[0])
             return;
@@ -367,23 +372,9 @@ pvMapper.onReady(function () {
         } else {
             Ext.MessageBox.alert("Unrecognize File Type", "The file [" + afile.name + "] is not a PVMapper project.");
         }
-    }
+        fDialogBox.value = "";  //reset so we can open the same file again.
 
-    /// find an object in an array that match the srcObj  using the fn function to compare.
-    /// provide function: as fn(obj1, scrObj) : integer.  if obj1 == scrObj return 0, else return -1.
-    /// if found, return the matching object, if no element found, it returns null.
-
-    if (Array.prototype.find === undefined) {
-        Array.prototype.find = function (fn) {
-            if (fn) {
-                for (i = 0; i < this.length; i++) {
-                    if (fn(this[i]))
-                        return this[i];
                 }
-            }
-            return undefined;
-        }
-    }
 
     function AddScoreboardSite(aFeature, fn) {
         WKT = aFeature.geometry.toString();
@@ -522,6 +513,7 @@ pvMapper.onReady(function () {
 
     var loadScoreboardBtn = Ext.create('Ext.Action', {
         text: 'Load Project',
+        iconCls: 'x-openproject-menu-icon',
         tooltip: "Load a saved scoreboard project and use it as a default.",
         handler: function () {
             fDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
@@ -545,6 +537,11 @@ pvMapper.onReady(function () {
                         return;
                     }
 
+                    //check to make sure that the file has '.kml' extension.
+                    var dotindex = filename.lastIndexOf('.');
+                    dotindex = dotindex == -1 ? filename.length : dotindex;
+                    filename = filename.substr(0, dotindex, dotindex) + '.cfg';
+
                     var config = {configLines: []};
                     var aUtility, aStarRatables, aWeight, aTitle, aCat = null;
 
@@ -558,7 +555,7 @@ pvMapper.onReady(function () {
                             if (scrline.getStarRatables !== undefined) {
                                 aStarRatables = scrline.getStarRatables();
                             }
-                            config.configLines.push({title: aTitle, category: aCat, utility: aUtility, starRatables: aStarRatables, weight: aWeight });
+                            config.configLines.push({ title: aTitle, category: aCat, utility: aUtility, starRatables: aStarRatables, weight: aWeight });
                         });
                     var content = JSON.stringify(config);
                     var blob = CustomBlob(content, null);
@@ -572,6 +569,7 @@ pvMapper.onReady(function () {
 
     var saveConfigBtn = Ext.create('Ext.Action', {
         text: "Save Configuration",
+        iconCls: "x-saveconfig-menu-icon",
         tooltip: "Save the Scoreboard Utility configuration to a local file.",
         handler: function () {
             saveScoreboardConfig();
@@ -609,6 +607,7 @@ pvMapper.onReady(function () {
         } else {
             Ext.MessageBox.alert("Unrecognize File Type", "The file [" + afile.name + "] is not a PVMapper configuration file.");
         }
+        configDialogBox.value = "";
 
     }
     function loadScoreboardConfig(configJSON) {
@@ -639,6 +638,7 @@ pvMapper.onReady(function () {
     //----------------------------------------------------------------------------------------
     var loadConfigBtn = Ext.create('Ext.Action', {
         text: "Load Configuration",
+        iconCls: "x-openconfig-menu-icon",
         tooltip: "Load a Scoreboard Utility configuration from a local file.",
         handler: function () {
             configDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
@@ -648,7 +648,6 @@ pvMapper.onReady(function () {
     pvMapper.scoreboardToolsToolbarMenu.add(4, loadConfigBtn);
     //----------------------------------------------------------------------------------------
     //#region Reset scoreboard config
-
     function resetScoreboardConfig() {
         pvMapper.mainScoreboard.scoreLines.forEach(
             function (scrLine, idx, scoreLines) {
@@ -661,16 +660,59 @@ pvMapper.onReady(function () {
     }
 
     var resetScoreboardBtn = Ext.create('Ext.Action', {
-        text: 'Reset Configuration',
-        tooltip: "Reset the scoreboard to the default configuration",
+        text: 'Reset Scoreboard Configuration',
+        tooltip: "Export site polygons and scores to a KML file",
         handler: function () {
             resetScoreboardConfig();
         }
     });
     pvMapper.scoreboardToolsToolbarMenu.add(5, resetScoreboardBtn);
+    //#endregion
+    //----------------------------------------------------------------------------------------
+    //#region Export to Excel
+    function exportScoreboardToCSV() {
+        Ext.MessageBox.prompt('Save file as', 'Please enter a filename for the scoreboard (.CSV).',
+            function (btn, filename) {
+                if (btn === 'ok') {
+                    filename = filename || 'PVMapperScoreboard.csv';
+
+                    var filenameSpecialChars = new RegExp("[~#%&*{}<>;?/+|\"]");
+                    if (filename.match(filenameSpecialChars)) {
+                        Ext.MessageBox.alert('Invlaid filename', 'A filename can not contains any of the following characters [~#%&*{}<>;?/+|\"]');
+                        return;
+                    }
+
+                    //check to make sure that the file has '.kml' extension.
+                    var dotindex = filename.lastIndexOf('.');
+                    dotindex = dotindex == -1 ? filename.length : dotindex;
+                    filename = filename.substr(0, dotindex, dotindex) + '.csv';
+
+                    var exporter = Ext.create("GridExporter");
+
+                    var content = exporter.getCSV(pvMapper.scoreboardGrid);
+                    var blob = CustomBlob(content, null);
+                    blob.data = content;
+                    blob.type = 'data:application/csv';
+                    saveAs(blob, filename);
+                }
+            }, this, false, 'PVMapperScoreboard.csv'
+        );
+    }
+
+    var exportBtn = Ext.create('Ext.Action', {
+        text: "Export to CSV",
+        iconCls: "x-fileexport-menu-icon",
+        tooltip: "Export the scoreboard data to a CSV file.",
+        handler: function () {
+            exportScoreboardToCSV();
+        }
+    });
+    pvMapper.scoreboardToolsToolbarMenu.add(6, exportBtn);
 
     //#endregion
-    pvMapper.scoreboardToolsToolbarMenu.add(6, '-');
+    //----------------------------------------------------------------------------------------
+    pvMapper.scoreboardToolsToolbarMenu.add(7, '-');
+
     //----------------------------------------------------------------------------------------
 });
 
