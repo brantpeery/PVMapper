@@ -4,6 +4,8 @@
 /// <reference path="Event.ts" />
 
 module pvMapper {
+
+
     export var readyEvent: pvMapper.Event = new pvMapper.Event;
 
     export var mapToolbar: Ext.toolbar.IToolbar; // The main toolbar above the map
@@ -21,7 +23,10 @@ module pvMapper {
 
     export var map: OpenLayers.IMap;
     export var siteLayer: any;
-
+    export var loadLocalModules: any = null;
+    export var isLocalModulesLoaded: boolean = false;
+    export var customModules: CustomModuleInfo[] = new Array<CustomModuleInfo>();
+    export var waitToLoad: any = null;
     export function getColorForScore(score: number): string {
         var min = Math.min;
         var max = Math.max;

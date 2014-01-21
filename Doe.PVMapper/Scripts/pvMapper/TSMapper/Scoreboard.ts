@@ -36,6 +36,9 @@ module pvMapper {
         public changedEvent: pvMapper.Event = new pvMapper.Event();
         public scoresInvalidatedEvent: pvMapper.Event = new pvMapper.Event();
         public scoreLineAddedEvent: pvMapper.Event = new pvMapper.Event();
+        public update() {
+            this.changedEvent.fire(this, null);
+        }
 
         /**
          Fires when a total line tool is added to the totalLines
@@ -152,19 +155,36 @@ module pvMapper {
             // queue is set to wait 1/10th of a second before it actually refreshes the scoreboard.
         } else {
             if (console) { console.log("Scoreboard update event safely (and efficiently) ignored."); }
-            
-            if ((ClientDB.db != null) && (!mainScoreboard.isScoreLoaded)) {
-                mainScoreboard.scoreLines.forEach(function (sc) {
-                    sc.loadConfiguration();
-                });
-                mainScoreboard.isScoreLoaded = true;
-            }
+                                           
         }
     });
 
+    //this function will wait until IndexedDB is loaded and then load the configuration as well as saved CustomKML modules.
+    //However, if the browser is not supporting IndexedDB, it will just kick it back out.
+    pvMapper.waitToLoad = function() {
+        if (ClientDB.db !== null) {                                                                  
+            //load custom modules.
+            if ((pvMapper.loadLocalModules !== undefined) && (pvMapper.loadLocalModules !== null)
+                && (typeof (pvMapper.loadLocalModules) === "function")) {
+                pvMapper.loadLocalModules();
+            }
+
+            //load configuration
+            if ((ClientDB.db != null) && (!mainScoreboard.isScoreLoaded)) {
+                mainScoreboard.scoreLines.forEach(function (sc) {
+                    sc.loadConfiguration();    
+                });
+                mainScoreboard.isScoreLoaded = true;
+            }
+        } else {
+            setTimeout(pvMapper.waitToLoad, 5000);
+        }
+
+    }
+
     //Create the scoreboard onscreen
     pvMapper.onReady(function () {
-
+        setTimeout(pvMapper.waitToLoad, 5000); //check every 5 seconds.
     });
 
 }

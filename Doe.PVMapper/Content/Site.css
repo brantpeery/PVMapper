@@ -188,6 +188,35 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4fcff', end
        background-size:contain;
 }
 
+.x-search-menu-icon {
+  background-image: url(../Images/search.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+
+.x-NREL-menu-icon {
+  background-image: url(../Images/nrel.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+.x-eispclogo-menu-icon {
+  background-image: url(../Images/eispclogo.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+.x-tag-menu-icon {
+  background-image: url(../Images/tag.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+
+
+
+
 
 
 

@@ -31,5 +31,8 @@ declare module pvMapper {
         id: string;
         author: string;
         version: string;
+
+        getModuleName?: () => string;
+        setModuleName?: (name: string) => void;
     }
 }

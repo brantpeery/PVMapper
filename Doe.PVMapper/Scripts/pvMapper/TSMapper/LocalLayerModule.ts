@@ -12,7 +12,7 @@ module INLModules {
 
     export class LocalLayerModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({
+            var myModule: pvMapper.Module = new pvMapper.Module(<IModuleOptions>{ 
                 id: "LocalLayerModule",
                 author: "Leng Vang, INL",
                 version: "0.1.ts",
@@ -46,6 +46,12 @@ module INLModules {
                         functionName: "linear3pt",
                         functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 10000, 0, "km")
                     },
+                    setModuleName: (name: string) => {
+                        this.moduleName = name;
+                    },
+                    getModuleName: () => {
+                        return this.moduleName;
+                    },
                     weight: 10,
                 }],
 
@@ -67,9 +73,9 @@ module INLModules {
 
         //============================================================
         // blob is the file attribute and file handle.
-        private kmlFile = null;
+        public moduleName: string = null;
         public readTextFile(kmlString, kmlName) {
-            this.kmlFile = kmlString;
+            this.moduleName = kmlName;
             var kml_projection = new OpenLayers.Projection("EPSG:4326");
             var map_projection = new OpenLayers.Projection("EPSG:3857");
 

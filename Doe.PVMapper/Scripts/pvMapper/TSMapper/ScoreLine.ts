@@ -55,6 +55,13 @@ module pvMapper {
                 this.setStarRatables = (rateTable: IStarRatings) => { options.setStarRatables.apply(this, arguments); }
             }
 
+            if ($.isFunction(options.getModuleName)) {
+                this.getModuleName = () => { return options.getModuleName.apply(this, arguments); }
+            }
+
+            if ($.isFunction(options.setModuleName)) {
+                this.setModuleName = (name:string) => { options.setModuleName.apply(this, arguments); }
+            }
             // config window
             if ($.isFunction(options.showConfigWindow)) {
                 this.showConfigWindow = () => { options.showConfigWindow.apply(this, arguments); }
@@ -116,6 +123,8 @@ module pvMapper {
 
         getStarRatables: (mode?: string) => IStarRatings;
         setStarRatables: (rateTable: IStarRatings) => void;
+        getModuleName: () => string;
+        setModuleName: (name: string) => void;
 
         showConfigWindow: () => void;
 
@@ -282,9 +291,9 @@ module pvMapper {
         public putConfiguration(): any {
             var me = this;
             if (ClientDB.db) {
-                try {
-                    var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.STORE_NAME, "readwrite");
-                    var store = txn.objectStore(ClientDB.STORE_NAME);
+                try {      
+                    var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.CONFIG_STORE_NAME, "readwrite");
+                    var store = txn.objectStore(ClientDB.CONFIG_STORE_NAME);
                     var stb = null;
                     if (me.getStarRatables !== undefined)
                         stb = me.getStarRatables(); // call the module for the rating value.
@@ -317,7 +326,7 @@ module pvMapper {
             try {
                 this.putConfiguration();
             }
-            catch (e) {
+            catch (e) {    
                 console.log("Error: " + e.message);
             }
         }
@@ -325,8 +334,8 @@ module pvMapper {
         public getConfiguration(): any {
             var me = this;
             if (ClientDB.db) {
-                var txn = ClientDB.db.transaction(ClientDB.STORE_NAME, "readonly");
-                var store = txn.objectStore(ClientDB.STORE_NAME);
+                var txn = ClientDB.db.transaction(ClientDB.CONFIG_STORE_NAME, "readonly");
+                var store = txn.objectStore(ClientDB.CONFIG_STORE_NAME);
                 var request = store.get(me.title);
                 request.onsuccess = function (evt): any {
                     if (request.result != undefined) {

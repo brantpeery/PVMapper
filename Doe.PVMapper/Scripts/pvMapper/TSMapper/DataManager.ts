@@ -3,18 +3,41 @@
 /// <reference path="../../ExtJS.d.ts" />
 
 
-// Module
+// Module                                               
 module pvMapper {
+
+    // for mainttaining uploaded custom KML modules.  The purpose if for keeping handles onto the module in case
+    // user want to remove it from the project.
+    export interface ICustomModuleInfo {
+        name: string;
+        moduleObject: any;
+    }
+
+    export class CustomModuleInfo implements ICustomModuleInfo {
+
+        constructor(options: ICustomModuleInfo) {
+            this.name = options.name;
+            this.moduleObject = options.moduleObject;
+        }
+        public name: string;
+        public moduleObject: any;
+    }
+
    //Just to trick TypeScript into believing that we are creating an Ext object
    //to by pass development time compiler
 //   if (typeof(Ext) === 'undefined') var Ext: ;
 
+    export interface ExtendEventTarget extends EventTarget {
+        result: any;  // this doest get defined  in Lib.d.s.
+    }
+
     export class ClientDB {
 
         public static DB_NAME: string = "PVMapperData";
-        public static STORE_NAME: string = "PVMapperScores";
+        public static CONFIG_STORE_NAME: string = "PVMapperScores";
+        public static PROJECT_STORE_NAME: string = "PVMapperProjects";
         public static db: IDBDatabase = null;
-        public static DBVersion = 2;
+        public static DBVersion = 6;
 
         public static indexedDB: IDBFactory = window.indexedDB || window.msIndexedDB; // || window.webkitIndexedDB || window.mozIndexedDB 
 
@@ -34,9 +57,8 @@ module pvMapper {
                     ClientDB.isDBCreating = true;
                     var dbreq: IDBOpenDBRequest = ClientDB.indexedDB.open(ClientDB.DB_NAME, ClientDB.DBVersion);
                     dbreq.onsuccess = function (evt): any {
-                        console.log("Database [PVMapperScores] is open sucessful.");
+                        console.log("Database [PVMapperData] is open sucessful.");
                         ClientDB.db = evt.currentTarget.result;
-                        
                     }
 
                     dbreq.onerror = function (event: ErrorEvent): any {
@@ -46,8 +68,13 @@ module pvMapper {
 
                     dbreq.onupgradeneeded = function (evt): any {
                         try {
-                            var objStore = evt.currentTarget.result.createObjectStore(ClientDB.STORE_NAME, { keypath: "title" });
-                            //objStore.createIndex("title", "title", { unique: true });
+                            var db = evt.target.result;
+                            if (!db.objectStoreNames.contains(ClientDB.CONFIG_STORE_NAME)) {
+                                evt.currentTarget.result.createObjectStore(ClientDB.CONFIG_STORE_NAME, { keypath: "title" });
+                            }
+                            if (!db.objectStoreNames.contains(ClientDB.PROJECT_STORE_NAME)) {
+                                evt.currentTarget.result.createObjectStore(ClientDB.PROJECT_STORE_NAME, { keypath: "project" });
+                            }
                             ClientDB.db = evt.currentTarget.result;
                         }
                         catch (e) {
@@ -61,10 +88,105 @@ module pvMapper {
             }
             return null;
         }
+
+        //=============================================
+        public static saveCustomKML(filename: string, kmlStream: string): any {
+            if (ClientDB.db == null) return;
+                try {         
+                    var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.PROJECT_STORE_NAME, "readwrite");
+                    var store = txn.objectStore(ClientDB.PROJECT_STORE_NAME);
+                    var stb = null;
+
+                    var request = store.get(filename);
+                    request.onsuccess = function (evt): any {
+                        if (request.result != undefined) { // if already exists, update
+                            store.put(kmlStream, filename);
+                        }
+                        else
+                            store.add(kmlStream, filename); // if new, add
+                    }
+                } catch (e) {
+                    console.log("save custom KML failed, cause: " + e.message);
+                }
+        }
+
+        public static loadCustomKML(key: string, cbFn : ICallback): string {
+            var kmlStream: string = "";
+            if (ClientDB.db == null) return;
+            var txn = ClientDB.db.transaction(ClientDB.PROJECT_STORE_NAME, "readonly");
+            var store = txn.objectStore(ClientDB.PROJECT_STORE_NAME);
+                var request = store.get(key);
+                request.onsuccess = function (evt): any {
+                    if (request.result != undefined) {
+                        kmlStream = request.result;
+                        if (typeof (cbFn) === "function") {
+                            cbFn(kmlStream);
+                        }
+                    }
+                }
+        }
+
+        public static deleteCustomKML(key: string, fn: ICallback) {
+            if (ClientDB.db == null) return;
+            var txn = ClientDB.db.transaction(ClientDB.PROJECT_STORE_NAME, "readwrite");
+            txn.oncomplete = function (evt): any {
+                console.log("Transaction completed deleting module: " + key + " has been deleted from the database.")
+            }
+            txn.onerror = function (evt): any {
+                console.log("Transaction delete module: " + key + " failed, cause: " + txn.error);
+            }
+
+            txn.onabort = function (evt): any {
+                console.log("Transaction aborted module: " + key + " failed, cause: " + txn.error);
+            }
+
+            var store = txn.objectStore(ClientDB.PROJECT_STORE_NAME);
+            var request = store.delete(key);
+            request.onsuccess = function (evt): any {
+                console.log("Custom KML module: " + key + " has been deleted from the database.")
+                if ((fn) && (typeof (fn) === "function")) {
+                    fn(true);
+                }
+            }
+            request.onerror = function (evt): any {
+                console.log("Attempt to delete module: " + key + " failed, cause: " + request.error);
+                if ((fn) && (typeof (fn) === "function")) {
+                    fn(false);
+                }
+
+            }
+
+
+        }
+
+        public static getAllCustomKMLName(fn: ICallback){
+            var kmlNames: string[] = new Array<string>();
+            if (ClientDB.db == null) return;
+            try {
+                var txn = ClientDB.db.transaction(ClientDB.PROJECT_STORE_NAME, "readonly");
+                var store = txn.objectStore(ClientDB.PROJECT_STORE_NAME);
+                store.openCursor().onsuccess = function (evt) {
+                    var cursor = (<ExtendEventTarget>evt.target).result;
+                    if (cursor) {
+                        kmlNames.push(cursor.key);
+                        cursor.continue();
+                    }
+                    else {
+                        if (typeof fn === "function") {
+                            fn(kmlNames);
+                        }
+                    }
+                }
+            }
+            catch (ex) {
+                console.log("getAllCustomerKMLName failed, cause: " + ex.message);
+            }
+            return kmlNames;
+        }
     }
 
-
-  export class SiteData{
+//===========================================
+  export class SiteData{            
     id: string;
     isActive: Boolean;
     name: string;
