@@ -491,6 +491,41 @@ Ext.define('MainApp.view.ScoreWeightEditing', {
     }
 });
 
+
+
+function removeCustomModule(moduleName) {
+    var module = pvMapper.customModules.find(function (a) {
+        if (a.name === moduleName) return true;
+        else return false;
+    });
+    if (module) {
+        //remove the module from the local database
+        pvMapper.ClientDB.deleteCustomKML(module.name, function (isSuccessful) {
+            if (isSuccessful) {
+                //remove it from the custom module list.
+                var idx = pvMapper.customModules.indexOf(module);
+                pvMapper.customModules.splice(idx, 1);
+                //now remove the scoreline.
+                var scoreline = pvMapper.mainScoreboard.scoreLines.find(function (a) {
+                    if (a.getModuleName !== undefined) {
+                        if (a.getModuleName() === module.name) return true;
+                        else return false;
+                    }
+                    else return false;
+                });
+                if (scoreline) {
+                    idx = pvMapper.mainScoreboard.scoreLines.indexOf(scoreline);
+                    if (idx >= 0) pvMapper.mainScoreboard.scoreLines.splice(idx, 1);
+                    //finally then free the module.
+                    delete scoreline;
+                }
+                delete module;
+                pvMapper.mainScoreboard.update();
+            }
+        });
+    }
+}
+
 //----------------The grid and window-----------------
 Ext.define('Ext.grid.ScoreboardGrid', {
     //xtype:'Scoreboard',
@@ -501,6 +536,37 @@ Ext.define('Ext.grid.ScoreboardGrid', {
     //height: 600,
     //title: "Tools List",
     columns: scoreboardColumns,
+    viewConfig: {
+        stripeRows: true,
+        listeners: {
+
+            itemcontextmenu: function (view, rec, node, idx, e) {
+                if (rec.raw.getModuleName === undefined) {
+                    return true;
+                } else {
+                    e.stopEvent();
+                    var moduleName = rec.raw.getModuleName();
+                    var cellContextMenu = Ext.create("Ext.menu.Menu", {
+                        items: [{
+                            text: "Remove custom '" + moduleName + "'",
+                            iconCls: "x-delete-menu-icon",
+                            handler: function () {
+                                Ext.MessageBox.confirm("Removing custom module: '"+moduleName+"'", "Are you sure you want to remove this module?", function (btn) {
+                                    if (btn === "yes") {
+                                        //this function is defined in MainToolbar file.
+                                        removeCustomModule(moduleName);
+                                    }
+                                });
+                            }
+                        }]
+
+                    });
+                    cellContextMenu.showAt(e.getXY());
+                    return false;
+                }
+            }
+        }
+    },
     selModel: {
         selType: 'cellmodel', //'rowmodel', //Note: use 'cellmodel' once we have cell editing worked out
     },
@@ -663,6 +729,7 @@ Ext.define('MainApp.view.ScoreboardWindow', {
     title: 'Main Scoreboard',
     width: 800,
     height: 600,
+    maximizable: true,
     //cls: "propertyBoard", <-- this looked hokey, and conflicted with ext js's default styling.
     closeAction: 'hide',
     plugins: [{
@@ -691,7 +758,7 @@ Ext.define('MainApp.view.ScoreboardWindow', {
                     $("style").each(function () {
                         style += $(this)[0].outerHTML;
                     });
-
+                    
                     // var script = '<script> window.onmouseover = function(){window.close();}</script>';
                     printWindow.document.write('<!DOCTYPE html><html lang="en"><head><title>PV Mapper Scoreboard</title>' + link + style + ' </head><body>' + html + '</body>');
                     $('div', printWindow.document).each(function () {
@@ -703,13 +770,13 @@ Ext.define('MainApp.view.ScoreboardWindow', {
                     printWindow.document.close();
                     printWindow.print();
 
-                    //printWindow.close();'
                 }
             }
         ]
     }],
     items: pvMapper.scoreboardGrid,
-    constrain: true
+    constrain:true
+
 });
 
 

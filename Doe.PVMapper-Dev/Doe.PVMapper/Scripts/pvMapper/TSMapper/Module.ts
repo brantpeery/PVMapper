@@ -9,7 +9,7 @@
 // Module
 module pvMapper {
 
-  // Class
+    // Class
     export class Module implements IModuleOptions {
         constructor(options: IModuleOptions) {
             this.id = options.id;
@@ -69,6 +69,15 @@ module pvMapper {
             if (typeof (this.activate) === "function") {
                 pvMapper.onReady(this.activate);
             }
+
+
+            if ($.isFunction(options.getModuleName)) {
+                this.getModuleName = () => { return options.getModuleName.apply(this, arguments); }
+            }
+
+            if ($.isFunction(options.setModuleName)) {
+                this.setModuleName = (name: string) => { options.setModuleName.apply(this, arguments); }
+            }
         }
 
         public id: string;
@@ -78,12 +87,16 @@ module pvMapper {
         public scoringTools: IScoreToolOptions[];
         public infoTools: ITool[];
         public totalTools: ITotalTool[];
-        
-        
+
+
         public init: ICallback;
         public destroy: ICallback;
         public activate: ICallback;
         public deactivate: ICallback;
+
+        getModuleName: () => string;
+        setModuleName: (name: string) => void;
+
 
     }
 

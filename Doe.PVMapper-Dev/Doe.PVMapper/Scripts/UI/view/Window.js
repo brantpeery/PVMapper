@@ -115,7 +115,7 @@ var WindowManager;
 (function (wnMgr) {
 
   wnMgr.createWindow = function (className, configObj, allowDuplicate) {
-    className = (typeof(className) == "string") ? className : ("MyApp.view.Window");
+    className = (typeof(className) == "string") ? className : ("MainApp.view.Window");
     configObj = (configObj === undefined || configObj == null) ? {} : configObj;
     var aTitle = (configObj.title) ? configObj.title : "Untitled Window";
     allowDuplicate = (allowDuplicate==true);
