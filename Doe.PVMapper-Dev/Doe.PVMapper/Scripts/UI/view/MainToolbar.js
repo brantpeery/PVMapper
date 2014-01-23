@@ -112,9 +112,9 @@ pvMapper.onReady(function () {
         if (!module) {
 
 
-            if (afile.type === "application/vnd.google-earth.kmz") {
-                var localLayer = new INLModules.LocalLayerModule();
-                var reader = new FileReader();
+        if (afile.type === "application/vnd.google-earth.kmz") {
+            var localLayer = new INLModules.LocalLayerModule();
+            var reader = new FileReader();
                 reader.onload = function (evt) {
                     uncompressZip(evt.target.result,
                         function (kmlResult) {
@@ -123,20 +123,20 @@ pvMapper.onReady(function () {
                             saveToLocalDB(afile.name, kmlResult);
                         });
                 }
-                reader.readAsArrayBuffer(afile);
-            } else if (afile.type === "application/vnd.google-earth.kml+xml") {
-                var localLayer = new INLModules.LocalLayerModule();
-                var reader = new FileReader();
+            reader.readAsArrayBuffer(afile);
+        } else if (afile.type === "application/vnd.google-earth.kml+xml") {
+            var localLayer = new INLModules.LocalLayerModule();
+            var reader = new FileReader();
                 reader.onload = function (evt) {
                     localLayer.readTextFile(evt.target.result, afile.name);
                     pvMapper.customModules.push(new pvMapper.CustomModuleInfo({ name: afile.name, moduleObject: localLayer }));
                     saveToLocalDB(afile.name, evt.target.result);
                 }
-                reader.readAsText(afile);
-            } else {
-                Ext.MessageBox.alert("Unknown File Type", "The file [" + afile.name + "] is not a KML format.");
-            }
+            reader.readAsText(afile);
+        } else {
+            Ext.MessageBox.alert("Unknown File Type", "The file [" + afile.name + "] is not a KML format.");
         }
+    }
         else {
             Ext.MessageBox.alert("Duplicate module", "The module [" + afile.name +"] aleady loaded on the scoreboard.");
         }
@@ -427,7 +427,6 @@ pvMapper.onReady(function () {
             Ext.MessageBox.alert("Unrecognize File Type", "The file [" + afile.name + "] is not a PVMapper project.");
         }
         fDialogBox.value = "";  //reset so we can open the same file again.
-
                 }
 
     function AddScoreboardSite(aFeature, fn) {
@@ -489,7 +488,6 @@ pvMapper.onReady(function () {
                 if (feature !== null)
                     features.push(feature);
             }
-            delete
 
             //remove all site features found
             pvMapper.siteLayer.removeFeatures(features, { silent: true });
@@ -590,11 +588,6 @@ pvMapper.onReady(function () {
                         Ext.MessageBox.alert('Invlaid filename', 'A filename can not contains any of the following characters [~#%&*{}<>;?/+|\"]');
                         return;
                     }
-
-                    //check to make sure that the file has '.kml' extension.
-                    var dotindex = filename.lastIndexOf('.');
-                    dotindex = dotindex == -1 ? filename.length : dotindex;
-                    filename = filename.substr(0, dotindex, dotindex) + '.pvCfg';
 
                     var config = {configLines: []};
                     var aUtility, aStarRatables, aWeight, aTitle, aCat = null;
@@ -714,7 +707,7 @@ pvMapper.onReady(function () {
     }
 
     var resetScoreboardBtn = Ext.create('Ext.Action', {
-        text: 'Reset Scoreboard Configuration',
+        text: 'Reset Configuration',
         iconCls: "x-cleaning-menu-icon",
         tooltip: "Reset the scoreboard to the default configuration",
         handler: function () {
@@ -729,18 +722,13 @@ pvMapper.onReady(function () {
         Ext.MessageBox.prompt('Save file as', 'Please enter a filename for the scoreboard (.CSV).',
             function (btn, filename) {
                 if (btn === 'ok') {
-                    filename = filename || 'PVMapperScoreboard.csv';
+                    filename = (filename || 'PVMapper Scoreboard') + '.csv';
 
                     var filenameSpecialChars = new RegExp("[~#%&*{}<>;?/+|\"]");
                     if (filename.match(filenameSpecialChars)) {
                         Ext.MessageBox.alert('Invlaid filename', 'A filename can not contains any of the following characters [~#%&*{}<>;?/+|\"]');
                         return;
                     }
-
-                    //check to make sure that the file has '.kml' extension.
-                    var dotindex = filename.lastIndexOf('.');
-                    dotindex = dotindex == -1 ? filename.length : dotindex;
-                    filename = filename.substr(0, dotindex, dotindex) + '.csv';
 
                     var exporter = Ext.create("GridExporter");
 
@@ -750,7 +738,7 @@ pvMapper.onReady(function () {
                     blob.type = 'data:application/csv';
                     saveAs(blob, filename);
                 }
-            }, this, false, 'PVMapperScoreboard.csv'
+            }, this, false, 'PVMapper Scoreboard'
         );
     }
 
