@@ -59,11 +59,11 @@ module INLModules {
             });
         }
 
-        private starRatingHelper: pvMapper.IStarRatingHelper = new pvMapper.StarRatingHelper({
-            defaultStarRating: 2,
-            noCategoryRating: 4,
-            noCategoryLabel: "None"
-        });
+        //private starRatingHelper: pvMapper.IStarRatingHelper = new pvMapper.StarRatingHelper({
+        //    defaultStarRating: 2,
+        //    noCategoryRating: 4,
+        //    noCategoryLabel: "None"
+        //});
 
         //private localUrl = "";
 
