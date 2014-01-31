@@ -22,7 +22,10 @@ var pvMapper;
 
     pvMapper.map;
     pvMapper.siteLayer;
-
+    pvMapper.loadLocalModules = null;
+    pvMapper.isLocalModulesLoaded = false;
+    pvMapper.customModules = new Array();
+    pvMapper.waitToLoad = null;
     function getColorForScore(score) {
         var min = Math.min;
         var max = Math.max;

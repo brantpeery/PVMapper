@@ -70,8 +70,8 @@ var app = Ext.application({
 
         if (console) console.log('launching application');
 
-    //connect to local indexedDB database.
-    pvMapper.ClientDB.initClientDB();
+        //connect to local indexedDB database.
+        pvMapper.ClientDB.initClientDB();
 
         // set the theme for OpenLayers
         OpenLayers.ImgPath = "/Content/OpenLayers/default/img/";
@@ -84,7 +84,8 @@ var app = Ext.application({
             }));
 
         //Create default map controls
-        var controls = [new OpenLayers.Control.Navigation(),
+        pvMapper.siteNavigatorControl = new OpenLayers.Control.Navigation();
+        var controls = [pvMapper.siteNavigatorControl,
                         //new OpenLayers.Control.PanPanel(), // <-- these two pan/zoom controls use CSS styling
                         //new OpenLayers.Control.ZoomPanel(),
                         new OpenLayers.Control.PanZoomBar(), // <-- this pan/zoom control is styled by images
@@ -175,7 +176,46 @@ var app = Ext.application({
                 plugins: [{
                     ptype: 'treeviewdragdrop',
                     appendOnly: false
-                }]
+                }],
+                listeners: {
+                    //this code is for context menu for allow delete of a Custom KML layer
+                    itemcontextmenu: function (treeview, record, element, index, evt) {
+                        if ((record.data.layer instanceof OpenLayers.Layer.Vector) && record.data.layer.isReferenceLayer) {
+                            var moduleName = record.data.layer.name;
+                            var module = pvMapper.customModules.find(function (a) {  //a is instance of pvMapper.CustomModuleData.
+                                if ((a.moduleObject.title) && (a.moduleObject.title == moduleName)) return true;
+                                return false;
+                            });
+
+                            if (module) {
+                                evt.stopEvent();
+                                var titleName = moduleName;
+                                var cellContextMenu = Ext.create("Ext.menu.Menu", {
+                                    items: [{
+                                        text: "Remove: '" + titleName + "'",
+                                        iconCls: "x-delete-menu-icon",
+                                        handler: function () {
+
+                                            Ext.MessageBox.confirm("Removing '" + titleName +"'", "Are you sure you want to remove this module?", function (btn) {
+                                                if (btn === "yes") {
+                                                    var idx = pvMapper.customModules.indexOf(module);
+                                                    pvMapper.customModules.splice(idx, 1);
+
+                                                    if (module.moduleObject.removeLocalLayer)
+                                                      module.moduleObject.removeLocalLayer();
+                                                }
+                                            });
+                                        }
+                                    }]
+
+                                });
+                                cellContextMenu.showAt(evt.getXY());
+                                return false;
+                            }
+                        }
+                    }
+                }
+
             },
             store: layerTreeStore,
             rootVisible: false,

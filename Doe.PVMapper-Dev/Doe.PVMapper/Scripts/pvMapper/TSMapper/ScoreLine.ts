@@ -62,6 +62,15 @@ module pvMapper {
             if ($.isFunction(options.setModuleName)) {
                 this.setModuleName = (name:string) => { options.setModuleName.apply(this, arguments); }
             }
+
+            if ($.isFunction(options.getTitle)) {
+                this.getTitle = () => { return options.getTitle.apply(this, arguments); }
+            }
+
+            if ($.isFunction(options.setTitle)) {
+                this.setTitle = (name: string) => { options.setTitle.apply(this, arguments); }
+            }
+
             // config window
             if ($.isFunction(options.showConfigWindow)) {
                 this.showConfigWindow = () => { options.showConfigWindow.apply(this, arguments); }
@@ -125,6 +134,8 @@ module pvMapper {
         setStarRatables: (rateTable: IStarRatings) => void;
         getModuleName: () => string;
         setModuleName: (name: string) => void;
+        getTitle: () => string;
+        setTitle: (newTitle: string) => void;
 
         showConfigWindow: () => void;
 
