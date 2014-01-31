@@ -25,7 +25,7 @@ module pvMapper {
     export var siteLayer: any;
     export var loadLocalModules: any = null;
     export var isLocalModulesLoaded: boolean = false;
-    export var customModules: CustomModuleInfo[] = new Array<CustomModuleInfo>();
+    export var customModules: CustomModuleData[] = new Array<CustomModuleData>();
     export var waitToLoad: any = null;
     export function getColorForScore(score: number): string {
         var min = Math.min;

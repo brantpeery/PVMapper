@@ -495,12 +495,12 @@ Ext.define('MainApp.view.ScoreWeightEditing', {
 
 function removeCustomModule(moduleName) {
     var module = pvMapper.customModules.find(function (a) {
-        if (a.name === moduleName) return true;
+        if (a.fileName === moduleName) return true;
         else return false;
     });
     if (module) {
         //remove the module from the local database
-        pvMapper.ClientDB.deleteCustomKML(module.name, function (isSuccessful) {
+        pvMapper.ClientDB.deleteCustomKML(module.fileName, function (isSuccessful) {
             if (isSuccessful) {
                 //remove it from the custom module list.
                 var idx = pvMapper.customModules.indexOf(module);
@@ -508,7 +508,7 @@ function removeCustomModule(moduleName) {
                 //now remove the scoreline.
                 var scoreline = pvMapper.mainScoreboard.scoreLines.find(function (a) {
                     if (a.getModuleName !== undefined) {
-                        if (a.getModuleName() === module.name) return true;
+                        if (a.getModuleName() === module.fileName) return true;
                         else return false;
                     }
                     else return false;
@@ -519,6 +519,8 @@ function removeCustomModule(moduleName) {
                     //finally then free the module.
                     delete scoreline;
                 }
+                if (module.moduleObject.removeLocalLayer !== undefined)
+                    module.moduleObject.removeLocalLayer();  //remove the custom module layer from map.
                 delete module;
                 pvMapper.mainScoreboard.update();
             }
@@ -546,12 +548,16 @@ Ext.define('Ext.grid.ScoreboardGrid', {
                 } else {
                     e.stopEvent();
                     var moduleName = rec.raw.getModuleName();
+                    var titleName = moduleName;
+                    if (rec.raw.getTitle !== undefined)
+                        titleName = rec.raw.getTitle();
                     var cellContextMenu = Ext.create("Ext.menu.Menu", {
                         items: [{
-                            text: "Remove custom '" + moduleName + "'",
+                            text: "Remove Custom Module: '" + titleName+"'",
                             iconCls: "x-delete-menu-icon",
                             handler: function () {
-                                Ext.MessageBox.confirm("Removing custom module: '"+moduleName+"'", "Are you sure you want to remove this module?", function (btn) {
+                                
+                                Ext.MessageBox.confirm("Removing '"+titleName+"("+moduleName+")'", "Are you sure you want to remove this module?", function (btn) {
                                     if (btn === "yes") {
                                         //this function is defined in MainToolbar file.
                                         removeCustomModule(moduleName);

@@ -66,6 +66,30 @@ var pvMapper;
                 };
             }
 
+            if ($.isFunction(options.getModuleName)) {
+                this.getModuleName = function () {
+                    return options.getModuleName.apply(_this, arguments);
+                };
+            }
+
+            if ($.isFunction(options.setModuleName)) {
+                this.setModuleName = function (name) {
+                    options.setModuleName.apply(_this, arguments);
+                };
+            }
+
+            if ($.isFunction(options.getTitle)) {
+                this.getTitle = function () {
+                    return options.getTitle.apply(_this, arguments);
+                };
+            }
+
+            if ($.isFunction(options.setTitle)) {
+                this.setTitle = function (name) {
+                    options.setTitle.apply(_this, arguments);
+                };
+            }
+
             if ($.isFunction(options.showConfigWindow)) {
                 this.showConfigWindow = function () {
                     options.showConfigWindow.apply(_this, arguments);
@@ -94,7 +118,7 @@ var pvMapper;
             if (options.scoreUtilityOptions == undefined) {
                 options.scoreUtilityOptions = {
                     functionName: "random",
-                    functionArgs: { className: "Random" },
+                    functionArgs: null,
                     iconURL: null
                 };
             }
@@ -245,8 +269,8 @@ var pvMapper;
             var me = this;
             if (pvMapper.ClientDB.db) {
                 try  {
-                    var txn = pvMapper.ClientDB.db.transaction(pvMapper.ClientDB.STORE_NAME, "readwrite");
-                    var store = txn.objectStore(pvMapper.ClientDB.STORE_NAME);
+                    var txn = pvMapper.ClientDB.db.transaction(pvMapper.ClientDB.CONFIG_STORE_NAME, "readwrite");
+                    var store = txn.objectStore(pvMapper.ClientDB.CONFIG_STORE_NAME);
                     var stb = null;
                     if (me.getStarRatables !== undefined)
                         stb = me.getStarRatables();
@@ -278,8 +302,8 @@ var pvMapper;
         ScoreLine.prototype.getConfiguration = function () {
             var me = this;
             if (pvMapper.ClientDB.db) {
-                var txn = pvMapper.ClientDB.db.transaction(pvMapper.ClientDB.STORE_NAME, "readonly");
-                var store = txn.objectStore(pvMapper.ClientDB.STORE_NAME);
+                var txn = pvMapper.ClientDB.db.transaction(pvMapper.ClientDB.CONFIG_STORE_NAME, "readonly");
+                var store = txn.objectStore(pvMapper.ClientDB.CONFIG_STORE_NAME);
                 var request = store.get(me.title);
                 request.onsuccess = function (evt) {
                     if (request.result != undefined) {

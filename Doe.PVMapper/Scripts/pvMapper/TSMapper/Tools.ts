@@ -54,7 +54,11 @@ module pvMapper {
 
 
     export interface IInfoToolOptions extends ITool {
+        getModuleName?: () => string;
+        setModuleName?: (name: string) => void;
 
+        getTitle?: () => string;
+        setTitle?: (newTitle: string) => void;
     }
 
     export interface IScoreToolOptions extends ITool {
@@ -72,6 +76,9 @@ module pvMapper {
 
         getModuleName?: () => string;
         setModuleName?: (name: string) => void;
+
+        getTitle?: () => string;                     
+        setTitle?: (newTitle: string) => void;
         //getStarRating: (name: string) => number;
 
         // optional method, implemented on configurable tools, which will show a configuration menu
@@ -109,7 +116,11 @@ module pvMapper {
     }
 
     export interface IInfoTool extends ITool {
+        getModuleName?: () => string;
+        setModuleName?: (name: string) => void;
 
+        getTitle?: () => string;
+        setTitle?: (newTitle: string) => void;
     }
 
     export interface IToolAction {

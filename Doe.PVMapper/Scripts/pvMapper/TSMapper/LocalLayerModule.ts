@@ -12,7 +12,7 @@ module INLModules {
 
     export class LocalLayerModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module(<IModuleOptions>{ 
+            var myModule: pvMapper.Module = new pvMapper.Module({ 
                 id: "LocalLayerModule",
                 author: "Leng Vang, INL",
                 version: "0.1.ts",
@@ -25,7 +25,12 @@ module INLModules {
                 },
                 destroy: null,
                 init: null,
-
+                setModuleName: (name: string) => {
+                    this.moduleName = name;
+                },
+                getModuleName: () => {
+                    return this.moduleName;
+                },
                 scoringTools: [{
                     activate: null,
                     deactivate: null,
@@ -52,8 +57,14 @@ module INLModules {
                     getModuleName: () => {
                         return this.moduleName;
                     },
+                    getTitle: () => {
+                        return this.title;
+                    },
+                    setTitle: (newTitle: string) => {
+                        this.title = newTitle;
+                    },
                     weight: 10,
-                }],
+                }],                     
 
                 infoTools: null
             });
@@ -71,15 +82,19 @@ module INLModules {
         private localFormat: OpenLayers.KML = null;
         //private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
 
+        public removeLocalLayer() {
+            this.localLayer.destroy(); //force to remove from map layer.
+        }
         //============================================================
         // blob is the file attribute and file handle.
+        public moduleClass: string = /(\w+)\(/.exec((<any>this).constructor.toString())[1];
         public moduleName: string = null;
-        public readTextFile(kmlString, kmlName) {
-            this.moduleName = kmlName;
+        public title: string = "Custom Distance Tool";
+        public readTextFile(kmlString, kmlName, kmlFile) {
+            this.moduleName = kmlFile;
+            this.title = kmlName;
             var kml_projection = new OpenLayers.Projection("EPSG:4326");
             var map_projection = new OpenLayers.Projection("EPSG:3857");
-
-            //var osm: OpenLayers.OSM = new OpenLayers.Layer.OSM();
 
             this.localFormat = this.localFormat || new OpenLayers.Format.KML({
                 extractStyles: true,               //user KML style
@@ -97,6 +112,7 @@ module INLModules {
                     }
                 });
 
+            this.localLayer.setVisibility(false);
             var feature: OpenLayers.FVector[] = this.localFormat.read(kmlString);
             this.localLayer.addFeatures(feature);
             var isOk = pvMapper.map.addLayer(this.localLayer);

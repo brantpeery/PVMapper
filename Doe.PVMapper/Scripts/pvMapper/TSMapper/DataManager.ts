@@ -1,3 +1,4 @@
+/// <reference path="Options.d.ts" />
 /// <reference path="common.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="../../ExtJS.d.ts" />
@@ -8,19 +9,38 @@ module pvMapper {
 
     // for mainttaining uploaded custom KML modules.  The purpose if for keeping handles onto the module in case
     // user want to remove it from the project.
-    export interface ICustomModuleInfo {
-        name: string;
-        moduleObject: any;
+
+    //this class is the database KML Module record.  The key is the filename.  moduleName is the user given name.
+    export class CustomModule {
+        constructor(name: string, aclass: string, data: any) {
+            this.customName = name;
+            this.customClass = aclass;
+            this.customData = data;
+        }
+        public customName: string;
+        public customClass: string;
+        public customData: any;
     }
 
-    export class CustomModuleInfo implements ICustomModuleInfo {
+    // these class and interface is for storing the module file name along with the module tool layer object
+    export interface ICustomModuleTool {
+        fileName: string;
+        moduleObject: IModuleOptions;
+    }
 
-        constructor(options: ICustomModuleInfo) {
-            this.name = options.name;
+    export var ICustomModuleData: {
+        new (name: string, data: any): ICustomModuleTool;
+        prototype: ICustomModuleTool;
+    }
+
+    export class CustomModuleData implements ICustomModuleTool {
+
+        constructor(options: ICustomModuleTool) {
+            this.fileName = options.fileName;
             this.moduleObject = options.moduleObject;
         }
-        public name: string;
-        public moduleObject: any;
+        public fileName: string;
+        public moduleObject: IModuleOptions;
     }
 
    //Just to trick TypeScript into believing that we are creating an Ext object
@@ -37,7 +57,7 @@ module pvMapper {
         public static CONFIG_STORE_NAME: string = "PVMapperScores";
         public static PROJECT_STORE_NAME: string = "PVMapperProjects";
         public static db: IDBDatabase = null;
-        public static DBVersion = 6;
+        public static DBVersion = 7;
 
         public static indexedDB: IDBFactory = window.indexedDB || window.msIndexedDB; // || window.webkitIndexedDB || window.mozIndexedDB 
 
@@ -88,9 +108,8 @@ module pvMapper {
             }
             return null;
         }
-
-        //=============================================
-        public static saveCustomKML(filename: string, kmlStream: string): any {
+        
+        public static saveCustomKML(moduleName: string, moduleClass: string, filename: string, kmlStream: string): any {
             if (ClientDB.db == null) return;
                 try {         
                     var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.PROJECT_STORE_NAME, "readwrite");
@@ -99,29 +118,32 @@ module pvMapper {
 
                     var request = store.get(filename);
                     request.onsuccess = function (evt): any {
+                        var data = new CustomModule(moduleName, moduleClass, kmlStream);
                         if (request.result != undefined) { // if already exists, update
-                            store.put(kmlStream, filename);
+                            store.put(data,filename);
                         }
                         else
-                            store.add(kmlStream, filename); // if new, add
-                    }
+                            store.add(data, filename); // if new, add
+                    }                     
                 } catch (e) {
                     console.log("save custom KML failed, cause: " + e.message);
                 }
         }
 
         public static loadCustomKML(key: string, cbFn : ICallback): string {
-            var kmlStream: string = "";
+            var kmlData: CustomModule;
             if (ClientDB.db == null) return;
             var txn = ClientDB.db.transaction(ClientDB.PROJECT_STORE_NAME, "readonly");
             var store = txn.objectStore(ClientDB.PROJECT_STORE_NAME);
                 var request = store.get(key);
                 request.onsuccess = function (evt): any {
                     if (request.result != undefined) {
-                        kmlStream = request.result;
-                        if (typeof (cbFn) === "function") {
-                            cbFn(kmlStream);
-                        }
+                        if (+ClientDB.db.version <= 6) 
+                            kmlData = new CustomModule(key, "LocalLayerModule", request.result);
+                        else 
+                            kmlData = request.result;
+                        if (typeof (cbFn) === "function") 
+                            cbFn(kmlData);
                     }
                 }
         }
