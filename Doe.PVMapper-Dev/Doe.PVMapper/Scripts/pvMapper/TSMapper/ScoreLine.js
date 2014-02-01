@@ -1,4 +1,4 @@
-/// <reference path="IEventTypes.ts" />
+﻿/// <reference path="IEventTypes.ts" />
 /// <reference path="ScoreUtility.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Site.ts" />
@@ -274,7 +274,16 @@ var pvMapper;
                     var stb = null;
                     if (me.getStarRatables !== undefined)
                         stb = me.getStarRatables();
-                    var dbScore = new DBScore(me.title, me.description, me.category, me.weight, me.active, me.scoreUtility, stb);
+
+                    //Man!!!!  IndexedDB just hates the IScoreUtilityArgs "stringify" function.  It conplains that it can not clone the object if it has a 'stringify' function defined.
+                    //Even the scoreUtility class has "stringify" defined, its fine, just not in the ScoreUtilityArgs class like ThreePoint or Linear.  May be because it thinks that
+                    //the stringify there has text formatting resemblance of DOM elements, because IndexedDB will not serialized DOM nodes.
+                    //since we will be serialized the scoreUtility and its going to do away with functions any way, we just remove the function 'stringify' if any.
+                    var util = me.scoreUtility;
+                    if (util.functionArgs.stringify !== undefined)
+                        util.functionArgs.stringify = undefined;
+
+                    var dbScore = new DBScore(me.title, me.description, me.category, me.weight, me.active, util, stb);
 
                     var request = store.get(me.title);
                     request.onsuccess = function (evt) {
