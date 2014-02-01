@@ -20,7 +20,6 @@ module pvMapper {
             public active: boolean,
             public scoreUtility: ScoreUtility,
             public rateTable: IStarRatings
-            //public scores: Score[]
             )
         {
         }
@@ -308,13 +307,22 @@ module pvMapper {
                     var stb = null;
                     if (me.getStarRatables !== undefined)
                         stb = me.getStarRatables(); // call the module for the rating value.
+
+                    //Man!!!!  IndexedDB just hates the IScoreUtilityArgs "stringify" function.  It conplains that it can not clone the object if it has a 'stringify' function defined.
+                    //Even the scoreUtility class has "stringify" defined, its fine, just not in the ScoreUtilityArgs class like ThreePoint or Linear.  May be because it thinks that 
+                    //the stringify there has text formatting resemblance of DOM elements, because IndexedDB will not serialized DOM nodes.
+                    //since we will be serialized the scoreUtility and its going to do away with functions any way, we just remove the function 'stringify' if any.
+                    var util = me.scoreUtility;
+                    if (util.functionArgs.stringify !== undefined)
+                        util.functionArgs.stringify = undefined;
+
                     var dbScore: DBScore = new DBScore(
                         me.title,
                         me.description,
                         me.category,
                         me.weight,
                         me.active,
-                        me.scoreUtility,
+                        util,
                         stb
                         );
 
@@ -360,8 +368,6 @@ module pvMapper {
                         me.scoreUtility.functionArgs = request.result.scoreUtility.functionArgs;
                         me.scoreUtility.iconURL = request.result.scoreUtility.iconURL;
                         me.scoreUtility.fCache = request.result.scoreUtility.fCache;
-                        //This won't work.  No way to write back to the module's rateTable.
-                        //me.getStarRatables = request.result.rateTable;
 
                         if ((me.setStarRatables !== undefined) && (request.result.rateTable !== null)) {
                             me.setStarRatables(request.result.rateTable);
