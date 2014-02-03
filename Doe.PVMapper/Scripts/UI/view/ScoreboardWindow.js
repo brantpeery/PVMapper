@@ -116,7 +116,7 @@ var scoreboardColumns = [{
         else
             return ' ';
     },
-    } , {
+}, {
     header: 'Weight',
     //text: 'Weight',
     width: 45,
@@ -305,14 +305,56 @@ var scoreboardColumns = [{
     columns: siteColumns
 }];
 
+//this is for the grid.column header context menu.
+function showHeaderCTMenu(xy, site) {
+    var siteName = ((site === undefined) || (site === null)) ? "this site" : "site: " + site.name;
+    var headerCtContext = Ext.create("Ext.menu.Menu", {
+        items: [Ext.create("Ext.menu.Item",{
+            text: "Zoom to " + siteName,
+            iconCls: "x-zoomin-menu-icon",
+            handler: function () {
+                pvMapper.map.zoomToExtent(site.geometry.bounds, false);
+            }
+        }), Ext.create("Ext.menu.Item",{
+            text: "Zoom to project",
+            iconCls: "x-zoomout-menu-icon",
+            handler: function () {
+                pvMapper.map.zoomToExtent(pvMapper.siteLayer.getDataExtent(), false);
+            }
+        }),
+        Ext.create("Ext.menu.Separator",{
+        }),
+        Ext.create("Ext.menu.Item",{
+            text: "Delete " + siteName,
+            iconCls: "x-delete-menu-icon",
+            handler: function () {
+                Ext.MessageBox.confirm("Delete " + siteName, "Deleting a site is permenant, are you sure?", function (btn) {
+                    if (btn === "yes") {
+                        pvMapper.deleteSite(site.id);
+                        pvMapper.siteManager.removeSite(site);
+                        var feature = pvMapper.siteLayer.features.find(
+                           function (a) {
+                               if (a.attributes.name === site.name) return true;
+                               else return false;
+                           });
+                        pvMapper.siteLayer.removeFeatures([feature], { silent: true });
+                    }
+                });
+            }
+        })
 
+        ]
+    });
+    headerCtContext.showAt(xy);
+}
 //Use this store to maintain the panel list of sites
 toolsStore.on({
     load: function () {
         siteColumns.length = 0; //Empty the array
         var rec0 = this.first();
         rec0.get('sites').forEach(function (scoreLine, idx) {
-            siteColumns.push({
+            var siteColumn = {
+                id: scoreLine.site.name,
                 text: scoreLine.site.name,
                 sealed: true,
                 //flex: 1, //Will stretch with the size of the window
@@ -355,10 +397,10 @@ toolsStore.on({
                         }
                     },
                     draggable: false,
-                    
+
                     summaryType: function (records) {
                         return "<div style='text-align: right;'>" +
-                            "<input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show pie chart' onClick='scoreboardGrid.viewPie(\"" +
+                            "<input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show pie chart' onClick='pvMapper.scoreboardGrid.viewPie(\"" +
                              records[0].get('category') + "\"," + idx.toString() + ");' /></div>";
                     },
                     //summaryRenderer: function (value, summaryRowValues) {
@@ -408,13 +450,33 @@ toolsStore.on({
                         else return '';
                     },
 
-                },
-                ]
-            });
+                }]
+            };
+            siteColumns.push(siteColumn);
         });
 
         //Now update the sites section of the grid
-        scoreboardGrid.reconfigure(this, scoreboardColumns);
+        pvMapper.scoreboardGrid.reconfigure(this, scoreboardColumns);
+
+        //The columns has been configured, Els for each column is now available.  
+        //We can attach conttext menu to the header.
+        var rec0 = this.first();
+        rec0.get('sites').forEach(function (scoreLine, idx) {
+            var col = Ext.getCmp(scoreLine.site.name);
+            if (col) {
+                var el = col.getEl();
+                if (el) {
+                    el.on({
+                        'contextmenu': function (e, col, opt) {
+                            e.stopEvent();
+                            showHeaderCTMenu(e.getXY(), scoreLine.site);
+                            return false;
+                        },
+                        scope: this
+                    });
+                }
+            }
+        });
     }
 
 });
@@ -430,6 +492,42 @@ Ext.define('MainApp.view.ScoreWeightEditing', {
 });
 
 
+
+function removeCustomModule(moduleName) {
+    var module = pvMapper.customModules.find(function (a) {
+        if (a.fileName === moduleName) return true;
+        else return false;
+    });
+    if (module) {
+        //remove the module from the local database
+        pvMapper.ClientDB.deleteCustomKML(module.fileName, function (isSuccessful) {
+            if (isSuccessful) {
+                //remove it from the custom module list.
+                var idx = pvMapper.customModules.indexOf(module);
+                pvMapper.customModules.splice(idx, 1);
+                //now remove the scoreline.
+                var scoreline = pvMapper.mainScoreboard.scoreLines.find(function (a) {
+                    if (a.getModuleName !== undefined) {
+                        if (a.getModuleName() === module.fileName) return true;
+                        else return false;
+                    }
+                    else return false;
+                });
+                if (scoreline) {
+                    idx = pvMapper.mainScoreboard.scoreLines.indexOf(scoreline);
+                    if (idx >= 0) pvMapper.mainScoreboard.scoreLines.splice(idx, 1);
+                    //finally then free the module.
+                    delete scoreline;
+                }
+                if (module.moduleObject.removeLocalLayer !== undefined)
+                    module.moduleObject.removeLocalLayer();  //remove the custom module layer from map.
+                delete module;
+                pvMapper.mainScoreboard.update();
+            }
+        });
+    }
+}
+
 //----------------The grid and window-----------------
 Ext.define('Ext.grid.ScoreboardGrid', {
     //xtype:'Scoreboard',
@@ -440,6 +538,41 @@ Ext.define('Ext.grid.ScoreboardGrid', {
     //height: 600,
     //title: "Tools List",
     columns: scoreboardColumns,
+    viewConfig: {
+        stripeRows: true,
+        listeners: {
+
+            itemcontextmenu: function (view, rec, node, idx, e) {
+                if (rec.raw.getModuleName === undefined) {
+                    return true;
+                } else {
+                    e.stopEvent();
+                    var moduleName = rec.raw.getModuleName();
+                    var titleName = moduleName;
+                    if (rec.raw.getTitle !== undefined)
+                        titleName = rec.raw.getTitle();
+                    var cellContextMenu = Ext.create("Ext.menu.Menu", {
+                        items: [{
+                            text: "Remove Custom Module: '" + titleName+"'",
+                            iconCls: "x-delete-menu-icon",
+                            handler: function () {
+                                
+                                Ext.MessageBox.confirm("Removing '"+titleName+"("+moduleName+")'", "Are you sure you want to remove this module?", function (btn) {
+                                    if (btn === "yes") {
+                                        //this function is defined in MainToolbar file.
+                                        removeCustomModule(moduleName);
+                                    }
+                                });
+                            }
+                        }]
+
+                    });
+                    cellContextMenu.showAt(e.getXY());
+                    return false;
+                }
+            }
+        }
+    },
     selModel: {
         selType: 'cellmodel', //'rowmodel', //Note: use 'cellmodel' once we have cell editing worked out
     },
@@ -490,7 +623,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
     viewPie: function (cat, site) {
 
         var pieColor = '';
-        var records = scoreboardGrid.store.getGroups(cat);
+        var records = pvMapper.scoreboardGrid.store.getGroups(cat);
         if ((records.children.length <= 0) || (site == null)) {
             Ext.MessageBox.alert("Empty!", "There is no data in this group.");
             return;
@@ -505,10 +638,10 @@ Ext.define('Ext.grid.ScoreboardGrid', {
         //        pieColor = pvMapper.getColorForScore(val);
         //    pieStore.add({Title: record.get('title'), Data: record.get('weight'), Color: pieColor });
         //});
-        
+
         var pieWin = Ext.create('MainApp.view.PieWindow', {
             //dataStore: pieStore,
-            scoreBoardStore: scoreboardGrid.store,
+            scoreBoardStore: pvMapper.scoreboardGrid.store,
             siteName: sitename,
             groupName: cat,
             title: 'Weighted Percentage - ' + cat + ' : ' + siteColumns[site].text,
@@ -561,7 +694,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
                             printWindow.print();
                         }
                     }
-            ]
+                ]
             }]
         }).show();
 
@@ -569,7 +702,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
 
 });
 
-var scoreboardGrid = Ext.create('Ext.grid.ScoreboardGrid', {
+pvMapper.scoreboardGrid = Ext.create('Ext.grid.ScoreboardGrid', {
 });
 
 //define a plugin to use to insert a button onto the window panel's header area.
@@ -602,6 +735,7 @@ Ext.define('MainApp.view.ScoreboardWindow', {
     title: 'Main Scoreboard',
     width: 800,
     height: 600,
+    maximizable: true,
     //cls: "propertyBoard", <-- this looked hokey, and conflicted with ext js's default styling.
     closeAction: 'hide',
     plugins: [{
@@ -630,7 +764,7 @@ Ext.define('MainApp.view.ScoreboardWindow', {
                     $("style").each(function () {
                         style += $(this)[0].outerHTML;
                     });
-
+                    
                     // var script = '<script> window.onmouseover = function(){window.close();}</script>';
                     printWindow.document.write('<!DOCTYPE html><html lang="en"><head><title>PV Mapper Scoreboard</title>' + link + style + ' </head><body>' + html + '</body>');
                     $('div', printWindow.document).each(function () {
@@ -642,13 +776,13 @@ Ext.define('MainApp.view.ScoreboardWindow', {
                     printWindow.document.close();
                     printWindow.print();
 
-                    //printWindow.close();'
                 }
             }
         ]
     }],
-    items: scoreboardGrid,
-    constrain: true
+    items: pvMapper.scoreboardGrid,
+    constrain:true
+
 });
 
 

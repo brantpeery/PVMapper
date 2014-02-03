@@ -66,6 +66,30 @@ var pvMapper;
                 };
             }
 
+            if ($.isFunction(options.getModuleName)) {
+                this.getModuleName = function () {
+                    return options.getModuleName.apply(_this, arguments);
+                };
+            }
+
+            if ($.isFunction(options.setModuleName)) {
+                this.setModuleName = function (name) {
+                    options.setModuleName.apply(_this, arguments);
+                };
+            }
+
+            if ($.isFunction(options.getTitle)) {
+                this.getTitle = function () {
+                    return options.getTitle.apply(_this, arguments);
+                };
+            }
+
+            if ($.isFunction(options.setTitle)) {
+                this.setTitle = function (name) {
+                    options.setTitle.apply(_this, arguments);
+                };
+            }
+
             if ($.isFunction(options.showConfigWindow)) {
                 this.showConfigWindow = function () {
                     options.showConfigWindow.apply(_this, arguments);
@@ -94,7 +118,7 @@ var pvMapper;
             if (options.scoreUtilityOptions == undefined) {
                 options.scoreUtilityOptions = {
                     functionName: "random",
-                    functionArgs: { className: "Random" },
+                    functionArgs: null,
                     iconURL: null
                 };
             }
@@ -245,12 +269,21 @@ var pvMapper;
             var me = this;
             if (pvMapper.ClientDB.db) {
                 try  {
-                    var txn = pvMapper.ClientDB.db.transaction(pvMapper.ClientDB.STORE_NAME, "readwrite");
-                    var store = txn.objectStore(pvMapper.ClientDB.STORE_NAME);
+                    var txn = pvMapper.ClientDB.db.transaction(pvMapper.ClientDB.CONFIG_STORE_NAME, "readwrite");
+                    var store = txn.objectStore(pvMapper.ClientDB.CONFIG_STORE_NAME);
                     var stb = null;
                     if (me.getStarRatables !== undefined)
                         stb = me.getStarRatables();
-                    var dbScore = new DBScore(me.title, me.description, me.category, me.weight, me.active, me.scoreUtility, stb);
+
+                    //Man!!!!  IndexedDB just hates the IScoreUtilityArgs "stringify" function.  It conplains that it can not clone the object if it has a 'stringify' function defined.
+                    //Even the scoreUtility class has "stringify" defined, its fine, just not in the ScoreUtilityArgs class like ThreePoint or Linear.  May be because it thinks that
+                    //the stringify there has text formatting resemblance of DOM elements, because IndexedDB will not serialized DOM nodes.
+                    //since we will be serialized the scoreUtility and its going to do away with functions any way, we just remove the function 'stringify' if any.
+                    var util = me.scoreUtility;
+                    if (util.functionArgs.stringify !== undefined)
+                        util.functionArgs.stringify = undefined;
+
+                    var dbScore = new DBScore(me.title, me.description, me.category, me.weight, me.active, util, stb);
 
                     var request = store.get(me.title);
                     request.onsuccess = function (evt) {
@@ -278,8 +311,8 @@ var pvMapper;
         ScoreLine.prototype.getConfiguration = function () {
             var me = this;
             if (pvMapper.ClientDB.db) {
-                var txn = pvMapper.ClientDB.db.transaction(pvMapper.ClientDB.STORE_NAME, "readonly");
-                var store = txn.objectStore(pvMapper.ClientDB.STORE_NAME);
+                var txn = pvMapper.ClientDB.db.transaction(pvMapper.ClientDB.CONFIG_STORE_NAME, "readonly");
+                var store = txn.objectStore(pvMapper.ClientDB.CONFIG_STORE_NAME);
                 var request = store.get(me.title);
                 request.onsuccess = function (evt) {
                     if (request.result != undefined) {

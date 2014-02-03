@@ -10,6 +10,7 @@ var pvMapper;
     // Class
     var Module = (function () {
         function Module(options) {
+            var _this = this;
             this.id = options.id;
             this.version = options.version;
             this.author = options.author;
@@ -62,6 +63,18 @@ var pvMapper;
             }
             if (typeof (this.activate) === "function") {
                 pvMapper.onReady(this.activate);
+            }
+
+            if ($.isFunction(options.getModuleName)) {
+                this.getModuleName = function () {
+                    return options.getModuleName.apply(_this, arguments);
+                };
+            }
+
+            if ($.isFunction(options.setModuleName)) {
+                this.setModuleName = function (name) {
+                    options.setModuleName.apply(_this, arguments);
+                };
             }
         }
         return Module;

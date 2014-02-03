@@ -9,18 +9,19 @@ var INLModules;
     var LocalLayerModule = (function () {
         function LocalLayerModule() {
             var _this = this;
-            this.starRatingHelper = new pvMapper.StarRatingHelper({
-                defaultStarRating: 2,
-                noCategoryRating: 4,
-                noCategoryLabel: "None"
-            });
+            //private starRatingHelper: pvMapper.IStarRatingHelper = new pvMapper.StarRatingHelper({
+            //    defaultStarRating: 2,
+            //    noCategoryRating: 4,
+            //    noCategoryLabel: "None"
+            //});
             //private localUrl = "";
             this.localLayer = null;
             this.localFormat = null;
-            //private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
             //============================================================
             // blob is the file attribute and file handle.
-            this.kmlFile = null;
+            this.moduleClass = /(\w+)\(/.exec((this).constructor.toString())[1];
+            this.moduleName = null;
+            this.title = "Custom Distance Tool";
             this.queuedScores = [];
             var myModule = new pvMapper.Module({
                 id: "LocalLayerModule",
@@ -34,6 +35,12 @@ var INLModules;
                 },
                 destroy: null,
                 init: null,
+                setModuleName: function (name) {
+                    _this.moduleName = name;
+                },
+                getModuleName: function () {
+                    return _this.moduleName;
+                },
                 scoringTools: [
                     {
                         activate: null,
@@ -53,18 +60,35 @@ var INLModules;
                             functionName: "linear3pt",
                             functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 10000, 0, "km")
                         },
+                        setModuleName: function (name) {
+                            _this.moduleName = name;
+                        },
+                        getModuleName: function () {
+                            return _this.moduleName;
+                        },
+                        getTitle: function () {
+                            return _this.title;
+                        },
+                        setTitle: function (newTitle) {
+                            _this.title = newTitle;
+                        },
                         weight: 10
                     }
                 ],
                 infoTools: null
             });
         }
-        LocalLayerModule.prototype.readTextFile = function (kmlString, kmlName) {
-            this.kmlFile = kmlString;
+        //private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
+        LocalLayerModule.prototype.removeLocalLayer = function () {
+            this.localLayer.destroy();
+        };
+
+        LocalLayerModule.prototype.readTextFile = function (kmlString, kmlName, kmlFile) {
+            this.moduleName = kmlFile;
+            this.title = kmlName;
             var kml_projection = new OpenLayers.Projection("EPSG:4326");
             var map_projection = new OpenLayers.Projection("EPSG:3857");
 
-            //var osm: OpenLayers.OSM = new OpenLayers.Layer.OSM();
             this.localFormat = this.localFormat || new OpenLayers.Format.KML({
                 extractStyles: true,
                 extractAttributes: true,
@@ -83,6 +107,7 @@ var INLModules;
                 }
             });
 
+            this.localLayer.setVisibility(false);
             var feature = this.localFormat.read(kmlString);
             this.localLayer.addFeatures(feature);
             var isOk = pvMapper.map.addLayer(this.localLayer);

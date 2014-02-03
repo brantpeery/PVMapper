@@ -55,7 +55,7 @@ module INLModules {
                             return this.starRatingHelper.starRatings;
                     },
                     setStarRatables: (rateTable: pvMapper.IStarRatings) => {
-                        this.starRatingHelper.starRatings = rateTable;
+                        $.extend(this.starRatingHelper.starRatings, rateTable);
                     },
                     scoreUtilityOptions: {
                         functionName: "linear",

@@ -33,6 +33,10 @@ var pvMapper;
                 _this.changedEvent.fire(_this, event);
             };
         }
+        ScoreBoard.prototype.update = function () {
+            this.changedEvent.fire(this, null);
+        };
+
         //End Events---------
         //public tableRenderer = new pvMapper.Table();
         ScoreBoard.prototype.addLine = function (scoreline) {
@@ -138,6 +142,16 @@ var pvMapper;
             if (console) {
                 console.log("Scoreboard update event safely (and efficiently) ignored.");
             }
+        }
+    });
+
+    //this function will wait until IndexedDB is loaded and then load the configuration as well as saved CustomKML modules.
+    //However, if the browser is not supporting IndexedDB, it will just kick it back out.
+    pvMapper.waitToLoad = function () {
+        if (pvMapper.ClientDB.db !== null) {
+            if ((pvMapper.loadLocalModules !== undefined) && (pvMapper.loadLocalModules !== null) && (typeof (pvMapper.loadLocalModules) === "function")) {
+                pvMapper.loadLocalModules();
+            }
 
             if ((pvMapper.ClientDB.db != null) && (!pvMapper.mainScoreboard.isScoreLoaded)) {
                 pvMapper.mainScoreboard.scoreLines.forEach(function (sc) {
@@ -145,10 +159,13 @@ var pvMapper;
                 });
                 pvMapper.mainScoreboard.isScoreLoaded = true;
             }
+        } else {
+            setTimeout(pvMapper.waitToLoad, 5000);
         }
-    });
+    };
 
     //Create the scoreboard onscreen
     pvMapper.onReady(function () {
+        setTimeout(pvMapper.waitToLoad, 5000);
     });
 })(pvMapper || (pvMapper = {}));

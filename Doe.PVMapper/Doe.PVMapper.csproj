@@ -231,7 +231,21 @@
       <DependentUpon>SiteDetailReport.scss</DependentUpon>
     </Content>
     <Content Include="Content\Reports\SummaryReport.css" />
+    <Content Include="Images\barcharts.png" />
+    <Content Include="Images\cleaning.png" />
+    <Content Include="Images\delete.png" />
+    <Content Include="Images\edit.png" />
+    <Content Include="Images\fileexport.png" />
+    <Content Include="Images\notes.png" />
+    <Content Include="Images\open.png" />
+    <Content Include="Images\openCfg.png" />
+    <Content Include="Images\openProject.png" />
     <Content Include="Images\printer.png" />
+    <Content Include="Images\save.png" />
+    <Content Include="Images\saveConfig.png" />
+    <Content Include="Images\saveProject.png" />
+    <Content Include="Images\zoom_in.png" />
+    <Content Include="Images\zoom_out.png" />
     <Content Include="lpresources\assets\ajax-loader.gif" />
     <Content Include="lpresources\assets\error.gif" />
     <Content Include="lpresources\assets\success.gif" />
@@ -369,6 +383,7 @@
     <Content Include="Scripts\pvExtensions\Reports.js">
       <DependentUpon>Reports.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvExtensions\Reports.ts" />
     <Content Include="Scripts\pvExtensions\TotalsModule.js">
       <DependentUpon>TotalsModule.ts</DependentUpon>
     </Content>
@@ -381,6 +396,7 @@
     <Content Include="Scripts\pvMapper\TSMapper\DataManager.js">
       <DependentUpon>DataManager.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Data\DataProccessor.js" />
     <Content Include="Scripts\pvMapper\TSMapper\Data\ScoreboardProcessor.js">
       <DependentUpon>ScoreboardProcessor.ts</DependentUpon>
     </Content>
@@ -413,6 +429,10 @@
     <Content Include="Scripts\pvMapper\TSMapper\jstorage.d.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\jstorage.js" />
     <Content Include="Scripts\pvMapper\TSMapper\JXG.d.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\KMLInfoModule.js">
+      <DependentUpon>KMLInfoModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\KMLInfoModule.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\LandUseModule.js">
       <DependentUpon>LandUseModule.ts</DependentUpon>
     </Content>
@@ -528,6 +548,7 @@
     <Content Include="Scripts\UI\model\Tool.js" />
     <Content Include="Scripts\UI\panel\MinMaxTargetPanel.js" />
     <Content Include="Scripts\UI\panel\PropertyGrid.js" />
+    <Content Include="Scripts\UI\view\ExportGridToExcel.js" />
     <Content Include="Scripts\UI\view\FunctionWindow.js" />
     <Content Include="Scripts\UI\view\PieView.js" />
     <Content Include="Scripts\UI\view\RatingTool.js" />

@@ -64,7 +64,7 @@ module INLModules {
                         }
                     },
                     setStarRatables: (rateTable: pvMapper.IStarRatings) => {
-                        this.starRatingHelper.starRatings = rateTable;
+                        $.extend(this.starRatingHelper.starRatings, rateTable);
                     },
 
                     scoreUtilityOptions: {
@@ -252,7 +252,7 @@ module INLModules {
                     },
 
                     setStarRatables: (rateTable: pvMapper.IStarRatings) => {
-                        this.starRatingHelper.starRatings = rateTable;
+                        $.extend(this.starRatingHelper.starRatings, rateTable);
                     },
                     scoreUtilityOptions: {
                         functionName: "linear",
@@ -423,7 +423,7 @@ module INLModules {
                         }
                     },
                     setStarRatables: (rateTable: pvMapper.IStarRatings) => {
-                        this.starRatingHelper.starRatings = rateTable;
+                        $.extend(this.starRatingHelper.starRatings, rateTable);
                     },
                     scoreUtilityOptions: {
                         functionName: "linear",
