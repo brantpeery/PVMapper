@@ -48,3 +48,13 @@ String.prototype.isNullOrEmpty = function () {
 else
         return false;
 };
+
+Array.prototype.find = function (fn) {
+    if (fn) {
+        for (var i = 0; i < this.length; i++) {
+            if (fn(this[i]))
+                return this[i];
+        }
+    }
+    return undefined;
+};

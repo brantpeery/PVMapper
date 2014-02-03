@@ -21,14 +21,11 @@ var pvMapper;
                     init: null,
                     infoTools: [
                         {
-                            title: "Basic Reports",
-                            description: "Tool for creating printable reports",
-                            longDescription: "Tool for creating printable reports",
-
                             activate: function () {
                                 pvMapper.reportsToolbarMenu.add([
                                     {
                                         text: 'Summary Report',
+                                        iconCls: 'x-barcharts-menu-icon',
                                         handler: function () {
                                             ////Catch the event when the SumaryReport window is ready and send it the data.
                                             ////This only works on same domain JS and window.
@@ -43,6 +40,7 @@ var pvMapper;
                                     },
                                     {
                                         text: 'Site Detail Report',
+                                        iconCls: 'x-notes-menu-icon',
                                         handler: function () {
                                             ////Catch the event when the SumaryReport window is ready and send it the data.
                                             ////This only works on same domain JS and window.
