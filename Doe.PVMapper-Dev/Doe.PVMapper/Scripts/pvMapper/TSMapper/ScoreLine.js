@@ -1,4 +1,4 @@
-﻿/// <reference path="IEventTypes.ts" />
+/// <reference path="IEventTypes.ts" />
 /// <reference path="ScoreUtility.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Site.ts" />

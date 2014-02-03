@@ -1,4 +1,4 @@
-﻿/// <reference path="Options.d.ts" />
+/// <reference path="Options.d.ts" />
 /// <reference path="common.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="../../ExtJS.d.ts" />
