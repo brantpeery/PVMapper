@@ -370,6 +370,7 @@
     <Content Include="Scripts\Esri-GeoJsonConverter.js" />
     <Content Include="Scripts\EsriGeoJSON.js" />
     <Content Include="Scripts\ExtJS.d.ts" />
+    <Content Include="Scripts\Heron\widgets\search\NominatimSearchCombo.js" />
     <Content Include="Scripts\jquery.d.ts" />
     <Content Include="Scripts\JSZip\jszip-inflate.js" />
     <Content Include="Scripts\JSZip\jszip-load.js" />
@@ -382,14 +383,8 @@
     <Content Include="Scripts\pvExtensions\Reports.js">
       <DependentUpon>Reports.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvExtensions\Reports.min.js">
-      <DependentUpon>Reports.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvExtensions\Reports.ts" />
     <Content Include="Scripts\pvExtensions\TotalsModule.js">
-      <DependentUpon>TotalsModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvExtensions\TotalsModule.min.js">
       <DependentUpon>TotalsModule.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvExtensions\TotalsModule.ts" />
@@ -397,38 +392,18 @@
     <Content Include="Scripts\pvMapper\TSMapper\AgricultureSocialModule.js">
       <DependentUpon>AgricultureSocialModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\AgricultureSocialModule.min.js">
-      <DependentUpon>AgricultureSocialModule.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\CombinedNearModule.js" />
-    <Content Include="Scripts\pvMapper\TSMapper\common.min.js">
-      <DependentUpon>common.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\DataManager.js">
       <DependentUpon>DataManager.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\DataManager.min.js">
-      <DependentUpon>DataManager.ts</DependentUpon>
-    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\Data\DataProccessor.js" />
     <Content Include="Scripts\pvMapper\TSMapper\Data\ScoreboardProcessor.js">
-      <DependentUpon>ScoreboardProcessor.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Data\ScoreboardProcessor.min.js">
       <DependentUpon>ScoreboardProcessor.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\DemModule.js">
       <DependentUpon>DemModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\DemModule.min.js">
-      <DependentUpon>DemModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Event.min.js">
-      <DependentUpon>Event.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\IEventTypes.js">
-      <DependentUpon>IEventTypes.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\IEventTypes.min.js">
       <DependentUpon>IEventTypes.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\IEventTypes.ts" />
@@ -446,43 +421,29 @@
     <Content Include="Scripts\pvMapper\TSMapper\InfoTools.js">
       <DependentUpon>InfoTools.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\InfoTools.min.js">
-      <DependentUpon>InfoTools.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\InfoTools.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\irradianceModule.js">
       <DependentUpon>irradianceModule.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\LandUseModule.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\irradianceModule.min.js">
-      <DependentUpon>irradianceModule.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\jstorage.d.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\jstorage.js" />
     <Content Include="Scripts\pvMapper\TSMapper\JXG.d.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\KMLInfoModule.js">
+      <DependentUpon>KMLInfoModule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\KMLInfoModule.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\LandUseModule.js">
       <DependentUpon>LandUseModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\LandUseModule.min.js">
-      <DependentUpon>LandUseModule.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\LocalLayerModule.js">
-      <DependentUpon>LocalLayerModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\LocalLayerModule.min.js">
       <DependentUpon>LocalLayerModule.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\LocalLayerModule.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\Module.js">
       <DependentUpon>Module.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Module.min.js">
-      <DependentUpon>Module.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\ModuleTemplate.js">
-      <DependentUpon>ModuleTemplate.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\ModuleTemplate.min.js">
       <DependentUpon>ModuleTemplate.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\ModuleTemplate.ts" />
@@ -496,14 +457,8 @@
     <Content Include="Scripts\pvMapper\TSMapper\PVData.js">
       <DependentUpon>PVData.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\PVData.min.js">
-      <DependentUpon>PVData.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\PVData.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\pvMapper.js">
-      <DependentUpon>pvMapper.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\pvMapper.min.js">
       <DependentUpon>pvMapper.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\pvMapper.ts" />
@@ -512,58 +467,28 @@
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Data\ScoreboardProcessor.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\riverDistance.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\Renderer.min.js">
-      <DependentUpon>Renderer.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\riverDistance.js">
       <DependentUpon>riverDistance.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\riverDistance.min.js">
-      <DependentUpon>riverDistance.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Score.min.js">
-      <DependentUpon>Score.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Scoreboard.js">
       <DependentUpon>Scoreboard.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\siteAreaModule.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreUtility.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\Scoreboard.min.js">
-      <DependentUpon>Scoreboard.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\ScoreLine.js">
-      <DependentUpon>ScoreLine.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\ScoreLine.min.js">
       <DependentUpon>ScoreLine.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\ScoreUtility.js">
       <DependentUpon>ScoreUtility.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtility.min.js">
-      <DependentUpon>ScoreUtility.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\ScoreUtilityWindows.js">
       <DependentUpon>ScoreUtilityWindows.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtilityWindows.min.js">
-      <DependentUpon>ScoreUtilityWindows.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\ScoreUtilityWindows.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\Site.min.js">
-      <DependentUpon>Site.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\siteAreaModule.js">
       <DependentUpon>siteAreaModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\siteAreaModule.min.js">
-      <DependentUpon>siteAreaModule.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\SiteManager.js">
-      <DependentUpon>SiteManager.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\SiteManager.min.js">
       <DependentUpon>SiteManager.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\SiteManager.ts" />
@@ -578,15 +503,9 @@
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Tools.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\solarmapperModule.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\snlModule.js" />
-    <Content Include="Scripts\pvMapper\TSMapper\snlModule.min.js">
-      <DependentUpon>snlModule.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\snlModule.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\SoilModule.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\SoilModule.js">
-      <DependentUpon>SoilModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\SoilModule.min.js">
       <DependentUpon>SoilModule.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\solarmapperModule.js">
@@ -594,39 +513,21 @@
     </Content>
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\StarRatingHelper.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\SolarPlantSocialModule.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\solarmapperModule.min.js">
-      <DependentUpon>solarmapperModule.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\SolarPlantSocialModule.js">
       <DependentUpon>SolarPlantSocialModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\SolarPlantSocialModule.min.js">
-      <DependentUpon>SolarPlantSocialModule.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\StarRatingHelper.js">
-      <DependentUpon>StarRatingHelper.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\StarRatingHelper.min.js">
       <DependentUpon>StarRatingHelper.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\SubStationModule.js" />
     <Content Include="Scripts\pvMapper\TSMapper\Tools.js">
       <DependentUpon>Tools.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Tools.min.js">
-      <DependentUpon>Tools.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\TotalLine.js">
-      <DependentUpon>TotalLine.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\TotalLine.min.js">
       <DependentUpon>TotalLine.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\TotalLine.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\UtilityFunctions.js">
-      <DependentUpon>UtilityFunctions.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\UtilityFunctions.min.js">
       <DependentUpon>UtilityFunctions.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\UtilityFunctions.ts" />
@@ -634,25 +535,13 @@
     <Content Include="Scripts\pvMapper\TSMapper\WetlandsSocialModule.js">
       <DependentUpon>WetlandsSocialModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\WetlandsSocialModule.min.js">
-      <DependentUpon>WetlandsSocialModule.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\pvMapper\TSMapper\WildernessModule.js">
-      <DependentUpon>WildernessModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\WildernessModule.min.js">
       <DependentUpon>WildernessModule.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\WildernessModule.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\WildlifeSocialModule.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\WildlifeSocialModule.js">
       <DependentUpon>WildlifeSocialModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\WildlifeSocialModule.min.js">
-      <DependentUpon>WildlifeSocialModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\Utility.min.js">
-      <DependentUpon>Utility.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\Utility.ts" />
     <Content Include="Scripts\SaveLocalFile.js" />
@@ -1414,87 +1303,6 @@
     <Content Include="Scripts\ViewScripts\SiteDetail.js" />
     <Content Include="Scripts\ViewScripts\testscripts.js" />
     <Content Include="Scripts\ViewScripts\ZoomAction.js" />
-    <Content Include="Scripts\pvMapper\TSMapper\Site.js.map">
-      <DependentUpon>Site.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Event.js.map">
-      <DependentUpon>Event.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\common.js.map">
-      <DependentUpon>common.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Score.js.map">
-      <DependentUpon>Score.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Renderer.js.map">
-      <DependentUpon>Renderer.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\IEventTypes.js.map">
-      <DependentUpon>IEventTypes.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\Utility.js.map">
-      <DependentUpon>Utility.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Scoreboard.js.map">
-      <DependentUpon>Scoreboard.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Tools.js.map">
-      <DependentUpon>Tools.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\SiteManager.js.map">
-      <DependentUpon>SiteManager.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\ModuleTemplate.js.map">
-      <DependentUpon>ModuleTemplate.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\PVData.js.map">
-      <DependentUpon>PVData.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\ScoreLine.js.map">
-      <DependentUpon>ScoreLine.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\StarRatingHelper.js.map">
-      <DependentUpon>StarRatingHelper.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Module.js.map">
-      <DependentUpon>Module.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\siteAreaModule.js.map">
-      <DependentUpon>siteAreaModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\TotalLine.js.map">
-      <DependentUpon>TotalLine.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\solarmapperModule.js.map">
-      <DependentUpon>solarmapperModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\pvMapper.js.map">
-      <DependentUpon>pvMapper.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\WildernessModule.js.map">
-      <DependentUpon>WildernessModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\LandUseModule.js.map">
-      <DependentUpon>LandUseModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtilityWindows.js.map">
-      <DependentUpon>ScoreUtilityWindows.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\DataManager.js.map">
-      <DependentUpon>DataManager.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\snlModule.js.map">
-      <DependentUpon>snlModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\irradianceModule.js.map">
-      <DependentUpon>irradianceModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\UtilityFunctions.js.map">
-      <DependentUpon>UtilityFunctions.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtility.js.map">
-      <DependentUpon>ScoreUtility.ts</DependentUpon>
-    </Content>
     <None Include="TestPages\SummaryReport.scss" />
     <Content Include="TestPages\SummaryReportTemplate.html" />
     <Content Include="TestPages\SummaryReport.css" />
