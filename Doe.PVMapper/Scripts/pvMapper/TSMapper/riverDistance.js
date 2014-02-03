@@ -112,8 +112,8 @@ var BYUModules;
     var modinstance = new WaterDistanceModule();
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
-    var ExportUrl = "http://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/export";
-    var QueryUrl = "http://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/3/query";
+    var ExportUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/export";
+    var QueryUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/3/query";
 
     var mapLayer;
 

@@ -466,7 +466,7 @@ pvMapper.onReady(function () {
                             else return false;
                         });
 
-                    if (scLine !== null) {
+                    if (typeof scLine === "object" && scLine !== null) {
                         scLine.suspendEvent = true;
                         scLine.fromJSON(line);
                         scLine.suspendEvent = false;

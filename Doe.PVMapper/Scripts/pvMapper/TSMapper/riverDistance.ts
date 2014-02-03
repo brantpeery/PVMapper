@@ -117,8 +117,8 @@ module BYUModules {
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
-    var ExportUrl = "http://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/export"; //TODO 
-    var QueryUrl = "http://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/3/query"; //TODO 
+    var ExportUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/export"; //TODO 
+    var QueryUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/3/query"; //TODO 
 
     var mapLayer: any;
 
