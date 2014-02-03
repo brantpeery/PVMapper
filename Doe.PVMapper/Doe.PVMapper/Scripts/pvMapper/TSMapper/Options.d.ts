@@ -31,5 +31,9 @@ declare module pvMapper {
         id: string;
         author: string;
         version: string;
+
+        //these are to support custom module naming.
+        getModuleName?: () => string;
+        setModuleName?: (name: string) => void;
     }
 }

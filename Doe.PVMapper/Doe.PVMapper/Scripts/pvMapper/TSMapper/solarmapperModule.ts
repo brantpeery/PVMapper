@@ -51,7 +51,7 @@ module INLModules {
                     },
 
                     setStarRatables: (rateTable: pvMapper.IStarRatings) => {
-                        starRatingHelper.starRatings = rateTable;
+                        $.extend(starRatingHelper.starRatings, rateTable);
                     },
 
                     // for now, no land management agencies is best, any one is bad, and multiple are worse

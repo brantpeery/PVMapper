@@ -2042,6 +2042,10 @@ declare module OpenLayers {
         onFeatureInsert: (feature: FVector) => any;
         preFeatureInsert: (feature: FVector) => any;
         getDataExtent(): Bounds;
+
+
+        //Custom properties.
+        isReferenceLayer: boolean;
     }
 
     var Vector: {

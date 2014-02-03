@@ -59,7 +59,7 @@ else
                                 return _this.starRatingHelper.starRatings;
                         },
                         setStarRatables: function (rateTable) {
-                            _this.starRatingHelper.starRatings = rateTable;
+                            $.extend(_this.starRatingHelper.starRatings, rateTable);
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",

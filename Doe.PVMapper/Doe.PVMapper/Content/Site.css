@@ -22,8 +22,9 @@ body
 {
     clear: both;
     width:100%;
-    -moz-box-sizing:border-box;
-    box-sizing:border-box;
+    -webkit-box-sizing: border-box;
+        -moz-box-sizing:border-box;
+             box-sizing:border-box;
     /*height:100%;*/
 }
 .main-content
@@ -68,25 +69,28 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4fcff', end
 }
 
 .ux-rating-star-zero {
-	/*background: transparent;*/
-	/*overflow: hidden;*/
-	opacity: 0.5;
+  /*background: transparent;*/
+  /*overflow: hidden;*/
+  opacity: 0.5;
 }
 
 .ux-rating-star-on {
-	/*background: transparent;*/
-	/*overflow: hidden;*/
+  /*background: transparent;*/
+  /*overflow: hidden;*/
 }
 
 .ux-rating-star-off {
-	/*background: transparent;
-	overflow: hidden;*/
-	/*background-position:0 -16px!important*/
-	opacity: 0.3;
+  /*background: transparent;
+  overflow: hidden;*/
+  /*background-position:0 -16px!important*/
+  opacity: 0.3;
 }
 
 .x-ux-grid-printer {
   background-image: url(../Images/printer.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
 }
 
 .x-action-col-icon {
@@ -96,3 +100,128 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4fcff', end
 .x-action-col-icon.x-item-disabled {
     cursor: default;
 }
+
+.x-save-menu-icon{
+  background-image: url(../Images/save.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+
+.x-saveconfig-menu-icon {
+  background-image: url(../Images/saveConfig.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+
+.x-saveproject-menu-icon {
+  background-image: url(../Images/saveProject.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+.x-open-menu-icon {
+  background-image: url(../Images/open.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+.x-openconfig-menu-icon {
+  background-image: url(../Images/openCfg.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+.x-openproject-menu-icon {
+  background-image: url(../Images/openProject.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+.x-delete-menu-icon {
+  background-image: url(../Images/delete.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+.x-zoomin-menu-icon {
+  background-image: url(../Images/zoom_in.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+.x-zoomout-menu-icon {
+  background-image: url(../Images/zoom_out.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+.x-cleaning-menu-icon {
+  background-image: url(../Images/cleaning.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+.x-fileexport-menu-icon {
+  background-image: url(../Images/fileexport.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+.x-barcharts-menu-icon {
+  background-image: url(../Images/barcharts.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+.x-notes-menu-icon {
+  background-image: url(../Images/notes.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+.x-edit-menu-icon {
+  background-image: url(../Images/edit.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+
+.x-search-menu-icon {
+  background-image: url(../Images/search.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+
+.x-NREL-menu-icon {
+  background-image: url(../Images/nrel.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+.x-eispclogo-menu-icon {
+  background-image: url(../Images/eispclogo.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+.x-tag-menu-icon {
+  background-image: url(../Images/tag.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+
+
+
+
+
+
+
+
+
+
+
+

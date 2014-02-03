@@ -14,6 +14,14 @@ var pvMapper;
             //            this.tips = { minValue: minTip, maxValue: maxTip };
             this.metaInfo = { name: "MinMaxUtilityArgs", unitSymbol: unit, minValueTip: minTip, maxValueTip: maxTip, vline: 0 };
         }
+        MinMaxUtilityArgs.prototype.stringify = function () {
+            var str = "";
+
+            //str += "name: " + this.metaInfo.name;
+            str += ", min: " + this.minValue.toFixed(0);
+            str += ", max: " + this.maxValue.toFixed(0);
+            return str;
+        };
         return MinMaxUtilityArgs;
     })();
     pvMapper.MinMaxUtilityArgs = MinMaxUtilityArgs;
@@ -49,6 +57,16 @@ var pvMapper;
                 vline: 0
             };
         }
+        SinusoidalUtilityArgs.prototype.stringify = function () {
+            var str = "";
+
+            //str += "name: " + this.metaInfo.name;
+            str += "min: " + this.minValue.toFixed(0);
+            str += ", max: " + this.maxValue.toFixed(0);
+            str += ", slope: " + this.slope.toFixed(0);
+            str += ", target: " + this.target.toFixed(0);
+            return str;
+        };
         return SinusoidalUtilityArgs;
     })();
     pvMapper.SinusoidalUtilityArgs = SinusoidalUtilityArgs;
@@ -68,6 +86,17 @@ var pvMapper;
             this.p2 = { x: p2x, y: p2y };
             this.metaInfo = { name: "ThreePointUtilityArgs", unitSymbol: unit, vline: 0 };
         }
+        ThreePointUtilityArgs.prototype.stringify = function () {
+            var str = "";
+            ;
+
+            //str += "name: " + this.metaInfo.name;
+            str += "points: [";
+            str += "(" + this.p0.x.toFixed(0) + "," + this.p0.y.toFixed(0) + "),";
+            str += "(" + this.p1.x.toFixed(0) + "," + this.p1.y.toFixed(0) + "),";
+            str += "(" + this.p2.x.toFixed(0) + "," + this.p2.y.toFixed(0) + ")]";
+            return str;
+        };
         return ThreePointUtilityArgs;
     })();
     pvMapper.ThreePointUtilityArgs = ThreePointUtilityArgs;
@@ -91,7 +120,8 @@ var pvMapper;
 
             //Attach the named function and window
             this.functionName = options.functionName;
-            this.functionArgs = options.functionArgs;
+            this.functionArgs = this.createArg(options.functionName);
+            $.extend(this.functionArgs, options.functionArgs);
             this.iconURL = options.iconURL;
         }
         //An options object might be better here. Then a call to a static function with options would be possible
@@ -114,12 +144,35 @@ var pvMapper;
             return o;
         };
 
+        ScoreUtility.prototype.createArg = function (fn) {
+            switch (fn) {
+                case "linear":
+                    return new MinMaxUtilityArgs();
+                case "sinusoidal":
+                    return new SinusoidalUtilityArgs();
+                case "linear3pt":
+                    return new ThreePointUtilityArgs();
+            }
+        };
+
         ScoreUtility.prototype.fromJSON = function (o) {
             this.functionName = o.functionName;
 
-            this.functionArgs = o.functionArgs;
+            this.functionArgs = this.createArg(o.functionName);
+            $.extend(this.functionArgs, o.functionArgs);
             this.iconURL = o.iconURL;
             this.fCache = o.fCache;
+        };
+
+        ScoreUtility.prototype.stringify = function () {
+            var str = "";
+            str += this.functionName;
+
+            //Ok, here is a little hack to get functionArgs to recognize stringify.  I don't know why functionArgs is not a class object here.
+            var fn = this.createArg(this.functionName);
+            $.extend(fn, this.functionArgs);
+            str += "(" + fn.stringify() + ")";
+            return str;
         };
         return ScoreUtility;
     })();

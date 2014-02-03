@@ -20,7 +20,6 @@ module pvMapper {
             public active: boolean,
             public scoreUtility: ScoreUtility,
             public rateTable: IStarRatings
-            //public scores: Score[]
             )
         {
         }
@@ -55,6 +54,22 @@ module pvMapper {
                 this.setStarRatables = (rateTable: IStarRatings) => { options.setStarRatables.apply(this, arguments); }
             }
 
+            if ($.isFunction(options.getModuleName)) {
+                this.getModuleName = () => { return options.getModuleName.apply(this, arguments); }
+            }
+
+            if ($.isFunction(options.setModuleName)) {
+                this.setModuleName = (name:string) => { options.setModuleName.apply(this, arguments); }
+            }
+
+            if ($.isFunction(options.getTitle)) {
+                this.getTitle = () => { return options.getTitle.apply(this, arguments); }
+            }
+
+            if ($.isFunction(options.setTitle)) {
+                this.setTitle = (name: string) => { options.setTitle.apply(this, arguments); }
+            }
+
             // config window
             if ($.isFunction(options.showConfigWindow)) {
                 this.showConfigWindow = () => { options.showConfigWindow.apply(this, arguments); }
@@ -85,7 +100,7 @@ module pvMapper {
             if (options.scoreUtilityOptions == undefined) {
                 options.scoreUtilityOptions = {
                     functionName: "random",
-                    functionArgs: { className: "Random" },
+                    functionArgs: null,
                     iconURL: null
                 }
             };
@@ -116,6 +131,10 @@ module pvMapper {
 
         getStarRatables: (mode?: string) => IStarRatings;
         setStarRatables: (rateTable: IStarRatings) => void;
+        getModuleName: () => string;
+        setModuleName: (name: string) => void;
+        getTitle: () => string;
+        setTitle: (newTitle: string) => void;
 
         showConfigWindow: () => void;
 
@@ -282,19 +301,28 @@ module pvMapper {
         public putConfiguration(): any {
             var me = this;
             if (ClientDB.db) {
-                try {
-                    var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.STORE_NAME, "readwrite");
-                    var store = txn.objectStore(ClientDB.STORE_NAME);
+                try {      
+                    var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.CONFIG_STORE_NAME, "readwrite");
+                    var store = txn.objectStore(ClientDB.CONFIG_STORE_NAME);
                     var stb = null;
                     if (me.getStarRatables !== undefined)
                         stb = me.getStarRatables(); // call the module for the rating value.
+
+                    //Man!!!!  IndexedDB just hates the IScoreUtilityArgs "stringify" function.  It conplains that it can not clone the object if it has a 'stringify' function defined.
+                    //Even the scoreUtility class has "stringify" defined, its fine, just not in the ScoreUtilityArgs class like ThreePoint or Linear.  May be because it thinks that 
+                    //the stringify there has text formatting resemblance of DOM elements, because IndexedDB will not serialized DOM nodes.
+                    //since we will be serialized the scoreUtility and its going to do away with functions any way, we just remove the function 'stringify' if any.
+                    var util = me.scoreUtility;
+                    if (util.functionArgs.stringify !== undefined)
+                        util.functionArgs.stringify = undefined;
+
                     var dbScore: DBScore = new DBScore(
                         me.title,
                         me.description,
                         me.category,
                         me.weight,
                         me.active,
-                        me.scoreUtility,
+                        util,
                         stb
                         );
 
@@ -317,7 +345,7 @@ module pvMapper {
             try {
                 this.putConfiguration();
             }
-            catch (e) {
+            catch (e) {    
                 console.log("Error: " + e.message);
             }
         }
@@ -325,8 +353,8 @@ module pvMapper {
         public getConfiguration(): any {
             var me = this;
             if (ClientDB.db) {
-                var txn = ClientDB.db.transaction(ClientDB.STORE_NAME, "readonly");
-                var store = txn.objectStore(ClientDB.STORE_NAME);
+                var txn = ClientDB.db.transaction(ClientDB.CONFIG_STORE_NAME, "readonly");
+                var store = txn.objectStore(ClientDB.CONFIG_STORE_NAME);
                 var request = store.get(me.title);
                 request.onsuccess = function (evt): any {
                     if (request.result != undefined) {
@@ -340,8 +368,6 @@ module pvMapper {
                         me.scoreUtility.functionArgs = request.result.scoreUtility.functionArgs;
                         me.scoreUtility.iconURL = request.result.scoreUtility.iconURL;
                         me.scoreUtility.fCache = request.result.scoreUtility.fCache;
-                        //This won't work.  No way to write back to the module's rateTable.
-                        //me.getStarRatables = request.result.rateTable;
 
                         if ((me.setStarRatables !== undefined) && (request.result.rateTable !== null)) {
                             me.setStarRatables(request.result.rateTable);

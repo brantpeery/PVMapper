@@ -1,10 +1,10 @@
 
 interface ICallback {
-  (...args: any[]): any;
+    (...args: any[]): any;
 }
 
 interface EventCallback {
-  (context: Object, ...args: any[]): any;
+    (context: Object, ...args: any[]): any;
 }
 
 interface String {
@@ -36,11 +36,11 @@ interface String {
     */
     format(args: { [key: string]: (val: string) => string; }): string;
 
-  /**
-  Indicates whether the specified string is null or an Empty string.
-  @param value:string The string to test.
-  @returns Boolean true if the value parameter is null or an empty string(""); otherwise, false.
-  */
+    /**
+    Indicates whether the specified string is null or an Empty string.
+    @param value:string The string to test.
+    @returns Boolean true if the value parameter is null or an empty string(""); otherwise, false.
+    */
     isNullOrEmpty(): Boolean;
 
 };
@@ -83,15 +83,34 @@ String.prototype.format = function (args: string) {
             replace = "{"; //Replace {\ with just {
         } else {
             replace = item;
-}
+        }
         return replace;
     });
 };
 
 String.prototype.isNullOrEmpty = function (): boolean {
-  var value: string = this;
-  if ((typeof (value) === 'undefined') || (value.length == 0))
-    return true;
-  else 
-    return false;
+    var value: string = this;
+    if ((typeof (value) === 'undefined') || (value.length == 0))
+        return true;
+    else
+        return false;
 };
+
+
+/// find an object in an array that match the srcObj  using the fn function to compare.
+/// provide function: as fn(obj1, scrObj) : integer.  if obj1 == scrObj return 0, else return -1.
+/// if found, return the matching object, if no element found, it returns null.
+
+interface Array {
+    find(fn: ICallback): boolean;
+}
+
+Array.prototype.find = function (fn: ICallback): boolean {
+    if (fn) {
+        for (var i = 0; i < this.length; i++) {
+            if (fn(this[i]))
+                return this[i];
+        }
+    }
+    return undefined;
+}

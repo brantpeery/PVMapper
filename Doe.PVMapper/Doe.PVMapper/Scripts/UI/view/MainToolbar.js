@@ -3,6 +3,7 @@
 pvMapper.onReady(function () {
 
     //----------------------------------------------------------------------------------------
+    //#region Address Search
     // place name and address search box
     var searchComboBox = Ext.create('Heron.widgets.search.NominatimSearchCombo', {
         map: pvMapper.map,
@@ -10,7 +11,7 @@ pvMapper.onReady(function () {
     });
 
     pvMapper.mapToolbar.add(9, searchComboBox);
-
+    //#endregion
     //----------------------------------------------------------------------------------------
     //#region Measure distance tool
     var control = new OpenLayers.Control.Measure(OpenLayers.Handler.Path, {
@@ -39,15 +40,18 @@ pvMapper.onReady(function () {
     });
 
     pvMapper.mapToolbar.add(3, distanceBtn);
-    //#endregion Measure distance
+    //#endregion
     //----------------------------------------------------------------------------------------
-    //#region Add distance score from KML
+    //#region OpenFileDialog
     // add a button on the tool bar to launch a file picker to load local KML file.
     //first, create an input with type='file' and add it to the body of the page.
+    var KMLMode = { KMLNONE: 0, KMLSITE: 1, KMLDISTANCE: 2, KMLINFO: 3 };
+    KMLMode.CurrentMode = KMLMode.KMLNONE;
     var fileDialogBox = document.createElement('input');
     fileDialogBox.type = 'file';
     fileDialogBox.style = 'display:none';
     fileDialogBox.accept = "application/vnd.google-earth.kml+xml,application/vnd.google-earth.kmz"; //only support in chrome and IE.  FF doesn't work.
+    fileDialogBox.addEventListener('change', handleCustomKML, false);  // disable the distance KML event.
 
     document.body.appendChild(fileDialogBox);
 
@@ -63,65 +67,37 @@ pvMapper.onReady(function () {
             Ext.MessageBox.confirm("File too big", "The file [" + afile.name + " with size: " + afile.size.toString() + "] is larger then 2000000 bytes (2 MB), do you want to continue loading?",
                 function (btn) {
                     if (btn === 'yes') {
-                        continueHandlingCustomKML(afile);
+                        switch (KMLMode.CurrentMode) {
+                            case KMLMode.KMLSITE:
+                                continueHandlingSiteKML(afile);
+                                break;
+                            case KMLMode.KMLDISTANCE:
+                                continueHandlingDistanceKML(afile);
+                                break;
+                            case KMLMode.KMLINFO:
+                                continueHandlingInfoKML(afile);
+                                break;
                     }
-                });
-        } else {
-            continueHandlingCustomKML(afile);
         }
+                        });
+            } else {
+            switch (KMLMode.CurrentMode) {
+                case KMLMode.KMLSITE:
+                        continueHandlingSiteKML(afile);
+                    break;
+                case KMLMode.KMLDISTANCE:
+                    continueHandlingDistanceKML(afile);
+                    break;
+                case KMLMode.KMLINFO:
+                    continueHandlingInfoKML(afile);
+                    break;
+                    }
+        }
+        fileDialogBox.value = "";
     }
-
-    function continueHandlingCustomKML(afile) {
-        if (afile.type === "application/vnd.google-earth.kmz") {
-            var localLayer = new INLModules.LocalLayerModule();
-            var reader = new FileReader();
-            reader.onload = function (evt) { uncompressZip(evt.target.result, function (kmlResult) { localLayer.readTextFile(kmlResult, afile.name); }); }
-            reader.readAsArrayBuffer(afile);
-        } else if (afile.type === "application/vnd.google-earth.kml+xml") {
-            var localLayer = new INLModules.LocalLayerModule();
-            var reader = new FileReader();
-            reader.onload = function (evt) { localLayer.readTextFile(evt.target.result, afile.name); }
-            reader.readAsText(afile);
-        } else {
-            Ext.MessageBox.alert("Unknown File Type", "The file [" + afile.name + "] is not a KML format.");
-        }
-    }
-
-    //create the actual button and put on the tool bar.
-    var customTool = Ext.create('Ext.Action', {
-        text: 'Add Distance Score From KML',
-        tooltip: "Add a new layer using features from a KML file, and add a score line for the distance from each site to the nearest feature in the KML layer",
-        //enabledToggle: false,
-        handler: function () {
-            fileDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
-            fileDialogBox.removeEventListener('change', handleSiteKML, false);  //disable the site KML event.
-            fileDialogBox.addEventListener('change', handleCustomKML, false);  // enable the distance KML event.
-            fileDialogBox.click();
-        }
-    });
-    pvMapper.scoreboardToolsToolbarMenu.add(3, customTool);
-    //#endregion Distance score from KML
+    //#endregion OpenFileDialog
     //----------------------------------------------------------------------------------------
     //#region  KML Site Import
-    function handleSiteKML(evt) {
-        if (!evt.target.files || !evt.target.files[0])
-            return;
-
-        var afile = evt.target.files[0];
-
-        //we probably don't want to load hug file.  Limit is about 2MB.
-        if (afile.size > 2000000) {
-            Ext.MessageBox.confirm("File Size Warning", "The file [" + afile.name + " with size: " + afile.size.toString() + "] is larger then 2000000 bytes (2 MB); do you want to try loading it anyway?",
-                function (btn) {
-                    if (btn === 'yes') {
-                        continueHandlingSiteKML(afile);
-                    }
-                });
-        } else {
-            continueHandlingSiteKML(afile);
-        }
-    }
-
     function continueHandlingSiteKML(afile) {
 
         if (afile.type === "application/vnd.google-earth.kmz") {
@@ -230,11 +206,11 @@ pvMapper.onReady(function () {
 
     var siteImportAction = Ext.create('Ext.Action', {
         text: 'Load Sites from KML',
+        iconCls: 'x-open-menu-icon',
         tooltip: "Import site polygons from a KML file",
         handler: function () {
             fileDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
-            fileDialogBox.removeEventListener('change', handleCustomKML, false);  //enable the site KML event.
-            fileDialogBox.addEventListener('change', handleSiteKML, false);  // disable the distance KML event.
+            KMLMode.CurrentMode = KMLMode.KMLSITE;
             fileDialogBox.click();
         }
     });
@@ -293,6 +269,7 @@ pvMapper.onReady(function () {
 
     var kmlExportBtn = Ext.create('Ext.Action', {
         text: 'Save Sites to KML',
+        iconCls: 'x-save-menu-icon',
         tooltip: "Export site polygons and scores to a KML file",
         handler: function () {
             ExportToXML();
@@ -309,13 +286,18 @@ pvMapper.onReady(function () {
         Ext.MessageBox.prompt('Save file as', 'Please enter a filename for the export sites (.pvProj).',
             function (btn, filename) {
                 if (btn === 'ok') {
-                    filename = (filename || 'PVMapper Project') + '.pvProj';
+                    filename = (filename || 'PVMapper Project');//  + '.pvProj';  Blindly add extension confuses user.
 
                     var filenameSpecialChars = new RegExp("[~#%&*{}<>;?/+|\"]");
                     if (filename.match(filenameSpecialChars)) {
                         Ext.MessageBox.alert('Invlaid filename', 'A filename can not contains any of the following characters [~#%&*{}<>;?/+|\"]');
                         return;
                     }
+
+                    //check to make sure that the file has '.pvProj' extension..  We will check and add extension only if user did not provide or provided with wrong extension.
+                    var dotindex = filename.lastIndexOf('.');
+                    dotindex = dotindex == -1 ? filename.length : dotindex;
+                    filename = filename.substr(0, dotindex, dotindex) + '.pvProj';
 
                     var content = JSON.stringify(pvMapper.mainScoreboard);
                     var blob = CustomBlob(content, null);
@@ -325,13 +307,11 @@ pvMapper.onReady(function () {
                 }
             }, this, false, 'PVMapper Project');
 
-        //This code below works too, but always save with a file name of "Download.kml".
-        //uriContent = 'data:application/vnd.google-earth.kml+xml;headers=Content-Disposition:attachment;filename="sites.kml",' + encodeURIComponent(content);
-        //newWindow = window.open(uriContent, 'sites.kml');
     }
 
     var loadScoreboardBtn = Ext.create('Ext.Action', {
         text: 'Save Project',
+        iconCls: 'x-saveproject-menu-icon',
         tooltip: "Save the Scoreboard project to local file.",
         handler: function () {
             saveScoreboardAs();
@@ -347,13 +327,14 @@ pvMapper.onReady(function () {
     fDialogBox.accept = ".pvProj"; //only support in chrome and IE.  FF doesn't work.
     fDialogBox.addEventListener('change', handleLoadScoreboard, false);
     document.body.appendChild(fDialogBox);
-
     function handleLoadScoreboard(evt) {
         if (!evt.target.files || !evt.target.files[0])
             return;
 
         var afile = evt.target.files[0];
         var afilename = afile.name;
+
+
         //check to make sure that the file has '.kml' extension.
         var dotindex = afilename.lastIndexOf('.');
         dotindex = dotindex == -1 ? afilename.length : dotindex;
@@ -367,23 +348,8 @@ pvMapper.onReady(function () {
         } else {
             Ext.MessageBox.alert("Unrecognize File Type", "The file [" + afile.name + "] is not a PVMapper project.");
         }
-    }
-
-    /// find an object in an array that match the srcObj  using the fn function to compare.
-    /// provide function: as fn(obj1, scrObj) : integer.  if obj1 == scrObj return 0, else return -1.
-    /// if found, return the matching object, if no element found, it returns null.
-
-    if (Array.prototype.find === undefined) {
-        Array.prototype.find = function (fn) {
-            if (fn) {
-                for (i = 0; i < this.length; i++) {
-                    if (fn(this[i]))
-                        return this[i];
+        fDialogBox.value = "";  //reset so we can open the same file again.
                 }
-            }
-            return undefined;
-        }
-    }
 
     function AddScoreboardSite(aFeature, fn) {
         WKT = aFeature.geometry.toString();
@@ -444,7 +410,6 @@ pvMapper.onReady(function () {
                 if (feature !== null)
                     features.push(feature);
             }
-            delete
 
             //remove all site features found
             pvMapper.siteLayer.removeFeatures(features, { silent: true });
@@ -522,6 +487,7 @@ pvMapper.onReady(function () {
 
     var loadScoreboardBtn = Ext.create('Ext.Action', {
         text: 'Load Project',
+        iconCls: 'x-openproject-menu-icon',
         tooltip: "Load a saved scoreboard project and use it as a default.",
         handler: function () {
             fDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
@@ -532,18 +498,23 @@ pvMapper.onReady(function () {
 
     //#endregion Load scoreboard
     //----------------------------------------------------------------------------------------
-
+    //#region SaveScoreboardConfig
     function saveScoreboardConfig() {
         Ext.MessageBox.prompt('Save file as', 'Please enter a configuraton filename (.pvCfg).',
             function (btn, filename) {
                 if (btn === 'ok') {
-                    filename = (filename || 'PVMapper Config') + '.pvCfg';
+                    filename = (filename || 'PVMapper Config'); //  + '.pvCfg';   //I think I like this behavior better, ... ??
 
                     var filenameSpecialChars = new RegExp("[~#%&*{}<>;?/+|\"]");
                     if (filename.match(filenameSpecialChars)) {
                         Ext.MessageBox.alert('Invlaid filename', 'A filename can not contains any of the following characters [~#%&*{}<>;?/+|\"]');
                         return;
                     }
+
+                    //check to make sure that the file has '.pvCfg' extension..  We will check and add extension only if user did not provide or provided with wrong extension.
+                    var dotindex = filename.lastIndexOf('.');
+                    dotindex = dotindex == -1 ? filename.length : dotindex;
+                    filename = filename.substr(0, dotindex, dotindex) + '.pvCfg';
 
                     var config = {configLines: []};
                     var aUtility, aStarRatables, aWeight, aTitle, aCat = null;
@@ -558,7 +529,7 @@ pvMapper.onReady(function () {
                             if (scrline.getStarRatables !== undefined) {
                                 aStarRatables = scrline.getStarRatables();
                             }
-                            config.configLines.push({title: aTitle, category: aCat, utility: aUtility, starRatables: aStarRatables, weight: aWeight });
+                            config.configLines.push({ title: aTitle, category: aCat, utility: aUtility, starRatables: aStarRatables, weight: aWeight });
                         });
                     var content = JSON.stringify(config);
                     var blob = CustomBlob(content, null);
@@ -572,6 +543,7 @@ pvMapper.onReady(function () {
 
     var saveConfigBtn = Ext.create('Ext.Action', {
         text: "Save Configuration",
+        iconCls: "x-saveconfig-menu-icon",
         tooltip: "Save the Scoreboard Utility configuration to a local file.",
         handler: function () {
             saveScoreboardConfig();
@@ -580,9 +552,9 @@ pvMapper.onReady(function () {
 
     pvMapper.scoreboardToolsToolbarMenu.add(2, '-');
     pvMapper.scoreboardToolsToolbarMenu.add(3, saveConfigBtn);
+    //#endregion SaveScoreboardConfig
     //----------------------------------------------------------------------------------------
-
-    
+    //#region LoadScoreboardConfig
     var configDialogBox = document.createElement('input');
     configDialogBox.type = 'file';
     configDialogBox.style = 'display:none';
@@ -596,12 +568,13 @@ pvMapper.onReady(function () {
 
         var afile = evt.target.files[0];
         var afilename = afile.name;
-        //check to make sure that the file has '.kml' extension.
+        //check to make sure that the file has '.pvCfg' extension.
         var dotindex = afilename.lastIndexOf('.');
         dotindex = dotindex == -1 ? afilename.length : dotindex;
         var name = afilename.substr(0, dotindex, dotindex);
         var extension = afilename.replace(name, "");
 
+        //since this feature is not support in FF, we need to check to make sure the file is correct extension.
         if (extension === ".pvCfg") {
             var reader = new FileReader();
             reader.onload = function (evt) { loadScoreboardConfig(evt.target.result); }
@@ -609,6 +582,7 @@ pvMapper.onReady(function () {
         } else {
             Ext.MessageBox.alert("Unrecognize File Type", "The file [" + afile.name + "] is not a PVMapper configuration file.");
         }
+        configDialogBox.value = "";
 
     }
     function loadScoreboardConfig(configJSON) {
@@ -639,6 +613,7 @@ pvMapper.onReady(function () {
     //----------------------------------------------------------------------------------------
     var loadConfigBtn = Ext.create('Ext.Action', {
         text: "Load Configuration",
+        iconCls: "x-openconfig-menu-icon",
         tooltip: "Load a Scoreboard Utility configuration from a local file.",
         handler: function () {
             configDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
@@ -646,9 +621,9 @@ pvMapper.onReady(function () {
         }
     });
     pvMapper.scoreboardToolsToolbarMenu.add(4, loadConfigBtn);
+    //#endregion LoadScoreboardConfig
     //----------------------------------------------------------------------------------------
     //#region Reset scoreboard config
-
     function resetScoreboardConfig() {
         pvMapper.mainScoreboard.scoreLines.forEach(
             function (scrLine, idx, scoreLines) {
@@ -662,15 +637,219 @@ pvMapper.onReady(function () {
 
     var resetScoreboardBtn = Ext.create('Ext.Action', {
         text: 'Reset Configuration',
+        iconCls: "x-cleaning-menu-icon",
         tooltip: "Reset the scoreboard to the default configuration",
         handler: function () {
             resetScoreboardConfig();
         }
     });
     pvMapper.scoreboardToolsToolbarMenu.add(5, resetScoreboardBtn);
+    //#endregion
+    //----------------------------------------------------------------------------------------
+    //#region Export to Excel
+    function exportScoreboardToCSV() {
+        Ext.MessageBox.prompt('Save file as', 'Please enter a filename for the scoreboard (.CSV).',
+            function (btn, filename) {
+                if (btn === 'ok') {
+                    filename = (filename || 'PVMapper Scoreboard');  /// + '.csv';  If user happen to enter with extension, we will have double .
+
+                    var filenameSpecialChars = new RegExp("[~#%&*{}<>;?/+|\"]");
+                    if (filename.match(filenameSpecialChars)) {
+                        Ext.MessageBox.alert('Invlaid filename', 'A filename can not contains any of the following characters [~#%&*{}<>;?/+|\"]');
+                        return;
+                    }
+
+                    //check to make sure that the file has '.csv extension.  We just guard against wrong extension entered by user here.  Or if user not provided extension or mistype, we then add it here -- be smarter.
+                    var dotindex = filename.lastIndexOf('.');
+                    dotindex = dotindex == -1 ? filename.length : dotindex;
+                    filename = filename.substr(0, dotindex, dotindex) + '.csv';
+
+                    var exporter = Ext.create("GridExporter");
+
+                    var content = exporter.getCSV(pvMapper.scoreboardGrid);
+                    var blob = CustomBlob(content, null);
+                    blob.data = content;
+                    blob.type = 'data:application/csv';
+                    saveAs(blob, filename);
+                }
+            }, this, false, 'PVMapper Scoreboard'
+        );
+    }
+
+    var exportBtn = Ext.create('Ext.Action', {
+        text: "Export Scoreboard to CSV",
+        iconCls: "x-fileexport-menu-icon",
+        tooltip: "Export the scoreboard data to a CSV file.",
+        handler: function () {
+            exportScoreboardToCSV();
+        }
+    });
+    pvMapper.scoreboardToolsToolbarMenu.add(6, exportBtn);
 
     //#endregion
-    pvMapper.scoreboardToolsToolbarMenu.add(6, '-');
     //----------------------------------------------------------------------------------------
+    //#region Add distance score from KML
+    function continueHandlingDistanceKML(afile) {
+        var module = pvMapper.customModules.find(function (a) {
+            if (a.name === afile.name) return true;
+            else return false;
+        });
+
+        if (!module) {
+            Ext.MessageBox.prompt("Module Naming", "Please type in the module name", function (btn, kmlModuleName) {
+                if (btn == 'ok') {
+                    if (kmlModuleName.length == 0)
+                        kmlModuleName = afile.name;
+
+                    if (afile.type === "application/vnd.google-earth.kmz") {
+                        var localLayer = new INLModules.LocalLayerModule();
+                        var reader = new FileReader();
+                        reader.onload = function (evt) {
+                            uncompressZip(evt.target.result,
+                                function (kmlResult) {
+                                    localLayer.readTextFile(kmlResult, kmlModuleName, afile.name);
+                                    pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: localLayer }));
+                                    saveToLocalDB(kmlModuleName, localLayer.moduleClass, afile.name, kmlResult);
+                                });
+                        }
+                        reader.readAsArrayBuffer(afile);
+                    } else if (afile.type === "application/vnd.google-earth.kml+xml") {
+                        var localLayer = new INLModules.LocalLayerModule();
+                        var reader = new FileReader();
+                        reader.onload = function (evt) {
+                            localLayer.readTextFile(evt.target.result, kmlModuleName, afile.name);
+                            pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: localLayer }));
+                            saveToLocalDB(kmlModuleName, localLayer.moduleClass, afile.name, evt.target.result);
+                        }
+                        reader.readAsText(afile);
+                    } else {
+                        Ext.MessageBox.alert("Unknown File Type", "The file [" + afile.name + "] is not a KML format.");
+                    }
+                }
+            }, this, false, afile.name);
+        }
+        else {
+            Ext.MessageBox.alert("Duplicate module", "The module [" + afile.name + "] aleady loaded.");
+        }
+    }
+
+    //create the actual button and put on the tool bar.
+    var customTool = Ext.create('Ext.Action', {
+        text: 'Add Distance Score From KML',
+        iconCls: "x-open-menu-icon",
+        tooltip: "Add a new layer using features from a KML file, and add a score line for the distance from each site to the nearest feature in the KML layer",
+        //enabledToggle: false,
+        handler: function () {
+            fileDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
+            KMLMode.CurrentMode = KMLMode.KMLDISTANCE;
+            fileDialogBox.click();
+        }
+    });
+    pvMapper.scoreboardToolsToolbarMenu.add(7, '-');
+    pvMapper.scoreboardToolsToolbarMenu.add(8, customTool);
+    //#endregion Distance score from KML
+    //----------------------------------------------------------------------------------------
+   //#region Custom Info From KML
+    function continueHandlingInfoKML(afile) {
+        var module = pvMapper.customModules.find(function (a) {
+            if (a.name === afile.name) return true;
+            else return false;
+        });
+
+        if (!module) {
+            Ext.MessageBox.prompt("Module Naming", "Please type in the module name", function (btn, kmlModuleName) {
+                if (btn == 'ok') {
+                    if (kmlModuleName.length == 0)
+                        kmlModuleName = afile.name;
+
+                    if (afile.type === "application/vnd.google-earth.kmz") {
+                        var infoLayer = new INLModules.KMLInfoModule();
+                        var reader = new FileReader();
+                        reader.onload = function (evt) {
+                            uncompressZip(evt.target.result,
+                                function (kmlResult) {
+                                    infoLayer.readTextFile(kmlResult, kmlModuleName, afile.name);
+                                    pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: infoLayer }));
+                                    saveToLocalDB(kmlModuleName, infoLayer.moduleClass, afile.name, kmlResult);
+                                });
+                        }
+                        reader.readAsArrayBuffer(afile);
+                    } else if (afile.type === "application/vnd.google-earth.kml+xml") {
+                        var infoLayer = new INLModules.KMLInfoModule();
+                        var reader = new FileReader();
+                        reader.onload = function (evt) {
+                            infoLayer.readTextFile(evt.target.result, kmlModuleName, afile.name);
+                            pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: infoLayer }));
+                            saveToLocalDB(kmlModuleName, infoLayer.moduleClass, afile.name, evt.target.result);
+                        }
+                        reader.readAsText(afile);
+                    } else {
+                        Ext.MessageBox.alert("Unknown File Type", "The file [" + afile.name + "] is not a KML format.");
+                    }
+                }
+            }, this, false, afile.name);
+        }
+        else {
+            Ext.MessageBox.alert("Duplicate module", "The module [" + afile.name + "] aleady loaded on the scoreboard.");
+        }
+    }
+
+    var customInfoTool = Ext.create('Ext.Action', {
+        text: 'Add Info Layer From KML',
+        iconCls: "x-open-menu-icon",
+        tooltip: "Add a new layer using features from a KML file as a reference information.",
+        //enabledToggle: false,
+        handler: function () {
+            fileDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
+            KMLMode.CurrentMode = KMLMode.KMLINFO;
+            fileDialogBox.click();
+        }
+    });
+    pvMapper.scoreboardToolsToolbarMenu.add(9, customInfoTool);
+    //#endregion Custom info from KML
+    //----------------------------------------------------------------------------------------
+    //#region Save and Load Modules to local IndexedDB
+    //Save the uploaded KML data to the client side database.
+    //aname: string - the module name
+    //aclass: string - the module class name.
+    //akey: string - a unitue module key (a file name).
+    //value: object - a string or object represent the actual module data.
+    function saveToLocalDB(aname, aclass, akey, value) {
+        pvMapper.ClientDB.saveCustomKML(aname, aclass, akey, value);
+    }
+
+    //load all saved uploaded KML modules.  This function is to be invoke by the scoreboard when everything is loaded.
+    //the "pvMapper.isLocalModuleLoaded" prevent a session from loading one too many times.
+    var isModulesLoading = false;
+    pvMapper.loadLocalModules = function () {
+        if (!pvMapper.isLocalModulesLoaded && !isModulesLoading) {
+            isModulesLoading = true;
+            pvMapper.ClientDB.getAllCustomKMLName(function (moduleFiles) {
+                if ((moduleFiles) && (moduleFiles.length > 0)) {
+                    moduleFiles.forEach(function (fileName, idx) {
+                        pvMapper.ClientDB.loadCustomKML(fileName, function (moduleObj) {
+                            if (moduleObj) {
+                                var alayer = null;
+                                if (moduleObj.customClass !== undefined) {
+                                    if (moduleObj.customClass === "LocalLayerModule")
+                                        alayer = new INLModules.LocalLayerModule();
+                                    else if (moduleObj.customClass === "KMLInfoModule")
+                                        alayer = new INLModules.KMLInfoModule();
+                                }
+                                if (alayer !== null) {
+                                    alayer.readTextFile(moduleObj.customData, moduleObj.customName, fileName);
+                                    pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: fileName, moduleObject: alayer }));
+                                }
+                            }
+                        });
+                    });
+                }
+                pvMapper.isLocalModulesLoaded = true;
+            });
+        }
+    }
+    //#endregion Save/load modules
+    //----------------------------------------------------------------------------------------
+
 });
 

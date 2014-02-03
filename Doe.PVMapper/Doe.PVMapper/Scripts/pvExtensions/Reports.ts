@@ -23,6 +23,7 @@ module pvMapper {
                         activate: () => {
                             pvMapper.reportsToolbarMenu.add([{
                                 text: 'Summary Report',
+                                iconCls: 'x-barcharts-menu-icon',
                                 handler: function () {
                                     ////Catch the event when the SumaryReport window is ready and send it the data. 
                                     ////This only works on same domain JS and window.
@@ -37,6 +38,7 @@ module pvMapper {
                                 }
                             }, {
                                 text: 'Site Detail Report',
+                                iconCls: 'x-notes-menu-icon',
                                 handler: function () {
                                     ////Catch the event when the SumaryReport window is ready and send it the data. 
                                     ////This only works on same domain JS and window.

@@ -65,7 +65,7 @@ var INLModules;
                             }
                         },
                         setStarRatables: function (rateTable) {
-                            _this.starRatingHelper.starRatings = rateTable;
+                            $.extend(_this.starRatingHelper.starRatings, rateTable);
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
@@ -226,7 +226,7 @@ var INLModules;
                             }
                         },
                         setStarRatables: function (rateTable) {
-                            _this.starRatingHelper.starRatings = rateTable;
+                            $.extend(_this.starRatingHelper.starRatings, rateTable);
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
@@ -376,7 +376,7 @@ var INLModules;
                             }
                         },
                         setStarRatables: function (rateTable) {
-                            _this.starRatingHelper.starRatings = rateTable;
+                            $.extend(_this.starRatingHelper.starRatings, rateTable);
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
