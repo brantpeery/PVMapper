@@ -130,7 +130,10 @@ Ext.define('Heron.widgets.search.NominatimSearchCombo', {
      *  Search parameters, see: http://open.mapquestapi.com/nominatim/#search. Has to work in concertwith
      *  storeFields and template (tpl).
      */
-    url: '//open.mapquestapi.com/nominatim/v1/search?format=json&addressdetails=1',
+    //url: '//open.mapquestapi.com/nominatim/v1/search?format=json&addressdetails=1',
+    url: '//open.mapquestapi.com/nominatim/v1/search?format=json&addressdetails=1' +
+        '&countrycodes=US,UM,PU,CA,MX', // The United States (including outlying and pacific islands), Canada, and Mexico
+        //'&bounded=1&viewbox=-124.7625,24.5210,-66.9326,49.3845',  // rough-ish CONUS bounding box
 
     storeFields: [
         "place_id"
