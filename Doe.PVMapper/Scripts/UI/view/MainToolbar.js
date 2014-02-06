@@ -2,6 +2,20 @@
 
 pvMapper.onReady(function () {
 
+    function hasExtension(filename, extension) {
+        // return true if the given filename uses the given file extension
+        //TODO: should this ignore case?
+        return (filename.indexOf(extension, filename.length - extension.length) !== -1);
+    }
+
+    function ensureExtension(filename, extension) {
+        // if the filename already ends with the given extension, return it without changes
+        if (hasExtension(filename, extension))
+            return filename;
+        // if the filename doesn't end with the provided extension, return the filename with the extension appended onto it
+        return filename + extension;
+    }
+
     //----------------------------------------------------------------------------------------
     //#region Address Search
     // place name and address search box
@@ -234,7 +248,7 @@ pvMapper.onReady(function () {
         SaveAsFile(sitesKml);
     }
 
-
+    var previousFilenameForSavingSites = 'PVMapper Sites'
     function SaveAsFile(content) {
 
         // add a button on the tool bar to launch a file picker to load local KML file.
@@ -242,7 +256,10 @@ pvMapper.onReady(function () {
         Ext.MessageBox.prompt('Save file as', 'Please enter a filename for the export sites.',
             function (btn, filename) {
                 if (btn === 'ok') {
-                    filename = (filename || 'PVMapper Sites') + '.kml';
+                    previousFilenameForSavingSites = (filename || 'PVMapper Sites')
+
+                    //check to make sure that the file has '.kml' extension.
+                    filename = ensureExtension(previousFilenameForSavingSites, '.kml');
 
                     var filenameSpecialChars = new RegExp("[~#%&*{}<>;?/+|\"]");
                     if (filename.match(filenameSpecialChars)) {
@@ -250,17 +267,12 @@ pvMapper.onReady(function () {
                         return;
                     }
 
-                    //check to make sure that the file has '.kml' extension.
-                    var dotindex = filename.lastIndexOf('.');
-                    dotindex = dotindex == -1 ? filename.length : dotindex;
-                    filename = filename.substr(0, dotindex, dotindex) + '.kml';
-
                     var blob = CustomBlob(content, null);
                     blob.data = content;
                     blob.type = 'data:application/vnd.google-earth.kml+xml';
                     saveAs(blob, filename);
                 }
-            }, this, false, 'PVMapper Sites');
+            }, this, false, previousFilenameForSavingSites);
 
         //This code below works too, but always save with a file name of "Download.kml".
         //uriContent = 'data:application/vnd.google-earth.kml+xml;headers=Content-Disposition:attachment;filename="sites.kml",' + encodeURIComponent(content);
@@ -279,6 +291,7 @@ pvMapper.onReady(function () {
     //#endregion export site to KML
     //----------------------------------------------------------------------------------------
     //#region Save scoreboard
+    var previousFilenameForSavingProject = 'PVMapper Project'
     function saveScoreboardAs() {
 
         // add a button on the tool bar to launch a file picker to load local KML file.
@@ -286,7 +299,10 @@ pvMapper.onReady(function () {
         Ext.MessageBox.prompt('Save file as', 'Please enter a filename for the export sites (.pvProj).',
             function (btn, filename) {
                 if (btn === 'ok') {
-                    filename = (filename || 'PVMapper Project');//  + '.pvProj';  Blindly add extension confuses user.
+                    previousFilenameForSavingProject = (filename || 'PVMapper Project')
+
+                    //check to make sure that the file has '.pvProj' extension..  We will check and add extension only if user did not provide or provided with wrong extension.
+                    filename = ensureExtension(previousFilenameForSavingProject, '.pvProj');
 
                     var filenameSpecialChars = new RegExp("[~#%&*{}<>;?/+|\"]");
                     if (filename.match(filenameSpecialChars)) {
@@ -294,18 +310,13 @@ pvMapper.onReady(function () {
                         return;
                     }
 
-                    //check to make sure that the file has '.pvProj' extension..  We will check and add extension only if user did not provide or provided with wrong extension.
-                    var dotindex = filename.lastIndexOf('.');
-                    dotindex = dotindex == -1 ? filename.length : dotindex;
-                    filename = filename.substr(0, dotindex, dotindex) + '.pvProj';
-
                     var content = JSON.stringify(pvMapper.mainScoreboard);
                     var blob = CustomBlob(content, null);
                     blob.data = content;
                     blob.type = 'data:application/json';
                     saveAs(blob, filename);
                 }
-            }, this, false, 'PVMapper Project');
+            }, this, false, previousFilenameForSavingProject);
 
     }
 
@@ -499,22 +510,21 @@ pvMapper.onReady(function () {
     //#endregion Load scoreboard
     //----------------------------------------------------------------------------------------
     //#region SaveScoreboardConfig
+    var previousFilenameForSavingConfig = 'PVMapper Config';
     function saveScoreboardConfig() {
         Ext.MessageBox.prompt('Save file as', 'Please enter a configuraton filename (.pvCfg).',
             function (btn, filename) {
                 if (btn === 'ok') {
-                    filename = (filename || 'PVMapper Config'); //  + '.pvCfg';   //I think I like this behavior better, ... ??
+                    previousFilenameForSavingConfig = (filename || 'PVMapper Config')
+
+                    //check to make sure that the file has '.pvCfg' extension..  We will check and add extension only if user did not provide or provided with wrong extension.
+                    filename = ensureExtension(previousFilenameForSavingConfig, '.pvCfg');
 
                     var filenameSpecialChars = new RegExp("[~#%&*{}<>;?/+|\"]");
                     if (filename.match(filenameSpecialChars)) {
                         Ext.MessageBox.alert('Invlaid filename', 'A filename can not contains any of the following characters [~#%&*{}<>;?/+|\"]');
                         return;
                     }
-
-                    //check to make sure that the file has '.pvCfg' extension..  We will check and add extension only if user did not provide or provided with wrong extension.
-                    var dotindex = filename.lastIndexOf('.');
-                    dotindex = dotindex == -1 ? filename.length : dotindex;
-                    filename = filename.substr(0, dotindex, dotindex) + '.pvCfg';
 
                     var config = {configLines: []};
                     var aUtility, aStarRatables, aWeight, aTitle, aCat = null;
@@ -537,7 +547,7 @@ pvMapper.onReady(function () {
                     blob.type = 'data:application/json';
                     saveAs(blob, filename);
                 }
-            }, this, false, 'PVMapper Config');
+            }, this, false, previousFilenameForSavingConfig);
     }
     //----------------------------------------------------------------------------------------
 
@@ -647,22 +657,21 @@ pvMapper.onReady(function () {
     //#endregion
     //----------------------------------------------------------------------------------------
     //#region Export to Excel
+    var previousFilenameForSavingCSV = 'PVMapper Scoreboard'
     function exportScoreboardToCSV() {
         Ext.MessageBox.prompt('Save file as', 'Please enter a filename for the scoreboard (.CSV).',
             function (btn, filename) {
                 if (btn === 'ok') {
-                    filename = (filename || 'PVMapper Scoreboard');  /// + '.csv';  If user happen to enter with extension, we will have double .
+                    previousFilenameForSavingCSV = (filename || 'PVMapper Scoreboard')
+
+                    //check to make sure that the file has '.csv' extension.  We just guard against wrong extension entered by user here.  Or if user not provided extension or mistype, we then add it here -- be smarter.
+                    filename = ensureExtension(previousFilenameForSavingCSV, '.csv');
 
                     var filenameSpecialChars = new RegExp("[~#%&*{}<>;?/+|\"]");
                     if (filename.match(filenameSpecialChars)) {
                         Ext.MessageBox.alert('Invlaid filename', 'A filename can not contains any of the following characters [~#%&*{}<>;?/+|\"]');
                         return;
                     }
-
-                    //check to make sure that the file has '.csv extension.  We just guard against wrong extension entered by user here.  Or if user not provided extension or mistype, we then add it here -- be smarter.
-                    var dotindex = filename.lastIndexOf('.');
-                    dotindex = dotindex == -1 ? filename.length : dotindex;
-                    filename = filename.substr(0, dotindex, dotindex) + '.csv';
 
                     var exporter = Ext.create("GridExporter");
 
@@ -672,7 +681,7 @@ pvMapper.onReady(function () {
                     blob.type = 'data:application/csv';
                     saveAs(blob, filename);
                 }
-            }, this, false, 'PVMapper Scoreboard'
+            }, this, false, previousFilenameForSavingCSV
         );
     }
 
