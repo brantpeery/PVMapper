@@ -16,6 +16,7 @@ pvMapper.onReady(function () {
         return filename + extension;
     }
 
+
     //----------------------------------------------------------------------------------------
     //#region Address Search
     // place name and address search box
@@ -25,6 +26,31 @@ pvMapper.onReady(function () {
     });
 
     pvMapper.mapToolbar.add(9, searchComboBox);
+
+    //#endregion
+    //----------------------------------------------------------------------------------------
+    //#region Navigation History
+
+    // Navigation history - two "button" controls
+    ctrl = new OpenLayers.Control.NavigationHistory();
+    pvMapper.map.addControl(ctrl);
+
+    action = Ext.create('GeoExt.Action', {
+        text: "»",
+        control: ctrl.next,
+        disabled: true,
+        tooltip: "Go to next map view extent"
+    });
+    pvMapper.mapToolbar.add(9, Ext.create('Ext.button.Button', action));
+
+    action = Ext.create('GeoExt.Action', {
+        text: "«",
+        control: ctrl.previous,
+        disabled: true,
+        tooltip: "Go back to previous map view extent"
+    });
+    pvMapper.mapToolbar.add(9, Ext.create('Ext.button.Button', action));
+
     //#endregion
     //----------------------------------------------------------------------------------------
     //#region Measure distance tool
