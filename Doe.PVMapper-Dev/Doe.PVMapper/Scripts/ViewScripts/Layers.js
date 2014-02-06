@@ -69,6 +69,30 @@ pvMapper.onReady(function () {
     addArcLayer("Solar Energy Zones", "http://solarmapper.anl.gov/ArcGIS/rest/services/SEZ_Map_Service_SDE/MapServer", "1,2");
 
 
+
+    //Note: the function doesn't work for this layer - it needs some peculiar values
+    //addWMSLayer("EPA Contaminated Lands", "http://mapsdb.nrel.gov/geoserver/geothermal_prospector/wms?", "geothermal_prospector:Brownfields", true);
+
+    var wms = new OpenLayers.Layer.WMS(
+        "EPA Brownfield Sites",
+        "http://mapsdb.nrel.gov/geoserver/geothermal_prospector/wms?",
+        {
+            layers: "geothermal_prospector:Brownfields",
+            transparent: true,
+            //srs: "EPSG:3857",
+            format: "image/gif",
+        }, {
+            opacity: 0.5,
+            isBaseLayer: false
+        });
+
+    wms.setVisibility(false);
+    wms.epsgOverride = "EPSG:3857";
+    wms.isReferenceLayer = true;
+    pvMapper.map.addLayer(wms);
+
+
+
     //var slope = new OpenLayers.Layer.WMS(
     //        "Slope",
     //        "http://mapsdb.nrel.gov/jw_router/DNI_slope_3/tile",
