@@ -179,7 +179,7 @@ var BYUModules;
 
     function updateScore (score) {
 
-        var NearRoadRestUrl = "http://geoserver.byu.edu/arcgis/rest/services/slope_tool/GPServer/extract_slope30m";
+        var NearRoadRestUrl = "http://geoserver.byu.edu/arcgis/rest/services/wst_slope/GPServer/extractpoly";
         //Fetch data from the cache if it exists. 
         var key = "slopeModule" + score.site.id;
         if (isNaN(score.value) && $.jStorage.get(key)) {
@@ -207,7 +207,7 @@ var BYUModules;
         var request = OpenLayers.Request.POST({
             url: NearRoadRestUrl + "/submitJob",
             proxy: "/Proxy/proxy.ashx?",
-            data: OpenLayers.Util.getParameterString({ UserPoly: JSON.stringify(esriJsonObj) }) + "+&env%3AoutSR=&env%3AprocessSR=&returnZ=false&returnM=false&f=pjson",
+            data: OpenLayers.Util.getParameterString({ Utah_user: JSON.stringify(esriJsonObj) }) + "+&env%3AoutSR=&env%3AprocessSR=&returnZ=false&returnM=false&f=pjson",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Cache-Control": "max-age=0"
@@ -226,10 +226,11 @@ var BYUModules;
                     var jobId = parsedResponse.jobId;
                     var resultSearcher = setInterval(function () {
                         console.log("Job Still Processing");
+                        console.log(jobId);
                         //Send out another request
                         var resultRequestRepeat = OpenLayers.Request.GET({
-
-                            url: "http://geoserver.byu.edu/arcgis/rest/services/slope_tool/GPServer/extract_slope30m/" + "jobs/" + jobId + "/results/RasterT_Extract1_TXT?f=json",
+                           
+                                url: "http://geoserver.byu.edu/arcgis/rest/services/wst_slope/GPServer/extractpoly/" + "jobs/" + jobId + "/results/slopeout_TXT?f=json",
                             proxy: "/Proxy/proxy.ashx?",
                             callback: function (response) {
 
@@ -240,7 +241,7 @@ var BYUModules;
 
                                     if (!parsedResponse.error) {
                                         //Got Result. Downloading file and processing it. 
-
+                                        
                                         clearInterval(resultSearcher);
                                         finalResponse = parsedResponse;
                                         var fileURL = finalResponse.value.url;
