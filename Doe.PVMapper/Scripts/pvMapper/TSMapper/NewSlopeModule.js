@@ -179,7 +179,7 @@ var BYUModules;
 
     function updateScore (score) {
 
-        var NearRoadRestUrl = "http://geoserver.byu.edu/arcgis/rest/services/wst_slope/GPServer/extractpoly";
+        var NearRoadRestUrl = "http://geoserver.byu.edu/arcgis/rest/services/Sloep30m/GPServer/extractpoly";
         //Fetch data from the cache if it exists. 
         var key = "slopeModule" + score.site.id;
         if (isNaN(score.value) && $.jStorage.get(key)) {
@@ -207,7 +207,7 @@ var BYUModules;
         var request = OpenLayers.Request.POST({
             url: NearRoadRestUrl + "/submitJob",
             proxy: "/Proxy/proxy.ashx?",
-            data: OpenLayers.Util.getParameterString({ Utah_user: JSON.stringify(esriJsonObj) }) + "+&env%3AoutSR=&env%3AprocessSR=&returnZ=false&returnM=false&f=pjson",
+            data: OpenLayers.Util.getParameterString({ UserPoly: JSON.stringify(esriJsonObj) }) + "+&env%3AoutSR=&env%3AprocessSR=&returnZ=false&returnM=false&f=pjson",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Cache-Control": "max-age=0"
@@ -230,7 +230,7 @@ var BYUModules;
                         //Send out another request
                         var resultRequestRepeat = OpenLayers.Request.GET({
                            
-                                url: "http://geoserver.byu.edu/arcgis/rest/services/wst_slope/GPServer/extractpoly/" + "jobs/" + jobId + "/results/slopeout_TXT?f=json",
+                            url: "http://geoserver.byu.edu/arcgis/rest/services/Sloep30m/GPServer/extractpoly/" + "jobs/" + jobId + "/results/slopeout_TXT?f=json",
                             proxy: "/Proxy/proxy.ashx?",
                             callback: function (response) {
 
