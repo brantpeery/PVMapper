@@ -24,13 +24,13 @@
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/Scoreboard.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/ScoreLine.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/TotalLine.js"></script>
-    <script src="~/Scripts/pvMapper/TSMapper/InfoTools.js"></script>
+    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/InfoTools.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/Site.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/SiteManager.js"></script>
 
     <script type="text/javascript" src="~/Scripts/UI/view/Window.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/Scoreboard.js"></script>
-    <script src="~/Scripts/UI/view/PieView.js"></script>
+    <script type="text/javascript" src="~/Scripts/UI/view/PieView.js"></script>
     <script type="text/javascript" src="/Scripts/UI/view/ScoreboardWindow.js"></script>
 
     @*<script type="text/javascript" src="~/Scripts/ViewScripts/IdentifySite.js"></script>*@
@@ -61,7 +61,8 @@
     @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/solarmapperModule.js"></script>*@
     @*Removed SNL transmission line queries; replaced with OpenStreetMap transmission line queries*@
     @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/snlModule.js"></script>*@
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/DemModule.js"></script>
+    @* Removed - The ESRI world topo map apparently no longer supports slope, aspect, and elevation (and a brief search found no suitible replacement) *@
+    @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/DemModule.js"></script>*@
     @* Removed Wilderness module as the Land Management module will fulfill the same role and others during the Beta release & demos *@
     @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/WildernessModule.js"></script>*@
     <script type="text/javascript" src="~/Scripts/pvExtensions/TotalsModule.js"></script>
@@ -77,6 +78,7 @@
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/SoilModule.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/OSMSocialModule.js"></script>
     <script type="text/javascript" src="~/Scripts/pvmapper/TSMapper/riverDistance.js"></script>
+    <script type="text/javascript" src="~/Scripts/pvmapper/TSMapper/NewSlopeModule.js"></script>
 
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/LocalLayerModule.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/KMLInfoModule.js"></script>
@@ -84,7 +86,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/jstorage.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/Data/ScoreboardProcessor.js"></script>
-    <script src="~/Scripts/pvExtensions/Reports.js"></script>
+    <script type="text/javascript" src="~/Scripts/pvExtensions/Reports.js"></script>
 
     <script type="text/javascript" src="~/Scripts/ViewScripts/RelatedLinks.js"></script>
 }
