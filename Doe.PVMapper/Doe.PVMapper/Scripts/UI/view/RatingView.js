@@ -45,6 +45,7 @@ pvMapper.showRatingWindow = function (ratables, onAccepted, title) {
           store: store
         })
     ],
+    height: Math.min(500, (Ext.getBody().getViewSize().height - 160)), // limit initial height to window height
     listeners: {
       onCancel: function () {
         window.close();

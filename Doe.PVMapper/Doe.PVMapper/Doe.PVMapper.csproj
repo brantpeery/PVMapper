@@ -447,6 +447,8 @@
       <DependentUpon>ModuleTemplate.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\ModuleTemplate.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\NearRoadModule.js" />
+    <Content Include="Scripts\pvMapper\TSMapper\NewSlopeModule.js" />
     <Content Include="Scripts\pvMapper\TSMapper\Options.d.js">
       <DependentUpon>Options.d.ts</DependentUpon>
     </Content>
