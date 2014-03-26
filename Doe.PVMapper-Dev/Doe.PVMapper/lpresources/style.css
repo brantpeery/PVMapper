@@ -24,7 +24,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#066dab', end
 
 height:100px;border-bottom:solid 1px #333333;}
 
-#toprow {height:372px;border-top:solid 1px #1d1d1d;background: #FFFFFF url(images/bg.gif) repeat-x;}
+#toprow {height:372px;border-top:solid 1px #1d1d1d;background: #FFFFFF url(images/bg1.gif) repeat-x;}
 #toprowsub {height:70px;border-bottom:solid 1px #ccc;background: #FFFFFF url(images/bg2.gif) repeat-x;}
 #toprowsub h2{padding:15px 30px;}
 #midrow {width:960px;margin:0 auto;}

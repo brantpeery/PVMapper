@@ -12,24 +12,6 @@ var BYUModules;
     var propsWindow;
 
     Ext.onReady(function () {
-        var comboConfig = {
-            allowBlank: false,
-            displayField: 'display',
-            valueField: 'value',
-            store: {
-                fields: ['display', 'value'],
-                data: [
-                    { 'display': '2 %', 'value': 2 },
-                    { 'display': '4 %', 'value': 4 },
-                    { 'display': '5 %', 'value': 5 }
-                ]
-            },
-            typeAhead: true,
-            mode: 'local',
-            triggerAction: 'all',
-            selectOnFocus: true
-        };
-
         var propsGrid = new Ext.grid.PropertyGrid({
             nameText: 'Properties Grid',
             minWidth: 300,
@@ -42,10 +24,6 @@ var BYUModules;
             propertyNames: {
                 percentT: 'Maximum Slope',
             },
-            customEditors: {
-                'percentT': new Ext.form.ComboBox(comboConfig),
-               
-            }
         });
         propsWindow = Ext.create('Ext.window.Window', {
             title: "Configure Slope Tool",
@@ -96,7 +74,7 @@ var BYUModules;
                         destroy: null,
                         init: null,
                         title: "Slope",
-                        description: "Slope percentage exceeding the described threshold(Default : 5%)",
+                        description: "Percentage of site slope which falls under the given threshold (Default : 5%)",
                         category: "Geography",
                         onScoreAdded: function (event, score) {
                         },
@@ -105,7 +83,7 @@ var BYUModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(10, 0, "%")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs( 0, 0, 50, 50, 100, 100, "%")
                         },
                         defaultWeight: 10
                     }
@@ -128,8 +106,8 @@ var BYUModules;
         var key = "slopeURL" + score.site.id;
         if ($.jStorage.get(key)) {
             url = $.jStorage.get(key);
-            score.popupMessage = "<i>Calculating...</i>";
-            score.updateValue(0);
+            score.popupMessage = "Calculating...";
+            score.updateValue(Number.NaN);
         }
         else {
             //Url has not been established. Run the update score. 
@@ -152,15 +130,14 @@ var BYUModules;
                 var totalNo = values.length;
                 var totalCount = 0;
                 for (var i = 0; i < totalNo; i++) {
-                    if (values[i] > lineConfigProperties.percentT) {
+                    if (values[i] <= lineConfigProperties.percentT) {
                         totalCount++;
                     }
                 }
 
                 var percent = (totalCount * 100.0) / totalNo;
-                percent = percent.toFixed(2);
 
-                var message = percent + "% of land has greater than " + lineConfigProperties.percentT + "% slope";
+                var message = percent.toFixed(2) + "% of land has less than " + lineConfigProperties.percentT + "% slope";
                 score.popupMessage = message;
                 score.updateValue(percent);
                 var key = "slopeModule" + score.site.id;
@@ -179,7 +156,7 @@ var BYUModules;
 
     function updateScore (score) {
 
-        var NearRoadRestUrl = "http://geoserver.byu.edu/arcgis/rest/services/Sloep30m/GPServer/extractpoly";
+        var NearRoadRestUrl = "https://geoserver.byu.edu/arcgis/rest/services/Sloep30m/GPServer/extractpoly";
         //Fetch data from the cache if it exists. 
         var key = "slopeModule" + score.site.id;
         if (isNaN(score.value) && $.jStorage.get(key)) {
@@ -199,7 +176,6 @@ var BYUModules;
             "features": [
                 { "geometry": recObj }
             ],
-
         };
 
         //console.log("Esri Json: " + JSON.stringify(esriJsonObj));
@@ -230,7 +206,7 @@ var BYUModules;
                         //Send out another request
                         var resultRequestRepeat = OpenLayers.Request.GET({
                            
-                            url: "http://geoserver.byu.edu/arcgis/rest/services/Sloep30m/GPServer/extractpoly/" + "jobs/" + jobId + "/results/slopeout_TXT?f=json",
+                            url: "https://geoserver.byu.edu/arcgis/rest/services/Sloep30m/GPServer/extractpoly/" + "jobs/" + jobId + "/results/slopeout_TXT?f=json",
                             proxy: "/Proxy/proxy.ashx?",
                             callback: function (response) {
 
@@ -253,13 +229,13 @@ var BYUModules;
                                     }
 
                                     else {
-                                        score.popupMessage = "Error " + response.status;
+                                        score.popupMessage = "Parse error " + parsedResponse.error;
                                         score.updateValue(Number.NaN);
                                     }
 
                                 } else {
                                     clearInterval(resultSearcher);
-                                    score.popupMessage = "Error " + response.status;
+                                    score.popupMessage = "Error " + response.status + " " + response.statusText;
                                     score.updateValue(Number.NaN);
                                 }
                             }
@@ -267,12 +243,10 @@ var BYUModules;
                     }, 4000);
 
                 } else {
-                    score.popupMessage = "Error " + response.status;
+                    score.popupMessage = "Error " + response.status + " " + response.statusText;
                     score.updateValue(Number.NaN);
                 }
             }
         });
     };
-
-
 })(BYUModules || (BYUModules = {}));
