@@ -131,7 +131,7 @@ else
                 url: this.soilSurveyQueryUrl,
                 params: {
                     f: "json",
-                    //outFields: "muname,muhelcl", //"*",
+                    outFields: "muname,muhelcl,farmlndcl,DrainageCl",
                     geometryType: "esriGeometryPolygon",
                     geometry: geoJsonPolygon,
                     //geometryType: "esriGeometryEnvelope",
@@ -148,9 +148,14 @@ else
                 },
                 callback: function (response) {
                     if (response.success()) {
-                        // cache the returned features, then update the score through the cache
-                        _this.nearestFeatureCache[score.site.id] = response.features || [];
-                        _this.updateScoreFromCache(score);
+                        if (response.data.error) {
+                            score.popupMessage = "Server error " + response.data.error.code + " " + response.data.error.message;
+                            score.updateValue(Number.NaN);
+                        } else {
+                            // cache the returned features, then update the score through the cache
+                            _this.nearestFeatureCache[score.site.id] = response.features || [];
+                            _this.updateScoreFromCache(score);
+                        }
                     } else {
                         score.popupMessage = "Request error " + response.error.toString();
                         score.updateValue(Number.NaN);
@@ -169,8 +174,7 @@ else
             if (features) {
                 for (var i = 0; i < features.length; i++) {
                     //if (score.site.geometry.intersects(features[i].geometry)) {
-                    var newText = features[i].attributes["muname"];
-
+                    var newText = features[i].attributes["muname"] + (features[i].attributes["DrainageCl"] ? ", " + features[i].attributes["DrainageCl"] : "");
                     if (newText && responseArray.indexOf(newText) < 0) {
                         // add this to the array of responses we've received
                         responseArray.push(newText);

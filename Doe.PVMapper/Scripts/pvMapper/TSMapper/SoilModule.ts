@@ -151,7 +151,7 @@ module INLModules {
                 url: this.soilSurveyQueryUrl,
                 params: {
                     f: "json",
-                    //outFields: "muname,muhelcl", //"*", 
+                    outFields: "muname,muhelcl,farmlndcl,DrainageCl", //"muname,muhelcl", //"*", 
                     geometryType: "esriGeometryPolygon",
                     geometry: geoJsonPolygon,
                     //geometryType: "esriGeometryEnvelope",
@@ -169,9 +169,14 @@ module INLModules {
                 },
                 callback: (response: OpenLayers.Response) => {
                     if (response.success()) {
-                        // cache the returned features, then update the score through the cache
-                        this.nearestFeatureCache[score.site.id] = response.features || [];
-                        this.updateScoreFromCache(score);
+                        if (response.data.error) {
+                            score.popupMessage = "Server error " + response.data.error.code + " " + response.data.error.message;
+                            score.updateValue(Number.NaN);
+                        } else {
+                            // cache the returned features, then update the score through the cache
+                            this.nearestFeatureCache[score.site.id] = response.features || [];
+                            this.updateScoreFromCache(score);
+                        }
                     } else {
                         score.popupMessage = "Request error " + response.error.toString();
                         score.updateValue(Number.NaN);
@@ -191,8 +196,8 @@ module INLModules {
             if (features) {
                 for (var i = 0; i < features.length; i++) {
                     //if (score.site.geometry.intersects(features[i].geometry)) {
-                        var newText: string = features[i].attributes["muname"];
-                            // + (features[i].attributes["muhelcl"] ? ": " + features[i].attributes["muhelcl"] : "");
+                        var newText: string = features[i].attributes["muname"] +
+                            (features[i].attributes["DrainageCl"] ? ", " + features[i].attributes["DrainageCl"] : "");
                         if (newText && responseArray.indexOf(newText) < 0) {
                             // add this to the array of responses we've received
                             responseArray.push(newText);
@@ -237,5 +242,4 @@ module INLModules {
     }
 
     var soilInstance = new INLModules.SoilModule();
-
 }
