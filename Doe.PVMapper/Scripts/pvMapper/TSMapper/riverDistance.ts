@@ -69,7 +69,7 @@ module BYUModules {
                 iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/home_icon.jpg",
 
                 activate: () => {
-                    addAllMaps();
+                    //addAllMaps();
                 },
                 deactivate: () => {
                     removeAllMaps();
@@ -117,29 +117,32 @@ module BYUModules {
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
-    var ExportUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/export"; //TODO 
-    var QueryUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/3/query"; //TODO 
+    //var ExportUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/export";
+    var QueryUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/3/query";
 
     var mapLayer: any;
 
-    function addAllMaps() {
-        mapLayer = new OpenLayers.Layer.ArcGIS93Rest(
-            "Power Lines",
-            ExportUrl,
-            {
-                layers: "show:3", //"show:2", //TODO 
-                format: "gif",
-                srs: "3857", //"102100",
-                transparent: "true",
-            }//,{ isBaseLayer: false }
-            );
-        mapLayer.setOpacity(0.3);
-        mapLayer.epsgOverride = "3857"; //"EPSG:102100";
-        mapLayer.setVisibility(false);
+    //Note: the river layer was already added as a Reference layer... 
+    //      As it seems more similar to the other Reference layers than it does to the Tool Data layers,
+    //      I chose to leave it there (and comment out this add)
+    //function addAllMaps() {
+    //    mapLayer = new OpenLayers.Layer.ArcGIS93Rest(
+    //        "Rivers",
+    //        ExportUrl,
+    //        {
+    //            layers: "show:3", //"show:2", //TODO 
+    //            format: "gif",
+    //            srs: "3857", //"102100",
+    //            transparent: "true",
+    //        }//,{ isBaseLayer: false }
+    //        );
+    //    mapLayer.setOpacity(0.3);
+    //    mapLayer.epsgOverride = "3857"; //"EPSG:102100";
+    //    mapLayer.setVisibility(false);
 
-        pvMapper.map.addLayer(mapLayer);
-        //pvMapper.map.setLayerIndex(mapLayer, 0);
-    }
+    //    pvMapper.map.addLayer(mapLayer);
+    //    //pvMapper.map.setLayerIndex(mapLayer, 0);
+    //}
 
     function removeAllMaps() {
         pvMapper.map.removeLayer(mapLayer, false);
