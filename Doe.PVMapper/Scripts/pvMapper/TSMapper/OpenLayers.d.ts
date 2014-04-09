@@ -26,7 +26,7 @@ declare module OpenLayers {
 
 
     interface Util {
-      getParameterString(any): string;
+        getParameterString(params: any): string;
     }
 
     var Util: Util;
@@ -1535,26 +1535,83 @@ declare module OpenLayers {
         }
     }
 
-  interface Filter {
+    interface Filter {
         destroy();
         evaluate(context: any): Boolean;
         clone(): Filter;
         toString(): string;
     }
 
+    interface Comparison extends Filter {
+        type: string;
+        property: string;
+        value: number;
+        lowerBoundary: number;
+        upperBoundary: number;
+
+        value2regex(wildCard: string, singleChar: string, escapeChar: string): string;
+    }
+
     var Filter: {
         new (options?: any): Filter;
         (options?: any): Filter;
         prototype: Filter;
+
+        Comparison: {
+            new (options?: any): Comparison;
+
+            EQUAL_TO: string;
+            NOT_EQUAL_TO: string;
+            LESS_THAN: string;
+            GREATER_THAN: string;
+            LESS_THAN_OR_EQUAL_TO: string;
+            GREATER_THAN_OR_EQUAL_TO: string;
+            BETWEEN: string;
+            LIKE: string;
+        }
     }
 
-  interface StyleMap {
-        styles: any;
+    interface StyleMap {
+        styles: {
+            [intent: string]: Style;
+            default: Style;
+            select: Style;
+            temporary: Style;
+        };
         extendDefault: Boolean;
 
         destroy();
         createSymobolizer(feature: Feature, intent: string): any;
         addUniqueValueRules(renderIntent: string, property: string, symbolizers: any, content: any);
+    }
+
+    var StyleMap: {
+        new (): StyleMap;
+        new (style: any): StyleMap;
+        new (style: any, options: any): StyleMap;
+    }
+
+    interface Rule {
+        id: string;
+        name: string;
+        title: string;
+        description: string;
+        context: any;
+        filter: Filter;
+        elseFilter: boolean;
+        symbolizer: any;
+        symbolizers: number;
+        minScaleDenominator: any;
+        maxScaleDenominator: any;
+
+        destroy();
+        evaluate(feature: Feature): boolean;
+        getContext(feature: Feature): any;
+        clone(): Rule;
+    }
+
+    var Rule: {
+        new (options?: any): Rule;
     }
 
     interface Strategy {
@@ -2196,49 +2253,64 @@ declare module OpenLayers {
     }
 
     interface Style {
-        fill: Boolean;
-        fillColor: string;
-        fillOpacity: number;
-        stroke: Boolean;
-        strokeColor: string;
-        strokeOpacity: number;
-        strokeWidth: number;
-        strokeLinecap: string;
-        strokeDashstyle: string;
-        graphic: Boolean;
-        pointRadius: number;
-        pointerEvents: string;
-        cursor: string;
-        externalGraphic: string;
-        graphicWidth: number;
-        graphicHeight: number;
-        graphicOpacity: number;
-        graphicXOffset: number;
-        graphicYOffset: number;
-        rotation: number;
-        graphicZIndex: number;
-        graphicTitle: string;
-        backgroundGraphic: string;
-        backgroundGraphicZIndex: number;
-        backgroundXOffset: number;
-        backgroundYOffset: number;
-        backgroundHeight: number;
-        backgroundWidth: number;
-        label: string;
-        labelAlign: string;
-        labelXOffset: number;
-        labelYOffset: number;
-        labelSelect: Boolean;
-        labelOutlineColor: string;
-        labelOutlineWidth: number;
-        fontColor: string;
-        fontOpacity: number;
-        fontFamily: string;
-        fontSize: string;
-        fontStyle: string;
-        fontWeight: string;
-        display: string;
+        name: string;
+        layerName: string;
+        isDefault: boolean;
+        context: any;
 
+        //fill: Boolean;
+        //fillColor: string;
+        //fillOpacity: number;
+        //stroke: Boolean;
+        //strokeColor: string;
+        //strokeOpacity: number;
+        //strokeWidth: number;
+        //strokeLinecap: string;
+        //strokeDashstyle: string;
+        //graphic: Boolean;
+        //pointRadius: number;
+        //pointerEvents: string;
+        //cursor: string;
+        //externalGraphic: string;
+        //graphicWidth: number;
+        //graphicHeight: number;
+        //graphicOpacity: number;
+        //graphicXOffset: number;
+        //graphicYOffset: number;
+        //rotation: number;
+        //graphicZIndex: number;
+        //graphicTitle: string;
+        //backgroundGraphic: string;
+        //backgroundGraphicZIndex: number;
+        //backgroundXOffset: number;
+        //backgroundYOffset: number;
+        //backgroundHeight: number;
+        //backgroundWidth: number;
+        //label: string;
+        //labelAlign: string;
+        //labelXOffset: number;
+        //labelYOffset: number;
+        //labelSelect: Boolean;
+        //labelOutlineColor: string;
+        //labelOutlineWidth: number;
+        //fontColor: string;
+        //fontOpacity: number;
+        //fontFamily: string;
+        //fontSize: string;
+        //fontStyle: string;
+        //fontWeight: string;
+        //display: string;
+
+        destroy();
+        addRules(rules: Rule[]);
+        setDefaultStyle(style: any);
+        clone(): Style;
+    }
+
+    var Style : {
+        new (): Style;
+        new (style: any): Style;
+        new (style: any, options: any): Style;
     }
 
     //NOTE: FVector is for all features related object.  There are a 'Vector' class which is use for layer only.
