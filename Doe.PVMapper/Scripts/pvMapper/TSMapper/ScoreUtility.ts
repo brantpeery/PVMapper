@@ -62,7 +62,7 @@ module pvMapper {
             maxTip: string = "The maximum value."
             ) {
 //            this.tips = { minValue: minTip, maxValue: maxTip };
-            this.metaInfo = { name: "MinMaxUtilityArgs", unitSymbol: unit, minValueTip: minTip, maxValueTip: maxTip, vline: 0 };
+                this.metaInfo = { name: "MinMaxUtilityArgs", unitSymbol: unit, minValueTip: minTip, maxValueTip: maxTip, vline: 0, comment: '', x_axis: 'X-axis', y_axis: 'Y-axis' };
 
         }
 
@@ -76,12 +76,18 @@ module pvMapper {
             minValueTip: string;
             maxValueTip: string;
             vline: number;
+            comment: string;
+            x_axis: string;
+            y_axis: string;
         }
         public stringify() {
             var str = "";
             //str += "name: " + this.metaInfo.name;
             str += ", min: " + this.minValue.toFixed(0);
             str += ", max: " + this.maxValue.toFixed(0);
+            str += ", x-axis: " + this.metaInfo.x_axis;
+            str += ", y-axis: " + this.metaInfo.y_axis;
+            str += ", comment: " + this.metaInfo.comment;
             return str; 
         }
     }
@@ -109,7 +115,10 @@ module pvMapper {
                 slopeTip: slopeTip,
                 minValueTip: minTip,
                 maxValueTip: maxTip,
-                vline: 0
+                vline: 0;
+                comment: '';
+                x_axis: 'X-axis';
+                y_axis: 'Y-axis';
             };                                                 
         }
 
@@ -127,6 +136,9 @@ module pvMapper {
             minValueTip: string;
             maxValueTip: string;
             vline: number;
+            comment: string;
+            x_axis: string;
+            y_axis: string;
         }
 
         public stringify() {
@@ -136,6 +148,9 @@ module pvMapper {
             str += ", max: " + this.maxValue.toFixed(0);
             str += ", slope: " + this.slope.toFixed(0);
             str += ", target: " + this.target.toFixed(0);
+            str += ", x-axis: " + this.metaInfo.x_axis;
+            str += ", y-axis: " + this.metaInfo.y_axis;
+            str += ", comment: " + this.metaInfo.comment;
             return str;
         }
     }
@@ -149,7 +164,7 @@ module pvMapper {
             this.p0 = { x: p0x, y: p0y };
             this.p1 = { x: p1x, y: p1y };
             this.p2 = { x: p2x, y: p2y };
-            this.metaInfo = { name: "ThreePointUtilityArgs", unitSymbol: unit, vline: 0 };
+            this.metaInfo = { name: "ThreePointUtilityArgs", unitSymbol: unit, vline: 0, comment: '', x_axis:'X-axis', y_axis:'Y-axis' };
         }
         public p0: { x: number; y: number; };
         public p1: { x: number; y: number; };
@@ -158,8 +173,11 @@ module pvMapper {
         public points: string[] = ["p0", "p1", "p2"];
         public metaInfo: {
             name: string;
-            unitSymbol: string;                        
+            unitSymbol: string;
             vline: number;
+            comment: string;
+            x_axis: string;
+            y_axis: string;
         }
         public stringify() {
             var str = "";;
@@ -168,6 +186,9 @@ module pvMapper {
             str += "(" + this.p0.x.toFixed(0) + "," + this.p0.y.toFixed(0) + "),";
             str += "(" + this.p1.x.toFixed(0) + "," + this.p1.y.toFixed(0) + "),";
             str += "(" + this.p2.x.toFixed(0) + "," + this.p2.y.toFixed(0) + ")]";
+            str += ", x-axis: " + this.metaInfo.x_axis;
+            str += ", y-axis: " + this.metaInfo.y_axis;
+            str += ", comment: " + this.metaInfo.comment;
             return str;
         }
     }

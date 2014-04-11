@@ -372,6 +372,7 @@
     <Content Include="Scripts\ExtJS.d.ts" />
     <Content Include="Scripts\Heron\widgets\search\NominatimSearchCombo.js" />
     <Content Include="Scripts\jquery.d.ts" />
+    <Content Include="Scripts\jsxgraphcore.js" />
     <Content Include="Scripts\JSZip\jszip-inflate.js" />
     <Content Include="Scripts\JSZip\jszip-load.js" />
     <Content Include="Scripts\JSZip\jszip.js" />

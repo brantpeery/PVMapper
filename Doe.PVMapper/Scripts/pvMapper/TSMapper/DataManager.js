@@ -1,4 +1,4 @@
-/// <reference path="Options.d.ts" />
+﻿/// <reference path="Options.d.ts" />
 /// <reference path="common.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="../../ExtJS.d.ts" />
@@ -18,6 +18,8 @@ var pvMapper;
     })();
     pvMapper.CustomModule = CustomModule;
 
+    
+
     pvMapper.ICustomModuleData;
 
     var CustomModuleData = (function () {
@@ -28,6 +30,8 @@ var pvMapper;
         return CustomModuleData;
     })();
     pvMapper.CustomModuleData = CustomModuleData;
+
+    
 
     var ClientDB = (function () {
         function ClientDB() {
@@ -91,7 +95,7 @@ var pvMapper;
                     if (request.result != undefined) {
                         store.put(data, filename);
                     } else
-                        store.add(data, filename);
+                        store.add(data, filename); // if new, add
                 };
             } catch (e) {
                 console.log("save custom KML failed, cause: " + e.message);
@@ -109,7 +113,7 @@ var pvMapper;
                 if (request.result != undefined) {
                     if (+ClientDB.db.version <= 6)
                         kmlData = new CustomModule(key, "LocalLayerModule", request.result);
-else
+                    else
                         kmlData = request.result;
                     if (typeof (cbFn) === "function")
                         cbFn(kmlData);
@@ -156,7 +160,7 @@ else
                 var txn = ClientDB.db.transaction(ClientDB.PROJECT_STORE_NAME, "readonly");
                 var store = txn.objectStore(ClientDB.PROJECT_STORE_NAME);
                 store.openCursor().onsuccess = function (evt) {
-                    var cursor = (evt.target).result;
+                    var cursor = evt.target.result;
                     if (cursor) {
                         kmlNames.push(cursor.key);
                         cursor.continue();

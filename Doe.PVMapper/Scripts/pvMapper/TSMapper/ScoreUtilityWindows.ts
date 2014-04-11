@@ -22,26 +22,111 @@ module pvMapper {
 
                 var board;
                 var fnOfy;
+
                 _this._xArgs = Ext.Object.merge({}, args); //!Create a clone of the args for use in the graph
-                
+
                 _this.functionName = scoreObj.functionName;
                 var gridPanel;
                 var cbxFunctions;
                 function loadboard() {
                     //Extras.loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
-                    Extras.getScript("https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.97/jsxgraphcore.js", function () {
+                    //Extras.getScript("https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.97/jsxgraphcore.js", function () {
+                    Extras.getScript("scripts/jsxgraphcore.js", function () { //this one has the latest (0.99.0) and supports of label rotation.
 
+                        var fbel = document.getElementById('FunctionBox');
                         var bounds = xBounds(args);
                         // ensure that the buffer is > 0 (bounds being equal is a valid case for a step function)
-                        var buffer = (bounds[0] == bounds[1]) ? 1 : (bounds[1] - bounds[0]) / 10;
-                        bounds[0] -= buffer;
-                        bounds[1] += buffer * 1.5; // a little more on the right hand side feels nice.
 
+                        var dx = fbel.clientWidth
+                        var buffer = (bounds[0] == bounds[1]) ? 1 : (bounds[1] - bounds[0]) / 10;
+                        bounds[0] -= dx * 0.1;
+                        bounds[1] = dx / 20;
+                        bounds[1] += buffer * 2.5; // a little more on the right hand side feels nice.
+
+                        JXG.Options.text.display = 'internal';  //need this to make the axis label rotation work.
                         board = JXG.JSXGraph.initBoard('FunctionBox-body', {
-                            boundingbox: [bounds[0], 108, bounds[1], -8],
-                            axis: true, showCopyright: false, showNavigation: true
+                            boundingbox: [bounds[0], 108, bounds[1], bounds[0]],
+                            keepaspectratio: true,
+                            axis: false,
+                            showCopyright: false,
+                            showNavigation: true
                         });
 
+                        _this.graph = board;
+                        _this._xArgs.metaInfo.y_axis = (typeof (_this._xArgs.metaInfo.y_axis) == 'undefined') ? null : _this._xArgs.metaInfo.y_axis;
+                        _this._xArgs.metaInfo.x_axis = (typeof (_this._xArgs.metaInfo.x_axis) == 'undefined') ? null : _this._xArgs.metaInfo.x_axis;
+                        var yaxis = board.create('axis', [[0, 0], [0, 1]],
+                            {
+                                name: (_this._xArgs.metaInfo.y_axis) || 'Y-axis',
+                                withLabel: true,
+                                ticks: {
+                                    insertTicks: false,
+                                    ticksDistance: 20,
+                                    label: {
+                                        offset: [-10, 0]
+                                    }
+                                },
+                                point1: {
+                                    needsRegularUpdate: true
+                                },
+                                point2: {
+                                    needsRegularUpdate: true
+                                },
+                                label: {
+                                    position: 'top',
+                                    offset: [-20, 5],
+                                    fixed: false,
+                                    strokeColor: 'blue',
+                                    highlightStrokeColor: 'red',
+                                }
+
+                            });
+                        yaxis.label.addRotation(90);
+
+                        var xaxis = board.create('axis', [[0, 0], [1, 0]],
+                            {
+                                name: (_this._xArgs.metaInfo.x_axisl) || 'X-axis',
+                                withLabel: true,
+                                ticks: {
+                                    insertTicks: false,
+                                    ticksDistance: 20,
+                                    label: {
+                                        offset: [-2, -10]
+                                    }
+                                },
+                                point1: {
+                                    needsRegularUpdate: true
+                                },
+                                point2: {
+                                    needsRegularUpdate: true
+                                },
+                                label: {
+                                    position: 'bot',
+                                    offset: [0, -20],
+                                    strokeColor: 'blue',
+                                    fixed: false,
+                                    highlightStrokeColor: 'green'
+                                }
+
+                            });
+
+                        board.constantUnitX = board.unitX;
+                        board.constantUnitY = board.unitY;
+
+                        var bbox = board.getBoundingBox();
+                        var w = board.canvasWidth;
+                        var h = board.canvasHeight;
+                        bbox[2] = w / board.constantUnitX;
+                        bbox[1] = h / board.constantUnitY;
+                        bbox[0] = -bbox[2] * 0.1;
+                        bbox[3] = -bbox[1] * 0.1;
+                        bbox[2] = bbox[2] + bbox[0];
+                        bbox[1] = bbox[1] + bbox[3];
+
+                        board.resizeContainer(w, h, false);
+                        board.setBoundingBox(bbox);
+                        board.needFullUpdate = true;
+                        board.fullUpdate();
 
                         //TODO: should we replace this with ScoreUtility.run(x) ...?
                         fnOfy = board.create('functiongraph', function (x) {
@@ -54,7 +139,6 @@ module pvMapper {
                         //draggable lines querying reflecting values.  By using the fn function to query the intersecting Y value, this should work for any utility function.
                         var bb = board.getBoundingBox();
 
-                        var dx;
                         if ((_this._xArgs.metaInfo.vline == undefined) || (_this._xArgs.metaInfo.vline <= 0)) {
                             dx = ((bb[2] - bb[0]) / 2.0) + bb[0];
                             _this._xArgs.metaInfo.vline = dx;
@@ -64,7 +148,7 @@ module pvMapper {
 
                         var dy = fn(dx, _this._xArgs) * 100;
                         var vline = board.create('segment', [[dx, 0], [dx, dy]],
-                            { name: dx.toFixed(1) + " " + _this._xArgs.metaInfo.unitSymbol, withLabel: true, strokeColor: "blue", dash: 2, strokeOpacity: 0.15 });    
+                            { name: dx.toFixed(1) + " " + _this._xArgs.metaInfo.unitSymbol, withLabel: true, strokeColor: "blue", dash: 2, strokeOpacity: 0.15 });
                         var scoreColor = pvMapper.getColorForScore(dy);
                         var hline = board.create('segment', [[0, dy], [vline.point1.X(), dy]],
                             { name: "Score: " + dy.toFixed(0), withLabel: true, strokeColor: scoreColor, dash: 2, strokeWidth: 4, strokeOpacity: 1 });
@@ -202,7 +286,6 @@ module pvMapper {
 
                 panel.removeAll();
 
-
                 var equStore = Ext.create('Ext.data.Store', {
                     fields: ['Name', 'Function'],
                     data: [
@@ -233,7 +316,7 @@ module pvMapper {
                             if (combo.value != _this._xArgs.metaInfo.name) {
 
                                 //NOTE: merge doesn't copy programmatic add variables,  Ext.apply does, it required param1 to be and existing object where properties can copy onto.
-                                var sobj: ScoreUtility = Ext.apply({}, scoreObj);  
+                                var sobj: ScoreUtility = Ext.apply({}, scoreObj);
                                 switch (combo.value) {
                                     case 'ThreePointUtilityArgs':
                                         //alert(combo.value);
@@ -306,16 +389,6 @@ module pvMapper {
                     }
                 });
 
-                //var funcPanel = Ext.create('Ext.panel.Panel', {
-                //    layout: {
-                //        align: 'center',
-                //        pack: 'center',
-                //        type: 'vbox'
-                //    },
-                //    items: cbxFunctions
-
-                //});
-
                 //Note: Removed this for the demo, as it is not stable or bug-free.
                 //      Bug fixes exist for this on the Dev branch, but those fixes also cause bugs (due to merge issues, mostly).
                 //      Until there is time to sort out the Dev branch, this is the safest solution available.
@@ -371,34 +444,107 @@ module pvMapper {
                     }
                 });
                 panel.add(gridPanel);
-                panel.add({
-                    xtype: 'panel',
-                    layout: {
-                        align: 'center',
-                        pack: 'center',
-                        type: 'vbox'
-                    },
-                    items: {
-                        id: 'FunctionBox',
-                        xtype: 'panel',
-                        layout: 'fit',
-                        border: true,
-                        width: 200,
-                        height: 225,
-                        padding: 5
-                    },
+                //panel.add({
+                //    xtype: 'panel',
+                //    width: 400,
+                //    height: 425,
+                //    layout: 'fit',
+                //    //{
+                //    //    align: 'center',
+                //    //    pack: 'center',
+                //    //    type: 'vbox'
+                //    //},
+                //    items: {
+                //        id: 'FunctionBox',
+                //        xtype: 'panel',
+                //        border: true,
+                //        bodyPadding: 5
+                //    },
+                //    listeners: {
+                //        afterrender: function (sender, eOpts) {
+                //            loadboard();
+                //        }
+                //    }
+                //});
+
+                var fpanel = Ext.create("Ext.panel.Panel", {
+                    height: 225,
+                    id: 'FunctionBox',
+                    renderTo: Ext.getBody(),
                     listeners: {
                         afterrender: function (sender, eOpts) {
                             loadboard();
                         }
                     }
                 });
+                panel.add(fpanel);
+
+                //_this._xArgs.metaInfo.comment = "This is a test of the comment area";
+                var commentPanel = Ext.create("Ext.panel.Panel", {
+                    height: 100,
+                    width: '100%',
+                    bodyPadding: 10,
+                    renderTo: Ext.getBody(),
+                    layout: {
+                        type: 'hbox',
+                        align: 'top'
+                    },
+                    items: [{
+                        xtype: 'label',
+                        forId: 'function_comment_id',
+                        text: 'Comment: ',
+                        margin: '0 0 0 10',
+                    }, {
+                            xtype: 'textareafield',
+                            id: 'function_comment_id',
+                            height: 80,
+                            hideLabel: true,
+                            value: _this._xArgs.metaInfo.comment,
+                            flex: 1,
+                            listeners: {
+                                blur: function (ed, The, op) {
+                                    _this._xArgs.metaInfo.comment = this.getValue();
+                                }
+
+                            }
+                        }]
+                });
+
+                panel.id = 'FunctionUtilMainPanel';
+                panel.add(commentPanel);
+                panel.onBodyResize = function (w, h, ops) {
+                    if (board) {
+                        if (this.getWidth() != w)
+                            this.setWidth(w);
+                        if (this.getHeight() != h)
+                            this.setHeight(h - 2);
+
+                        h = h - gridPanel.getHeight() - commentPanel.getHeight() - 2;
+
+                        var bbox = board.getBoundingBox();
+                        bbox[2] = w / board.constantUnitX;
+                        bbox[1] = h / board.constantUnitY;
+                        bbox[0] = -bbox[2] * 0.1;
+                        bbox[3] = -bbox[1] * 0.1;
+                        bbox[2] = bbox[2] + bbox[0];
+                        bbox[1] = bbox[1] + bbox[3];
+
+                        var el = document.getElementById('FunctionBox');
+                        el.style.height = h + 'px';
+
+                        board.resizeContainer(w, h, false);
+                        board.setBoundingBox(bbox);
+                        board.needFullUpdate = true;
+                        board.fullUpdate();
+                    }
+                }
                 panel.doLayout();
             },
 
             okhandler: function (panel, args: ScoreUtility) {
                 args.functionArgs = this._xArgs;
                 args.functionName = this.functionName;
+                
             }
         }
     }
