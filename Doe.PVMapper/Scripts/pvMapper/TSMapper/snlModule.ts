@@ -98,7 +98,7 @@ module INLModules {
 
     class SnlModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "SnlModule",
                 author: "Scott Brown, INL",
                 version: "0.2.ts",
@@ -113,7 +113,7 @@ module INLModules {
                 destroy: null,
                 init: null,
 
-                scoringTools: [{
+                scoringTools: [<pvMapper.IScoreToolOptions>{
                     activate: null,
                     deactivate: null,
                     destroy: null,
@@ -139,7 +139,8 @@ module INLModules {
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
                         functionArgs:
-                        new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInKM - 1), 0.3, configProperties.maxSearchDistanceInKM, 0, "km")
+                        new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInKM - 1), 0.3, configProperties.maxSearchDistanceInKM, 0, "km",
+                            "Nearest Transmission Line", "Preference", "Preference of nearest to an existing transmission line.")
                     },
                     weight: 10
                 }],

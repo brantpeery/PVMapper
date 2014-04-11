@@ -83,7 +83,7 @@ var BYUModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs( 0, 0, 50, 50, 100, 100, "%")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs( 0, 0, 50, 50, 100, 100, "%","Slope Threshold","Preference","Preference of percentage of slope on a proposed site.")
                         },
                         defaultWeight: 10
                     }

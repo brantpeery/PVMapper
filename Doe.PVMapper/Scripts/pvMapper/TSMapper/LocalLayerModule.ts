@@ -12,7 +12,7 @@ module INLModules {
 
     export class LocalLayerModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({ 
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{ 
                 id: "LocalLayerModule",
                 author: "Leng Vang, INL",
                 version: "0.1.ts",
@@ -49,7 +49,7 @@ module INLModules {
 
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 10000, 0, "km")
+                        functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 10000, 0, "km","Nearest Feature","Preference","Preference to nearest feature. A custom tool based on KML file.")
                     },
                     setModuleName: (name: string) => {
                         this.moduleName = name;

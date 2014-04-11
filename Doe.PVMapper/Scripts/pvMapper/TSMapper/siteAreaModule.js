@@ -17,8 +17,7 @@ var INLModules;
                 deactivate: null,
                 destroy: null,
                 init: null,
-                scoringTools: [
-                    {
+                scoringTools: [{
                         activate: null,
                         deactivate: null,
                         destroy: null,
@@ -41,11 +40,10 @@ var INLModules;
                         // for now, this is a constant value (always returns the max, why not)
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "km2", "Minimum gross area to be considered.", "Maximum gross area to be considered.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "km2", "Total Area", "Preference", "Preference of the total area available for a proposed site.", "Minimum gross area to be considered.", "Maximum gross area to be considered.")
                         },
                         weight: 0
-                    }
-                ],
+                    }],
                 infoTools: null
             });
         }
@@ -91,7 +89,7 @@ var INLModules;
         if (site.offsetFeature) {
             //Redraw the polygon
             setbackLayer.removeFeatures(site.offsetFeature);
-            site.offsetFeature.geometry = newGeometry;
+            site.offsetFeature.geometry = newGeometry; //This probably won't work
         } else {
             var style = { fillColor: 'blue', fillOpacity: 0, strokeWidth: 3, strokeColor: "purple" };
             site.offsetFeature = new OpenLayers.Feature.Vector(newGeometry, { parentFID: site.feature.fid }, style);

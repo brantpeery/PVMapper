@@ -57,12 +57,24 @@ module pvMapper {
 
         constructor(public minValue: number = 0,
             public maxValue: number = 100,
-                    unit: string = "",
+            unit: string = "",
+            xLabel: string = "X-axis",
+            yLabel: string = "Y-axis",
+            memo: string = "",
             minTip: string = "The minimum value.",
             maxTip: string = "The maximum value."
             ) {
 //            this.tips = { minValue: minTip, maxValue: maxTip };
-                this.metaInfo = { name: "MinMaxUtilityArgs", unitSymbol: unit, minValueTip: minTip, maxValueTip: maxTip, vline: 0, comment: '', x_axis: 'X-axis', y_axis: 'Y-axis' };
+                this.metaInfo = {
+                    name: "MinMaxUtilityArgs",
+                    unitSymbol: unit,
+                    minValueTip: minTip,
+                    maxValueTip: maxTip,
+                    vline: 0,
+                    comment: memo,
+                    x_axis: xLabel,
+                    y_axis: yLabel
+                };
 
         }
 
@@ -98,16 +110,13 @@ module pvMapper {
             public target: number = 0,
             public slope: number = 10,
             unit: string = "",
+            xLabel: string = "X-axis",
+            yLabel: string = "Y-axis",
+            memo: string = "",
             minTip: string = "The minimum value.",
             maxTip: string = "The maximum value.",
             targetTip: string = "The target value.",
             slopeTip: string = "The slope value.") {
-            //this.tips = {
-            //    target: targetTip,
-            //    slope: slopeTip,
-            //    minValue: minTip,
-            //    maxValue: maxTip
-            //};
             this.metaInfo = {
                 name: "SinusoidalUtilityArgs",
                 unitSymbol: unit,
@@ -115,10 +124,10 @@ module pvMapper {
                 slopeTip: slopeTip,
                 minValueTip: minTip,
                 maxValueTip: maxTip,
-                vline: 0;
-                comment: '';
-                x_axis: 'X-axis';
-                y_axis: 'Y-axis';
+                vline: 0,
+                comment: memo,
+                x_axis: xLabel,
+                y_axis: yLabel
             };                                                 
         }
 
@@ -159,12 +168,22 @@ module pvMapper {
         constructor(p0x: number = 0, p0y: number = 0.5,
             p1x: number = 180, p1y: number = 1,
             p2x: number = 360, p2y: number = 0.5,
-            unit: string = ""
+            unit: string = "",
+            xLabel: string = "X-axis",
+            yLabel: string = "Y-axis",
+            memo: string = ""
             ) {
             this.p0 = { x: p0x, y: p0y };
             this.p1 = { x: p1x, y: p1y };
             this.p2 = { x: p2x, y: p2y };
-            this.metaInfo = { name: "ThreePointUtilityArgs", unitSymbol: unit, vline: 0, comment: '', x_axis:'X-axis', y_axis:'Y-axis' };
+            this.metaInfo = {
+                name: "ThreePointUtilityArgs",
+                unitSymbol: unit,
+                vline: 0,
+                comment: memo,
+                x_axis: xLabel,
+                y_axis: yLabel
+            };
         }
         public p0: { x: number; y: number; };
         public p1: { x: number; y: number; };

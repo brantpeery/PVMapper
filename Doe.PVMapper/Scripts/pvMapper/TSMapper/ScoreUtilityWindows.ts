@@ -39,7 +39,7 @@ module pvMapper {
 
                         var dx = fbel.clientWidth
                         var buffer = (bounds[0] == bounds[1]) ? 1 : (bounds[1] - bounds[0]) / 10;
-                        bounds[0] -= dx * 0.1;
+                        bounds[0] -= dx * 0.2;
                         bounds[1] = dx / 20;
                         bounds[1] += buffer * 2.5; // a little more on the right hand side feels nice.
 
@@ -85,7 +85,7 @@ module pvMapper {
 
                         var xaxis = board.create('axis', [[0, 0], [1, 0]],
                             {
-                                name: (_this._xArgs.metaInfo.x_axisl) || 'X-axis',
+                                name: (_this._xArgs.metaInfo.x_axis) || 'X-axis',
                                 withLabel: true,
                                 ticks: {
                                     insertTicks: false,
@@ -119,7 +119,7 @@ module pvMapper {
                         bbox[2] = w / board.constantUnitX;
                         bbox[1] = h / board.constantUnitY;
                         bbox[0] = -bbox[2] * 0.1;
-                        bbox[3] = -bbox[1] * 0.1;
+                        bbox[3] = -bbox[1] * 0.2;
                         bbox[2] = bbox[2] + bbox[0];
                         bbox[1] = bbox[1] + bbox[3];
 
@@ -525,7 +525,7 @@ module pvMapper {
                         bbox[2] = w / board.constantUnitX;
                         bbox[1] = h / board.constantUnitY;
                         bbox[0] = -bbox[2] * 0.1;
-                        bbox[3] = -bbox[1] * 0.1;
+                        bbox[3] = -bbox[1] * 0.2;
                         bbox[2] = bbox[2] + bbox[0];
                         bbox[1] = bbox[1] + bbox[3];
 
