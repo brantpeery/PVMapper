@@ -62,7 +62,7 @@ module BYUModules {
 
     class WaterDistanceModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "Water Distance Module",
                 author: "Darian Ramage, BYU",
                 version: "0.2.ts",
@@ -77,7 +77,7 @@ module BYUModules {
                 destroy: null,
                 init: null,
 
-                scoringTools: [{
+                scoringTools: [<pvMapper.IScoreToolOptions>{
                     activate: null,
                     deactivate: null,
                     destroy: null,
@@ -103,7 +103,7 @@ module BYUModules {
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
                         functionArgs:
-                        new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInKM - 1), 0.3, configProperties.maxSearchDistanceInKM, 0, "km")
+                        new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInKM - 1), 0.3, configProperties.maxSearchDistanceInKM, 0, "km","River Available","Preference","Preference of available source of water.")
                     },
                     weight: 10
                 }],

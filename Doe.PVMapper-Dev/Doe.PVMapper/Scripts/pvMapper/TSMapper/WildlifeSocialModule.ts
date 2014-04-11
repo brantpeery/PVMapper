@@ -121,7 +121,7 @@ module INLModules {
 
     class WildlifeSocialModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "WildlifeSocialModule",
                 author: "Scott Brown, INL",
                 version: "0.1.ts",
@@ -136,7 +136,7 @@ module INLModules {
                 destroy: null,
                 init: null,
 
-                scoringTools: [{
+                scoringTools: [<pvMapper.IScoreToolOptions>{
                     activate: null,
                     deactivate: null,
                     destroy: null,
@@ -162,7 +162,7 @@ module INLModules {
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
                         functionArgs:
-                        new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor")
+                        new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor","Critical Habitat Restriction","Preference","Preference of proximity to wildlife habitat restrictions.")
                     },
                     weight: 10
                 }],

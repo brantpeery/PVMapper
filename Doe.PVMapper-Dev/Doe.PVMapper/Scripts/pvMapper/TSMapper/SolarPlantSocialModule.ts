@@ -119,7 +119,7 @@ module INLModules {
 
     class SolarPlantSocialModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "SolarPlantSocialModule",
                 author: "Scott Brown, INL",
                 version: "0.1.ts",
@@ -134,7 +134,7 @@ module INLModules {
                 destroy: null,
                 init: null,
 
-                scoringTools: [{
+                scoringTools: [<pvMapper.IScoreToolOptions>{
                     activate: null,
                     deactivate: null,
                     destroy: null,
@@ -160,7 +160,7 @@ module INLModules {
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
                         functionArgs:
-                        new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor")
+                        new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor","Proxity to Existing Solar Plants","Preference","Preference to the social aceptable in relative distance to existing solar plants.")
                     },
                     weight: 10
                 }],

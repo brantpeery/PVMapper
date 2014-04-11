@@ -30,7 +30,7 @@ var BYUModules;
                         scoreUtilityOptions: {
                             functionName: "linear",
                             //TODO: what units is this distance in? kilometers? I'm guessing km... - It gets converted to miles!
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(100, 0, "Mi", "Minimum Road Distance threshold allowed.", "Maximum Road Distance threshold allowed.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(100, 0, "Mi", "Available Road","Preference","Preference with existing road near by.","Minimum Road Distance threshold allowed.", "Maximum Road Distance threshold allowed.")
                         },
                         defaultWeight: 10
                     }
@@ -72,7 +72,7 @@ var BYUModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(100, 0, "Mi", "Minimum River threshold allowed.", "Maximum River threshold allowed.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(100, 0, "Mi", "Available of River","Preference","Preference of readily available source of water.","Minimum River threshold allowed.", "Maximum River threshold allowed.")
                         },
                         defaultWeight: 10
                     }

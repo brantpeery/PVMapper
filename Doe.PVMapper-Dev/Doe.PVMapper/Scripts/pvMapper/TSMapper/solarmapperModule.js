@@ -22,8 +22,7 @@ var INLModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [
-                    {
+                scoringTools: [{
                         activate: null,
                         deactivate: null,
                         destroy: null,
@@ -61,11 +60,10 @@ var INLModules;
                         //},
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Federal Land Restriction", "Preference", "Preference to near by federal land and restrictions.")
                         },
                         weight: 10
-                    }
-                ],
+                    }],
                 infoTools: null
             });
         }
@@ -97,7 +95,7 @@ var INLModules;
             transparent: "true"
         }, { isBaseLayer: false });
         mapLayer.setOpacity(0.3);
-        mapLayer.epsgOverride = "3857";
+        mapLayer.epsgOverride = "3857"; //"EPSG:102100";
         mapLayer.setVisibility(false);
         pvMapper.map.addLayer(mapLayer);
         //pvMapper.map.setLayerIndex(mapLayer, 0);
@@ -135,6 +133,10 @@ var INLModules;
             params: params,
             //callback: handler,
             callback: function (response) {
+                // debug statement
+                //alert(score.site.name + ": " + request.responseText.length + " (" + request.status + ")");
+                //alert(request.responseText);
+                // update value
                 if (response.status === 200) {
                     var esriJsonPerser = new OpenLayers.Format.JSON();
                     esriJsonPerser.extractAttributes = true;
@@ -160,6 +162,7 @@ var INLModules;
                                     newText += " (" + code + ")";
                                 }
 
+                                // add this to the array of responses we've received
                                 if (responseArray.indexOf(newText) < 0) {
                                     responseArray.push(newText);
                                 }

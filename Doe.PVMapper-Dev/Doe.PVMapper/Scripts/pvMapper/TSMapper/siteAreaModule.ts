@@ -8,7 +8,7 @@
 module INLModules {
     class SiteAreaModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "AreaModule",
                 author: "Brant Peery, INL",
                 version: "0.3.ts",
@@ -44,6 +44,7 @@ module INLModules {
                     scoreUtilityOptions: {
                         functionName: "linear",
                         functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "km2", // <-- This isn't an error - don't "fix" it.
+                            "Total Area","Preference","Preference of the total area available for a proposed site.",
                             "Minimum gross area to be considered.",
                             "Maximum gross area to be considered.")
                     },
