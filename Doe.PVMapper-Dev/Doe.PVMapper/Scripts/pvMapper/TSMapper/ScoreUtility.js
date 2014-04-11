@@ -2,6 +2,12 @@
 /// <reference path="ScoreUtilityWindows.ts" />
 var pvMapper;
 (function (pvMapper) {
+    
+
+    
+
+    
+
     var MinMaxUtilityArgs = (function () {
         function MinMaxUtilityArgs(minValue, maxValue, unit, minTip, maxTip) {
             if (typeof minValue === "undefined") { minValue = 0; }
@@ -84,7 +90,7 @@ var pvMapper;
             this.p0 = { x: p0x, y: p0y };
             this.p1 = { x: p1x, y: p1y };
             this.p2 = { x: p2x, y: p2y };
-            this.metaInfo = { name: "ThreePointUtilityArgs", unitSymbol: unit, vline: 0 };
+            this.metaInfo = { name: "ThreePointUtilityArgs", unitSymbol: unit, vline: 0, comment: '', x_axis: 'X-axis', y_axis: 'Y-axis' };
         }
         ThreePointUtilityArgs.prototype.stringify = function () {
             var str = "";
@@ -95,6 +101,7 @@ var pvMapper;
             str += "(" + this.p0.x.toFixed(0) + "," + this.p0.y.toFixed(0) + "),";
             str += "(" + this.p1.x.toFixed(0) + "," + this.p1.y.toFixed(0) + "),";
             str += "(" + this.p2.x.toFixed(0) + "," + this.p2.y.toFixed(0) + ")]";
+
             return str;
         };
         return ThreePointUtilityArgs;
@@ -104,6 +111,7 @@ var pvMapper;
     var ScoreUtility = (function () {
         function ScoreUtility(options) {
             this.fCache = {};
+            //Check for custom utility by checking to see if there is a function callback (not optimal but in the absence of interface comparison will do)
             if (options['functionCallback']) {
                 //Load up the ScoreUtility with the custom function + window callbacks
                 var copt = options;
@@ -170,7 +178,7 @@ var pvMapper;
 
             //Ok, here is a little hack to get functionArgs to recognize stringify.  I don't know why functionArgs is not a class object here.
             var fn = this.createArg(this.functionName);
-            $.extend(fn, this.functionArgs);
+            $.extend(fn, this.functionArgs); //merge the data to fn.
             str += "(" + fn.stringify() + ")";
             return str;
         };

@@ -20,8 +20,7 @@ module pvMapper {
             public active: boolean,
             public scoreUtility: ScoreUtility,
             public rateTable: IStarRatings
-            )
-        {
+            ) {
         }
     }
 
@@ -59,7 +58,7 @@ module pvMapper {
             }
 
             if ($.isFunction(options.setModuleName)) {
-                this.setModuleName = (name:string) => { options.setModuleName.apply(this, arguments); }
+                this.setModuleName = (name: string) => { options.setModuleName.apply(this, arguments); }
             }
 
             if ($.isFunction(options.getTitle)) {
@@ -301,8 +300,20 @@ module pvMapper {
         public putConfiguration(): any {
             var me = this;
             if (ClientDB.db) {
-                try {      
+                try {
                     var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.CONFIG_STORE_NAME, "readwrite");
+
+                    txn.oncomplete = function (evt): any {
+                        console.log("Transaction completed: '" + me.title + "' has been saved to the database.")
+                    }
+                    txn.onerror = function (evt): any {
+                        console.log("Transaction error: saving '" + me.title + "' failed, cause: " + txn.error);
+                    }
+
+                    txn.onabort = function (evt): any {
+                        console.log("Transaction aborted: saving " + me.title + " failed, cause: " + txn.error);
+                    }
+
                     var store = txn.objectStore(ClientDB.CONFIG_STORE_NAME);
                     var stb = null;
                     if (me.getStarRatables !== undefined)
@@ -312,7 +323,7 @@ module pvMapper {
                     //Even the scoreUtility class has "stringify" defined, its fine, just not in the ScoreUtilityArgs class like ThreePoint or Linear.  May be because it thinks that 
                     //the stringify there has text formatting resemblance of DOM elements, because IndexedDB will not serialized DOM nodes.
                     //since we will be serialized the scoreUtility and its going to do away with functions any way, we just remove the function 'stringify' if any.
-                    var util = me.scoreUtility;
+                    var util = new pvMapper.ScoreUtility(me.scoreUtility);
                     if (util.functionArgs.stringify !== undefined)
                         util.functionArgs.stringify = undefined;
 
@@ -330,9 +341,15 @@ module pvMapper {
                     request.onsuccess = function (evt): any {
                         if (request.result != undefined) { // if already exists, update
                             store.put(dbScore, dbScore.title);
+                            console.log("updated '" + me.title + "' successful.");
                         }
-                        else
+                        else {
                             store.add(dbScore, dbScore.title); // if new, add
+                            console.log("new record '" + me.title + "' saved successful.");
+                        }
+                    }
+                    request.onerror = function (evt): any {
+                        console.log("save utilitity, check for existing record failed, cause: " + evt.message);
                     }
                 } catch (e) {
                     console.log("putScore failed, cause: " + e.message);
@@ -345,7 +362,7 @@ module pvMapper {
             try {
                 this.putConfiguration();
             }
-            catch (e) {    
+            catch (e) {
                 console.log("Error: " + e.message);
             }
         }
