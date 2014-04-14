@@ -8,7 +8,7 @@
 var BYUModules;
 (function (BYUModules) {
     var configProperties = {
-        maxSearchDistanceInKM: 30
+        maxSearchDistanceInMi: 15
     };
 
     var myToolLine;
@@ -22,12 +22,12 @@ var BYUModules;
             //autoHeight: true,
             source: configProperties,
             customRenderers: {
-                maxSearchDistanceInKM: function (v) {
-                    return v + " km";
+                maxSearchDistanceInMi: function (v) {
+                    return v + " mi";
                 }
             },
             propertyNames: {
-                maxSearchDistanceInKM: "search distance"
+                maxSearchDistanceInMi: "search distance"
             }
         });
 
@@ -47,13 +47,15 @@ var BYUModules;
                     myToolLine.scores.forEach(updateScore);
                 }
             },
-            buttons: [{
+            buttons: [
+                {
                     xtype: 'button',
                     text: 'OK',
                     handler: function () {
                         propsWindow.hide();
                     }
-                }],
+                }
+            ],
             constrain: true
         });
     });
@@ -73,13 +75,14 @@ var BYUModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [{
+                scoringTools: [
+                    {
                         activate: null,
                         deactivate: null,
                         destroy: null,
                         init: null,
                         showConfigWindow: function () {
-                            myToolLine = this; // fetch tool line, which was passed as 'this' parameter
+                            myToolLine = this;
                             propsWindow.show();
                         },
                         title: "Nearest River",
@@ -95,10 +98,11 @@ var BYUModules;
                         // having any nearby line is much better than having no nearby line, so let's reflect that.
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInKM - 1), 0.3, configProperties.maxSearchDistanceInKM, 0, "km", "River Available", "Preference", "Preference of available source of water.")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInMi - 1), 0.3, configProperties.maxSearchDistanceInMi, 0, "mi", "Distance to nearest river", "Score", "Prefer sites near a river.")
                         },
                         weight: 10
-                    }],
+                    }
+                ],
                 infoTools: null
             });
         }
@@ -138,7 +142,7 @@ var BYUModules;
     }
 
     function updateScore(score) {
-        var maxSearchDistanceInMeters = configProperties.maxSearchDistanceInKM * 1000;
+        var maxSearchDistanceInMeters = configProperties.maxSearchDistanceInMi * 1609.34;
 
         // use a genuine JSONP request, rather than a plain old GET request routed through the proxy.
         var jsonpProtocol = new OpenLayers.Protocol.Script({
@@ -157,7 +161,6 @@ var BYUModules;
                 return this.format.read(data);
             },
             callback: function (response) {
-                //alert("Nearby features: " + response.features.length);
                 if (response.success()) {
                     var closestFeature = null;
                     var minDistance = maxSearchDistanceInMeters;
@@ -172,11 +175,19 @@ var BYUModules;
                         }
                     }
                     if (closestFeature !== null) {
-                        score.popupMessage = (minDistance / 1000).toFixed(1) + " km to " + closestFeature.attributes.PNAME + " River";
-                        score.updateValue(minDistance / 1000);
+                        var distanceInFt = minDistance * 3.28084;
+                        var distanceInMi = minDistance * 0.000621371;
+                        var distanceString = distanceInMi > 10.0 ? distanceInMi.toFixed(1) + " mi" : distanceInMi > 0.5 ? distanceInMi.toFixed(2) + " mi" : distanceInMi.toFixed(2) + " mi (" + distanceInFt.toFixed(0) + " ft)";
+
+                        var toNearestString = " to " + closestFeature.attributes.PNAME + " river";
+
+                        var messageString = distanceInFt > 1 ? distanceString + toNearestString + "." : "0 mi" + toNearestString + " (river is on site).";
+
+                        score.popupMessage = messageString;
+                        score.updateValue(distanceInMi);
                     } else {
-                        score.popupMessage = "No rivers found within " + configProperties.maxSearchDistanceInKM + " km";
-                        score.updateValue(configProperties.maxSearchDistanceInKM);
+                        score.popupMessage = "No rivers found within " + configProperties.maxSearchDistanceInMi + " mi search distance.";
+                        score.updateValue(configProperties.maxSearchDistanceInMi);
                     }
                 } else {
                     score.popupMessage = "Request error " + response.error.toString();

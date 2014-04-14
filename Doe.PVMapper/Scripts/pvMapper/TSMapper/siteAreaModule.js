@@ -17,7 +17,8 @@ var INLModules;
                 deactivate: null,
                 destroy: null,
                 init: null,
-                scoringTools: [{
+                scoringTools: [
+                    {
                         activate: null,
                         deactivate: null,
                         destroy: null,
@@ -25,25 +26,29 @@ var INLModules;
                         title: "Gross Area",
                         category: "Geography",
                         description: "The raw area of a site polygon",
-                        longDescription: '<p>This tool calculates the raw area of a site polygon in km<sup>2</sup>.</p>',
+                        longDescription: '<p>This tool calculates the raw area of a site polygon in mi<sup>2</sup>.</p>',
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {
                             //if (console) console.log("Site change detected in tool Gross Area. Updating the value.");
-                            var area = calculateSiteArea(score.site);
+                            var areaInKm2 = calculateSiteArea(score.site);
 
                             //if (console) console.log("Calulated area of " + area + ". Setting the value on the score");
-                            score.popupMessage = area.toFixed(3) + " km2";
-                            score.updateValue(area);
+                            var areaInMi2 = areaInKm2 * 0.386102158542446;
+                            var areaInAcre = areaInKm2 * 247.105381467165;
+
+                            score.popupMessage = areaInMi2.toFixed(areaInMi2 > 10 ? 2 : 3) + " sq mi (" + areaInAcre.toFixed(areaInAcre > 100 ? 1 : areaInAcre > 10 ? 2 : 3) + " acres)";
+                            score.updateValue(areaInMi2);
                         },
                         //TODO: we have no idea what their ideal size is... we don't even know if more is better or worse. damn.
                         // for now, this is a constant value (always returns the max, why not)
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "km2", "Total Area", "Preference", "Preference of the total area available for a proposed site.", "Minimum gross area to be considered.", "Maximum gross area to be considered.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "sq mi", "Total Area", "Preference", "Preference of the total area available for a proposed site.", "Minimum gross area to be considered.", "Maximum gross area to be considered.")
                         },
                         weight: 0
-                    }],
+                    }
+                ],
                 infoTools: null
             });
         }
@@ -89,7 +94,7 @@ var INLModules;
         if (site.offsetFeature) {
             //Redraw the polygon
             setbackLayer.removeFeatures(site.offsetFeature);
-            site.offsetFeature.geometry = newGeometry; //This probably won't work
+            site.offsetFeature.geometry = newGeometry;
         } else {
             var style = { fillColor: 'blue', fillOpacity: 0, strokeWidth: 3, strokeColor: "purple" };
             site.offsetFeature = new OpenLayers.Feature.Vector(newGeometry, { parentFID: site.feature.fid }, style);

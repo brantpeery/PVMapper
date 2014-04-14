@@ -10,7 +10,7 @@
 module BYUModules {
 
     var configProperties = {
-        maxSearchDistanceInKM: 30,
+        maxSearchDistanceInMi: 15,
     };
 
     var myToolLine: pvMapper.IToolLine;
@@ -24,10 +24,10 @@ module BYUModules {
             //autoHeight: true,
             source: configProperties,
             customRenderers: {
-                maxSearchDistanceInKM: function (v) { return v + " km"; }
+                maxSearchDistanceInMi: function (v) { return v + " mi"; }
             },
             propertyNames: {
-                maxSearchDistanceInKM: "search distance",
+                maxSearchDistanceInMi: "search distance",
             }
         });
 
@@ -103,7 +103,8 @@ module BYUModules {
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
                         functionArgs:
-                        new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInKM - 1), 0.3, configProperties.maxSearchDistanceInKM, 0, "km","River Available","Preference","Preference of available source of water.")
+                        new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInMi - 1), 0.3, configProperties.maxSearchDistanceInMi, 0,
+                            "mi", "Distance to nearest river", "Score", "Prefer sites near a river.")
                     },
                     weight: 10
                 }],
@@ -149,7 +150,7 @@ module BYUModules {
     }
 
     function updateScore(score: pvMapper.Score) {
-        var maxSearchDistanceInMeters = configProperties.maxSearchDistanceInKM * 1000;
+        var maxSearchDistanceInMeters = configProperties.maxSearchDistanceInMi * 1609.34;
         // use a genuine JSONP request, rather than a plain old GET request routed through the proxy.
         var jsonpProtocol = new OpenLayers.Protocol.Script(<any>{
             url: QueryUrl,
@@ -187,13 +188,22 @@ module BYUModules {
                         }
                     }
                     if (closestFeature !== null) {
-                        score.popupMessage = (minDistance / 1000).toFixed(1) + " km to " +
-                        closestFeature.attributes.PNAME + " River"
-                        score.updateValue(minDistance / 1000);
+                        var distanceInFt = minDistance * 3.28084; // convert meters to feet
+                        var distanceInMi = minDistance * 0.000621371; // convert meters to miles
+                        var distanceString = distanceInMi > 10.0 ? distanceInMi.toFixed(1) + " mi" :
+                            distanceInMi > 0.5 ? distanceInMi.toFixed(2) + " mi" :
+                            distanceInMi.toFixed(2) + " mi (" + distanceInFt.toFixed(0) + " ft)";
+
+                        var toNearestString = " to " + closestFeature.attributes.PNAME + " river";
+
+                        var messageString = distanceInFt > 1 ? distanceString + toNearestString + "." :
+                            "0 mi" + toNearestString + " (river is on site).";
+
+                        score.popupMessage = messageString;
+                        score.updateValue(distanceInMi);
                     } else {
-                        score.popupMessage = "No rivers found within " +
-                        configProperties.maxSearchDistanceInKM + " km";
-                        score.updateValue(configProperties.maxSearchDistanceInKM);
+                        score.popupMessage = "No rivers found within " + configProperties.maxSearchDistanceInMi + " mi search distance.";
+                        score.updateValue(configProperties.maxSearchDistanceInMi);
                     }
                 } else {
                     score.popupMessage = "Request error " + response.error.toString();

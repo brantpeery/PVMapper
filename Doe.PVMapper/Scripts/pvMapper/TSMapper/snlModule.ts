@@ -140,7 +140,7 @@ module INLModules {
                         functionName: "linear3pt",
                         functionArgs:
                         new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInKM - 1), 0.3, configProperties.maxSearchDistanceInKM, 0, "km",
-                            "Nearest Transmission Line", "Preference", "Preference of nearest to an existing transmission line.")
+                            "Distance to nearest transmission line", "Score", "Prefer sites closer to a transmission line.")
                     },
                     weight: 10
                 }],
