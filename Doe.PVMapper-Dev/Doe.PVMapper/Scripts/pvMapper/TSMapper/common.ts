@@ -24,6 +24,7 @@ interface String {
         @returns string The string with all the tokens replaced by the values passed in as arguments 
     */
     format(...args: string[]): string;
+    
 
 
     /**
@@ -34,7 +35,8 @@ interface String {
         @param args key:value pair where value is a string
         @returns string A string that has all the key tokens replaced with the values given in args
     */
-    format(args: { [key: string]: (val: string) => string; }): string;
+    
+    //format(args: { [key: string]: (val: string) => string; }): string; //Overload not working in v0.97
 
     /**
     Indicates whether the specified string is null or an Empty string.
@@ -63,7 +65,7 @@ interface String {
         That would produce
         "this is John's book."
 */
-String.prototype.format = function (args: string) {
+String.prototype.format = function (...args: string[]): string{
 
     //var values: string = (arguments.length > 1) ? arguments : args;
     //                                                              -------------  TC9.0 doesn't allow reference this way.
@@ -101,7 +103,7 @@ String.prototype.isNullOrEmpty = function (): boolean {
 /// provide function: as fn(obj1, scrObj) : integer.  if obj1 == scrObj return 0, else return -1.
 /// if found, return the matching object, if no element found, it returns null.
 
-interface Array {
+interface Array<T> {
     find(fn: ICallback): boolean;
 }
 
