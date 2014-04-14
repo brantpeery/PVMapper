@@ -22,6 +22,8 @@ module pvMapper {
 
                 var board;
                 var fnOfy;
+                var xAxis;
+                var yAxis;
 
                 _this._xArgs = Ext.Object.merge({}, args); //!Create a clone of the args for use in the graph
 
@@ -37,11 +39,12 @@ module pvMapper {
                         var bounds = xBounds(args);
                         // ensure that the buffer is > 0 (bounds being equal is a valid case for a step function)
 
+                        var numTicks = 20;
                         var dx = fbel.clientWidth
                         var buffer = (bounds[0] == bounds[1]) ? 1 : (bounds[1] - bounds[0]) / 10;
-                        bounds[0] -= dx * 0.2;
-                        bounds[1] = dx / 20;
-                        bounds[1] += buffer * 2.5; // a little more on the right hand side feels nice.
+                        //bounds[1] = dx / high;
+                        bounds[1] += buffer * 1.5; // a little more on the right hand side feels nice.
+                        bounds[0] -= buffer * 2;
 
                         JXG.Options.text.display = 'internal';  //need this to make the axis label rotation work.
                         board = JXG.JSXGraph.initBoard('FunctionBox-body', {
@@ -52,16 +55,53 @@ module pvMapper {
                             showNavigation: true
                         });
 
-                        _this.graph = board;
+                        //move the board's origin when mouse down is not selected on any element.
+                        board.on('mousedown', function (e) {
+                            var x = e.x;
+                            var y = e.y;
+                            if (board.downObjects.length == 0) {
+                                board.mode = board.BOARD_MODE_MOVE_ORIGIN;
+                            }
+                        });
+
+                        //turn off when mouse up.
+                        board.on('mouseup', function (e) {
+                            board.mode = board.BOARD_MODE_NONE;
+                        })
+
+                        var mousewheelevt = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
+
+
+                        var zooming = function (e) {
+                            //alert('wheel on: ' + e.wheelDelta);
+                            var e = window.event || e; // old IE support;
+                            var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+                            if (delta < 0) {
+                                board.zoomOut(board.attr.zoom.factorx, board.attr.zoom.factory);
+                            } else if (delta > 0) {
+                                board.zoomIn(board.attr.zoom.factorx, board.attr.zoom.factory);
+                            }
+                            return false;
+                        }
+
+                        if (board.containerObj.attachEvent) //if IE (and Opera depending on user setting)
+                            board.containerObj.attachEvent("on" + mousewheelevt, zooming);
+                        else if (board.containerObj.addEventListener) //WC3 browsers
+                            board.containerObj.addEventListener(mousewheelevt, zooming, false);
+
+
+                        var dxtic = board.canvasWidth / (bounds[1] - bounds[0]) * 10;
+                        var dytic = board.canvasHeight / (108 - bounds[0]) * 10;
+
                         _this._xArgs.metaInfo.y_axis = (typeof (_this._xArgs.metaInfo.y_axis) == 'undefined') ? null : _this._xArgs.metaInfo.y_axis;
                         _this._xArgs.metaInfo.x_axis = (typeof (_this._xArgs.metaInfo.x_axis) == 'undefined') ? null : _this._xArgs.metaInfo.x_axis;
-                        var yaxis = board.create('axis', [[0, 0], [0, 1]],
+                        yAxis = board.create('axis', [[0, 0], [0, 1]],
                             {
                                 name: (_this._xArgs.metaInfo.y_axis) || 'Y-axis',
                                 withLabel: true,
                                 ticks: {
                                     insertTicks: false,
-                                    ticksDistance: 20,
+                                    ticksDistance: dytic,
                                     label: {
                                         offset: [-10, 0]
                                     }
@@ -81,15 +121,15 @@ module pvMapper {
                                 }
 
                             });
-                        yaxis.label.addRotation(90);
+                        yAxis.label.addRotation(90);
 
-                        var xaxis = board.create('axis', [[0, 0], [1, 0]],
+                        xAxis = board.create('axis', [[0, 0], [1, 0]],
                             {
                                 name: (_this._xArgs.metaInfo.x_axis) || 'X-axis',
                                 withLabel: true,
                                 ticks: {
                                     insertTicks: false,
-                                    ticksDistance: 20,
+                                    ticksDistance: dxtic,
                                     label: {
                                         offset: [-2, -10]
                                     }
@@ -110,20 +150,40 @@ module pvMapper {
 
                             });
 
-                        board.constantUnitX = board.unitX;
-                        board.constantUnitY = board.unitY;
+
+                        // change distance to 4, have to do it the hacky way.
+                        yAxis.defaultTicks.ticksFunction = function () {
+                            return numTicks;
+                        };
+
+                        xAxis.defaultTicks.ticksFunction = function () {
+                            return numTicks;
+                        };
+
+                        //board.constantUnitX = board.unitX;
+                        //board.constantUnitY = board.unitY;
+
+                        //var bbox = board.getBoundingBox();
+                        //var w = board.canvasWidth;
+                        //var h = board.canvasHeight;
+                        //bbox[2] = w / board.constantUnitX;
+                        //bbox[1] = h / board.constantUnitY;
+                        //bbox[0] = -bbox[2] * 0.1;
+                        //bbox[3] = -bbox[1] * 0.2;
+                        //bbox[2] = bbox[2] + bbox[0];
+                        //bbox[1] = bbox[1] + bbox[3];
+
+                        //board.resizeContainer(w, h, false);
+                        //board.setBoundingBox(bbox);
+
+
+
+                        // to size graph and bound stay the same.
 
                         var bbox = board.getBoundingBox();
-                        var w = board.canvasWidth;
-                        var h = board.canvasHeight;
-                        bbox[2] = w / board.constantUnitX;
-                        bbox[1] = h / board.constantUnitY;
-                        bbox[0] = -bbox[2] * 0.1;
-                        bbox[3] = -bbox[1] * 0.2;
-                        bbox[2] = bbox[2] + bbox[0];
-                        bbox[1] = bbox[1] + bbox[3];
-
-                        board.resizeContainer(w, h, false);
+                        board.unitX = board.canvasWidth / (bbox[2] - bbox[0]);
+                        board.unitY = board.canvasHeight / (bbox[1] - bbox[3]);
+                        board.resizeContainer(board.canvasWidth, board.canvasHeight, false);
                         board.setBoundingBox(bbox);
                         board.needFullUpdate = true;
                         board.fullUpdate();
@@ -520,18 +580,22 @@ module pvMapper {
                             this.setHeight(h - 2);
 
                         h = h - gridPanel.getHeight() - commentPanel.getHeight() - 2;
-
-                        var bbox = board.getBoundingBox();
-                        bbox[2] = w / board.constantUnitX;
-                        bbox[1] = h / board.constantUnitY;
-                        bbox[0] = -bbox[2] * 0.1;
-                        bbox[3] = -bbox[1] * 0.2;
-                        bbox[2] = bbox[2] + bbox[0];
-                        bbox[1] = bbox[1] + bbox[3];
-
                         var el = document.getElementById('FunctionBox');
                         el.style.height = h + 'px';
 
+                        // To size window, the ticks stay the same size.  Same view, bigger canvas.
+                        //var bbox = board.getBoundingBox();
+                        //bbox[2] = w / board.constantUnitX;
+                        //bbox[1] = h / board.constantUnitY;
+                        //bbox[0] = -bbox[2] * 0.1;
+                        //bbox[3] = -bbox[1] * 0.2;
+                        //bbox[2] = bbox[2] + bbox[0];
+                        //bbox[1] = bbox[1] + bbox[3];
+
+                        // to size the ticks space based on the size of the window. -- a stretch effect.
+                        var bbox = board.getBoundingBox();
+                        board.unitX = w / (bbox[2] - bbox[0]);
+                        board.unitY = h / (bbox[1] - bbox[3]);
                         board.resizeContainer(w, h, false);
                         board.setBoundingBox(bbox);
                         board.needFullUpdate = true;
@@ -544,7 +608,7 @@ module pvMapper {
             okhandler: function (panel, args: ScoreUtility) {
                 args.functionArgs = this._xArgs;
                 args.functionName = this.functionName;
-                
+
             }
         }
     }
