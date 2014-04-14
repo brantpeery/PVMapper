@@ -19,7 +19,7 @@ var INLModules;
             this.localFormat = null;
             //============================================================
             // blob is the file attribute and file handle.
-            this.moduleClass = /(\w+)\(/.exec(this.constructor.toString())[1];
+            this.moduleClass = /(\w+)\(/.exec((this).constructor.toString())[1];
             this.moduleName = null;
             this.title = "Custom Distance Tool";
             this.queuedScores = [];
@@ -41,7 +41,8 @@ var INLModules;
                 getModuleName: function () {
                     return _this.moduleName;
                 },
-                scoringTools: [{
+                scoringTools: [
+                    {
                         activate: null,
                         deactivate: null,
                         destroy: null,
@@ -57,7 +58,7 @@ var INLModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 10000, 0, "km", "Nearest Feature", "Preference", "Preference to nearest feature. A custom tool based on KML file.")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 10000, 0, "mi", "Distance to nearest feature", "Score", "Prefer sites closer to the nearest feature.")
                         },
                         setModuleName: function (name) {
                             _this.moduleName = name;
@@ -72,13 +73,14 @@ var INLModules;
                             _this.title = newTitle;
                         },
                         weight: 10
-                    }],
+                    }
+                ],
                 infoTools: null
             });
         }
         //private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
         LocalLayerModule.prototype.removeLocalLayer = function () {
-            this.localLayer.destroy(); //force to remove from map layer.
+            this.localLayer.destroy();
         };
 
         LocalLayerModule.prototype.readTextFile = function (kmlString, kmlName, kmlFile) {
@@ -97,8 +99,11 @@ var INLModules;
             this.localLayer = this.localLayer || new OpenLayers.Layer.Vector(kmlName || "KML File", {
                 strategies: OpenLayers.Strategy.Fixed(),
                 style: {
-                    fillColor: "darkred", strokeColor: "red", strokeWidth: 5,
-                    strokeOpacity: 0.5, pointRadius: 5
+                    fillColor: "darkred",
+                    strokeColor: "red",
+                    strokeWidth: 5,
+                    strokeOpacity: 0.5,
+                    pointRadius: 5
                 }
             });
 
@@ -143,8 +148,16 @@ var INLModules;
                 }
             }
             if (closestFeature !== null) {
-                score.popupMessage = (minDistance / 1000).toFixed(1) + " km to nearest feature.";
-                score.updateValue(minDistance / 1000);
+                var distanceInFt = minDistance * 3.28084;
+                var distanceInMi = minDistance * 0.000621371;
+                var distanceString = distanceInMi > 10.0 ? distanceInMi.toFixed(1) + " mi" : distanceInMi > 0.5 ? distanceInMi.toFixed(2) + " mi" : distanceInMi.toFixed(2) + " mi (" + distanceInFt.toFixed(0) + " ft)";
+
+                var toNearestString = " to nearest feature";
+
+                var messageString = distanceInFt > 1 ? distanceString + toNearestString + "." : "0 mi" + toNearestString + " (feature is on site).";
+
+                score.popupMessage = messageString;
+                score.updateValue(distanceInMi);
             } else {
                 score.popupMessage = "No features loaded.";
                 score.updateValue(Number.NaN);

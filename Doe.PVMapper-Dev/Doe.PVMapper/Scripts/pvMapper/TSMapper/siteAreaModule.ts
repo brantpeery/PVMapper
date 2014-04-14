@@ -27,23 +27,27 @@ module INLModules {
                     title: "Gross Area",
                     category: "Geography",
                     description: "The raw area of a site polygon",
-                    longDescription: '<p>This tool calculates the raw area of a site polygon in km<sup>2</sup>.</p>',
+                    longDescription: '<p>This tool calculates the raw area of a site polygon in mi<sup>2</sup>.</p>',
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, score: pvMapper.Score) {
                         //if (console) console.log("Site change detected in tool Gross Area. Updating the value.");
-                        var area = calculateSiteArea(score.site);
+                        var areaInKm2 = calculateSiteArea(score.site);
                         //if (console) console.log("Calulated area of " + area + ". Setting the value on the score");
-                        
-                        score.popupMessage = area.toFixed(3) + " km2";
-                        score.updateValue(area);
+
+                        var areaInMi2 = areaInKm2 * 0.386102158542446 ;
+                        var areaInAcre = areaInKm2 * 247.105381467165;
+
+                        score.popupMessage = areaInMi2.toFixed(areaInMi2 > 10 ? 2 : 3) + " sq mi (" +
+                            areaInAcre.toFixed(areaInAcre > 100 ? 1 : areaInAcre > 10 ? 2 : 3) + " acres)";
+                        score.updateValue(areaInMi2);
                     },
                     
                     //TODO: we have no idea what their ideal size is... we don't even know if more is better or worse. damn.
                     // for now, this is a constant value (always returns the max, why not)
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "km2", // <-- This isn't an error - don't "fix" it.
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "sq mi", // <-- This isn't an error - don't "fix" it.
                             "Total Area","Preference","Preference of the total area available for a proposed site.",
                             "Minimum gross area to be considered.",
                             "Maximum gross area to be considered.")

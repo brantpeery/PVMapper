@@ -86,13 +86,15 @@ var INLModules;
                     myToolLine.scores.forEach(updateScore);
                 }
             },
-            buttons: [{
+            buttons: [
+                {
                     xtype: 'button',
                     text: 'OK',
                     handler: function () {
                         propsWindow.hide();
                     }
-                }],
+                }
+            ],
             constrain: true
         });
     });
@@ -112,13 +114,14 @@ var INLModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [{
+                scoringTools: [
+                    {
                         activate: null,
                         deactivate: null,
                         destroy: null,
                         init: null,
                         showConfigWindow: function () {
-                            myToolLine = this; // fetch tool line, which was passed as 'this' parameter
+                            myToolLine = this;
                             propsWindow.show();
                         },
                         title: "Nearest Transmission Line",
@@ -134,10 +137,11 @@ var INLModules;
                         // having any nearby line is much better than having no nearby line, so let's reflect that.
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInKM - 1), 0.3, configProperties.maxSearchDistanceInKM, 0, "km", "Nearest Transmission Line", "Preference", "Preference of nearest to an existing transmission line.")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInKM - 1), 0.3, configProperties.maxSearchDistanceInKM, 0, "km", "Distance to nearest transmission line", "Score", "Prefer sites closer to a transmission line.")
                         },
                         weight: 10
-                    }],
+                    }
+                ],
                 infoTools: null
             });
         }
@@ -161,7 +165,7 @@ var INLModules;
             transparent: "true"
         });
         mapLayer.setOpacity(0.3);
-        mapLayer.epsgOverride = "3857"; //"EPSG:102100";
+        mapLayer.epsgOverride = "3857";
         mapLayer.setVisibility(false);
 
         pvMapper.map.addLayer(mapLayer);
@@ -194,7 +198,6 @@ var INLModules;
                 return this.format.read(data);
             },
             callback: function (response) {
-                //alert("Nearby features: " + response.features.length);
                 if (response.success()) {
                     var closestFeature = null;
                     var minDistance = maxSearchDistanceInMeters;
