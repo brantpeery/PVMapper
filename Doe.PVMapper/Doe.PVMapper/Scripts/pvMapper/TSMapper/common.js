@@ -16,7 +16,11 @@ ex "this is {name}'s {item}.".format({name:'John',item:'book'})
 That would produce
 "this is John's book."
 */
-String.prototype.format = function (args) {
+String.prototype.format = function () {
+    var args = [];
+    for (var _i = 0; _i < (arguments.length - 0); _i++) {
+        args[_i] = arguments[_i + 0];
+    }
     //var values: string = (arguments.length > 1) ? arguments : args;
     //                                                              -------------  TC9.0 doesn't allow reference this way.
     var values = (arguments.length > 1) ? arguments[0] : args;

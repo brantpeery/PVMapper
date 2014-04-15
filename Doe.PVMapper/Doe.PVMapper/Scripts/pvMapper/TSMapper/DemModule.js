@@ -43,7 +43,7 @@ var BYUModules;
                         // for now, flatter is better...?
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(10, 0, "degrees")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(10, 0, "degrees", "Slope Degrees", "Score", "Preference of area with average slope")
                         }
                     },
                     {
@@ -67,7 +67,7 @@ var BYUModules;
                         // for now, south is better, but north ain't so bad...?
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.5, 180, 1, 360, 0.5, "degrees")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.5, 180, 1, 360, 0.5, "degrees", "Orientation Degrees", "Score", "Preference of the orientation within an area.")
                         }
                     },
                     {
@@ -88,7 +88,7 @@ var BYUModules;
                         // higher is better, but not much better, yeah?
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.5, 1000, 0.9, 6000, 1, "m")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.5, 1000, 0.9, 6000, 1, "m", "Elevation", "Score", "Preference of the elevation of an area.")
                         }
                     }
                 ],
