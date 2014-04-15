@@ -6,7 +6,6 @@
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
 /// <reference path="Esri-GeoJsonConverter.js />
-
 var BYUModules;
 (function (BYUModules) {
     var WildernessModule = (function () {
@@ -26,7 +25,8 @@ var BYUModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [{
+                scoringTools: [
+                    {
                         //activate: null,
                         //deactivate: null,
                         //destroy: null,
@@ -45,7 +45,8 @@ var BYUModules;
                             functionArgs: new pvMapper.MinMaxUtilityArgs(1, 0, "parks", "Parks Restriction", "Score", "Preference of proximity of recreation land management such as national parks.", "Minimum Wilderness threshold allowed.", "Maximum Wilderness threshold allowed.")
                         },
                         weight: 10
-                    }],
+                    }
+                ],
                 infoTools: null
             });
         }

@@ -56,7 +56,8 @@ var INLModules;
         { mi: 300, percentOk: 98.35051546 },
         { mi: 500, percentOk: 99.17525773 },
         { mi: 1000, percentOk: 99.79381443 },
-        { mi: 5000, percentOk: 100 }];
+        { mi: 5000, percentOk: 100 }
+    ];
 
     var configProperties = {
         //maxSearchDistanceInKM: 30,
@@ -105,13 +106,15 @@ var INLModules;
                     }
                 }
             },
-            buttons: [{
+            buttons: [
+                {
                     xtype: 'button',
                     text: 'OK',
                     handler: function () {
                         propsWindow.hide();
                     }
-                }],
+                }
+            ],
             constrain: true
         });
     });
@@ -131,13 +134,14 @@ var INLModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [{
+                scoringTools: [
+                    {
                         activate: null,
                         deactivate: null,
                         destroy: null,
                         init: null,
                         showConfigWindow: function () {
-                            myToolLine = this; // fetch tool line, which was passed as 'this' parameter
+                            myToolLine = this;
                             propsWindow.show();
                         },
                         title: "Wildlife Proximity",
@@ -156,7 +160,8 @@ var INLModules;
                             functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Percent Habitat Favor", "Score", "Preference of proximity to wildlife habitat restrictions.")
                         },
                         weight: 10
-                    }],
+                    }
+                ],
                 infoTools: null
             });
         }
@@ -269,7 +274,6 @@ var INLModules;
             }
         }
 
-        //"Power_Plant,Owner,Plant_Operator,Operating_Capacity_MW"
         if (closestFeature !== null) {
             var minDistanceInMi = minDistance * 0.000621371;
 

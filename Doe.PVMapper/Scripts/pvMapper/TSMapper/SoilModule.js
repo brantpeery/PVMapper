@@ -37,7 +37,8 @@ var INLModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [{
+                scoringTools: [
+                    {
                         activate: null,
                         deactivate: null,
                         destroy: null,
@@ -54,7 +55,7 @@ var INLModules;
                         getStarRatables: function (mode) {
                             if ((mode !== undefined) && (mode === "default"))
                                 return _this.starRatingHelper.defaultStarRatings;
-                            else
+else
                                 return _this.starRatingHelper.starRatings;
                         },
                         setStarRatables: function (rateTable) {
@@ -65,7 +66,8 @@ var INLModules;
                             functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Favor Soil", "Score", "They say sandy soil is not stable ground, is it?")
                         },
                         weight: 10
-                    }],
+                    }
+                ],
                 infoTools: null
             });
         }
@@ -77,7 +79,7 @@ var INLModules;
                 transparent: "true"
             });
             this.soilLayer.setOpacity(0.3);
-            this.soilLayer.epsgOverride = "3857"; //"EPSG:102100";
+            this.soilLayer.epsgOverride = "3857";
             this.soilLayer.setVisibility(false);
 
             pvMapper.map.addLayer(this.soilLayer);
@@ -177,8 +179,6 @@ var INLModules;
                         // add this to the array of responses we've received
                         responseArray.push(newText);
 
-                        // if we have a valid erodale class definition, and no current star rating,
-                        // then let's go ahead and use the erodable class definition as the star rating.
                         if (typeof this.starRatingHelper.starRatings[newText] === "undefined") {
                             switch (features[i].attributes["muhelcl"]) {
                                 case "Highly erodible land":
