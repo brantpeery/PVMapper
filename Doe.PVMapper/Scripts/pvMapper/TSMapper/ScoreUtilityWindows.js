@@ -31,13 +31,14 @@ var pvMapper;
                 function loadboard() {
                     //Extras.loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
                     //Extras.getScript("https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.97/jsxgraphcore.js", function () {
-                    Extras.getScript("scripts/jsxgraphcore.js", function () {
-                        var fbel = document.getElementById('FunctionBox');
+                    //if the jsxgraphcore loaded by demand then everything runs peachy.  If it is included in the index.cshtml as others, it runs very slow
+                    // and eventually max call state error is thrown.
+                    $.ajaxSetup({ cache: true });
+                    $.getScript("scripts/jsxgraphcore.js", function (script, textStatus, jqXHR) {
                         var bounds = xBounds(args);
+                        var numTicks = 20;
 
                         // ensure that the buffer is > 0 (bounds being equal is a valid case for a step function)
-                        var numTicks = 20;
-                        var dx = fbel.clientWidth;
                         var buffer = (bounds[0] == bounds[1]) ? 1 : (bounds[1] - bounds[0]) / 10;
 
                         //bounds[1] = dx / high;
@@ -182,6 +183,7 @@ var pvMapper;
                         });
 
                         //draggable lines querying reflecting values.  By using the fn function to query the intersecting Y value, this should work for any utility function.
+                        var dx;
                         var bb = board.getBoundingBox();
 
                         if ((_this._xArgs.metaInfo.vline == undefined) || (_this._xArgs.metaInfo.vline <= 0)) {
@@ -322,6 +324,8 @@ var pvMapper;
                                 updateGuideLines();
                             });
                         }
+                    }).fail(function (jqxhr, setttings, exception) {
+                        console.log('Loading graph library failed, cause: ' + exception.message);
                     });
                 }
 

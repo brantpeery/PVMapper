@@ -26,7 +26,8 @@ var BYUModules;
                         scoreUtilityOptions: {
                             functionName: "linear",
                             //TODO: what units is this distance in? kilometers? I'm guessing km... - It gets converted to miles!
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(100, 0, "Mi", "Minimum Road Distance threshold allowed.", "Maximum Road Distance threshold allowed.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(100, 0, "Mi", "Nearest Road", "Score", "Do we need to build our own road to this site?",
+                              "Minimum Road Distance threshold allowed.", "Maximum Road Distance threshold allowed.")
                         },
                         defaultWeight: 10
                     }

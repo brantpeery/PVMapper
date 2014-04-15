@@ -34,7 +34,7 @@ module INLModules {
                         //if (console) console.log("Site change detected in tool Gross Area. Updating the value.");
                         var areaInKm2 = calculateSiteArea(score.site);
                         //if (console) console.log("Calulated area of " + area + ". Setting the value on the score");
-
+                        
                         var areaInMi2 = areaInKm2 * 0.386102158542446 ;
                         var areaInAcre = areaInKm2 * 247.105381467165;
 
@@ -47,8 +47,8 @@ module INLModules {
                     // for now, this is a constant value (always returns the max, why not)
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "sq mi", // <-- This isn't an error - don't "fix" it.
-                            "Total Area","Preference","Preference of the total area available for a proposed site.",
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "km2", // <-- This isn't an error - don't "fix" it.
+                            "Total Area","Score","Preference of the total area available for a proposed site.",
                             "Minimum gross area to be considered.",
                             "Maximum gross area to be considered.")
                     },

@@ -161,7 +161,7 @@ var INLModules;
                         // having any nearby line is much better than having no nearby line, so let's reflect that.
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Wetland Acceptance", "Preference", "Preference of social acceptance to proximity of wetland.")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Wetland Acceptance", "Score", "Preference of social acceptance to proximity of wetland.")
                         },
                         weight: 10
                     }],
