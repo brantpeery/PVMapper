@@ -38,13 +38,15 @@
                         var buffer = (bounds[0] == bounds[1]) ? 1 : (bounds[1] - bounds[0]) / 10;
 
                         //bounds[1] = dx / high;
-                        bounds[1] += buffer * 1.5;
+                        bounds[1] = Math.min(120, bounds[1]);
+                        buffer = buffer > 10 ? 10 : buffer;
+                        bounds[1] += buffer * 1.5; // a little more on the right hand side feels nice.
                         bounds[0] -= buffer * 2;
 
                         JXG.Options.text.display = 'internal';
                         board = JXG.JSXGraph.initBoard('FunctionBox-body', {
                             boundingbox: [bounds[0], 108, bounds[1], bounds[0]],
-                            keepaspectratio: true,
+                            keepaspectratio: false,
                             axis: false,
                             showCopyright: false,
                             showNavigation: true
@@ -80,7 +82,7 @@
 
                         if (board.containerObj.attachEvent)
                             board.containerObj.attachEvent("on" + mousewheelevt, zooming);
-else if (board.containerObj.addEventListener)
+                        else if (board.containerObj.addEventListener)
                             board.containerObj.addEventListener(mousewheelevt, zooming, false);
 
                         var dxtic = board.canvasWidth / (bounds[1] - bounds[0]) * 10;
@@ -139,7 +141,7 @@ else if (board.containerObj.addEventListener)
                             }
                         });
 
-                        // change distance to 4, have to do it the hacky way.
+                        // change between ticks distance, have to do it the hacky way.
                         yAxis.defaultTicks.ticksFunction = function () {
                             return numTicks;
                         };
@@ -363,7 +365,7 @@ else if (board.containerObj.addEventListener)
                                         var tpArgs;
                                         if (sobj.fCache[sobj.functionName] != undefined)
                                             tpArgs = sobj.fCache[sobj.functionName];
-else {
+                                        else {
                                             tpArgs = new pvMapper.ThreePointUtilityArgs(0, 0.5, 180, 1, 360, 0.5, "degrees");
                                             tpArgs.metaInfo.vline = 180;
                                         }
@@ -382,7 +384,7 @@ else {
                                         var mmArgs;
                                         if (sobj.fCache[sobj.functionName] != undefined)
                                             mmArgs = sobj.fCache[sobj.functionName];
-else {
+                                        else {
                                             mmArgs = new pvMapper.MinMaxUtilityArgs(10, 0, "degrees");
                                             mmArgs.metaInfo.vline = 5;
                                         }
@@ -401,7 +403,7 @@ else {
                                         var sArgs;
                                         if (sobj.fCache[sobj.functionName] != undefined)
                                             sArgs = sobj.fCache[sobj.functionName];
-else {
+                                        else {
                                             sArgs = new pvMapper.SinusoidalUtilityArgs(0, 100, 50, 0.50, "degrees");
                                             sArgs.metaInfo.vline = 50;
                                         }

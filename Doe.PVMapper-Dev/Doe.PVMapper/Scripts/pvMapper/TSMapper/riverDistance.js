@@ -47,15 +47,13 @@ var BYUModules;
                     myToolLine.scores.forEach(updateScore);
                 }
             },
-            buttons: [
-                {
+            buttons: [{
                     xtype: 'button',
                     text: 'OK',
                     handler: function () {
                         propsWindow.hide();
                     }
-                }
-            ],
+                }],
             constrain: true
         });
     });
@@ -75,14 +73,13 @@ var BYUModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [
-                    {
+                scoringTools: [{
                         activate: null,
                         deactivate: null,
                         destroy: null,
                         init: null,
                         showConfigWindow: function () {
-                            myToolLine = this;
+                            myToolLine = this; // fetch tool line, which was passed as 'this' parameter
                             propsWindow.show();
                         },
                         title: "Nearest River",
@@ -101,8 +98,7 @@ var BYUModules;
                             functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInMi - 1), 0.3, configProperties.maxSearchDistanceInMi, 0, "mi", "Distance to nearest river", "Score", "Prefer sites near a river.")
                         },
                         weight: 10
-                    }
-                ],
+                    }],
                 infoTools: null
             });
         }
@@ -161,6 +157,7 @@ var BYUModules;
                 return this.format.read(data);
             },
             callback: function (response) {
+                //alert("Nearby features: " + response.features.length);
                 if (response.success()) {
                     var closestFeature = null;
                     var minDistance = maxSearchDistanceInMeters;
