@@ -282,3 +282,8 @@ var app = Ext.application({
         pvMapper.readyEvent.fire();
     },
 });
+
+
+window.onbeforeunload = function () {
+  return "Leaving?  If you have made any changes that is not yet saved, your changes will be lost.";
+}
