@@ -33,14 +33,15 @@ module pvMapper {
                 function loadboard() {
                     //Extras.loadExternalCSS("http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css");
                     //Extras.getScript("https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.97/jsxgraphcore.js", function () {
-                    Extras.getScript("scripts/jsxgraphcore.js", function () { //this one has the latest (0.99.0) and supports of label rotation.
 
-                        var fbel = document.getElementById('FunctionBox');
+                    //if the jsxgraphcore loaded by demand then everything runs peachy.  If it is included in the index.cshtml as others, it runs very slow
+                    // and eventually max call state error is thrown.  
+                    $.ajaxSetup({ cache: true });
+                    $.getScript("scripts/jsxgraphcore.js", function (script, textStatus, jqXHR) { //this one has the latest (0.99.1) and supports of label rotation.
                         var bounds = xBounds(args);
-                        // ensure that the buffer is > 0 (bounds being equal is a valid case for a step function)
-
                         var numTicks = 20;
-                        var dx = fbel.clientWidth
+
+                        // ensure that the buffer is > 0 (bounds being equal is a valid case for a step function)
                         var buffer = (bounds[0] == bounds[1]) ? 1 : (bounds[1] - bounds[0]) / 10;
                         //bounds[1] = dx / high;
                         bounds[1] += buffer * 1.5; // a little more on the right hand side feels nice.
@@ -197,6 +198,7 @@ module pvMapper {
                             });
 
                         //draggable lines querying reflecting values.  By using the fn function to query the intersecting Y value, this should work for any utility function.
+                        var dx;
                         var bb = board.getBoundingBox();
 
                         if ((_this._xArgs.metaInfo.vline == undefined) || (_this._xArgs.metaInfo.vline <= 0)) {
@@ -341,8 +343,11 @@ module pvMapper {
                                 updateGuideLines();
                             });
                         }
+                    })
+                    .fail(function (jqxhr, setttings, exception) {
+                        console.log('Loading graph library failed, cause: ' + exception.message);
                     });
-                }
+                } //loadboard()
 
                 panel.removeAll();
 

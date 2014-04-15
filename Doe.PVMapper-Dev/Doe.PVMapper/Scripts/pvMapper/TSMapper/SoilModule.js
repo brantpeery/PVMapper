@@ -62,7 +62,7 @@ var INLModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Errosion Resistant", "Preference", "Preference of soil compactability.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Favor Soil", "Score", "They say sandy soil is not stable ground, is it?")
                         },
                         weight: 10
                     }],

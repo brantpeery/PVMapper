@@ -160,7 +160,7 @@ module INLModules {
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
                         functionArgs:
-                        new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor","Proxity to Existing Solar Plants","Preference","Preference to the social aceptable in relative distance to existing solar plants.")
+                        new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor","Percent Favor","Score","Preference to the social aceptable in relative distance to existing solar plants.")
                     },
                     weight: 10
                 }],

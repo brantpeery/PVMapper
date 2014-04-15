@@ -118,7 +118,7 @@ module INLModules {
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
                         functionArgs:
-                        new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Agriculture Proximity","Preference", "Preference of agriculture development near by.")
+                        new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Proximity Favor","Score", "Preference of agriculture development near by.")
                     },
                     weight: 10
                 }],
