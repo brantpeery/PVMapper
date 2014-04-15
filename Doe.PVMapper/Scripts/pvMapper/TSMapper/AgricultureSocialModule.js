@@ -74,8 +74,7 @@ var INLModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [
-                    {
+                scoringTools: [{
                         activate: null,
                         deactivate: null,
                         destroy: null,
@@ -109,11 +108,10 @@ var INLModules;
                         // having any nearby line is much better than having no nearby line, so let's reflect that.
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Agriculture Proximity", "Preference", "Preference of agriculture development near by.")
                         },
                         weight: 10
-                    }
-                ],
+                    }],
                 infoTools: null
             });
         }
@@ -197,12 +195,14 @@ var INLModules;
             //    return this.format.read(data);
             //},
             callback: function (response) {
+                //alert("Nearby features: " + response.features.length);
                 if (response.status === 200) {
                     var closestFeature = null;
                     var minDistance = searchDistanceInMeters;
 
                     var features = OpenLayers.Format.EsriGeoJSON.prototype.read(response.responseText);
 
+                    //console.log("Near-ish features: " + (features ? features.length : 0));
                     if (features) {
                         for (var i = 0; i < features.length; i++) {
                             var distance = score.site.geometry.distanceTo(features[i].geometry, { edge: false });

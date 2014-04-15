@@ -68,7 +68,7 @@ module INLModules {
                     //},                                                                     
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars","Federal Land Restriction","Preference","Preference to near by federal land and restrictions.")
                     },
                     weight: 10
                 }],

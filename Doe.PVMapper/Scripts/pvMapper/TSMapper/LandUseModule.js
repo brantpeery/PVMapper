@@ -14,6 +14,7 @@
 /// <reference path="../../jquery.d.ts" />
 /// <reference path="common.ts" />
 /// <reference path="Event.ts" />
+
 var INLModules;
 (function (INLModules) {
     var ProtectedAreasModule = (function () {
@@ -42,8 +43,7 @@ var INLModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [
-                    {
+                scoringTools: [{
                         activate: null,
                         deactivate: null,
                         destroy: null,
@@ -69,11 +69,10 @@ var INLModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Away from Protected Area", "Preference", "Preference of proposed site away from protected area.")
                         },
                         weight: 10
-                    }
-                ],
+                    }],
                 infoTools: null
             });
         }
@@ -117,6 +116,7 @@ var INLModules;
                 proxy: "/Proxy/proxy.ashx?",
                 params: params,
                 callback: function (response) {
+                    // update value
                     if (response.status === 200) {
                         var esriJsonPerser = new OpenLayers.Format.JSON();
                         esriJsonPerser.extractAttributes = true;
@@ -134,6 +134,7 @@ var INLModules;
 
                                 var newText = "";
 
+                                // use name if we can; use type otherwise
                                 if (name && name != "Null" && isNaN(parseFloat(name))) {
                                     // some of the names start with a number - skip those
                                     newText += name;
@@ -141,16 +142,21 @@ var INLModules;
                                     newText += type;
                                 }
 
+                                // use manager if we can; use owner otherwise
                                 if (manager && manager != "Null") {
                                     newText += (newText) ? ": " + manager : manager;
                                 } else if (owner && owner != "Null") {
                                     newText += (newText) ? ": " + owner : owner;
                                 }
 
+                                // add this to the array of responses we've received
                                 if (responseArray.indexOf(newText) < 0) {
                                     responseArray.push(newText);
                                 }
 
+                                // if we have a valid gap status code, and no current star rating,
+                                // then let's go ahead and use the gap status code as the star rating.
+                                // (gap status codes defined: http://www.gap.uidaho.edu/padus/gap_iucn.html)
                                 if (typeof _this.starRatingHelper.starRatings[newText] === "undefined" && !isNaN(gapStatusCode) && gapStatusCode > 0 && gapStatusCode <= 5) {
                                     _this.starRatingHelper.starRatings[newText] = gapStatusCode;
                                 }
@@ -161,6 +167,7 @@ var INLModules;
                             score.popupMessage = combinedText;
                             score.updateValue(_this.starRatingHelper.starRatings[responseArray[0]]);
                         } else {
+                            // use the no category label, and its current star rating
                             if (_this.starRatingHelper.starRatings !== undefined) {
                                 score.popupMessage = _this.starRatingHelper.options.noCategoryLabel;
                                 score.updateValue(_this.starRatingHelper.starRatings[_this.starRatingHelper.options.noCategoryLabel]);
@@ -203,8 +210,7 @@ var INLModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [
-                    {
+                scoringTools: [{
                         activate: null,
                         deactivate: null,
                         destroy: null,
@@ -230,11 +236,10 @@ var INLModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Under Development", "Preference", "Preference for vegetation cover and land uses.")
                         },
                         weight: 10
-                    }
-                ],
+                    }],
                 infoTools: null
             });
         }
@@ -246,7 +251,7 @@ var INLModules;
                 transparent: "true"
             });
             this.landCoverLayer.setOpacity(0.3);
-            this.landCoverLayer.epsgOverride = "3857";
+            this.landCoverLayer.epsgOverride = "3857"; //"EPSG:102100";
             this.landCoverLayer.setVisibility(false);
 
             pvMapper.map.addLayer(this.landCoverLayer);
@@ -274,6 +279,7 @@ var INLModules;
                 proxy: "/Proxy/proxy.ashx?",
                 params: params,
                 callback: function (response) {
+                    // update value
                     if (response.status === 200) {
                         var esriJsonPerser = new OpenLayers.Format.JSON();
                         esriJsonPerser.extractAttributes = true;
@@ -353,8 +359,7 @@ var INLModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [
-                    {
+                scoringTools: [{
                         activate: null,
                         deactivate: null,
                         destroy: null,
@@ -380,11 +385,10 @@ var INLModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Land Use", "Preference", "Preference for the type of land cover present in propose site.")
                         },
                         weight: 10
-                    }
-                ],
+                    }],
                 infoTools: null
             });
         }
@@ -396,7 +400,7 @@ var INLModules;
                 transparent: "true"
             });
             this.landCoverLayer.setOpacity(0.3);
-            this.landCoverLayer.epsgOverride = "3857";
+            this.landCoverLayer.epsgOverride = "3857"; //"EPSG:102100";
             this.landCoverLayer.setVisibility(false);
 
             pvMapper.map.addLayer(this.landCoverLayer);
@@ -412,10 +416,10 @@ var INLModules;
             var key = "landCover" + score.site.id;
             if (isNaN(score.value) && $.jStorage.get(key)) {
                 score.popupMessage = "<i>" + $.jStorage.get(key + "msg") + "</i>";
-                score.updateValue($.jStorage.get(key));
+                score.updateValue(($.jStorage.get(key)));
             }
 
-            var _this = this;
+            var _me = this;
 
             var toGeoJson = new OpenLayers.Format.GeoJSON();
             var geoJsonObj = toGeoJson.extract.geometry.apply(toGeoJson, [
@@ -439,6 +443,7 @@ var INLModules;
                     "Content-Type": "application/x-www-form-urlencoded"
                 },
                 callback: function (response) {
+                    // update value
                     if (response.status === 200) {
                         var esriJsonParser = new OpenLayers.Format.JSON();
                         esriJsonParser.extractAttributes = true;
@@ -496,12 +501,12 @@ var INLModules;
                                                 var combinedText = '';
 
                                                 for (var i = 0; i < landCovers.length; i++) {
-                                                    if (typeof _this.starRatingHelper.starRatings[landCovers[i].cover] === "undefined") {
-                                                        _this.starRatingHelper.starRatings[landCovers[i].cover] = _this.starRatingHelper.options.defaultStarRating;
+                                                    if (typeof _me.starRatingHelper.starRatings[landCovers[i].cover] === "undefined") {
+                                                        _me.starRatingHelper.starRatings[landCovers[i].cover] = _me.starRatingHelper.options.defaultStarRating;
                                                     }
 
                                                     // overall score is the average star rating weighted by the percentage of individual land covers
-                                                    var starRating = _this.starRatingHelper.starRatings[landCovers[i].cover];
+                                                    var starRating = _me.starRatingHelper.starRatings[landCovers[i].cover];
 
                                                     totalPercent += landCovers[i].percent;
                                                     overallScore += landCovers[i].percent * starRating;

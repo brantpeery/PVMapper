@@ -2,9 +2,12 @@
     extend: "MainApp.view.Window",
     title: 'Utiltiy Function Editor',
     modal:true,
-    layout: '',
-    width: 300,
+    layout: 'auto',
+    //width: 400,
+    //height: 450,
     shrinkWrap: 3,
+    maxHeight: 600,
+    maxWidth: 800,
     overflowY:'auto',
     buttons: [{
         buttons: [{
@@ -17,5 +20,5 @@
             handler: function () { }
         }]
     }],
-  constrain: true
+    constrain: true
 });

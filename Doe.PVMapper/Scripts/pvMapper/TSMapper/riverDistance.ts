@@ -10,7 +10,7 @@
 module BYUModules {
 
     var configProperties = {
-        maxSearchDistanceInKM: 30,
+        maxSearchDistanceInMi: 15,
     };
 
     var myToolLine: pvMapper.IToolLine;
@@ -24,10 +24,10 @@ module BYUModules {
             //autoHeight: true,
             source: configProperties,
             customRenderers: {
-                maxSearchDistanceInKM: function (v) { return v + " km"; }
+                maxSearchDistanceInMi: function (v) { return v + " mi"; }
             },
             propertyNames: {
-                maxSearchDistanceInKM: "search distance",
+                maxSearchDistanceInMi: "search distance",
             }
         });
 
@@ -62,14 +62,14 @@ module BYUModules {
 
     class WaterDistanceModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "Water Distance Module",
                 author: "Darian Ramage, BYU",
                 version: "0.2.ts",
                 iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/home_icon.jpg",
 
                 activate: () => {
-                    addAllMaps();
+                    //addAllMaps();
                 },
                 deactivate: () => {
                     removeAllMaps();
@@ -77,7 +77,7 @@ module BYUModules {
                 destroy: null,
                 init: null,
 
-                scoringTools: [{
+                scoringTools: [<pvMapper.IScoreToolOptions>{
                     activate: null,
                     deactivate: null,
                     destroy: null,
@@ -103,7 +103,8 @@ module BYUModules {
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
                         functionArgs:
-                        new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInKM - 1), 0.3, configProperties.maxSearchDistanceInKM, 0, "km")
+                        new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInMi - 1), 0.3, configProperties.maxSearchDistanceInMi, 0,
+                            "mi", "Distance to nearest river", "Score", "Prefer sites near a river.")
                     },
                     weight: 10
                 }],
@@ -117,36 +118,39 @@ module BYUModules {
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
-    var ExportUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/export"; //TODO 
-    var QueryUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/3/query"; //TODO 
+    //var ExportUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/export";
+    var QueryUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/3/query";
 
     var mapLayer: any;
 
-    function addAllMaps() {
-        mapLayer = new OpenLayers.Layer.ArcGIS93Rest(
-            "Power Lines",
-            ExportUrl,
-            {
-                layers: "show:3", //"show:2", //TODO 
-                format: "gif",
-                srs: "3857", //"102100",
-                transparent: "true",
-            }//,{ isBaseLayer: false }
-            );
-        mapLayer.setOpacity(0.3);
-        mapLayer.epsgOverride = "3857"; //"EPSG:102100";
-        mapLayer.setVisibility(false);
+    //Note: the river layer was already added as a Reference layer... 
+    //      As it seems more similar to the other Reference layers than it does to the Tool Data layers,
+    //      I chose to leave it there (and comment out this add)
+    //function addAllMaps() {
+    //    mapLayer = new OpenLayers.Layer.ArcGIS93Rest(
+    //        "Rivers",
+    //        ExportUrl,
+    //        {
+    //            layers: "show:3", //"show:2", //TODO 
+    //            format: "gif",
+    //            srs: "3857", //"102100",
+    //            transparent: "true",
+    //        }//,{ isBaseLayer: false }
+    //        );
+    //    mapLayer.setOpacity(0.3);
+    //    mapLayer.epsgOverride = "3857"; //"EPSG:102100";
+    //    mapLayer.setVisibility(false);
 
-        pvMapper.map.addLayer(mapLayer);
-        //pvMapper.map.setLayerIndex(mapLayer, 0);
-    }
+    //    pvMapper.map.addLayer(mapLayer);
+    //    //pvMapper.map.setLayerIndex(mapLayer, 0);
+    //}
 
     function removeAllMaps() {
         pvMapper.map.removeLayer(mapLayer, false);
     }
 
     function updateScore(score: pvMapper.Score) {
-        var maxSearchDistanceInMeters = configProperties.maxSearchDistanceInKM * 1000;
+        var maxSearchDistanceInMeters = configProperties.maxSearchDistanceInMi * 1609.34;
         // use a genuine JSONP request, rather than a plain old GET request routed through the proxy.
         var jsonpProtocol = new OpenLayers.Protocol.Script(<any>{
             url: QueryUrl,
@@ -184,13 +188,22 @@ module BYUModules {
                         }
                     }
                     if (closestFeature !== null) {
-                        score.popupMessage = (minDistance / 1000).toFixed(1) + " km to " +
-                        closestFeature.attributes.PNAME + " River"
-                        score.updateValue(minDistance / 1000);
+                        var distanceInFt = minDistance * 3.28084; // convert meters to feet
+                        var distanceInMi = minDistance * 0.000621371; // convert meters to miles
+                        var distanceString = distanceInMi > 10.0 ? distanceInMi.toFixed(1) + " mi" :
+                            distanceInMi > 0.5 ? distanceInMi.toFixed(2) + " mi" :
+                            distanceInMi.toFixed(2) + " mi (" + distanceInFt.toFixed(0) + " ft)";
+
+                        var toNearestString = " to " + closestFeature.attributes.PNAME + " river";
+
+                        var messageString = distanceInFt > 1 ? distanceString + toNearestString + "." :
+                            "0 mi" + toNearestString + " (river is on site).";
+
+                        score.popupMessage = messageString;
+                        score.updateValue(distanceInMi);
                     } else {
-                        score.popupMessage = "No rivers found within " +
-                        configProperties.maxSearchDistanceInKM + " km";
-                        score.updateValue(configProperties.maxSearchDistanceInKM);
+                        score.popupMessage = "No rivers found within " + configProperties.maxSearchDistanceInMi + " mi search distance.";
+                        score.updateValue(configProperties.maxSearchDistanceInMi);
                     }
                 } else {
                     score.popupMessage = "Request error " + response.error.toString();

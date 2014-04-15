@@ -12,7 +12,7 @@ module INLModules {
 
     export class LocalLayerModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({ 
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{ 
                 id: "LocalLayerModule",
                 author: "Leng Vang, INL",
                 version: "0.1.ts",
@@ -49,7 +49,7 @@ module INLModules {
 
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 10000, 0, "km")
+                        functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 10000, 0, "mi","Distance to nearest feature", "Score", "Prefer sites closer to the nearest feature.")
                     },
                     setModuleName: (name: string) => {
                         this.moduleName = name;
@@ -155,8 +155,19 @@ module INLModules {
                 }
             }
             if (closestFeature !== null) {
-                score.popupMessage = (minDistance / 1000).toFixed(1) + " km to nearest feature.";
-                score.updateValue(minDistance / 1000);
+                var distanceInFt = minDistance * 3.28084; // convert meters to feet
+                var distanceInMi = minDistance * 0.000621371; // convert meters to miles
+                var distanceString = distanceInMi > 10.0 ? distanceInMi.toFixed(1) + " mi" :
+                    distanceInMi > 0.5 ? distanceInMi.toFixed(2) + " mi" :
+                    distanceInMi.toFixed(2) + " mi (" + distanceInFt.toFixed(0) + " ft)";
+
+                var toNearestString = " to nearest feature";
+
+                var messageString = distanceInFt > 1 ? distanceString + toNearestString + "." :
+                    "0 mi" + toNearestString + " (feature is on site).";
+
+                score.popupMessage = messageString;
+                score.updateValue(distanceInMi);
             } else {
                 score.popupMessage = "No features loaded.";
                 score.updateValue(Number.NaN);

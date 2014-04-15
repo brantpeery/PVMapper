@@ -225,7 +225,7 @@ var INLModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "% in favor", "Score", "Preference for percentage of respondents regard to historical landmarks.")
                         },
                         weight: 10
                     },
