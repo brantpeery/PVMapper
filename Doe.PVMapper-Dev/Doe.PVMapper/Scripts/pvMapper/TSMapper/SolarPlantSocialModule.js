@@ -57,7 +57,8 @@ var INLModules;
         { mi: 500, percentOk: 99.32126697 },
         { mi: 1000, percentOk: 99.54751131 },
         { mi: 2000, percentOk: 99.77375566 },
-        { mi: 5000, percentOk: 100 }];
+        { mi: 5000, percentOk: 100 }
+    ];
 
     var configProperties = {
         //maxSearchDistanceInKM: 30,
@@ -103,13 +104,15 @@ var INLModules;
                     myToolLine.scores.forEach(updateScore);
                 }
             },
-            buttons: [{
+            buttons: [
+                {
                     xtype: 'button',
                     text: 'OK',
                     handler: function () {
                         propsWindow.hide();
                     }
-                }],
+                }
+            ],
             constrain: true
         });
     });
@@ -129,13 +132,14 @@ var INLModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [{
+                scoringTools: [
+                    {
                         activate: null,
                         deactivate: null,
                         destroy: null,
                         init: null,
                         showConfigWindow: function () {
-                            myToolLine = this; // fetch tool line, which was passed as 'this' parameter
+                            myToolLine = this;
                             propsWindow.show();
                         },
                         title: "Existing Solar Proximity",
@@ -154,7 +158,8 @@ var INLModules;
                             functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Percent Favor", "Score", "Preference to the social aceptable in relative distance to existing solar plants.")
                         },
                         weight: 10
-                    }],
+                    }
+                ],
                 infoTools: null
             });
         }
@@ -275,7 +280,6 @@ var INLModules;
                         }
                     }
 
-                    //nearestFeatureCache[score.site.id] = response.features;
                     if (layerDevelopment.features.length) {
                         pvMapper.map.addLayer(layerDevelopment);
                     }
@@ -346,8 +350,6 @@ var INLModules;
 
         var searchForClosestFeature = function (features) {
             for (var i = 0; i < features.length; i++) {
-                // filter out far away geometries quickly using boundary overlap
-                //if (searchBounds.intersects(features[i].bounds))
                 if (searchBounds.contains(features[i].geometry.x, features[i].geometry.y)) {
                     var distance = score.site.geometry.distanceTo(features[i].geometry);
                     if (distance < minDistance) {

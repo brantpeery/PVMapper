@@ -40,7 +40,8 @@ var INLModules;
                             functionArgs: new pvMapper.MinMaxUtilityArgs(0, 8, "kWh/m2/day", "Irradiance", "Score", "Preference of available annual direct solar radiation.")
                         },
                         weight: 10
-                    }, {
+                    },
+                    {
                         activate: null,
                         deactivate: null,
                         destroy: null,
@@ -59,7 +60,8 @@ var INLModules;
                             functionArgs: new pvMapper.MinMaxUtilityArgs(0, 6, "kWh/m2/day", "Irradiance", "Score", "Preference of annual average of globally horizontal solar radiation.")
                         },
                         weight: 10
-                    }, {
+                    },
+                    {
                         activate: null,
                         deactivate: null,
                         destroy: null,
@@ -78,7 +80,8 @@ var INLModules;
                             functionArgs: new pvMapper.MinMaxUtilityArgs(0, 6, "kWh/m2/day", "Irradiance", "Score", "Preference of annual tilted flat plate solar radiation.")
                         },
                         weight: 10
-                    }],
+                    }
+                ],
                 infoTools: null
             });
         }
