@@ -44,13 +44,15 @@ module pvMapper {
                         // ensure that the buffer is > 0 (bounds being equal is a valid case for a step function)
                         var buffer = (bounds[0] == bounds[1]) ? 1 : (bounds[1] - bounds[0]) / 10;
                         //bounds[1] = dx / high;
+                        bounds[1] = Math.min(120, bounds[1]);
+                        buffer = buffer > 10 ? 10 : buffer;
                         bounds[1] += buffer * 1.5; // a little more on the right hand side feels nice.
                         bounds[0] -= buffer * 2;
 
                         JXG.Options.text.display = 'internal';  //need this to make the axis label rotation work.
                         board = JXG.JSXGraph.initBoard('FunctionBox-body', {
                             boundingbox: [bounds[0], 108, bounds[1], bounds[0]],
-                            keepaspectratio: true,
+                            keepaspectratio: false,
                             axis: false,
                             showCopyright: false,
                             showNavigation: true
@@ -151,8 +153,7 @@ module pvMapper {
 
                             });
 
-
-                        // change distance to 4, have to do it the hacky way.
+                        // change between ticks distance, have to do it the hacky way.
                         yAxis.defaultTicks.ticksFunction = function () {
                             return numTicks;
                         };
