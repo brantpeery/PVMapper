@@ -5,6 +5,7 @@
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
 /// <reference path="ScoreUtility.ts" />
+/// <reference path="OpenLayers.d.ts" />
 
 
 module INLModules {
@@ -118,7 +119,7 @@ module INLModules {
 
     class SolarPlantSocialModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "SolarPlantSocialModule",
                 author: "Scott Brown, INL",
                 version: "0.1.ts",
@@ -133,7 +134,7 @@ module INLModules {
                 destroy: null,
                 init: null,
 
-                scoringTools: [{
+                scoringTools: [<pvMapper.IScoreToolOptions>{
                     activate: null,
                     deactivate: null,
                     destroy: null,
@@ -159,7 +160,7 @@ module INLModules {
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
                         functionArgs:
-                        new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor")
+                        new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor","Proxity to Existing Solar Plants","Preference","Preference to the social aceptable in relative distance to existing solar plants.")
                     },
                     weight: 10
                 }],
@@ -184,6 +185,66 @@ module INLModules {
     var layerConstruction: OpenLayers.Vector = null;
     var layerDevelopment: OpenLayers.Vector = null;
 
+    function createDefaultStyle(fillColor: string): OpenLayers.StyleMap {
+
+        /*
+            Capacity: 2
+            City/County: "Kona"
+            Date Announced: 2008
+            Developer: "Sopogy"
+            Electricity Purchaser: "HELCO"
+            Land Type: "Private"
+            LocAccurac: 1
+            Online Date: "2009"
+            PV/CSP: "CSP"
+            Project Name: "Holaniku at Keahole Point"
+            State: "HI"
+            Status: "Operating"
+            Technology: "Other"
+            X: -156.055
+            Y: 19.7279
+        */
+
+        var style = new OpenLayers.Style(
+            {
+                fontSize: "12px",
+                label: "${getLabel}", // "${Developer}", // "${Project Name}",
+                labelOutlineColor: fillColor,
+                labelOutlineWidth: 2,
+
+                pointRadius: "${getSize}", //"${Capacity}",
+                fillOpacity: 0.25,
+                strokeOpacity: 0.875,
+
+                fillColor: fillColor, // using context.getColor(feature)
+                strokeColor: fillColor,
+            },
+            {
+                context: {
+                    getLabel: function (feature) {
+                        try {
+                            return feature.attributes["Project Name"] ? feature.attributes["Project Name"] :
+                                feature.attributes["Developer"] ? feature.attributes["Developer"] :
+                                feature.attributes["Electricity Purchaser"] ? feature.attributes["Electricity Purchaser"] :
+                                "";
+                        } catch (e) {
+                            return ""; // duh?
+                        }
+                    },
+                    getSize: function (feature) {
+                        try {
+                            return 2 + (4 * Math.log(feature.attributes["Capacity"]));
+                        } catch (e) {
+                            return 10; // duh?
+                        }
+                    },
+                }
+            });
+
+        var styleMap = new OpenLayers.StyleMap(style);
+        return styleMap;
+    }
+
     function addAllMaps() {
         var jsonpProtocol = new OpenLayers.Protocol.Script(<any>{
             url: seiaDataUrl,
@@ -201,6 +262,10 @@ module INLModules {
                     layerOperating = new OpenLayers.Layer.Vector("PV/CSP In Operation", properties);
                     layerConstruction = new OpenLayers.Layer.Vector("PV/CSP Under Construction", properties);
                     layerDevelopment = new OpenLayers.Layer.Vector("PV/CSP In Development", properties);
+
+                    layerOperating.styleMap = createDefaultStyle("lightgreen");
+                    layerConstruction.styleMap = createDefaultStyle("lightblue");
+                    layerDevelopment.styleMap = createDefaultStyle("orange");
 
                     //new OpenLayers.Format.EsriGeoJSON()
                     //this.format.read(data)

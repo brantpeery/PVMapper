@@ -165,7 +165,6 @@ var scoreboardColumns = [{
                 items: [{
                     xtype: 'text',
                     text: 'configure me',
-                    width: 100,
                     shrinkWrap: 3,
                     sortable: true,
                     hideable: false,
@@ -181,6 +180,7 @@ var scoreboardColumns = [{
                 icon: utilityFn.iconURL,
                 minimizable: false,
                 collapsible: false,
+                title: "Utiltiy Function Editor - " + record.data.category + "\\" + record.data.title,
                 plugins: [{
                     ptype: "headericons",
                     index: 2,
@@ -246,10 +246,20 @@ var scoreboardColumns = [{
                     }
                 }],
                 listeners: {
-                    beforerender: function () {
-                        utilityFn.windowSetup.apply(utilityFn, [dynamicPanel, uf]); // uf.functionArgs, utilityFn.fn, utilityFn.xBounds]);
-                        //TODO: can't we just pass uf here, in place of all this other crap?
-                        dynamicPanel.doLayout();
+                  beforerender: function (win, op) {
+                    var w = win.width;
+                    if (typeof(w) == 'undefined' || (w < 400))  {
+                      win.setWidth(400);
+                      win.center();
+                    }
+                     utilityFn.windowSetup.apply(utilityFn, [dynamicPanel, uf]); // uf.functionArgs, utilityFn.fn, utilityFn.xBounds]);
+                    //TODO: can't we just pass uf here, in place of all this other crap?
+                  },
+                    resize: function (win, width, height, opts) {
+                      if (dynamicPanel.onBodyResize != undefined)
+                        width = this.getContentTarget().getWidth();
+                        height = this.getContentTarget().getHeight();
+                        dynamicPanel.onBodyResize(width, height, opts);
                     }
                 }
 

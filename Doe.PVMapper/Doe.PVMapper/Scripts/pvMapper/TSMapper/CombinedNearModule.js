@@ -30,7 +30,8 @@ var BYUModules;
                         scoreUtilityOptions: {
                             functionName: "linear",
                             //TODO: what units is this distance in? kilometers? I'm guessing km... - It gets converted to miles!
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(100, 0, "Mi", "Minimum Road Distance threshold allowed.", "Maximum Road Distance threshold allowed.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(100, 0, "mi", "Distance to nearest road",
+                                "Score", "Prefer sites near roads", "Worst scoring road distance", "Best scoring road distance")
                         },
                         defaultWeight: 10
                     }
@@ -72,7 +73,8 @@ var BYUModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(100, 0, "Mi", "Minimum River threshold allowed.", "Maximum River threshold allowed.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(100, 0, "mi", "Distance to nearest river",
+                                "Score", "Prefer sites near rivers", "Worst scoring river distance", "Best scoring river distance")
                         },
                         defaultWeight: 10
                     }
@@ -176,7 +178,7 @@ var BYUModules;
                                                             if (parsedResponse && parsedResponse.value.features[0].attributes) {
 
                                                                 var distRoad = parsedResponse.value.features[0].attributes.near_dist * 0.000621371;
-                                                                var msgRoad = distRoad.toFixed(2) + " miles to " + parsedResponse.value.features[0].attributes.NAME + "(" + parsedResponse.value.features[0].attributes.FEATURE + ")";
+                                                                var msgRoad = distRoad.toFixed(2) + " mi to " + parsedResponse.value.features[0].attributes.NAME + "(" + parsedResponse.value.features[0].attributes.FEATURE + ")";
                                                                 score.popupMessage = msgRoad;
                                                                 score.updateValue(distRoad);
 

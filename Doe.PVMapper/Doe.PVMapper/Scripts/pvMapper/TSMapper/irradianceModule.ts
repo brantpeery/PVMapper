@@ -8,7 +8,7 @@
 module INLModules {
     class IrradianceModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "IrradianceModule",
                 author: "Scott Brown, INL",
                 version: "0.1.ts",
@@ -40,7 +40,7 @@ module INLModules {
 
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 8, "kWh/m2/day")
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 8, "kWh/m2/day","Irradiance","Preference","Preference of available annual direct solar radiation.")
                     },
                     weight: 10
 
@@ -62,7 +62,7 @@ module INLModules {
 
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 6, "kWh/m2/day")
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 6, "kWh/m2/day","Irradiance","Preference","Preference of annual average of globally horizontal solar radiation.")
                     },                                                       
                     weight: 10
                 }, {
@@ -83,7 +83,7 @@ module INLModules {
 
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 6, "kWh/m2/day")
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 6, "kWh/m2/day","Irradiance","Preference","Preference of annual tilted flat plate solar radiation.")
                     },
                     weight: 10
                 }],
@@ -201,7 +201,7 @@ module INLModules {
     }
 
     function queryResponseHandler(score: pvMapper.Score): ICallback {
-        return (response) => {
+        return (response?)=> {
             try {
                 if (response.status === 200) {
 

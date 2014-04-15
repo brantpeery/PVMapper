@@ -18,7 +18,7 @@ module INLModules {
 
     export class SoilModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "SoilModule",
                 author: "Leng Vang, INL",
                 version: "0.1.ts",
@@ -59,7 +59,7 @@ module INLModules {
                     },
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Errosion Resistant", "Preference", "Preference of soil compactability.")
                     },
                     weight: 10,
                 }],

@@ -12,7 +12,7 @@
 var BYUModules;
 (function (BYUModules) {
     var configProperties = {
-        maxSearchDistanceInKM: 30
+        maxSearchDistanceInMi: 15
     }
 
     var lineConfigProperties = {
@@ -51,8 +51,8 @@ var BYUModules;
             minWidth: 300,
             source: lineConfigProperties,
             customRenderers: {
-                maxSearchDistanceInKM: function (v) {
-                    return v + " km";
+                maxSearchDistanceInMi: function (v) {
+                    return v + " mi";
                 },
                 minimumVoltage: function (v) {
                     return v + " kV";
@@ -62,7 +62,7 @@ var BYUModules;
                 }
             },
             propertyNames: {
-                maxSearchDistanceInKM: "search distance",
+                maxSearchDistanceInMi: "search distance",
                 minimumVoltage: 'minimum voltage',
                 maximumVoltage: 'maximum voltage',
                 onlyKnownVoltages: 'known kV only'
@@ -149,7 +149,8 @@ var BYUModules;
                         // having any nearby line is much better than having no nearby line, so let's reflect that.
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInKM - 1), 0.5, configProperties.maxSearchDistanceInKM, 0.25, "km")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInMi - 1), 0.5, configProperties.maxSearchDistanceInMi, 0.25, "mi",
+                                "Distance to nearest substation", "Score", "Prefer sites near a substation.")
                         },
                         weight: 10
                     },
@@ -170,7 +171,8 @@ var BYUModules;
                         // having any nearby line is much better than having no nearby line, so let's reflect that.
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInKM - 1), 0.3, configProperties.maxSearchDistanceInKM, 0, "km")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInMi - 1), 0.3, configProperties.maxSearchDistanceInMi, 0, "mi",
+                                "Distance to nearest transmission line", "Score", "Prefer sites near a transmission line.")
                         },
                         weight: 10
                     }
@@ -196,7 +198,7 @@ var BYUModules;
 
 
     function updateScore(score, wayQueryKey, objectType) {
-        var maxSearchDistanceInMeters = configProperties.maxSearchDistanceInKM * 1000;
+        var maxSearchDistanceInMeters = configProperties.maxSearchDistanceInMi * 1000;
         var SubStationQueryUrl = "http://overpass.osm.rambler.ru/cgi/interpreter";
         var bounds = new OpenLayers.Bounds(
             score.site.geometry.bounds.left - maxSearchDistanceInMeters - 1000,
@@ -263,28 +265,43 @@ var BYUModules;
                         }
                     }
                     if (closestFeature !== null) {
+                        var distanceInFt = minDistance * 3.28084; // convert meters to feet
+                        var distanceInMi = minDistance * 0.000621371; // convert meters to miles
+                        var distanceString = distanceInMi > 10.0 ? distanceInMi.toFixed(1) + " mi" :
+                            distanceInMi > 0.5 ? distanceInMi.toFixed(2) + " mi" :
+                            distanceInFt <= 1 ? "0 mi" :
+                            distanceInMi.toFixed(2) + " mi (" + distanceInFt.toFixed(0) + " ft)";
+
                         var name = "nearest"
                         if (closestFeature.attributes.name) {
                             name = closestFeature.attributes.name;
                         }
-                        var message = (minDistance / 1000).toFixed(1) + " km to " + name + " " + objectType;
+                        var toNearestString = " to " + name + " " + objectType;
+
+                        if (distanceInFt <= 1) {
+                            toNearestString += " (" + objectType + " on site)";
+                        }
 
                         if (!isNaN(closestFeature.attributes.voltage)) {
-                            message += ", " + (closestFeature.attributes.voltage / 1000).toFixed(0) + " kV";
+                            toNearestString += ", " + (closestFeature.attributes.voltage / 1000).toFixed(0) + " kV";
                         } else {
-                            message += ", unknown kV";
+                            toNearestString += ", unknown kV";
                         }
 
                         if (closestFeature.attributes.operator) {
-                            message += ", operated by " + closestFeature.attributes.operator;
+                            toNearestString += ", operated by " + closestFeature.attributes.operator;
                         }
 
-                        message += ".";
-                        score.popupMessage = message;
-                        score.updateValue(minDistance / 1000);
+                        toNearestString += ".";
+
+                        var messageString = distanceString + toNearestString;
+
+
+                        score.popupMessage = messageString;
+                        score.updateValue(distanceInMi);
                     } else {
-                        score.popupMessage = "No " + objectType + " found within " + configProperties.maxSearchDistanceInKM + " km";
-                        score.updateValue(configProperties.maxSearchDistanceInKM);
+                        score.popupMessage = "No " + objectType + " found within " + configProperties.maxSearchDistanceInMi + " mi search distance.";
+                        score.updateValue(configProperties.maxSearchDistanceInMi);
                     }
                 } else {
                     score.popupMessage = "Error " + response.status + " " + response.statusText;

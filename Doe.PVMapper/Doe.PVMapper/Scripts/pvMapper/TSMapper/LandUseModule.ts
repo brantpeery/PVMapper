@@ -25,7 +25,7 @@ module INLModules {
 
     export class ProtectedAreasModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "ProtectedAreasModule",
                 author: "Leng Vang, INL",
                 version: "0.1.ts",
@@ -69,7 +69,7 @@ module INLModules {
 
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Away from Protected Area","Preference","Preference of proposed site away from protected area." )
                     },
                     weight: 10,
                 }],
@@ -212,7 +212,7 @@ module INLModules {
 
     export class LandCoverModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "LandCoverModule",
                 author: "Leng Vang, INL",
                 version: "0.1.ts",
@@ -256,7 +256,7 @@ module INLModules {
                     },
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Under Development","Preference","Preference for vegetation cover and land uses.")
                     },
                     weight: 10
                 }],
@@ -384,7 +384,7 @@ module INLModules {
 
     export class LandCoverModuleV2 {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "LandCoverModuleV2",
                 author: "Rohit Khattar BYU",
                 version: "0.2.ts",
@@ -427,7 +427,7 @@ module INLModules {
                     },
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars")
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars","Land Use","Preference","Preference for the type of land cover present in propose site.")
                     },
                     weight: 10
                 }],
@@ -483,11 +483,11 @@ module INLModules {
             var key = "landCover" + score.site.id;
             if (isNaN(score.value) && $.jStorage.get(key)) {
                 score.popupMessage = "<i>" + $.jStorage.get(key + "msg") + "</i>";
-                score.updateValue($.jStorage.get(key));
+                score.updateValue(<number>($.jStorage.get(key)));
             }
 
 
-            var _this = this;
+            var _me = this;
 
             var toGeoJson = new OpenLayers.Format.GeoJSON();
             var geoJsonObj = toGeoJson.extract.geometry.apply(toGeoJson, [
@@ -577,13 +577,13 @@ module INLModules {
 
                                                 for (var i = 0; i < landCovers.length; i++) {
 
-                                                    if (typeof _this.starRatingHelper.starRatings[landCovers[i].cover] === "undefined") {
-                                                        _this.starRatingHelper.starRatings[landCovers[i].cover] =
-                                                        _this.starRatingHelper.options.defaultStarRating;
+                                                    if (typeof _me.starRatingHelper.starRatings[landCovers[i].cover] === "undefined") {
+                                                        _me.starRatingHelper.starRatings[landCovers[i].cover] =
+                                                        _me.starRatingHelper.options.defaultStarRating;
                                                     }
 
                                                     // overall score is the average star rating weighted by the percentage of individual land covers
-                                                    var starRating = _this.starRatingHelper.starRatings[landCovers[i].cover];
+                                                    var starRating = _me.starRatingHelper.starRatings[landCovers[i].cover];
 
                                                     totalPercent += landCovers[i].percent;
                                                     overallScore += landCovers[i].percent * starRating;

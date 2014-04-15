@@ -293,8 +293,8 @@ Ext.define('MainApp.view.FunctionWindow', {
         xtype: 'panel',
         layout: 'anchor',
         border: true,
-        width: 200,
-        height: 250
+        width: 400,
+        height: 450
       }],
       //#endregion
       //#region Buttons

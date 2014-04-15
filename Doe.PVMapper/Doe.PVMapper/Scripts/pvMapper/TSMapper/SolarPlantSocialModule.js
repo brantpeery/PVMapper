@@ -5,6 +5,7 @@
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
 /// <reference path="ScoreUtility.ts" />
+/// <reference path="OpenLayers.d.ts" />
 var INLModules;
 (function (INLModules) {
     var surveyResults = [
@@ -56,8 +57,7 @@ var INLModules;
         { mi: 500, percentOk: 99.32126697 },
         { mi: 1000, percentOk: 99.54751131 },
         { mi: 2000, percentOk: 99.77375566 },
-        { mi: 5000, percentOk: 100 }
-    ];
+        { mi: 5000, percentOk: 100 }];
 
     var configProperties = {
         //maxSearchDistanceInKM: 30,
@@ -103,15 +103,13 @@ var INLModules;
                     myToolLine.scores.forEach(updateScore);
                 }
             },
-            buttons: [
-                {
+            buttons: [{
                     xtype: 'button',
                     text: 'OK',
                     handler: function () {
                         propsWindow.hide();
                     }
-                }
-            ],
+                }],
             constrain: true
         });
     });
@@ -131,14 +129,13 @@ var INLModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [
-                    {
+                scoringTools: [{
                         activate: null,
                         deactivate: null,
                         destroy: null,
                         init: null,
                         showConfigWindow: function () {
-                            myToolLine = this;
+                            myToolLine = this; // fetch tool line, which was passed as 'this' parameter
                             propsWindow.show();
                         },
                         title: "Existing Solar Proximity",
@@ -154,11 +151,10 @@ var INLModules;
                         // having any nearby line is much better than having no nearby line, so let's reflect that.
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Proxity to Existing Solar Plants", "Preference", "Preference to the social aceptable in relative distance to existing solar plants.")
                         },
                         weight: 10
-                    }
-                ],
+                    }],
                 infoTools: null
             });
         }
@@ -178,6 +174,57 @@ var INLModules;
     var layerConstruction = null;
     var layerDevelopment = null;
 
+    function createDefaultStyle(fillColor) {
+        /*
+        Capacity: 2
+        City/County: "Kona"
+        Date Announced: 2008
+        Developer: "Sopogy"
+        Electricity Purchaser: "HELCO"
+        Land Type: "Private"
+        LocAccurac: 1
+        Online Date: "2009"
+        PV/CSP: "CSP"
+        Project Name: "Holaniku at Keahole Point"
+        State: "HI"
+        Status: "Operating"
+        Technology: "Other"
+        X: -156.055
+        Y: 19.7279
+        */
+        var style = new OpenLayers.Style({
+            fontSize: "12px",
+            label: "${getLabel}",
+            labelOutlineColor: fillColor,
+            labelOutlineWidth: 2,
+            pointRadius: "${getSize}",
+            fillOpacity: 0.25,
+            strokeOpacity: 0.875,
+            fillColor: fillColor,
+            strokeColor: fillColor
+        }, {
+            context: {
+                getLabel: function (feature) {
+                    try  {
+                        return feature.attributes["Project Name"] ? feature.attributes["Project Name"] : feature.attributes["Developer"] ? feature.attributes["Developer"] : feature.attributes["Electricity Purchaser"] ? feature.attributes["Electricity Purchaser"] : "";
+                    } catch (e) {
+                        return "";
+                    }
+                },
+                getSize: function (feature) {
+                    try  {
+                        return 2 + (4 * Math.log(feature.attributes["Capacity"]));
+                    } catch (e) {
+                        return 10;
+                    }
+                }
+            }
+        });
+
+        var styleMap = new OpenLayers.StyleMap(style);
+        return styleMap;
+    }
+
     function addAllMaps() {
         var jsonpProtocol = new OpenLayers.Protocol.Script({
             url: seiaDataUrl,
@@ -195,6 +242,10 @@ var INLModules;
                     layerOperating = new OpenLayers.Layer.Vector("PV/CSP In Operation", properties);
                     layerConstruction = new OpenLayers.Layer.Vector("PV/CSP Under Construction", properties);
                     layerDevelopment = new OpenLayers.Layer.Vector("PV/CSP In Development", properties);
+
+                    layerOperating.styleMap = createDefaultStyle("lightgreen");
+                    layerConstruction.styleMap = createDefaultStyle("lightblue");
+                    layerDevelopment.styleMap = createDefaultStyle("orange");
 
                     //new OpenLayers.Format.EsriGeoJSON()
                     //this.format.read(data)
@@ -224,6 +275,7 @@ var INLModules;
                         }
                     }
 
+                    //nearestFeatureCache[score.site.id] = response.features;
                     if (layerDevelopment.features.length) {
                         pvMapper.map.addLayer(layerDevelopment);
                     }
@@ -294,6 +346,8 @@ var INLModules;
 
         var searchForClosestFeature = function (features) {
             for (var i = 0; i < features.length; i++) {
+                // filter out far away geometries quickly using boundary overlap
+                //if (searchBounds.intersects(features[i].bounds))
                 if (searchBounds.contains(features[i].geometry.x, features[i].geometry.y)) {
                     var distance = score.site.geometry.distanceTo(features[i].geometry);
                     if (distance < minDistance) {

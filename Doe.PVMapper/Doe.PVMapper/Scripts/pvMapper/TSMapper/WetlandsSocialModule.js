@@ -54,8 +54,7 @@ var INLModules;
         { mi: 200, percentOk: 98.75 },
         { mi: 500, percentOk: 99.16666667 },
         { mi: 1000, percentOk: 99.79166667 },
-        { mi: 5000, percentOk: 100 }
-    ];
+        { mi: 5000, percentOk: 100 }];
 
     //var initialSearchDistanceInMi = 5;
     //var maxSearchDistanceInMi = 5000;
@@ -98,15 +97,13 @@ var INLModules;
                     }
                 }
             },
-            buttons: [
-                {
+            buttons: [{
                     xtype: 'button',
                     text: 'OK',
                     handler: function () {
                         propsWindow.hide();
                     }
-                }
-            ],
+                }],
             constrain: true
         });
     });
@@ -129,8 +126,7 @@ var INLModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [
-                    {
+                scoringTools: [{
                         activate: null,
                         deactivate: null,
                         destroy: null,
@@ -149,6 +145,11 @@ var INLModules;
                         //    scores.push(score);
                         //},
                         onSiteChange: function (e, score) {
+                            //if (lastDistanceCache[score.site.id] > 500) {
+                            //    updateScore(score, 5000);
+                            //} else if (lastDistanceCache[score.site.id] > 50) {
+                            //    updateScore(score, 500);
+                            //} else
                             if (lastDistanceCache[score.site.id] > 5) {
                                 updateScore(score, 50);
                             } else if (lastDistanceCache[score.site.id] > 0.5) {
@@ -160,11 +161,10 @@ var INLModules;
                         // having any nearby line is much better than having no nearby line, so let's reflect that.
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Wetland Acceptance", "Preference", "Preference of social acceptance to proximity of wetland.")
                         },
                         weight: 10
-                    }
-                ],
+                    }],
                 infoTools: null
             });
         }
@@ -240,12 +240,14 @@ var INLModules;
             //    return this.format.read(data);
             //},
             callback: function (response) {
+                //alert("Nearby features: " + response.features.length);
                 if (response.status === 200) {
                     var closestFeature = null;
                     var minDistance = searchDistanceInMeters;
 
                     var features = OpenLayers.Format.EsriGeoJSON.prototype.read(response.responseText);
 
+                    //console.log("Near-ish features: " + (features ? features.length : 0));
                     if (features) {
                         for (var i = 0; i < features.length; i++) {
                             var distance = score.site.geometry.distanceTo(features[i].geometry, { edge: false });

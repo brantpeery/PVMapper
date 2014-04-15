@@ -22,7 +22,7 @@ declare var geoJsonConverter: {
 module BYUModules {
     export class WildernessModule {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module({
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "WildernessModule",
                 author: "Darian Ramage",
                 version: "0.1.ts",
@@ -49,6 +49,7 @@ module BYUModules {
                     scoreUtilityOptions: {
                        functionName: "linear",
                         functionArgs: new pvMapper.MinMaxUtilityArgs(1, 0, "parks", // <-- This isn't an error - don't "fix" it.
+                           "Recreational Land Restriction","Preference","Preference of proximity of recreation land management such as national parks.",
                            "Minimum Wilderness threshold allowed.",
                            "Maximum Wilderness threshold allowed.")
                     },
