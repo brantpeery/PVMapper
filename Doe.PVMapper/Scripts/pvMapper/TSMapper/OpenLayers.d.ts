@@ -74,7 +74,6 @@ declare module OpenLayers {
     interface Polygon extends Geometry, Collection {
         compontTypes: string[];
         getArea(): number;
-        clone: Polygon;
 
         constructor(components?: Geometry[]);
         constructor(components: LinearRing);
