@@ -37,7 +37,7 @@ module pvMapper {
                     //if the jsxgraphcore loaded by demand then everything runs peachy.  If it is included in the index.cshtml as others, it runs very slow
                     // and eventually max call state error is thrown.  
                     $.ajaxSetup({ cache: true });
-                    $.getScript("scripts/jsxgraphcore.js", function (script, textStatus, jqXHR) { //this one has the latest (0.99.1) and supports of label rotation.
+                    $.getScript("/scripts/jsxgraphcore.js", function (script, textStatus, jqXHR) { //this one has the latest (0.99.1) and supports of label rotation.
                         var bounds = xBounds(args);
                         var numTicks = 20;
 
