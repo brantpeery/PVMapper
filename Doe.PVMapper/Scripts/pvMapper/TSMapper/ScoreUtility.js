@@ -2,19 +2,13 @@
 /// <reference path="ScoreUtilityWindows.ts" />
 var pvMapper;
 (function (pvMapper) {
-    
-
-    
-
-    
-
     var MinMaxUtilityArgs = (function () {
         function MinMaxUtilityArgs(minValue, maxValue, unit, xLabel, yLabel, memo, minTip, maxTip) {
             if (typeof minValue === "undefined") { minValue = 0; }
             if (typeof maxValue === "undefined") { maxValue = 100; }
             if (typeof unit === "undefined") { unit = ""; }
             if (typeof xLabel === "undefined") { xLabel = "X-axis"; }
-            if (typeof yLabel === "undefined") { yLabel = "Y-axis"; }
+            if (typeof yLabel === "undefined") { yLabel = "Score"; }
             if (typeof memo === "undefined") { memo = ""; }
             if (typeof minTip === "undefined") { minTip = "The minimum value."; }
             if (typeof maxTip === "undefined") { maxTip = "The maximum value."; }
@@ -141,7 +135,6 @@ var pvMapper;
     var ScoreUtility = (function () {
         function ScoreUtility(options) {
             this.fCache = {};
-            //Check for custom utility by checking to see if there is a function callback (not optimal but in the absence of interface comparison will do)
             if (options['functionCallback']) {
                 //Load up the ScoreUtility with the custom function + window callbacks
                 var copt = options;
@@ -208,7 +201,7 @@ var pvMapper;
 
             //Ok, here is a little hack to get functionArgs to recognize stringify.  I don't know why functionArgs is not a class object here.
             var fn = this.createArg(this.functionName);
-            $.extend(fn, this.functionArgs); //merge the data to fn.
+            $.extend(fn, this.functionArgs);
             str += "(" + fn.stringify() + ")";
             return str;
         };

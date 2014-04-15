@@ -59,7 +59,7 @@ module pvMapper {
             public maxValue: number = 100,
             unit: string = "",
             xLabel: string = "X-axis",
-            yLabel: string = "Y-axis",
+            yLabel: string = "Score",
             memo: string = "",
             minTip: string = "The minimum value.",
             maxTip: string = "The maximum value."
