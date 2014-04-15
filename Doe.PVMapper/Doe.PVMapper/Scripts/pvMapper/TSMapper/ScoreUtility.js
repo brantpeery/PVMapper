@@ -8,7 +8,7 @@ var pvMapper;
             if (typeof maxValue === "undefined") { maxValue = 100; }
             if (typeof unit === "undefined") { unit = ""; }
             if (typeof xLabel === "undefined") { xLabel = "X-axis"; }
-            if (typeof yLabel === "undefined") { yLabel = "Y-axis"; }
+            if (typeof yLabel === "undefined") { yLabel = "Score"; }
             if (typeof memo === "undefined") { memo = ""; }
             if (typeof minTip === "undefined") { minTip = "The minimum value."; }
             if (typeof maxTip === "undefined") { maxTip = "The maximum value."; }

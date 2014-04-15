@@ -285,5 +285,5 @@ var app = Ext.application({
 
 
 window.onbeforeunload = function () {
-  return "Leaving?  If you have made any changes that is not yet saved, your changes will be lost.";
+    return "Consider saving your project before you go; otherwise, changes you've made to the scoreboard could be lost.";
 }
