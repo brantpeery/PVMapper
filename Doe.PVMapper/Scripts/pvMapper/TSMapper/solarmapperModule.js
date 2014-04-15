@@ -60,7 +60,7 @@ var INLModules;
                         //},
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Federal Land Restriction", "Preference", "Preference to near by federal land and restrictions.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Fed-Land Favor", "Score", "Preference to near by federal land and restrictions.")
                         },
                         weight: 10
                     }],

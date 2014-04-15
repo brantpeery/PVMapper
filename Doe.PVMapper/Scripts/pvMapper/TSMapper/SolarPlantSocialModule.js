@@ -151,7 +151,7 @@ var INLModules;
                         // having any nearby line is much better than having no nearby line, so let's reflect that.
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Proxity to Existing Solar Plants", "Preference", "Preference to the social aceptable in relative distance to existing solar plants.")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Percent Favor", "Score", "Preference to the social aceptable in relative distance to existing solar plants.")
                         },
                         weight: 10
                     }],
