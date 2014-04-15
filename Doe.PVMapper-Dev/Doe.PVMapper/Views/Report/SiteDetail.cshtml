@@ -64,7 +64,7 @@
             map.zoomToExtent(bound, false);
         }
 
-        function loadGraph(divName, utilityOptions) {
+        function loadGraph(divName, utilityOptions, scoreValue) {
             //Extras.getScript("", function () {
             var utilFunction = pvMapper.UtilityFunctions[utilityOptions.functionName];
             var fn = utilFunction.fn;
@@ -76,7 +76,7 @@
             bounds[1] += buffer * 1.5; // a little more on the right hand side feels nice.
 
             var board = JXG.JSXGraph.initBoard(divName, {
-                boundingbox: [bounds[0], 108, bounds[1], -8],
+                boundingbox: [bounds[0], 108, bounds[1], -20],
                 axis: true, showCopyright: false, showNavigation: false
             });
 
@@ -89,7 +89,14 @@
                 strokeWidth: 3, strokeColor: "red",
             });
 
-            
+            var p1 = board.create('point', [scoreValue, fnOfy.Y(scoreValue)]);
+            p1.setLabelText("");
+            var vline = board.create("segment", [p1, [scoreValue, 0]], { strokeColor: "blue", dash: 2, strokeOpacity: 0.15, withLabel: false });
+            var hline = board.create("segment", [p1, [0, fnOfy.Y(scoreValue)]], { dash: 2, withLabel: false });
+            hline.isDraggable = false;
+            //hline.setLabelText("Score");
+            vline.isDraggable = false;
+            //vline.setLabelText((vline.point1.X()).toFixed(1) + " " + utilityOptions.functionArgs.metaInfo.unitSymbol);
         }
 
 
@@ -141,7 +148,7 @@
                 '            <tpl for="scores" exec="values.parent=parent">',
                 '            <div class="toolDetail">',
                 '                <h1>{scoreLine.title}</h1>',
-                '                <div id="{parent.id}-Graph{#}"  class="scoreGraph">{[this.drawGraph(parent.id+"-Graph"+xindex, values.scoreLine.scoreUtility)]}</div>',
+                '                <div id="{parent.id}-Graph{#}"  class="scoreGraph">{[this.drawGraph(parent.id+"-Graph"+xindex, values.scoreLine.scoreUtility, values.value)]}</div>',
                 '                <div class="valueField">',
                 '                    <label>Value: </label>',
                 '                    <span class="value">{popupMessage}</span>',
@@ -153,6 +160,10 @@
                 '                <div class="weightField">',
                 '                    <label>Weight: </label>',
                 '                    <span class="value">{scoreLine.weight}</span>',
+                '                </div>',
+                '                <div class="commentsField">',
+                '                    <label>Comments on Score: </label>',
+                '                    <span class="value">{scoreLine.scoreUtility.functionArgs.metaInfo.comment}</span>',
                 '                </div>',
                 '',
                 '                <div class="toolNotesField">',
@@ -177,8 +188,8 @@
                     drawMap: function (div, data) {
                         maps.push({ div: div, data: data });
                     },
-                    drawGraph: function(div, options) {
-                        graphs.push({div:div, options:options});
+                    drawGraph: function (div, options, scoreValue) {
+                        graphs.push({ div: div, options: options, scoreValue: scoreValue });
                     }
                 }
             );
@@ -192,7 +203,7 @@
             });
 
             graphs.map(function (value, idx) {
-                loadGraph(value.div, value.options);
+                loadGraph(value.div, value.options, value.scoreValue);
             });
         };
     </script>
