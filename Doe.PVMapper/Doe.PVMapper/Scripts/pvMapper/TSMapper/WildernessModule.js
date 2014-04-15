@@ -42,7 +42,7 @@ var BYUModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(1, 0, "parks", "Recreational Land Restriction", "Preference", "Preference of proximity of recreation land management such as national parks.", "Minimum Wilderness threshold allowed.", "Maximum Wilderness threshold allowed.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(1, 0, "parks", "Parks Restriction", "Score", "Preference of proximity of recreation land management such as national parks.", "Minimum Wilderness threshold allowed.", "Maximum Wilderness threshold allowed.")
                         },
                         weight: 10
                     }],

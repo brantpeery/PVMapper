@@ -69,7 +69,7 @@ var INLModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Away from Protected Area", "Preference", "Preference of proposed site away from protected area.")
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Stars Rating", "Score", "Preference of proposed site away from protected area.")
                         },
                         weight: 10
                     }],

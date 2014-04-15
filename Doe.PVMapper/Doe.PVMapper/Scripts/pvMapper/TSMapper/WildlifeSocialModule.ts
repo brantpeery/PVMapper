@@ -162,7 +162,7 @@ module INLModules {
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
                         functionArgs:
-                        new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor","Critical Habitat Restriction","Preference","Preference of proximity to wildlife habitat restrictions.")
+                        new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor","Percent Habitat Favor","Score","Preference of proximity to wildlife habitat restrictions.")
                     },
                     weight: 10
                 }],

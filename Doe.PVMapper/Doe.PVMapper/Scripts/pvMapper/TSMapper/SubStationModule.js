@@ -171,8 +171,8 @@ var BYUModules;
                         // having any nearby line is much better than having no nearby line, so let's reflect that.
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInMi - 1), 0.3, configProperties.maxSearchDistanceInMi, 0, "mi",
-                                "Distance to nearest transmission line", "Score", "Prefer sites near a transmission line.")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInKM - 1), 0.3, configProperties.maxSearchDistanceInKM, 0, "km",
+                              "Existing Power Infrastructure", "Preference", "Preference of a proposed site in proxity to existing power transmissions.")
                         },
                         weight: 10
                     }
