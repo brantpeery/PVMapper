@@ -30,7 +30,7 @@ var pvMapper;
                 //Update all the summary (average/total) lines
                 _this.updateTotals();
 
-                _this.changedEvent.fire(_this, event);
+                _this.changedEvent.fire(_this, event); //Let the UI handle the changes
             };
         }
         ScoreBoard.prototype.update = function () {
@@ -72,7 +72,8 @@ var pvMapper;
         ScoreBoard.prototype.getTableData = function (flat) {
             if (typeof flat === "undefined") { flat = false; }
             //Mash the two rendering line types together for display on the GUI
-            var lines = ([].concat(this.scoreLines)).concat(this.totalLines);
+            var emptyArray = [];
+            var lines = (emptyArray.concat(this.scoreLines)).concat(this.totalLines);
             return lines;
         };
 
@@ -110,6 +111,7 @@ var pvMapper;
 
     //mainScoreboard.changedEvent.addHandler(() => {
     pvMapper.mainScoreboard.changedEvent.addHandler(function () {
+        // queue the changed event to be handled shortly; ignore following change events until it is.
         if (timeoutHandle == null) {
             timeoutHandle = window.setTimeout(function () {
                 if (console) {
@@ -147,12 +149,15 @@ var pvMapper;
 
     //this function will wait until IndexedDB is loaded and then load the configuration as well as saved CustomKML modules.
     //However, if the browser is not supporting IndexedDB, it will just kick it back out.
+    //TODO: Should change this to use the Promise pattern. --LV
     pvMapper.waitToLoad = function () {
         if (pvMapper.ClientDB.db !== null) {
+            //load custom modules.
             if ((pvMapper.loadLocalModules !== undefined) && (pvMapper.loadLocalModules !== null) && (typeof (pvMapper.loadLocalModules) === "function")) {
                 pvMapper.loadLocalModules();
             }
 
+            //load configuration
             if ((pvMapper.ClientDB.db != null) && (!pvMapper.mainScoreboard.isScoreLoaded)) {
                 pvMapper.mainScoreboard.scoreLines.forEach(function (sc) {
                     sc.loadConfiguration();
@@ -166,6 +171,6 @@ var pvMapper;
 
     //Create the scoreboard onscreen
     pvMapper.onReady(function () {
-        setTimeout(pvMapper.waitToLoad, 5000);
+        setTimeout(pvMapper.waitToLoad, 5000); //check every 5 seconds.
     });
 })(pvMapper || (pvMapper = {}));

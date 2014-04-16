@@ -7,10 +7,8 @@ USAGE:
 Using numbered parameters.
 var s = '<{0} {1}>{2}</{0}>'
 s = s.format('div', 'style="background:blue"', "What a wonderful WORLD!");
-
 the above would produce
 <div style="background:blue">What a wonderful WORLD!</div>
-
 Replaces the tokens named by key with the value specified by value for each key value pair
 ex "this is {name}'s {item}.".format({name:'John',item:'book'})
 That would produce
@@ -37,7 +35,7 @@ String.prototype.format = function () {
         if (typeof (values[key]) !== 'undefined') {
             replace = values[key];
         } else if (item === '{\\') {
-            replace = "{";
+            replace = "{"; //Replace {\ with just {
         } else {
             replace = item;
         }
@@ -49,9 +47,10 @@ String.prototype.isNullOrEmpty = function () {
     var value = this;
     if ((typeof (value) === 'undefined') || (value.length == 0))
         return true;
-else
+    else
         return false;
 };
+
 
 Array.prototype.find = function (fn) {
     if (fn) {
@@ -60,5 +59,5 @@ Array.prototype.find = function (fn) {
                 return this[i];
         }
     }
-    return undefined;
+    return null;
 };

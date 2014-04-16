@@ -117,13 +117,13 @@ pvMapper.onReady(function () {
                             case KMLMode.KMLINFO:
                                 continueHandlingInfoKML(afile);
                                 break;
+                        }
                     }
-        }
-                        });
-            } else {
+                });
+        } else {
             switch (KMLMode.CurrentMode) {
                 case KMLMode.KMLSITE:
-                        continueHandlingSiteKML(afile);
+                    continueHandlingSiteKML(afile);
                     break;
                 case KMLMode.KMLDISTANCE:
                     continueHandlingDistanceKML(afile);
@@ -131,7 +131,7 @@ pvMapper.onReady(function () {
                 case KMLMode.KMLINFO:
                     continueHandlingInfoKML(afile);
                     break;
-                    }
+            }
         }
         fileDialogBox.value = "";
     }
@@ -386,9 +386,9 @@ pvMapper.onReady(function () {
             Ext.MessageBox.alert("Unrecognize File Type", "The file [" + afile.name + "] is not a PVMapper project.");
         }
         fDialogBox.value = "";  //reset so we can open the same file again.
-                }
+    }
 
-    function AddScoreboardSite(aFeature, fn) {
+    function AddScoreboardSite(aFeature) {
         WKT = aFeature.geometry.toString();
 
         //adding the site to the server database.
@@ -403,8 +403,6 @@ pvMapper.onReady(function () {
                 pvMapper.siteManager.addSite(newSite);
 
                 if (console) console.log('Added ' + newSite.name + ' from Scoreboard Project to the site manager');
-                if ((fn) && (typeof fn === "function"))
-                    fn();
             })
             .fail(function () {
                 if (console) console.log('failed to post Scoreboard site');
@@ -412,91 +410,88 @@ pvMapper.onReady(function () {
             });
     }
 
-    var isDone;
-    var whenDone;
-    function waiting() {
-        if ((isDone) && (typeof isDone === "function")) {
-            if (!isDone()) {
-                setTimeout(waiting, 1000); //1 second.
-            }
-            else {
-                if ((whenDone) && (typeof whenDone === "function"))
-                    whenDone();
-            }
-        }
-    }
-
     function importScoreboardFromJSON(scoreboardJSON) {
-        var obj = JSON.parse(scoreboardJSON);
+        var jsonObj = JSON.parse(scoreboardJSON);
 
-        if ((obj.scoreLines !== undefined) && (obj.scoreLines.length > 0)) {
+        if ((jsonObj.scoreLines !== undefined) && (jsonObj.scoreLines.length > 0)) {
             //first remove all sites from sitelayer and from the database.
 
             var site, feature;
             var features = [];
 
-            //look up for all currently in memory features
-            while (site = pvMapper.siteManager.sites.pop()) {
-                pvMapper.deleteSite(site.id);
-                pvMapper.siteManager.removeSite(site);
-                feature = pvMapper.siteLayer.features.find(
-                    function (a) {
-                        if (a.attributes.name === site.name) return true;
-                        else return false;
-                    });
-                if (feature !== null)
-                    features.push(feature);
-            }
+            //change to use Promise pattern to better handle on syncing the delete and add project sites.
+            //NOTE: Chrome 32+ supports Promise directly, all other browsers use an included promise.js library.
+            var promise = new Promise(function removeSites(resolve, reject) {
+                try {
+                    //collecting all currently in memory features
+                    while (site = pvMapper.siteManager.sites.pop()) {
+                        pvMapper.deleteSite(site.id);
+                        pvMapper.siteManager.removeSite(site);
+                        feature = pvMapper.siteLayer.features.find(
+                            function (a) {
+                                if (a.attributes.name === site.name) return true;
+                                else return false;
+                            });
+                        //This was what cause of the issue when loading project and report messed up.  The "find" function return "undefined" when no match found.  
+                        //It test to be != null which always true and add all existing site information backin. 
+                        if (feature) 
+                            features.push(feature);
+                    }
 
-            //remove all site features found
-            pvMapper.siteLayer.removeFeatures(features, { silent: true });
+                    //remove all site features found
+                    pvMapper.siteLayer.removeFeatures(features, { silent: true });
+                    pvMapper.siteManager.sites = [];  // reset, it seems re-using the existing sites array resulting in some error where GC is not collect fast enough.
 
-            //the scoreboard JSON object is in the following format, we need to search throught to find all features (polygons)
-            //root
-            //   |=scoreLines
-            //           |= Scores
-            //                  |= Scores
-            //                        |= Site
-            //                             |= geometry (features)
-            var allSites = [];
-            obj.scoreLines.forEach(function (scline, scid) {
-                scline.scores.forEach(function (score, sid) {
-                    var asite = allSites.find(
-                        function (a) {
-                            if (a.name === score.site.name) return true;
-                            else return false;
-                        });
-                    if (asite == null)
-                        allSites.push(score.site);
-                });
-            });
+                }
+                catch (ex) {
+                    reject(Error("Attempt delete sites failed, cause: " + ex.message));
+                }
 
-            //now add the project sites into siteLayer.
-            var count = 0;
-            allSites.forEach(function (site, idx) {
-                feature = new OpenLayers.Feature.Vector(
-                     OpenLayers.Geometry.fromWKT(site.geometry),
-                     {
-                         name: site.name,
-                         description: site.description
-                     },
-                     pvMapper.siteLayer.style
-                );
-                AddScoreboardSite(feature, function () {
-                    count++;
-                });
-            });
+                resolve();
+            }).then(
+              function onDoneRemoveSites() {
+                  //the scoreboard JSON object is in the following format, we need to search throught to find all features (polygons)
+                  //root
+                  //   |=scoreLines
+                  //           |= Scores
+                  //                  |= Scores
+                  //                        |= Site
+                  //                             |= geometry (features)
+                  var allSites = [];
+                  jsonObj.scoreLines.forEach(function (scline, scid) {
+                      scline.scores.forEach(function (score, sid) {
+                          var asite = allSites.find(
+                              function (a) {
+                                  if (a.name === score.site.name) return true;
+                                  else return false;
+                              });
+                          if (!asite)
+                              allSites.push(score.site);
+                      });
+                  });
 
-            //This is  a hack synchronize to wait until all sites have been added before updating data to the scoreboard.
-            //isDone is a callback for the wait() function to check for when all sites are added,  it then 
-            //call a callback whenDone() function to continue.
-            isDone = function () {
-                return count == allSites.length;
-            }
-            whenDone = function () {
+                  //now add the project sites into siteLayer.
+                  //var count = 0;
+                  allSites.forEach(function (site, idx) {
+                      feature = new OpenLayers.Feature.Vector(
+                           OpenLayers.Geometry.fromWKT(site.geometry),
+                           {
+                               name: site.name,
+                               description: site.description
+                           },
+                           pvMapper.siteLayer.style
+                      );
+                      AddScoreboardSite(feature);
+                  });
+              },
+              function onerror(err) {
+                  Ext.MessageBox.alert(err.message);
+              }
+            ).then(
+            function onDoneAddSites() {
                 //all scorelines (modules) should've been created.
                 //update score in each scoreLine, if matched.
-                obj.scoreLines.forEach(function (line, idx) {
+                jsonObj.scoreLines.forEach(function (line, idx) {
                     var scLine = pvMapper.mainScoreboard.scoreLines.find(
                         function (a) {
                             if ((a.category === line.category) && (a.title === line.title)) return true;
@@ -510,11 +505,14 @@ pvMapper.onReady(function () {
                     }
                 });
 
+            },
+            function onErrorDelete(err) {
+                Ext.MessageBox.alert(err.message);
+            }).then(function finished() {
                 var bound = pvMapper.siteLayer.getDataExtent();
                 pvMapper.map.zoomToExtent(bound, false);
-            }
-            waiting();
-
+            });
+            
         }
         else {
             Ext.MessageBox.alert("Unrecognize data structure", "The file [" + afile.name + "] doesn't seems to be a PVMapper project file.");
@@ -552,7 +550,7 @@ pvMapper.onReady(function () {
                         return;
                     }
 
-                    var config = {configLines: []};
+                    var config = { configLines: [] };
                     var aUtility, aStarRatables, aWeight, aTitle, aCat = null;
 
                     pvMapper.mainScoreboard.scoreLines.forEach(
@@ -784,7 +782,7 @@ pvMapper.onReady(function () {
     pvMapper.scoreboardToolsToolbarMenu.add(8, customTool);
     //#endregion Distance score from KML
     //----------------------------------------------------------------------------------------
-   //#region Custom Info From KML
+    //#region Custom Info From KML
     function continueHandlingInfoKML(afile) {
         var module = pvMapper.customModules.find(function (a) {
             if (a.name === afile.name) return true;

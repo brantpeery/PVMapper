@@ -347,7 +347,8 @@ function showHeaderCTMenu(xy, site) {
                                if (a.attributes.name === site.name) return true;
                                else return false;
                            });
-                        pvMapper.siteLayer.removeFeatures([feature], { silent: true });
+                        if (feature)
+                            pvMapper.siteLayer.removeFeatures([feature], { silent: true });
                     }
                 });
             }
