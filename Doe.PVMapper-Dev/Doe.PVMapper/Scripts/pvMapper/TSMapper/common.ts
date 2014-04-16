@@ -114,5 +114,5 @@ Array.prototype.find = function (fn: ICallback): boolean {
                 return this[i];
         }
     }
-    return undefined;
+    return null;
 }

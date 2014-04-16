@@ -86,7 +86,8 @@ module pvMapper {
         */
         public getTableData(flat: Boolean = false) {
             //Mash the two rendering line types together for display on the GUI
-            var lines:IToolLine[]= ([].concat(this.scoreLines)).concat(this.totalLines)
+            var emptyArray = []; // Typescript 0.98 doesn't like this:  [].concat()...  
+            var lines: IToolLine[] = (emptyArray.concat(this.scoreLines)).concat(this.totalLines)
             return lines;
         }
 
@@ -161,6 +162,7 @@ module pvMapper {
 
     //this function will wait until IndexedDB is loaded and then load the configuration as well as saved CustomKML modules.
     //However, if the browser is not supporting IndexedDB, it will just kick it back out.
+    //TODO: Should change this to use the Promise pattern. --LV
     pvMapper.waitToLoad = function() {
         if (ClientDB.db !== null) {                                                                  
             //load custom modules.

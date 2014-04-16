@@ -548,6 +548,7 @@
     </Content>
     <Content Include="Scripts\pvMapper\Utility.ts" />
     <Content Include="Scripts\SaveLocalFile.js" />
+    <Content Include="Scripts\UI\extras\promise.js" />
     <Content Include="Scripts\UI\model\Scoreboard.js" />
     <Content Include="Scripts\UI\model\Tool.js" />
     <Content Include="Scripts\UI\panel\MinMaxTargetPanel.js" />
