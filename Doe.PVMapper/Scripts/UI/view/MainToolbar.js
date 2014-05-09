@@ -434,7 +434,7 @@ pvMapper.onReady(function () {
                             });
                         //This was what cause of the issue when loading project and report messed up.  The "find" function return "undefined" when no match found.  
                         //It test to be != null which always true and add all existing site information backin. 
-                        if (feature) 
+                        if (feature)
                             features.push(feature);
                     }
 
@@ -512,7 +512,7 @@ pvMapper.onReady(function () {
                 var bound = pvMapper.siteLayer.getDataExtent();
                 pvMapper.map.zoomToExtent(bound, false);
             });
-            
+
         }
         else {
             Ext.MessageBox.alert("Unrecognize data structure", "The file [" + afile.name + "] doesn't seems to be a PVMapper project file.");
@@ -883,6 +883,38 @@ pvMapper.onReady(function () {
     }
     //#endregion Save/load modules
     //----------------------------------------------------------------------------------------
+
+
+    var configTool = Ext.create('Ext.Action', {
+        text: 'Tool Module Selector',
+        iconCls: "x-tag-check-icon",
+        tooltip: "Turn tool modules on and off.",
+        //enabledToggle: false,
+        handler: function () {
+            var toolWin = Ext.create("MainApp.view.ToolConfigWindow", {
+                buttons: [{
+                    xtype: 'button',
+                    text: 'OK',
+                    handler: function () {
+                        toolWin.closeMode = this.text;
+                        toolWin.close();
+                    }
+                }, {
+                    xtype: 'button',
+                    text: "Cancel",
+                    handler: function () {
+                        toolWin.closeMode = this.text;
+                        toolWin.close();
+                    }
+                }]
+            });
+            toolWin.show();
+        }
+    });
+    pvMapper.scoreboardToolsToolbarMenu.add(10, '-');
+    pvMapper.scoreboardToolsToolbarMenu.add(11, configTool);
+
+
 
 });
 

@@ -60,21 +60,25 @@ var pvMapper;
 
                 //Aggragate all the scoreline's values into an array
                 lines.forEach(function (line) {
+                    //TODO: This should be the weighted score
                     if (line.scores && line.scores[idx] && typeof line.scores[idx].utility === "number" && !isNaN(line.scores[idx].utility)) {
-                        site = line.scores[idx].site;
+                        site = line.scores[idx].site; // during this loop, this will (should?) always be the same site
                         values.push({ utility: line.scores[idx].utility, tool: line });
                     }
                 });
 
+                //Create a new score if one doesn't exist for this index
                 if (!this.scores[idx]) {
                     this.scores.push({ utility: 0 });
                 }
 
                 //Update the score on the total line using the tools CalculateScore method
-                this.scores[idx] = this.CalculateScore(values, site);
+                if (site)
+                    this.scores[idx] = this.CalculateScore(values, site);
             }
         };
         return TotalLine;
     })();
     pvMapper.TotalLine = TotalLine;
 })(pvMapper || (pvMapper = {}));
+//# sourceMappingURL=TotalLine.js.map

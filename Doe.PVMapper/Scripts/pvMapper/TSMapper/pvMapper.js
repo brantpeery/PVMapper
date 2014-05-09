@@ -4,7 +4,7 @@
 /// <reference path="Event.ts" />
 var pvMapper;
 (function (pvMapper) {
-    pvMapper.readyEvent = new pvMapper.Event();
+    pvMapper.readyEvent = new pvMapper.Event;
 
     pvMapper.mapToolbar;
 
@@ -26,6 +26,7 @@ var pvMapper;
     pvMapper.isLocalModulesLoaded = false;
     pvMapper.customModules = new Array();
     pvMapper.waitToLoad = null;
+    pvMapper.clientScripts;
     function getColorForScore(score) {
         var min = Math.min;
         var max = Math.max;
@@ -83,4 +84,13 @@ var pvMapper;
             tool.activate();
         });
     });
+
+    function getIncludeModules() {
+        return null;
+    }
+    pvMapper.getIncludeModules = getIncludeModules;
 })(pvMapper || (pvMapper = {}));
+
+//allow jquery to cache all ajax get from server.
+$.ajaxSetup({ cache: true });
+//# sourceMappingURL=pvMapper.js.map

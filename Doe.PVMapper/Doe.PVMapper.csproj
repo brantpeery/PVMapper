@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -32,6 +33,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -233,11 +235,15 @@
     </Content>
     <Content Include="Content\Reports\SummaryReport.css" />
     <Content Include="Images\barcharts.png" />
+    <Content Include="Images\check.png" />
     <Content Include="Images\cleaning.png" />
     <Content Include="Images\delete.png" />
+    <Content Include="Images\disk.png" />
     <Content Include="Images\edit.png" />
+    <Content Include="Images\eispclogo.png" />
     <Content Include="Images\fileexport.png" />
     <Content Include="Images\notes.png" />
+    <Content Include="Images\nrel.png" />
     <Content Include="Images\open.png" />
     <Content Include="Images\openCfg.png" />
     <Content Include="Images\openProject.png" />
@@ -245,6 +251,8 @@
     <Content Include="Images\save.png" />
     <Content Include="Images\saveConfig.png" />
     <Content Include="Images\saveProject.png" />
+    <Content Include="Images\search.png" />
+    <Content Include="Images\tag.png" />
     <Content Include="Images\zoom_in.png" />
     <Content Include="Images\zoom_out.png" />
     <Content Include="lpresources\assets\ajax-loader.gif" />
@@ -368,6 +376,7 @@
     <Content Include="lpresources\verify\3.png" />
     <Content Include="lpresources\verify\ajax_check.php" />
     <Content Include="Notes\reportMockup.svg" />
+    <Content Include="Scripts\pvClient.js" />
     <Content Include="Scripts\Esri-GeoJsonConverter.js" />
     <Content Include="Scripts\EsriGeoJSON.js" />
     <Content Include="Scripts\ExtJS.d.ts" />
@@ -378,6 +387,7 @@
     <Content Include="Scripts\JSZip\jszip-load.js" />
     <Content Include="Scripts\JSZip\jszip.js" />
     <Content Include="Scripts\lib.d.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ModuleManager.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\OpenLayers.d.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreLine.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\common.ts" />
@@ -559,6 +569,7 @@
     <Content Include="Scripts\UI\view\RatingTool.js" />
     <Content Include="Scripts\UI\view\RatingView.js" />
     <Content Include="Scripts\UI\view\ScoreboardWindow.js" />
+    <Content Include="Scripts\UI\view\toolConfigWindow.js" />
     <Content Include="Scripts\UI\view\UtilityFunctionEdit.js" />
     <Content Include="Scripts\ViewScripts\RelatedLinks.js" />
     <Content Include="Scripts\ViewScripts\SiteId.js" />
@@ -1419,6 +1430,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

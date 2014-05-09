@@ -1,4 +1,9 @@
-﻿var pvMapper;
+﻿/// <reference path="jxg.d.ts" />
+/// <reference path="pvMapper.ts" />
+/// <reference path="../../ExtJS.d.ts" />
+/// <reference path="UtilityFunctions.ts" />
+
+var pvMapper;
 (function (pvMapper) {
     //Created for static access from more than one function def
     var ScoreUtilityWindows = (function () {
@@ -19,7 +24,7 @@
                 var xAxis;
                 var yAxis;
 
-                _this._xArgs = Ext.Object.merge({}, args);
+                _this._xArgs = Ext.Object.merge({}, args); //!Create a clone of the args for use in the graph
 
                 _this.functionName = scoreObj.functionName;
                 var gridPanel;
@@ -43,7 +48,7 @@
                         bounds[1] += buffer * 1.5; // a little more on the right hand side feels nice.
                         bounds[0] -= buffer * 2;
 
-                        JXG.Options.text.display = 'internal';
+                        JXG.Options.text.display = 'internal'; //need this to make the axis label rotation work.
                         board = JXG.JSXGraph.initBoard('FunctionBox-body', {
                             boundingbox: [bounds[0], 108, bounds[1], bounds[0]],
                             keepaspectratio: false,
@@ -177,8 +182,7 @@
                             var y = fn(x, _this._xArgs);
                             return Math.max(0, Math.min(1, y)) * 100;
                         }, {
-                            strokeWidth: 3,
-                            strokeColor: "red"
+                            strokeWidth: 3, strokeColor: "red"
                         });
 
                         //draggable lines querying reflecting values.  By using the fn function to query the intersecting Y value, this should work for any utility function.
@@ -210,7 +214,7 @@
                             var y = fn(vline.point1.X(), _this._xArgs);
                             y = Math.max(0, Math.min(1, y)) * 100;
 
-                            vline.labelColor("red");
+                            vline.labelColor("red"); //<<--- this doesn't seem to work.
                             vline.setLabelText((vline.point1.X()).toFixed(1) + " " + _this._xArgs.metaInfo.unitSymbol);
 
                             vline.point1.moveTo([vline.point1.X(), 0]);
@@ -248,6 +252,7 @@
                             board.unsuspendUpdate();
                         };
 
+                        //NOTE: this code section aught to move to a separate file closer to the UtilityFunction.
                         if (_this._xArgs.metaInfo.name == "ThreePointUtilityArgs") {
                             if (_this._xArgs.points != undefined && _this._xArgs.points.length > 0) {
                                 //create the points
@@ -359,6 +364,8 @@
                                 var sobj = Ext.apply({}, scoreObj);
                                 switch (combo.value) {
                                     case 'ThreePointUtilityArgs':
+                                        //alert(combo.value);
+                                        //TODO: create a 3 points xArgs and assign to _this._xArgs then refresh the screen
                                         if ((sobj.functionName != undefined) && (_this._xArgs != undefined))
                                             sobj.fCache[sobj.functionName] = _this._xArgs;
                                         sobj.functionName = 'linear3pt';
@@ -378,6 +385,8 @@
 
                                         break;
                                     case 'MinMaxUtilityArgs':
+                                        //alert(combo.value);
+                                        //TODO: see above
                                         if ((sobj.functionName != undefined) && (_this._xArgs != undefined))
                                             sobj.fCache[sobj.functionName] = _this._xArgs;
                                         sobj.functionName = 'linear';
@@ -525,8 +534,7 @@
                             forId: 'function_comment_id',
                             text: 'Comment: ',
                             margin: '0 0 0 10'
-                        },
-                        {
+                        }, {
                             xtype: 'textareafield',
                             id: 'function_comment_id',
                             height: 80,
@@ -538,8 +546,7 @@
                                     _this._xArgs.metaInfo.comment = this.getValue();
                                 }
                             }
-                        }
-                    ]
+                        }]
                 });
 
                 panel.id = 'FunctionUtilMainPanel';
@@ -584,3 +591,4 @@
     })();
     pvMapper.ScoreUtilityWindows = ScoreUtilityWindows;
 })(pvMapper || (pvMapper = {}));
+//# sourceMappingURL=ScoreUtilityWindows.js.map

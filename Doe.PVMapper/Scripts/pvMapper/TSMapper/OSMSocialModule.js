@@ -162,8 +162,8 @@ var INLModules;
     // cache for features we've found from which we can find a nearest feature.
     var nearestFeatureCache = {};
 
-    var OpenStreetMapSocialModule = (function () {
-        function OpenStreetMapSocialModule() {
+    var OpenStreetMapSocialHistoricModule = (function () {
+        function OpenStreetMapSocialHistoricModule() {
             var myModule = new pvMapper.Module({
                 id: "OpenStreetMapSocialModule",
                 author: "Scott Brown, INL",
@@ -213,10 +213,10 @@ var INLModules;
                         //    myToolLine = this; // fetch tool line, which was passed as 'this' parameter
                         //    propsWindow.show();
                         //},
-                        title: "Historic Proximity",
-                        category: "Social Acceptance",
-                        description: "Percentage of survey respondents who reported this distance from cultural or historic landmarks as acceptable",
-                        longDescription: '<p>This tool calculates the distance from a site to the nearest historic area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 477 respondents from six counties in Southern California answered Question 16 which asked "How much buffer distance is acceptable between a large solar facility and an area of cultural or historical importance?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "historic" key are considered. The accuracy of OSM data is limited by its contributors, and classification of historic or cultural sites may be highly subjective. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Historic).</p>',
+                        title:OpenStreetMapSocialHistoricModule.title,// "Historic Proximity",
+                        category: OpenStreetMapSocialHistoricModule.category, //"Social Acceptance",
+                        description: OpenStreetMapSocialHistoricModule.description, //"Percentage of survey respondents who reported this distance from cultural or historic landmarks as acceptable",
+                        longDescription: OpenStreetMapSocialHistoricModule.longDescription, //'<p>This tool calculates the distance from a site to the nearest historic area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 477 respondents from six counties in Southern California answered Question 16 which asked "How much buffer distance is acceptable between a large solar facility and an area of cultural or historical importance?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "historic" key are considered. The accuracy of OSM data is limited by its contributors, and classification of historic or cultural sites may be highly subjective. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Historic).</p>',
                         //onScoreAdded: function (e, score: pvMapper.Score) {
                         //    scores.push(score);
                         //},
@@ -228,7 +228,37 @@ var INLModules;
                             functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Percent Favor", "Score", "Preference for percentage of respondents regard to historical landmarks.")
                         },
                         weight: 10
-                    },
+                    }],
+                infoTools: null
+            });
+            this.getModuleObj = function () { return myModule; }
+        }
+        //Add these so ModuleManager can access the tool information for display in the Tool/Module Selector and make it easier to register onto the moduleManager.
+        OpenStreetMapSocialHistoricModule.title = "Historic Proximity";
+        OpenStreetMapSocialHistoricModule.category = "Social Acceptance";
+        OpenStreetMapSocialHistoricModule.description = "Percentage of survey respondents who reported this distance from cultural or historic landmarks as acceptable";
+        OpenStreetMapSocialHistoricModule.longDescription = '<p>This tool calculates the distance from a site to the nearest historic area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 477 respondents from six counties in Southern California answered Question 16 which asked "How much buffer distance is acceptable between a large solar facility and an area of cultural or historical importance?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "historic" key are considered. The accuracy of OSM data is limited by its contributors, and classification of historic or cultural sites may be highly subjective. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Historic).</p>';
+
+        return OpenStreetMapSocialHistoricModule;
+    })();
+
+
+    var OpenStreetMapSocialRecreationalModule = (function () {
+        function OpenStreetMapSocialRecreationalModule() {
+            var myModule = new pvMapper.Module({
+                id: "OpenStreetMapSocialModule",
+                author: "Scott Brown, INL",
+                version: "0.1.ts",
+                iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/home_icon.jpg",
+                activate: function () {
+                    addAllMaps();
+                },
+                deactivate: function () {
+                    removeAllMaps();
+                },
+                destroy: null,
+                init: null,
+                scoringTools: [
                     {
                         activate: null,
                         deactivate: null,
@@ -238,10 +268,10 @@ var INLModules;
                         //    myToolLine = this; // fetch tool line, which was passed as 'this' parameter
                         //    propsWindow.show();
                         //},
-                        title: "Recreational Proximity",
-                        category: "Social Acceptance",
-                        description: "Percentage of survey respondents who reported this distance from recreational areas as acceptable",
-                        longDescription: '<p>This tool calculates the distance from a site to the nearest recreational area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 488 respondents from six counties in Southern California answered Question 19 which asked "How much buffer distance is acceptable between a large solar facility and recreation areas such as hunting, fishing, or hiking locations?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "leisure" key are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:leisure).</p>',
+                        title: OpenStreetMapSocialRecreationalModule.title, //"Recreational Proximity",
+                        category: OpenStreetMapSocialRecreationalModule.category, //"Social Acceptance",
+                        description: OpenStreetMapSocialRecreationalModule.description, //"Percentage of survey respondents who reported this distance from recreational areas as acceptable",
+                        longDescription: OpenStreetMapSocialRecreationalModule.longDescription,//'<p>This tool calculates the distance from a site to the nearest recreational area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 488 respondents from six counties in Southern California answered Question 19 which asked "How much buffer distance is acceptable between a large solar facility and recreation areas such as hunting, fishing, or hiking locations?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "leisure" key are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:leisure).</p>',
                         //onScoreAdded: function (e, score: pvMapper.Score) {
                         //    scores.push(score);
                         //},
@@ -250,18 +280,23 @@ var INLModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor","Percent Favor","Score","We don't want our favorite picnic spot blocks by panels.")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Percent Favor", "Score", "We don't want our favorite picnic spot blocks by panels.")
                         },
                         weight: 10
                     }
                 ],
                 infoTools: null
             });
+            this.getModuleObj = function () { return myModule; }
         }
-        return OpenStreetMapSocialModule;
+        OpenStreetMapSocialRecreationalModule.title = "Recreational Proximity";
+        OpenStreetMapSocialRecreationalModule.category = "Social Acceptance";
+        OpenStreetMapSocialRecreationalModule.description = "Percentage of survey respondents who reported this distance from recreational areas as acceptable";
+        OpenStreetMapSocialRecreationalModule.longDescription = '<p>This tool calculates the distance from a site to the nearest recreational area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 488 respondents from six counties in Southern California answered Question 19 which asked "How much buffer distance is acceptable between a large solar facility and recreation areas such as hunting, fishing, or hiking locations?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "leisure" key are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:leisure).</p>';
+        return OpenStreetMapSocialRecreationalModule;
     })();
 
-    var modinstance = new OpenStreetMapSocialModule();
+
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
@@ -444,6 +479,19 @@ var INLModules;
 
             score.updateValue(Number.NaN);
         }
+        this.getModuleObj = function () { return myModule; }
     }
 
+    INLModules.OpenStreetMapSocialHistoricModule = OpenStreetMapSocialHistoricModule;
+    INLModules.OpenStreetMapSocialRecreationalModule = OpenStreetMapSocialRecreationalModule;
+    //var modinstance = new OpenStreetMapSocialHistoricModule();
+    //var modinstance = new OpenStreetMapSocialRecreationalModule();
+
 })(INLModules || (INLModules = {}));
+
+if (typeof (selfUrl) == 'undefined')
+    var selfUrl = $('script[src$="OSMSocialModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(INLModules.OpenStreetMapSocialHistoricModule.category, INLModules.OpenStreetMapSocialHistoricModule.title, INLModules.OpenStreetMapSocialHistoricModule, isActive, selfUrl);
+pvMapper.moduleManager.registerModule(INLModules.OpenStreetMapSocialRecreationalModule.category, INLModules.OpenStreetMapSocialRecreationalModule.title, INLModules.OpenStreetMapSocialRecreationalModule, isActive, selfUrl);

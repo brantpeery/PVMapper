@@ -5,10 +5,11 @@
 /// <reference path="Tools.ts" />
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
+/// <reference path="modulemanager.ts" />
 /// <reference path="StarRatingHelper.ts" />
 
 module INLModules {
-    class SolarmapperModule {
+    export class SolarmapperModule {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module( <pvMapper.IModuleOptions>{
                 id: "SolarmapperModule",
@@ -30,10 +31,10 @@ module INLModules {
                     destroy: null,
                     init: null,
 
-                    title: "Land Management",
-                    category: "Land Use",
-                    description: "Checks solarmapper.anl.gov for intersecting land management polygons",
-                    longDescription: '<p>This star rating tool identifies the management agency of any federal land overlapping the proposed site. These agencies are defined in the Surface Management Agency (SMA) dataset. A management agency refers to a Federal agency with administrative jurisdiction over the surface of Federal lands. The SMA feature class currently covers all or the BLM Western State Offices including Alaska. This layer is a dynamic assembly of spatial data layers and Federal land status records maintained at various federal and local government offices. The official Federal land status records of the appropriate surface land managing agency should be consulted concerning ownership details. See the US Department of the Interior, Bureau of Land Management, National Operations Center for more information (www.geocommunicator.gov).</p><p>This tool depends on a user-defined star rating for each SMA found at a site, on a scale of 0-5 stars. The default rating for any SMA is two stars. The default rating for no intersecting SMA is four stars. These ratings should be adjusted by the user.</p><p>When a site overlaps a single SMA, its score is based on the star rating of that SMA (so overlapping a five-star SMA might give a score of 100, while overlapping a one-star SMA may give a score of 20). If a site includes more than one SMA, the lowest star rating is used to calculate its score (so a site with both a one-star and a five-star SMA might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>',
+                    title: SolarmapperModule.title, //"Land Management",
+                    category: SolarmapperModule.category, //"Land Use",
+                    description: SolarmapperModule. description, //"Checks solarmapper.anl.gov for intersecting land management polygons",
+                    longDescription: SolarmapperModule.longDescription, //'<p>This star rating tool identifies the management agency of any federal land overlapping the proposed site. These agencies are defined in the Surface Management Agency (SMA) dataset. A management agency refers to a Federal agency with administrative jurisdiction over the surface of Federal lands. The SMA feature class currently covers all or the BLM Western State Offices including Alaska. This layer is a dynamic assembly of spatial data layers and Federal land status records maintained at various federal and local government offices. The official Federal land status records of the appropriate surface land managing agency should be consulted concerning ownership details. See the US Department of the Interior, Bureau of Land Management, National Operations Center for more information (www.geocommunicator.gov).</p><p>This tool depends on a user-defined star rating for each SMA found at a site, on a scale of 0-5 stars. The default rating for any SMA is two stars. The default rating for no intersecting SMA is four stars. These ratings should be adjusted by the user.</p><p>When a site overlaps a single SMA, its score is based on the star rating of that SMA (so overlapping a five-star SMA might give a score of 100, while overlapping a one-star SMA may give a score of 20). If a site includes more than one SMA, the lowest star rating is used to calculate its score (so a site with both a one-star and a five-star SMA might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>',
                     //onScoreAdded: (e, score: pvMapper.Score) => {
                     //},
                     onSiteChange: function (e, score) {
@@ -74,10 +75,16 @@ module INLModules {
                 }],
                 infoTools: null
             });
+            this.getModuleObj = function () { return myModule; }
         }
+        getModuleObj: () => pvMapper.Module;
+        public static title: string = "Land Management";
+        public static category: string = "Land Use";
+        public static description: string = "Checks solarmapper.anl.gov for intersecting land management polygons";
+        public static longDescription: string = '<p>This star rating tool identifies the management agency of any federal land overlapping the proposed site. These agencies are defined in the Surface Management Agency (SMA) dataset. A management agency refers to a Federal agency with administrative jurisdiction over the surface of Federal lands. The SMA feature class currently covers all or the BLM Western State Offices including Alaska. This layer is a dynamic assembly of spatial data layers and Federal land status records maintained at various federal and local government offices. The official Federal land status records of the appropriate surface land managing agency should be consulted concerning ownership details. See the US Department of the Interior, Bureau of Land Management, National Operations Center for more information (www.geocommunicator.gov).</p><p>This tool depends on a user-defined star rating for each SMA found at a site, on a scale of 0-5 stars. The default rating for any SMA is two stars. The default rating for no intersecting SMA is four stars. These ratings should be adjusted by the user.</p><p>When a site overlaps a single SMA, its score is based on the star rating of that SMA (so overlapping a five-star SMA might give a score of 100, while overlapping a one-star SMA may give a score of 20). If a site includes more than one SMA, the lowest star rating is used to calculate its score (so a site with both a one-star and a five-star SMA might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>';
+
     }
 
-    var modinstance = new SolarmapperModule();
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
@@ -226,5 +233,12 @@ module INLModules {
         });
     }
 
-    //declare var Ext: any; //So we can use it
+    
+    //var modinstance = new INLModules.SolarmapperModule();
 }
+
+if (typeof (selfUrl) == 'undefined')
+  var selfUrl = $('script[src$="solarmapperModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(INLModules.SolarmapperModule.category, INLModules.SolarmapperModule.title, INLModules.SolarmapperModule, isActive, selfUrl);

@@ -19,8 +19,8 @@ declare module pvMapper {
 
     export interface IModuleOptions {
         scoringTools?: IScoreToolOptions[];
-        infoTools?: ITool[];
-        totalTools?: ITotalTool[];
+        infoTools?: Array<ITool>;
+        totalTools?: Array<ITotalTool>;
         //Intents: IIntent[];
 
         init: ICallback;
@@ -35,5 +35,6 @@ declare module pvMapper {
         //these are to support custom module naming.
         getModuleName?: () => string;
         setModuleName?: (name: string) => void;
+        removeLocalLayer?: any;
     }
 }

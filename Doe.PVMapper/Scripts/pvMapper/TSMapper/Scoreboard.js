@@ -83,6 +83,72 @@ var pvMapper;
             Error("Function not implemented yet!");
         };
 
+        ScoreBoard.prototype.removeCustomModule = function (moduleName) {
+            var amodule = pvMapper.customModules.find(function (a) {
+                if (a.fileName === moduleName)
+                    return true;
+                else
+                    return false;
+            });
+            if (amodule) {
+                //remove the module from the local database
+                pvMapper.ClientDB.deleteCustomKML(amodule.fileName, function (isSuccessful) {
+                    if (isSuccessful) {
+                        //remove it from the custom module list.
+                        var idx = pvMapper.customModules.indexOf(amodule);
+                        pvMapper.customModules.splice(idx, 1);
+
+                        //now remove the scoreline.
+                        var scoreline = pvMapper.mainScoreboard.scoreLines.find(function (a) {
+                            if (a.getModuleName !== undefined) {
+                                if (a.getModuleName() === amodule.fileName)
+                                    return true;
+                                else
+                                    return false;
+                            } else
+                                return false;
+                        });
+                        if (scoreline) {
+                            idx = pvMapper.mainScoreboard.scoreLines.indexOf(scoreline);
+                            if (idx >= 0)
+                                pvMapper.mainScoreboard.scoreLines.splice(idx, 1);
+
+                            //finally then free the module.
+                            delete scoreline;
+                        }
+                        if (amodule.moduleObject.removeLocalLayer !== undefined)
+                            amodule.moduleObject.removeLocalLayer(); //remove the custom module layer from map.
+                        delete amodule;
+                        pvMapper.mainScoreboard.update();
+                    }
+                });
+            }
+        };
+
+        ScoreBoard.prototype.removeModule = function (moduleName) {
+            var scoreline = pvMapper.mainScoreboard.scoreLines.find(function (sl) {
+                if (sl.title == moduleName)
+                    return true;
+                else
+                    return false;
+            });
+            if (scoreline) {
+                var amodule = scoreline.getModule();
+
+                //pvMapper.moduleManager.deleteModule(moduleName);
+                var mInfo = pvMapper.moduleManager.getModule(moduleName);
+                mInfo.isActive = false;
+                delete amodule;
+                var idx = pvMapper.mainScoreboard.scoreLines.indexOf(scoreline);
+                if (idx >= 0)
+                    pvMapper.mainScoreboard.scoreLines.splice(idx, 1);
+                delete scoreline;
+
+                pvMapper.mainScoreboard.update();
+                pvMapper.mainScoreboard.updateTotals();
+            }
+        };
+
         ScoreBoard.prototype.toJSON = function () {
             return {
                 scoreLines: this.scoreLines,
@@ -147,22 +213,33 @@ var pvMapper;
         }
     });
 
+    //this file has all modules to be loaded.
+    pvMapper.clientScripts = "~/Scirpts/pvClient.js";
+
     //this function will wait until IndexedDB is loaded and then load the configuration as well as saved CustomKML modules.
     //However, if the browser is not supporting IndexedDB, it will just kick it back out.
     //TODO: Should change this to use the Promise pattern. --LV
+    var holdYourHorse = false;
     pvMapper.waitToLoad = function () {
         if (pvMapper.ClientDB.db !== null) {
-            //load custom modules.
-            if ((pvMapper.loadLocalModules !== undefined) && (pvMapper.loadLocalModules !== null) && (typeof (pvMapper.loadLocalModules) === "function")) {
-                pvMapper.loadLocalModules();
-            }
+            if (!holdYourHorse) {
+                holdYourHorse = true;
 
-            //load configuration
-            if ((pvMapper.ClientDB.db != null) && (!pvMapper.mainScoreboard.isScoreLoaded)) {
-                pvMapper.mainScoreboard.scoreLines.forEach(function (sc) {
-                    sc.loadConfiguration();
-                });
-                pvMapper.mainScoreboard.isScoreLoaded = true;
+                //load all necessary modules dynamically.
+                pvMapper.moduleManager.loadTools();
+
+                //load custom modules.
+                if ((pvMapper.loadLocalModules !== undefined) && (pvMapper.loadLocalModules !== null) && (typeof (pvMapper.loadLocalModules) === "function")) {
+                    pvMapper.loadLocalModules();
+                }
+
+                //load configuration
+                if ((pvMapper.ClientDB.db != null) && (!pvMapper.mainScoreboard.isScoreLoaded)) {
+                    pvMapper.mainScoreboard.scoreLines.forEach(function (sc) {
+                        sc.loadConfiguration();
+                    });
+                    pvMapper.mainScoreboard.isScoreLoaded = true;
+                }
             }
         } else {
             setTimeout(pvMapper.waitToLoad, 5000);
@@ -171,6 +248,8 @@ var pvMapper;
 
     //Create the scoreboard onscreen
     pvMapper.onReady(function () {
+        holdYourHorse = false;
         setTimeout(pvMapper.waitToLoad, 5000); //check every 5 seconds.
     });
 })(pvMapper || (pvMapper = {}));
+//# sourceMappingURL=Scoreboard.js.map

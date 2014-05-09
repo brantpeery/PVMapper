@@ -1,9 +1,10 @@
-﻿/// <reference path="pvMapper.ts" />
+﻿/// <reference path="jxg.d.ts" />
+/// <reference path="pvMapper.ts" />
 /// <reference path="../../ExtJS.d.ts" />
 /// <reference path="UtilityFunctions.ts" />
 
 //declare var Ext: any;
-declare var JXG: any;
+//declare var JXG: any;
 declare var Extras: any;
 
 module pvMapper {

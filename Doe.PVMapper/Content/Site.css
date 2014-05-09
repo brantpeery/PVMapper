@@ -213,6 +213,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4fcff', end
    -o-background-size: contain;
        background-size:contain;
 }
+.x-tag-check-icon {
+  background-image: url(../Images/check.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
 
 
 

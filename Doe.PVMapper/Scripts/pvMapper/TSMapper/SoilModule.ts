@@ -5,7 +5,6 @@
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
 /// <reference path="ScoreUtility.ts" />
-/// <reference path="Esri-GeoJsonConverter.js />
 /// <reference path="jstorage.d.ts" />
 /// <reference path="ScoreLine.ts" />
 /// <reference path="Scoreboard.ts" />
@@ -38,10 +37,10 @@ module INLModules {
                     destroy: null,
                     init: null,
 
-                    title: "Soil",
-                    category: "Geography",
-                    description: "Overlapping soil types, using the Soil Survey Geographic (SSURGO) map hosted by arcgisonline.com",
-                    longDescription: '<p>This star rating tool finds the various types of soil present at a proposed site. These ares are defined in the Soil Survey Geographic (SSURGO) dataset from the National Cooperative Soil Survey. SSURGO digitizing duplicates the original soil survey maps. This level of mapping is designed for use by landowners, townships, and county natural resource planning and management. Note that the extent of SSURGO data is limited to soil survey areas; many counties and parts counties are not included. For more information, see the USDA Natural Resource Conservation Service (soils.usda.gov/survey/geography/ssurgo).</p><p>This tool depends on a user-defined star rating for each soil type found at a site, on a scale of 0-5 stars. The default rating for all soil types is three stars. These ratings should be adjusted by the user. Note that the user should be knowledgeable of soils data and their characteristics.</p><p>When a site has just one soil type, its score is based on the star rating of that soil (so overlapping a five-star soil type might give a score of 100, while overlapping a one-star soil may give a score of 20). If a site includes more than one soil type, the lowest star rating is used to calculate its score (so a site with both a one-star and a five-star soil might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>',
+                    title: SoilModule.title, // "Soil",
+                    category: SoilModule.category, //"Geography",
+                    description: SoilModule.description, //"Overlapping soil types, using the Soil Survey Geographic (SSURGO) map hosted by arcgisonline.com",
+                    longDescription: SoilModule.longDescription, //'<p>This star rating tool finds the various types of soil present at a proposed site. These ares are defined in the Soil Survey Geographic (SSURGO) dataset from the National Cooperative Soil Survey. SSURGO digitizing duplicates the original soil survey maps. This level of mapping is designed for use by landowners, townships, and county natural resource planning and management. Note that the extent of SSURGO data is limited to soil survey areas; many counties and parts counties are not included. For more information, see the USDA Natural Resource Conservation Service (soils.usda.gov/survey/geography/ssurgo).</p><p>This tool depends on a user-defined star rating for each soil type found at a site, on a scale of 0-5 stars. The default rating for all soil types is three stars. These ratings should be adjusted by the user. Note that the user should be knowledgeable of soils data and their characteristics.</p><p>When a site has just one soil type, its score is based on the star rating of that soil (so overlapping a five-star soil type might give a score of 100, while overlapping a one-star soil may give a score of 20). If a site includes more than one soil type, the lowest star rating is used to calculate its score (so a site with both a one-star and a five-star soil might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>',
                     //onScoreAdded: (e, score: pvMapper.Score) => {
                     //},
                     onSiteChange: (e, score: pvMapper.Score) => {
@@ -66,7 +65,14 @@ module INLModules {
 
                 infoTools: null
             });
+            this.getModuleObj = function () { return myModule; }
         }
+        getModuleObj: () => pvMapper.Module;
+        public static title: string = "Soil";
+        public static category: string = "Geography";
+        public static description: string = "Overlapping soil types, using the Soil Survey Geographic (SSURGO) map hosted by arcgisonline.com";
+        public static longDescription: string = '<p>This star rating tool finds the various types of soil present at a proposed site. These ares are defined in the Soil Survey Geographic (SSURGO) dataset from the National Cooperative Soil Survey. SSURGO digitizing duplicates the original soil survey maps. This level of mapping is designed for use by landowners, townships, and county natural resource planning and management. Note that the extent of SSURGO data is limited to soil survey areas; many counties and parts counties are not included. For more information, see the USDA Natural Resource Conservation Service (soils.usda.gov/survey/geography/ssurgo).</p><p>This tool depends on a user-defined star rating for each soil type found at a site, on a scale of 0-5 stars. The default rating for all soil types is three stars. These ratings should be adjusted by the user. Note that the user should be knowledgeable of soils data and their characteristics.</p><p>When a site has just one soil type, its score is based on the star rating of that soil (so overlapping a five-star soil type might give a score of 100, while overlapping a one-star soil may give a score of 20). If a site includes more than one soil type, the lowest star rating is used to calculate its score (so a site with both a one-star and a five-star soil might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>';
+
 
         private starRatingHelper: pvMapper.IStarRatingHelper = new pvMapper.StarRatingHelper({
             defaultStarRating: 3,
@@ -241,5 +247,11 @@ module INLModules {
 
     }
 
-    var soilInstance = new INLModules.SoilModule();
+    //var soilInstance = new INLModules.SoilModule();
 }
+
+if (typeof (selfUrl) == 'undefined')
+  var selfUrl = $('script[src$="SoilModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(INLModules.SoilModule.category, INLModules.SoilModule.title, INLModules.SoilModule, isActive, selfUrl);

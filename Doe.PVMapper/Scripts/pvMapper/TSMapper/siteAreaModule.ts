@@ -6,7 +6,7 @@
 /// <reference path="Module.ts" />
 
 module INLModules {
-    class SiteAreaModule {
+    export class SiteAreaModule {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "AreaModule",
@@ -24,10 +24,10 @@ module INLModules {
                     destroy: null,
                     init: null,
 
-                    title: "Gross Area",
-                    category: "Geography",
-                    description: "The raw area of a site polygon",
-                    longDescription: '<p>This tool calculates the raw area of a site polygon in mi<sup>2</sup>.</p>',
+                    title: SiteAreaModule.title, //"Gross Area",
+                    category: SiteAreaModule.category, //"Geography",
+                    description: SiteAreaModule.description, //"The raw area of a site polygon",
+                    longDescription: SiteAreaModule.longDescription, //'<p>This tool calculates the raw area of a site polygon in mi<sup>2</sup>.</p>',
                     onScoreAdded: (e, score: pvMapper.Score) => {
                     },
                     onSiteChange: function (e, score: pvMapper.Score) {
@@ -56,10 +56,16 @@ module INLModules {
                 }],
                 infoTools: null
             });
+            this.getModuleObj = function () { return myModule; }
         }
+        getModuleObj: () => pvMapper.Module;
+        //Add these so ModuleManager can access the tool information for display in the Tool/Module Selector and make it easier to register onto the moduleManager.
+        public static title: string = "Gross Area";
+        public static category: string = "Geography";
+        public static description: string = "The raw area of a site polygon";
+        public static longDescription: string = '<p>This tool calculates the raw area of a site polygon in mi<sup>2</sup>.</p>';
     }
 
-    var modinstance = new SiteAreaModule();
 
      //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
     var offsetFeature, setbackLength, setbackLayer;
@@ -127,4 +133,12 @@ module INLModules {
         return val;
     }
 
+    //var modinstance = new SiteAreaModule();
+
 }
+
+if (typeof (selfUrl) == 'undefined')
+  var selfUrl = $('script[src$="siteAreaModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(INLModules.SiteAreaModule.category, INLModules.SiteAreaModule.title, INLModules.SiteAreaModule, isActive, selfUrl);

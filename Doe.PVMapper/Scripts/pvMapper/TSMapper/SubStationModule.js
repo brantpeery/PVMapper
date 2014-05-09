@@ -102,12 +102,12 @@ var BYUModules;
 
     var substationsMap;
 
-    var SubStationModule = (function () {
-        function SubStationModule() {
+    var NearestSubStationModule = (function () {
+        function NearestSubStationModule() {
             var _this = this;
             var myModule = new pvMapper.Module({
 
-                id: "SubStationModule",
+                id: "NearestSubStationModule",
                 author: "Rohit Khattar, BYU",
                 version: "0.1",
                 iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/home_icon.jpg",
@@ -135,10 +135,10 @@ var BYUModules;
                         //    myToolLine = this;
                         //    propsWindow.show();
                         //},
-                        title: "Nearest Substation",
-                        category: "Power Infrastructure",
-                        description: "Distance from a site boundary to the center of the nearest known substation, using data from OpenStreetMap",
-                        longDescription: '<p>This tool reports the distance from a site to the nearest known substation. The substation is identified using OpenStreetMap. All map features using the "power" key with values of "station" and "sub_station" are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:power).</p>',
+                        title: NearestSubStationModule.title, //"Nearest Substation",
+                        category: NearestSubStationModule.category, //"Power Infrastructure",
+                        description: NearestSubStationModule.description, //"Distance from a site boundary to the center of the nearest known substation, using data from OpenStreetMap",
+                        longDescription: NearestSubStationModule.longDescription, //'<p>This tool reports the distance from a site to the nearest known substation. The substation is identified using OpenStreetMap. All map features using the "power" key with values of "station" and "sub_station" are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:power).</p>',
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (e, score) {
@@ -153,16 +153,62 @@ var BYUModules;
                                 "Distance to nearest substation", "Score", "Prefer sites near a substation.")
                         },
                         weight: 10
-                    },
+                    }],
+                infoTools: null
+            });
+            this.getModuleObj = function () { return myModule; }
+        }
+
+        NearestSubStationModule.title = "Nearest Substation";
+        NearestSubStationModule.category = "Power Infrastructure";
+        NearestSubStationModule.description = "Distance from a site boundary to the center of the nearest known substation, using data from OpenStreetMap";
+        NearestSubStationModule.longDescription = '<p>This tool reports the distance from a site to the nearest known substation. The substation is identified using OpenStreetMap. All map features using the "power" key with values of "station" and "sub_station" are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:power).</p>';
+
+        NearestSubStationModule.prototype.updateScore = function (score, wayQueryKey, objectType) {
+            updateScore(score, wayQueryKey, objectType);
+        }
+
+        return NearestSubStationModule;
+    })();
+
+    BYUModules.NearestSubStationModule = NearestSubStationModule;
+
+    var NearestTransmissionLineModule = (function () {
+        function NearestTransmissionLineModule() {
+            var _this = this;
+            var myModule = new pvMapper.Module({
+
+                id: "NearestTransmissionLineModule",
+                author: "Rohit Khattar, BYU",
+                version: "0.1",
+                iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/home_icon.jpg",
+
+                activate: function () {
+                    //http://t0.beta.itoworld.com/4/317c99f331113b90c57c41ccdb137030/${z}/${x}/${y}.png
+                    substationsMap = new OpenLayers.Layer.XYZ("Power Infrastructure",
+                        "http://t0.beta.itoworld.com/4/317c99f331113b90c57c41ccdb137030/${z}/${x}/${y}.png",
+                            { transitionEffect: null, buffer: 1, sphericalMercator: true, isBaseLayer: false, visibility: false });
+                    pvMapper.map.addLayer(substationsMap);
+
+                    //addAllMaps();
+                },
+                deactivate: function () {
+                    pvMapper.map.removeLayer(substationsMap, false);
+                    //removeAllMaps();
+                },
+
+                destroy: null,
+                init: null,
+                scoringTools: [
                     {
                         showConfigWindow: function () {
                             myToolLine = this;
                             propsWindow.show();
                         },
-                        title: "Nearest Transmission Line",
-                        category: "Power Infrastructure",
-                        description: "Distance from a site boundary to the nearest known transmission line, using data from OpenStreetMap",
-                        longDescription: '<p>This tool reports the distance from a site to the nearest known transmission line. The line is identified using OpenStreetMap. All map features using the "power" key with a value of "line" are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:power).</p>',
+                        title: NearestTransmissionLineModule.title, //"Nearest Transmission Line",
+                        category: NearestTransmissionLineModule.category, // "Power Infrastructure",
+                        description: NearestTransmissionLineModule.description, // "Distance from a site boundary to the nearest known transmission line, using data from OpenStreetMap",
+                        longDescription: NearestTransmissionLineModule.longDescription,// '<p>This tool reports the distance from a site to the nearest known transmission line. The line is identified using OpenStreetMap. All map features using the "power" key with a value of "line" are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:power).</p>',
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (e, score) {
@@ -179,16 +225,22 @@ var BYUModules;
                 ],
                 infoTools: null
             });
+            this.getModuleObj = function () { return myModule; }
         }
 
-        SubStationModule.prototype.updateScore = function (score, wayQueryKey, objectType) {
+        NearestTransmissionLineModule.title = "Nearest Transmission Line";
+        NearestTransmissionLineModule.category = "Power Infrastructure";
+        NearestTransmissionLineModule.description = "Distance from a site boundary to the nearest known transmission line, using data from OpenStreetMap";
+        NearestTransmissionLineModule.longDescription = '<p>This tool reports the distance from a site to the nearest known transmission line. The line is identified using OpenStreetMap. All map features using the "power" key with a value of "line" are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:power).</p>';
+
+        NearestTransmissionLineModule.prototype.updateScore = function (score, wayQueryKey, objectType) {
             updateScore(score, wayQueryKey, objectType);
         }
 
-        return SubStationModule;
+        return NearestTransmissionLineModule;
     })();
 
-    var modinstance = new SubStationModule();
+    BYUModules.NearestTransmissionLineModule = NearestTransmissionLineModule;
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
@@ -312,4 +364,15 @@ var BYUModules;
 
 
     }
+
 })(BYUModules || (BYUModules = {}));
+
+//var modinstance = new BYUModules.NearestSubStationModule();
+//var modinstance = new BYUModules.NearestTransmissionLineModule();
+if (typeof (selfUrl) == 'undefined')
+    var selfUrl = $('script[src$="SubStationModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(BYUModules.NearestSubStationModule.category, BYUModules.NearestSubStationModule.title, BYUModules.NearestSubStationModule, isActive, selfUrl);
+pvMapper.moduleManager.registerModule(BYUModules.NearestTransmissionLineModule.category, BYUModules.NearestTransmissionLineModule.title, BYUModules.NearestTransmissionLineModule, isActive, selfUrl);
+

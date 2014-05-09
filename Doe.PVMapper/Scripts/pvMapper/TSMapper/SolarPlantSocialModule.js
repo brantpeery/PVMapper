@@ -57,8 +57,7 @@ var INLModules;
         { mi: 500, percentOk: 99.32126697 },
         { mi: 1000, percentOk: 99.54751131 },
         { mi: 2000, percentOk: 99.77375566 },
-        { mi: 5000, percentOk: 100 }
-    ];
+        { mi: 5000, percentOk: 100 }];
 
     var configProperties = {
         //maxSearchDistanceInKM: 30,
@@ -104,15 +103,13 @@ var INLModules;
                     myToolLine.scores.forEach(updateScore);
                 }
             },
-            buttons: [
-                {
+            buttons: [{
                     xtype: 'button',
                     text: 'OK',
                     handler: function () {
                         propsWindow.hide();
                     }
-                }
-            ],
+                }],
             constrain: true
         });
     });
@@ -132,20 +129,19 @@ var INLModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [
-                    {
+                scoringTools: [{
                         activate: null,
                         deactivate: null,
                         destroy: null,
                         init: null,
                         showConfigWindow: function () {
-                            myToolLine = this;
+                            myToolLine = this; // fetch tool line, which was passed as 'this' parameter
                             propsWindow.show();
                         },
-                        title: "Existing Solar Proximity",
-                        category: "Social Acceptance",
-                        description: "Percentage of survey respondents who reported this distance from existing solar plants as acceptable",
-                        longDescription: '<p>This tool calculates the distance from a site to the nearest existing solar plant, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 441 respondents from six counties in Southern California answered Question 21 which asked "How much buffer distance is acceptable between a large solar facility and an existing large solar facility?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest existing solar installation is identified using map data from SEIA. See their Research & Resources page for more information (www.seia.org/research-resources).</p>',
+                        title: SolarPlantSocialModule.title,
+                        category: SolarPlantSocialModule.category,
+                        description: SolarPlantSocialModule.description,
+                        longDescription: SolarPlantSocialModule.longDescription,
                         //onScoreAdded: function (e, score: pvMapper.Score) {
                         //    scores.push(score);
                         //},
@@ -158,15 +154,20 @@ var INLModules;
                             functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Percent Favor", "Score", "Preference to the social aceptable in relative distance to existing solar plants.")
                         },
                         weight: 10
-                    }
-                ],
+                    }],
                 infoTools: null
             });
+            this.getModuleObj = function () {
+                return myModule;
+            };
         }
+        SolarPlantSocialModule.title = "Existing Solar Proximity";
+        SolarPlantSocialModule.category = "Social Acceptance";
+        SolarPlantSocialModule.description = "Percentage of survey respondents who reported this distance from existing solar plants as acceptable";
+        SolarPlantSocialModule.longDescription = '<p>This tool calculates the distance from a site to the nearest existing solar plant, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 441 respondents from six counties in Southern California answered Question 21 which asked "How much buffer distance is acceptable between a large solar facility and an existing large solar facility?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest existing solar installation is identified using map data from SEIA. See their Research & Resources page for more information (www.seia.org/research-resources).</p>';
         return SolarPlantSocialModule;
     })();
-
-    var modinstance = new SolarPlantSocialModule();
+    INLModules.SolarPlantSocialModule = SolarPlantSocialModule;
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
     var seiaDataUrl = "https://seia.maps.arcgis.com/sharing/rest/content/items/e442f5fc7402493b8a695862b6a2290b/data";
@@ -280,6 +281,7 @@ var INLModules;
                         }
                     }
 
+                    //nearestFeatureCache[score.site.id] = response.features;
                     if (layerDevelopment.features.length) {
                         pvMapper.map.addLayer(layerDevelopment);
                     }
@@ -350,6 +352,8 @@ var INLModules;
 
         var searchForClosestFeature = function (features) {
             for (var i = 0; i < features.length; i++) {
+                // filter out far away geometries quickly using boundary overlap
+                //if (searchBounds.intersects(features[i].bounds))
                 if (searchBounds.contains(features[i].geometry.x, features[i].geometry.y)) {
                     var distance = score.site.geometry.distanceTo(features[i].geometry);
                     if (distance < minDistance) {
@@ -427,3 +431,10 @@ var INLModules;
         }
     }
 })(INLModules || (INLModules = {}));
+
+if (typeof (selfUrl) == 'undefined')
+    var selfUrl = $('script[src$="SolarPlantSocialModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(INLModules.SolarPlantSocialModule.category, INLModules.SolarPlantSocialModule.title, INLModules.SolarPlantSocialModule, isActive, selfUrl);
+//# sourceMappingURL=SolarPlantSocialModule.js.map

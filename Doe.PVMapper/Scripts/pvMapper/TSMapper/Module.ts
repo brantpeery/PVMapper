@@ -9,6 +9,7 @@
 // Module
 module pvMapper {
 
+
     // Class
     export class Module implements IModuleOptions {
         constructor(options: IModuleOptions) {
@@ -26,14 +27,17 @@ module pvMapper {
             this.totalTools = options.totalTools;
 
             //Load the info for this module into the data model
-
             //Load the scoring tools into the api
             if (this.scoringTools) {
                 this.scoringTools.map((tool, idx, toolarr) => {
                     if (console) console.log("Loading scoring tool " + tool.title + " into the API");
 
                     //Create the scoreline
-                    var scoreline = new ScoreLine(tool);
+                    var scoreline: pvMapper.ScoreLine = new pvMapper.ScoreLine(tool);
+
+                    //A delegate function to return a reference to this module which associating with the scoreline, calling from scoreLine module.
+                    scoreline.getModule = (d = this, f= () => this) => f.apply(d, arguments);
+                    this.getScoreLine = function () { return scoreline; };
 
                     //Add the scoreline to the scoreboard/data model
                     pvMapper.mainScoreboard.addLine(scoreline);
@@ -96,6 +100,7 @@ module pvMapper {
 
         getModuleName: () => string;
         setModuleName: (name: string) => void;
+        getScoreLine: () => pvMapper.ScoreLine;
 
 
     }

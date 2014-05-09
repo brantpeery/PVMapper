@@ -1,4 +1,5 @@
-﻿//SLope Module involving client side calculation. 
+﻿
+//SLope Module involving client side calculation. 
 
 var BYUModules;
 (function (BYUModules) {
@@ -73,9 +74,10 @@ var BYUModules;
                         deactivate: null,
                         destroy: null,
                         init: null,
-                        title: "Slope",
-                        description: "Percentage of site slope which falls under the given threshold (Default : 5%)",
-                        category: "Geography",
+                        title: NewSlopeModule.title, //"Slope",
+                        description: NewSlopeModule.description, //"Percentage of site slope which falls under the given threshold (Default : 5%)",
+                        category: NewSlopeModule.category, //"Geography",
+                        longDescription: NewSlopeModule.longDescription,
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
@@ -90,7 +92,14 @@ var BYUModules;
                 ],
                 infoTools: null
             });
+            this.getModuleObj = function () {
+                return myModule;
+            };
         }
+        NewSlopeModule.title = "Slope";
+        NewSlopeModule.description = "Percentage of site slope which falls under the given threshold (Default : 5%)";
+        NewSlopeModule.category = "Geography";
+        NewSlopeModule.longDescription = '???';
 
         NewSlopeModule.prototype.updateScore = function (score) {
             updateScore(score);
@@ -99,7 +108,6 @@ var BYUModules;
         return NewSlopeModule;
     })();
     BYUModules.NewSlopeModule = NewSlopeModule;
-    var modInstance = new BYUModules.NewSlopeModule();
 
     function reCalculate (score) {
 
@@ -250,3 +258,10 @@ var BYUModules;
         });
     };
 })(BYUModules || (BYUModules = {}));
+
+//var modInstance = new BYUModules.NewSlopeModule();
+if (typeof (selfUrl) == 'undefined')
+  var selfUrl = $('script[src$="NewSlopeModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(BYUModules.NewSlopeModule.category, BYUModules.NewSlopeModule.title, BYUModules.NewSlopeModule, isActive, selfUrl);

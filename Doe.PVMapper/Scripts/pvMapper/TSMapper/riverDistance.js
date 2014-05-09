@@ -82,10 +82,10 @@ var BYUModules;
                             myToolLine = this; // fetch tool line, which was passed as 'this' parameter
                             propsWindow.show();
                         },
-                        title: "Nearest River",
-                        category: "Geography",
-                        description: "Distance from the site to the nearest river",
-                        longDescription: '<p>This tool reports the distance from a site to the nearest river.</p>',
+                        title: WaterDistanceModule.title,
+                        category: WaterDistanceModule.category,
+                        description: WaterDistanceModule.description,
+                        longDescription: WaterDistanceModule.longDescription,
                         //onScoreAdded: function (e, score: pvMapper.Score) {
                         //    scores.push(score);
                         //},
@@ -101,11 +101,17 @@ var BYUModules;
                     }],
                 infoTools: null
             });
+            this.getModuleObj = function () {
+                return myModule;
+            };
         }
+        WaterDistanceModule.title = "Nearest River";
+        WaterDistanceModule.category = "Geography";
+        WaterDistanceModule.description = "Distance from the site to the nearest river";
+        WaterDistanceModule.longDescription = '<p>This tool reports the distance from a site to the nearest river.</p>';
         return WaterDistanceModule;
     })();
-
-    var modinstance = new WaterDistanceModule();
+    BYUModules.WaterDistanceModule = WaterDistanceModule;
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
     //var ExportUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/export";
@@ -196,3 +202,11 @@ var BYUModules;
         var response = jsonpProtocol.read();
     }
 })(BYUModules || (BYUModules = {}));
+
+//var modinstance = new BYUModules.WaterDistanceModule();
+if (typeof (selfUrl) == 'undefined')
+    var selfUrl = $('script[src$="riverDisnace.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(BYUModules.WaterDistanceModule.category, BYUModules.WaterDistanceModule.title, BYUModules.WaterDistanceModule, isActive, selfUrl);
+//# sourceMappingURL=riverDistance.js.map

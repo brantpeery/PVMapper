@@ -63,7 +63,7 @@ module INLModules {
     // cache for the last distance found to a agriculture, used so that our search isn't criminally inefficient
     var lastDistanceCache = {};
 
-    class AgricultureSocialModule {
+    export class AgricultureSocialModule {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "AgricultureSocialModule",
@@ -93,10 +93,10 @@ module INLModules {
                     //    propsWindow.show();
                     //},
 
-                    title: "Agriculture Proximity",
-                    category: "Social Acceptance",
-                    description: "Percentage of survey respondents who reported this distance from agriculture as acceptable",
-                    longDescription: '<p>This tool calculates the distance from a site to the nearest agriculture area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 468 respondents from six counties in Southern California answered Question 15, which asked "How much buffer distance is acceptable between a large solar facility and existing agricultural land?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest agricultural area is identified from a map of agriculture polygons derived from original land classification by USDA\'s CropScape dataset (nassgeodata.gmu.edu). These raster data were generalized and then digitized into a vector format, which was then simplified using geoprocessing tools in ArcGIS Desktop. The resulting geometries are gross approximations useful only for coarse distance estimates.</p>',
+                    title: AgricultureSocialModule.title, //"Agriculture Proximity",
+                    category: AgricultureSocialModule.category, // "Social Acceptance",
+                    description: AgricultureSocialModule.description, //"Percentage of survey respondents who reported this distance from agriculture as acceptable",
+                    longDescription: AgricultureSocialModule.longDescription, // '<p>This tool calculates the distance from a site to the nearest agriculture area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 468 respondents from six counties in Southern California answered Question 15, which asked "How much buffer distance is acceptable between a large solar facility and existing agricultural land?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest agricultural area is identified from a map of agriculture polygons derived from original land classification by USDA\'s CropScape dataset (nassgeodata.gmu.edu). These raster data were generalized and then digitized into a vector format, which was then simplified using geoprocessing tools in ArcGIS Desktop. The resulting geometries are gross approximations useful only for coarse distance estimates.</p>',
                     //onScoreAdded: function (e, score: pvMapper.Score) {
                     //    scores.push(score);
                     //},
@@ -125,10 +125,17 @@ module INLModules {
 
                 infoTools: null
             });
+            this.getModuleObj = function () { return myModule; }
         }
-    }
+        getModuleObj: () => pvMapper.Module;
 
-    var modinstance = new AgricultureSocialModule();
+        // add these to make it easier for the ModuleManager stuff.
+        public static title: string = "Agriculture Proximity";
+        public static category: string = "Social Acceptance";
+        public static description: string = "Percentage of survey respondents who reported this distance from agriculture as acceptable";
+        public static longDescription: string = '<p>This tool calculates the distance from a site to the nearest agriculture area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 468 respondents from six counties in Southern California answered Question 15, which asked "How much buffer distance is acceptable between a large solar facility and existing agricultural land?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest agricultural area is identified from a map of agriculture polygons derived from original land classification by USDA\'s CropScape dataset (nassgeodata.gmu.edu). These raster data were generalized and then digitized into a vector format, which was then simplified using geoprocessing tools in ArcGIS Desktop. The resulting geometries are gross approximations useful only for coarse distance estimates.</p>';
+
+    }
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
@@ -304,4 +311,12 @@ module INLModules {
         //var response: OpenLayers.Response = jsonpProtocol.read();
     }
 
+    //var modinstance = new AgricultureSocialModule();
+
 }
+if (typeof (selfUrl) == 'undefined')
+    var selfUrl = $('script[src$="AgricultureSocialModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(INLModules.AgricultureSocialModule.category, INLModules.AgricultureSocialModule.title, INLModules.AgricultureSocialModule, isActive, selfUrl);
+

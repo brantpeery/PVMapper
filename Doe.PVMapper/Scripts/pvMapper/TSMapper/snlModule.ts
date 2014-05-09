@@ -5,6 +5,7 @@
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
 /// <reference path="ScoreUtility.ts" />
+/// <reference path="modulemanager.ts" />
 
 
 module INLModules {
@@ -96,7 +97,7 @@ module INLModules {
          
     });
 
-    class SnlModule {
+    export class SnlModule {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "SnlModule",
@@ -124,10 +125,10 @@ module INLModules {
                         propsWindow.show();
                     },
 
-                    title: "Nearest Transmission Line",
-                    category: "Power Infrastructure",
-                    description: "Distance from a site boundary to the nearest known transmission line, using data from SNL",
-                    longDescription: '<p>This tool reports the distance from a site to the nearest known transmission line. The line is identified using SNL data. See SNL for more information (snl.com).</p>',
+                    title: SnlModule.title, //"Nearest Transmission Line",
+                    category: SnlModule.category, //"Power Infrastructure",
+                    description: SnlModule.description, //"Distance from a site boundary to the nearest known transmission line, using data from SNL",
+                    longDescription: SnlModule.longDescription, //'<p>This tool reports the distance from a site to the nearest known transmission line. The line is identified using SNL data. See SNL for more information (snl.com).</p>',
                     //onScoreAdded: function (e, score: pvMapper.Score) {
                     //    scores.push(score);
                     //},
@@ -147,10 +148,16 @@ module INLModules {
 
                 infoTools: null
             });
+            this.getModuleObj = function () { return myModule; }
         }
+        getModuleObj: () => pvMapper.Module;
+        public static title: string = "Nearest Transmission Line";
+        public static category: string = "Power Infrastructure";
+        public static description: string = "Distance from a site boundary to the nearest known transmission line, using data from SNL";
+        public static longDescription: string = '<p>This tool reports the distance from a site to the nearest known transmission line. The line is identified using SNL data. See SNL for more information (snl.com).</p>';
+
     }
 
-    var modinstance = new SnlModule();
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
@@ -252,6 +259,12 @@ module INLModules {
 
         var response: OpenLayers.Response = jsonpProtocol.read();
     }
-
-
+    //var modinstance = new INLModules.SnlModule();
 }
+
+if (typeof (selfUrl) == 'undefined')
+  var selfUrl = $('script[src$="snlModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(INLModules.SnlModule.category, INLModules.SnlModule.title, INLModules.SnlModule, isActive, selfUrl);
+

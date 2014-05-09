@@ -7,12 +7,111 @@
 /// <reference path="/../../EsriGeoJSON.js>
 /// <reference path="Module.ts" />
 /// <reference path="ScoreUtility.ts" />
+/// <reference path="modulemanager.ts" />
+
 
 module BYUModules {
-    class DemModule {
+
+    export class DemSlopeModule {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
-                id: "DemModule",
+                id: "DemSlopeModule",
+                author: "Darian Ramage, BYU",
+                version: "0.1.ts",
+
+                activate: () => { addMap(); },
+                deactivate: () => { removeMap(); },
+                destroy: null,
+                init: null,
+
+                scoringTools: [
+                    <pvMapper.IScoreToolOptions> {
+                        activate: null,
+                        deactivate: null,
+                        destroy: null,
+                        init: null,
+
+                        title: DemSlopeModule.title, //"Slope",
+                        category: DemSlopeModule.category, //"Geography",
+                        description: DemSlopeModule.description, //"The slope at the center of a site, using data from ArcGIS Online",
+                        longDescription: DemSlopeModule.longDescription, //'<p>This tool reports the slope at the center point of a site. The slope is retrieved from the World Topographic Map on ArcGIS Online. Note that the slope at the center point of a site may not be representative of the overall slope at that site. See ArcGIS Online for more information (www.arcgis.com).</p>',
+                        onScoreAdded: (event, score) => { },
+                        onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:3", "degrees"); },
+                        //TODO: is this degrees? or maybe it's grade?
+
+                        //TODO: The utility of slope only makes sense in the context of aspect - merge these two metrics
+                        // for now, flatter is better...?
+                        scoreUtilityOptions: {
+                            functionName: "linear",
+                            functionArgs: new pvMapper.MinMaxUtilityArgs(10, 0, "degrees", "Slope Degrees", "Score", "Preference of area with average slope")
+                        }
+                    }],
+                infoTools: null
+            });
+            this.getModuleObj = function () { return myModule; }
+        }
+        getModuleObj: () => pvMapper.Module;
+        //Add these so ModuleManager can access the tool information for display in the Tool/Module Selector and make it easier to register onto the moduleManager.
+        public static title: string = "Slope";
+        public static category: string = "Geography";
+        public static description: string = "The slope at the center of a site, using data from ArcGIS Online";
+        public static longDescription: string = '<p>This tool reports the slope at the center point of a site. The slope is retrieved from the World Topographic Map on ArcGIS Online. Note that the slope at the center point of a site may not be representative of the overall slope at that site. See ArcGIS Online for more information (www.arcgis.com).</p>';
+    }
+
+    export class DemAspectModule {
+        constructor() {
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
+                id: "DemAspectModule",
+                author: "Darian Ramage, BYU",
+                version: "0.1.ts",
+
+                activate: () => { addMap(); },
+                deactivate: () => { removeMap(); },
+                destroy: null,
+                init: null,
+
+                scoringTools: [
+                    <pvMapper.IScoreToolOptions> {
+                        activate: null,
+                        deactivate: null,
+                        destroy: null,
+                        init: null,
+
+                        title: DemAspectModule.title, //"Aspect",
+                        category: DemAspectModule.category, //"Geography",
+                        description: DemAspectModule.description, //"The horizontal aspect at the center of a site, using data from ArcGIS Online",
+                        longDescription: DemAspectModule.longDescription, //'<p>This tool reports the aspect at the center point of a site, an angular measure where 0 degrees indicates a northerly aspect and 90 degrees indicates an easterly aspect. This measure is retrieved from the World Topographic Map on ArcGIS Online. Note that the aspect at the center point of a site may not be representative of the overall aspect of a site. Note also that aspect is integrally related to slope. See ArcGIS Online for more information (www.arcgis.com).</p>',
+                        onScoreAdded: (event, score) => { },
+                        onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:4", "degrees"); },
+                        //TODO: is this degrees? it's not radian.
+
+                        //TODO: should we translate the aspect score into a "degrees away from south" score, or something?
+                        //      I assume that south is the best...
+                        //TODO: The utility of aspect only makes sense in the context of slope - merge these two metrics
+                        // for now, south is better, but north ain't so bad...?
+                        scoreUtilityOptions: {
+                            functionName: "linear3pt",
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.5, 180, 1, 360, 0.5, "degrees", "Orientation Degrees", "Score", "Preference of the orientation within an area.")
+                        }
+                    }],
+                infoTools: null
+            });
+            this.getModuleObj = function () { return myModule; }
+        }
+        getModuleObj: () => pvMapper.Module;
+        //Add these so ModuleManager can access the tool information for display in the Tool/Module Selector and make it easier to register onto the moduleManager.
+        public static title: string = "Aspect";
+        public static category: string = "Geography";
+        public static description: string = "The horizontal aspect at the center of a site, using data from ArcGIS Online";
+        public static longDescription: string = '<p>This tool reports the aspect at the center point of a site, an angular measure where 0 degrees indicates a northerly aspect and 90 degrees indicates an easterly aspect. This measure is retrieved from the World Topographic Map on ArcGIS Online. Note that the aspect at the center point of a site may not be representative of the overall aspect of a site. Note also that aspect is integrally related to slope. See ArcGIS Online for more information (www.arcgis.com).</p>';
+    }
+
+
+
+    export class DemElevationModule {
+        constructor() {
+            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
+                id: "DemElevationModule",
                 author: "Darian Ramage, BYU",
                 version: "0.1.ts",
 
@@ -22,49 +121,7 @@ module BYUModules {
                 init: null,
                                         
                 scoringTools: [
-                <pvMapper.IScoreToolOptions> {                                   
-                    activate: null,
-                    deactivate: null,
-                    destroy: null,
-                    init: null,
-
-                    title: "Slope",
-                    category: "Geography",
-                    description: "The slope at the center of a site, using data from ArcGIS Online",
-                    longDescription: '<p>This tool reports the slope at the center point of a site. The slope is retrieved from the World Topographic Map on ArcGIS Online. Note that the slope at the center point of a site may not be representative of the overall slope at that site. See ArcGIS Online for more information (www.arcgis.com).</p>',
-                    onScoreAdded: (event, score) => { },
-                    onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:3", "degrees"); },
-                    //TODO: is this degrees? or maybe it's grade?
-
-                    //TODO: The utility of slope only makes sense in the context of aspect - merge these two metrics
-                    // for now, flatter is better...?
-                    scoreUtilityOptions: {
-                        functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(10, 0, "degrees", "Slope Degrees", "Score","Preference of area with average slope")
-                    }
-                }, {
-                    activate: null,
-                    deactivate: null,
-                    destroy: null,
-                    init: null,
-
-                    title: "Aspect",
-                    category: "Geography",
-                    description: "The horizontal aspect at the center of a site, using data from ArcGIS Online",
-                    longDescription: '<p>This tool reports the aspect at the center point of a site, an angular measure where 0 degrees indicates a northerly aspect and 90 degrees indicates an easterly aspect. This measure is retrieved from the World Topographic Map on ArcGIS Online. Note that the aspect at the center point of a site may not be representative of the overall aspect of a site. Note also that aspect is integrally related to slope. See ArcGIS Online for more information (www.arcgis.com).</p>',
-                    onScoreAdded: (event, score) => { },
-                    onSiteChange: (event, score: pvMapper.Score) => { updateScore(score, "any:4", "degrees"); },
-                    //TODO: is this degrees? it's not radian.
-
-                    //TODO: should we translate the aspect score into a "degrees away from south" score, or something?
-                    //      I assume that south is the best...
-                    //TODO: The utility of aspect only makes sense in the context of slope - merge these two metrics
-                    // for now, south is better, but north ain't so bad...?
-                    scoreUtilityOptions: {
-                        functionName: "linear3pt",
-                        functionArgs: new pvMapper.ThreePointUtilityArgs( 0, 0.5, 180, 1, 360, 0.5, "degrees","Orientation Degrees", "Score","Preference of the orientation within an area.")
-                    }
-                }, {
+                <pvMapper.IScoreToolOptions> {
                     activate: null,
                     deactivate: null,
                     destroy: null,
@@ -86,10 +143,15 @@ module BYUModules {
                 } ],
                 infoTools: null
             });
+            this.getModuleObj = function () { return myModule; }
         }
+        getModuleObj: () => pvMapper.Module;
+        //Add these so ModuleManager can access the tool information for display in the Tool/Module Selector and make it easier to register onto the moduleManager.
+        public static title: string = "Elevation";
+        public static category: string = "Geography";
+        public static description: string = "The elevation at the center of a site, using data from ArcGIS Online";
+        public static longDescription: string = '<p>This tool reports the elevation at the center point of a site. This measure is retrieved from the World Topographic Map on ArcGIS Online. See ArcGIS Online for more information (www.arcgis.com).</p>';
     }
-
-    var modInstance = new DemModule();
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
@@ -173,5 +235,17 @@ module BYUModules {
         });
     }
 
+    //var modInstance = new DemSlopeModule();
+    //modInstance = new DemAspectModule();
+    //modInstance = new DemElevationModule();
 }
+
+
+if (typeof (selfUrl) == 'undefined')
+  var selfUrl = $('script[src$="DemModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(BYUModules.DemSlopeModule.category, BYUModules.DemSlopeModule.title, BYUModules.DemSlopeModule, isActive, selfUrl);
+pvMapper.moduleManager.registerModule(BYUModules.DemAspectModule.category, BYUModules.DemAspectModule.title, BYUModules.DemAspectModule, isActive, selfUrl);
+pvMapper.moduleManager.registerModule(BYUModules.DemElevationModule.category, BYUModules.DemElevationModule.title, BYUModules.DemElevationModule, isActive, selfUrl);
 

@@ -27,6 +27,7 @@ module pvMapper {
     export var isLocalModulesLoaded: boolean = false;
     export var customModules: CustomModuleData[] = new Array<CustomModuleData>();
     export var waitToLoad: any = null;
+    export var clientScripts: string;
     export function getColorForScore(score: number): string {
         var min = Math.min;
         var max = Math.max;
@@ -83,5 +84,8 @@ module pvMapper {
         });
     })
 
-
+    export function getIncludeModules() { return null;}
 }
+
+//allow jquery to cache all ajax get from server.
+$.ajaxSetup({ cache: true });
