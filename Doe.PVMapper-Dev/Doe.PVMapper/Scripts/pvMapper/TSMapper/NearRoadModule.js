@@ -15,9 +15,10 @@ var BYUModules;
                 init: null,
                 scoringTools: [
                     {
-                        title: "Nearest Road",
-                        description: "Nearest Road to the Selected Site",
-                        category: "Land Use",
+                        title: NearRoadModule.title, //"Nearest Road",
+                        description: NearRoadModule.description, //"Nearest Road to the Selected Site",
+                        category: NearRoadModule.category, //"Land Use",
+                        longDescription: NearRoadModule.longDescription,
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
@@ -34,7 +35,12 @@ var BYUModules;
                 ],
                 infoTools: null
             });
+            this.getModuleObj = function () { return myModule; }
         }
+        NearRoadModule.title = "Nearest Road";
+        NearRoadModule.category = "Land Use";
+        NearRoadModule.description = "Nearest Road to the Selected Site";
+        NearRoadModule.longDescription = '???';
 
         NearRoadModule.prototype.updateScore = function (score) {
 
@@ -180,5 +186,10 @@ var BYUModules;
         return NearRoadModule;
     })();
     BYUModules.NearRoadModule = NearRoadModule;
-    var modInstance = new BYUModules.NearRoadModule();
+   // var modInstance = new BYUModules.NearRoadModule();
 })(BYUModules || (BYUModules = {}));
+
+var selfUrl = $('script[src$="NearRoadModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(BYUModules.NearRoadModule.category, BYUModules.NearRoadModule.title, BYUModules.NearRoadModule, isActive, selfUrl);

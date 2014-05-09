@@ -5,6 +5,7 @@
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
 /// <reference path="ScoreUtility.ts" />
+/// <reference path="modulemanager.ts" />
 var INLModules;
 (function (INLModules) {
     var configProperties = {
@@ -86,15 +87,13 @@ var INLModules;
                     myToolLine.scores.forEach(updateScore);
                 }
             },
-            buttons: [
-                {
+            buttons: [{
                     xtype: 'button',
                     text: 'OK',
                     handler: function () {
                         propsWindow.hide();
                     }
-                }
-            ],
+                }],
             constrain: true
         });
     });
@@ -114,20 +113,19 @@ var INLModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [
-                    {
+                scoringTools: [{
                         activate: null,
                         deactivate: null,
                         destroy: null,
                         init: null,
                         showConfigWindow: function () {
-                            myToolLine = this;
+                            myToolLine = this; // fetch tool line, which was passed as 'this' parameter
                             propsWindow.show();
                         },
-                        title: "Nearest Transmission Line",
-                        category: "Power Infrastructure",
-                        description: "Distance from a site boundary to the nearest known transmission line, using data from SNL",
-                        longDescription: '<p>This tool reports the distance from a site to the nearest known transmission line. The line is identified using SNL data. See SNL for more information (snl.com).</p>',
+                        title: SnlModule.title,
+                        category: SnlModule.category,
+                        description: SnlModule.description,
+                        longDescription: SnlModule.longDescription,
                         //onScoreAdded: function (e, score: pvMapper.Score) {
                         //    scores.push(score);
                         //},
@@ -140,15 +138,20 @@ var INLModules;
                             functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInKM - 1), 0.3, configProperties.maxSearchDistanceInKM, 0, "km", "Distance to nearest transmission line", "Score", "Prefer sites closer to a transmission line.")
                         },
                         weight: 10
-                    }
-                ],
+                    }],
                 infoTools: null
             });
+            this.getModuleObj = function () {
+                return myModule;
+            };
         }
+        SnlModule.title = "Nearest Transmission Line";
+        SnlModule.category = "Power Infrastructure";
+        SnlModule.description = "Distance from a site boundary to the nearest known transmission line, using data from SNL";
+        SnlModule.longDescription = '<p>This tool reports the distance from a site to the nearest known transmission line. The line is identified using SNL data. See SNL for more information (snl.com).</p>';
         return SnlModule;
     })();
-
-    var modinstance = new SnlModule();
+    INLModules.SnlModule = SnlModule;
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
     var snlLineExportUrl = "https://maps.snl.com/arcgis/rest/services/SNLMaps/Power/MapServer/export";
@@ -165,7 +168,7 @@ var INLModules;
             transparent: "true"
         });
         mapLayer.setOpacity(0.3);
-        mapLayer.epsgOverride = "3857";
+        mapLayer.epsgOverride = "3857"; //"EPSG:102100";
         mapLayer.setVisibility(false);
 
         pvMapper.map.addLayer(mapLayer);
@@ -198,6 +201,7 @@ var INLModules;
                 return this.format.read(data);
             },
             callback: function (response) {
+                //alert("Nearby features: " + response.features.length);
                 if (response.success()) {
                     var closestFeature = null;
                     var minDistance = maxSearchDistanceInMeters;
@@ -231,3 +235,9 @@ var INLModules;
         var response = jsonpProtocol.read();
     }
 })(INLModules || (INLModules = {}));
+
+if (typeof (selfUrl) == 'undefined')
+    var selfUrl = $('script[src$="snlModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(INLModules.SnlModule.category, INLModules.SnlModule.title, INLModules.SnlModule, isActive, selfUrl);

@@ -1,3 +1,4 @@
+
 /// <reference path="pvMapper.ts" />
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
@@ -60,7 +61,7 @@ module BYUModules {
     
     });
 
-    class WaterDistanceModule {
+    export class WaterDistanceModule {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "Water Distance Module",
@@ -88,10 +89,10 @@ module BYUModules {
                         propsWindow.show();
                     },
 
-                    title: "Nearest River",
-                    category: "Geography",
-                    description: "Distance from the site to the nearest river",
-                    longDescription: '<p>This tool reports the distance from a site to the nearest river.</p>',
+                    title: WaterDistanceModule.title, //"Nearest River",
+                    category: WaterDistanceModule.category, //"Geography",
+                    description: WaterDistanceModule.description, //"Distance from the site to the nearest river",
+                    longDescription: WaterDistanceModule.longDescription, //'<p>This tool reports the distance from a site to the nearest river.</p>',
                     //onScoreAdded: function (e, score: pvMapper.Score) {
                     //    scores.push(score);
                     //},
@@ -111,10 +112,15 @@ module BYUModules {
 
                 infoTools: null
             });
+            this.getModuleObj = function () { return myModule; }
         }
-    }
+        getModuleObj: () => pvMapper.Module;
+        public static title: string = "Nearest River";
+        public static category: string = "Geography";
+        public static description: string = "Distance from the site to the nearest river";
+        public static longDescription: string = '<p>This tool reports the distance from a site to the nearest river.</p>';
 
-    var modinstance = new WaterDistanceModule();
+    }
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
@@ -217,3 +223,9 @@ module BYUModules {
 
 
 }
+//var modinstance = new BYUModules.WaterDistanceModule();
+if (typeof(selfUrl) == 'undefined')
+  var selfUrl = $('script[src$="riverDisnace.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(BYUModules.WaterDistanceModule.category, BYUModules.WaterDistanceModule.title, BYUModules.WaterDistanceModule, isActive, selfUrl);

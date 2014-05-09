@@ -18,9 +18,10 @@ var BYUModules;
                 init: null,
                 scoringTools: [
                     {
-                        title: "Nearest Road",
-                        description: "Nearest Road to the Selected Site",
-                        category: "Land Use",
+                        title: NearRoadModule.title, // "Nearest Road",
+                        description: NearRoadModule.description, //"Nearest Road to the Selected Site",
+                        category: NearRoadModule.category, //"Land Use",
+                        longDescription: NearRoadModule.longDescription,
                         onScoreAdded: function (event, score) {
                             NearRoadScoreKeeper[score.site.id] = score;
                         },
@@ -38,7 +39,15 @@ var BYUModules;
                 ],
                 infoTools: null
             });
+            this.getModuleObj = function () {
+                return myModule;
+            };
         }
+        //Add these so ModuleManager can access the tool information for display in the Tool/Module Selector and make it easier to register onto the moduleManager.
+        NearRoadScoreKeeper.title = "Nearest Road";
+        NearRoadScoreKeeper.category = "Land Use";
+        NearRoadScoreKeeper.description = "Nearest Road to the Selected Site";
+        NearRoadScoreKeeper.longDescription = '<p>This tool calculates the nearest available road from the proposing site <miles>.</p>';
         return NearRoadModule;
     })();
 
@@ -48,8 +57,6 @@ var BYUModules;
 
 
     BYUModules.NearRoadModule = NearRoadModule;
-    var modInstance = new BYUModules.NearRoadModule();
-
     var NearRiverModule = (function () {
         function NearRiverModule() {
             var _this = this;
@@ -63,9 +70,10 @@ var BYUModules;
                 init: null,
                 scoringTools: [
                     {
-                        title: "Nearest River",
-                        description: "Nearest River to the Selected Site",
-                        category: "Land Use",
+                        title: NearRiverModule.title, //"Nearest River",
+                        description: NearRiverModule.description, //"Nearest River to the Selected Site",
+                        category: NearRiverModule.category, //"Land Use",
+                        longDescription: NearRiverModule.longDescription,
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
@@ -81,7 +89,15 @@ var BYUModules;
                 ],
                 infoTools: null
             });
+            this.getModuleObj = function () {
+                return myModule;
+            };
         }
+        //Add these so ModuleManager can access the tool information for display in the Tool/Module Selector and make it easier to register onto the moduleManager.
+        NearRiverModule.title = "Nearest River";
+        NearRiverModule.category = "Land Use";
+        NearRiverModule.description = "Nearest River to the Selected Site";
+        NearRiverModule.longDescription = '<p>This tool calculates the nearest available river from the proposing site <miles>.</p>';
 
         NearRiverModule.prototype.updateScore = function (score) {
             var key = "roadModuleScore" + score.site.id;
@@ -224,5 +240,13 @@ var BYUModules;
     BYUModules.NearRiverModule = NearRiverModule;
 
     //Create new module and run
-    var modInstance = new BYUModules.NearRiverModule();
+    //var modInstance = new BYUModules.NearRoadModule();
+    //var modInstance = new BYUModules.NearRiverModule();
 })(BYUModules || (BYUModules = {}));
+
+if (typeof (selfUrl) == 'undefined')
+    var selfUrl = $('script[src$="CombinedNearModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(BYUModules.NearRoadModule.category, BYUModules.NearRoadModule.title, BYUModules.NearRoadModule, isActive, selfUrl);
+pvMapper.moduleManager.registerModule(BYUModules.NearRiverModule.category, BYUModules.NearRiverModule.title, BYUModules.NearRiverModule, isActive, selfUrl);

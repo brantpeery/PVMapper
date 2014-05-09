@@ -5,6 +5,7 @@
 /// <reference path="Tools.ts" />
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
+/// <reference path="modulemanager.ts" />
 /// <reference path="Esri-GeoJsonConverter.js />
 
 interface esriConverter {}
@@ -38,10 +39,10 @@ module BYUModules {
                     //destroy: null,
                     //init: null,
                     
-                    title: "Wilderness",
-                    description: "Overlapping national parks, using data hosted by BYU",
-                    longDescription: '<p>Overlapping national parks, using data hosted by BYU.</p>',
-                    category: "Land Use",
+                    title: WildernessModule.title, //"Wilderness",
+                    description: WildernessModule.description, //"Overlapping national parks, using data hosted by BYU",
+                    longDescription: WildernessModule.longDescription, //'<p>Overlapping national parks, using data hosted by BYU.</p>',
+                    category: WildernessModule.category, //"Land Use",
                     onScoreAdded: (event:EventArg, score: pvMapper.Score) => { },
                     onSiteChange: (event: EventArg, score: pvMapper.Score) => {
                         this.updateScore(score);
@@ -57,7 +58,14 @@ module BYUModules {
                 }],
                 infoTools: null
             });
+            this.getModuleObj = function () { return myModule; }
         }
+        getModuleObj: () => pvMapper.Module;
+        public static title: string = "Wilderness";
+        public static category: string = "Land Use";
+        public static description: string = "Overlapping national parks, using data hosted by BYU";
+        public static longDescription: string = '<p>Overlapping national parks, using data hosted by BYU.</p>;
+
 
         private WildernessRestUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/nat_parks/MapServer/";
         private wildernessLayer;
@@ -154,6 +162,11 @@ module BYUModules {
         }
     }
 
-    var modInstance = new BYUModules.WildernessModule();
+   //var modInstance = new BYUModules.WildernessModule();
     
 }
+if (typeof (selfUrl) == 'undefined')
+  var selfUrl = $('script[src$="WildernessModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(BYUModules.WildernessModule.category, BYUModules.WildernessModule.title, BYUModules.WildernessModule, isActive, selfUrl);

@@ -40,6 +40,7 @@ var pvMapper;
             this.self = this;
             this.title = (typeof (options.title) === 'string') ? options.title : 'Unnamed Tool';
 
+            //this.description = (typeof (options.description) === 'string') ? options.description : 'Unnamed Tool';
             if (options.description) {
                 this.description = options.description;
             }
@@ -54,6 +55,7 @@ var pvMapper;
                 };
             }
 
+            // star rating functions
             if ($.isFunction(options.getStarRatables)) {
                 this.getStarRatables = function () {
                     return options.getStarRatables.apply(_this, arguments);
@@ -90,6 +92,7 @@ var pvMapper;
                 };
             }
 
+            // config window
             if ($.isFunction(options.showConfigWindow)) {
                 this.showConfigWindow = function () {
                     options.showConfigWindow.apply(_this, arguments);
@@ -99,6 +102,11 @@ var pvMapper;
             this.valueChangeHandler = function (event) {
                 //Update the utility score for the score that just changed it's value.
                 event.score.setUtility(_this.getUtilityScore(event.newValue));
+
+                //update the scoreline title for custom tools.
+                if (typeof (_this.getTitle) === 'function') {
+                    _this.title = _this.getTitle();
+                }
 
                 _this.scoreChangeEvent.fire(_this, event);
             };
@@ -115,6 +123,7 @@ var pvMapper;
                 _this.onSiteRemove(site);
             });
 
+            //Set default scoreUtilityOptions object if none was provided
             if (options.scoreUtilityOptions == undefined) {
                 options.scoreUtilityOptions = {
                     functionName: "random",
@@ -142,7 +151,7 @@ var pvMapper;
         };
         ScoreLine.prototype.setWeight = function (value) {
             this.weight = value;
-            this.scoreChangeEvent.fire(self, undefined);
+            this.scoreChangeEvent.fire(self, undefined); // score line changed
             this.saveConfiguration();
         };
 
@@ -162,6 +171,18 @@ var pvMapper;
 
             this.scores.push(score);
 
+            //this.self.scoreAddedEvent.fire(score, [{ score: score, site: site }, score]);
+            // Check if we are testing; if so, skip the initial load of scores
+            //if (document.location.hostname === "localhost") {
+            //    //Set the initial value to 1
+            //    window.setTimeout(function () {
+            //        score.popupMessage = "localhost" +
+            //            " &nbsp (this appears only when running from localhost;" +
+            //            " it's an initial dummy value, where all scores are set to 1;" +
+            //            " to load actual scores, simply edit/change/drag a site vertex)";
+            //        score.updateValue.apply(score, [1]);
+            //    }, 2500 * Math.random());
+            //} else {
             if (!this.suspendEvent) {
                 try  {
                     // request a score update
@@ -225,7 +246,7 @@ var pvMapper;
         ScoreLine.prototype.toJSON = function () {
             var stb = null;
             if (this.getStarRatables !== undefined)
-                stb = this.getStarRatables();
+                stb = this.getStarRatables(); // call the module for the rating value.
             var o = {
                 title: this.title,
                 weight: this.weight,
@@ -285,7 +306,7 @@ var pvMapper;
                     var store = txn.objectStore(pvMapper.ClientDB.CONFIG_STORE_NAME);
                     var stb = null;
                     if (me.getStarRatables !== undefined)
-                        stb = me.getStarRatables();
+                        stb = me.getStarRatables(); // call the module for the rating value.
 
                     //Man!!!!  IndexedDB just hates the IScoreUtilityArgs "stringify" function.  It conplains that it can not clone the object if it has a 'stringify' function defined.
                     //Even the scoreUtility class has "stringify" defined, its fine, just not in the ScoreUtilityArgs class like ThreePoint or Linear.  May be because it thinks that
@@ -303,7 +324,7 @@ var pvMapper;
                             store.put(dbScore, dbScore.title);
                             console.log("updated '" + me.title + "' successful.");
                         } else {
-                            store.add(dbScore, dbScore.title);
+                            store.add(dbScore, dbScore.title); // if new, add
                             console.log("new record '" + me.title + "' saved successful.");
                         }
                     };
@@ -380,3 +401,4 @@ var pvMapper;
     })();
     pvMapper.ScoreLine = ScoreLine;
 })(pvMapper || (pvMapper = {}));
+//# sourceMappingURL=ScoreLine.js.map

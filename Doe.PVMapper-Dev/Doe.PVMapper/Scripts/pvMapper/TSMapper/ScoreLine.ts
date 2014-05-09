@@ -78,6 +78,11 @@ module pvMapper {
                 //Update the utility score for the score that just changed it's value.
                 event.score.setUtility(this.getUtilityScore(event.newValue));
 
+                //update the scoreline title for custom tools.
+                if (typeof (this.getTitle) === 'function') {
+                    this.title = this.getTitle();
+                }
+                
                 this.scoreChangeEvent.fire(this, event);
             }
 
@@ -134,7 +139,7 @@ module pvMapper {
         setModuleName: (name: string) => void;
         getTitle: () => string;
         setTitle: (newTitle: string) => void;
-
+        getModule: () => pvMapper.Module;
         showConfigWindow: () => void;
 
         public self: ScoreLine;

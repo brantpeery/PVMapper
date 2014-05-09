@@ -6,7 +6,6 @@
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
 /// <reference path="ScoreUtility.ts" />
-/// <reference path="Esri-GeoJsonConverter.js />
 /// <reference path="jstorage.d.ts" />
 /// <reference path="ScoreLine.ts" />
 /// <reference path="Scoreboard.ts" />
@@ -20,7 +19,7 @@ declare var geoJsonConverter: {
     new (): any;
     prototype: geoJsonConverter;
 }
-
+ 
 module INLModules {
 
     export class ProtectedAreasModule {
@@ -45,10 +44,10 @@ module INLModules {
                     destroy: null,
                     init: null,
 
-                    title: "Protected Areas",
-                    category: "Land Use",
-                    description: "Overlapping protected areas, found in the PADUS map hosted by gapanalysisprogram.com, using GAP status codes as the default star rating",
-                    longDescription: '<p>This star rating tool finds all protected areas that intersect a proposed site. These ares are defined in PADUS: the national inventory of U.S. terrestrial and marine areas managed through legal or other effective means for the preservation of biological diversity or for other natural, recreational and cultural uses. This dataset includes all federal and most state conservation lands, and many areas at regional and local scales, including some private conservation efforts. For more information, see the USGS Gap Analysis Program (gapanalysis.usgs.gov/padus/data).</p><p>For each area, PADUS includes a GAP Status Code: a conservation measure of management intent for the long-term protection of biodiversity. These status codes range from 1, for areas where natural disturbance events (e.g. fires or floods) go uninterrupted or are mimicked through management, to 2, for areas which may receive uses or management practices that degrade the quality of existing natural communities, to 3, for areas subject to extractive uses of either a localized intense type, or a broad, low-intensity type (such as logging or motorsports). Refer to the PADUS metadata for more details (gapanalysis.usgs.gov/padus/data/metadata/).</p><p>This tool depends on a user-defined star rating for each protected area intersecting a site, on a scale of 0-5 stars. The default rating for a given protected area is equal to its GAP Status Code, so an area with status code 2 would have a two-star rating by default. The default rating for not intersecting any protected areas is four stars. These ratings can then be adjusted by the user.</p><p>When a site overlaps a protected area, its score is based on the star rating of that area (so overlapping a one-star area may give a score of 20, and overlapping a five-star area might give a score of 100). If a site overlaps more than one protected area, the lowest star rating is used to calculate its score (so a site overlapping both a one-star and a five-star area might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>',
+                    title: ProtectedAreasModule.title, //"Protected Areas",
+                    category: ProtectedAreasModule.category, //"Land Use",
+                    description: ProtectedAreasModule.description, //"Overlapping protected areas, found in the PADUS map hosted by gapanalysisprogram.com, using GAP status codes as the default star rating",
+                    longDescription: ProtectedAreasModule.longDescription, //'<p>This star rating tool finds all protected areas that intersect a proposed site. These ares are defined in PADUS: the national inventory of U.S. terrestrial and marine areas managed through legal or other effective means for the preservation of biological diversity or for other natural, recreational and cultural uses. This dataset includes all federal and most state conservation lands, and many areas at regional and local scales, including some private conservation efforts. For more information, see the USGS Gap Analysis Program (gapanalysis.usgs.gov/padus/data).</p><p>For each area, PADUS includes a GAP Status Code: a conservation measure of management intent for the long-term protection of biodiversity. These status codes range from 1, for areas where natural disturbance events (e.g. fires or floods) go uninterrupted or are mimicked through management, to 2, for areas which may receive uses or management practices that degrade the quality of existing natural communities, to 3, for areas subject to extractive uses of either a localized intense type, or a broad, low-intensity type (such as logging or motorsports). Refer to the PADUS metadata for more details (gapanalysis.usgs.gov/padus/data/metadata/).</p><p>This tool depends on a user-defined star rating for each protected area intersecting a site, on a scale of 0-5 stars. The default rating for a given protected area is equal to its GAP Status Code, so an area with status code 2 would have a two-star rating by default. The default rating for not intersecting any protected areas is four stars. These ratings can then be adjusted by the user.</p><p>When a site overlaps a protected area, its score is based on the star rating of that area (so overlapping a one-star area may give a score of 20, and overlapping a five-star area might give a score of 100). If a site overlaps more than one protected area, the lowest star rating is used to calculate its score (so a site overlapping both a one-star and a five-star area might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>',
                     //onScoreAdded: (e, score: pvMapper.Score) => {
                     //},
                     onSiteChange: (e, score: pvMapper.Score) => {
@@ -76,7 +75,13 @@ module INLModules {
 
                 infoTools: null
             });
+            this.getModuleObj = function () { return myModule; }
         }
+        getModuleObj: () => pvMapper.Module;
+        public static title: string = "Protected Areas";
+        public static category: string = "Land Use";
+        public static description: string = "Overlapping protected areas, found in the PADUS map hosted by gapanalysisprogram.com, using GAP status codes as the default star rating";
+        public static longDescription: string = '<p>This star rating tool finds all protected areas that intersect a proposed site. These ares are defined in PADUS: the national inventory of U.S. terrestrial and marine areas managed through legal or other effective means for the preservation of biological diversity or for other natural, recreational and cultural uses. This dataset includes all federal and most state conservation lands, and many areas at regional and local scales, including some private conservation efforts. For more information, see the USGS Gap Analysis Program (gapanalysis.usgs.gov/padus/data).</p><p>For each area, PADUS includes a GAP Status Code: a conservation measure of management intent for the long-term protection of biodiversity. These status codes range from 1, for areas where natural disturbance events (e.g. fires or floods) go uninterrupted or are mimicked through management, to 2, for areas which may receive uses or management practices that degrade the quality of existing natural communities, to 3, for areas subject to extractive uses of either a localized intense type, or a broad, low-intensity type (such as logging or motorsports). Refer to the PADUS metadata for more details (gapanalysis.usgs.gov/padus/data/metadata/).</p><p>This tool depends on a user-defined star rating for each protected area intersecting a site, on a scale of 0-5 stars. The default rating for a given protected area is equal to its GAP Status Code, so an area with status code 2 would have a two-star rating by default. The default rating for not intersecting any protected areas is four stars. These ratings can then be adjusted by the user.</p><p>When a site overlaps a protected area, its score is based on the star rating of that area (so overlapping a one-star area may give a score of 20, and overlapping a five-star area might give a score of 100). If a site overlaps more than one protected area, the lowest star rating is used to calculate its score (so a site overlapping both a one-star and a five-star area might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>';
 
         private starRatingHelper: pvMapper.IStarRatingHelper = new pvMapper.StarRatingHelper({
             defaultStarRating: 4,
@@ -206,8 +211,6 @@ module INLModules {
 
     }
 
-    var protectedAreasInstance = new INLModules.ProtectedAreasModule();
-
     //============================================================
 
     export class LandCoverModule {
@@ -232,10 +235,10 @@ module INLModules {
                     destroy: null,
                     init: null,
 
-                    title: "Land Cover",
-                    category: "Land Use",
-                    description: "The type of land cover found in the center of a site, using GAP land cover data hosted by gapanalysisprogram.com",
-                    longDescription: '<p>This star rating tool finds the type of land cover present at the center of a proposed site. The GAP Land Cover dataset provides detailed vegetation and land use patterns for the continental United States, incorporating an ecological classification system to represent natural and semi-natural land cover. Note that the land cover at the center point of a site may not be representative of the overall land cover at that site. Note also that this dataset was created for regional biodiversity assessment, and not for use at scales larger than 1:100,000. Due to these limitations, results from this tool should be considered preliminary. For more information, see the USGS Gap Analysis Program (gapanalysis.usgs.gov/gaplandcover/data).</p><p>This tool depends on a user-defined star rating for the land cover classification found at each site, on a scale of 0-5 stars. The default rating for all land classes is three stars. These ratings should be adjusted by the user. The score for a site is based on the star rating of its land cover class (so overlapping a one-star class may give a score of 20, and overlapping a five-star class might give a score of 100). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>',
+                    title: LandCoverModule.title, //"Land Cover",
+                    category: LandCoverModule.category, //"Land Use",
+                    description: LandCoverModule.description, //"The type of land cover found in the center of a site, using GAP land cover data hosted by gapanalysisprogram.com",
+                    longDescription: LandCoverModule.longDescription, //'<p>This star rating tool finds the type of land cover present at the center of a proposed site. The GAP Land Cover dataset provides detailed vegetation and land use patterns for the continental United States, incorporating an ecological classification system to represent natural and semi-natural land cover. Note that the land cover at the center point of a site may not be representative of the overall land cover at that site. Note also that this dataset was created for regional biodiversity assessment, and not for use at scales larger than 1:100,000. Due to these limitations, results from this tool should be considered preliminary. For more information, see the USGS Gap Analysis Program (gapanalysis.usgs.gov/gaplandcover/data).</p><p>This tool depends on a user-defined star rating for the land cover classification found at each site, on a scale of 0-5 stars. The default rating for all land classes is three stars. These ratings should be adjusted by the user. The score for a site is based on the star rating of its land cover class (so overlapping a one-star class may give a score of 20, and overlapping a five-star class might give a score of 100). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>',
                     //onScoreAdded: (e, score: pvMapper.Score) => {
                     //},
                     onSiteChange: (e, score: pvMapper.Score) => {
@@ -263,7 +266,13 @@ module INLModules {
 
                 infoTools: null
             });
+            this.getModuleObj = function () { return myModule; }
         }
+        getModuleObj: () => pvMapper.Module;
+        public static title: string = "Land Cover";
+        public static category: string = "Land Use";
+        public static description: string = "The type of land cover found in the center of a site, using GAP land cover data hosted by gapanalysisprogram.com";
+        public static longDescription: string = '<p>This star rating tool finds the type of land cover present at the center of a proposed site. The GAP Land Cover dataset provides detailed vegetation and land use patterns for the continental United States, incorporating an ecological classification system to represent natural and semi-natural land cover. Note that the land cover at the center point of a site may not be representative of the overall land cover at that site. Note also that this dataset was created for regional biodiversity assessment, and not for use at scales larger than 1:100,000. Due to these limitations, results from this tool should be considered preliminary. For more information, see the USGS Gap Analysis Program (gapanalysis.usgs.gov/gaplandcover/data).</p><p>This tool depends on a user-defined star rating for the land cover classification found at each site, on a scale of 0-5 stars. The default rating for all land classes is three stars. These ratings should be adjusted by the user. The score for a site is based on the star rating of its land cover class (so overlapping a one-star class may give a score of 20, and overlapping a five-star class might give a score of 100). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>';
 
         private starRatingHelper: pvMapper.IStarRatingHelper = new pvMapper.StarRatingHelper({
             defaultStarRating: 4,
@@ -375,7 +384,6 @@ module INLModules {
         }
     }
 
-    var landCoverInstance = new INLModules.LandCoverModule();
 
     //============================================================
 
@@ -404,10 +412,10 @@ module INLModules {
                     destroy: null,
                     init: null,
 
-                    title: "Land Cover",
-                    category: "Land Use",
-                    description: "The types of Land cover found in the selected area. Using data hosted on Geoserver.byu.edu",
-                    longDescription: "<p>The types of Land cover found in the selected area. Using data hosted on geoserver.byu.edu</p>", //TODO: this...!
+                    title: LandCoverModuleV2.title, //"Land Cover 2",
+                    category: LandCoverModuleV2.category, //"Land Use",
+                    description: LandCoverModuleV2.description, //"The types of Land cover found in the selected area. Using data hosted on Geoserver.byu.edu",
+                    longDescription: LandCoverModuleV2.longDescription, //"<p>The types of Land cover found in the selected area. Using data hosted on geoserver.byu.edu</p>", //TODO: this...!
                     //onScoreAdded: (e, score: pvMapper.Score) => {
                     //},
                     onSiteChange: (e, score: pvMapper.Score) => {
@@ -434,10 +442,13 @@ module INLModules {
 
                 infoTools: null
             });
+            this.getModuleObj = function () { return myModule; }
         }
-
-
-
+        getModuleObj: () => pvMapper.Module;
+        public static title: string = "Land Cover 2";
+        public static category: string = "Land Use";
+        public static description: string = "The types of Land cover found in the selected area. Using data hosted on Geoserver.byu.edu";
+        public static longDescription: string = "<p>The types of Land cover found in the selected area. Using data hosted on geoserver.byu.edu</p>";
 
         private landCoverRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/NAT_LC/1_NVC_class_landuse/MapServer/";
 
@@ -631,7 +642,7 @@ module INLModules {
                         score.updateValue(Number.NaN);
                     }
                 },
-            });
+            });                                
         }
     }
 
@@ -642,4 +653,15 @@ module INLModules {
     //============================================================
 
 }
+//var protectedAreasInstance = new INLModules.ProtectedAreasModule();
+//var landCoverInstance = new INLModules.LandCoverModule();
+
+
+if (typeof (selfUrl) == 'undefined')
+  var selfUrl = $('script[src$="LandUseModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(INLModules.ProtectedAreasModule.category, INLModules.ProtectedAreasModule.title, INLModules.ProtectedAreasModule, isActive,selfUrl);
+pvMapper.moduleManager.registerModule(INLModules.LandCoverModule.category, INLModules.LandCoverModule.title, INLModules.LandCoverModule, isActive,selfUrl);
+pvMapper.moduleManager.registerModule(INLModules.LandCoverModuleV2.category, INLModules.LandCoverModuleV2.title, INLModules.LandCoverModuleV2, !isActive, selfUrl);
 

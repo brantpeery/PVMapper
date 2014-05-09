@@ -9,31 +9,171 @@ interface ICallback {
 declare module JXG {
 
 
-  interface EventEmitter {
-    eventHandlers: any;
-    suspended: any;
-    trigger(event: any[], args: any[]): EventEmitter;
-    /**
-      Register a new event handler. For a list of possible events see documentation of the elements and objects implementing the EventEmitter interface. 
-      @{String} event - the name of the event to be registered.
-      @{Function} handler, a call back function
-      @{Object} context Optional, The context the handler will be called in, default is the element itself.
-    */
-    on(event: string, handler: ICallback, context: any): EventEmitter;
-    /**
-        Unregister an event handler. 
-      */
-    off(event: string, handler: ICallback): EventEmitter;
-    eventify(o: any);
-  }
+    interface EventEmitter {
+        eventHandlers: any;
+        suspended: any;
+        trigger(event: any[], args: any[]): EventEmitter;
+        /**
+          Register a new event handler. For a list of possible events see documentation of the elements and objects implementing the EventEmitter interface. 
+          @{String} event - the name of the event to be registered.
+          @{Function} handler, a call back function
+          @{Object} context Optional, The context the handler will be called in, default is the element itself.
+        */
+        on(event: string, handler: ICallback, context: any): EventEmitter;
+        /**
+            Unregister an event handler. 
+          */
+        off(event: string, handler: ICallback): EventEmitter;
+        eventify(o: any);
+    }
 
-  enum BoardMode {
-    BOARD_MODE_NONE, BOARD_MODE_DRAG, BOARD_MODE_ORIGIN
-  }
+    enum BoardMode {
+        BOARD_MODE_NONE, BOARD_MODE_DRAG, BOARD_MODE_ORIGIN
+    }
 
-  interface Options {
+    interface Options {
+ 
 
-  }
+    }
+
+    var Options: {
+        new (): Options;
+        (): Options;
+        prototype: Options;
+        jc: {
+            enabled: boolean;
+            compile: boolean;
+        };
+        board: {
+            boundingBox: Array<number>;
+            zoomFactor: number;
+            zoomX: number;
+            zoomY: number;
+            showCopyRight: boolean;
+            axis: boolean;
+            showNavigation: boolean;
+            showReload: boolean;
+            showClearTrace: boolean;
+            keepAspectRatio: boolean;
+            document: boolean;
+            takeFirst: boolean;
+            takeSizeFromFile: boolean;
+            renderer: string;
+            animationDelay: number;
+            registerEvents: boolean;
+            offsetX: number;
+            offsetY: number;
+            zoom: {
+                factorX: number;
+                factorY: number;
+                wheel: boolean;
+                needshift: boolean;
+                eps: number;
+            };
+            pan: {
+                needShift: boolean;
+                needTwoFingers: boolean;
+                enabled: boolean;
+            };
+        };
+        navbar: {
+            strokeColor: string;
+            fillColor: string;
+            hightlightFillColor: string;
+            padding: string;
+            position: string;
+            fontSize: string;
+            cursor: string;
+            zIndex: string;
+            right: string;
+            bottom: string;
+        };
+        elements: {
+            strokeColor: string;
+            highlightStrokeColor: string;
+            fillColor: string;
+            highlightFillColor: string;
+            strokeOpacity: number;
+            highlightStrokeOpacity: number;
+            fillOpacity: number;
+            highlightFillOpacity: number;
+            strokeWidth: number;
+            highlightStrokeWidth: number;
+            fixed: boolean;
+            frozen: boolean;
+            withLabel: boolean;
+            visible: boolean;
+            priv: boolean;
+            layer: number;
+            dash: number;
+            shadow: boolean;
+            trace: boolean;
+            traceAttributes: any;
+            highlight: boolean;
+            needsRegularUpdate: boolean;
+            snapToGrid: boolean;
+            scalable: boolean;
+            draft: {
+                draft: boolean;
+                strokeColor: string;
+                fillColor: string;
+                strokeOpacity: string;
+                fillOpacity: string;
+                strokeWidth: number;
+            };
+            isLabel: boolean;
+        };
+        ticks: {
+            generateLabelValue: any;
+            drawLabels: boolean;
+            label: any;
+            anchor: string;
+            downZero: boolean;
+            insertTicks: boolean;
+            minTicksDistance: number;
+            minorHeight: number;
+            majorHeight: number;
+            tickEndings: Array<number>;
+            minorTicks: number;
+            scale: number;
+            scaleSymbol: string;
+            labels: Array<any>;
+            maxLabelLength: number;
+            precision: number;
+            ticksDistance: number;
+            strokeOpacity: number;
+            strokeWidth: number;
+            strokeColor: string;
+            highlightStrokeColor: string;
+            includeBoundaries: boolean;
+        };
+        hatch: {
+            drawLabels: boolean;
+            drawZero: boolean;
+            majorHeight: number;
+            anchor: string;
+            strokeWidth: number;
+            strokeColor: string;
+            ticksDistance: number;
+        };
+        precision: {
+            touch: number;
+            touchMax: number;
+            mouse: number;
+            epsilon: number;
+            hasPoint: number;
+        };
+        /// Arrggghhh !!! too many...
+        text: {
+            fontSize: number;
+            digits: number;
+            parse: boolean;
+            useCaja: boolean;
+            isLabel: boolean;
+            /// there are more attributes, but only include what I need for now.
+            display: string;
+        };
+    };
 
   interface Board {
     animateObjects: any;

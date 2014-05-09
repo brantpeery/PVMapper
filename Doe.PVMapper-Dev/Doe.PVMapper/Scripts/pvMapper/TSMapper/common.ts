@@ -104,10 +104,10 @@ String.prototype.isNullOrEmpty = function (): boolean {
 /// if found, return the matching object, if no element found, it returns null.
 
 interface Array<T> {
-    find(fn: ICallback): boolean;
+    find(fn: ICallback): Object;
 }
 
-Array.prototype.find = function (fn: ICallback): boolean {
+Array.prototype.find = function (fn: ICallback): Object {
     if (fn) {
         for (var i = 0; i < this.length; i++) {
             if (fn(this[i]))
@@ -116,3 +116,13 @@ Array.prototype.find = function (fn: ICallback): boolean {
     }
     return null;
 }
+
+//Just for forcing the funciton domain to a specific d. 
+//Specifically the 'this' argument of the function
+function bindTo(d, f) {
+    return function () {
+        return f.apply(d, arguments);
+    }
+ }
+
+

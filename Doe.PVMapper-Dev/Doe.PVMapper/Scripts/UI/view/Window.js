@@ -146,9 +146,10 @@ var WindowManager;
         return aWin;
       }
       else {
-        aWin = Ext.create(className, configObj);
-
-        aWin.setTitle(aTitle);
+          aWin = Ext.create(className, configObj);
+          if (aWin.title == undefined && configObj.title == undefined) {
+              aWin.setTitle(aTitle);
+          }
         return aWin;
       }
     }

@@ -2,6 +2,8 @@
 /// <reference path="common.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="../../ExtJS.d.ts" />
+var Promise;
+
 // Module
 var pvMapper;
 (function (pvMapper) {
@@ -18,6 +20,8 @@ var pvMapper;
     })();
     pvMapper.CustomModule = CustomModule;
 
+    
+
     pvMapper.ICustomModuleData;
 
     var CustomModuleData = (function () {
@@ -32,28 +36,38 @@ var pvMapper;
     var ClientDB = (function () {
         function ClientDB() {
         }
-        ClientDB.initClientDB = function () {
+        ClientDB.initClientDB = function (forced) {
+            if (typeof forced === "undefined") { forced = false; }
             var me = this;
             if (!ClientDB.indexedDB) {
                 window.alert("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
                 return;
             }
 
-            if (ClientDB.db)
-                return;
-
+            if (ClientDB.db) {
+                if (!forced)
+                    return;
+                else {
+                    ClientDB.db = null;
+                    ClientDB.isDBCreating = false;
+                }
+            }
             try  {
                 if (!ClientDB.isDBCreating) {
                     ClientDB.isDBCreating = true;
-                    var dbreq = ClientDB.indexedDB.open(ClientDB.DB_NAME, ClientDB.DBVersion);
+                    if (forced)
+                        var dbreq = ClientDB.indexedDB.open(ClientDB.DB_NAME, ClientDB.DBVersion);
+                    else
+                        var dbreq = ClientDB.indexedDB.open(ClientDB.DB_NAME);
                     dbreq.onsuccess = function (evt) {
                         console.log("Database [PVMapperData] is open sucessful.");
                         ClientDB.db = evt.currentTarget.result;
+                        ClientDB.DBVersion = +ClientDB.db.version;
                     };
 
                     dbreq.onerror = function (event) {
                         me.clientDBError = true;
-                        console.log("indexedDB open error: " + event.message);
+                        console.log("indexedDB open error: " + event.currentTarget.error.message);
                     };
 
                     dbreq.onupgradeneeded = function (evt) {
@@ -65,6 +79,15 @@ var pvMapper;
                             if (!db.objectStoreNames.contains(ClientDB.PROJECT_STORE_NAME)) {
                                 evt.currentTarget.result.createObjectStore(ClientDB.PROJECT_STORE_NAME, { keypath: "project" });
                             }
+                            if (!db.objectStoreNames.contains(ClientDB.TOOLS_STORE_NAME)) {
+                                evt.currentTarget.result.createObjectStore(ClientDB.TOOLS_STORE_NAME, { keypath: "tools" });
+                            }
+                            if (ClientDB.CUSTOM_STORE_NAME && ClientDB.CUSTOM_STORE_NAME.length > 0) {
+                                if (!db.objectStoreNames.contains(ClientDB.CUSTOM_STORE_NAME)) {
+                                    evt.currentTarget.result.createObjectStore(ClientDB.CUSTOM_STORE_NAME, { keypath: "custom_id" });
+                                }
+                            }
+
                             ClientDB.db = evt.currentTarget.result;
                         } catch (e) {
                             console.log("Creating object store failed, cause: " + e.message);
@@ -83,7 +106,6 @@ var pvMapper;
             try  {
                 var txn = ClientDB.db.transaction(ClientDB.PROJECT_STORE_NAME, "readwrite");
                 var store = txn.objectStore(ClientDB.PROJECT_STORE_NAME);
-                var stb = null;
 
                 var request = store.get(filename);
                 request.onsuccess = function (evt) {
@@ -91,7 +113,7 @@ var pvMapper;
                     if (request.result != undefined) {
                         store.put(data, filename);
                     } else
-                        store.add(data, filename);
+                        store.add(data, filename); // if new, add
                 };
             } catch (e) {
                 console.log("save custom KML failed, cause: " + e.message);
@@ -109,7 +131,7 @@ var pvMapper;
                 if (request.result != undefined) {
                     if (+ClientDB.db.version <= 6)
                         kmlData = new CustomModule(key, "LocalLayerModule", request.result);
-else
+                    else
                         kmlData = request.result;
                     if (typeof (cbFn) === "function")
                         cbFn(kmlData);
@@ -156,7 +178,7 @@ else
                 var txn = ClientDB.db.transaction(ClientDB.PROJECT_STORE_NAME, "readonly");
                 var store = txn.objectStore(ClientDB.PROJECT_STORE_NAME);
                 store.openCursor().onsuccess = function (evt) {
-                    var cursor = (evt.target).result;
+                    var cursor = evt.target.result;
                     if (cursor) {
                         kmlNames.push(cursor.key);
                         cursor.continue();
@@ -171,16 +193,122 @@ else
             }
             return kmlNames;
         };
+
+        ClientDB.loadToolModules = function (storeName) {
+            this.CUSTOM_STORE_NAME = storeName;
+
+            return new Promise(function (resolve, reject) {
+                if (ClientDB.db == null) {
+                    reject(Error("Database is not available or not ready."));
+                    return;
+                }
+                if (storeName == undefined || storeName.length == 0) {
+                    reject(Error("Tried to open a store, but store name is not provided."));
+                    return;
+                }
+
+                try  {
+                    //if the custom store is not yet exists, re-initCLientDB to force it to connect with higher version.
+                    if (!ClientDB.db.objectStoreNames.contains(ClientDB.CUSTOM_STORE_NAME)) {
+                        reject(Error("There is no store '" + ClientDB.CUSTOM_STORE_NAME + "' exists."));
+                    }
+
+                    var txn = ClientDB.db.transaction(ClientDB.CUSTOM_STORE_NAME, 'readonly');
+                    txn.oncomplete = function (evt) {
+                        console.log("Transaction for '" + ClientDB.CUSTOM_STORE_NAME + "' completed.");
+                    };
+                    txn.onerror = function (evt) {
+                        console.log("Transaction for '" + ClientDB.CUSTOM_STORE_NAME + "' failed, cause: " + txn.error);
+                    };
+
+                    txn.onabort = function (evt) {
+                        console.log("Transaction for '" + ClientDB.CUSTOM_STORE_NAME + "' aborted, cause: " + txn.error);
+                    };
+
+                    var store = txn.objectStore(ClientDB.CUSTOM_STORE_NAME);
+
+                    if (store) {
+                        var results = new Array();
+                        var cursor = store.openCursor();
+                        cursor.onsuccess = function (evt) {
+                            var rec = evt.target.result;
+                            if (rec) {
+                                var jsonObj = JSON.parse(rec.value);
+                                results.push({ key: rec.key, value: jsonObj });
+                                rec.continue();
+                            } else {
+                                resolve(results);
+                            }
+                        };
+                        cursor.onerror = function (evt) {
+                            console.log("Open a cursor on '" + store + "' failed, cause: " + evt.message);
+                        };
+                    }
+                } catch (e) {
+                    reject(Error(e.message));
+                }
+            });
+        };
+
+        //Save user preferences of tool modules to local database.
+        //storeName - the "table" name
+        //tools - array of object [key,value] pair.
+        ClientDB.saveToolModules = function (storeName, tools) {
+            this.CUSTOM_STORE_NAME = storeName;
+
+            if (ClientDB.db == null) {
+                console.log("Database is not available or not ready.");
+                return;
+            }
+            if (storeName == undefined || storeName.length == 0) {
+                console.log("Tried to open a store, but store name is not provided.");
+                return;
+            }
+
+            try  {
+                //if the custom store is not yet exists, re-initCLientDB to force it to connect with higher version.
+                if (!ClientDB.db.objectStoreNames.contains(ClientDB.CUSTOM_STORE_NAME)) {
+                    console.log("There is no store '" + ClientDB.CUSTOM_STORE_NAME + "' exists.");
+                }
+
+                var txn = ClientDB.db.transaction(ClientDB.CUSTOM_STORE_NAME, 'readwrite');
+                var store = txn.objectStore(ClientDB.CUSTOM_STORE_NAME);
+                if (store) {
+                    tools.forEach(function (tool) {
+                        var request = store.get(tool.key);
+                        request.onsuccess = function (evt) {
+                            //tool.value.ctorStr = tool.value.ctor.toString();
+                            var jsonStr = JSON.stringify(tool.value);
+                            if (request.result != undefined) {
+                                store.put(jsonStr, tool.key);
+                                console.log("Tool module: '" + tool.key + "' updated successful.");
+                            } else {
+                                store.add(jsonStr, tool.key); // if new, add
+                                console.log("Tool module: '" + tool.key + "' added successfule.");
+                            }
+                        };
+                        request.onerror = function (evt) {
+                            console.log("Attempt to save tool key = '" + tool.key + "' failed, cause: " + evt.message);
+                        };
+                    });
+                }
+            } catch (ex) {
+                console.log("Save tool Modules failed, cause: " + ex.message);
+            }
+        };
         ClientDB.DB_NAME = "PVMapperData";
         ClientDB.CONFIG_STORE_NAME = "PVMapperScores";
         ClientDB.PROJECT_STORE_NAME = "PVMapperProjects";
+        ClientDB.TOOLS_STORE_NAME = "PVMapperTools";
         ClientDB.db = null;
-        ClientDB.DBVersion = 7;
+        ClientDB.DBVersion = 1;
 
         ClientDB.indexedDB = window.indexedDB || window.msIndexedDB;
 
         ClientDB.isDBCreating = false;
         ClientDB.clientDBError = false;
+
+        ClientDB.CUSTOM_STORE_NAME = "";
         return ClientDB;
     })();
     pvMapper.ClientDB = ClientDB;
@@ -254,3 +382,4 @@ else
     })();
     pvMapper.dataManager = dataManager;
 })(pvMapper || (pvMapper = {}));
+//# sourceMappingURL=DataManager.js.map

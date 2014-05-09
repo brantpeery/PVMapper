@@ -117,7 +117,7 @@ module INLModules {
     
     });
 
-    class SolarPlantSocialModule {
+    export class SolarPlantSocialModule {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "SolarPlantSocialModule",
@@ -145,10 +145,10 @@ module INLModules {
                         propsWindow.show();
                     },
 
-                    title: "Existing Solar Proximity",
-                    category: "Social Acceptance",
-                    description: "Percentage of survey respondents who reported this distance from existing solar plants as acceptable",
-                    longDescription: '<p>This tool calculates the distance from a site to the nearest existing solar plant, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 441 respondents from six counties in Southern California answered Question 21 which asked "How much buffer distance is acceptable between a large solar facility and an existing large solar facility?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest existing solar installation is identified using map data from SEIA. See their Research & Resources page for more information (www.seia.org/research-resources).</p>',
+                    title: SolarPlantSocialModule.title, //"Existing Solar Proximity",
+                    category: SolarPlantSocialModule.category, //"Social Acceptance",
+                    description: SolarPlantSocialModule.description, //"Percentage of survey respondents who reported this distance from existing solar plants as acceptable",
+                    longDescription: SolarPlantSocialModule.longDescription, //'<p>This tool calculates the distance from a site to the nearest existing solar plant, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 441 respondents from six counties in Southern California answered Question 21 which asked "How much buffer distance is acceptable between a large solar facility and an existing large solar facility?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest existing solar installation is identified using map data from SEIA. See their Research & Resources page for more information (www.seia.org/research-resources).</p>',
                     //onScoreAdded: function (e, score: pvMapper.Score) {
                     //    scores.push(score);
                     //},
@@ -167,10 +167,16 @@ module INLModules {
 
                 infoTools: null
             });
+            this.getModuleObj = function () { return myModule; }
         }
+        getModuleObj: () => pvMapper.Module;
+        public static title: string = "Existing Solar Proximity";
+        public static category: string = "Social Acceptance";
+        public static description: string = "Percentage of survey respondents who reported this distance from existing solar plants as acceptable";
+        public static longDescription: string = '<p>This tool calculates the distance from a site to the nearest existing solar plant, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 441 respondents from six counties in Southern California answered Question 21 which asked "How much buffer distance is acceptable between a large solar facility and an existing large solar facility?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest existing solar installation is identified using map data from SEIA. See their Research & Resources page for more information (www.seia.org/research-resources).</p>';
+
     }
 
-    var modinstance = new SolarPlantSocialModule();
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
@@ -466,4 +472,11 @@ module INLModules {
         }
 
     }
+    //var modinstance = new INLModules.SolarPlantSocialModule();
 }
+
+if (typeof (selfUrl) == 'undefined')
+  var selfUrl = $('script[src$="SolarPlantSocialModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(INLModules.SolarPlantSocialModule.category, INLModules.SolarPlantSocialModule.title, INLModules.SolarPlantSocialModule, isActive, selfUrl);

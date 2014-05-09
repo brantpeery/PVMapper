@@ -56,8 +56,7 @@ var INLModules;
         { mi: 300, percentOk: 98.35051546 },
         { mi: 500, percentOk: 99.17525773 },
         { mi: 1000, percentOk: 99.79381443 },
-        { mi: 5000, percentOk: 100 }
-    ];
+        { mi: 5000, percentOk: 100 }];
 
     var configProperties = {
         //maxSearchDistanceInKM: 30,
@@ -106,15 +105,13 @@ var INLModules;
                     }
                 }
             },
-            buttons: [
-                {
+            buttons: [{
                     xtype: 'button',
                     text: 'OK',
                     handler: function () {
                         propsWindow.hide();
                     }
-                }
-            ],
+                }],
             constrain: true
         });
     });
@@ -134,20 +131,19 @@ var INLModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [
-                    {
+                scoringTools: [{
                         activate: null,
                         deactivate: null,
                         destroy: null,
                         init: null,
                         showConfigWindow: function () {
-                            myToolLine = this;
+                            myToolLine = this; // fetch tool line, which was passed as 'this' parameter
                             propsWindow.show();
                         },
-                        title: "Wildlife Proximity",
-                        category: "Social Acceptance",
-                        description: "Percentage of survey respondents who reported this distance from sensitive wildlife habitat as acceptable",
-                        longDescription: '<p>This tool calculates the distance from a site to the nearest critical wildlife habitat, and then reports the percentage of survey respondents who said that distance would be an acceptable buffer between a large solar facility and a wildlife breeding ground or nesting site.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 484 respondents from six counties in Southern California answered Question 18 which asked "How much buffer distance is acceptable between a large solar facility and an area used as nesting sites or breeding grounds by wildlife?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest wildlife area is identified using the Critical Habitat Portal by the US Fish and Wildlife Service. Note that several issues with this. First, the FWS dataset includes habitat which are not breeding or nesting grounds. Second, it only includes data on critical and endangered species, while the survey question was not so limited. And third, the data portal does not include habitat for all critical and endangered species. See the FWS website for more information (ecos.fws.gov/crithab).</p><p>Due to these limitations, results from this tool should be considered preliminary and approximate.</p>',
+                        title: WildlifeSocialModule.title,
+                        category: WildlifeSocialModule.category,
+                        description: WildlifeSocialModule.description,
+                        longDescription: WildlifeSocialModule.longDescription,
                         //onScoreAdded: function (e, score: pvMapper.Score) {
                         //    scores.push(score);
                         //},
@@ -160,15 +156,20 @@ var INLModules;
                             functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Percent Habitat Favor", "Score", "Preference of proximity to wildlife habitat restrictions.")
                         },
                         weight: 10
-                    }
-                ],
+                    }],
                 infoTools: null
             });
+            this.getModuleObj = function () {
+                return myModule;
+            };
         }
+        WildlifeSocialModule.title = "Wildlife Proximity";
+        WildlifeSocialModule.category = "Social Acceptance";
+        WildlifeSocialModule.description = "Percentage of survey respondents who reported this distance from sensitive wildlife habitat as acceptable";
+        WildlifeSocialModule.longDescription = '<p>This tool calculates the distance from a site to the nearest critical wildlife habitat, and then reports the percentage of survey respondents who said that distance would be an acceptable buffer between a large solar facility and a wildlife breeding ground or nesting site.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 484 respondents from six counties in Southern California answered Question 18 which asked "How much buffer distance is acceptable between a large solar facility and an area used as nesting sites or breeding grounds by wildlife?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest wildlife area is identified using the Critical Habitat Portal by the US Fish and Wildlife Service. Note that several issues with this. First, the FWS dataset includes habitat which are not breeding or nesting grounds. Second, it only includes data on critical and endangered species, while the survey question was not so limited. And third, the data portal does not include habitat for all critical and endangered species. See the FWS website for more information (ecos.fws.gov/crithab).</p><p>Due to these limitations, results from this tool should be considered preliminary and approximate.</p>';
         return WildlifeSocialModule;
     })();
-
-    var modinstance = new WildlifeSocialModule();
+    INLModules.WildlifeSocialModule = WildlifeSocialModule;
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
     var fwsExportUrl = "https://ecos.fws.gov/arcgis/rest/services/crithab/usfwsCriticalHabitat/MapServer/export";
@@ -274,6 +275,7 @@ var INLModules;
             }
         }
 
+        //"Power_Plant,Owner,Plant_Operator,Operating_Capacity_MW"
         if (closestFeature !== null) {
             var minDistanceInMi = minDistance * 0.000621371;
 
@@ -332,3 +334,11 @@ var INLModules;
         }
     }
 })(INLModules || (INLModules = {}));
+
+//var modinstance = new INLModules.WildlifeSocialModule();
+if (typeof (selfUrl) == 'undefined')
+    var selfUrl = $('script[src$="WildlifeSocialModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(INLModules.WildlifeSocialModule.category, INLModules.WildlifeSocialModule.title, INLModules.WildlifeSocialModule, isActive, selfUrl);
+//# sourceMappingURL=WildlifeSocialModule.js.map

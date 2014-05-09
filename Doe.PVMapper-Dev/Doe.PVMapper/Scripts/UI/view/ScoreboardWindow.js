@@ -503,41 +503,40 @@ Ext.define('MainApp.view.ScoreWeightEditing', {
 });
 
 
-
-function removeCustomModule(moduleName) {
-    var module = pvMapper.customModules.find(function (a) {
-        if (a.fileName === moduleName) return true;
-        else return false;
-    });
-    if (module) {
-        //remove the module from the local database
-        pvMapper.ClientDB.deleteCustomKML(module.fileName, function (isSuccessful) {
-            if (isSuccessful) {
-                //remove it from the custom module list.
-                var idx = pvMapper.customModules.indexOf(module);
-                pvMapper.customModules.splice(idx, 1);
-                //now remove the scoreline.
-                var scoreline = pvMapper.mainScoreboard.scoreLines.find(function (a) {
-                    if (a.getModuleName !== undefined) {
-                        if (a.getModuleName() === module.fileName) return true;
-                        else return false;
-                    }
-                    else return false;
-                });
-                if (scoreline) {
-                    idx = pvMapper.mainScoreboard.scoreLines.indexOf(scoreline);
-                    if (idx >= 0) pvMapper.mainScoreboard.scoreLines.splice(idx, 1);
-                    //finally then free the module.
-                    delete scoreline;
-                }
-                if (module.moduleObject.removeLocalLayer !== undefined)
-                    module.moduleObject.removeLocalLayer();  //remove the custom module layer from map.
-                delete module;
-                pvMapper.mainScoreboard.update();
-            }
-        });
-    }
-}
+//function removeCustomModule(moduleName) {
+//    var module = pvMapper.customModules.find(function (a) {
+//        if (a.fileName === moduleName) return true;
+//        else return false;
+//    });
+//    if (module) {
+//        //remove the module from the local database
+//        pvMapper.ClientDB.deleteCustomKML(module.fileName, function (isSuccessful) {
+//            if (isSuccessful) {
+//                //remove it from the custom module list.
+//                var idx = pvMapper.customModules.indexOf(module);
+//                pvMapper.customModules.splice(idx, 1);
+//                //now remove the scoreline.
+//                var scoreline = pvMapper.mainScoreboard.scoreLines.find(function (a) {
+//                    if (a.getModuleName !== undefined) {
+//                        if (a.getModuleName() === module.fileName) return true;
+//                        else return false;
+//                    }
+//                    else return false;
+//                });
+//                if (scoreline) {
+//                    idx = pvMapper.mainScoreboard.scoreLines.indexOf(scoreline);
+//                    if (idx >= 0) pvMapper.mainScoreboard.scoreLines.splice(idx, 1);
+//                    //finally then free the module.
+//                    delete scoreline;
+//                }
+//                if (module.moduleObject.removeLocalLayer !== undefined)
+//                    module.moduleObject.removeLocalLayer();  //remove the custom module layer from map.
+//                delete module;
+//                pvMapper.mainScoreboard.update();
+//            }
+//        });
+//    }
+//}
 
 //----------------The grid and window-----------------
 Ext.define('Ext.grid.ScoreboardGrid', {
@@ -571,7 +570,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
                                 Ext.MessageBox.confirm("Removing '"+titleName+"("+moduleName+")'", "Are you sure you want to remove this module?", function (btn) {
                                     if (btn === "yes") {
                                         //this function is defined in MainToolbar file.
-                                        removeCustomModule(moduleName);
+                                        pvMapper.mainScoreBoard.removeCustomModule(moduleName);
                                     }
                                 });
                             }

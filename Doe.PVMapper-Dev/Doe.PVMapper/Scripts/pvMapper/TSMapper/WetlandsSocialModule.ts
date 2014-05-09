@@ -123,7 +123,7 @@ module INLModules {
     // cache for the last distance found to a wetland, used so that our search isn't criminally inefficient
     var lastDistanceCache = {};
 
-    class WetlandsSocialModule {
+    export class WetlandsSocialModule {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "WetlandsSocialModule",
@@ -153,10 +153,10 @@ module INLModules {
                     //    propsWindow.show();
                     //},
 
-                    title: "Wetland Proximity",
-                    category: "Social Acceptance",
-                    description: "Percentage of survey respondents who reported this distance from wetlands as acceptable",
-                    longDescription: '<p>This tool calculates the distance from a site to the nearest wetland, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 479 respondents from six counties in Southern California answered Question 20 which asked "How much buffer distance is acceptable between a large solar facility and a wetland?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest wetland is identified using the National Wetlands Inventory by the US Fish and Wildlife Service. Note that this dataset includes wetlands which may have no conservation value, such as irrigation canals and small drainage basins. See the FWS website for more information (www.fws.gov/wetlands).</p>',
+                    title: WetlandsSocialModule.title, //"Wetland Proximity",
+                    category: WetlandsSocialModule.category, //"Social Acceptance",
+                    description: WetlandsSocialModule.description, //"Percentage of survey respondents who reported this distance from wetlands as acceptable",
+                    longDescription: WetlandsSocialModule.longDescription, //'<p>This tool calculates the distance from a site to the nearest wetland, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 479 respondents from six counties in Southern California answered Question 20 which asked "How much buffer distance is acceptable between a large solar facility and a wetland?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest wetland is identified using the National Wetlands Inventory by the US Fish and Wildlife Service. Note that this dataset includes wetlands which may have no conservation value, such as irrigation canals and small drainage basins. See the FWS website for more information (www.fws.gov/wetlands).</p>',
                     //onScoreAdded: function (e, score: pvMapper.Score) {
                     //    scores.push(score);
                     //},
@@ -186,10 +186,16 @@ module INLModules {
 
                 infoTools: null
             });
+            this.getModuleObj = function () { return myModule; }
         }
+        getModuleObj: () => pvMapper.Module;
+        public static title: string = "Wetland Proximity";
+        public static category: string = "Social Acceptance";
+        public static description: string = "Percentage of survey respondents who reported this distance from wetlands as acceptable";
+        public static longDescription: string = '<p>This tool calculates the distance from a site to the nearest wetland, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 479 respondents from six counties in Southern California answered Question 20 which asked "How much buffer distance is acceptable between a large solar facility and a wetland?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest wetland is identified using the National Wetlands Inventory by the US Fish and Wildlife Service. Note that this dataset includes wetlands which may have no conservation value, such as irrigation canals and small drainage basins. See the FWS website for more information (www.fws.gov/wetlands).</p>';
+
     }
 
-    var modinstance = new WetlandsSocialModule();
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
@@ -364,4 +370,10 @@ module INLModules {
         //var response: OpenLayers.Response = jsonpProtocol.read();
     }
 
+    //var modinstance = new INLModules.WetlandsSocialModule();
 }
+if (typeof (selfUrl) == 'undefined')
+  var selfUrl = $('script[src$="WetlandSocialModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(INLModules.WetlandsSocialModule.category, INLModules.WetlandsSocialModule.title, INLModules.WetlandsSocialModule, isActive, selfUrl);

@@ -5,6 +5,7 @@
 /// <reference path="Tools.ts" />
 /// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
+/// <reference path="modulemanager.ts" />
 /// <reference path="StarRatingHelper.ts" />
 var INLModules;
 (function (INLModules) {
@@ -22,16 +23,15 @@ var INLModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [
-                    {
+                scoringTools: [{
                         activate: null,
                         deactivate: null,
                         destroy: null,
                         init: null,
-                        title: "Land Management",
-                        category: "Land Use",
-                        description: "Checks solarmapper.anl.gov for intersecting land management polygons",
-                        longDescription: '<p>This star rating tool identifies the management agency of any federal land overlapping the proposed site. These agencies are defined in the Surface Management Agency (SMA) dataset. A management agency refers to a Federal agency with administrative jurisdiction over the surface of Federal lands. The SMA feature class currently covers all or the BLM Western State Offices including Alaska. This layer is a dynamic assembly of spatial data layers and Federal land status records maintained at various federal and local government offices. The official Federal land status records of the appropriate surface land managing agency should be consulted concerning ownership details. See the US Department of the Interior, Bureau of Land Management, National Operations Center for more information (www.geocommunicator.gov).</p><p>This tool depends on a user-defined star rating for each SMA found at a site, on a scale of 0-5 stars. The default rating for any SMA is two stars. The default rating for no intersecting SMA is four stars. These ratings should be adjusted by the user.</p><p>When a site overlaps a single SMA, its score is based on the star rating of that SMA (so overlapping a five-star SMA might give a score of 100, while overlapping a one-star SMA may give a score of 20). If a site includes more than one SMA, the lowest star rating is used to calculate its score (so a site with both a one-star and a five-star SMA might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>',
+                        title: SolarmapperModule.title,
+                        category: SolarmapperModule.category,
+                        description: SolarmapperModule.description,
+                        longDescription: SolarmapperModule.longDescription,
                         //onScoreAdded: (e, score: pvMapper.Score) => {
                         //},
                         onSiteChange: function (e, score) {
@@ -64,15 +64,20 @@ var INLModules;
                             functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Fed-Land Favor", "Score", "Preference to near by federal land and restrictions.")
                         },
                         weight: 10
-                    }
-                ],
+                    }],
                 infoTools: null
             });
+            this.getModuleObj = function () {
+                return myModule;
+            };
         }
+        SolarmapperModule.title = "Land Management";
+        SolarmapperModule.category = "Land Use";
+        SolarmapperModule.description = "Checks solarmapper.anl.gov for intersecting land management polygons";
+        SolarmapperModule.longDescription = '<p>This star rating tool identifies the management agency of any federal land overlapping the proposed site. These agencies are defined in the Surface Management Agency (SMA) dataset. A management agency refers to a Federal agency with administrative jurisdiction over the surface of Federal lands. The SMA feature class currently covers all or the BLM Western State Offices including Alaska. This layer is a dynamic assembly of spatial data layers and Federal land status records maintained at various federal and local government offices. The official Federal land status records of the appropriate surface land managing agency should be consulted concerning ownership details. See the US Department of the Interior, Bureau of Land Management, National Operations Center for more information (www.geocommunicator.gov).</p><p>This tool depends on a user-defined star rating for each SMA found at a site, on a scale of 0-5 stars. The default rating for any SMA is two stars. The default rating for no intersecting SMA is four stars. These ratings should be adjusted by the user.</p><p>When a site overlaps a single SMA, its score is based on the star rating of that SMA (so overlapping a five-star SMA might give a score of 100, while overlapping a one-star SMA may give a score of 20). If a site includes more than one SMA, the lowest star rating is used to calculate its score (so a site with both a one-star and a five-star SMA might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>';
         return SolarmapperModule;
     })();
-
-    var modinstance = new SolarmapperModule();
+    INLModules.SolarmapperModule = SolarmapperModule;
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
     var starRatingHelper = new pvMapper.StarRatingHelper({
@@ -97,7 +102,7 @@ var INLModules;
             transparent: "true"
         }, { isBaseLayer: false });
         mapLayer.setOpacity(0.3);
-        mapLayer.epsgOverride = "3857";
+        mapLayer.epsgOverride = "3857"; //"EPSG:102100";
         mapLayer.setVisibility(false);
         pvMapper.map.addLayer(mapLayer);
         //pvMapper.map.setLayerIndex(mapLayer, 0);
@@ -135,6 +140,10 @@ var INLModules;
             params: params,
             //callback: handler,
             callback: function (response) {
+                // debug statement
+                //alert(score.site.name + ": " + request.responseText.length + " (" + request.status + ")");
+                //alert(request.responseText);
+                // update value
                 if (response.status === 200) {
                     var esriJsonPerser = new OpenLayers.Format.JSON();
                     esriJsonPerser.extractAttributes = true;
@@ -160,6 +169,7 @@ var INLModules;
                                     newText += " (" + code + ")";
                                 }
 
+                                // add this to the array of responses we've received
                                 if (responseArray.indexOf(newText) < 0) {
                                     responseArray.push(newText);
                                 }
@@ -204,3 +214,10 @@ var INLModules;
         });
     }
 })(INLModules || (INLModules = {}));
+
+if (typeof (selfUrl) == 'undefined')
+    var selfUrl = $('script[src$="solarmapperModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(INLModules.SolarmapperModule.category, INLModules.SolarmapperModule.title, INLModules.SolarmapperModule, isActive, selfUrl);
+//# sourceMappingURL=solarmapperModule.js.map

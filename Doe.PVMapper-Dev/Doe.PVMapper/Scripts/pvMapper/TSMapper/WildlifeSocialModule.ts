@@ -119,7 +119,7 @@ module INLModules {
 
     });
 
-    class WildlifeSocialModule {
+    export class WildlifeSocialModule {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "WildlifeSocialModule",
@@ -147,10 +147,10 @@ module INLModules {
                         propsWindow.show();
                     },
 
-                    title: "Wildlife Proximity",
-                    category: "Social Acceptance",
-                    description: "Percentage of survey respondents who reported this distance from sensitive wildlife habitat as acceptable",
-                    longDescription: '<p>This tool calculates the distance from a site to the nearest critical wildlife habitat, and then reports the percentage of survey respondents who said that distance would be an acceptable buffer between a large solar facility and a wildlife breeding ground or nesting site.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 484 respondents from six counties in Southern California answered Question 18 which asked "How much buffer distance is acceptable between a large solar facility and an area used as nesting sites or breeding grounds by wildlife?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest wildlife area is identified using the Critical Habitat Portal by the US Fish and Wildlife Service. Note that several issues with this. First, the FWS dataset includes habitat which are not breeding or nesting grounds. Second, it only includes data on critical and endangered species, while the survey question was not so limited. And third, the data portal does not include habitat for all critical and endangered species. See the FWS website for more information (ecos.fws.gov/crithab).</p><p>Due to these limitations, results from this tool should be considered preliminary and approximate.</p>',
+                    title: WildlifeSocialModule.title, // "Wildlife Proximity",
+                    category: WildlifeSocialModule.category, //"Social Acceptance",
+                    description: WildlifeSocialModule.description, //"Percentage of survey respondents who reported this distance from sensitive wildlife habitat as acceptable",
+                    longDescription: WildlifeSocialModule.longDescription, //'<p>This tool calculates the distance from a site to the nearest critical wildlife habitat, and then reports the percentage of survey respondents who said that distance would be an acceptable buffer between a large solar facility and a wildlife breeding ground or nesting site.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 484 respondents from six counties in Southern California answered Question 18 which asked "How much buffer distance is acceptable between a large solar facility and an area used as nesting sites or breeding grounds by wildlife?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest wildlife area is identified using the Critical Habitat Portal by the US Fish and Wildlife Service. Note that several issues with this. First, the FWS dataset includes habitat which are not breeding or nesting grounds. Second, it only includes data on critical and endangered species, while the survey question was not so limited. And third, the data portal does not include habitat for all critical and endangered species. See the FWS website for more information (ecos.fws.gov/crithab).</p><p>Due to these limitations, results from this tool should be considered preliminary and approximate.</p>',
                     //onScoreAdded: function (e, score: pvMapper.Score) {
                     //    scores.push(score);
                     //},
@@ -169,10 +169,15 @@ module INLModules {
 
                 infoTools: null
             });
+            this.getModuleObj = function () { return myModule; }
         }
-    }
+        getModuleObj: () => pvMapper.Module;
+        public static title: string = "Wildlife Proximity";
+        public static category: string = "Social Acceptance";
+        public static description: string = "Percentage of survey respondents who reported this distance from sensitive wildlife habitat as acceptable";
+        public static longDescription: string = '<p>This tool calculates the distance from a site to the nearest critical wildlife habitat, and then reports the percentage of survey respondents who said that distance would be an acceptable buffer between a large solar facility and a wildlife breeding ground or nesting site.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 484 respondents from six counties in Southern California answered Question 18 which asked "How much buffer distance is acceptable between a large solar facility and an area used as nesting sites or breeding grounds by wildlife?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest wildlife area is identified using the Critical Habitat Portal by the US Fish and Wildlife Service. Note that several issues with this. First, the FWS dataset includes habitat which are not breeding or nesting grounds. Second, it only includes data on critical and endangered species, while the survey question was not so limited. And third, the data portal does not include habitat for all critical and endangered species. See the FWS website for more information (ecos.fws.gov/crithab).</p><p>Due to these limitations, results from this tool should be considered preliminary and approximate.</p>';
 
-    var modinstance = new WildlifeSocialModule();
+    }
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
@@ -366,3 +371,10 @@ module INLModules {
 
     }
 }
+//var modinstance = new INLModules.WildlifeSocialModule();
+
+if (typeof (selfUrl) == 'undefined')
+  var selfUrl = $('script[src$="WildlifeSocialModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(INLModules.WildlifeSocialModule.category, INLModules.WildlifeSocialModule.title, INLModules.WildlifeSocialModule, isActive, selfUrl);

@@ -17,16 +17,15 @@ var INLModules;
                 deactivate: null,
                 destroy: null,
                 init: null,
-                scoringTools: [
-                    {
+                scoringTools: [{
                         activate: null,
                         deactivate: null,
                         destroy: null,
                         init: null,
-                        title: "Gross Area",
-                        category: "Geography",
-                        description: "The raw area of a site polygon",
-                        longDescription: '<p>This tool calculates the raw area of a site polygon in mi<sup>2</sup>.</p>',
+                        title: SiteAreaModule.title,
+                        category: SiteAreaModule.category,
+                        description: SiteAreaModule.description,
+                        longDescription: SiteAreaModule.longDescription,
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {
@@ -47,15 +46,20 @@ var INLModules;
                             functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "km2", "Total Area", "Score", "Preference of the total area available for a proposed site.", "Minimum gross area to be considered.", "Maximum gross area to be considered.")
                         },
                         weight: 0
-                    }
-                ],
+                    }],
                 infoTools: null
             });
+            this.getModuleObj = function () {
+                return myModule;
+            };
         }
+        SiteAreaModule.title = "Gross Area";
+        SiteAreaModule.category = "Geography";
+        SiteAreaModule.description = "The raw area of a site polygon";
+        SiteAreaModule.longDescription = '<p>This tool calculates the raw area of a site polygon in mi<sup>2</sup>.</p>';
         return SiteAreaModule;
     })();
-
-    var modinstance = new SiteAreaModule();
+    INLModules.SiteAreaModule = SiteAreaModule;
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
     var offsetFeature, setbackLength, setbackLayer;
@@ -94,7 +98,7 @@ var INLModules;
         if (site.offsetFeature) {
             //Redraw the polygon
             setbackLayer.removeFeatures(site.offsetFeature);
-            site.offsetFeature.geometry = newGeometry;
+            site.offsetFeature.geometry = newGeometry; //This probably won't work
         } else {
             var style = { fillColor: 'blue', fillOpacity: 0, strokeWidth: 3, strokeColor: "purple" };
             site.offsetFeature = new OpenLayers.Feature.Vector(newGeometry, { parentFID: site.feature.fid }, style);
@@ -118,3 +122,10 @@ var INLModules;
         return val;
     }
 })(INLModules || (INLModules = {}));
+
+if (typeof (selfUrl) == 'undefined')
+    var selfUrl = $('script[src$="siteAreaModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(INLModules.SiteAreaModule.category, INLModules.SiteAreaModule.title, INLModules.SiteAreaModule, isActive, selfUrl);
+//# sourceMappingURL=siteAreaModule.js.map

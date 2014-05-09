@@ -82,7 +82,8 @@ module pvMapper {
                 }
 
                 //Update the score on the total line using the tools CalculateScore method
-                this.scores[idx] = this.CalculateScore(values, site);
+                if (site)  //if the site is not yet loaded, no update required.
+                  this.scores[idx] = this.CalculateScore(values, site);
             }
         }
     }

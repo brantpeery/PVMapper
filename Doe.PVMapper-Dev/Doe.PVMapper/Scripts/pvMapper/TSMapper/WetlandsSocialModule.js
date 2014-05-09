@@ -54,8 +54,7 @@ var INLModules;
         { mi: 200, percentOk: 98.75 },
         { mi: 500, percentOk: 99.16666667 },
         { mi: 1000, percentOk: 99.79166667 },
-        { mi: 5000, percentOk: 100 }
-    ];
+        { mi: 5000, percentOk: 100 }];
 
     //var initialSearchDistanceInMi = 5;
     //var maxSearchDistanceInMi = 5000;
@@ -98,15 +97,13 @@ var INLModules;
                     }
                 }
             },
-            buttons: [
-                {
+            buttons: [{
                     xtype: 'button',
                     text: 'OK',
                     handler: function () {
                         propsWindow.hide();
                     }
-                }
-            ],
+                }],
             constrain: true
         });
     });
@@ -129,8 +126,7 @@ var INLModules;
                 },
                 destroy: null,
                 init: null,
-                scoringTools: [
-                    {
+                scoringTools: [{
                         activate: null,
                         deactivate: null,
                         destroy: null,
@@ -141,14 +137,19 @@ var INLModules;
                         //    myToolLine = this; // fetch tool line, which was passed as 'this' parameter
                         //    propsWindow.show();
                         //},
-                        title: "Wetland Proximity",
-                        category: "Social Acceptance",
-                        description: "Percentage of survey respondents who reported this distance from wetlands as acceptable",
-                        longDescription: '<p>This tool calculates the distance from a site to the nearest wetland, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 479 respondents from six counties in Southern California answered Question 20 which asked "How much buffer distance is acceptable between a large solar facility and a wetland?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest wetland is identified using the National Wetlands Inventory by the US Fish and Wildlife Service. Note that this dataset includes wetlands which may have no conservation value, such as irrigation canals and small drainage basins. See the FWS website for more information (www.fws.gov/wetlands).</p>',
+                        title: WetlandsSocialModule.title,
+                        category: WetlandsSocialModule.category,
+                        description: WetlandsSocialModule.description,
+                        longDescription: WetlandsSocialModule.longDescription,
                         //onScoreAdded: function (e, score: pvMapper.Score) {
                         //    scores.push(score);
                         //},
                         onSiteChange: function (e, score) {
+                            //if (lastDistanceCache[score.site.id] > 500) {
+                            //    updateScore(score, 5000);
+                            //} else if (lastDistanceCache[score.site.id] > 50) {
+                            //    updateScore(score, 500);
+                            //} else
                             if (lastDistanceCache[score.site.id] > 5) {
                                 updateScore(score, 50);
                             } else if (lastDistanceCache[score.site.id] > 0.5) {
@@ -163,15 +164,20 @@ var INLModules;
                             functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Wetland Acceptance", "Score", "Preference of social acceptance to proximity of wetland.")
                         },
                         weight: 10
-                    }
-                ],
+                    }],
                 infoTools: null
             });
+            this.getModuleObj = function () {
+                return myModule;
+            };
         }
+        WetlandsSocialModule.title = "Wetland Proximity";
+        WetlandsSocialModule.category = "Social Acceptance";
+        WetlandsSocialModule.description = "Percentage of survey respondents who reported this distance from wetlands as acceptable";
+        WetlandsSocialModule.longDescription = '<p>This tool calculates the distance from a site to the nearest wetland, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 479 respondents from six counties in Southern California answered Question 20 which asked "How much buffer distance is acceptable between a large solar facility and a wetland?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest wetland is identified using the National Wetlands Inventory by the US Fish and Wildlife Service. Note that this dataset includes wetlands which may have no conservation value, such as irrigation canals and small drainage basins. See the FWS website for more information (www.fws.gov/wetlands).</p>';
         return WetlandsSocialModule;
     })();
-
-    var modinstance = new WetlandsSocialModule();
+    INLModules.WetlandsSocialModule = WetlandsSocialModule;
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
     var wmsServerUrl = "http://107.20.228.18/ArcGIS/services/FWS_Wetlands_WMS/mapserver/wmsserver?";
@@ -240,12 +246,14 @@ var INLModules;
             //    return this.format.read(data);
             //},
             callback: function (response) {
+                //alert("Nearby features: " + response.features.length);
                 if (response.status === 200) {
                     var closestFeature = null;
                     var minDistance = searchDistanceInMeters;
 
                     var features = OpenLayers.Format.EsriGeoJSON.prototype.read(response.responseText);
 
+                    //console.log("Near-ish features: " + (features ? features.length : 0));
                     if (features) {
                         for (var i = 0; i < features.length; i++) {
                             var distance = score.site.geometry.distanceTo(features[i].geometry, { edge: false });
@@ -315,3 +323,9 @@ var INLModules;
         //var response: OpenLayers.Response = jsonpProtocol.read();
     }
 })(INLModules || (INLModules = {}));
+if (typeof (selfUrl) == 'undefined')
+    var selfUrl = $('script[src$="WetlandSocialModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(INLModules.WetlandsSocialModule.category, INLModules.WetlandsSocialModule.title, INLModules.WetlandsSocialModule, isActive, selfUrl);
+//# sourceMappingURL=WetlandsSocialModule.js.map
