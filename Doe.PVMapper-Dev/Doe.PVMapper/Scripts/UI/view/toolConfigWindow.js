@@ -104,6 +104,7 @@ var toolTree = Ext.create('Ext.tree.Panel', {
                 if (anode.data.text == amodule.moduleName) return true; else return false;
             });
 
+            amodule.isActive = amodule.isActive || false;
             if (node == null) {
                 catNode.appendChild({ text: amodule.moduleName, leaf: true, checked: amodule.isActive });
             }

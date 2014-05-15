@@ -246,18 +246,18 @@ var scoreboardColumns = [{
                     }
                 }],
                 listeners: {
-                  beforerender: function (win, op) {
-                    var w = win.width;
-                    if (typeof(w) == 'undefined' || (w < 400))  {
-                      win.setWidth(400);
-                      win.center();
-                    }
-                     utilityFn.windowSetup.apply(utilityFn, [dynamicPanel, uf]); // uf.functionArgs, utilityFn.fn, utilityFn.xBounds]);
-                    //TODO: can't we just pass uf here, in place of all this other crap?
-                  },
+                    beforerender: function (win, op) {
+                        var w = win.width;
+                        if (typeof (w) == 'undefined' || (w < 400)) {
+                            win.setWidth(400);
+                            win.center();
+                        }
+                        utilityFn.windowSetup.apply(utilityFn, [dynamicPanel, uf]); // uf.functionArgs, utilityFn.fn, utilityFn.xBounds]);
+                        //TODO: can't we just pass uf here, in place of all this other crap?
+                    },
                     resize: function (win, width, height, opts) {
-                      if (dynamicPanel.onBodyResize != undefined)
-                        width = this.getContentTarget().getWidth();
+                        if (dynamicPanel.onBodyResize != undefined)
+                            width = this.getContentTarget().getWidth();
                         height = this.getContentTarget().getHeight();
                         dynamicPanel.onBodyResize(width, height, opts);
                     }
@@ -319,22 +319,22 @@ var scoreboardColumns = [{
 function showHeaderCTMenu(xy, site) {
     var siteName = ((site === undefined) || (site === null)) ? "this site" : "site: " + site.name;
     var headerCtContext = Ext.create("Ext.menu.Menu", {
-        items: [Ext.create("Ext.menu.Item",{
+        items: [Ext.create("Ext.menu.Item", {
             text: "Zoom to " + siteName,
             iconCls: "x-zoomin-menu-icon",
             handler: function () {
                 pvMapper.map.zoomToExtent(site.geometry.bounds, false);
             }
-        }), Ext.create("Ext.menu.Item",{
+        }), Ext.create("Ext.menu.Item", {
             text: "Zoom to project",
             iconCls: "x-zoomout-menu-icon",
             handler: function () {
                 pvMapper.map.zoomToExtent(pvMapper.siteLayer.getDataExtent(), false);
             }
         }),
-        Ext.create("Ext.menu.Separator",{
+        Ext.create("Ext.menu.Separator", {
         }),
-        Ext.create("Ext.menu.Item",{
+        Ext.create("Ext.menu.Item", {
             text: "Delete " + siteName,
             iconCls: "x-delete-menu-icon",
             handler: function () {
@@ -488,6 +488,11 @@ toolsStore.on({
                 }
             }
         });
+
+
+
+
+
     }
 
 });
@@ -501,42 +506,6 @@ Ext.define('MainApp.view.ScoreWeightEditing', {
         }
     }
 });
-
-
-//function removeCustomModule(moduleName) {
-//    var module = pvMapper.customModules.find(function (a) {
-//        if (a.fileName === moduleName) return true;
-//        else return false;
-//    });
-//    if (module) {
-//        //remove the module from the local database
-//        pvMapper.ClientDB.deleteCustomKML(module.fileName, function (isSuccessful) {
-//            if (isSuccessful) {
-//                //remove it from the custom module list.
-//                var idx = pvMapper.customModules.indexOf(module);
-//                pvMapper.customModules.splice(idx, 1);
-//                //now remove the scoreline.
-//                var scoreline = pvMapper.mainScoreboard.scoreLines.find(function (a) {
-//                    if (a.getModuleName !== undefined) {
-//                        if (a.getModuleName() === module.fileName) return true;
-//                        else return false;
-//                    }
-//                    else return false;
-//                });
-//                if (scoreline) {
-//                    idx = pvMapper.mainScoreboard.scoreLines.indexOf(scoreline);
-//                    if (idx >= 0) pvMapper.mainScoreboard.scoreLines.splice(idx, 1);
-//                    //finally then free the module.
-//                    delete scoreline;
-//                }
-//                if (module.moduleObject.removeLocalLayer !== undefined)
-//                    module.moduleObject.removeLocalLayer();  //remove the custom module layer from map.
-//                delete module;
-//                pvMapper.mainScoreboard.update();
-//            }
-//        });
-//    }
-//}
 
 //----------------The grid and window-----------------
 Ext.define('Ext.grid.ScoreboardGrid', {
@@ -554,7 +523,48 @@ Ext.define('Ext.grid.ScoreboardGrid', {
 
             itemcontextmenu: function (view, rec, node, idx, e) {
                 if (rec.raw.getModuleName === undefined) {
-                    return true;
+                    e.stopEvent();
+                    var titleName = rec.raw.title;
+                    var ccMenu = Ext.create("Ext.menu.Menu", {
+                        items: [{
+                            text: "Turn off '" + titleName + "'",
+                            iconCls: "x-delete-menu-icon",
+                            handler: function () {
+                                pvMapper.mainScoreboard.removeModule(rec.raw.title);
+                                pvMapper.moduleManager.saveTools();
+                            }
+                        },
+                         '-',
+                        {
+                            text: 'Tool Module Selector',
+                            iconCls: "x-tag-check-icon",
+                            tooltip: "Turn tool modules on and off.",
+                            //enabledToggle: false,
+                            handler: function () {
+                                var toolWin = Ext.create("MainApp.view.ToolConfigWindow", {
+                                    buttons: [{
+                                        xtype: 'button',
+                                        text: 'OK',
+                                        handler: function () {
+                                            toolWin.closeMode = this.text;
+                                            toolWin.close();
+                                        }
+                                    }, {
+                                        xtype: 'button',
+                                        text: "Cancel",
+                                        handler: function () {
+                                            toolWin.closeMode = this.text;
+                                            toolWin.close();
+                                        }
+                                    }]
+                                });
+                                toolWin.show();
+                            }
+                        }
+                        ]
+                    });
+                    ccMenu.showAt(e.getXY());
+                    return false;
                 } else {
                     e.stopEvent();
                     var moduleName = rec.raw.getModuleName();
@@ -563,14 +573,14 @@ Ext.define('Ext.grid.ScoreboardGrid', {
                         titleName = rec.raw.getTitle();
                     var cellContextMenu = Ext.create("Ext.menu.Menu", {
                         items: [{
-                            text: "Remove Custom Module: '" + titleName+"'",
+                            text: "Remove Custom Module: '" + titleName + "'",
                             iconCls: "x-delete-menu-icon",
                             handler: function () {
-                                
-                                Ext.MessageBox.confirm("Removing '"+titleName+"("+moduleName+")'", "Are you sure you want to remove this module?", function (btn) {
+
+                                Ext.MessageBox.confirm("Removing '" + titleName + "(" + moduleName + ")'", "Are you sure you want to remove this module?", function (btn) {
                                     if (btn === "yes") {
                                         //this function is defined in MainToolbar file.
-                                        pvMapper.mainScoreBoard.removeCustomModule(moduleName);
+                                        pvMapper.mainScoreboard.removeCustomModule(moduleName);
                                     }
                                 });
                             }
@@ -774,7 +784,7 @@ Ext.define('MainApp.view.ScoreboardWindow', {
                     $("style").each(function () {
                         style += $(this)[0].outerHTML;
                     });
-                    
+
                     // var script = '<script> window.onmouseover = function(){window.close();}</script>';
                     printWindow.document.write('<!DOCTYPE html><html lang="en"><head><title>PV Mapper Scoreboard</title>' + link + style + ' </head><body>' + html + '</body>');
                     $('div', printWindow.document).each(function () {
@@ -791,7 +801,7 @@ Ext.define('MainApp.view.ScoreboardWindow', {
         ]
     }],
     items: pvMapper.scoreboardGrid,
-    constrain:true
+    constrain: true
 
 });
 

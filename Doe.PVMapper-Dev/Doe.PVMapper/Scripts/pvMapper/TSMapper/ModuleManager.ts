@@ -4,6 +4,7 @@
 var pvClient: {
     getIncludeModules: () => Array<string>;
     prototype: pvClient;
+    moduleChanged: boolean;
 }
 
 module pvMapper {
@@ -49,18 +50,29 @@ module pvMapper {
         //This function should only be call by the tool module.  Calling from anywhere else, the caller must make sure
         //that the supporting code script (configProperties) is loaded.  
         public registerModule(category: string, name: string, ctor: any, isActivated: boolean, url: string = '') {
+            isActivated = isActivated || false;
             var m = this.getModule(name);
             if (m == null) {
                 this._modules.push(new ModuleInfo(category, name, ctor, isActivated, url));
                 if (ctor && isActivated) {
-                    new ctor();
+                    if (!this.isLoadOnly) {
+                        var tm = new ctor();
+                        var mObj = tm.getModuleObj();
+                        if (typeof (mObj.activate) != 'undefined')
+                            mObj.activate();
+                    }
                 }
             }
             else {
                 if (!m.ctor && m.isActive && ctor) {
                     //create the tool if it has created before.
                     m.ctor = ctor;
-                    new ctor();
+                    if (!this.isLoadOnly) {
+                        var tm = new ctor();
+                        var mObj = tm.getModuleObj();
+                        if (typeof(mObj.activate) != 'undefined')
+                          mObj.activate();
+                    }
                 }
                 if (m.moduleUrl != url && url !== null)
                     m.moduleUrl = url;
@@ -119,22 +131,52 @@ module pvMapper {
                         //Synchronize the register of user's preference modules.  If no user preferences saved,
                         //load all modules using a pre-select included list through a pvClient.getIncludeModules function.
                         new Promise(bindTo(this, function (resolve: ICallback, reject: ICallback) {
-                            var cntr: number = 0;
                             try {
+                                var loadedCnt: number = 0;
+                                var totalCnt = arrObj.length;
+                                var errCnt = 0;
+                                var newCnt = 0;
+
+                                var availableModules = pvClient.getIncludeModules();
+
                                 arrObj.forEach(bindTo(this, function (tool) {
-                                    var cm: ModuleInfo = this.getModule(tool.value._moduleName);
-                                    if (cm) {
-                                        cm.isActive = tool.value._isActive;
+                                    var mUrl = availableModules.find(function (url: string) {
+                                        if (url === tool.value._moduleUrl) return true; else return false;
+                                    });
+
+                                    //only attempt to load modules that are actually available on the server.
+                                    if (mUrl != null) {
+                                        var cm: ModuleInfo = this.getModule(tool.value._moduleName);
+                                        if (cm) {
+                                            cm.isActive = tool.value._isActive;
+                                            ++loadedCnt;
+                                        }
+                                        else { //if a tool is in the database but not yet registered, go get the script, it should self register.
+                                            if (tool.value._isActive)
+                                                this.getScript(tool.value._moduleUrl).then(
+                                                    function onResolved() { ++loadedCnt; },
+                                                    function onReject(Err) {
+                                                        console.log(Err.message);
+                                                        ++errCnt;
+                                                    });
+                                            else {
+                                                this.modules.push(new ModuleInfo(tool.value._category, tool.value._moduleName, undefined, tool.value._isActive, tool.value._moduleUrl));
+                                                ++newCnt;
+                                            }
+                                        }
                                     }
-                                    else { //if a tool is in the database but not yet registered, go get the script, it should self register.
-                                        if (tool.value._isActive)
-                                            this.getScript(tool.value._moduleUrl);
-                                        else
-                                            this.modules.push(new ModuleInfo(tool.value._category, tool.value._moduleName, undefined, tool.value._isActive, tool.value._moduleUrl));
-                                    }
-                                    ++cntr;
                                 }));
-                                resolve(cntr);
+                                var cycle = 0;
+                                var waitFor = function () {
+                                    if (((loadedCnt + errCnt + newCnt) >= totalCnt) || (cycle >= 10))  //max 10 seconds wait.
+                                        resolve(loadedCnt);
+                                    else {
+                                        ++cycle;
+                                        setTimeout(waitFor, 1000);
+                                    }
+                                }
+                                waitFor();
+
                             }
                             catch (ex) {
                                 reject(Error("Registering user's preferred modules failed, cause: " + ex.message));
@@ -146,9 +188,6 @@ module pvMapper {
                                     //no user preferences saved, load the default scripts file.
                                     this.loadModuleScripts();
                                 }
-                                //else {
-                                //    this.activateModules();
-                                //}
                             }),
                             function onReject(err) {
                                 console.log(err.message);
@@ -164,22 +203,37 @@ module pvMapper {
                 }));
         }
 
-        public getScript(url: string, cbFn : ICallback) {
-            var req = new XMLHttpRequest();
-            req.open("GET", url);
-            req.onload = bindTo(this, function (e) {
-                this.evaluateScript(url, req.responseText);
-                if (cbFn)
-                    cbFn.apply(this);
-                console.log("Tool module '" + url + "' loaded successful.");
-            });
-            req.onerror = function (e) {
-                console.log("Loading tool module '" + url + "' failed.");
-            }
-            req.send();
+        public getScript(url: string, cbFn: ICallback) {
+            return new Promise(bindTo(this, function (resolve, reject) {
+                try {
+                    var req = new XMLHttpRequest();
+                    req.open("GET", url);
+                    req.onload = bindTo(this, function (e) {
+                        if (req.status != 404) {
+                            this.evaluateScript(url, req.responseText);
+                            if (cbFn)
+                                cbFn.apply(this);
+                            console.log("Tool module '" + url + "' loaded successful.");
+                            resolve();
+                        }
+                        else {
+                            reject(Error("Load tool '" + url + "' not found."));
+                        }
+                    });
+                    req.onerror = function (e) {
+                        reject(Error("Loading tool module '" + url + "' failed."));
+
+                    }
+                    req.send();
+                }
+                catch (ex) {
+                    reject(Error("Getting module '" + url + "' from server failed, cause: " + ex.message));
+                }
+            }));
         }
 
         public evaluateScript(url: string, script: string) {
+            if (script.length == 0) return;
             // the //# sourceURL is for help debugging in browser because all script loaded dynamically doesn't show up in browser developer tool.
             // selfUrl is to supply the URL to the loading tool module so it can use to register back to the moduleManager.
             var prescript = "//# sourceURL=" + url + "\n" + "var selfUrl = '" + url + "';\n" // + "var isActive = true; \n";
@@ -187,14 +241,52 @@ module pvMapper {
             eval(script);
         }
 
+        public isLoadOnly: boolean = false;
         public loadModuleScripts() {
             var moduleScripts = pvClient.getIncludeModules();
             if (moduleScripts && moduleScripts.length > 0) {
-                moduleScripts.forEach(bindTo(this, function (url) {
-                    var m = this.getModuleByURL(url);
-                    if (m == null) //only if not already loaded.  Assumption is that if a module is registered, the code should have been loaded.
-                        this.getScript(url);
-                }));
+                var loadedCnt = 0;
+                var totalCnt = moduleScripts.length;
+                var errCnt = 0;
+                var wasLoaded = 0;
+
+                new Promise(bindTo(this, function (resolve: ICallback, reject: ICallback) {
+                    try {
+                        moduleScripts.forEach(bindTo(this, function (url) {
+                            var m = this.getModuleByURL(url);
+                            if (m == null) //only if not already loaded.  Assumption is that if a module is registered, the code should have been loaded.
+                                this.getScript(url).then(function onResolve() { ++loadedCnt; }, function onError(err) { ++errCnt; });
+                            else
+                                ++wasLoaded;
+                        }));
+
+                        var cycle = 0;  //wait 10 seconds max.
+                        var waitaSecond = function () {
+                            if ((loadedCnt + errCnt + wasLoaded >= totalCnt) || (cycle >= 10)) {
+                                resolve();
+                            }
+                            else {
+                                ++cycle;
+                                setTimeout(waitaSecond, 1000);
+                            }
+                        }
+                        waitaSecond();
+                    }
+                    catch (ex) {
+                        reject(Error(ex.message));
+                    }
+
+                })).then(
+                    bindTo(this, function onResolve() {
+                        if (pvClient.moduleChanged) {
+                            pvClient.moduleChanged = false;
+                            this.saveTools();
+                        }
+                    }),
+                    function onError(Err) {
+                        console.log("loadModuleScripts: Loading all scripts failed, cause: " + Err.message);
+                    });
+
             }
         }
     }

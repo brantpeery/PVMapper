@@ -316,25 +316,27 @@ module pvMapper {
                 var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.CUSTOM_STORE_NAME, 'readwrite');
                 var store = txn.objectStore(ClientDB.CUSTOM_STORE_NAME);
                 if (store) {
-                    tools.forEach(function (tool) {
-                        var request = store.get(tool.key);
-                        request.onsuccess = function (evt): any {
+                    store.clear().onsuccess = function (event) {
+                        tools.forEach(function (tool) {
+                            var request = store.get(tool.key);
+                            request.onsuccess = function (evt): any {
 
-                            //tool.value.ctorStr = tool.value.ctor.toString();
-                            var jsonStr = JSON.stringify(tool.value);
-                            if (request.result != undefined) { // if already exists, update
-                                store.put(jsonStr, tool.key);
-                                console.log("Tool module: '" + tool.key + "' updated successful.");
+                                //tool.value.ctorStr = tool.value.ctor.toString();
+                                var jsonStr = JSON.stringify(tool.value);
+                                if (request.result != undefined) { // if already exists, update
+                                    store.put(jsonStr, tool.key);
+                                    console.log("Tool module: '" + tool.key + "' updated successful.");
+                                }
+                                else {
+                                    store.add(jsonStr, tool.key); // if new, add
+                                    console.log("Tool module: '" + tool.key + "' added successfule.");
+                                }
                             }
-                            else {
-                                store.add(jsonStr, tool.key); // if new, add
-                                console.log("Tool module: '" + tool.key + "' added successfule.");
-                            }
-                        }
                         request.onerror = function (evt): any {
-                            console.log("Attempt to save tool key = '" + tool.key + "' failed, cause: " + evt.message);
-                        }
+                                console.log("Attempt to save tool key = '" + tool.key + "' failed, cause: " + evt.message);
+                            }
                     });
+                    }
                 }
             }
             catch (ex) {

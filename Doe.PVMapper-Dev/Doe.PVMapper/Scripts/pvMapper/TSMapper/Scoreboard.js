@@ -137,15 +137,17 @@ var pvMapper;
 
                 //pvMapper.moduleManager.deleteModule(moduleName);
                 var mInfo = pvMapper.moduleManager.getModule(moduleName);
-                mInfo.isActive = false;
-                delete amodule;
-                var idx = pvMapper.mainScoreboard.scoreLines.indexOf(scoreline);
-                if (idx >= 0)
-                    pvMapper.mainScoreboard.scoreLines.splice(idx, 1);
-                delete scoreline;
+                if (mInfo) {
+                    mInfo.isActive = false;
+                    delete amodule;
+                    var idx = pvMapper.mainScoreboard.scoreLines.indexOf(scoreline);
+                    if (idx >= 0)
+                        pvMapper.mainScoreboard.scoreLines.splice(idx, 1);
+                    delete scoreline;
 
-                pvMapper.mainScoreboard.update();
-                pvMapper.mainScoreboard.updateTotals();
+                    pvMapper.mainScoreboard.update();
+                    pvMapper.mainScoreboard.updateTotals();
+                }
             }
         };
 

@@ -723,18 +723,30 @@ pvMapper.onReady(function () {
     //----------------------------------------------------------------------------------------
     //#region Add distance score from KML
     function continueHandlingDistanceKML(afile) {
-        var module = pvMapper.customModules.find(function (a) {
+        var amodule = pvMapper.customModules.find(function (a) {
             if (a.name === afile.name) return true;
             else return false;
         });
 
-        if (!module) {
+        if (!amodule) {
             Ext.MessageBox.prompt("Module Naming", "Please type in the module name", function (btn, kmlModuleName) {
                 if (btn == 'ok') {
                     if (kmlModuleName.length == 0)
                         kmlModuleName = afile.name;
+                    //It seems HTML5 file API pull the file type from the MIME type association with an application.
+                    //problem here is that if the client machine never had Google Earth installed, the file.type is blank.
+                    //If it is the case, we can only realize on the file extension.
+                    var fileType = afile.type;
+                    if (fileType === "") {
+                        var ext = /\.[0-9a-z]+$/.exec(afile.name)[0].toLowerCase();
+                        if (ext === ".kml") {
+                            fileType = "application/vnd.google-earth.kml+xml";
+                        } else if (ext === ".kmz") {
+                            fileType = "application/vnd.google-earth.kmz";
+                        }
+                    }
 
-                    if (afile.type === "application/vnd.google-earth.kmz") {
+                    if (fileType === "application/vnd.google-earth.kmz") {
                         var localLayer = new INLModules.LocalLayerModule();
                         var reader = new FileReader();
                         reader.onload = function (evt) {
@@ -746,7 +758,7 @@ pvMapper.onReady(function () {
                                 });
                         }
                         reader.readAsArrayBuffer(afile);
-                    } else if (afile.type === "application/vnd.google-earth.kml+xml") {
+                    } else if (fileType === "application/vnd.google-earth.kml+xml") {
                         var localLayer = new INLModules.LocalLayerModule();
                         var reader = new FileReader();
                         reader.onload = function (evt) {
@@ -914,6 +926,17 @@ pvMapper.onReady(function () {
     pvMapper.scoreboardToolsToolbarMenu.add(10, '-');
     pvMapper.scoreboardToolsToolbarMenu.add(11, configTool);
 
+    var loadAllTool = Ext.create("Ext.Action", {
+        text: "Load all tools",
+        iconCls: 'x-tag-restart-icon',
+        tooltip: "Get an update of all available tool modules.  If no new module after update, press F5 to refresh.",
+        handler: function () {
+            pvMapper.moduleManager.isLoadOnly = true;
+            pvMapper.moduleManager.loadModuleScripts();
+            pvMapper.moduleManager.isLoadOnly = false;
+        }
+    });
+    pvMapper.scoreboardToolsToolbarMenu.add(12, loadAllTool);
 
 
 });

@@ -207,6 +207,18 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4fcff', end
    -o-background-size: contain;
        background-size:contain;
 }
+.x-anllogo-menu-icon {
+  background-image: url(../Images/anllogo.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+.x-dsirelogo-menu-icon {
+  background-image: url(../Images/dsirelogo.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
 .x-tag-menu-icon {
   background-image: url(../Images/tag.png);
   -moz-background-size:contain;
@@ -215,6 +227,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4fcff', end
 }
 .x-tag-check-icon {
   background-image: url(../Images/check.png);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
+.x-tag-restart-icon {
+  background-image: url(../Images/restart.png);
   -moz-background-size:contain;
    -o-background-size: contain;
        background-size:contain;

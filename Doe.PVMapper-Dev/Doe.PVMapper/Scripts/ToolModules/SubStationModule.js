@@ -1,13 +1,4 @@
-/// <reference path="pvMapper.ts" />
-/// <reference path="Site.ts" />
-/// <reference path="Score.ts" />
-/// <reference path="Tools.ts" />
-/// <reference path="Options.d.ts" />
-/// <reference path="Module.ts" />
-/// <reference path="ScoreUtility.ts" />
-
 //Substation Module fetching data from OSM and calculating the nearest distance
-
 
 var BYUModules;
 (function (BYUModules) {

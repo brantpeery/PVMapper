@@ -44,19 +44,17 @@ var BYUModules;
             };
         }
         //Add these so ModuleManager can access the tool information for display in the Tool/Module Selector and make it easier to register onto the moduleManager.
-        NearRoadScoreKeeper.title = "Nearest Road";
-        NearRoadScoreKeeper.category = "Land Use";
-        NearRoadScoreKeeper.description = "Nearest Road to the Selected Site";
-        NearRoadScoreKeeper.longDescription = '<p>This tool calculates the nearest available road from the proposing site <miles>.</p>';
+        NearRoadModule.title = "Nearest Road";
+        NearRoadModule.category = "Land Use";
+        NearRoadModule.description = "Nearest Road to the Selected Site";
+        NearRoadModule.longDescription = '<p>This tool calculates the nearest available road from the proposing site <miles>.</p>';
         return NearRoadModule;
     })();
 
     //NearRoadScore Hash to keep a track of its score object and make updates when the result comes back from the River module's Request
     var NearRoadScoreKeeper = {};
-
-
-
     BYUModules.NearRoadModule = NearRoadModule;
+    
     var NearRiverModule = (function () {
         function NearRiverModule() {
             var _this = this;

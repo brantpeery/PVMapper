@@ -274,23 +274,25 @@ var pvMapper;
                 var txn = ClientDB.db.transaction(ClientDB.CUSTOM_STORE_NAME, 'readwrite');
                 var store = txn.objectStore(ClientDB.CUSTOM_STORE_NAME);
                 if (store) {
-                    tools.forEach(function (tool) {
-                        var request = store.get(tool.key);
-                        request.onsuccess = function (evt) {
-                            //tool.value.ctorStr = tool.value.ctor.toString();
-                            var jsonStr = JSON.stringify(tool.value);
-                            if (request.result != undefined) {
-                                store.put(jsonStr, tool.key);
-                                console.log("Tool module: '" + tool.key + "' updated successful.");
-                            } else {
-                                store.add(jsonStr, tool.key); // if new, add
-                                console.log("Tool module: '" + tool.key + "' added successfule.");
-                            }
-                        };
-                        request.onerror = function (evt) {
-                            console.log("Attempt to save tool key = '" + tool.key + "' failed, cause: " + evt.message);
-                        };
-                    });
+                    store.clear().onsuccess = function (event) {
+                        tools.forEach(function (tool) {
+                            var request = store.get(tool.key);
+                            request.onsuccess = function (evt) {
+                                //tool.value.ctorStr = tool.value.ctor.toString();
+                                var jsonStr = JSON.stringify(tool.value);
+                                if (request.result != undefined) {
+                                    store.put(jsonStr, tool.key);
+                                    console.log("Tool module: '" + tool.key + "' updated successful.");
+                                } else {
+                                    store.add(jsonStr, tool.key); // if new, add
+                                    console.log("Tool module: '" + tool.key + "' added successfule.");
+                                }
+                            };
+                            request.onerror = function (evt) {
+                                console.log("Attempt to save tool key = '" + tool.key + "' failed, cause: " + evt.message);
+                            };
+                        });
+                    };
                 }
             } catch (ex) {
                 console.log("Save tool Modules failed, cause: " + ex.message);

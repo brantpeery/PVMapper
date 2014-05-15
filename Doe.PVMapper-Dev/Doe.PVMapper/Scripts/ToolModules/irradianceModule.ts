@@ -1,9 +1,10 @@
-/// <reference path="pvMapper.ts" />
-/// <reference path="Site.ts" />
-/// <reference path="Score.ts" />
-/// <reference path="Tools.ts" />
-/// <reference path="Options.d.ts" />
-/// <reference path="Module.ts" />
+/// <reference path="../pvmapper/tsmapper/pvmapper.ts" />
+/// <reference path="../pvmapper/tsmapper/site.ts" />
+/// <reference path="../pvmapper/tsmapper/score.ts" />
+/// <reference path="../pvmapper/tsmapper/tools.ts" />
+/// <reference path="../pvmapper/tsmapper/options.d.ts" />
+/// <reference path="../pvmapper/tsmapper/module.ts" />
+/// <reference path="../pvmapper/tsmapper/modulemanager.ts" />
 
 module INLModules {
     export class DirectNormalIrradianceModule {
