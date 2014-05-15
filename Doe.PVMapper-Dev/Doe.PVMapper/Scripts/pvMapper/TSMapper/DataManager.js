@@ -268,9 +268,31 @@ var pvMapper;
             try  {
                 //if the custom store is not yet exists, re-initCLientDB to force it to connect with higher version.
                 if (!ClientDB.db.objectStoreNames.contains(ClientDB.CUSTOM_STORE_NAME)) {
-                    console.log("There is no store '" + ClientDB.CUSTOM_STORE_NAME + "' exists.");
+                    ClientDB.DBVersion = +ClientDB.db.version + 1;
+                    new Promise(function (resolve, reject) {
+                        ClientDB.initClientDB(true);
+                        var cycle = 0;
+                        var waitAsecond = function () {
+                            if (ClientDB.db == null) {
+                                ++cycle;
+                                setTimeout(waitAsecond, 1000);
+                            } else if (cycle == 10) {
+                                reject(Error("Waiting for create database time out"));
+                            } else {
+                                resolve();
+                            }
+                        };
+                        waitAsecond();
+                    }).then(function onResolve() {
+                    }, function onReject(Err) {
+                        console.log(Err.message);
+                    });
                 }
 
+                if (ClientDB.db == null) {
+                    console.log("There is no data store '" + ClientDB.CUSTOM_STORE_NAME + "' exists.");
+                    return;
+                }
                 var txn = ClientDB.db.transaction(ClientDB.CUSTOM_STORE_NAME, 'readwrite');
                 var store = txn.objectStore(ClientDB.CUSTOM_STORE_NAME);
                 if (store) {
