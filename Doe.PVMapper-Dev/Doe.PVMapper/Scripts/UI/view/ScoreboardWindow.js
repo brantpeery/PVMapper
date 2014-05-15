@@ -198,7 +198,7 @@ var scoreboardColumns = [{
                                 //}
                                 var style = ''; var link = '';
                                 var printContent = document.getElementById(dynamicPanel.id + "-body"); //TODO: change to get the ID, rather than use 'magic' ID
-                                var printWindow = window.open('', '', ''); // 'left=10, width=800, height=520');
+                                var printWindow = window.open(); // 'left=10, width=800, height=520');
 
                                 var html = printContent.outerHTML; //TODO: must change to innerHTML ???
                                 $("link").each(function () {

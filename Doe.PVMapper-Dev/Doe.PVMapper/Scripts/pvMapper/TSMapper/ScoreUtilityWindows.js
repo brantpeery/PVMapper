@@ -34,8 +34,7 @@ var pvMapper;
                     //Extras.getScript("https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.97/jsxgraphcore.js", function () {
                     //if the jsxgraphcore loaded by demand then everything runs peachy.  If it is included in the index.cshtml as others, it runs very slow
                     // and eventually max call state error is thrown.
-                    $.ajaxSetup({ cache: true });
-                    $.getScript("/scripts/jsxgraphcore.js", function (script, textStatus, jqXHR) {
+                    $.getScript("/scripts/jsxgraphcore.js").done(function (script, textStatus) {
                         var bounds = xBounds(args);
                         var numTicks = 20;
 

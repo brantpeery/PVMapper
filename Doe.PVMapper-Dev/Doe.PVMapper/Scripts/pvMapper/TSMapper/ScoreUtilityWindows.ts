@@ -37,318 +37,318 @@ module pvMapper {
 
                     //if the jsxgraphcore loaded by demand then everything runs peachy.  If it is included in the index.cshtml as others, it runs very slow
                     // and eventually max call state error is thrown.  
-                    $.ajaxSetup({ cache: true });
-                    $.getScript("/scripts/jsxgraphcore.js", function (script, textStatus, jqXHR) { //this one has the latest (0.99.1) and supports of label rotation.
-                        var bounds = xBounds(args);
-                        var numTicks = 20;
+                    $.getScript("/scripts/jsxgraphcore.js")
+                        .done(function (script, textStatus) { //this one has the latest (0.99.1) and supports of label rotation.
+                            var bounds = xBounds(args);
+                            var numTicks = 20;
 
-                        // ensure that the buffer is > 0 (bounds being equal is a valid case for a step function)
-                        var buffer = (bounds[0] == bounds[1]) ? 1 : (bounds[1] - bounds[0]) / 10;
-                        //bounds[1] = dx / high;
-                        bounds[1] = Math.min(120, bounds[1]);
-                        buffer = buffer > 10 ? 10 : buffer;
-                        bounds[1] += buffer * 1.5; // a little more on the right hand side feels nice.
-                        bounds[0] -= buffer * 2;
+                            // ensure that the buffer is > 0 (bounds being equal is a valid case for a step function)
+                            var buffer = (bounds[0] == bounds[1]) ? 1 : (bounds[1] - bounds[0]) / 10;
+                            //bounds[1] = dx / high;
+                            bounds[1] = Math.min(120, bounds[1]);
+                            buffer = buffer > 10 ? 10 : buffer;
+                            bounds[1] += buffer * 1.5; // a little more on the right hand side feels nice.
+                            bounds[0] -= buffer * 2;
 
-                        JXG.Options.text.display = 'internal';  //need this to make the axis label rotation work.
-                        board = JXG.JSXGraph.initBoard('FunctionBox-body', {
-                            boundingbox: [bounds[0], 108, bounds[1], bounds[0]],
-                            keepaspectratio: false,
-                            axis: false,
-                            showCopyright: false,
-                            showNavigation: true
-                        });
+                            JXG.Options.text.display = 'internal';  //need this to make the axis label rotation work.
+                            board = JXG.JSXGraph.initBoard('FunctionBox-body', {
+                                boundingbox: [bounds[0], 108, bounds[1], bounds[0]],
+                                keepaspectratio: false,
+                                axis: false,
+                                showCopyright: false,
+                                showNavigation: true
+                            });
 
-                        //move the board's origin when mouse down is not selected on any element.
-                        board.on('mousedown', function (e) {
-                            var x = e.x;
-                            var y = e.y;
-                            if (board.downObjects.length == 0) {
-                                board.mode = board.BOARD_MODE_MOVE_ORIGIN;
+                            //move the board's origin when mouse down is not selected on any element.
+                            board.on('mousedown', function (e) {
+                                var x = e.x;
+                                var y = e.y;
+                                if (board.downObjects.length == 0) {
+                                    board.mode = board.BOARD_MODE_MOVE_ORIGIN;
+                                }
+                            });
+
+                            //turn off when mouse up.
+                            board.on('mouseup', function (e) {
+                                board.mode = board.BOARD_MODE_NONE;
+                            })
+
+                            var mousewheelevt = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
+
+
+                            var zooming = function (e) {
+                                //alert('wheel on: ' + e.wheelDelta);
+                                var e = window.event || e; // old IE support;
+                                var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+                                if (delta < 0) {
+                                    board.zoomOut(board.attr.zoom.factorx, board.attr.zoom.factory);
+                                } else if (delta > 0) {
+                                    board.zoomIn(board.attr.zoom.factorx, board.attr.zoom.factory);
+                                }
+                                return false;
                             }
-                        });
 
-                        //turn off when mouse up.
-                        board.on('mouseup', function (e) {
-                            board.mode = board.BOARD_MODE_NONE;
+                            if (board.containerObj.attachEvent) //if IE (and Opera depending on user setting)
+                                board.containerObj.attachEvent("on" + mousewheelevt, zooming);
+                            else if (board.containerObj.addEventListener) //WC3 browsers
+                                board.containerObj.addEventListener(mousewheelevt, zooming, false);
+
+
+                            var dxtic = board.canvasWidth / (bounds[1] - bounds[0]) * 10;
+                            var dytic = board.canvasHeight / (108 - bounds[0]) * 10;
+
+                            _this._xArgs.metaInfo.y_axis = (typeof (_this._xArgs.metaInfo.y_axis) == 'undefined') ? null : _this._xArgs.metaInfo.y_axis;
+                            _this._xArgs.metaInfo.x_axis = (typeof (_this._xArgs.metaInfo.x_axis) == 'undefined') ? null : _this._xArgs.metaInfo.x_axis;
+                            yAxis = board.create('axis', [[0, 0], [0, 1]],
+                                {
+                                    name: (_this._xArgs.metaInfo.y_axis) || 'Y-axis',
+                                    withLabel: true,
+                                    ticks: {
+                                        insertTicks: false,
+                                        ticksDistance: dytic,
+                                        label: {
+                                            offset: [-10, 0]
+                                        }
+                                    },
+                                    point1: {
+                                        needsRegularUpdate: true
+                                    },
+                                    point2: {
+                                        needsRegularUpdate: true
+                                    },
+                                    label: {
+                                        position: 'top',
+                                        offset: [-20, 5],
+                                        fixed: false,
+                                        strokeColor: 'blue',
+                                        highlightStrokeColor: 'red',
+                                    }
+
+                                });
+                            yAxis.label.addRotation(90);
+
+                            xAxis = board.create('axis', [[0, 0], [1, 0]],
+                                {
+                                    name: (_this._xArgs.metaInfo.x_axis) || 'X-axis',
+                                    withLabel: true,
+                                    ticks: {
+                                        insertTicks: false,
+                                        ticksDistance: dxtic,
+                                        label: {
+                                            offset: [-2, -10]
+                                        }
+                                    },
+                                    point1: {
+                                        needsRegularUpdate: true
+                                    },
+                                    point2: {
+                                        needsRegularUpdate: true
+                                    },
+                                    label: {
+                                        position: 'bot',
+                                        offset: [0, -20],
+                                        strokeColor: 'blue',
+                                        fixed: false,
+                                        highlightStrokeColor: 'green'
+                                    }
+
+                                });
+
+                            // change between ticks distance, have to do it the hacky way.
+                            yAxis.defaultTicks.ticksFunction = function () {
+                                return numTicks;
+                            };
+
+                            xAxis.defaultTicks.ticksFunction = function () {
+                                return numTicks;
+                            };
+
+                            //board.constantUnitX = board.unitX;
+                            //board.constantUnitY = board.unitY;
+
+                            //var bbox = board.getBoundingBox();
+                            //var w = board.canvasWidth;
+                            //var h = board.canvasHeight;
+                            //bbox[2] = w / board.constantUnitX;
+                            //bbox[1] = h / board.constantUnitY;
+                            //bbox[0] = -bbox[2] * 0.1;
+                            //bbox[3] = -bbox[1] * 0.2;
+                            //bbox[2] = bbox[2] + bbox[0];
+                            //bbox[1] = bbox[1] + bbox[3];
+
+                            //board.resizeContainer(w, h, false);
+                            //board.setBoundingBox(bbox);
+
+
+
+                            // to size graph and bound stay the same.
+
+                            var bbox = board.getBoundingBox();
+                            board.unitX = board.canvasWidth / (bbox[2] - bbox[0]);
+                            board.unitY = board.canvasHeight / (bbox[1] - bbox[3]);
+                            board.resizeContainer(board.canvasWidth, board.canvasHeight, false);
+                            board.setBoundingBox(bbox);
+                            board.needFullUpdate = true;
+                            board.fullUpdate();
+
+                            //TODO: should we replace this with ScoreUtility.run(x) ...?
+                            fnOfy = board.create('functiongraph', function (x) {
+                                var y = fn(x, _this._xArgs);
+                                return Math.max(0, Math.min(1, y)) * 100;
+                            }, {
+                                    strokeWidth: 3, strokeColor: "red",
+                                });
+
+                            //draggable lines querying reflecting values.  By using the fn function to query the intersecting Y value, this should work for any utility function.
+                            var dx;
+                            var bb = board.getBoundingBox();
+
+                            if ((_this._xArgs.metaInfo.vline == undefined) || (_this._xArgs.metaInfo.vline <= 0)) {
+                                dx = ((bb[2] - bb[0]) / 2.0) + bb[0];
+                                _this._xArgs.metaInfo.vline = dx;
+                            }
+                            else
+                                dx = _this._xArgs.metaInfo.vline;
+
+                            var dy = fn(dx, _this._xArgs) * 100;
+                            var vline = board.create('segment', [[dx, 0], [dx, dy]],
+                                { name: dx.toFixed(1) + " " + _this._xArgs.metaInfo.unitSymbol, withLabel: true, strokeColor: "blue", dash: 2, strokeOpacity: 0.15 });
+                            var scoreColor = pvMapper.getColorForScore(dy);
+                            var hline = board.create('segment', [[0, dy], [vline.point1.X(), dy]],
+                                { name: "Score: " + dy.toFixed(0), withLabel: true, strokeColor: scoreColor, dash: 2, strokeWidth: 4, strokeOpacity: 1 });
+
+                            //TODO: make the line move on mouseover, rather than on drag (it's more intuitive)
+                            //board.on("mousemove", function (e) {
+                            //    //TODO: translate coordinates from event e to score function (x,y)
+                            //    //      OR, find a better event to hook into which has translated coordinates
+                            //    //      then, do the same line move doodle as below...
+                            //});
+
+                            vline.on("drag", function (e) {
+                                board.suspendUpdate();
+                                //var bb = board.getBoundingBox();
+                                _this._xArgs.metaInfo.vline = vline.point1.X();
+                                var y = fn(vline.point1.X(), _this._xArgs);
+                                y = Math.max(0, Math.min(1, y)) * 100;
+
+                                vline.labelColor("red");  //<<--- this doesn't seem to work.
+                                vline.setLabelText((vline.point1.X()).toFixed(1) + " " + _this._xArgs.metaInfo.unitSymbol);
+
+                                vline.point1.moveTo([vline.point1.X(), 0]);
+                                vline.point2.moveTo([vline.point1.X(), y]);
+
+                                hline.labelColor("red");
+                                hline.setLabelText("Score: " + y.toFixed(0));
+                                hline.visProp.strokecolor = pvMapper.getColorForScore(y);
+
+                                hline.point1.moveTo([0, y]);
+                                hline.point2.moveTo([vline.point1.X(), y]);
+                                board.unsuspendUpdate();
+                            });
+
+                            //do this just to prevent the horizontal line from dragging.
+                            hline.on("drag", function (e) {
+                                board.suspendUpdate();
+                                var y = fn(vline.point1.X(), _this._xArgs) * 100;
+                                hline.point1.moveTo([0, y]);
+                                hline.point2.moveTo([vline.point1.X(), y]);
+                                board.unsuspendUpdate();
+                            });
+
+                            // updates guide lines after the function is altered in some way
+                            var updateGuideLines = function () {
+                                board.suspendUpdate();
+                                var y = fn(vline.point1.X(), _this._xArgs);
+                                y = Math.max(0, Math.min(1, y)) * 100;
+
+                                vline.point2.moveTo([vline.point1.X(), y]);
+                                hline.setLabelText("Score: " + y.toFixed(2));
+                                hline.point1.moveTo([0, y]);
+                                hline.point2.moveTo([vline.point1.X(), y]);
+                                hline.visProp.strokecolor = pvMapper.getColorForScore(y);
+                                board.unsuspendUpdate();
+                            };
+
+                            //NOTE: this code section aught to move to a separate file closer to the UtilityFunction.
+                            if (_this._xArgs.metaInfo.name == "ThreePointUtilityArgs") {
+                                if (_this._xArgs.points != undefined && _this._xArgs.points.length > 0) {
+                                    //create the points
+                                    // var seg: any[] = new Array<any>();
+                                    _this._xArgs.points.forEach(function (p, idx) {
+                                        var point = board.create('point', [_this._xArgs[p].x, _this._xArgs[p].y * 100], { name: p, size: 3 });
+                                        //   seg.push(point);
+                                        point.on("drag", function (e) {
+                                            _this._xArgs[p].x = point.X();
+                                            _this._xArgs[p].y = point.Y() / 100;
+                                            updateGuideLines();
+                                        });
+                                    })
+                            }
+                            }
+                            else if (_this._xArgs.metaInfo.name == "MinMaxUtilityArgs") {
+                                var point1 = board.create('point', [_this._xArgs.minValue, 0], { name: 'Min', size: 3 });
+                                point1.on("drag", function (e) {
+                                    _this._xArgs.minValue = point1.X();
+                                    board.update();
+                                    point1.moveTo([point1.X(), 0]);
+                                    gridPanel.setSource(_this._xArgs);
+                                    updateGuideLines();
+                                });
+
+                                var point2 = board.create('point', [_this._xArgs.maxValue, 100], { name: 'Max', size: 3 });
+                                point2.on("drag", function (e) {
+                                    _this._xArgs.maxValue = point2.X();
+                                    board.update();
+                                    point2.moveTo([point2.X(), 100]);
+                                    gridPanel.setSource(_this._xArgs);
+                                    updateGuideLines();
+                                });
+                            }
+                            else if (_this._xArgs.metaInfo.name == "SinusoidalUtilityArgs") {
+                                var dmin = fn(_this._xArgs.minValue, _this._xArgs) * 100;
+                                var dmax = fn(_this._xArgs.maxValue, _this._xArgs) * 100;
+                                var dtar = fn(_this._xArgs.target, _this._xArgs) * 100;
+
+                                var minPoint = board.create('point', [_this._xArgs.minValue, dmin], { name: 'Min', size: 3 });
+                                var maxPoint = board.create('point', [_this._xArgs.maxValue, dmax], { name: 'Max', size: 3 });
+                                var targetPoint = board.create('point', [_this._xArgs.target, dtar], { name: 'target', size: 3 });
+                                minPoint.on("drag", function (e) {
+                                    var x = minPoint.X();
+                                    if (x > targetPoint.X())
+                                        x = targetPoint.X();
+                                    _this._xArgs.minValue = x;
+                                    board.update();
+                                    minPoint.moveTo([x, dmin]);
+                                    gridPanel.setSource(_this._xArgs);
+                                    updateGuideLines();
+                                });
+                                maxPoint.on("drag", function (e) {
+                                    var x = maxPoint.X();
+                                    if (x < targetPoint.X())
+                                        x = targetPoint.X();
+                                    _this._xArgs.maxValue = x;
+                                    board.update();
+                                    maxPoint.moveTo([x, dmax]);
+                                    gridPanel.setSource(_this._xArgs);
+                                    updateGuideLines();
+                                });
+                                targetPoint.on("drag", function (e) {
+                                    var x = targetPoint.X();
+                                    if (x < minPoint.X())
+                                        x = minPoint.X();
+                                    if (x > maxPoint.X())
+                                        x = maxPoint.X();
+                                    _this._xArgs.target = x;
+                                    board.update();
+                                    targetPoint.moveTo([x, dtar]);
+                                    gridPanel.setSource(_this._xArgs);
+                                    updateGuideLines();
+                                });
+                            }
                         })
-
-                        var mousewheelevt = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
-
-
-                        var zooming = function (e) {
-                            //alert('wheel on: ' + e.wheelDelta);
-                            var e = window.event || e; // old IE support;
-                            var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-                            if (delta < 0) {
-                                board.zoomOut(board.attr.zoom.factorx, board.attr.zoom.factory);
-                            } else if (delta > 0) {
-                                board.zoomIn(board.attr.zoom.factorx, board.attr.zoom.factory);
-                            }
-                            return false;
-                        }
-
-                        if (board.containerObj.attachEvent) //if IE (and Opera depending on user setting)
-                            board.containerObj.attachEvent("on" + mousewheelevt, zooming);
-                        else if (board.containerObj.addEventListener) //WC3 browsers
-                            board.containerObj.addEventListener(mousewheelevt, zooming, false);
-
-
-                        var dxtic = board.canvasWidth / (bounds[1] - bounds[0]) * 10;
-                        var dytic = board.canvasHeight / (108 - bounds[0]) * 10;
-
-                        _this._xArgs.metaInfo.y_axis = (typeof (_this._xArgs.metaInfo.y_axis) == 'undefined') ? null : _this._xArgs.metaInfo.y_axis;
-                        _this._xArgs.metaInfo.x_axis = (typeof (_this._xArgs.metaInfo.x_axis) == 'undefined') ? null : _this._xArgs.metaInfo.x_axis;
-                        yAxis = board.create('axis', [[0, 0], [0, 1]],
-                            {
-                                name: (_this._xArgs.metaInfo.y_axis) || 'Y-axis',
-                                withLabel: true,
-                                ticks: {
-                                    insertTicks: false,
-                                    ticksDistance: dytic,
-                                    label: {
-                                        offset: [-10, 0]
-                                    }
-                                },
-                                point1: {
-                                    needsRegularUpdate: true
-                                },
-                                point2: {
-                                    needsRegularUpdate: true
-                                },
-                                label: {
-                                    position: 'top',
-                                    offset: [-20, 5],
-                                    fixed: false,
-                                    strokeColor: 'blue',
-                                    highlightStrokeColor: 'red',
-                                }
-
-                            });
-                        yAxis.label.addRotation(90);
-
-                        xAxis = board.create('axis', [[0, 0], [1, 0]],
-                            {
-                                name: (_this._xArgs.metaInfo.x_axis) || 'X-axis',
-                                withLabel: true,
-                                ticks: {
-                                    insertTicks: false,
-                                    ticksDistance: dxtic,
-                                    label: {
-                                        offset: [-2, -10]
-                                    }
-                                },
-                                point1: {
-                                    needsRegularUpdate: true
-                                },
-                                point2: {
-                                    needsRegularUpdate: true
-                                },
-                                label: {
-                                    position: 'bot',
-                                    offset: [0, -20],
-                                    strokeColor: 'blue',
-                                    fixed: false,
-                                    highlightStrokeColor: 'green'
-                                }
-
-                            });
-
-                        // change between ticks distance, have to do it the hacky way.
-                        yAxis.defaultTicks.ticksFunction = function () {
-                            return numTicks;
-                        };
-
-                        xAxis.defaultTicks.ticksFunction = function () {
-                            return numTicks;
-                        };
-
-                        //board.constantUnitX = board.unitX;
-                        //board.constantUnitY = board.unitY;
-
-                        //var bbox = board.getBoundingBox();
-                        //var w = board.canvasWidth;
-                        //var h = board.canvasHeight;
-                        //bbox[2] = w / board.constantUnitX;
-                        //bbox[1] = h / board.constantUnitY;
-                        //bbox[0] = -bbox[2] * 0.1;
-                        //bbox[3] = -bbox[1] * 0.2;
-                        //bbox[2] = bbox[2] + bbox[0];
-                        //bbox[1] = bbox[1] + bbox[3];
-
-                        //board.resizeContainer(w, h, false);
-                        //board.setBoundingBox(bbox);
-
-
-
-                        // to size graph and bound stay the same.
-
-                        var bbox = board.getBoundingBox();
-                        board.unitX = board.canvasWidth / (bbox[2] - bbox[0]);
-                        board.unitY = board.canvasHeight / (bbox[1] - bbox[3]);
-                        board.resizeContainer(board.canvasWidth, board.canvasHeight, false);
-                        board.setBoundingBox(bbox);
-                        board.needFullUpdate = true;
-                        board.fullUpdate();
-
-                        //TODO: should we replace this with ScoreUtility.run(x) ...?
-                        fnOfy = board.create('functiongraph', function (x) {
-                            var y = fn(x, _this._xArgs);
-                            return Math.max(0, Math.min(1, y)) * 100;
-                        }, {
-                                strokeWidth: 3, strokeColor: "red",
-                            });
-
-                        //draggable lines querying reflecting values.  By using the fn function to query the intersecting Y value, this should work for any utility function.
-                        var dx;
-                        var bb = board.getBoundingBox();
-
-                        if ((_this._xArgs.metaInfo.vline == undefined) || (_this._xArgs.metaInfo.vline <= 0)) {
-                            dx = ((bb[2] - bb[0]) / 2.0) + bb[0];
-                            _this._xArgs.metaInfo.vline = dx;
-                        }
-                        else
-                            dx = _this._xArgs.metaInfo.vline;
-
-                        var dy = fn(dx, _this._xArgs) * 100;
-                        var vline = board.create('segment', [[dx, 0], [dx, dy]],
-                            { name: dx.toFixed(1) + " " + _this._xArgs.metaInfo.unitSymbol, withLabel: true, strokeColor: "blue", dash: 2, strokeOpacity: 0.15 });
-                        var scoreColor = pvMapper.getColorForScore(dy);
-                        var hline = board.create('segment', [[0, dy], [vline.point1.X(), dy]],
-                            { name: "Score: " + dy.toFixed(0), withLabel: true, strokeColor: scoreColor, dash: 2, strokeWidth: 4, strokeOpacity: 1 });
-
-                        //TODO: make the line move on mouseover, rather than on drag (it's more intuitive)
-                        //board.on("mousemove", function (e) {
-                        //    //TODO: translate coordinates from event e to score function (x,y)
-                        //    //      OR, find a better event to hook into which has translated coordinates
-                        //    //      then, do the same line move doodle as below...
-                        //});
-
-                        vline.on("drag", function (e) {
-                            board.suspendUpdate();
-                            //var bb = board.getBoundingBox();
-                            _this._xArgs.metaInfo.vline = vline.point1.X();
-                            var y = fn(vline.point1.X(), _this._xArgs);
-                            y = Math.max(0, Math.min(1, y)) * 100;
-
-                            vline.labelColor("red");  //<<--- this doesn't seem to work.
-                            vline.setLabelText((vline.point1.X()).toFixed(1) + " " + _this._xArgs.metaInfo.unitSymbol);
-
-                            vline.point1.moveTo([vline.point1.X(), 0]);
-                            vline.point2.moveTo([vline.point1.X(), y]);
-
-                            hline.labelColor("red");
-                            hline.setLabelText("Score: " + y.toFixed(0));
-                            hline.visProp.strokecolor = pvMapper.getColorForScore(y);
-
-                            hline.point1.moveTo([0, y]);
-                            hline.point2.moveTo([vline.point1.X(), y]);
-                            board.unsuspendUpdate();
+                        .fail(function (jqxhr, setttings, exception) {
+                            console.log('Loading graph library failed, cause: ' + exception.message);
                         });
-
-                        //do this just to prevent the horizontal line from dragging.
-                        hline.on("drag", function (e) {
-                            board.suspendUpdate();
-                            var y = fn(vline.point1.X(), _this._xArgs) * 100;
-                            hline.point1.moveTo([0, y]);
-                            hline.point2.moveTo([vline.point1.X(), y]);
-                            board.unsuspendUpdate();
-                        });
-
-                        // updates guide lines after the function is altered in some way
-                        var updateGuideLines = function () {
-                            board.suspendUpdate();
-                            var y = fn(vline.point1.X(), _this._xArgs);
-                            y = Math.max(0, Math.min(1, y)) * 100;
-
-                            vline.point2.moveTo([vline.point1.X(), y]);
-                            hline.setLabelText("Score: " + y.toFixed(2));
-                            hline.point1.moveTo([0, y]);
-                            hline.point2.moveTo([vline.point1.X(), y]);
-                            hline.visProp.strokecolor = pvMapper.getColorForScore(y);
-                            board.unsuspendUpdate();
-                        };
-
-                        //NOTE: this code section aught to move to a separate file closer to the UtilityFunction.
-                        if (_this._xArgs.metaInfo.name == "ThreePointUtilityArgs") {
-                            if (_this._xArgs.points != undefined && _this._xArgs.points.length > 0) {
-                                //create the points
-                                // var seg: any[] = new Array<any>();
-                                _this._xArgs.points.forEach(function (p, idx) {
-                                    var point = board.create('point', [_this._xArgs[p].x, _this._xArgs[p].y * 100], { name: p, size: 3 });
-                                    //   seg.push(point);
-                                    point.on("drag", function (e) {
-                                        _this._xArgs[p].x = point.X();
-                                        _this._xArgs[p].y = point.Y() / 100;
-                                        updateGuideLines();
-                                    });
-                                })
-                            }
-                        }
-                        else if (_this._xArgs.metaInfo.name == "MinMaxUtilityArgs") {
-                            var point1 = board.create('point', [_this._xArgs.minValue, 0], { name: 'Min', size: 3 });
-                            point1.on("drag", function (e) {
-                                _this._xArgs.minValue = point1.X();
-                                board.update();
-                                point1.moveTo([point1.X(), 0]);
-                                gridPanel.setSource(_this._xArgs);
-                                updateGuideLines();
-                            });
-
-                            var point2 = board.create('point', [_this._xArgs.maxValue, 100], { name: 'Max', size: 3 });
-                            point2.on("drag", function (e) {
-                                _this._xArgs.maxValue = point2.X();
-                                board.update();
-                                point2.moveTo([point2.X(), 100]);
-                                gridPanel.setSource(_this._xArgs);
-                                updateGuideLines();
-                            });
-                        }
-                        else if (_this._xArgs.metaInfo.name == "SinusoidalUtilityArgs") {
-                            var dmin = fn(_this._xArgs.minValue, _this._xArgs) * 100;
-                            var dmax = fn(_this._xArgs.maxValue, _this._xArgs) * 100;
-                            var dtar = fn(_this._xArgs.target, _this._xArgs) * 100;
-
-                            var minPoint = board.create('point', [_this._xArgs.minValue, dmin], { name: 'Min', size: 3 });
-                            var maxPoint = board.create('point', [_this._xArgs.maxValue, dmax], { name: 'Max', size: 3 });
-                            var targetPoint = board.create('point', [_this._xArgs.target, dtar], { name: 'target', size: 3 });
-                            minPoint.on("drag", function (e) {
-                                var x = minPoint.X();
-                                if (x > targetPoint.X())
-                                    x = targetPoint.X();
-                                _this._xArgs.minValue = x;
-                                board.update();
-                                minPoint.moveTo([x, dmin]);
-                                gridPanel.setSource(_this._xArgs);
-                                updateGuideLines();
-                            });
-                            maxPoint.on("drag", function (e) {
-                                var x = maxPoint.X();
-                                if (x < targetPoint.X())
-                                    x = targetPoint.X();
-                                _this._xArgs.maxValue = x;
-                                board.update();
-                                maxPoint.moveTo([x, dmax]);
-                                gridPanel.setSource(_this._xArgs);
-                                updateGuideLines();
-                            });
-                            targetPoint.on("drag", function (e) {
-                                var x = targetPoint.X();
-                                if (x < minPoint.X())
-                                    x = minPoint.X();
-                                if (x > maxPoint.X())
-                                    x = maxPoint.X();
-                                _this._xArgs.target = x;
-                                board.update();
-                                targetPoint.moveTo([x, dtar]);
-                                gridPanel.setSource(_this._xArgs);
-                                updateGuideLines();
-                            });
-                        }
-                    })
-                    .fail(function (jqxhr, setttings, exception) {
-                        console.log('Loading graph library failed, cause: ' + exception.message);
-                    });
                 } //loadboard()
 
                 panel.removeAll();
