@@ -76,56 +76,15 @@
 
     <script type="text/javascript">
         pvIncludeAllScripts = false;
-        pvIncludeMinimal = true;
+        pvIncludeMinimal = false;
     </script>
     <script type="text/javascript" src="~/Scripts/pvClient.js"></script>
-
-
-    @*Removed per Randy's suggestion that the Protected Areas service is superior*@
-    @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/solarmapperModule.js"></script>*@
-    @*Removed SNL transmission line queries; replaced with OpenStreetMap transmission line queries*@
-    @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/snlModule.js"></script>*@
-    @* Removed - The ESRI world topo map apparently no longer supports slope, aspect, and elevation (and a brief search found no suitible replacement) *@
-    @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/DemModule.js"></script>*@
-    @* Removed Wilderness module as the Land Management module will fulfill the same role and others during the Beta release & demos *@
-    @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/WildernessModule.js"></script>*@
-    @* Removed near module: speed issues are too invaisive for inclusion in demo; will replace once requests run in under 1000 ms *@
-    @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/CombinedNearModule.js"></script>*@
-    @* Removed the nearest road module before I merge to release - it isn't presently working - will replace in dev branch afterward. *@
-    @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/NearRoadModule.js"></script>*@
-    @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/siteAreaModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/irradianceModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/LandUseModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/SubStationModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/WetlandsSocialModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/AgricultureSocialModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/SolarPlantSocialModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/WildlifeSocialModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/SoilModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/OSMSocialModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/riverDistance.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/NewSlopeModule.js"></script>*@
-    
-}
-
-
-
-<!-- TODO: move all script files that can be load dynamically into folders,
-        Have C# looks those folders and put all script files found into the ViewBag.toolModules
-        one line per file (full path) separated by a comma. Enabled the following code. 
-        i.e: "~/Scripts/UI/Views/Appliation.js",
-    -->    
-
-   @*
+  
     <script type="text/javascript">
-      pvMapper.prototype.getIncludeModules = function () {
-        this.basePath = "~/Scripts";
-        var modules = [
-            @ViewBag.toolModules
-        ]
-        return modules;
-    }
+        //using DOM to convert HTML string (js code) into plain text.
+        var div = document.createElement('div');
+        div.innerHTML = "@ViewBag.toolModules";
+        eval("//# sourceURL=IndexInline.js\n " + div.textContent);
     </script>
-    *@
-
+}
 

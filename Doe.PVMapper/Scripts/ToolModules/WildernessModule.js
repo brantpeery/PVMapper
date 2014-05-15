@@ -1,12 +1,11 @@
-/// <reference path="ScoreUtility.ts" />
-/// <reference path="pvMapper.ts" />
-/// <reference path="Site.ts" />
-/// <reference path="Score.ts" />
-/// <reference path="Tools.ts" />
-/// <reference path="Options.d.ts" />
-/// <reference path="Module.ts" />
-/// <reference path="modulemanager.ts" />
-/// <reference path="Esri-GeoJsonConverter.js />
+/// <reference path="../pvmapper/tsmapper/pvmapper.ts" />
+/// <reference path="../pvmapper/tsmapper/site.ts" />
+/// <reference path="../pvmapper/tsmapper/score.ts" />
+/// <reference path="../pvmapper/tsmapper/tools.ts" />
+/// <reference path="../pvmapper/tsmapper/options.d.ts" />
+/// <reference path="../pvmapper/tsmapper/module.ts" />
+/// <reference path="../pvmapper/tsmapper/scoreutility.ts" />
+/// <reference path="../pvmapper/tsmapper/modulemanager.ts" />
 
 var BYUModules;
 (function (BYUModules) {
@@ -32,10 +31,10 @@ var BYUModules;
                         //deactivate: null,
                         //destroy: null,
                         //init: null,
-                        title: "Wilderness",
-                        description: "Overlapping national parks, using data hosted by BYU",
-                        longDescription: '<p>Overlapping national parks, using data hosted by BYU.</p>',
-                        category: "Land Use",
+                        title: WildernessModule.title,
+                        description: WildernessModule.description,
+                        longDescription: WildernessModule.longDescription,
+                        category: WildernessModule.category,
                         onScoreAdded: function (event, score) {
                         },
                         onSiteChange: function (event, score) {
@@ -126,11 +125,16 @@ var BYUModules;
                 }
             });
         };
+        WildernessModule.title = "Wilderness";
+        WildernessModule.category = "Land Use";
+        WildernessModule.description = "Overlapping national parks, using data hosted by BYU";
+        WildernessModule.longDescription = '<p>Overlapping national parks, using data hosted by BYU.</p>';
         return WildernessModule;
     })();
     BYUModules.WildernessModule = WildernessModule;
-
-    var modInstance = new BYUModules.WildernessModule();
 })(BYUModules || (BYUModules = {}));
-
-pvMapper.moduleManager.registerModule("Land Use", "Wilderness", "BYUModules", BYUModules.WildernessModule, true);
+if (typeof (selfUrl) == 'undefined')
+    var selfUrl = $('script[src$="WildernessModule.js"]').attr('src');
+if (typeof (isActive) == 'undefined')
+    var isActive = true;
+pvMapper.moduleManager.registerModule(BYUModules.WildernessModule.category, BYUModules.WildernessModule.title, BYUModules.WildernessModule, isActive, selfUrl);
