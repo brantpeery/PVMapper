@@ -198,7 +198,7 @@ var scoreboardColumns = [{
                                 //}
                                 var style = ''; var link = '';
                                 var printContent = document.getElementById(dynamicPanel.id + "-body"); //TODO: change to get the ID, rather than use 'magic' ID
-                                var printWindow = window.open(); // 'left=10, width=800, height=520');
+                                var printWindow = window.open('','_blank');
 
                                 var html = printContent.outerHTML; //TODO: must change to innerHTML ???
                                 $("link").each(function () {
@@ -217,7 +217,7 @@ var scoreboardColumns = [{
                                     }
                                 });
                                 printWindow.document.close();
-                                printWindow.print();
+                                //printWindow.print();     //this doesn't support across all browsers, so just show it, user can print manually.
                             }
                         }
                     ]
@@ -692,7 +692,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
                             //}
                             var style = ''; var link = '';
                             var printContent = document.getElementById(pieWin.body.id); //TODO: change to get the ID, rather than use 'magic' ID
-                            var printWindow = window.open('', '', ''); // 'left=10, width=800, height=520');
+                            var printWindow = window.open('','_blank');
 
                             var html = printContent.outerHTML; //TODO: must change to innerHTML ???
                             $("link").each(function () {
@@ -711,7 +711,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
                                 }
                             });
                             printWindow.document.close();
-                            printWindow.print();
+                            //printWindow.print();
                         }
                     }
                 ]
@@ -775,7 +775,7 @@ Ext.define('MainApp.view.ScoreboardWindow', {
                     //}
                     var style = ''; var link = '';
                     var printContent = document.getElementById("ScoreboardWindowID-body"); //TODO: change to get the ID, rather than use 'magic' ID
-                    var printWindow = window.open('', '', ''); // 'left=10, width=800, height=520');
+                    var printWindow = window.open('', '_blank'); // 'left=10, width=800, height=520');
 
                     var html = printContent.outerHTML; //TODO: must change to innerHTML ???
                     $("link").each(function () {
@@ -794,7 +794,7 @@ Ext.define('MainApp.view.ScoreboardWindow', {
                         }
                     });
                     printWindow.document.close();
-                    printWindow.print();
+                    //printWindow.print();
 
                 }
             }
