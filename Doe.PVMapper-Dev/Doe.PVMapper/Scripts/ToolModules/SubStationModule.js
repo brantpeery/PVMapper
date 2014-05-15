@@ -105,7 +105,7 @@ var BYUModules;
 
                 activate: function () {
                     //http://t0.beta.itoworld.com/4/317c99f331113b90c57c41ccdb137030/${z}/${x}/${y}.png
-                    substationsMap = new OpenLayers.Layer.XYZ("Power Infrastructure",
+                    substationsMap = new OpenLayers.Layer.XYZ("Nearest Substation",
                         "http://t0.beta.itoworld.com/4/317c99f331113b90c57c41ccdb137030/${z}/${x}/${y}.png",
                             { transitionEffect: null, buffer: 1, sphericalMercator: true, isBaseLayer: false, visibility: false });
                     pvMapper.map.addLayer(substationsMap);
@@ -176,7 +176,7 @@ var BYUModules;
 
                 activate: function () {
                     //http://t0.beta.itoworld.com/4/317c99f331113b90c57c41ccdb137030/${z}/${x}/${y}.png
-                    substationsMap = new OpenLayers.Layer.XYZ("Power Infrastructure",
+                    substationsMap = new OpenLayers.Layer.XYZ("Nearest Transmission Line",
                         "http://t0.beta.itoworld.com/4/317c99f331113b90c57c41ccdb137030/${z}/${x}/${y}.png",
                             { transitionEffect: null, buffer: 1, sphericalMercator: true, isBaseLayer: false, visibility: false });
                     pvMapper.map.addLayer(substationsMap);

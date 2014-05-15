@@ -157,11 +157,15 @@ module BYUModules {
     var topoMapRestUrl = "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/";
     var topoMapLayer: OpenLayers.Layer;
 
+    var isDemMapAdded: boolean = false;
     function addMap() {
-        topoMapLayer = new OpenLayers.Layer.XYZ("ESRI Topography",
-            "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/${z}/${y}/${x}",
-            { transitionEffect: "resize", buffer: 1, sphericalMercator: true });
-        pvMapper.map.addLayer(topoMapLayer);
+        if (!isDemMapAdded) {
+            topoMapLayer = new OpenLayers.Layer.XYZ("ESRI Topography",
+                "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/${z}/${y}/${x}",
+                { transitionEffect: "resize", buffer: 1, sphericalMercator: true });
+            pvMapper.map.addLayer(topoMapLayer);
+            isDemMapAdded = true;
+        }
         /*
         topoMapLayer = new OpenLayers.Layer.ArcGIS93Rest(
             "World Topography",
@@ -183,6 +187,7 @@ module BYUModules {
 
     function removeMap() {
         pvMapper.map.removeLayer(topoMapLayer, false);
+        isDemMapAdded = false;
     }
 
     function updateScore(score: pvMapper.Score, layers: string, description?: string) {
