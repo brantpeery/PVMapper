@@ -456,7 +456,7 @@ module INLModules {
 
         private addMap() {
             this.landCoverLayer = new OpenLayers.Layer.ArcGIS93Rest(
-                "Land Cover",
+                "Land Cover 2",
                 this.landCoverRestUrl + "export",
                 {
                     layers: "show:0,1,2",

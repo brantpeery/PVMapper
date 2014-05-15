@@ -401,7 +401,7 @@ var INLModules;
             };
         }
         LandCoverModuleV2.prototype.addMap = function () {
-            this.landCoverLayer = new OpenLayers.Layer.ArcGIS93Rest("Land Cover", this.landCoverRestUrl + "export", {
+            this.landCoverLayer = new OpenLayers.Layer.ArcGIS93Rest("Land Cover 2", this.landCoverRestUrl + "export", {
                 layers: "show:0,1,2",
                 format: "gif",
                 srs: "3857",

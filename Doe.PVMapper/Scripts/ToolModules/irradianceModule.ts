@@ -174,20 +174,24 @@ module INLModules {
     var dniSuny: OpenLayers.Layer;
     var ghiSuny: OpenLayers.Layer;
     var tiltSuny: OpenLayers.Layer;
+    var irradianceMapsAdded: boolean = false;
 
     function addAllMaps() {
-        //var solarBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
+        if (!irradianceMapsAdded) {
+            //var solarBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
 
-        // Direct-Normal Irradiation
-        dniSuny = addMapsDbMap("swera:dni_suny_high_900913", "Direct-Normal Irradiance 10km");
-        pvMapper.map.addLayer(dniSuny);
+            // Direct-Normal Irradiation
+            dniSuny = addMapsDbMap("swera:dni_suny_high_900913", "Direct-Normal Irradiance 10km");
+            pvMapper.map.addLayer(dniSuny);
 
-        // Global-Horizontal Irradiation
-        ghiSuny = addMapsDbMap("swera:ghi_suny_high_900913", "Global-Horizontal Irradiance 10km");
-        pvMapper.map.addLayer(ghiSuny);
+            // Global-Horizontal Irradiation
+            ghiSuny = addMapsDbMap("swera:ghi_suny_high_900913", "Global-Horizontal Irradiance 10km");
+            pvMapper.map.addLayer(ghiSuny);
 
-        tiltSuny = addMapsDbMap("swera:tilt_suny_high_900913", "Tilted flat-plate Irradiance");
-        pvMapper.map.addLayer(tiltSuny);
+            tiltSuny = addMapsDbMap("swera:tilt_suny_high_900913", "Tilted flat-plate Irradiance");
+            pvMapper.map.addLayer(tiltSuny);
+            irradianceMapsAdded = true;
+        }
     }
 
     function addMapsDbMap(name: string, description: string): OpenLayers.WMS {
@@ -218,6 +222,7 @@ module INLModules {
         pvMapper.map.removeLayer(dniSuny, false);
         pvMapper.map.removeLayer(ghiSuny, false);
         pvMapper.map.removeLayer(tiltSuny, false);
+        irradianceMapsAdded = false;
     }
 
     function updateScoreFromLayer(score: pvMapper.Score, layerName: string) { //site: pvMapper.Site
