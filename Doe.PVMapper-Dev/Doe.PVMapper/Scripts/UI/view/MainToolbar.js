@@ -906,14 +906,16 @@ pvMapper.onReady(function () {
             var toolWin = Ext.create("MainApp.view.ToolConfigWindow", {
                 buttons: [{
                     xtype: 'button',
-                    text: 'OK',
+                    text: 'Save',
+                    tooltip:'Save the preferences to local database then close this window.',
                     handler: function () {
                         toolWin.closeMode = this.text;
                         toolWin.close();
                     }
                 }, {
                     xtype: 'button',
-                    text: "Cancel",
+                    text: "Close",
+                    tooltip: 'Close without saving preference.  Current preferences are maintained in this session.',
                     handler: function () {
                         toolWin.closeMode = this.text;
                         toolWin.close();

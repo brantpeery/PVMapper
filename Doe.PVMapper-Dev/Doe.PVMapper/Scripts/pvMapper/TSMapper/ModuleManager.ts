@@ -10,12 +10,13 @@ var pvClient: {
 module pvMapper {
 
     export class ModuleInfo {
-        constructor(private _category: string, private _moduleName: string, private _ctor: any, private _isActive: boolean, private _moduleUrl?: string) { }
+        constructor(private _category: string, private _moduleName: string, private _ctor: any, private _isActive: boolean, private _moduleUrl: string = "", private _description:string = "") { }
         get category(): string { return this._category; } set category(acat: string) { this._category = acat; }
         get moduleName(): string { return this._moduleName; } set moduleName(aname: string) { this._moduleName = aname; }
         get ctor(): any { return this._ctor; } set ctor(actor: any) { this._ctor = actor; }
         get isActive(): boolean { return this._isActive; } set isActive(isOn: boolean) { this._isActive = isOn; }
         get moduleUrl(): string { return this._moduleUrl; } set moduleUrl(aUrl: string) { this._moduleUrl = aUrl; }
+        get description(): string { return this._description; } set description(desc: string) { this._description = desc; }
     }
 
     export class ModuleManager {
@@ -50,10 +51,12 @@ module pvMapper {
         //This function should only be call by the tool module.  Calling from anywhere else, the caller must make sure
         //that the supporting code script (configProperties) is loaded.  
         public registerModule(category: string, name: string, ctor: any, isActivated: boolean, url: string = '') {
+            if (typeof (ctor.description) == 'undefined')
+                ctor.description = "";
             isActivated = isActivated || false;
             var m = this.getModule(name);
             if (m == null) {
-                this._modules.push(new ModuleInfo(category, name, ctor, isActivated, url));
+                this._modules.push(new ModuleInfo(category, name, ctor, isActivated, url, ctor.description));
                 if (ctor && isActivated) {
                     if (!this.isLoadOnly) {
                         var tm = new ctor();
@@ -160,7 +163,7 @@ module pvMapper {
                                                         ++errCnt;
                                                     });
                                             else {
-                                                this.modules.push(new ModuleInfo(tool.value._category, tool.value._moduleName, undefined, tool.value._isActive, tool.value._moduleUrl));
+                                                this.modules.push(new ModuleInfo(tool.value._category, tool.value._moduleName, undefined, tool.value._isActive, tool.value._moduleUrl, tool.value._description));
                                                 ++newCnt;
                                             }
                                         }

@@ -529,6 +529,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
                         items: [{
                             text: "Turn off '" + titleName + "'",
                             iconCls: "x-delete-menu-icon",
+                            tooltip: "Remove tool here does not save to preferences.",
                             handler: function () {
                                 pvMapper.mainScoreboard.removeModule(rec.raw.title);
                                 pvMapper.moduleManager.saveTools();
@@ -544,14 +545,16 @@ Ext.define('Ext.grid.ScoreboardGrid', {
                                 var toolWin = Ext.create("MainApp.view.ToolConfigWindow", {
                                     buttons: [{
                                         xtype: 'button',
-                                        text: 'OK',
+                                        text: 'Save',
+                                        tooltip: 'Save the preferences to local database then close this window.',
                                         handler: function () {
                                             toolWin.closeMode = this.text;
                                             toolWin.close();
                                         }
                                     }, {
                                         xtype: 'button',
-                                        text: "Cancel",
+                                        text: "Close",
+                                        tooltip: 'Close without saving preference.  Current preferences are maintained in this session.',
                                         handler: function () {
                                             toolWin.closeMode = this.text;
                                             toolWin.close();

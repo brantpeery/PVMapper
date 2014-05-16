@@ -106,7 +106,7 @@ var toolTree = Ext.create('Ext.tree.Panel', {
 
             amodule.isActive = amodule.isActive || false;
             if (node == null) {
-                catNode.appendChild({ text: amodule.moduleName, leaf: true, checked: amodule.isActive });
+                catNode.appendChild({ text: amodule.moduleName, qtip:amodule.description, leaf: true, checked: amodule.isActive });
             }
         });
         this.store = toolsStore;
@@ -163,7 +163,7 @@ Ext.define("MainApp.view.ToolConfigWindow", {
             this.loadToolConfig(wnd, opt);
         },
         beforeclose: function (wnd, opt) {
-            if (this.closeMode == 'OK') {
+            if (this.closeMode == 'Save') {
                 this.saveToolConfig();
             }
             var root = toolsStore.getRootNode();
