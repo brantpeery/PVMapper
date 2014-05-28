@@ -19,8 +19,11 @@ var pvMapper;
                     },
                     destroy: null,
                     init: null,
-                    infoTools: [
-                        {
+                    infoTools: [{
+                            title: "Default Reports",
+                            description: "Provide summary and detail report generation feature",
+                            longDescription: "Provide summary and detail report generation feature",
+                            category: "Reports",
                             activate: function () {
                                 pvMapper.reportsToolbarMenu.add([
                                     {
@@ -37,8 +40,7 @@ var pvMapper;
                                             //};
                                             var win = window.open('/Report/Summary', 'Report');
                                         }
-                                    },
-                                    {
+                                    }, {
                                         text: 'Site Detail Report',
                                         iconCls: 'x-notes-menu-icon',
                                         handler: function () {
@@ -52,8 +54,7 @@ var pvMapper;
                                             //};
                                             var win = window.open('/Report/SiteDetail', 'Report');
                                         }
-                                    }
-                                ]);
+                                    }]);
                             },
                             init: function () {
                             },
@@ -61,8 +62,7 @@ var pvMapper;
                             },
                             deactivate: function () {
                             }
-                        }
-                    ]
+                        }]
                 });
             }
             return Reports;
@@ -74,3 +74,4 @@ var pvMapper;
     })(pvMapper.Tools || (pvMapper.Tools = {}));
     var Tools = pvMapper.Tools;
 })(pvMapper || (pvMapper = {}));
+//# sourceMappingURL=Reports.js.map

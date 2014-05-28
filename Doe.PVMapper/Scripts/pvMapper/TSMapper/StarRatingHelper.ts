@@ -67,8 +67,8 @@ module pvMapper {
                     ////this.options.defaultStarRating;
                     return "";
                 }
-
-                ratables.forEach((ratable) => {
+                
+                ratables.forEach((ratable: string) => {
                     if (typeof this.starRatings[ratable] === "undefined") {
                         this.starRatings[ratable] = this.options.defaultStarRating;
                     }

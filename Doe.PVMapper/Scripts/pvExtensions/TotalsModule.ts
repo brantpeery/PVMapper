@@ -18,9 +18,10 @@ module pvMapper {
                     author: "Brant Peery, INL",
                     version: "0.1",
                     id: "TOTALS_TOOLS",
-                    totalTools: [{
+                    totalTools: [<ITotalTool>{
                         title: "Weighted Average Score",
                         description: "The weighted arithmetic mean of all scores for a site",
+                        longDescription: "The weighted arithmetic mean of all scores for a site",
                         category: "Totals",
                         
                         activate: () => { },
@@ -58,9 +59,10 @@ module pvMapper {
                             //Return the basic average 
                             return { utility: average, popupMessage: "Average" };
                         }                      
-                    }, {
+                    }, <ITotalTool>{
                         title: "Lowest Score",
                         description: "The lowest score for a site, and the name of the tool which generated that score",
+                        longDescription: "The lowest score for a site, and the name of the tool which generated that score",
                         category: "Totals",
 
                         activate: () => { },

@@ -33,9 +33,9 @@ var pvMapper;
                 var y = 0;
                 if (x >= h)
                     y = 1;
-else if (x <= l)
+                else if (x <= l)
                     y = 0;
-else
+                else
                     y = (x < b) ? 1 / (1 + Math.pow((b - l) / (x - l), (2 * s * (b + x - 2 * l)))) : 1 - (1 / (1 + Math.pow((b - (2 * b - h)) / ((2 * b - x) - (2 * b - h)), (2 * s * (b + (2 * b - x) - 2 * (2 * b - h))))));
 
                 //Note: clamping this value to the range 0-1 is handled by the run(x) function
@@ -53,9 +53,10 @@ else
             },
             iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/stats_icon.jpg",
             fn: function (x, args) {
+                //Note: clamping this value to the range 0-1 is handled by the run(x) function
                 if (args != null)
                     return ((x - args.minValue) / (args.maxValue - args.minValue));
-else
+                else
                     return 0;
             }
         };
@@ -66,8 +67,7 @@ else
             xBounds: function (args) {
                 return [
                     Math.min(args.p0.x, Math.min(args.p1.x, args.p2.x)),
-                    Math.max(args.p0.x, Math.max(args.p1.x, args.p2.x))
-                ];
+                    Math.max(args.p0.x, Math.max(args.p1.x, args.p2.x))];
             },
             iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/stats_icon.jpg",
             fn: function (x, args) {
@@ -79,11 +79,11 @@ else
 
                 if (x < sortedPts[0].x)
                     return sortedPts[0].y;
-else if (x < sortedPts[1].x)
+                else if (x < sortedPts[1].x)
                     return sortedPts[0].y + ((sortedPts[1].y - sortedPts[0].y) * (x - sortedPts[0].x) / (sortedPts[1].x - sortedPts[0].x));
-else if (x < sortedPts[2].x)
+                else if (x < sortedPts[2].x)
                     return sortedPts[1].y + ((sortedPts[2].y - sortedPts[1].y) * (x - sortedPts[1].x) / (sortedPts[2].x - sortedPts[1].x));
-else
+                else
                     return sortedPts[2].y;
             }
         };
@@ -100,3 +100,4 @@ else
     })();
     pvMapper.UtilityFunctions = UtilityFunctions;
 })(pvMapper || (pvMapper = {}));
+//# sourceMappingURL=UtilityFunctions.js.map

@@ -13,7 +13,7 @@ var INLModules;
             this.localFormat = null;
             //============================================================
             // blob is the file attribute and file handle.
-            this.moduleClass = /(\w+)\(/.exec((this).constructor.toString())[1];
+            this.moduleClass = /(\w+)\(/.exec(this.constructor.toString())[1];
             this.moduleName = null;
             this.title = "Custom Info Tool";
             var myModule = new pvMapper.Module({
@@ -37,8 +37,7 @@ var INLModules;
                 getModuleName: function () {
                     return _this.moduleName;
                 },
-                infoTools: [
-                    {
+                infoTools: [{
                         init: function () {
                         },
                         activate: function () {
@@ -63,13 +62,12 @@ var INLModules;
                         setTitle: function (newTitle) {
                             _this.title = newTitle;
                         }
-                    }
-                ]
+                    }]
             });
         }
         //private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
         KMLInfoModule.prototype.removeLocalLayer = function () {
-            this.localLayer.destroy();
+            this.localLayer.destroy(); //force to remove from map layer.
         };
 
         KMLInfoModule.prototype.readTextFile = function (kmlString, kmlName, kmlFile) {
@@ -88,11 +86,8 @@ var INLModules;
             this.localLayer = this.localLayer || new OpenLayers.Layer.Vector(kmlName || "KML File", {
                 strategies: OpenLayers.Strategy.Fixed(),
                 style: {
-                    fillColor: "darkred",
-                    strokeColor: "red",
-                    strokeWidth: 5,
-                    strokeOpacity: 0.5,
-                    pointRadius: 5
+                    fillColor: "darkred", strokeColor: "red", strokeWidth: 5,
+                    strokeOpacity: 0.5, pointRadius: 5
                 }
             });
 
@@ -111,3 +106,4 @@ var INLModules;
     })();
     INLModules.KMLInfoModule = KMLInfoModule;
 })(INLModules || (INLModules = {}));
+//# sourceMappingURL=KMLInfoModule.js.map

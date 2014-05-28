@@ -23,21 +23,19 @@ module pvMapper {
         constructor() { }
         private _modules: Array<pvMapper.ModuleInfo> = new Array<pvMapper.ModuleInfo>();
         public getModule(name: string): pvMapper.ModuleInfo {
-            var m: pvMapper.ModuleInfo = <pvMapper.ModuleInfo>(this._modules.find(function (a: pvMapper.ModuleInfo) {
-                if (a.moduleName === name) return true;
-                else return false;
-            }));
-            if (m) return m;
-            return null;
+            var ma = this._modules.filter(function (a: pvMapper.ModuleInfo) {
+                return (a.moduleName === name); //TODO: this is NOT a unique key !
+            });
+            console.assert(ma.length < 2, "Module name collision detected!");
+            return ma.length ? ma[0] : null;
         }
 
         public getModuleByURL(url: string): pvMapper.ModuleInfo {
-            var m: pvMapper.ModuleInfo = <pvMapper.ModuleInfo>(this._modules.find(function (a: pvMapper.ModuleInfo) {
-                if (a.moduleUrl === url) return true;
-                else return false;
-            }));
-            if (m) return m;
-            return null;
+            var ma = this._modules.filter(function (a: pvMapper.ModuleInfo) {
+                return (a.moduleUrl === url);
+            });
+            console.assert(ma.length < 2, "Module url collision detected!");
+            return ma.length ? ma[0] : null; //TODO: this is NOT a unique key !
         }
 
         public getCtor(moduleName: string): any {
@@ -83,10 +81,7 @@ module pvMapper {
         }
 
         public deleteModule(aName: string) {
-            var m = <pvMapper.ModuleInfo>this._modules.find(function (a: pvMapper.ModuleInfo) {
-                if (a.moduleName === aName) return true;
-                else return false;
-            });
+            var m = this.getModule(aName);
             if (m) {
                 var idx = this._modules.indexOf(m);
                 if (idx >= 0) this._modules.splice(idx, 1);
@@ -143,12 +138,14 @@ module pvMapper {
                                 var availableModules = pvClient.getIncludeModules();
 
                                 arrObj.forEach(bindTo(this, function (tool) {
-                                    var mUrl = availableModules.find(function (url: string) {
+                                    var mUrlArray = availableModules.filter(function (url: string) {
                                         if (url === tool.value._moduleUrl) return true; else return false;
                                     });
+                                    console.assert(mUrlArray.length < 2, "Module url collision detected!");
+                                    var mUrl = mUrlArray.length ? mUrlArray[0] : null;
 
                                     //only attempt to load modules that are actually available on the server.
-                                    if (mUrl != null) {
+                                    if (mUrl) {
                                         var cm: ModuleInfo = this.getModule(tool.value._moduleName);
                                         if (cm) {
                                             cm.isActive = tool.value._isActive;
@@ -197,11 +194,11 @@ module pvMapper {
                             });
                     }
                     catch (ex) {
-                        console.log("Reading user module preferences failed, cause: " + ex.message);
+                        console.warn("Reading user module preferences failed, cause: " + ex.message);
                     }
                 }),
                 bindTo(this, function onError(err) {
-                    console.log("Opening database store failed, cause: " + err.message);
+                    console.warn("Opening database store failed, cause: " + err.message);
                     this.loadModuleScripts();
                 }));
         }
@@ -287,7 +284,7 @@ module pvMapper {
                         }
                     }),
                     function onError(Err) {
-                        console.log("loadModuleScripts: Loading all scripts failed, cause: " + Err.message);
+                        console.warn("loadModuleScripts: Loading all scripts failed, cause: " + Err.message);
                     });
 
             }

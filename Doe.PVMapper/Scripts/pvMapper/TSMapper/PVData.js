@@ -26,7 +26,7 @@ var pvMapper;
 
         PVData.prototype.refreshTree = function () {
             var ts = pvMapper.treeStore;
-            ts.root.removeAll();
+            ts.root.removeAll(); //Remove all records (children)
 
             //TreeStore start with ModuleStore.
             var aRoot = ts.getRootNode();
@@ -268,3 +268,4 @@ var pvMapper;
         }
     });
 })(pvMapper || (pvMapper = {}));
+//# sourceMappingURL=PVData.js.map

@@ -98,25 +98,6 @@ String.prototype.isNullOrEmpty = function (): boolean {
         return false;
 };
 
-
-/// find an object in an array that match the srcObj  using the fn function to compare.
-/// provide function: as fn(obj1, scrObj) : integer.  if obj1 == scrObj return 0, else return -1.
-/// if found, return the matching object, if no element found, it returns null.
-
-interface Array<T> {
-    find(fn: ICallback): Object;
-}
-
-Array.prototype.find = function (fn: ICallback): Object {
-    if (fn) {
-        for (var i = 0; i < this.length; i++) {
-            if (fn(this[i]))
-                return this[i];
-        }
-    }
-    return null;
-}
-
 //Just for forcing the funciton domain to a specific d. 
 //Specifically the 'this' argument of the function
 function bindTo(d, f) {

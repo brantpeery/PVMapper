@@ -51,17 +51,6 @@ String.prototype.isNullOrEmpty = function () {
         return false;
 };
 
-
-Array.prototype.find = function (fn) {
-    if (fn) {
-        for (var i = 0; i < this.length; i++) {
-            if (fn(this[i]))
-                return this[i];
-        }
-    }
-    return null;
-};
-
 //Just for forcing the funciton domain to a specific d.
 //Specifically the 'this' argument of the function
 function bindTo(d, f) {

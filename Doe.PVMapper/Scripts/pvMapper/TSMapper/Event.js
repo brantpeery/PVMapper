@@ -1,5 +1,6 @@
 ﻿/// <reference path="common.ts" />
 /// <reference path="../../jquery.d.ts" />
+
 var pvMapper;
 (function (pvMapper) {
     /*
@@ -56,3 +57,4 @@ var pvMapper;
     })();
     pvMapper.Event = Event;
 })(pvMapper || (pvMapper = {}));
+//# sourceMappingURL=Event.js.map

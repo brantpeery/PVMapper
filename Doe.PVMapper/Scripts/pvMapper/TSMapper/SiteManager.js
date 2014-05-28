@@ -107,3 +107,15 @@ var pvMapper;
     //instantiate siteManager object.
     pvMapper.siteManager = new SiteManager();
 })(pvMapper || (pvMapper = {}));
+/*       public addSite(site: Site) {
+if (site instanceof (OpenLayers.Feature)) { //Convert the feature to a site
+site = new Site(site);
+} else if (site instanceof Options) {
+} else if (!site instanceof Site) { //If the site was not one of the above and also is not a site then error
+console.log("Cannot create a site from a type : " + typeof (site) + " Site not created.");
+}
+this.sites.push(site);
+this.siteAdded.fire(site, [{ site: site }, site]);
+}
+*/
+//# sourceMappingURL=SiteManager.js.map

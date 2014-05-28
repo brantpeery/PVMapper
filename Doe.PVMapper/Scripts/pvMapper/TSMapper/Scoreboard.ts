@@ -99,10 +99,12 @@ module pvMapper {
 
 
         public removeCustomModule(moduleName: string) {
-            var amodule: pvMapper.CustomModuleData = <pvMapper.CustomModuleData>pvMapper.customModules.find(function (a) {
-                if (a.fileName === moduleName) return true;
-                else return false;
+            var moduleDataArray = pvMapper.customModules.filter(function (a) {
+                return (a.fileName === moduleName); //TODO: this is NOT a unique key !  Also, this equality isn't easily enforcable or obvious to non-experts. Should change it entirely.
             });
+            console.assert(moduleDataArray.length < 2, "Module name collision detected!");
+            var amodule = moduleDataArray.length ? moduleDataArray[0] : null
+
             if (amodule) {
                 //remove the module from the local database
                 pvMapper.ClientDB.deleteCustomKML(amodule.fileName, function (isSuccessful) {
@@ -111,13 +113,15 @@ module pvMapper {
                         var idx = pvMapper.customModules.indexOf(amodule);
                         pvMapper.customModules.splice(idx, 1);
                         //now remove the scoreline.
-                        var scoreline: pvMapper.ScoreLine = <pvMapper.ScoreLine>pvMapper.mainScoreboard.scoreLines.find(function (a) {
+                        var scorelineArray: pvMapper.ScoreLine[] = pvMapper.mainScoreboard.scoreLines.filter(function (a) {
                             if (a.getModuleName !== undefined) {
-                                if (a.getModuleName() === amodule.fileName) return true;
+                                if (a.getModuleName() === amodule.fileName) return true; //TODO: this is NOT a unique key !  Also, this equality isn't easily enforcable or obvious to non-experts. Should change it entirely.
                                 else return false;
                             }
                             else return false;
                         });
+                        console.assert(scorelineArray.length < 2, "Module name collision detected!");
+                        var scoreline = scorelineArray.length ? scorelineArray[0] : null;
                         if (scoreline) {
                             idx = pvMapper.mainScoreboard.scoreLines.indexOf(scoreline);
                             if (idx >= 0) pvMapper.mainScoreboard.scoreLines.splice(idx, 1);
@@ -134,10 +138,12 @@ module pvMapper {
         }
 
         public removeModule(moduleName: string) {
-            var scoreline: pvMapper.ScoreLine = <pvMapper.ScoreLine>mainScoreboard.scoreLines.find(function (sl: pvMapper.ScoreLine) {
-                if (sl.title == moduleName) return true;
-                else return false;
+            var scorelineArray = mainScoreboard.scoreLines.filter(function (sl) {
+                return (sl.title == moduleName); //TODO: this is NOT a unique key !  Also, this equality isn't easily enforcable or obvious to non-experts. Should change it entirely.
             });
+            console.assert(scorelineArray.length < 2, "Module name collision detected in score lines!");
+            var scoreline = scorelineArray.length ? scorelineArray[0] : null
+
             if (scoreline) {
                 var amodule = scoreline.getModule();
                 //pvMapper.moduleManager.deleteModule(moduleName);

@@ -45,7 +45,7 @@ declare module JXG {
             compile: boolean;
         };
         board: {
-            boundingBox: Array<number>;
+            boundingBox: number[];
             zoomFactor: number;
             zoomX: number;
             zoomY: number;
