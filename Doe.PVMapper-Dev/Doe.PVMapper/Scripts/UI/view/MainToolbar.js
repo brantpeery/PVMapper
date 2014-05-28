@@ -734,7 +734,7 @@ pvMapper.onReady(function () {
     //----------------------------------------------------------------------------------------
     //#region Add distance score from KML
     function continueHandlingDistanceKML(afile) {
-        var amoduleArray = pvMapper.mainScoreboard.scoreLines.filter(
+        var amoduleArray = pvMapper.customModules.filter(
             function (a)
             {
                 return (a.name === afile.name); //TODO: this is NOT a unique key !
@@ -812,7 +812,7 @@ pvMapper.onReady(function () {
     //----------------------------------------------------------------------------------------
     //#region Custom Info From KML
     function continueHandlingInfoKML(afile) {
-        var moduleArray = pvMapper.mainScoreboard.scoreLines.filter(
+        var moduleArray = pvMapper.customModules.filter(
             function (a)
             {
                 return (a.name === afile.name); //TODO: this is NOT a unique key !
