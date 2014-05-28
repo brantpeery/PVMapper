@@ -427,11 +427,12 @@ pvMapper.onReady(function () {
                     while (site = pvMapper.siteManager.sites.pop()) {
                         pvMapper.deleteSite(site.id);
                         pvMapper.siteManager.removeSite(site);
-                        feature = pvMapper.siteLayer.features.find(
+                        var featureArray = pvMapper.siteLayer.features.filter(
                             function (a) {
-                                if (a.attributes.name === site.name) return true;
-                                else return false;
+                                return (a.attributes.name === site.name); //TODO: this is NOT a unique key !
                             });
+                        console.assert(featureArray.length < 2, "Encountered a collision in tool names!");
+                        var feature = featureArray.length ? featureArray[0] : null;
                         //This was what cause of the issue when loading project and report messed up.  The "find" function return "undefined" when no match found.  
                         //It test to be != null which always true and add all existing site information backin. 
                         if (feature)
@@ -460,11 +461,16 @@ pvMapper.onReady(function () {
                   var allSites = [];
                   jsonObj.scoreLines.forEach(function (scline, scid) {
                       scline.scores.forEach(function (score, sid) {
-                          var asite = allSites.find(
-                              function (a) {
-                                  if (a.name === score.site.name) return true;
-                                  else return false;
+                          var asiteArray = allSites.filter(
+                              function (a)
+                              {
+                                  return (a.name === score.site.name); //TODO: this is NOT a unique key !
                               });
+                          console.assert(asiteArray.length < 2, "Encountered a collision in site names!");
+                          var asite = asiteArray.length ? asiteArray[0] : null;
+
+                          console.assert(asite, "Wait... what is this function supposed to do? Because whatever that is, it's doing a bad job...")
+
                           if (!asite)
                               allSites.push(score.site);
                       });
@@ -492,13 +498,15 @@ pvMapper.onReady(function () {
                 //all scorelines (modules) should've been created.
                 //update score in each scoreLine, if matched.
                 jsonObj.scoreLines.forEach(function (line, idx) {
-                    var scLine = pvMapper.mainScoreboard.scoreLines.find(
-                        function (a) {
-                            if ((a.category === line.category) && (a.title === line.title)) return true;
-                            else return false;
+                    var scLineArray = pvMapper.mainScoreboard.scoreLines.filter(
+                        function (a)
+                        {
+                            return (a.category === line.category) && (a.title === line.title); //TODO: this is NOT a unique key !
                         });
+                    console.assert(scLineArray.length < 2, "Encountered a collision in score lines!");
+                    var scLine = scLineArray.length ? scLineArray[0] : null;
 
-                    if (typeof scLine === "object" && scLine !== null) {
+                    if (typeof scLine === "object" && scLine) {
                         scLine.suspendEvent = true;
                         scLine.fromJSON(line);
                         scLine.suspendEvent = false;
@@ -627,13 +635,16 @@ pvMapper.onReady(function () {
             var scLine;
             obj.configLines.forEach(
                 function (cfgLine, idx, configLines) {
-                    scLine = pvMapper.mainScoreboard.scoreLines.find(
-                        function (a) {
-                            if ((a.category === cfgLine.category) && (a.title === cfgLine.title)) return true;
-                            else return false;
+                    var scLineArray = pvMapper.mainScoreboard.scoreLines.filter(
+                        function (a)
+                        {
+                            return (a.category === cfgLine.category) && (a.title === cfgLine.title); //TODO: this is NOT a unique key !
                         });
+                    console.assert(scLineArray.length < 2, "Encountered a collision in score lines!");
+                    var scLine = scLineArray.length ? scLineArray[0] : null;
 
-                    if (scLine !== null) {
+                    if (scLine)
+                    {
                         scLine.updateConfiguration(cfgLine.utility, cfgLine.starRatables, cfgLine.weight);
                     }
                 });
@@ -723,10 +734,15 @@ pvMapper.onReady(function () {
     //----------------------------------------------------------------------------------------
     //#region Add distance score from KML
     function continueHandlingDistanceKML(afile) {
-        var amodule = pvMapper.customModules.find(function (a) {
-            if (a.name === afile.name) return true;
-            else return false;
-        });
+        var amoduleArray = pvMapper.mainScoreboard.scoreLines.filter(
+            function (a)
+            {
+                return (a.name === afile.name); //TODO: this is NOT a unique key !
+            });
+        console.assert(amoduleArray.length < 2, "Encountered a collision in file names!");
+        var amodule = amoduleArray.length ? amoduleArray[0] : null;
+
+        console.assert(amodule, "Wait... why is this function looking for a matching file? Because maybe it shouldn't...?");
 
         if (!amodule) {
             Ext.MessageBox.prompt("Module Naming", "Please type in the module name", function (btn, kmlModuleName) {
@@ -796,10 +812,15 @@ pvMapper.onReady(function () {
     //----------------------------------------------------------------------------------------
     //#region Custom Info From KML
     function continueHandlingInfoKML(afile) {
-        var module = pvMapper.customModules.find(function (a) {
-            if (a.name === afile.name) return true;
-            else return false;
-        });
+        var moduleArray = pvMapper.mainScoreboard.scoreLines.filter(
+            function (a)
+            {
+                return (a.name === afile.name); //TODO: this is NOT a unique key !
+            });
+        console.assert(moduleArray.length < 2, "Encountered a collision in module names!");
+        var module = moduleArray.length ? moduleArray[0] : null;
+
+        console.assert(module, "Wait... why is this function looking for a matching module? Because maybe it shouldn't...?");
 
         if (!module) {
             Ext.MessageBox.prompt("Module Naming", "Please type in the module name", function (btn, kmlModuleName) {
