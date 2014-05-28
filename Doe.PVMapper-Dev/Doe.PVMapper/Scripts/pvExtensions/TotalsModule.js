@@ -25,6 +25,7 @@ var pvMapper;
                         {
                             title: "Weighted Average Score",
                             description: "The weighted arithmetic mean of all scores for a site",
+                            longDescription: "The weighted arithmetic mean of all scores for a site",
                             category: "Totals",
                             activate: function () {
                             },
@@ -51,12 +52,14 @@ var pvMapper;
                                 //TODO: is this really the best place to be mucking about with the feature attributes?
                                 var feature = site.feature;
 
+                                // test if the feature's average score value has changed
                                 if (feature.attributes.overallScore !== average) {
                                     feature.attributes.overallScore = average;
 
                                     // set the score's color as an attribute on the feature (note - this is at least partly a hack...)
                                     feature.attributes.fillColor = (!isNaN(average)) ? pvMapper.getColorForScore(average) : "";
 
+                                    // redraw the feature
                                     if (feature.layer) {
                                         feature.layer.drawFeature(feature);
                                     }
@@ -65,10 +68,10 @@ var pvMapper;
                                 //Return the basic average
                                 return { utility: average, popupMessage: "Average" };
                             }
-                        },
-                        {
+                        }, {
                             title: "Lowest Score",
                             description: "The lowest score for a site, and the name of the tool which generated that score",
+                            longDescription: "The lowest score for a site, and the name of the tool which generated that score",
                             category: "Totals",
                             activate: function () {
                             },
@@ -84,6 +87,7 @@ var pvMapper;
                                 var min = Number.POSITIVE_INFINITY;
                                 var title;
                                 values.forEach(function (v) {
+                                    // skip 0-weight scores tools...
                                     if (v.tool.weight) {
                                         if (typeof v.utility !== 'undefined' && v.utility < min) {
                                             min = v.utility;
@@ -93,14 +97,13 @@ var pvMapper;
                                 });
 
                                 if (isNaN(min) || !isFinite(min)) {
-                                    min = NaN;
-                                    title = null;
+                                    min = NaN; // NaN is already used to flag bad values...
+                                    title = null; // no need for a popup
                                 }
 
                                 return { utility: min, popupMessage: title };
                             }
-                        }
-                    ],
+                        }],
                     infoTools: null
                 });
             }
@@ -112,3 +115,4 @@ var pvMapper;
 
     var TotalAverageScoreInstance = new pvMapper.Tools.TotalScore();
 })(pvMapper || (pvMapper = {}));
+//# sourceMappingURL=TotalsModule.js.map

@@ -19,7 +19,7 @@ var INLModules;
             this.localFormat = null;
             //============================================================
             // blob is the file attribute and file handle.
-            this.moduleClass = /(\w+)\(/.exec((this).constructor.toString())[1];
+            this.moduleClass = /(\w+)\(/.exec(this.constructor.toString())[1];
             this.moduleName = null;
             this.title = "Custom Distance Tool";
             this.queuedScores = [];
@@ -41,8 +41,7 @@ var INLModules;
                 getModuleName: function () {
                     return _this.moduleName;
                 },
-                scoringTools: [
-                    {
+                scoringTools: [{
                         activate: null,
                         deactivate: null,
                         destroy: null,
@@ -73,14 +72,13 @@ var INLModules;
                             _this.title = newTitle;
                         },
                         weight: 10
-                    }
-                ],
+                    }],
                 infoTools: null
             });
         }
         //private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
         LocalLayerModule.prototype.removeLocalLayer = function () {
-            this.localLayer.destroy();
+            this.localLayer.destroy(); //force to remove from map layer.
         };
 
         LocalLayerModule.prototype.readTextFile = function (kmlString, kmlName, kmlFile) {
@@ -99,11 +97,8 @@ var INLModules;
             this.localLayer = this.localLayer || new OpenLayers.Layer.Vector(kmlName || "KML File", {
                 strategies: OpenLayers.Strategy.Fixed(),
                 style: {
-                    fillColor: "darkred",
-                    strokeColor: "red",
-                    strokeWidth: 5,
-                    strokeOpacity: 0.5,
-                    pointRadius: 5
+                    fillColor: "darkred", strokeColor: "red", strokeWidth: 5,
+                    strokeOpacity: 0.5, pointRadius: 5
                 }
             });
 
@@ -167,3 +162,4 @@ var INLModules;
     })();
     INLModules.LocalLayerModule = LocalLayerModule;
 })(INLModules || (INLModules = {}));
+//# sourceMappingURL=LocalLayerModule.js.map

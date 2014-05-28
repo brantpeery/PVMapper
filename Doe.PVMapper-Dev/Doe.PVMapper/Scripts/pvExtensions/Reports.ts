@@ -20,6 +20,11 @@ module pvMapper {
                     destroy: null,
                     init: null,
                     infoTools: [<pvMapper.IInfoToolOptions>{
+                        title: "Default Reports",
+                        description: "Provide summary and detail report generation feature",
+                        longDescription: "Provide summary and detail report generation feature",
+                        category: "Reports",
+
                         activate: () => {
                             pvMapper.reportsToolbarMenu.add([{
                                 text: 'Summary Report',

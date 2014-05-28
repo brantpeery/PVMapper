@@ -1,6 +1,8 @@
 // Module
 var pvMapper;
 (function (pvMapper) {
+    
+
     // Class
     var StarRatingHelper = (function () {
         // Constructor
@@ -27,6 +29,7 @@ var pvMapper;
             // sorts the passed array by descending star rating, and returns
             // a single string representing the sorted array (including star ratings)
             this.sortRatableArray = function (ratables) {
+                // if we were passed an empty array...
                 if (typeof ratables === "undefined" || ratables.length <= 0) {
                     //// return the rating for the no category label (if there is one)
                     //if (this.options.noCategoryLabel) {
@@ -60,3 +63,4 @@ var pvMapper;
     })();
     pvMapper.StarRatingHelper = StarRatingHelper;
 })(pvMapper || (pvMapper = {}));
+//# sourceMappingURL=StarRatingHelper.js.map

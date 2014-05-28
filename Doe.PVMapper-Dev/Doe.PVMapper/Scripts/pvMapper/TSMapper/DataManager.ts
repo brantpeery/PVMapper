@@ -295,7 +295,7 @@ module pvMapper {
         //Save user preferences of tool modules to local database.  
         //storeName - the "table" name
         //tools - array of object [key,value] pair.
-        public static saveToolModules(storeName: string, tools: Array<any>) {
+        public static saveToolModules(storeName: string, tools: any[]) {
             this.CUSTOM_STORE_NAME = storeName;
 
             if (ClientDB.db == null) {

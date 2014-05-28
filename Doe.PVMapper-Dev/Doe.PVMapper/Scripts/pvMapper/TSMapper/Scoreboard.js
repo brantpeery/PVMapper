@@ -84,12 +84,12 @@ var pvMapper;
         };
 
         ScoreBoard.prototype.removeCustomModule = function (moduleName) {
-            var amodule = pvMapper.customModules.find(function (a) {
-                if (a.fileName === moduleName)
-                    return true;
-                else
-                    return false;
+            var moduleDataArray = pvMapper.customModules.filter(function (a) {
+                return (a.fileName === moduleName);
             });
+            console.assert(moduleDataArray.length < 2, "Module name collision detected!");
+            var amodule = moduleDataArray.length ? moduleDataArray[0] : null;
+
             if (amodule) {
                 //remove the module from the local database
                 pvMapper.ClientDB.deleteCustomKML(amodule.fileName, function (isSuccessful) {
@@ -99,7 +99,7 @@ var pvMapper;
                         pvMapper.customModules.splice(idx, 1);
 
                         //now remove the scoreline.
-                        var scoreline = pvMapper.mainScoreboard.scoreLines.find(function (a) {
+                        var scorelineArray = pvMapper.mainScoreboard.scoreLines.filter(function (a) {
                             if (a.getModuleName !== undefined) {
                                 if (a.getModuleName() === amodule.fileName)
                                     return true;
@@ -108,6 +108,8 @@ var pvMapper;
                             } else
                                 return false;
                         });
+                        console.assert(scorelineArray.length < 2, "Module name collision detected!");
+                        var scoreline = scorelineArray.length ? scorelineArray[0] : null;
                         if (scoreline) {
                             idx = pvMapper.mainScoreboard.scoreLines.indexOf(scoreline);
                             if (idx >= 0)
@@ -126,12 +128,12 @@ var pvMapper;
         };
 
         ScoreBoard.prototype.removeModule = function (moduleName) {
-            var scoreline = pvMapper.mainScoreboard.scoreLines.find(function (sl) {
-                if (sl.title == moduleName)
-                    return true;
-                else
-                    return false;
+            var scorelineArray = pvMapper.mainScoreboard.scoreLines.filter(function (sl) {
+                return (sl.title == moduleName);
             });
+            console.assert(scorelineArray.length < 2, "Module name collision detected in score lines!");
+            var scoreline = scorelineArray.length ? scorelineArray[0] : null;
+
             if (scoreline) {
                 var amodule = scoreline.getModule();
 

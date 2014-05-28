@@ -1,5 +1,6 @@
 ﻿/// <reference path="OpenLayers.d.ts" />
 /// <reference path="Event.ts" />
+
 var pvMapper;
 (function (pvMapper) {
     var Site = (function () {
@@ -21,7 +22,7 @@ var pvMapper;
             this.feature.site = this;
             this.geometry = feature.geometry;
             this.name = feature.attributes.name;
-            this.description = feature.attributes.description || "";
+            this.description = feature.attributes.description || ""; // default to empty string (not null)
         }
         /**
         *  This function is a helper function that is called by JSON.stringify() to properly stringify this object
@@ -44,7 +45,7 @@ var pvMapper;
         */
         Site.prototype.fromJSON = function (o) {
             this.id = o.id;
-            this.geometry = (this.geometry.fromWKT(o.geometry));
+            this.geometry = (this.geometry.fromWKT(o.geometry)); //convert WKT string into
             this.name = o.name;
             this.description = o.decription;
             this.popupHTML = o.popupHTML;
@@ -53,3 +54,4 @@ var pvMapper;
     })();
     pvMapper.Site = Site;
 })(pvMapper || (pvMapper = {}));
+//# sourceMappingURL=Site.js.map
