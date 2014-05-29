@@ -737,7 +737,7 @@ pvMapper.onReady(function () {
         var amoduleArray = pvMapper.customModules.filter(
             function (a)
             {
-                return (a.name === afile.name); //TODO: this is NOT a unique key !
+                return (a.fileName === afile.name); //TODO: this is NOT a unique key ! Also, this isn't a reasonable limitation or filter - users may have folder names to deliniate their files
             });
         console.assert(amoduleArray.length < 2, "Encountered a collision in file names!");
         var amodule = amoduleArray.length ? amoduleArray[0] : null;
@@ -749,20 +749,12 @@ pvMapper.onReady(function () {
                 if (btn == 'ok') {
                     if (kmlModuleName.length == 0)
                         kmlModuleName = afile.name;
+
                     //It seems HTML5 file API pull the file type from the MIME type association with an application.
                     //problem here is that if the client machine never had Google Earth installed, the file.type is blank.
                     //If it is the case, we can only realize on the file extension.
-                    var fileType = afile.type;
-                    if (fileType === "") {
-                        var ext = /\.[0-9a-z]+$/.exec(afile.name)[0].toLowerCase();
-                        if (ext === ".kml") {
-                            fileType = "application/vnd.google-earth.kml+xml";
-                        } else if (ext === ".kmz") {
-                            fileType = "application/vnd.google-earth.kmz";
-                        }
-                    }
-
-                    if (fileType === "application/vnd.google-earth.kmz") {
+                    var fileExtension = afile.name.split('.').pop().toLowerCase(); // will be of the form 'kml', 'kmz', etc.
+                    if (afile.type === "application/vnd.google-earth.kmz" || fileExtension === "kmz") {
                         var localLayer = new INLModules.LocalLayerModule();
                         var reader = new FileReader();
                         reader.onload = function (evt) {
@@ -770,17 +762,17 @@ pvMapper.onReady(function () {
                                 function (kmlResult) {
                                     localLayer.readTextFile(kmlResult, kmlModuleName, afile.name);
                                     pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: localLayer }));
-                                    saveToLocalDB(kmlModuleName, localLayer.moduleClass, afile.name, kmlResult);
+                                    saveToLocalDB(kmlModuleName, localLayer.moduleClass, afile.name, kmlResult); //TODO: we shouldn't use just the file name as the primary key here...
                                 });
                         }
                         reader.readAsArrayBuffer(afile);
-                    } else if (fileType === "application/vnd.google-earth.kml+xml") {
+                    } else if (afile.type === "application/vnd.google-earth.kml+xml" || fileExtension === "kml") {
                         var localLayer = new INLModules.LocalLayerModule();
                         var reader = new FileReader();
                         reader.onload = function (evt) {
                             localLayer.readTextFile(evt.target.result, kmlModuleName, afile.name);
                             pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: localLayer }));
-                            saveToLocalDB(kmlModuleName, localLayer.moduleClass, afile.name, evt.target.result);
+                            saveToLocalDB(kmlModuleName, localLayer.moduleClass, afile.name, evt.target.result); //TODO: we shouldn't use just the file name as the primary key here...
                         }
                         reader.readAsText(afile);
                     } else {
@@ -790,7 +782,7 @@ pvMapper.onReady(function () {
             }, this, false, afile.name);
         }
         else {
-            Ext.MessageBox.alert("Duplicate module", "The module [" + afile.name + "] aleady loaded.");
+            Ext.MessageBox.alert("Duplicate file", "The file [" + afile.name + "] was aleady loaded.");
         }
     }
 
@@ -815,7 +807,7 @@ pvMapper.onReady(function () {
         var moduleArray = pvMapper.customModules.filter(
             function (a)
             {
-                return (a.name === afile.name); //TODO: this is NOT a unique key !
+                return (a.fileName === afile.name); //TODO: this is NOT a unique key ! Also, this isn't a reasonable limitation or filter - users may have folder names to deliniate their files
             });
         console.assert(moduleArray.length < 2, "Encountered a collision in module names!");
         var module = moduleArray.length ? moduleArray[0] : null;
@@ -828,7 +820,8 @@ pvMapper.onReady(function () {
                     if (kmlModuleName.length == 0)
                         kmlModuleName = afile.name;
 
-                    if (afile.type === "application/vnd.google-earth.kmz") {
+                    var fileExtension = afile.name.split('.').pop().toLowerCase(); // will be of the form 'kml', 'kmz', etc.
+                    if (afile.type === "application/vnd.google-earth.kmz" || fileExtension === "kmz") {
                         var infoLayer = new INLModules.KMLInfoModule();
                         var reader = new FileReader();
                         reader.onload = function (evt) {
@@ -836,17 +829,17 @@ pvMapper.onReady(function () {
                                 function (kmlResult) {
                                     infoLayer.readTextFile(kmlResult, kmlModuleName, afile.name);
                                     pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: infoLayer }));
-                                    saveToLocalDB(kmlModuleName, infoLayer.moduleClass, afile.name, kmlResult);
+                                    saveToLocalDB(kmlModuleName, infoLayer.moduleClass, afile.name, kmlResult); //TODO: we shouldn't use just the file name as the primary key here...
                                 });
                         }
                         reader.readAsArrayBuffer(afile);
-                    } else if (afile.type === "application/vnd.google-earth.kml+xml") {
+                    } else if (afile.type === "application/vnd.google-earth.kml+xml" || fileExtension === "kml") {
                         var infoLayer = new INLModules.KMLInfoModule();
                         var reader = new FileReader();
                         reader.onload = function (evt) {
                             infoLayer.readTextFile(evt.target.result, kmlModuleName, afile.name);
                             pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: infoLayer }));
-                            saveToLocalDB(kmlModuleName, infoLayer.moduleClass, afile.name, evt.target.result);
+                            saveToLocalDB(kmlModuleName, infoLayer.moduleClass, afile.name, evt.target.result); //TODO: we shouldn't use just the file name as the primary key here...
                         }
                         reader.readAsText(afile);
                     } else {
@@ -856,7 +849,7 @@ pvMapper.onReady(function () {
             }, this, false, afile.name);
         }
         else {
-            Ext.MessageBox.alert("Duplicate module", "The module [" + afile.name + "] aleady loaded on the scoreboard.");
+            Ext.MessageBox.alert("Duplicate file", "The file [" + afile.name + "] was aleady loaded.");
         }
     }
 
