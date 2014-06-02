@@ -402,6 +402,15 @@ var pvMapper;
                 }
             });
         };
+
+        //Deletes all sites from the datastore
+        dataManager.prototype.deleteAllSites = function () {
+            return $.ajax("/api/ProjectSite/", {
+                data: {
+                    type: "DELETE"
+                }
+            });
+        };
         return dataManager;
     })();
     pvMapper.dataManager = dataManager;

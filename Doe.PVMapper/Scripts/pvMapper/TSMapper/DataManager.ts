@@ -446,7 +446,16 @@ module pvMapper {
                 }
             });
         }
-    }
 
+        //Deletes all sites from the datastore
+        public deleteAllSites() {
+            return $.ajax("/api/ProjectSite/", {
+                data: {
+                    type: "DELETE",
+                }
+            });
+        }
+
+    }
 }
 

@@ -49,6 +49,17 @@ var pvMapper;
         };
 
         /**
+        Removes all sites from the sites array.
+        */
+        SiteManager.prototype.removeAllSites = function () {
+            while (this.sites.length) {
+                var site = this.sites.pop();
+                this.siteRemoved.fire(site, site);
+                //site.destroy();
+            }
+        };
+
+        /**
         Removes a site from the sites array.
         */
         SiteManager.prototype.removeSite = function (site) {

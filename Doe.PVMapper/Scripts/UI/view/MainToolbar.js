@@ -4,8 +4,8 @@ pvMapper.onReady(function () {
 
     function hasExtension(filename, extension) {
         // return true if the given filename uses the given file extension
-        //TODO: should this ignore case?
-        return (filename.indexOf(extension, filename.length - extension.length) !== -1);
+        return filename.length < extension.length ? false :
+            (filename.substr(filename.length - extension.length).toLowerCase() === extension.toLowerCase());
     }
 
     function ensureExtension(filename, extension) {
@@ -753,8 +753,7 @@ pvMapper.onReady(function () {
                     //It seems HTML5 file API pull the file type from the MIME type association with an application.
                     //problem here is that if the client machine never had Google Earth installed, the file.type is blank.
                     //If it is the case, we can only realize on the file extension.
-                    var fileExtension = afile.name.split('.').pop().toLowerCase(); // will be of the form 'kml', 'kmz', etc.
-                    if (afile.type === "application/vnd.google-earth.kmz" || fileExtension === "kmz") {
+                    if (afile.type === "application/vnd.google-earth.kmz" || hasExtension(afile.name, ".kmz")) {
                         var localLayer = new INLModules.LocalLayerModule();
                         var reader = new FileReader();
                         reader.onload = function (evt) {
@@ -766,7 +765,7 @@ pvMapper.onReady(function () {
                                 });
                         }
                         reader.readAsArrayBuffer(afile);
-                    } else if (afile.type === "application/vnd.google-earth.kml+xml" || fileExtension === "kml") {
+                    } else if (afile.type === "application/vnd.google-earth.kml+xml" || hasExtension(afile.name, ".kml")) {
                         var localLayer = new INLModules.LocalLayerModule();
                         var reader = new FileReader();
                         reader.onload = function (evt) {
@@ -820,8 +819,7 @@ pvMapper.onReady(function () {
                     if (kmlModuleName.length == 0)
                         kmlModuleName = afile.name;
 
-                    var fileExtension = afile.name.split('.').pop().toLowerCase(); // will be of the form 'kml', 'kmz', etc.
-                    if (afile.type === "application/vnd.google-earth.kmz" || fileExtension === "kmz") {
+                    if (afile.type === "application/vnd.google-earth.kmz" || hasExtension(afile.name, ".kmz")) {
                         var infoLayer = new INLModules.KMLInfoModule();
                         var reader = new FileReader();
                         reader.onload = function (evt) {
@@ -833,7 +831,7 @@ pvMapper.onReady(function () {
                                 });
                         }
                         reader.readAsArrayBuffer(afile);
-                    } else if (afile.type === "application/vnd.google-earth.kml+xml" || fileExtension === "kml") {
+                    } else if (afile.type === "application/vnd.google-earth.kml+xml" || hasExtension(afile.name, ".kml")) {
                         var infoLayer = new INLModules.KMLInfoModule();
                         var reader = new FileReader();
                         reader.onload = function (evt) {

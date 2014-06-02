@@ -197,6 +197,20 @@ if ( typeof pvMapper == 'undefined' ) {
             });
         },
 
+        //Deletes all sites from the datastore
+        deleteAllSites: function() {
+            return $.ajax("/api/ProjectSite/", {
+                data: {},
+                type: "DELETE",
+                done: function () {
+                    pvMapper.displayMessage("All sites were deleted from the database.", "help");
+                },
+                fail: function () {
+                    pvMapper.displayMessage("Unable to delete the sites. There was an error communicating with the database.", "warning");
+                }                
+            });
+        },
+
         getSiteLayer: function () {
             return this.siteLayer || "SiteLayer does not exist in the collection of layers on the map. Add a site or load sites first.";
         },
