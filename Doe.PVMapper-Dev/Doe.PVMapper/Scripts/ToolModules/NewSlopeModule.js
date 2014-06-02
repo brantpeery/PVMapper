@@ -114,8 +114,10 @@ var BYUModules;
         var key = "slopeURL" + score.site.id;
         if ($.jStorage.get(key)) {
             url = $.jStorage.get(key);
-            score.popupMessage = "Calculating...";
-            score.updateValue(Number.NaN);
+            if (score.popupMessage !== "Calculating..." || score.value !== Number.NaN) {
+                score.popupMessage = "Calculating...";
+                score.updateValue(Number.NaN);
+            }
         }
         else {
             //Url has not been established. Run the update score. 
