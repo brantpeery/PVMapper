@@ -145,6 +145,47 @@ pvMapper.onReady(function () {
 
     pvMapper.sitesToolbarMenu.add([renameAction, delAction]);
 
+
+
+    var delAllAction = Ext.create('Ext.Action', {
+        text: 'Delete All Sites',
+        iconCls: 'x-delete-menu-icon',
+        tooltip: "Delete all sites from the current project",
+        handler: function ()
+        {
+            if (pvMapper.siteLayer.features.length > 0)
+            {
+                Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete ' +
+                    pvMapper.siteLayer.features.length + (pvMapper.siteLayer.features.length === 1 ? ' site?' : ' sites?'),
+                function (result)
+                {
+                    if (result === 'yes')
+                    {
+                        // unselect all features first (at present, this causes a PUT to the database if a feature was selected)
+                        // if this isn't done, there will be artifacts left on the map after deleting the selected site(s).
+                        editAction.control.selectControl.unselectAll();
+
+                        // try to delete all features
+                        pvMapper.deleteAllSites()
+                            .done(function ()
+                            {
+                                // if we've deleted the feature from the database, let's delete it from BOTH local collections (?!?)
+                                //TODO: This should happen automagically - ie the local collection should be tied into the database
+                                //TODO: we should combine our siteManager with our OpenLayers feature collection - they both store sites, and that's absurd.
+                                pvMapper.siteManager.removeAllSites();
+                            })
+                            .fail(function ()
+                            {
+                                if (console) console.log('failed to delete sites');
+                            });
+                        // all done
+                    }
+                });
+            }
+        }
+    });
+    pvMapper.sitesToolbarMenu.add(delAllAction);
+
     // instead of commented code we tuck these in the edit menu.
     //var editTools = [new Ext.Button(delAction), new Ext.Button(editAction), new Ext.Button(renameAction)];
     //pvMapper.mapToolbar.add(editTools);

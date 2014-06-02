@@ -16,7 +16,7 @@ namespace Doe.PVMapper.WebApi
 
         public IQueryable<ProjectSite> Get()
         {
-            return _db.All().Where(c => c.IsActive && c.UserId == User.Identity.Name);
+            return _db.All().Where(site => site.UserId == User.Identity.Name);
         }
 
         public ProjectSite Get(string id)
@@ -84,6 +84,12 @@ namespace Doe.PVMapper.WebApi
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound));
             }
+        }
+
+        public HttpResponseMessage Delete()
+        {
+            _db.Delete(site => site.UserId == User.Identity.Name);
+            return new HttpResponseMessage(HttpStatusCode.NoContent);
         }
 
         public HttpResponseMessage Delete(string id)

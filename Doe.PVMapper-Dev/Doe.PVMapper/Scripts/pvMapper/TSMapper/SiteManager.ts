@@ -46,6 +46,17 @@ module pvMapper {
         }
 
         /**
+        Removes all sites from the sites array.
+        */
+        public removeAllSites() {
+            while (this.sites.length) {
+                var site = this.sites.pop();
+                this.siteRemoved.fire(site, site);
+                //site.destroy();
+            }
+        }
+
+        /**
         Removes a site from the sites array.
         */
         public removeSite(site: pvMapper.Site) {
