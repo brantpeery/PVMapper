@@ -15,8 +15,13 @@ var pvMapper;
 
     pvMapper.infoTools = [];
 
+    pvMapper.isReady = false;
+
     function onReady(fn) {
-        pvMapper.readyEvent.addHandler(fn);
+        if (pvMapper.isReady)
+            fn();
+        else
+            pvMapper.readyEvent.addHandler(fn);
     }
     pvMapper.onReady = onReady;
 
@@ -26,7 +31,8 @@ var pvMapper;
     pvMapper.isLocalModulesLoaded = false;
     pvMapper.customModules = new Array();
     pvMapper.waitToLoad = null;
-    pvMapper.clientScripts;
+
+    //export var clientScripts: string;
     function getColorForScore(score) {
         var min = Math.min;
         var max = Math.max;

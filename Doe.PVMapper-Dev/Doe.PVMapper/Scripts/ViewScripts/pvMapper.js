@@ -254,7 +254,6 @@ if ( typeof pvMapper == 'undefined' ) {
 
     } ); //End the $.extend
 
-    if (console) console.log("pvMapper: " + pvMapper);
 } )(pvMapper );
 
 

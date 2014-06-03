@@ -38,7 +38,6 @@ var pvMapper;
         }
         ClientDB.initClientDB = function (forced) {
             if (typeof forced === "undefined") { forced = false; }
-            var me = this;
             if (!ClientDB.indexedDB) {
                 window.alert("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
                 return;
@@ -56,21 +55,21 @@ var pvMapper;
                 if (!ClientDB.isDBCreating) {
                     ClientDB.isDBCreating = true;
                     if (forced)
-                        var dbreq = ClientDB.indexedDB.open(ClientDB.DB_NAME, ClientDB.DBVersion);
+                        ClientDB.dbreq = ClientDB.indexedDB.open(ClientDB.DB_NAME, ClientDB.DBVersion);
                     else
-                        var dbreq = ClientDB.indexedDB.open(ClientDB.DB_NAME);
-                    dbreq.onsuccess = function (evt) {
-                        console.log("Database [PVMapperData] is open sucessful.");
-                        ClientDB.db = evt.currentTarget.result;
-                        ClientDB.DBVersion = +ClientDB.db.version;
+                        ClientDB.dbreq = ClientDB.indexedDB.open(ClientDB.DB_NAME);
+                    ClientDB.dbreq.onsuccess = function (evt) {
+                        ClientDB.useDatabase(evt.currentTarget.result);
                     };
 
-                    dbreq.onerror = function (event) {
-                        me.clientDBError = true;
-                        console.log("indexedDB open error: " + event.currentTarget.error.message);
+                    ClientDB.dbreq.onerror = function (event) {
+                        ClientDB.clientDBError = true;
+                        if (console && console.warn)
+                            console.warn("indexedDB open error: " + event.currentTarget.error.message);
+                        alert("Error: couldn't connect to in-browser storage.");
                     };
 
-                    dbreq.onupgradeneeded = function (evt) {
+                    ClientDB.dbreq.onupgradeneeded = function (evt) {
                         try  {
                             var db = evt.target.result;
                             if (!db.objectStoreNames.contains(ClientDB.CONFIG_STORE_NAME)) {
@@ -88,16 +87,63 @@ var pvMapper;
                                 }
                             }
 
-                            ClientDB.db = evt.currentTarget.result;
+                            ClientDB.useDatabase(evt.currentTarget.result);
                         } catch (e) {
-                            console.log("Creating object store failed, cause: " + e.message);
+                            if (console && console.warn)
+                                console.warn("Creating object store failed, cause: " + e.message);
                         }
+                    };
+
+                    ClientDB.dbreq.onblocked = function (event) {
+                        if (console && console.warn)
+                            console.warn("database open is blocked ?!?");
+                        alert("PV Mapper is open in another browser tab; please close that tab to continue.");
                     };
                 }
             } catch (e) {
                 console.log("initDB error, cause: " + e.message);
             }
             return null;
+        };
+
+        ClientDB.useDatabase = function (db) {
+            // Make sure to add a handler to be notified if another page requests a version
+            // change. We must close the database. This allows the other page to upgrade the database.
+            // If you don't do this then the upgrade won't happen until the user closes the tab.
+            db.onversionchange = function (event) {
+                alert("PV Mapper is open in another browser tab; please close this tab to continue.");
+
+                //db.close();
+                window.close();
+            };
+
+            // Do stuff with the database.
+            ClientDB.db = db;
+            ClientDB.DBVersion = +ClientDB.db.version;
+
+            if (console && console.log)
+                console.log("Database 'PVMapperData' (version " + ClientDB.DBVersion + ") is open.");
+
+            // Now, handle loading from our new database (or schedule it for handling, whenever pvMapper is ready)
+            pvMapper.onReady(function () {
+                pvMapper.moduleManager.loadTools();
+
+                //load custom modules.
+                if (console && console.assert)
+                    console.assert((pvMapper.loadLocalModules !== undefined) && (pvMapper.loadLocalModules !== null) && (typeof (pvMapper.loadLocalModules) === "function"), "Warning: MainToolbar isn't finished loading...!");
+
+                if ((pvMapper.loadLocalModules !== undefined) && (pvMapper.loadLocalModules !== null) && (typeof (pvMapper.loadLocalModules) === "function")) {
+                    pvMapper.loadLocalModules();
+                }
+
+                //load configuration
+                if ((ClientDB.db != null) && (!pvMapper.mainScoreboard.isScoreLoaded)) {
+                    pvMapper.mainScoreboard.scoreLines.forEach(function (sc) {
+                        sc.loadConfiguration();
+                    });
+                    pvMapper.mainScoreboard.isScoreLoaded = true;
+                }
+            });
         };
 
         ClientDB.saveCustomKML = function (moduleName, moduleClass, filename, kmlStream) {
@@ -195,7 +241,7 @@ var pvMapper;
         };
 
         ClientDB.loadToolModules = function (storeName) {
-            this.CUSTOM_STORE_NAME = storeName;
+            ClientDB.CUSTOM_STORE_NAME = storeName;
 
             return new Promise(function (resolve, reject) {
                 if (ClientDB.db == null) {
@@ -254,7 +300,7 @@ var pvMapper;
         //storeName - the "table" name
         //tools - array of object [key,value] pair.
         ClientDB.saveToolModules = function (storeName, tools) {
-            this.CUSTOM_STORE_NAME = storeName;
+            ClientDB.CUSTOM_STORE_NAME = storeName;
 
             if (ClientDB.db == null) {
                 console.log("Database is not available or not ready.");
@@ -268,7 +314,11 @@ var pvMapper;
             try  {
                 //if the custom store is not yet exists, re-initCLientDB to force it to connect with higher version.
                 if (!ClientDB.db.objectStoreNames.contains(ClientDB.CUSTOM_STORE_NAME)) {
-                    ClientDB.DBVersion = +ClientDB.db.version + 1;
+                    ClientDB.DBVersion = +ClientDB.db.version + 1; //TODO: this is a terrible abuse of the version system. Terrible. Truly terrible.
+
+                    if (console && console.log)
+                        console.log("Upgrading database 'PVMapperData' to version " + ClientDB.DBVersion + ".");
+
                     new Promise(function (resolve, reject) {
                         ClientDB.initClientDB(true);
                         var cycle = 0;
@@ -325,6 +375,7 @@ var pvMapper;
         ClientDB.PROJECT_STORE_NAME = "PVMapperProjects";
         ClientDB.TOOLS_STORE_NAME = "PVMapperTools";
         ClientDB.db = null;
+        ClientDB.dbreq = null;
         ClientDB.DBVersion = 1;
 
         ClientDB.indexedDB = window.indexedDB || window.msIndexedDB;

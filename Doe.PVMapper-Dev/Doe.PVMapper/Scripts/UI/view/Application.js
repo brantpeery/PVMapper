@@ -279,6 +279,7 @@ var app = Ext.application({
         //Ext.ComponentQuery.query('#maincontent').add(mapPanel);
 
         if (console) console.log('Signaling that the pvMapper object is ready to go');
+        pvMapper.isReady = true;
         pvMapper.readyEvent.fire();
     },
 });
