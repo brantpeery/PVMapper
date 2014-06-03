@@ -2,7 +2,12 @@
     this.pvMapper = {};
 }
 
+var done_percent = 0;
+
 (function (pvM) {
+
+
+
     $.extend(pvM, {
         // should be passed a function that will be executed when all required scripts are fully loaded
         readyEvent: new pvM.Event(),

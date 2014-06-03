@@ -1,6 +1,6 @@
 ﻿@{
-    ViewBag.Title = "PVMapper";
-    Layout = "~/Views/Shared/_MapLayout.cshtml";
+  ViewBag.Title = "PVMapper";
+  Layout = "~/Views/Shared/_MapLayout.cshtml";
 }
 
 
@@ -39,14 +39,14 @@
     @*<script type="text/javascript" src="~/Scripts/ViewScripts/IdentifySite.js"></script>*@
     <script type="text/javascript" src="~/Scripts/ViewScripts/SiteId.js"></script>
 
-    @*Load the layers for the map*@
+  @*Load the layers for the map*@
     <script type="text/javascript" src="~/Scripts/ViewScripts/LoadProjectSites.js"></script>
 
     <script type="text/javascript" src="~/Scripts/ViewScripts/Layers.js"></script>
 
     <script type="text/javascript" src="~/Scripts/jsts/javascript.util.js"></script>
     <script type="text/javascript" src="~/Scripts/jsts/jsts.js"></script>
-
+    
     <script type="text/javascript" src="~/Scripts/EsriGeoJSON.js"></script>
     <script type="text/javascript" src="~/Scripts/Esri-GeoJsonConverter.js"></script>
 
@@ -64,10 +64,13 @@
     <script type="text/javascript" src="~/Scripts/UI/view/toolConfigWindow.js"></script>
     <script type="text/javascript" src="~/Scripts/ViewScripts/RelatedLinks.js"></script>
     <script type="text/javascript" src="~/Scripts/pvExtensions/TotalsModule.js"></script>
-    
+
+    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/CustomModule.js"></script>  @* Add New Custom Tool, Added by Rohan Raja (BYU Intern) *@
+    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/ProgressBar.js"></script>  @* Add New Custom Tool, Added by Rohan Raja (BYU Intern) *@
+
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/LocalLayerModule.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/KMLInfoModule.js"></script>
-
+    
     @*
         =====================================================================================================
         Files list from here on down are not pvMapper core API specific and may be load on demand if necessary
@@ -79,12 +82,13 @@
         pvIncludeMinimal = false;
     </script>
     <script type="text/javascript" src="~/Scripts/pvClient.js"></script>
-  
+
     <script type="text/javascript">
         //using DOM to convert HTML string (js code) into plain text.
         var div = document.createElement('div');
         div.innerHTML = "@ViewBag.toolModules";
         eval("//# sourceURL=IndexInline.js\n " + div.textContent);
     </script>
+    
 }
 

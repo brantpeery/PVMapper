@@ -1,4 +1,4 @@
-﻿Ext.require('MainApp.view.RatingView');
+Ext.require('MainApp.view.RatingView');
 
 /*
  * Start FIX: Summary + Grouping. Without this fix there would be a summary row under each group
@@ -88,9 +88,12 @@ var toolsStore = Ext.create('Ext.data.Store', {
 
 var siteColumns = []; //Empty array for use below as a reference to what will be in the array eventually
 
+
 var scoreboardColumns = [{
-    text: 'Tool Name',
     minWidth: 150,
+
+    text: 'Tool Name',    // Add the new "Add new Tool" href link
+
     //maxWidth: 100,
     flex: 1, //Will be resized
     //shrinkWrap: 1,
@@ -102,6 +105,14 @@ var scoreboardColumns = [{
             metadata.tdAttr = 'data-qtip="' + record.data.description + '"';
         }
         return value;
+    },
+
+    editor: {
+        xtype: 'textfield',
+        allowBlank: false,
+        allowDecimals: false,
+        allowExponential: false,
+        allowOnlyWhitespace: false
     },
     //tooltip: '{description}',
     //editor: 'textfield', <-- don't edit this field - that would be silly
@@ -246,18 +257,18 @@ var scoreboardColumns = [{
                     }
                 }],
                 listeners: {
-                    beforerender: function (win, op) {
-                        var w = win.width;
+                  beforerender: function (win, op) {
+                    var w = win.width;
                         if (typeof (w) == 'undefined' || (w < 400)) {
-                            win.setWidth(400);
-                            win.center();
-                        }
-                        utilityFn.windowSetup.apply(utilityFn, [dynamicPanel, uf]); // uf.functionArgs, utilityFn.fn, utilityFn.xBounds]);
-                        //TODO: can't we just pass uf here, in place of all this other crap?
-                    },
+                      win.setWidth(400);
+                      win.center();
+                    }
+                     utilityFn.windowSetup.apply(utilityFn, [dynamicPanel, uf]); // uf.functionArgs, utilityFn.fn, utilityFn.xBounds]);
+                    //TODO: can't we just pass uf here, in place of all this other crap?
+                  },
                     resize: function (win, width, height, opts) {
-                        if (dynamicPanel.onBodyResize != undefined)
-                            width = this.getContentTarget().getWidth();
+                      if (dynamicPanel.onBodyResize != undefined)
+                        width = this.getContentTarget().getWidth();
                         height = this.getContentTarget().getHeight();
                         dynamicPanel.onBodyResize(width, height, opts);
                     }
@@ -382,11 +393,15 @@ toolsStore.on({
                     //minWidth: 50,
                     width: 120,
                     renderer: function (value, metaData) {
+
                         if (value.length <= idx) return '<i>Calculating...</i>'; //Avoid the index out of range error
 
                         //if (typeof value[idx].utility !== "undefined" && !isNaN(value[idx].utility)) {
                         //    metaData.style = "background-color:" + getColor(value[idx].utility);
                         //}
+
+                        if(isFinite(value))
+                            return value;
 
                         if (value[idx].popupMessage && value[idx].popupMessage.trim().length > 0) {
                             metaData.tdAttr = 'data-qtip="' + value[idx].popupMessage + '"';
@@ -406,7 +421,19 @@ toolsStore.on({
                                 return value[idx].popupMessage;
                             return "";
                         }
+
+
                     },
+
+                    editor: {
+        xtype: 'textfield',
+        allowBlank: false,
+        allowDecimals: false,
+        allowExponential: false,
+        allowOnlyWhitespace: false
+    },
+
+
                     draggable: false,
 
                     summaryType: function (records) {
@@ -434,6 +461,16 @@ toolsStore.on({
                         return value[idx].utility.toFixed(0);
                     },
                     draggable: false,
+
+                    editor: {
+        xtype: 'textfield',
+        allowBlank: false,
+        allowDecimals: false,
+        allowExponential: false,
+        allowOnlyWhitespace: false
+    },
+
+                    
 
                     summaryType: function (records) {
                         var total = 0;
@@ -496,13 +533,61 @@ toolsStore.on({
     }
 
 });
+
+var old_pop_msg ;
 // plugin for cell editing (Weight value)
 Ext.define('MainApp.view.ScoreWeightEditing', {
     extend: 'Ext.grid.plugin.CellEditing',
     clicksToEdit: 1,
     listeners: {
+
+         beforeedit: function(editor, e, eOpts) {
+
+
+                if(e.field == "weight")
+                    return true ;
+            
+                if(e.record.raw.category != "All Custom Added Tools")
+        
+                    return false ;
+
+                if(e.column.text == "Score")
+                {
+
+                     theScoreIdx = parseInt((e.colIdx - 3) / 2) ;
+
+                    old_pop_msg = e.record.raw.scores[theScoreIdx].popupMessage ;
+                    e.record.raw.scores[theScoreIdx].popupMessage = e.record.raw.scores[theScoreIdx].value.toString() ;
+                }
+                
+              },
+
+
         edit: function (editor, e, eOpts) {
             e.record.raw.setWeight(e.record.data['weight']);
+
+            theScoreIdx = parseInt((e.colIdx - 3) / 2) ;
+
+            if(e.record.raw.category == "All Custom Added Tools")
+            {
+                switch(e.column.text){
+
+                    case "Value" :
+                         e.record.raw.scores[theScoreIdx].popupMessage = e.value;
+                         break ;
+
+                    case "Score" :
+                         e.record.raw.scores[theScoreIdx].popupMessage = old_pop_msg ;
+                         e.record.raw.scores[theScoreIdx].updateValue(parseInt(e.value));
+
+
+                }
+
+                if(e.field == "title")
+                    e.record.raw.title = e.value;
+               
+              //  e.record.raw.scores[0].updateValue(0);
+            }
         }
     }
 });
@@ -512,6 +597,27 @@ Ext.define('Ext.grid.ScoreboardGrid', {
     //xtype:'Scoreboard',
     extend: 'Ext.grid.Panel',
     store: toolsStore,
+    dockedItems: [{                // Toolbar on the mainscoreboard, added by Rohan Raja (BYU)
+    xtype: 'toolbar',
+    dock: 'top',
+    items: [{
+        xtype: 'button',
+        iconCls: 'x-openproject-menu-icon',
+        text: 'Add Custom Tool',// <img style="width : 10px; height 10px;" src="http://www.iconsdb.com/icons/download/black/plus-2-256.png">',
+        handler: function(){
+            add_new_tool();
+        }
+    },
+    {
+        xtype: 'button',
+        iconCls: 'x-fileexport-menu-icon',
+        text: 'Export Scoreboard to CSV',// <img style="width : 10px; height 10px;" src="http://www.iconsdb.com/icons/download/black/plus-2-256.png">',
+        handler: function(){
+
+            pvMapper.scoreboardToolsToolbarMenu.items.items[6].handler()
+        }
+    }]
+}],
     //forceFit: true,
     //width: '100%',
     //height: 600,
@@ -579,7 +685,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
                             text: "Remove Custom Module: '" + titleName + "'",
                             iconCls: "x-delete-menu-icon",
                             handler: function () {
-
+                                
                                 Ext.MessageBox.confirm("Removing '" + titleName + "(" + moduleName + ")'", "Are you sure you want to remove this module?", function (btn) {
                                     if (btn === "yes") {
                                         //this function is defined in MainToolbar file.
@@ -755,7 +861,7 @@ Ext.define('MainApp.view.ExtraIcons', {
 Ext.define('MainApp.view.ScoreboardWindow', {
     extend: "MainApp.view.Window",
     id: "ScoreboardWindowID",
-    title: 'Main Scoreboard',
+    title: 'Main Scoreboard :  Loading tools <span class = "completed_val">(0/0) 0</span>%',
     width: 800,
     height: 600,
     maximizable: true,
@@ -787,7 +893,7 @@ Ext.define('MainApp.view.ScoreboardWindow', {
                     $("style").each(function () {
                         style += $(this)[0].outerHTML;
                     });
-
+                    
                     // var script = '<script> window.onmouseover = function(){window.close();}</script>';
                     printWindow.document.write('<!DOCTYPE html><html lang="en"><head><title>PV Mapper Scoreboard</title>' + link + style + ' </head><body>' + html + '</body>');
                     $('div', printWindow.document).each(function () {

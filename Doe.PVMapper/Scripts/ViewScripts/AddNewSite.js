@@ -19,6 +19,14 @@ pvMapper.onReady(function () {
         enableToggle: true,
         toggleGroup: "editToolbox",
         handler: function () {
+
+            if(pvMapper.siteLayer.features.length > 3)
+            {
+                Ext.Msg.alert('Warning', 'Too many sites!');
+                this.toggle(false);
+                return 0;
+            }
+
             if (thisTool.mapControl.active) {
                 thisTool.deactivateDrawSite();
                 this.toggle(false);

@@ -173,6 +173,7 @@ pvMapper.onReady(function () {
                                 //TODO: This should happen automagically - ie the local collection should be tied into the database
                                 //TODO: we should combine our siteManager with our OpenLayers feature collection - they both store sites, and that's absurd.
                                 pvMapper.siteManager.removeAllSites();
+                                pvMapper.siteLayer.removeAllFeatures() ; // Remove map features after deletion 
                             })
                             .fail(function ()
                             {

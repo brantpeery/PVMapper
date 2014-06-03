@@ -216,6 +216,7 @@ pvMapper.onReady(function () {
 
     ///kmlFeature : pvMapper.SiteFeature.
     function AddSite(kmlFeature) {
+            
         var name = kmlFeature.attributes.name ? kmlFeature.attributes.name : "KML site";
         var desc = kmlFeature.attributes.description ? kmlFeature.attributes.description : "";
 
@@ -249,13 +250,40 @@ pvMapper.onReady(function () {
         iconCls: 'x-open-menu-icon',
         tooltip: "Import site polygons from a KML file",
         handler: function () {
+             if(pvMapper.siteLayer.features.length > 3)
+            {
+                Ext.Msg.alert('Warning', 'Too many sites!');
+                return 0;
+            }
             fileDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
             KMLMode.CurrentMode = KMLMode.KMLSITE;
             fileDialogBox.click();
         }
     });
+
+    var allSitesDeleteAction = Ext.create('Ext.Action', {
+        text: 'Delete all sites',
+        iconCls: 'x-open-menu-icon',
+        tooltip: "Import site polygons from a KML file",
+        handler: function () {
+           tempSites = pvMapper.siteManager.getSites();
+
+        while (tempSites.length>0)
+        {
+        tempSites.forEach(function(siteTemp){pvMapper.siteManager.removeSiteById(siteTemp.id); pvMapper.deleteSite(siteTemp.id);}); 
+        tempSites = pvMapper.siteManager.getSites();
+        }
+      
+         pvMapper.siteLayer.removeAllFeatures() ;
+
+        }
+    });
+
+   //  pvMapper.sitesToolbarMenu.add(allSitesDeleteAction);
+
     pvMapper.sitesToolbarMenu.add('-');
     pvMapper.sitesToolbarMenu.add(siteImportAction);
+   
     //#endregion KML Site import
     //----------------------------------------------------------------------------------------
     //#region export site to KML

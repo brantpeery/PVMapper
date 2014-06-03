@@ -33,7 +33,7 @@
             deactivate: function () { },    //Called when the tool is unchecked or deactivated by the system or user
         };
 
-        var settings = $.extend({}, defaults, options);
+        var settings = $.extend({}, defaults, options); 
 
         this.id = (typeof (settings.id) === 'string') ? settings.id : '';
         this.author = (typeof (settings.author) === 'string') ? settings.author : '';
