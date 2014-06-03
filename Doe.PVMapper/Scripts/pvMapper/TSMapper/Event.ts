@@ -26,17 +26,17 @@ module pvMapper {
   Is a publish point. Uses the handlers and fire method to publish events
  */
   export class Event {
-    public eventHandlers: { (any): any; }[];
+    public eventHandlers: EventCallback[];
     /// Creates the publish point. 
     /// allowDuplicateHandler if set to true will allow the same function to subscribe more than once.
     constructor(public allowDuplicateHandler: boolean = false) {
       this.eventHandlers = new Array();
     }
     ///
-    public addHandler(callBack:EventCallback) {
-      if (this.eventHandlers.indexOf(callBack) == -1 || this.allowDuplicateHandler) {
-        this.eventHandlers.push(callBack);
-      }
+    public addHandler(callBack : EventCallback) {
+        if (this.allowDuplicateHandler || this.eventHandlers.indexOf(callBack) === -1) {
+            this.eventHandlers.push(callBack);
+        }
     }
 
     public removeHandler(handler:EventCallback) {

@@ -17,8 +17,11 @@ module pvMapper {
 
     export var infoTools: IInfoTool[] = [];
 
-    export function onReady(fn:ICallback) {
-        readyEvent.addHandler(fn);
+    export var isReady: boolean = false;
+
+    export function onReady(fn: ICallback) {
+        if (isReady) fn();
+        else readyEvent.addHandler(fn);
     }
 
     export var map: OpenLayers.IMap;
@@ -27,7 +30,7 @@ module pvMapper {
     export var isLocalModulesLoaded: boolean = false;
     export var customModules: CustomModuleData[] = new Array<CustomModuleData>();
     export var waitToLoad: any = null;
-    export var clientScripts: string;
+    //export var clientScripts: string;
     export function getColorForScore(score: number): string {
         var min = Math.min;
         var max = Math.max;

@@ -18,7 +18,7 @@ var pvMapper;
         }
         ///
         Event.prototype.addHandler = function (callBack) {
-            if (this.eventHandlers.indexOf(callBack) == -1 || this.allowDuplicateHandler) {
+            if (this.allowDuplicateHandler || this.eventHandlers.indexOf(callBack) === -1) {
                 this.eventHandlers.push(callBack);
             }
         };

@@ -216,44 +216,5 @@ var pvMapper;
             }
         }
     });
-
-    //this file has all modules to be loaded.
-    pvMapper.clientScripts = "~/Scirpts/pvClient.js";
-
-    //this function will wait until IndexedDB is loaded and then load the configuration as well as saved CustomKML modules.
-    //However, if the browser is not supporting IndexedDB, it will just kick it back out.
-    //TODO: Should change this to use the Promise pattern. --LV
-    var holdYourHorse = false;
-    pvMapper.waitToLoad = function () {
-        if (pvMapper.ClientDB.db !== null) {
-            if (!holdYourHorse) {
-                holdYourHorse = true;
-
-                //load all necessary modules dynamically.
-                pvMapper.moduleManager.loadTools();
-
-                //load custom modules.
-                if ((pvMapper.loadLocalModules !== undefined) && (pvMapper.loadLocalModules !== null) && (typeof (pvMapper.loadLocalModules) === "function")) {
-                    pvMapper.loadLocalModules();
-                }
-
-                //load configuration
-                if ((pvMapper.ClientDB.db != null) && (!pvMapper.mainScoreboard.isScoreLoaded)) {
-                    pvMapper.mainScoreboard.scoreLines.forEach(function (sc) {
-                        sc.loadConfiguration();
-                    });
-                    pvMapper.mainScoreboard.isScoreLoaded = true;
-                }
-            }
-        } else {
-            setTimeout(pvMapper.waitToLoad, 5000);
-        }
-    };
-
-    //Create the scoreboard onscreen
-    pvMapper.onReady(function () {
-        holdYourHorse = false;
-        setTimeout(pvMapper.waitToLoad, 5000); //check every 5 seconds.
-    });
 })(pvMapper || (pvMapper = {}));
 //# sourceMappingURL=Scoreboard.js.map
