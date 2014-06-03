@@ -172,6 +172,23 @@ var app = Ext.application({
 
         var layerPanel = new GeoExt.tree.Panel({
             title: "Layers",
+            dockedItems: [{                // Toolbar on the mainscoreboard, added by Rohan Raja (BYU)
+    xtype: 'toolbar',
+    dock: 'top',
+    items: [
+    {
+        xtype: 'button',
+        iconCls: 'x-open-menu-icon', 
+        text: 'Add Info Layer From KML',// <img style="width : 10px; height 10px;" src="http://www.iconsdb.com/icons/download/black/plus-2-256.png">',
+        handler: function(){
+
+              
+            fileDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
+            KMLMode.CurrentMode = KMLMode.KMLINFO;
+            fileDialogBox.click();
+        }
+    }]
+}],
             viewConfig: {
                 plugins: [{
                     ptype: 'treeviewdragdrop',

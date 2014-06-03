@@ -49,7 +49,7 @@ if (!Array.prototype.forEach) {
             if (i in this) {
                 fn.call(scope, this[i], i, this);
             }
-        }
+       } 
     };
 }
 
@@ -129,7 +129,7 @@ if (!Array.prototype.map) {
 }
 
 // This is a globally defined object that represents the client-side behaviors available through the PVMapper framework.
-if (console) console.log("Loading pvMapper object");
+if (console) console.log("Loading pvMapper object")
 if ( typeof pvMapper == 'undefined' ) {
   this.pvMapper = {};
 }
@@ -186,6 +186,7 @@ if ( typeof pvMapper == 'undefined' ) {
         },
         //Deletes a site from the datastore
         deleteSite: function (siteId) {
+                    
             return $.ajax("/api/ProjectSite/" + siteId, {
                 data: { Id: siteId }, type: "DELETE",
                 done: function () {

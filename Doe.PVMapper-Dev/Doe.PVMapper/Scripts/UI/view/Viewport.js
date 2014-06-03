@@ -16,6 +16,11 @@ if ( !Array.prototype.indexOfObject ) {
   };
 }
 
+var pb2 = Ext.create('Ext.ProgressBar', {
+            width: 200
+        });
+
+
 Ext.define( 'MainApp.view.Viewport', {
     extend: 'Ext.container.Viewport',
     layout: 'fit',
@@ -65,7 +70,7 @@ Ext.define( 'MainApp.view.Viewport', {
               region: 'south',
               margins: '0',
               padding: '0',
-              items: [ ],
+              items: [pb2],
               addButton: function (winObj) {
                 //if the button exists, do nothing.
                 //if ( this.items.items.indexOfObject( function ( val ) { return val.text === winObj.title; } ) >= 0 ) return; 
