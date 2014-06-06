@@ -50,12 +50,4 @@ String.prototype.isNullOrEmpty = function () {
     else
         return false;
 };
-
-//Just for forcing the funciton domain to a specific d.
-//Specifically the 'this' argument of the function
-function bindTo(d, f) {
-    return function () {
-        return f.apply(d, arguments);
-    };
-}
 //# sourceMappingURL=common.js.map
