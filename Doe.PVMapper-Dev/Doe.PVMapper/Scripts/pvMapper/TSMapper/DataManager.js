@@ -1,9 +1,8 @@
+/// <reference path="es6-promises.d.ts" />
 /// <reference path="Options.d.ts" />
 /// <reference path="common.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="../../ExtJS.d.ts" />
-var Promise;
-
 // Module
 var pvMapper;
 (function (pvMapper) {
@@ -130,9 +129,9 @@ var pvMapper;
 
                 //load custom modules.
                 if (console && console.assert)
-                    console.assert((pvMapper.loadLocalModules !== undefined) && (pvMapper.loadLocalModules !== null) && (typeof (pvMapper.loadLocalModules) === "function"), "Warning: MainToolbar isn't finished loading...!");
+                    console.assert(typeof (pvMapper.loadLocalModules) === "function", "Warning: MainToolbar isn't finished loading...!");
 
-                if ((pvMapper.loadLocalModules !== undefined) && (pvMapper.loadLocalModules !== null) && (typeof (pvMapper.loadLocalModules) === "function")) {
+                if (typeof (pvMapper.loadLocalModules) === "function") {
                     pvMapper.loadLocalModules();
                 }
 

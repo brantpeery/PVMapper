@@ -915,13 +915,12 @@ pvMapper.onReady(function () {
                         pvMapper.ClientDB.loadCustomKML(fileName, function (moduleObj) {
                             if (moduleObj) {
                                 var alayer = null;
-                                if (moduleObj.customClass !== undefined) {
-                                    if (moduleObj.customClass === "LocalLayerModule")
-                                        alayer = new INLModules.LocalLayerModule();
-                                    else if (moduleObj.customClass === "KMLInfoModule")
-                                        alayer = new INLModules.KMLInfoModule();
-                                }
-                                if (alayer !== null) {
+                                if (moduleObj.customClass === "LocalLayerModule")
+                                    alayer = new INLModules.LocalLayerModule();
+                                else if (moduleObj.customClass === "KMLInfoModule")
+                                    alayer = new INLModules.KMLInfoModule();
+
+                                if (alayer) {
                                     alayer.readTextFile(moduleObj.customData, moduleObj.customName, fileName);
                                     pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: fileName, moduleObject: alayer }));
                                 }
@@ -968,17 +967,17 @@ pvMapper.onReady(function () {
     pvMapper.scoreboardToolsToolbarMenu.add(10, '-');
     pvMapper.scoreboardToolsToolbarMenu.add(11, configTool);
 
-    var loadAllTool = Ext.create("Ext.Action", {
-        text: "Load all tools",
-        iconCls: 'x-tag-restart-icon',
-        tooltip: "Get an update of all available tool modules.  If no new module after update, press F5 to refresh.",
-        handler: function () {
-            pvMapper.moduleManager.isLoadOnly = true;
-            pvMapper.moduleManager.loadModuleScripts();
-            pvMapper.moduleManager.isLoadOnly = false;
-        }
-    });
-    pvMapper.scoreboardToolsToolbarMenu.add(12, loadAllTool);
+    //var loadAllTool = Ext.create("Ext.Action", {
+    //    text: "Load all tools",
+    //    iconCls: 'x-tag-restart-icon',
+    //    tooltip: "Get an update of all available tool modules.  If no new module after update, press F5 to refresh.",
+    //    handler: function () {
+    //        pvMapper.moduleManager.isLoadOnly = true;
+    //        pvMapper.moduleManager.loadModuleScripts();
+    //        pvMapper.moduleManager.isLoadOnly = false;
+    //    }
+    //});
+    //pvMapper.scoreboardToolsToolbarMenu.add(12, loadAllTool);
 
 
 });

@@ -1,15 +1,8 @@
+/// <reference path="es6-promises.d.ts" />
 /// <reference path="Options.d.ts" />
 /// <reference path="common.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="../../ExtJS.d.ts" />
-
-interface Promise {
-    then: (resolveFn: ICallback, rejectFn?: ICallback) => Promise;
-}
-var Promise: {
-    new (fn: ICallback): Promise;  //fn is expecting two parameters of callback functions, fn(resolve, reject).
-    prototype: Promise;
-}
 
 // Module                                               
 module pvMapper {
@@ -68,6 +61,7 @@ module pvMapper {
 
         public static isDBCreating = false;
         public static clientDBError: boolean = false;
+
         public static initClientDB(forced: boolean = false) {
             if (!ClientDB.indexedDB) {
                 window.alert("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
@@ -158,11 +152,10 @@ module pvMapper {
 
                 //load custom modules.
                 if (console && console.assert)
-                    console.assert((pvMapper.loadLocalModules !== undefined) && (pvMapper.loadLocalModules !== null)
-                        && (typeof (pvMapper.loadLocalModules) === "function"), "Warning: MainToolbar isn't finished loading...!");
+                    console.assert(typeof (pvMapper.loadLocalModules) === "function",
+                        "Warning: MainToolbar isn't finished loading...!");
 
-                if ((pvMapper.loadLocalModules !== undefined) && (pvMapper.loadLocalModules !== null)
-                    && (typeof (pvMapper.loadLocalModules) === "function")) {
+                if (typeof (pvMapper.loadLocalModules) === "function") {
                     pvMapper.loadLocalModules();
                 }
 
@@ -241,10 +234,7 @@ module pvMapper {
                 if ((fn) && (typeof (fn) === "function")) {
                     fn(false);
                 }
-
             }
-
-
         }
 
         public static getAllCustomKMLName(fn: ICallback) {
@@ -271,7 +261,6 @@ module pvMapper {
             }
             return kmlNames;
         }
-
 
         //Open a indexedDb Store with a given storeName and get all records into an array and return it.  This function uses 
         //the HTML5 new Promise framework to better sync to the async of indexedDB process.  

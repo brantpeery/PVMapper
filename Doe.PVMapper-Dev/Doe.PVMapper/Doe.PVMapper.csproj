@@ -404,6 +404,10 @@
     </Content>
     <TypeScriptCompile Include="Scripts\pvExtensions\TotalsModule.ts" />
     <TypeScriptCompile Include="Scripts\ToolModules\AgricultureSocialModule.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\es6-promises.d.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\ModuleManager.js">
+      <DependentUpon>ModuleManager.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\ToolModules\AgricultureSocialModule.js">
       <DependentUpon>AgricultureSocialModule.ts</DependentUpon>
     </Content>
@@ -514,7 +518,7 @@
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Site.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Tools.ts" />
     <TypeScriptCompile Include="Scripts\ToolModules\solarmapperModule.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\snlModule.js" />
+    <Content Include="Scripts\ToolModules\snlModule.js" />
     <TypeScriptCompile Include="Scripts\ToolModules\SoilModule.ts" />
     <Content Include="Scripts\ToolModules\SoilModule.js">
       <DependentUpon>SoilModule.ts</DependentUpon>
