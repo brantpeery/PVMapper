@@ -75,7 +75,7 @@ var INLModules;
             };
         }
         ProtectedAreasModule.prototype.addMap = function () {
-            this.federalLandsLayer = new OpenLayers.Layer.WMS("Protected Areas", this.federalLandsWmsUrl, {
+            this.federalLandsLayer = new OpenLayers.Layer.WMS("<img class=\"on_c_img\" mdata='MetaData not Found' src='http://www.iconsdb.com/icons/preview/tropical-blue/info-xxl.png' style='width:20px; height:20px'> " + "Protected Areas", this.federalLandsWmsUrl, {
                 maxExtent: this.landBounds,
                 layers: "0",
                 layer_type: "polygon",
@@ -247,7 +247,7 @@ var INLModules;
             };
         }
         LandCoverModule.prototype.addMap = function () {
-            this.landCoverLayer = new OpenLayers.Layer.ArcGIS93Rest("Land Cover", this.landCoverRestUrl + "export", {
+            this.landCoverLayer = new OpenLayers.Layer.ArcGIS93Rest("<img class=\"on_c_img\" mdata='MetaData not Found' src='http://www.iconsdb.com/icons/preview/tropical-blue/info-xxl.png' style='width:20px; height:20px'> " + "Land Cover", this.landCoverRestUrl + "export", {
                 layers: "show:0,1,2",
                 format: "gif",
                 srs: "3857",

@@ -205,7 +205,8 @@ var INLModules;
         //
         //pvMapper.map.addLayer(mapLayer);
         // add as WMS layer
-        mapLayer = new OpenLayers.Layer.WMS("Wetlands", wmsServerUrl, {
+        var WildlifeMetaData = Ext.htmlEncode("Title: critical_habitat_mapper<br>Author: johnsteffy<br>Comments: <br>Category: <br>Keywords: <br>AntialiasingMode: None<br>TextAntialiasingMode: Force<br>Supported Image Format Types: PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP<br>Min Scale: 0<br>Max Scale: 0<br>");
+        mapLayer = new OpenLayers.Layer.WMS("<img class=\"on_c_img\" mdata=\"" + WildlifeMetaData +"\" src='http://www.iconsdb.com/icons/preview/tropical-blue/info-xxl.png' style='width:20px; height:20px'> " + "Wetlands", wmsServerUrl, {
             layers: "17",
             transparent: "true",
             format: "image/png",

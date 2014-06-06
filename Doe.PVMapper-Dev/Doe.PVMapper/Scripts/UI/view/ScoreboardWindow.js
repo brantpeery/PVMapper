@@ -1,4 +1,4 @@
-Ext.require('MainApp.view.RatingView');
+﻿Ext.require('MainApp.view.RatingView');
 
 /*
  * Start FIX: Summary + Grouping. Without this fix there would be a summary row under each group
