@@ -573,6 +573,7 @@
     <Content Include="Scripts\UI\view\ScoreboardWindow.js" />
     <Content Include="Scripts\UI\view\toolConfigWindow.js" />
     <Content Include="Scripts\UI\view\UtilityFunctionEdit.js" />
+    <Content Include="Scripts\ViewScripts\metadata.js" />
     <Content Include="Scripts\ViewScripts\RelatedLinks.js" />
     <Content Include="Scripts\ViewScripts\SiteId.js" />
     <Content Include="Scripts\UnitTests\jasmine.js" />

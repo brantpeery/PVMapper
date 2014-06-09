@@ -91,8 +91,6 @@ var BYUModules;
         });
     });
 
-    var substationsMap;
-
     var NearestSubStationModule = (function () {
         function NearestSubStationModule() {
             var _this = this;
@@ -104,17 +102,10 @@ var BYUModules;
                 iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/home_icon.jpg",
 
                 activate: function () {
-                    //http://t0.beta.itoworld.com/4/317c99f331113b90c57c41ccdb137030/${z}/${x}/${y}.png
-                    substationsMap = new OpenLayers.Layer.XYZ("Nearest Substation",
-                        "http://t0.beta.itoworld.com/4/317c99f331113b90c57c41ccdb137030/${z}/${x}/${y}.png",
-                            { transitionEffect: null, buffer: 1, sphericalMercator: true, isBaseLayer: false, visibility: false });
-                    pvMapper.map.addLayer(substationsMap);
-
-                    //addAllMaps();
+                    // nothing to do here... map added in layers.js
                 },
                 deactivate: function() {
-                    pvMapper.map.removeLayer(substationsMap, false);
-                    //removeAllMaps();
+                    // nothing to do here... map added in layers.js
                 },
         
                 destroy: null,
@@ -175,17 +166,10 @@ var BYUModules;
                 iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/home_icon.jpg",
 
                 activate: function () {
-                    //http://t0.beta.itoworld.com/4/317c99f331113b90c57c41ccdb137030/${z}/${x}/${y}.png
-                    substationsMap = new OpenLayers.Layer.XYZ("Nearest Transmission Line",
-                        "http://t0.beta.itoworld.com/4/317c99f331113b90c57c41ccdb137030/${z}/${x}/${y}.png",
-                            { transitionEffect: null, buffer: 1, sphericalMercator: true, isBaseLayer: false, visibility: false });
-                    pvMapper.map.addLayer(substationsMap);
-
-                    //addAllMaps();
+                    // nothing to do here... map added in layers.js
                 },
                 deactivate: function () {
-                    pvMapper.map.removeLayer(substationsMap, false);
-                    //removeAllMaps();
+                    // nothing to do here... map added in layers.js
                 },
 
                 destroy: null,
