@@ -140,7 +140,7 @@ pvMapper.onReady(function () {
 
     //Note: this map is pretty ugly...
     var esriWorldTerrain = new OpenLayers.Layer.XYZ("Shaded Relief",
-        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/${z}/${y}/${x}",
+        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/${z}/${y}/${x}?blankTile=true",
             { transitionEffect: "resize", buffer: 1, sphericalMercator: true });
     pvMapper.map.addLayer(esriWorldTerrain);
     /*
@@ -159,14 +159,21 @@ pvMapper.onReady(function () {
     */
 
     var esriImagery = new OpenLayers.Layer.XYZ("World Imagery", 
-        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}",
+        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}?blankTile=true",
             { transitionEffect: "resize", buffer: 1, numZoomLevels: 20, sphericalMercator: true });
     pvMapper.map.addLayer(esriImagery);
 
     var esriStreet = new OpenLayers.Layer.XYZ("ESRI Street Map",
-        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}",
+        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}?blankTile=true",
             { transitionEffect: "resize", buffer: 1, sphericalMercator: true });
     pvMapper.map.addLayer(esriStreet);
+
+
+    var usgsTopoCache = new OpenLayers.Layer.XYZ("USGS Topo", 
+        "http://basemap.nationalmap.gov/ArcGIS/rest/services/USGSTopo/MapServer/tile/${z}/${y}/${x}?blankTile=true",
+            { transitionEffect: "resize", buffer: 1, sphericalMercator: true });
+    //usgsTopoCache.zoomOffset = 3; //Note: this seems to hoark the spherical mercator setting...
+    pvMapper.map.addLayer(usgsTopoCache);
 
 
     //Set up the layer for the site polys
