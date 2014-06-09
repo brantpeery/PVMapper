@@ -176,6 +176,14 @@ pvMapper.onReady(function () {
     pvMapper.map.addLayer(usgsTopoCache);
 
 
+    // Add the power line and substation data layer
+    //http://t0.beta.itoworld.com/4/317c99f331113b90c57c41ccdb137030/${z}/${x}/${y}.png
+    osmPowerInfrastructure = new OpenLayers.Layer.XYZ("Power Infrastructure",
+        "http://t0.beta.itoworld.com/4/317c99f331113b90c57c41ccdb137030/${z}/${x}/${y}.png",
+            { transitionEffect: null, buffer: 1, sphericalMercator: true, isBaseLayer: false, visibility: false });
+    pvMapper.map.addLayer(osmPowerInfrastructure);
+
+
     //Set up the layer for the site polys
     //If a style is applied at the layer level, then 
     //when a label is applied, the engine draws it incorrectly
