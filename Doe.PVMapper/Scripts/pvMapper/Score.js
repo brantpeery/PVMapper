@@ -39,9 +39,6 @@
 
         function onSiteChanged(event) {
             //Change the context, add this score to the event and pass the event on
-
-            alert('site changed ') ;
-            
             event.score = self;
             if (console) console.log('The score ' + self.site.name + ' has detected a site change pvM.Event.Firing its own event now');
             self.siteChangeEvent.fire(self, [event, self]);
