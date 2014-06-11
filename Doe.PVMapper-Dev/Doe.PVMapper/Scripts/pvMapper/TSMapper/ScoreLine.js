@@ -245,7 +245,7 @@ var pvMapper;
 
         ScoreLine.prototype.toJSON = function () {
             var stb = null;
-            if (this.getStarRatables !== undefined)
+            if (typeof (this.getStarRatables) === "function")
                 stb = this.getStarRatables(); // call the module for the rating value.
             var o = {
                 title: this.title,
@@ -280,7 +280,7 @@ var pvMapper;
                 }
             }
 
-            if ((this.setStarRatables !== undefined) && (o.starRateTable !== null)) {
+            if (typeof (this.setStarRatables) === "function" && o.starRateTable) {
                 this.setStarRatables(o.starRateTable);
             }
         };
@@ -305,7 +305,7 @@ var pvMapper;
 
                     var store = txn.objectStore(pvMapper.ClientDB.CONFIG_STORE_NAME);
                     var stb = null;
-                    if (me.getStarRatables !== undefined)
+                    if (typeof (me.getStarRatables) === "function")
                         stb = me.getStarRatables(); // call the module for the rating value.
 
                     //Man!!!!  IndexedDB just hates the IScoreUtilityArgs "stringify" function.  It conplains that it can not clone the object if it has a 'stringify' function defined.
@@ -354,7 +354,7 @@ var pvMapper;
                 var store = txn.objectStore(pvMapper.ClientDB.CONFIG_STORE_NAME);
                 var request = store.get(me.title);
                 request.onsuccess = function (evt) {
-                    if (request.result != undefined) {
+                    if (request.result) {
                         me.title = request.result.title;
                         me.description = request.result.description;
                         me.category = request.result.category;
@@ -366,7 +366,7 @@ var pvMapper;
                         me.scoreUtility.iconURL = request.result.scoreUtility.iconURL;
                         me.scoreUtility.fCache = request.result.scoreUtility.fCache;
 
-                        if ((me.setStarRatables !== undefined) && (request.result.rateTable !== null)) {
+                        if (typeof (me.setStarRatables) === "function" && request.result.rateTable) {
                             me.setStarRatables(request.result.rateTable);
                         }
 
@@ -392,7 +392,7 @@ var pvMapper;
             this.scoreUtility.iconURL = utility.iconURL;
             this.scoreUtility.fCache = utility.fCache;
 
-            if ((this.setStarRatables !== undefined) && (starRatables !== undefined)) {
+            if (typeof (this.setStarRatables) === "function" && starRatables) {
                 this.setStarRatables(starRatables);
             }
             this.setWeight(weight);

@@ -276,9 +276,9 @@ var INLModules;
         //var response: OpenLayers.Response = jsonpProtocol.read();
     }
 })(INLModules || (INLModules = {}));
-if (typeof (selfUrl) == 'undefined')
-    var selfUrl = $('script[src$="AgricultureSocialModule.js"]').attr('src');
-if (typeof (isActive) == 'undefined')
-    var isActive = true;
-pvMapper.moduleManager.registerModule(INLModules.AgricultureSocialModule.category, INLModules.AgricultureSocialModule.title, INLModules.AgricultureSocialModule, isActive, selfUrl);
+if (console && console.assert)
+    console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
+var selfUrl = selfUrl || $('script[src$="AgricultureSocialModule.js"]').attr('src');
+
+pvMapper.moduleManager.registerModule(INLModules.AgricultureSocialModule.category, INLModules.AgricultureSocialModule.title, INLModules.AgricultureSocialModule, true, selfUrl);
 //# sourceMappingURL=AgricultureSocialModule.js.map

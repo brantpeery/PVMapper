@@ -14,10 +14,12 @@ var INLModules;
                 author: "Scott Brown, INL",
                 version: "0.1.ts",
                 activate: function () {
-                    addAllMaps();
+                    // Direct-Normal Irradiation
+                    dniSuny = addMapsDbMap("swera:dni_suny_high_900913", "Direct-Normal Irradiance 10km");
+                    pvMapper.map.addLayer(dniSuny);
                 },
                 deactivate: function () {
-                    removeAllMaps();
+                    pvMapper.map.removeLayer(dniSuny, false);
                 },
                 destroy: null,
                 init: null,
@@ -62,10 +64,12 @@ var INLModules;
                 author: "Scott Brown, INL",
                 version: "0.1.ts",
                 activate: function () {
-                    addAllMaps();
+                    // Global-Horizontal Irradiation
+                    ghiSuny = addMapsDbMap("swera:ghi_suny_high_900913", "Global-Horizontal Irradiance 10km");
+                    pvMapper.map.addLayer(ghiSuny);
                 },
                 deactivate: function () {
-                    removeAllMaps();
+                    pvMapper.map.removeLayer(ghiSuny, false);
                 },
                 destroy: null,
                 init: null,
@@ -110,10 +114,11 @@ var INLModules;
                 author: "Scott Brown, INL",
                 version: "0.1.ts",
                 activate: function () {
-                    addAllMaps();
+                    tiltSuny = addMapsDbMap("swera:tilt_suny_high_900913", "Tilted flat-plate Irradiance");
+                    pvMapper.map.addLayer(tiltSuny);
                 },
                 deactivate: function () {
-                    removeAllMaps();
+                    pvMapper.map.removeLayer(tiltSuny, false);
                 },
                 destroy: null,
                 init: null,
@@ -161,24 +166,6 @@ var INLModules;
     var dniSuny;
     var ghiSuny;
     var tiltSuny;
-    var irradianceMapsAdded = false;
-
-    function addAllMaps() {
-        if (!irradianceMapsAdded) {
-            //var solarBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
-            // Direct-Normal Irradiation
-            dniSuny = addMapsDbMap("swera:dni_suny_high_900913", "Direct-Normal Irradiance 10km");
-            pvMapper.map.addLayer(dniSuny);
-
-            // Global-Horizontal Irradiation
-            ghiSuny = addMapsDbMap("swera:ghi_suny_high_900913", "Global-Horizontal Irradiance 10km");
-            pvMapper.map.addLayer(ghiSuny);
-
-            tiltSuny = addMapsDbMap("swera:tilt_suny_high_900913", "Tilted flat-plate Irradiance");
-            pvMapper.map.addLayer(tiltSuny);
-            irradianceMapsAdded = true;
-        }
-    }
 
     function addMapsDbMap(name, description) {
         var newLayer = new OpenLayers.Layer.WMS(description, MapsDbUrl, {
@@ -197,13 +184,6 @@ var INLModules;
 
         //dniSuny.epsgOverride = "EPSG:102113";
         return newLayer;
-    }
-
-    function removeAllMaps() {
-        pvMapper.map.removeLayer(dniSuny, false);
-        pvMapper.map.removeLayer(ghiSuny, false);
-        pvMapper.map.removeLayer(tiltSuny, false);
-        irradianceMapsAdded = false;
     }
 
     function updateScoreFromLayer(score, layerName) {
@@ -302,11 +282,11 @@ var INLModules;
 //var modinstance = new INLModules.DirectNormalIrradianceModule();
 //var modinstance = new INLModules.GlobalHorizontalIrradianceModule();
 //var modinstance = new INLModules.TiltedFlatPlateIrradianceModule();
-if (typeof (selfUrl) == 'undefined')
-    var selfUrl = $('script[src$="irradianceModule.js"]').attr('src');
-if (typeof (isActive) == 'undefined')
-    var isActive = true;
-pvMapper.moduleManager.registerModule(INLModules.DirectNormalIrradianceModule.category, INLModules.DirectNormalIrradianceModule.title, INLModules.DirectNormalIrradianceModule, isActive, selfUrl);
-pvMapper.moduleManager.registerModule(INLModules.GlobalHorizontalIrradianceModule.category, INLModules.GlobalHorizontalIrradianceModule.title, INLModules.GlobalHorizontalIrradianceModule, isActive, selfUrl);
-pvMapper.moduleManager.registerModule(INLModules.TiltedFlatPlateIrradianceModule.category, INLModules.TiltedFlatPlateIrradianceModule.title, INLModules.TiltedFlatPlateIrradianceModule, isActive, selfUrl);
+if (console && console.assert)
+    console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
+var selfUrl = selfUrl || $('script[src$="irradianceModule.js"]').attr('src');
+
+pvMapper.moduleManager.registerModule(INLModules.DirectNormalIrradianceModule.category, INLModules.DirectNormalIrradianceModule.title, INLModules.DirectNormalIrradianceModule, true, selfUrl);
+pvMapper.moduleManager.registerModule(INLModules.GlobalHorizontalIrradianceModule.category, INLModules.GlobalHorizontalIrradianceModule.title, INLModules.GlobalHorizontalIrradianceModule, true, selfUrl);
+pvMapper.moduleManager.registerModule(INLModules.TiltedFlatPlateIrradianceModule.category, INLModules.TiltedFlatPlateIrradianceModule.title, INLModules.TiltedFlatPlateIrradianceModule, true, selfUrl);
 //# sourceMappingURL=irradianceModule.js.map

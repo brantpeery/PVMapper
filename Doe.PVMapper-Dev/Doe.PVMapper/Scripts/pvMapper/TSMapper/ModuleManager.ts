@@ -12,10 +12,10 @@ var pvClient: {
 module pvMapper {
 
     export class ModuleInfo {
-        constructor(private _category: string, private _moduleName: string, private _ctor: any, private _isActive: boolean, private _moduleUrl: string = "", private _description:string = "") { }
+        constructor(private _category: string, private _moduleName: string, private _ctor: IModuleFactory, private _isActive: boolean, private _moduleUrl: string = "", private _description:string = "") { }
         get category(): string { return this._category; } set category(acat: string) { this._category = acat; }
         get moduleName(): string { return this._moduleName; } set moduleName(aname: string) { this._moduleName = aname; }
-        get ctor(): any { return this._ctor; } set ctor(actor: any) { this._ctor = actor; }
+        get ctor(): IModuleFactory { return this._ctor; } set ctor(actor: IModuleFactory) { this._ctor = actor; }
         get isActive(): boolean { return this._isActive; } set isActive(isOn: boolean) { this._isActive = isOn; }
         get moduleUrl(): string { return this._moduleUrl; } set moduleUrl(aUrl: string) { this._moduleUrl = aUrl; }
         get description(): string { return this._description; } set description(desc: string) { this._description = desc; }
@@ -41,17 +41,17 @@ module pvMapper {
             //return ma.length ? ma[0] : null; //TODO: this is NOT a unique key !
         }
 
-        public getCtor(moduleName: string): any {
-            var m = this.getModule(moduleName);
-            if (m) {
-                return m.ctor;
-            }
-            else return null;
-        }
+        //public getCtor(moduleName: string): any {
+        //    var m = this.getModule(moduleName);
+        //    if (m) {
+        //        return m.ctor;
+        //    }
+        //    else return null;
+        //}
 
         //This function should only be call by the tool module.  Calling from anywhere else, the caller must make sure
         //that the supporting code script (configProperties) is loaded.  
-        public registerModule(category: string, name: string, ctor: any, isActivated: boolean, url: string = '') {
+        public registerModule(category: string, name: string, ctor: IModuleFactory, isActivated: boolean, url: string = '') {
             if (typeof (ctor.description) == 'undefined')
                 ctor.description = "";
             isActivated = isActivated || false;
@@ -60,9 +60,10 @@ module pvMapper {
                 this._modules.push(new ModuleInfo(category, name, ctor, isActivated, url, ctor.description));
                 if (ctor && isActivated) {
                     var tm = new ctor();
-                    var mObj = tm.getModuleObj();
-                    if (typeof (mObj.activate) === 'function')
-                        mObj.activate();
+                    //Note: init() and activate() are called by the default constructor in Module.ts
+                    //var mObj = tm.getModuleObj();
+                    //if (typeof (mObj.activate) === 'function')
+                    //    mObj.activate();
                 }
             }
             else {
@@ -70,38 +71,39 @@ module pvMapper {
                     //create the tool if it has created before.
                     m.ctor = ctor;
                     var tm = new ctor();
-                    var mObj = tm.getModuleObj();
-                    if (typeof (mObj.activate) === 'function')
-                        mObj.activate();
+                    //Note: init() and activate() are called by the default constructor in Module.ts
+                    //var mObj = tm.getModuleObj();
+                    //if (typeof (mObj.activate) === 'function')
+                    //    mObj.activate();
                 }
                 if (m.moduleUrl != url && url !== null)
                     m.moduleUrl = url;
             }
         }
 
-        public deleteModule(aName: string) {
-            var m = this.getModule(aName);
-            if (m) {
-                var idx = this._modules.indexOf(m);
-                if (idx >= 0) this._modules.splice(idx, 1);
-                delete m;
-            }
-        }
+        //public deleteModule(aName: string) {
+        //    var m = this.getModule(aName);
+        //    if (m) {
+        //        var idx = this._modules.indexOf(m);
+        //        if (idx >= 0) this._modules.splice(idx, 1);
+        //        delete m;
+        //    }
+        //}
 
         get modules(): Array<pvMapper.ModuleInfo> {
             return this._modules;
         }
 
-        public activateModules() {
+        //public activateModules() {
 
-            this.modules.forEach(function (tool) {
-                if (tool.isActive && tool.ctor != undefined) {
-                    new tool.ctor();
-                }
-            });
-            pvMapper.mainScoreboard.update();
-            pvMapper.mainScoreboard.updateTotals();
-        }
+        //    this.modules.forEach(function (tool) {
+        //        if (tool.isActive && tool.ctor != undefined) {
+        //            new tool.ctor();
+        //        }
+        //    });
+        //    pvMapper.mainScoreboard.update();
+        //    pvMapper.mainScoreboard.updateTotals();
+        //}
 
         private toolStoreName: string = 'ToolModules';
         public saveTools() {

@@ -7,7 +7,7 @@
 /// <reference path="../pvmapper/tsmapper/modulemanager.ts" />
 
 module INLModules {
-    export class DirectNormalIrradianceModule {
+    export class DirectNormalIrradianceModule implements pvMapper.IModuleHandle {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "DirectNormalIrradianceModule",
@@ -15,10 +15,12 @@ module INLModules {
                 version: "0.1.ts",
 
                 activate: () => {
-                    addAllMaps();
+                    // Direct-Normal Irradiation
+                    dniSuny = addMapsDbMap("swera:dni_suny_high_900913", "Direct-Normal Irradiance 10km");
+                    pvMapper.map.addLayer(dniSuny);
                 },
                 deactivate: () => {
-                    removeAllMaps();
+                    pvMapper.map.removeLayer(dniSuny, false);
                 },
                 destroy: null,
                 init: null,
@@ -61,7 +63,7 @@ module INLModules {
 
 
 
-    export class GlobalHorizontalIrradianceModule {
+    export class GlobalHorizontalIrradianceModule implements pvMapper.IModuleHandle {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "GlobalHorizontalIrradianceModule",
@@ -69,10 +71,12 @@ module INLModules {
                 version: "0.1.ts",
 
                 activate: () => {
-                    addAllMaps();
+                    // Global-Horizontal Irradiation
+                    ghiSuny = addMapsDbMap("swera:ghi_suny_high_900913", "Global-Horizontal Irradiance 10km");
+                    pvMapper.map.addLayer(ghiSuny);
                 },
                 deactivate: () => {
-                    removeAllMaps();
+                    pvMapper.map.removeLayer(ghiSuny, false);
                 },
                 destroy: null,
                 init: null,
@@ -111,7 +115,7 @@ module INLModules {
         public static longDescription: string = '<p>This tool reports the daily total flat plate global-horizontal irradiance at a site, averaged over a 12 year period and over a 0.1 degree square area. The insolation values represent the global horizontal resource - the geometric sum of direct normal and diffuse irradiance components, representing total energy available on a planar surface. The data are created using the SUNY Satellite Solar Radiation model (Perez, et.al., 2002). The data are averaged from hourly model output over 12 years (1998-2009). This model uses hourly radiance images from geostationary weather satellites, daily snow cover data, and monthly averages of atmospheric water vapor, trace gases, and the amount of aerosols in the atmosphere to calculate the hourly total insolation (sun and sky) falling on a horizontal surface. The direct beam radiation is then calculated using the atmospheric water vapor, trace gases, and aerosols, which are derived from a variety of sources. For further information, see DATA.gov (api.data.gov/docs/nrel/solar/solar-resource-v1) and NREL GIS (www.nrel.gov/gis).</p>';
     }
 
-    export class TiltedFlatPlateIrradianceModule {
+    export class TiltedFlatPlateIrradianceModule implements pvMapper.IModuleHandle {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "TiltedFlatPlateIrradianceModule",
@@ -119,10 +123,11 @@ module INLModules {
                 version: "0.1.ts",
 
                 activate: () => {
-                    addAllMaps();
+                    tiltSuny = addMapsDbMap("swera:tilt_suny_high_900913", "Tilted flat-plate Irradiance");
+                    pvMapper.map.addLayer(tiltSuny);
                 },
                 deactivate: () => {
-                    removeAllMaps();
+                    pvMapper.map.removeLayer(tiltSuny, false);
                 },
                 destroy: null,
                 init: null,
@@ -174,25 +179,6 @@ module INLModules {
     var dniSuny: OpenLayers.Layer;
     var ghiSuny: OpenLayers.Layer;
     var tiltSuny: OpenLayers.Layer;
-    var irradianceMapsAdded: boolean = false;
-
-    function addAllMaps() {
-        if (!irradianceMapsAdded) {
-            //var solarBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
-
-            // Direct-Normal Irradiation
-            dniSuny = addMapsDbMap("swera:dni_suny_high_900913", "Direct-Normal Irradiance 10km");
-            pvMapper.map.addLayer(dniSuny);
-
-            // Global-Horizontal Irradiation
-            ghiSuny = addMapsDbMap("swera:ghi_suny_high_900913", "Global-Horizontal Irradiance 10km");
-            pvMapper.map.addLayer(ghiSuny);
-
-            tiltSuny = addMapsDbMap("swera:tilt_suny_high_900913", "Tilted flat-plate Irradiance");
-            pvMapper.map.addLayer(tiltSuny);
-            irradianceMapsAdded = true;
-        }
-    }
 
     function addMapsDbMap(name: string, description: string): OpenLayers.WMS {
         var newLayer: OpenLayers.WMS = new OpenLayers.Layer.WMS(
@@ -216,13 +202,6 @@ module INLModules {
         //dniSuny.epsgOverride = "EPSG:102113";
 
         return newLayer;
-    }
-
-    function removeAllMaps() {
-        pvMapper.map.removeLayer(dniSuny, false);
-        pvMapper.map.removeLayer(ghiSuny, false);
-        pvMapper.map.removeLayer(tiltSuny, false);
-        irradianceMapsAdded = false;
     }
 
     function updateScoreFromLayer(score: pvMapper.Score, layerName: string) { //site: pvMapper.Site
@@ -331,12 +310,11 @@ module INLModules {
 //var modinstance = new INLModules.GlobalHorizontalIrradianceModule();
 //var modinstance = new INLModules.TiltedFlatPlateIrradianceModule();
 
-if (typeof (selfUrl) == 'undefined')
-  var selfUrl = $('script[src$="irradianceModule.js"]').attr('src');
-if (typeof (isActive) == 'undefined')
-    var isActive = true;
-pvMapper.moduleManager.registerModule(INLModules.DirectNormalIrradianceModule.category, INLModules.DirectNormalIrradianceModule.title, INLModules.DirectNormalIrradianceModule, isActive, selfUrl);
-pvMapper.moduleManager.registerModule(INLModules.GlobalHorizontalIrradianceModule.category, INLModules.GlobalHorizontalIrradianceModule.title, INLModules.GlobalHorizontalIrradianceModule, isActive, selfUrl);
-pvMapper.moduleManager.registerModule(INLModules.TiltedFlatPlateIrradianceModule.category, INLModules.TiltedFlatPlateIrradianceModule.title, INLModules.TiltedFlatPlateIrradianceModule, isActive, selfUrl);
+if (console && console.assert) console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
+var selfUrl = selfUrl || $('script[src$="irradianceModule.js"]').attr('src');
+
+pvMapper.moduleManager.registerModule(INLModules.DirectNormalIrradianceModule.category, INLModules.DirectNormalIrradianceModule.title, INLModules.DirectNormalIrradianceModule, true, selfUrl);
+pvMapper.moduleManager.registerModule(INLModules.GlobalHorizontalIrradianceModule.category, INLModules.GlobalHorizontalIrradianceModule.title, INLModules.GlobalHorizontalIrradianceModule, true, selfUrl);
+pvMapper.moduleManager.registerModule(INLModules.TiltedFlatPlateIrradianceModule.category, INLModules.TiltedFlatPlateIrradianceModule.title, INLModules.TiltedFlatPlateIrradianceModule, true, selfUrl);
 
 

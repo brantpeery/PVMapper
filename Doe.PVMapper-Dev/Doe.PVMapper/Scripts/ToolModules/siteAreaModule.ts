@@ -8,7 +8,7 @@
 
 
 module INLModules {
-    export class SiteAreaModule {
+    export class SiteAreaModule implements pvMapper.IModuleHandle {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "AreaModule",
@@ -139,8 +139,7 @@ module INLModules {
 
 }
 
-if (typeof (selfUrl) == 'undefined')
-  var selfUrl = $('script[src$="siteAreaModule.js"]').attr('src');
-if (typeof (isActive) == 'undefined')
-    var isActive = true;
-pvMapper.moduleManager.registerModule(INLModules.SiteAreaModule.category, INLModules.SiteAreaModule.title, INLModules.SiteAreaModule, isActive, selfUrl);
+if (console && console.assert) console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
+var selfUrl = selfUrl || $('script[src$="siteAreaModule.js"]').attr('src');
+
+pvMapper.moduleManager.registerModule(INLModules.SiteAreaModule.category, INLModules.SiteAreaModule.title, INLModules.SiteAreaModule, true, selfUrl);

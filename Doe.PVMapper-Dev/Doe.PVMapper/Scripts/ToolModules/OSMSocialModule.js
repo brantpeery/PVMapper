@@ -2,55 +2,55 @@
 (function (INLModules) {
     var surveyResults = {
         
-        residential: [
-            { mi: 0, percentOk: 4.868154158 },
-            { mi: 0.001136364, percentOk: 5.070993915 },
-            { mi: 0.003787879, percentOk: 5.273833671 },
-            { mi: 0.005681818, percentOk: 5.476673428 },
-            { mi: 0.009469697, percentOk: 5.679513185 },
-            { mi: 0.018939394, percentOk: 6.490872211 },
-            { mi: 0.028409091, percentOk: 6.693711968 },
-            { mi: 0.056818182, percentOk: 7.505070994 },
-            { mi: 0.075757576, percentOk: 7.910750507 },
-            { mi: 0.09469697, percentOk: 8.519269777 },
-            { mi: 0.170454546, percentOk: 8.722109533 },
-            { mi: 0.189393939, percentOk: 9.736308316 },
-            { mi: 0.227272727, percentOk: 9.939148073 },
-            { mi: 0.25, percentOk: 12.1703854 },
-            { mi: 0.284090909, percentOk: 12.37322515 },
-            { mi: 0.473484849, percentOk: 12.57606491 },
-            { mi: 0.5, percentOk: 16.22718053 },
-            { mi: 0.568181818, percentOk: 16.43002028 },
-            { mi: 1, percentOk: 36.71399594 },
-            { mi: 2, percentOk: 42.19066937 },
-            { mi: 2.8, percentOk: 42.39350913 },
-            { mi: 3, percentOk: 45.63894523 },
-            { mi: 4, percentOk: 46.85598377 },
-            { mi: 5, percentOk: 65.11156187 },
-            { mi: 6, percentOk: 65.51724138 },
-            { mi: 7, percentOk: 66.32860041 },
-            { mi: 8, percentOk: 68.15415822 },
-            { mi: 10, percentOk: 75.65922921 },
-            { mi: 12, percentOk: 75.86206897 },
-            { mi: 15, percentOk: 78.4989858 },
-            { mi: 17, percentOk: 78.70182556 },
-            { mi: 18.64113577, percentOk: 78.90466531 },
-            { mi: 20, percentOk: 86.40973631 },
-            { mi: 21, percentOk: 86.61257606 },
-            { mi: 25, percentOk: 89.85801217 },
-            { mi: 30, percentOk: 91.07505071 },
-            { mi: 35, percentOk: 91.48073022 },
-            { mi: 45, percentOk: 91.68356998 },
-            { mi: 50, percentOk: 96.75456389 },
-            { mi: 60, percentOk: 97.16024341 },
-            { mi: 100, percentOk: 98.5801217 },
-            { mi: 120, percentOk: 98.78296146 },
-            { mi: 200, percentOk: 98.98580122 },
-            { mi: 250, percentOk: 99.39148073 },
-            { mi: 400, percentOk: 99.59432049 },
-            { mi: 500, percentOk: 99.79716024 },
-            { mi: 5000, percentOk: 100 }
-        ],
+        //residential: [
+        //    { mi: 0, percentOk: 4.868154158 },
+        //    { mi: 0.001136364, percentOk: 5.070993915 },
+        //    { mi: 0.003787879, percentOk: 5.273833671 },
+        //    { mi: 0.005681818, percentOk: 5.476673428 },
+        //    { mi: 0.009469697, percentOk: 5.679513185 },
+        //    { mi: 0.018939394, percentOk: 6.490872211 },
+        //    { mi: 0.028409091, percentOk: 6.693711968 },
+        //    { mi: 0.056818182, percentOk: 7.505070994 },
+        //    { mi: 0.075757576, percentOk: 7.910750507 },
+        //    { mi: 0.09469697, percentOk: 8.519269777 },
+        //    { mi: 0.170454546, percentOk: 8.722109533 },
+        //    { mi: 0.189393939, percentOk: 9.736308316 },
+        //    { mi: 0.227272727, percentOk: 9.939148073 },
+        //    { mi: 0.25, percentOk: 12.1703854 },
+        //    { mi: 0.284090909, percentOk: 12.37322515 },
+        //    { mi: 0.473484849, percentOk: 12.57606491 },
+        //    { mi: 0.5, percentOk: 16.22718053 },
+        //    { mi: 0.568181818, percentOk: 16.43002028 },
+        //    { mi: 1, percentOk: 36.71399594 },
+        //    { mi: 2, percentOk: 42.19066937 },
+        //    { mi: 2.8, percentOk: 42.39350913 },
+        //    { mi: 3, percentOk: 45.63894523 },
+        //    { mi: 4, percentOk: 46.85598377 },
+        //    { mi: 5, percentOk: 65.11156187 },
+        //    { mi: 6, percentOk: 65.51724138 },
+        //    { mi: 7, percentOk: 66.32860041 },
+        //    { mi: 8, percentOk: 68.15415822 },
+        //    { mi: 10, percentOk: 75.65922921 },
+        //    { mi: 12, percentOk: 75.86206897 },
+        //    { mi: 15, percentOk: 78.4989858 },
+        //    { mi: 17, percentOk: 78.70182556 },
+        //    { mi: 18.64113577, percentOk: 78.90466531 },
+        //    { mi: 20, percentOk: 86.40973631 },
+        //    { mi: 21, percentOk: 86.61257606 },
+        //    { mi: 25, percentOk: 89.85801217 },
+        //    { mi: 30, percentOk: 91.07505071 },
+        //    { mi: 35, percentOk: 91.48073022 },
+        //    { mi: 45, percentOk: 91.68356998 },
+        //    { mi: 50, percentOk: 96.75456389 },
+        //    { mi: 60, percentOk: 97.16024341 },
+        //    { mi: 100, percentOk: 98.5801217 },
+        //    { mi: 120, percentOk: 98.78296146 },
+        //    { mi: 200, percentOk: 98.98580122 },
+        //    { mi: 250, percentOk: 99.39148073 },
+        //    { mi: 400, percentOk: 99.59432049 },
+        //    { mi: 500, percentOk: 99.79716024 },
+        //    { mi: 5000, percentOk: 100 }
+        //],
         historic: [
             { mi: 0, percentOk: 4.60251046 },
             { mi: 0.018939394, percentOk: 5.648535565 },
@@ -482,9 +482,8 @@
 
 })(INLModules || (INLModules = {}));
 
-if (typeof (selfUrl) == 'undefined')
-    var selfUrl = $('script[src$="OSMSocialModule.js"]').attr('src');
-if (typeof (isActive) == 'undefined')
-    var isActive = true;
-pvMapper.moduleManager.registerModule(INLModules.OpenStreetMapSocialHistoricModule.category, INLModules.OpenStreetMapSocialHistoricModule.title, INLModules.OpenStreetMapSocialHistoricModule, isActive, selfUrl);
-pvMapper.moduleManager.registerModule(INLModules.OpenStreetMapSocialRecreationalModule.category, INLModules.OpenStreetMapSocialRecreationalModule.title, INLModules.OpenStreetMapSocialRecreationalModule, isActive, selfUrl);
+if (console && console.assert) console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
+var selfUrl = selfUrl || $('script[src$="OSMSocialModule.js"]').attr('src');
+
+pvMapper.moduleManager.registerModule(INLModules.OpenStreetMapSocialHistoricModule.category, INLModules.OpenStreetMapSocialHistoricModule.title, INLModules.OpenStreetMapSocialHistoricModule, true, selfUrl);
+pvMapper.moduleManager.registerModule(INLModules.OpenStreetMapSocialRecreationalModule.category, INLModules.OpenStreetMapSocialRecreationalModule.title, INLModules.OpenStreetMapSocialRecreationalModule, true, selfUrl);

@@ -1,5 +1,4 @@
-﻿
-//SLope Module involving client side calculation. 
+﻿//SLope Module involving client side calculation. 
 
 var BYUModules;
 (function (BYUModules) {
@@ -262,8 +261,7 @@ var BYUModules;
 })(BYUModules || (BYUModules = {}));
 
 //var modInstance = new BYUModules.NewSlopeModule();
-if (typeof (selfUrl) == 'undefined')
-  var selfUrl = $('script[src$="NewSlopeModule.js"]').attr('src');
-if (typeof (isActive) == 'undefined')
-    var isActive = true;
-pvMapper.moduleManager.registerModule(BYUModules.NewSlopeModule.category, BYUModules.NewSlopeModule.title, BYUModules.NewSlopeModule, isActive, selfUrl);
+if (console && console.assert) console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
+var selfUrl = selfUrl || $('script[src$="NewSlopeModule.js"]').attr('src');
+
+pvMapper.moduleManager.registerModule(BYUModules.NewSlopeModule.category, BYUModules.NewSlopeModule.title, BYUModules.NewSlopeModule, true, selfUrl);
