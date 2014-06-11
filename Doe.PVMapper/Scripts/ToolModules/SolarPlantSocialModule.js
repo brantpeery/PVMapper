@@ -245,9 +245,9 @@ var INLModules;
                 if (response.success()) {
                     requestError = null;
                     var properties = { opacity: 0.3, visibility: false };
-                    layerOperating = new OpenLayers.Layer.Vector("<img class=\"on_c_img\" mdata='MetaData not Found' src='http://www.iconsdb.com/icons/preview/tropical-blue/info-xxl.png'  style='width:20px; height:20px'> " + "PV/CSP In Operation", properties);
-                    layerConstruction = new OpenLayers.Layer.Vector("<img class=\"on_c_img\" mdata='MetaData not Found' src='http://www.iconsdb.com/icons/preview/tropical-blue/info-xxl.png' style='width:20px; height:20px'> " + "PV/CSP Under Construction", properties);
-                    layerDevelopment = new OpenLayers.Layer.Vector("<img class=\"on_c_img\" mdata='MetaData not Found' src='http://www.iconsdb.com/icons/preview/tropical-blue/info-xxl.png' style='width:20px; height:20px'> " + "PV/CSP In Development", properties);
+                    layerOperating = new OpenLayers.Layer.Vector("PV/CSP In Operation", properties);
+                    layerConstruction = new OpenLayers.Layer.Vector("PV/CSP Under Construction", properties);
+                    layerDevelopment = new OpenLayers.Layer.Vector("PV/CSP In Development", properties);
 
                     layerOperating.styleMap = createDefaultStyle("lightgreen");
                     layerConstruction.styleMap = createDefaultStyle("lightblue");
@@ -432,9 +432,9 @@ var INLModules;
     }
 })(INLModules || (INLModules = {}));
 
-if (typeof (selfUrl) == 'undefined')
-    var selfUrl = $('script[src$="SolarPlantSocialModule.js"]').attr('src');
-if (typeof (isActive) == 'undefined')
-    var isActive = true;
-pvMapper.moduleManager.registerModule(INLModules.SolarPlantSocialModule.category, INLModules.SolarPlantSocialModule.title, INLModules.SolarPlantSocialModule, isActive, selfUrl);
+if (console && console.assert)
+    console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
+var selfUrl = selfUrl || $('script[src$="SolarPlantSocialModule.js"]').attr('src');
+
+pvMapper.moduleManager.registerModule(INLModules.SolarPlantSocialModule.category, INLModules.SolarPlantSocialModule.title, INLModules.SolarPlantSocialModule, true, selfUrl);
 //# sourceMappingURL=SolarPlantSocialModule.js.map

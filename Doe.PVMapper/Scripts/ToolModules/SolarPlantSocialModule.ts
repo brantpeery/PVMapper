@@ -117,7 +117,7 @@ module INLModules {
     
     });
 
-    export class SolarPlantSocialModule {
+    export class SolarPlantSocialModule implements pvMapper.IModuleHandle {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "SolarPlantSocialModule",
@@ -475,8 +475,7 @@ module INLModules {
     //var modinstance = new INLModules.SolarPlantSocialModule();
 }
 
-if (typeof (selfUrl) == 'undefined')
-  var selfUrl = $('script[src$="SolarPlantSocialModule.js"]').attr('src');
-if (typeof (isActive) == 'undefined')
-    var isActive = true;
-pvMapper.moduleManager.registerModule(INLModules.SolarPlantSocialModule.category, INLModules.SolarPlantSocialModule.title, INLModules.SolarPlantSocialModule, isActive, selfUrl);
+if (console && console.assert) console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
+var selfUrl = selfUrl || $('script[src$="SolarPlantSocialModule.js"]').attr('src');
+
+pvMapper.moduleManager.registerModule(INLModules.SolarPlantSocialModule.category, INLModules.SolarPlantSocialModule.title, INLModules.SolarPlantSocialModule, true, selfUrl);

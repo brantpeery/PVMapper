@@ -9,6 +9,21 @@
 // Module
 module pvMapper {
 
+    //Note: I have no idea why we've built modules this way... it seems crazy to me... but, interfaces to document the crazy might help.
+    export interface IModuleFactory {
+        new (): IModuleHandle
+
+        // add these to make it easier for the ModuleManager stuff.
+        title: string;
+        category: string;
+        description: string;
+        longDescription: string;
+    }
+
+    //Note: I have no idea why we've built modules this way... it seems crazy to me... but, interfaces to document the crazy might help.
+    export interface IModuleHandle {
+        getModuleObj: () => Module; // IModuleOptions;
+    }
 
     // Class
     export class Module implements IModuleOptions {

@@ -44,14 +44,12 @@ var INLModules;
                         onSiteChange: function (e, score) {
                             _this.updateScore(score);
                         },
-                        getStarRatables: function (mode) {
-                            if ((mode !== undefined) && (mode === "default"))
-                                return _this.starRatingHelper.defaultStarRatings;
-                            else
-                                return _this.starRatingHelper.starRatings;
+                        getStarRatables: function () {
+                            return _this.starRatingHelper.starRatings;
                         },
                         setStarRatables: function (rateTable) {
-                            $.extend(_this.starRatingHelper.starRatings, rateTable);
+                            //$.extend(this.starRatingHelper.starRatings, rateTable);
+                            _this.starRatingHelper.resetStarRatings(rateTable);
                         },
                         scoreUtilityOptions: {
                             functionName: "linear",
@@ -65,9 +63,8 @@ var INLModules;
                 return myModule;
             };
         }
-        var SoilMetaData = Ext.htmlEncode("Title: Soil Survey Map<br>Author: ESRI<br>Subject: natural resources<br>Keywords: soil,US Department of Agriculture,USDA,Natural Resources Conservation Service,NRCS,National,Federal,USA<br>AntialiasingMode: None<br>TextAntialiasingMode: Force<br>Format: PNG8<br><br>Min Scale: 5.91657527591555E8<br>Max Scale: 9027.977411<br><br>Service Description: USDA/NRCS SSURGO: This layer shows the Soil Survey Geographic (SSURGO) by the United States Department of Agriculture’s Natural Resources Conservation Service. SSURGO digitizing duplicates the original soil survey maps. This level of mapping is designed for use by landowners, townships, and county natural resource planning and management. The user should be knowledgeable of soils data and their characteristics. The soil units are symbolized by Esri to show the dominant condition for the 12 soil orders according to Soil Taxonomy. Dominant condition was determined by evaluating each of the components in a map unit; the percentage of the component that each soil order represented was accumulated for all the soil orders present in the map unit. The soil order with the highest accumulated percentage is then characterized as the dominant condition for that unit. If a tie was found between soil orders, a “tie-break” rule was applied. The tie-break was based on the component’s “slope_r” attribute value, which represents the Slope Gradient – Representative Value. The slope_r values were accumulated in the same fashion as the soil order attributes, i.e., by soil order, and the order with the lowest slope_r value was selected as dominant because that represented the lower slope value, and therefore we assumed the soils were more likely to be staying in that area or being deposited in that area. USDA/NRCS STATSGO This layer shows the U.S. General Soil Map of general soil association units by the United States Department of Agriculture’s Natural Resources Conservation Service. It was developed by the National Cooperative Soil Survey and supersedes the State Soil Geographic (STATSGO) dataset published in 1994. It consists of a broad-based inventory of soils and non-soil areas that occur in a repeatable pattern on the landscape and that can be cartographically shown at the scale mapped. The soil units are symbolized by Esri to show the dominant condition for the 12 soil orders according to Soil Taxonomy. Dominant condition was determined by evaluating each of the components in a map unit; the percentage of the component that each soil order represented was accumulated for all the soil orders present in the map unit. The soil order with the highest accumulated percentage is then characterized as the dominant condition for that unit. If a tie was found between soil orders, a “tie-break” rule was applied. The tie-break was based on the component’s “slope_r” attribute value, which represents the Slope Gradient – Representative Value. The slope_r values were accumulated in the same fashion as the soil order attributes, i.e., by soil order, and the order with the lowest slope_r value was selected as dominant because that represented the lower slope value, and therefore we assumed the soils were more likely to be staying in that area or being deposited in that area. USDA/NRCS GLOBAL SOIL REGIONS This layer shows the Global Soil Regions map by the United States Department of Agriculture’s Natural Resources Conservation Service. The data and symbology are based on a reclassification of the FAO-UNESCO Soil Map of the World combined with a soil climate map. The soils data is symbolized to show the distribution of the 12 soil orders according to Soil Taxonomy. For more information on this map, including the terms of use, visit us online.");
         SoilModule.prototype.addMap = function () {
-            this.soilLayer = new OpenLayers.Layer.ArcGIS93Rest("<img class=\"on_c_img\" mdata=\"" + SoilMetaData + "\" src='http://www.iconsdb.com/icons/preview/tropical-blue/info-xxl.png' style='width:20px; height:20px'> " + "Soil Type", this.soilRestUrl + "export", {
+            this.soilLayer = new OpenLayers.Layer.ArcGIS93Rest("Soil Type", this.soilRestUrl + "export", {
                 layers: "show:0",
                 format: "gif",
                 srs: "3857",
@@ -217,9 +214,9 @@ var INLModules;
     INLModules.SoilModule = SoilModule;
 })(INLModules || (INLModules = {}));
 
-if (typeof (selfUrl) == 'undefined')
-    var selfUrl = $('script[src$="SoilModule.js"]').attr('src');
-if (typeof (isActive) == 'undefined')
-    var isActive = true;
-pvMapper.moduleManager.registerModule(INLModules.SoilModule.category, INLModules.SoilModule.title, INLModules.SoilModule, isActive, selfUrl);
+if (console && console.assert)
+    console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
+var selfUrl = selfUrl || $('script[src$="SoilModule.js"]').attr('src');
+
+pvMapper.moduleManager.registerModule(INLModules.SoilModule.category, INLModules.SoilModule.title, INLModules.SoilModule, true, selfUrl);
 //# sourceMappingURL=SoilModule.js.map

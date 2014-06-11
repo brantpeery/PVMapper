@@ -121,7 +121,7 @@ module INLModules {
 
     });
 
-    export class WildlifeSocialModule {
+    export class WildlifeSocialModule implements pvMapper.IModuleHandle {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "WildlifeSocialModule",
@@ -375,8 +375,7 @@ module INLModules {
 }
 //var modinstance = new INLModules.WildlifeSocialModule();
 
-if (typeof (selfUrl) == 'undefined')
-  var selfUrl = $('script[src$="WildlifeSocialModule.js"]').attr('src');
-if (typeof (isActive) == 'undefined')
-    var isActive = true;
-pvMapper.moduleManager.registerModule(INLModules.WildlifeSocialModule.category, INLModules.WildlifeSocialModule.title, INLModules.WildlifeSocialModule, isActive, selfUrl);
+if (console && console.assert) console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
+var selfUrl = selfUrl || $('script[src$="WildlifeSocialModule.js"]').attr('src');
+
+pvMapper.moduleManager.registerModule(INLModules.WildlifeSocialModule.category, INLModules.WildlifeSocialModule.title, INLModules.WildlifeSocialModule, true, selfUrl);

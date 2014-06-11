@@ -66,12 +66,8 @@ var BYUModules;
                 author: "Darian Ramage, BYU",
                 version: "0.2.ts",
                 iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/home_icon.jpg",
-                activate: function () {
-                    //addAllMaps();
-                },
-                deactivate: function () {
-                    removeAllMaps();
-                },
+                activate: null,
+                deactivate: null,
                 destroy: null,
                 init: null,
                 scoringTools: [{
@@ -118,8 +114,7 @@ var BYUModules;
     //var ExportUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/export";
     var QueryUrl = "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer/3/query";
 
-    var mapLayer;
-
+    //var mapLayer: any;
     //Note: the river layer was already added as a Reference layer...
     //      As it seems more similar to the other Reference layers than it does to the Tool Data layers,
     //      I chose to leave it there (and comment out this add)
@@ -140,10 +135,9 @@ var BYUModules;
     //    pvMapper.map.addLayer(mapLayer);
     //    //pvMapper.map.setLayerIndex(mapLayer, 0);
     //}
-    function removeAllMaps() {
-        pvMapper.map.removeLayer(mapLayer, false);
-    }
-
+    //function removeAllMaps() {
+    //    pvMapper.map.removeLayer(mapLayer, false);
+    //}
     function updateScore(score) {
         var maxSearchDistanceInMeters = configProperties.maxSearchDistanceInMi * 1609.34;
 
@@ -205,9 +199,9 @@ var BYUModules;
 })(BYUModules || (BYUModules = {}));
 
 //var modinstance = new BYUModules.WaterDistanceModule();
-if (typeof (selfUrl) == 'undefined')
-    var selfUrl = $('script[src$="riverDisnace.js"]').attr('src');
-if (typeof (isActive) == 'undefined')
-    var isActive = true;
-pvMapper.moduleManager.registerModule(BYUModules.WaterDistanceModule.category, BYUModules.WaterDistanceModule.title, BYUModules.WaterDistanceModule, isActive, selfUrl);
+if (console && console.assert)
+    console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
+var selfUrl = selfUrl || $('script[src$="riverDisnace.js"]').attr('src');
+
+pvMapper.moduleManager.registerModule(BYUModules.WaterDistanceModule.category, BYUModules.WaterDistanceModule.title, BYUModules.WaterDistanceModule, false, selfUrl);
 //# sourceMappingURL=riverDistance.js.map

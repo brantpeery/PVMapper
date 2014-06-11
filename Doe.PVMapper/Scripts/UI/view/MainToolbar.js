@@ -596,7 +596,7 @@ pvMapper.onReady(function () {
                             aTitle = scrline.title;
                             aCat = scrline.category;
                             aStarRatables = null;
-                            if (scrline.getStarRatables !== undefined) {
+                            if (typeof (scrline.getStarRatables) === "function") {
                                 aStarRatables = scrline.getStarRatables();
                             }
                             config.configLines.push({ title: aTitle, category: aCat, utility: aUtility, starRatables: aStarRatables, weight: aWeight });
@@ -701,8 +701,8 @@ pvMapper.onReady(function () {
         pvMapper.mainScoreboard.scoreLines.forEach(
             function (scrLine, idx, scoreLines) {
                 scrLine.scoreUtility = scrLine.defaultScoreUtility;
-                if ((scrLine.setStarRatables !== undefined) && (scrLine.getStarRatables !== undefined))
-                    scrLine.setStarRatables(scrLine.getStarRatables("default"));
+                if (typeof scrLine.setStarRatables === "function")
+                    scrLine.setStarRatables({});
                 scrLine.setWeight(10); //TODO: not all score lines have a default weight of 10.
                 //TODO: some score lines have their own config menues, which should also be reset.
             });
@@ -773,40 +773,46 @@ pvMapper.onReady(function () {
         console.assert(amodule, "Wait... why is this function looking for a matching file? Because maybe it shouldn't...?");
 
         if (!amodule) {
-            Ext.MessageBox.prompt("Module Naming", "Please type in the module name", function (btn, kmlModuleName) {
-                if (btn == 'ok') {
-                    if (kmlModuleName.length == 0)
-                        kmlModuleName = afile.name;
+            //Note: elsewhere we treat the file name as a unique key which is bound to the tool name, SO we cannot in fact allow the user to change the tool name here.
+            //TODO: fix this... sometime.
 
-                    //It seems HTML5 file API pull the file type from the MIME type association with an application.
-                    //problem here is that if the client machine never had Google Earth installed, the file.type is blank.
-                    //If it is the case, we can only realize on the file extension.
-                    if (afile.type === "application/vnd.google-earth.kmz" || hasExtension(afile.name, ".kmz")) {
-                        var localLayer = new INLModules.LocalLayerModule();
-                        var reader = new FileReader();
-                        reader.onload = function (evt) {
-                            uncompressZip(evt.target.result,
-                                function (kmlResult) {
-                                    localLayer.readTextFile(kmlResult, kmlModuleName, afile.name);
-                                    pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: localLayer }));
-                                    saveToLocalDB(kmlModuleName, localLayer.moduleClass, afile.name, kmlResult); //TODO: we shouldn't use just the file name as the primary key here...
-                                });
-                        }
-                        reader.readAsArrayBuffer(afile);
-                    } else if (afile.type === "application/vnd.google-earth.kml+xml" || hasExtension(afile.name, ".kml")) {
-                        var localLayer = new INLModules.LocalLayerModule();
-                        var reader = new FileReader();
-                        reader.onload = function (evt) {
-                            localLayer.readTextFile(evt.target.result, kmlModuleName, afile.name);
+            //Ext.MessageBox.prompt("Module Naming", "Please type in the module name", function (btn, kmlModuleName) {
+                //if (btn == 'ok') {
+                    //if (kmlModuleName.length == 0)
+                        //kmlModuleName = afile.name;
+
+            var kmlModuleName = afile.name;
+
+            //It seems HTML5 file API pull the file type from the MIME type association with an application.
+            //problem here is that if the client machine never had Google Earth installed, the file.type is blank.
+            //If it is the case, we can only realize on the file extension.
+            if (afile.type === "application/vnd.google-earth.kmz" || hasExtension(afile.name, ".kmz")) {
+                var localLayer = new INLModules.LocalLayerModule();
+                var reader = new FileReader();
+                reader.onload = function (evt) {
+                    uncompressZip(evt.target.result,
+                        function (kmlResult) {
+                            localLayer.readTextFile(kmlResult, kmlModuleName, afile.name);
                             pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: localLayer }));
-                            saveToLocalDB(kmlModuleName, localLayer.moduleClass, afile.name, evt.target.result); //TODO: we shouldn't use just the file name as the primary key here...
-                        }
-                        reader.readAsText(afile);
-                    } else {
-                        Ext.MessageBox.alert("Unknown File Type", "The file [" + afile.name + "] is not a KML format.");
-                    }
+                            saveToLocalDB(kmlModuleName, localLayer.moduleClass, afile.name, kmlResult); //TODO: we shouldn't use just the file name as the primary key here...
+                        });
                 }
-            }, this, false, afile.name);
+                reader.readAsArrayBuffer(afile);
+            } else if (afile.type === "application/vnd.google-earth.kml+xml" || hasExtension(afile.name, ".kml")) {
+                var localLayer = new INLModules.LocalLayerModule();
+                var reader = new FileReader();
+                reader.onload = function (evt) {
+                    localLayer.readTextFile(evt.target.result, kmlModuleName, afile.name);
+                    pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: localLayer }));
+                    saveToLocalDB(kmlModuleName, localLayer.moduleClass, afile.name, evt.target.result); //TODO: we shouldn't use just the file name as the primary key here...
+                }
+                reader.readAsText(afile);
+            } else {
+                Ext.MessageBox.alert("Unknown File Type", "The file [" + afile.name + "] is not a KML format.");
+            }
+
+                //}
+            //}, this, false, afile.name);
         }
         else {
             Ext.MessageBox.alert("Duplicate file", "The file [" + afile.name + "] was aleady loaded.");

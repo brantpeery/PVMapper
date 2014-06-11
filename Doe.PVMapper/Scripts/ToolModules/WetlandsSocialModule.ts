@@ -125,7 +125,7 @@ module INLModules {
     // cache for the last distance found to a wetland, used so that our search isn't criminally inefficient
     var lastDistanceCache = {};
 
-    export class WetlandsSocialModule {
+    export class WetlandsSocialModule implements pvMapper.IModuleHandle {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "WetlandsSocialModule",
@@ -374,8 +374,7 @@ module INLModules {
 
     //var modinstance = new INLModules.WetlandsSocialModule();
 }
-if (typeof (selfUrl) == 'undefined')
-  var selfUrl = $('script[src$="WetlandSocialModule.js"]').attr('src');
-if (typeof (isActive) == 'undefined')
-    var isActive = true;
-pvMapper.moduleManager.registerModule(INLModules.WetlandsSocialModule.category, INLModules.WetlandsSocialModule.title, INLModules.WetlandsSocialModule, isActive, selfUrl);
+if (console && console.assert) console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
+var selfUrl = selfUrl || $('script[src$="WetlandSocialModule.js"]').attr('src');
+
+pvMapper.moduleManager.registerModule(INLModules.WetlandsSocialModule.category, INLModules.WetlandsSocialModule.title, INLModules.WetlandsSocialModule, true, selfUrl);

@@ -25,7 +25,7 @@ module pvMapper {
 
         // dictionary mapping ratable category names to star ratings
         starRatings: IStarRatings;
-        defaultStarRatings: IStarRatings;
+        resetStarRatings(starRatings?: IStarRatings);
         // returns the lowest rated category of those passed in,
         // and also a combined string of all categories with their star values, sorted from lowest to highest
         sortRatableArray: (ratables: string[]) => string;
@@ -37,11 +37,17 @@ module pvMapper {
         constructor(options: IStarRatingOptions) {
             this.options = options;
 
-            this.starRatings = {};
-
-            if (options.noCategoryLabel && typeof options.noCategoryRating === "number") {
-                this.starRatings[options.noCategoryLabel] = options.noCategoryRating;
+            this.resetStarRatings = (starRatings?: IStarRatings) => {
+                this.starRatings = starRatings || {};
+                if (this.options.noCategoryLabel &&
+                    typeof (this.options.noCategoryRating) === "number" &&
+                    typeof (this.starRatings[this.options.noCategoryLabel]) !== "number") {
+                    // the no category label value is missing - set it.
+                    this.starRatings[this.options.noCategoryLabel] = options.noCategoryRating;
+                }
             }
+
+            this.resetStarRatings(); // initial star ratings setup
 
             this.sortRatings = (a: string, b: string) => {
                 // sort from lowest to highest star rating first
@@ -86,13 +92,13 @@ module pvMapper {
 
                 return allText;
             }
-            this.defaultStarRatings = this.starRatings;
         }
 
         public options: IStarRatingOptions;
 
         public starRatings: IStarRatings;
-        public defaultStarRatings: IStarRatings;
+
+        public resetStarRatings: (starRatings?: IStarRatings) => void;
 
         private sortRatings: (a: string, b: string) => number;
 

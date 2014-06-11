@@ -18,7 +18,7 @@ declare var geoJsonConverter: {
  
 module INLModules {
 
-    export class ProtectedAreasModule {
+    export class ProtectedAreasModule implements pvMapper.IModuleHandle {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "ProtectedAreasModule",
@@ -50,16 +50,12 @@ module INLModules {
                         this.updateScore(score);
                     },
 
-                    getStarRatables: (mode?: string) => {
-                        if ((mode !== undefined) && (mode === "default")) {
-                            return this.starRatingHelper.starRatings;
-                        }
-                        else {
-                            return this.starRatingHelper.defaultStarRatings;
-                        }
+                    getStarRatables: () => {
+                        return this.starRatingHelper.starRatings;
                     },
                     setStarRatables: (rateTable: pvMapper.IStarRatings) => {
-                        $.extend(this.starRatingHelper.starRatings, rateTable);
+                        //$.extend(this.starRatingHelper.starRatings, rateTable);
+                        this.starRatingHelper.resetStarRatings(rateTable);
                     },
 
                     scoreUtilityOptions: {
@@ -192,10 +188,10 @@ module INLModules {
                             score.updateValue(this.starRatingHelper.starRatings[responseArray[0]]);
                         } else {
                             // use the no category label, and its current star rating
-                            if (this.starRatingHelper.starRatings !== undefined) {
-                                score.popupMessage = this.starRatingHelper.options.noCategoryLabel;
-                                score.updateValue(this.starRatingHelper.starRatings[this.starRatingHelper.options.noCategoryLabel]);
-                            }
+                            if (console && console.assert) console.assert(typeof (this.starRatingHelper.starRatings) !== "undefined");
+
+                            score.popupMessage = this.starRatingHelper.options.noCategoryLabel;
+                            score.updateValue(this.starRatingHelper.starRatings[this.starRatingHelper.options.noCategoryLabel]);
                         }
                     } else {
                         score.popupMessage = "Error " + response.status + " " + response.statusText;
@@ -209,7 +205,7 @@ module INLModules {
 
     //============================================================
 
-    export class LandCoverModule {
+    export class LandCoverModule implements pvMapper.IModuleHandle {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "LandCoverModule",
@@ -241,17 +237,12 @@ module INLModules {
                         this.updateScore(score);
                     },
 
-                    getStarRatables: (mode?: string) => {
-                        if ((mode !== undefined) && (mode === "default")) {
-                            return this.starRatingHelper.defaultStarRatings;
-                        }
-                        else {
-                            return this.starRatingHelper.starRatings;
-                        }
+                    getStarRatables: () => {
+                        return this.ratables;
                     },
-
                     setStarRatables: (rateTable: pvMapper.IStarRatings) => {
-                        $.extend(this.starRatingHelper.starRatings, rateTable);
+                        //$.extend(this.starRatingHelper.starRatings, rateTable);
+                        this.ratables = rateTable;
                     },
                     scoreUtilityOptions: {
                         functionName: "linear",
@@ -265,16 +256,12 @@ module INLModules {
             this.getModuleObj = function () { return myModule; }
         }
         getModuleObj: () => pvMapper.Module;
-        public static title: string = "Land Cover";
+        public static title: string = "Land Conservation";
         public static category: string = "Land Use";
         public static description: string = "The type of land cover found in the center of a site, using GAP land cover data hosted by gapanalysisprogram.com";
         public static longDescription: string = '<p>This star rating tool finds the type of land cover present at the center of a proposed site. The GAP Land Cover dataset provides detailed vegetation and land use patterns for the continental United States, incorporating an ecological classification system to represent natural and semi-natural land cover. Note that the land cover at the center point of a site may not be representative of the overall land cover at that site. Note also that this dataset was created for regional biodiversity assessment, and not for use at scales larger than 1:100,000. Due to these limitations, results from this tool should be considered preliminary. For more information, see the USGS Gap Analysis Program (gapanalysis.usgs.gov/gaplandcover/data).</p><p>This tool depends on a user-defined star rating for the land cover classification found at each site, on a scale of 0-5 stars. The default rating for all land classes is three stars. These ratings should be adjusted by the user. The score for a site is based on the star rating of its land cover class (so overlapping a one-star class may give a score of 20, and overlapping a five-star class might give a score of 100). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>';
 
-        private starRatingHelper: pvMapper.IStarRatingHelper = new pvMapper.StarRatingHelper({
-            defaultStarRating: 4,
-            noCategoryRating: 5,
-            noCategoryLabel: "None"
-        });
+        private ratables: pvMapper.IStarRatings = {};
         
         private defaultRating: number = 3;
 
@@ -348,16 +335,10 @@ module INLModules {
                                 lastText = newText;
                             }
 
-                            var rating = undefined;
-                            if (this.starRatingHelper.starRatings !== undefined) {
-                                rating = this.starRatingHelper.starRatings[landCover];
-                            }
+                            var rating = this.ratables[landCover];
 
                             if (typeof rating === "undefined") {
-                                if (this.starRatingHelper.starRatings === undefined) {
-                                    this.starRatingHelper.starRatings = {};
-                                }
-                               rating = this.starRatingHelper.starRatings[landCover] = this.defaultRating;
+                                var rating = this.ratables[landCover] = this.defaultRating;
                             }
 
                             score.popupMessage = landCover + " [" + rating + (rating === 1 ? " star]" : " stars]");
@@ -386,7 +367,7 @@ module INLModules {
 
     //============================================================
 
-    export class LandCoverModuleV2 {
+    export class LandCoverModuleV2 implements pvMapper.IModuleHandle {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "LandCoverModuleV2",
@@ -394,10 +375,10 @@ module INLModules {
                 version: "0.2.ts",
 
                 activate: () => {
-                    this.addMap();
+                    // no map layer exposed for land cover on geoserver.byu.edu
                 },
                 deactivate: () => {
-                    this.removeMap();
+                    // no map layer exposed for land cover on geoserver.byu.edu
                 },
                 destroy: null,
                 init: null,
@@ -418,16 +399,12 @@ module INLModules {
                         this.updateScore(score);
                     },
 
-                    getStarRatables: (mode?: string) => {
-                        if ((mode !== undefined) && (mode === "default")) {
-                            return this.starRatingHelper.defaultStarRatings;
-                        }
-                        else {
-                            return this.starRatingHelper.starRatings;
-                        }
+                    getStarRatables: () => {
+                        return this.starRatingHelper.starRatings;
                     },
                     setStarRatables: (rateTable: pvMapper.IStarRatings) => {
-                        $.extend(this.starRatingHelper.starRatings, rateTable);
+                        //$.extend(this.starRatingHelper.starRatings, rateTable);
+                        this.starRatingHelper.resetStarRatings(rateTable);
                     },
                     scoreUtilityOptions: {
                         functionName: "linear",
@@ -446,35 +423,35 @@ module INLModules {
         public static description: string = "The types of Land cover found in the selected area. Using data hosted on Geoserver.byu.edu";
         public static longDescription: string = "<p>The types of Land cover found in the selected area. Using data hosted on geoserver.byu.edu</p>";
 
-        private landCoverRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/NAT_LC/1_NVC_class_landuse/MapServer/";
+        //private landCoverRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/NAT_LC/1_NVC_class_landuse/MapServer/";
 
         //TODO: try switching to WMS source instead, to support Identify and Legend functions. WMS url:
         //      http://dingo.gapanalysisprogram.com/ArcGIS/services/NAT_LC/6_Ecol_Sys_landuseNocache/MapServer/WMSServer?request=GetCapabilities&service=WMS
 
-        private landCoverLayer;
-        private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
+        //private landCoverLayer;
+        //private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
 
-        private addMap() {
-            this.landCoverLayer = new OpenLayers.Layer.ArcGIS93Rest(
-                "Land Cover 2",
-                this.landCoverRestUrl + "export",
-                {
-                    layers: "show:0,1,2",
-                    format: "gif",
-                    srs: "3857", //"102100",
-                    transparent: "true",
-                }//,{ isBaseLayer: false }
-                );
-            this.landCoverLayer.setOpacity(0.3);
-            this.landCoverLayer.epsgOverride = "3857"; //"EPSG:102100";
-            this.landCoverLayer.setVisibility(false);
+        //private addMap() {
+        //    this.landCoverLayer = new OpenLayers.Layer.ArcGIS93Rest(
+        //        "Land Cover 2",
+        //        this.landCoverRestUrl + "export",
+        //        {
+        //            layers: "show:0,1,2",
+        //            format: "gif",
+        //            srs: "3857", //"102100",
+        //            transparent: "true",
+        //        }//,{ isBaseLayer: false }
+        //        );
+        //    this.landCoverLayer.setOpacity(0.3);
+        //    this.landCoverLayer.epsgOverride = "3857"; //"EPSG:102100";
+        //    this.landCoverLayer.setVisibility(false);
 
-            pvMapper.map.addLayer(this.landCoverLayer);
-        }
+        //    pvMapper.map.addLayer(this.landCoverLayer);
+        //}
 
-        private removeMap() {
-            pvMapper.map.removeLayer(this.landCoverLayer, false);
-        }
+        //private removeMap() {
+        //    pvMapper.map.removeLayer(this.landCoverLayer, false);
+        //}
 
 
         private starRatingHelper: pvMapper.IStarRatingHelper = new pvMapper.StarRatingHelper({
@@ -484,7 +461,7 @@ module INLModules {
         });
 
 
-        private updateScore(score: pvMapper.Score) {
+        private updateScore = (score: pvMapper.Score) => {
 
             //Fetch data from the cache if it exists. 
             var key = "landCover" + score.site.id;
@@ -492,9 +469,6 @@ module INLModules {
                 score.popupMessage = "<i>" + $.jStorage.get(key + "msg") + "</i>";
                 score.updateValue(<number>($.jStorage.get(key)));
             }
-
-
-            var _me = this;
 
             var toGeoJson = new OpenLayers.Format.GeoJSON();
             var geoJsonObj = toGeoJson.extract.geometry.apply(toGeoJson, [
@@ -532,13 +506,13 @@ module INLModules {
                         var finalResponse = {};
                         var mainObj = this;
                         var jobId = parsedResponse.jobId;
-                        var resultSearcher = setInterval(function () {
+                        var resultSearcher = setInterval(() => {
                             console.log("Job Still Processing");
                             //Send out another request
                             var resultRequestRepeat = OpenLayers.Request.GET({
                                 url: "https://geoserver.byu.edu/arcgis/rest/services/land_cover/GPServer/land_cover/" + "jobs/" + jobId + "/results/Extract_nlcd1_TableSelect?f=json",
                                 proxy: "/Proxy/proxy.ashx?",
-                                callback: function (response) {
+                                callback: (response) => {
                                     if (response.status == 200) {
                                         var esriJsonParser = new OpenLayers.Format.JSON();
                                         esriJsonParser.extractAttributes = true;
@@ -584,13 +558,13 @@ module INLModules {
 
                                                 for (var i = 0; i < landCovers.length; i++) {
 
-                                                    if (typeof _me.starRatingHelper.starRatings[landCovers[i].cover] === "undefined") {
-                                                        _me.starRatingHelper.starRatings[landCovers[i].cover] =
-                                                        _me.starRatingHelper.options.defaultStarRating;
+                                                    if (typeof this.starRatingHelper.starRatings[landCovers[i].cover] === "undefined") {
+                                                        this.starRatingHelper.starRatings[landCovers[i].cover] =
+                                                        this.starRatingHelper.options.defaultStarRating;
                                                     }
 
                                                     // overall score is the average star rating weighted by the percentage of individual land covers
-                                                    var starRating = _me.starRatingHelper.starRatings[landCovers[i].cover];
+                                                    var starRating = this.starRatingHelper.starRatings[landCovers[i].cover];
 
                                                     totalPercent += landCovers[i].percent;
                                                     overallScore += landCovers[i].percent * starRating;
@@ -653,11 +627,10 @@ module INLModules {
 //var landCoverInstance = new INLModules.LandCoverModule();
 
 
-if (typeof (selfUrl) == 'undefined')
-  var selfUrl = $('script[src$="LandUseModule.js"]').attr('src');
-if (typeof (isActive) == 'undefined')
-    var isActive = true;
-pvMapper.moduleManager.registerModule(INLModules.ProtectedAreasModule.category, INLModules.ProtectedAreasModule.title, INLModules.ProtectedAreasModule, isActive,selfUrl);
-pvMapper.moduleManager.registerModule(INLModules.LandCoverModule.category, INLModules.LandCoverModule.title, INLModules.LandCoverModule, isActive,selfUrl);
-pvMapper.moduleManager.registerModule(INLModules.LandCoverModuleV2.category, INLModules.LandCoverModuleV2.title, INLModules.LandCoverModuleV2, !isActive, selfUrl);
+if (console && console.assert) console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
+var selfUrl = selfUrl || $('script[src$="LandUseModule.js"]').attr('src');
+
+pvMapper.moduleManager.registerModule(INLModules.ProtectedAreasModule.category, INLModules.ProtectedAreasModule.title, INLModules.ProtectedAreasModule, true ,selfUrl);
+pvMapper.moduleManager.registerModule(INLModules.LandCoverModule.category, INLModules.LandCoverModule.title, INLModules.LandCoverModule, true ,selfUrl);
+pvMapper.moduleManager.registerModule(INLModules.LandCoverModuleV2.category, INLModules.LandCoverModuleV2.title, INLModules.LandCoverModuleV2, true, selfUrl);
 

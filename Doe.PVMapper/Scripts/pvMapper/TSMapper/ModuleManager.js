@@ -82,6 +82,15 @@ var pvMapper;
         function ModuleManager() {
             var _this = this;
             this._modules = new Array();
+            //public activateModules() {
+            //    this.modules.forEach(function (tool) {
+            //        if (tool.isActive && tool.ctor != undefined) {
+            //            new tool.ctor();
+            //        }
+            //    });
+            //    pvMapper.mainScoreboard.update();
+            //    pvMapper.mainScoreboard.updateTotals();
+            //}
             this.toolStoreName = 'ToolModules';
             //Instantiate the registered tool modules whose isActive is true.  isActive is check against user's configuration first.
             //It also load the module from server if it has not been loaded.
@@ -156,14 +165,13 @@ var pvMapper;
             //return ma.length ? ma[0] : null; //TODO: this is NOT a unique key !
         };
 
-        ModuleManager.prototype.getCtor = function (moduleName) {
-            var m = this.getModule(moduleName);
-            if (m) {
-                return m.ctor;
-            } else
-                return null;
-        };
-
+        //public getCtor(moduleName: string): any {
+        //    var m = this.getModule(moduleName);
+        //    if (m) {
+        //        return m.ctor;
+        //    }
+        //    else return null;
+        //}
         //This function should only be call by the tool module.  Calling from anywhere else, the caller must make sure
         //that the supporting code script (configProperties) is loaded.
         ModuleManager.prototype.registerModule = function (category, name, ctor, isActivated, url) {
@@ -176,51 +184,41 @@ var pvMapper;
                 this._modules.push(new ModuleInfo(category, name, ctor, isActivated, url, ctor.description));
                 if (ctor && isActivated) {
                     var tm = new ctor();
-                    var mObj = tm.getModuleObj();
-                    if (typeof (mObj.activate) === 'function')
-                        mObj.activate();
+                    //Note: init() and activate() are called by the default constructor in Module.ts
+                    //var mObj = tm.getModuleObj();
+                    //if (typeof (mObj.activate) === 'function')
+                    //    mObj.activate();
                 }
             } else {
                 if (!m.ctor && m.isActive && ctor) {
                     //create the tool if it has created before.
                     m.ctor = ctor;
                     var tm = new ctor();
-                    var mObj = tm.getModuleObj();
-                    if (typeof (mObj.activate) === 'function')
-                        mObj.activate();
+                    //Note: init() and activate() are called by the default constructor in Module.ts
+                    //var mObj = tm.getModuleObj();
+                    //if (typeof (mObj.activate) === 'function')
+                    //    mObj.activate();
                 }
                 if (m.moduleUrl != url && url !== null)
                     m.moduleUrl = url;
             }
         };
 
-        ModuleManager.prototype.deleteModule = function (aName) {
-            var m = this.getModule(aName);
-            if (m) {
-                var idx = this._modules.indexOf(m);
-                if (idx >= 0)
-                    this._modules.splice(idx, 1);
-                delete m;
-            }
-        };
-
         Object.defineProperty(ModuleManager.prototype, "modules", {
+            //public deleteModule(aName: string) {
+            //    var m = this.getModule(aName);
+            //    if (m) {
+            //        var idx = this._modules.indexOf(m);
+            //        if (idx >= 0) this._modules.splice(idx, 1);
+            //        delete m;
+            //    }
+            //}
             get: function () {
                 return this._modules;
             },
             enumerable: true,
             configurable: true
         });
-
-        ModuleManager.prototype.activateModules = function () {
-            this.modules.forEach(function (tool) {
-                if (tool.isActive && tool.ctor != undefined) {
-                    new tool.ctor();
-                }
-            });
-            pvMapper.mainScoreboard.update();
-            pvMapper.mainScoreboard.updateTotals();
-        };
 
         ModuleManager.prototype.saveTools = function () {
             var tools = this._modules.map(function (m) {

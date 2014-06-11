@@ -100,15 +100,11 @@ var pvMapper;
 
                         //now remove the scoreline.
                         var scorelineArray = pvMapper.mainScoreboard.scoreLines.filter(function (a) {
-                            if (a.getModuleName !== undefined) {
-                                if (a.getModuleName() === amodule.fileName)
-                                    return true;
-                                else
-                                    return false;
-                            } else
-                                return false;
+                            return (typeof (a.getModuleName) === "function" && a.getModuleName() === amodule.fileName);
+                            //TODO: this is NOT a unique key !  Also, this equality isn't easily enforcable or obvious to non-experts. Should change it entirely.
                         });
                         console.assert(scorelineArray.length < 2, "Module name collision detected!");
+                        console.assert(scorelineArray.length > 0, "Warning: couldn't locate the score line for the module to be removed!");
                         var scoreline = scorelineArray.length ? scorelineArray[0] : null;
                         if (scoreline) {
                             idx = pvMapper.mainScoreboard.scoreLines.indexOf(scoreline);
@@ -132,6 +128,7 @@ var pvMapper;
                 return (sl.title == moduleName);
             });
             console.assert(scorelineArray.length < 2, "Module name collision detected in score lines!");
+            console.assert(scorelineArray.length > 0, "Warning: couldn't locate the score line for the module to be removed!");
             var scoreline = scorelineArray.length ? scorelineArray[0] : null;
 
             if (scoreline) {
@@ -141,6 +138,14 @@ var pvMapper;
                 var mInfo = pvMapper.moduleManager.getModule(moduleName);
                 if (mInfo) {
                     mInfo.isActive = false;
+
+                    if (typeof (amodule.deactivate) === "function") {
+                        amodule.deactivate();
+                    }
+                    if (typeof (amodule.destroy) === "function") {
+                        amodule.destroy();
+                    }
+
                     delete amodule;
                     var idx = pvMapper.mainScoreboard.scoreLines.indexOf(scoreline);
                     if (idx >= 0)

@@ -9,7 +9,7 @@
 
 module INLModules {
 
-    export class SoilModule {
+    export class SoilModule implements pvMapper.IModuleHandle {
         constructor() {
             var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
                 id: "SoilModule",
@@ -41,14 +41,12 @@ module INLModules {
                         this.updateScore(score);
                     },
 
-                    getStarRatables: (mode?: string) => {
-                        if ((mode !== undefined) && (mode === "default"))
-                            return this.starRatingHelper.defaultStarRatings;
-                        else
-                            return this.starRatingHelper.starRatings;
+                    getStarRatables: () => {
+                        return this.starRatingHelper.starRatings;
                     },
                     setStarRatables: (rateTable: pvMapper.IStarRatings) => {
-                        $.extend(this.starRatingHelper.starRatings, rateTable);
+                        //$.extend(this.starRatingHelper.starRatings, rateTable);
+                        this.starRatingHelper.resetStarRatings(rateTable);
                     },
                     scoreUtilityOptions: {
                         functionName: "linear",
@@ -244,8 +242,7 @@ module INLModules {
     //var soilInstance = new INLModules.SoilModule();
 }
 
-if (typeof (selfUrl) == 'undefined')
-  var selfUrl = $('script[src$="SoilModule.js"]').attr('src');
-if (typeof (isActive) == 'undefined')
-    var isActive = true;
-pvMapper.moduleManager.registerModule(INLModules.SoilModule.category, INLModules.SoilModule.title, INLModules.SoilModule, isActive, selfUrl);
+if (console && console.assert) console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
+var selfUrl = selfUrl || $('script[src$="SoilModule.js"]').attr('src');
+
+pvMapper.moduleManager.registerModule(INLModules.SoilModule.category, INLModules.SoilModule.title, INLModules.SoilModule, true, selfUrl);
