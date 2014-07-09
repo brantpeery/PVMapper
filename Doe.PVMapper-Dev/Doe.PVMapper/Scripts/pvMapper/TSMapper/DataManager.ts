@@ -39,125 +39,118 @@ module pvMapper {
     export class ClientDB {
 
         public static DB_NAME: string = "PVMapperData";
-        public static CONFIG_STORE_NAME: string = "PVMapperScores";
-        public static PROJECT_STORE_NAME: string = "PVMapperProjects";
-        public static TOOLS_STORE_NAME: string = "PVMapperTools";
+
+        public static SCORE_LINE_CONFIG_STORE_NAME: string = "ScoreLineConfig";
+        public static KML_STORE_NAME: string = "KML";
+        public static MODULES_STORE_NAME = "Modules";
+
         public static db: IDBDatabase = null;
-        public static dbreq: IDBOpenDBRequest = null;
-        public static DBVersion = 1;  //Each time a new store or any changes to the database, current version must be increased to fire onupgradeneeded event.
+        //public static dbreq: IDBOpenDBRequest = null;
+        public static DBVersion = 10000;
 
         public static indexedDB: IDBFactory = window.indexedDB || window.msIndexedDB; // || window.webkitIndexedDB || window.mozIndexedDB 
 
-        public static isDBCreating = false;
         public static clientDBError: boolean = false;
 
-        public static initClientDB(forced: boolean = false) {
+        public static initClientDB() {
             if (!ClientDB.indexedDB) {
-                window.alert("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
+                window.alert("Your browser doesn't support a stable version of IndexedDB. Local storage features will not be available.");
                 return;
             }
 
             if (ClientDB.db) {
-                if (!forced)
-                    return;//already have database object.
-                else {
-                    ClientDB.db = null;
-                    ClientDB.isDBCreating = false;
-                }
+                return; //already have database object.
             }
             try {
-                if (!ClientDB.isDBCreating) {
-                    ClientDB.isDBCreating = true;
-                    if (forced)
-                        ClientDB.dbreq = ClientDB.indexedDB.open(ClientDB.DB_NAME, ClientDB.DBVersion);
-                    else
-                        ClientDB.dbreq = ClientDB.indexedDB.open(ClientDB.DB_NAME);
-                    ClientDB.dbreq.onsuccess = function (evt): any {
-                        ClientDB.useDatabase(evt.currentTarget.result);
-                    }
+                var dbreq: IDBOpenDBRequest = ClientDB.indexedDB.open(ClientDB.DB_NAME, this.DBVersion);
 
-                    ClientDB.dbreq.onerror = function (event): any {
-                        ClientDB.clientDBError = true;
-                        if (console && console.warn) console.warn("indexedDB open error: " + event.currentTarget.error.message);
-                        alert("Error: couldn't connect to in-browser storage.");
-                    }
+                dbreq.onsuccess = function (evt): any {
+                    ClientDB.useDatabase(dbreq.result);
+                }
 
-                    ClientDB.dbreq.onupgradeneeded = function (evt): any {
-                        try {
-                            var db = evt.target.result;
-                            if (!db.objectStoreNames.contains(ClientDB.CONFIG_STORE_NAME)) {
-                                evt.currentTarget.result.createObjectStore(ClientDB.CONFIG_STORE_NAME, { keypath: "title" });
-                            }
-                            if (!db.objectStoreNames.contains(ClientDB.PROJECT_STORE_NAME)) {
-                                evt.currentTarget.result.createObjectStore(ClientDB.PROJECT_STORE_NAME, { keypath: "project" });
-                            }
-                            if (!db.objectStoreNames.contains(ClientDB.TOOLS_STORE_NAME)) {
-                                evt.currentTarget.result.createObjectStore(ClientDB.TOOLS_STORE_NAME, { keypath: "tools" });
-                            }
-                            if (ClientDB.CUSTOM_STORE_NAME && ClientDB.CUSTOM_STORE_NAME.length > 0) {
-                                if (!db.objectStoreNames.contains(ClientDB.CUSTOM_STORE_NAME)) {
-                                    evt.currentTarget.result.createObjectStore(ClientDB.CUSTOM_STORE_NAME, { keypath: "custom_id" });
-                                }
-                            }
+                dbreq.onerror = function (event): any {
+                    ClientDB.clientDBError = true;
+                    if (console && console.warn) console.warn("indexedDB open error: " + event.currentTarget.error.message);
+                    alert("Error: couldn't connect to in-browser storage.");
+                }
 
-                            ClientDB.useDatabase(evt.currentTarget.result);
+                dbreq.onupgradeneeded = function (evt: IDBVersionChangeEvent): any {
+                    try {
+                        var db: IDBDatabase = (<any>evt.target).result;
+                        if (evt.oldVersion < 10000) {
+                            // this is the old version of the database... burn it to the ground.
+                            while (db.objectStoreNames.length > 0) 
+                                db.deleteObjectStore(db.objectStoreNames.item(0));
                         }
-                        catch (e) {
-                            if (console && console.warn) console.warn("Creating object store failed, cause: " + e.message);
+
+                        if (!db.objectStoreNames.contains(ClientDB.KML_STORE_NAME)) {
+                            db.createObjectStore(ClientDB.KML_STORE_NAME);
+                        }
+                        if (!db.objectStoreNames.contains(ClientDB.SCORE_LINE_CONFIG_STORE_NAME)) {
+                            db.createObjectStore(ClientDB.SCORE_LINE_CONFIG_STORE_NAME, { keypath: "id" });
+                        }
+                        if (!db.objectStoreNames.contains(ClientDB.MODULES_STORE_NAME)) {
+                            db.createObjectStore(ClientDB.MODULES_STORE_NAME, { keypath: "id" });
                         }
                     }
-
-                    ClientDB.dbreq.onblocked = function (event): any {
-                        if (console && console.warn) console.warn("database open is blocked ?!?");
-                        alert("PV Mapper is open in another browser tab; please close that tab to continue.");
+                    catch (e) {
+                        if (console && console.warn) console.warn("Creating object store failed, cause: " + e.message);
                     }
+                }
+
+                dbreq.onblocked = function (event): any {
+                    if (console && console.warn) console.warn("database open is blocked ?!?");
+                    alert("PV Mapper is open in another browser tab; please close that tab to continue.");
                 }
             }
             catch (e) {
-                console.log("initDB error, cause: " + e.message);
+                if (console && console.error) console.error("initDB error: " + e.message);
             }
             return null;
         }
 
-        private isScoreLoaded = false; //TODO: why are we doing this...?
         private static useDatabase(db) {
             // Make sure to add a handler to be notified if another page requests a version
             // change. We must close the database. This allows the other page to upgrade the database.
             // If you don't do this then the upgrade won't happen until the user closes the tab.
             db.onversionchange = function (event) {
+                db.close();
+                if (console && console.warn) console.warn("database needs an update ?!?");
                 alert("PV Mapper is open in another browser tab; please close this tab to continue.");
-                //db.close();
-                window.close();
             };
 
             // Do stuff with the database.
             ClientDB.db = db;
-            ClientDB.DBVersion = +ClientDB.db.version;
+            if (console && console.assert) console.assert(ClientDB.DBVersion === +ClientDB.db.version, "Warning: unexpected database version: " + ClientDB.db.version)
 
             if (console && console.log) console.log("Database 'PVMapperData' (version " + ClientDB.DBVersion + ") is open.");
 
             // Now, handle loading from our new database (or schedule it for handling, whenever pvMapper is ready)
             pvMapper.onReady(function () {
-                pvMapper.moduleManager.loadTools();
+                pvMapper.mainScoreboard.scoreLines.forEach(function (sc) {
+                    sc.loadConfiguration();
+                });
+
+                pvMapper.moduleManager.loadModulesFromBrowserConfig();
 
                 //load custom modules.
-                if (console && console.assert)
-                    console.assert(typeof (pvMapper.loadLocalModules) === "function",
-                        "Warning: MainToolbar isn't finished loading...!");
+                ClientDB.loadAllCustomKML();
+            });
+        }
 
-                if (typeof (pvMapper.loadLocalModules) === "function") {
-                    pvMapper.loadLocalModules();
-                }
-
-                //load configuration
-                if (console && console.assert) console.assert(!this.isScoreLoaded,
-                    "If this never happens, then I should delete isScoreLoaded - it server no purpose."); //TODO: delete isScoreLoaded !
-
-                if ((ClientDB.db != null) && (!this.isScoreLoaded)) {
-                    mainScoreboard.scoreLines.forEach(function (sc) {
-                        sc.loadConfiguration();
+        public static loadAllCustomKML() {
+            ClientDB.getAllCustomKMLName(function (moduleFiles) {
+                if ((moduleFiles) && (moduleFiles.length > 0)) {
+                    moduleFiles.forEach(function (fileName) {
+                        pvMapper.ClientDB.loadCustomKML(fileName, function (moduleObj) {
+                            if (moduleObj) {
+                                if (INLModules[moduleObj.customClass]) {
+                                    var moduleHandle: IModule = new INLModules[moduleObj.customClass](moduleObj.customData, moduleObj.customName, fileName);
+                                    pvMapper.moduleManager.addCustomModule(moduleHandle);
+                                }
+                            }
+                        });
                     });
-                    this.isScoreLoaded = true;
                 }
             });
         }
@@ -165,8 +158,8 @@ module pvMapper {
         public static saveCustomKML(moduleName: string, moduleClass: string, filename: string, kmlStream: string): any {
             if (ClientDB.db == null) return;
             try {
-                var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.PROJECT_STORE_NAME, "readwrite");
-                var store = txn.objectStore(ClientDB.PROJECT_STORE_NAME);
+                var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.KML_STORE_NAME, "readwrite");
+                var store = txn.objectStore(ClientDB.KML_STORE_NAME);
 
                 var request = store.get(filename);
                 request.onsuccess = function (evt): any {
@@ -189,8 +182,8 @@ module pvMapper {
         public static loadCustomKML(key: string, cbFn: ICallback): string {
             var kmlData: CustomModule;
             if (ClientDB.db == null) return;
-            var txn = ClientDB.db.transaction(ClientDB.PROJECT_STORE_NAME, "readonly");
-            var store = txn.objectStore(ClientDB.PROJECT_STORE_NAME);
+            var txn = ClientDB.db.transaction(ClientDB.KML_STORE_NAME, "readonly");
+            var store = txn.objectStore(ClientDB.KML_STORE_NAME);
             var request = store.get(key);
             request.onsuccess = function (evt): any {
                 if (request.result != undefined) {
@@ -206,7 +199,7 @@ module pvMapper {
 
         public static deleteCustomKML(key: string, fn: ICallback) {
             if (ClientDB.db == null) return;
-            var txn = ClientDB.db.transaction(ClientDB.PROJECT_STORE_NAME, "readwrite");
+            var txn = ClientDB.db.transaction(ClientDB.KML_STORE_NAME, "readwrite");
             txn.oncomplete = function (evt): any {
                 if (console && console.log) console.log("Transaction completed deleting module: " + key + " has been deleted from the database.")
             }
@@ -219,7 +212,7 @@ module pvMapper {
                 if (console && console.warn) console.warn("Transaction aborted module: " + key + " failed, cause: " + txn.error);
             }
 
-            var store = txn.objectStore(ClientDB.PROJECT_STORE_NAME);
+            var store = txn.objectStore(ClientDB.KML_STORE_NAME);
             var request = store.delete(key);
             request.onsuccess = function (evt): any {
                 pvMapper.displayMessage("Deleted " + key + " from the local browser.", "success");
@@ -240,8 +233,8 @@ module pvMapper {
             var kmlNames: string[] = new Array<string>();
             if (ClientDB.db == null) return;
             try {
-                var txn = ClientDB.db.transaction(ClientDB.PROJECT_STORE_NAME, "readonly");
-                var store = txn.objectStore(ClientDB.PROJECT_STORE_NAME);
+                var txn = ClientDB.db.transaction(ClientDB.KML_STORE_NAME, "readonly");
+                var store = txn.objectStore(ClientDB.KML_STORE_NAME);
                 store.openCursor().onsuccess = function (evt) {
                     var cursor = (<ExtendEventTarget>evt.target).result;
                     if (cursor) {
@@ -264,40 +257,31 @@ module pvMapper {
         //Open a indexedDb Store with a given storeName and get all records into an array and return it.  This function uses 
         //the HTML5 new Promise framework to better sync to the async of indexedDB process.  
         // NOTE: Promise framework is not support on all browsers, so there is a \Scripts\UI\extras\Project.js provided.
-        private static CUSTOM_STORE_NAME: string = "";
-
-        public static loadToolModules(storeName: string) {
-            ClientDB.CUSTOM_STORE_NAME = storeName;
-
+        public static loadToolModules() {
             return new Promise(function (resolve, reject) {
                 if (ClientDB.db == null) {
                     reject(Error("Database is not available or not ready."));
                     return;
                 }
-                if (storeName == undefined || storeName.length == 0) {
-                    reject(Error("Tried to open a store, but store name is not provided."));
-                    return;
-                }
 
                 try {
-                    //if the custom store is not yet exists, re-initCLientDB to force it to connect with higher version.
-                    if (!ClientDB.db.objectStoreNames.contains(ClientDB.CUSTOM_STORE_NAME)) {
-                        reject(Error("There is no store '" + ClientDB.CUSTOM_STORE_NAME + "' exists."));
+                    if (!ClientDB.db.objectStoreNames.contains(ClientDB.MODULES_STORE_NAME)) {
+                        reject(Error("There is no store '" + ClientDB.MODULES_STORE_NAME + "' exists."));
                     }
 
-                    var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.CUSTOM_STORE_NAME, 'readonly');
+                    var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.MODULES_STORE_NAME, 'readonly');
                     txn.oncomplete = function (evt): any {
-                        if (console && console.log) console.log("Transaction for '" + ClientDB.CUSTOM_STORE_NAME + "' completed.");
+                        if (console && console.log) console.log("Transaction for '" + ClientDB.MODULES_STORE_NAME + "' completed.");
                     }
                     txn.onerror = function (evt): any {
-                        if (console && console.error) console.error("Transaction for '" + ClientDB.CUSTOM_STORE_NAME + "' failed, cause: " + txn.error);
+                        if (console && console.error) console.error("Transaction for '" + ClientDB.MODULES_STORE_NAME + "' failed, cause: " + txn.error);
                     }
 
                     txn.onabort = function (evt): any {
-                        if (console && console.warn) console.warn("Transaction for '" + ClientDB.CUSTOM_STORE_NAME + "' aborted, cause: " + txn.error);
+                        if (console && console.warn) console.warn("Transaction for '" + ClientDB.MODULES_STORE_NAME + "' aborted, cause: " + txn.error);
                     }
 
-                    var store = txn.objectStore(ClientDB.CUSTOM_STORE_NAME);
+                    var store = txn.objectStore(ClientDB.MODULES_STORE_NAME);
 
                     if (store) {
                         var results: Array<any> = new Array<any>();
@@ -327,53 +311,25 @@ module pvMapper {
         //Save user preferences of tool modules to local database.  
         //storeName - the "table" name
         //tools - array of object [key,value] pair.
-        public static saveToolModules(storeName: string, tools: IModuleInfoJSON[]) {
-            ClientDB.CUSTOM_STORE_NAME = storeName;
+        public static saveToolModules(tools: IModuleInfoJSON[]) {
 
             if (ClientDB.db == null) {
                 console.log("Database is not available or not ready.");
                 return;
             }
-            if (storeName == undefined || storeName.length == 0) {
-                console.log("Tried to open a store, but store name is not provided.");
-                return;
-            }
 
             try {
-                //if the custom store is not yet exists, re-initCLientDB to force it to connect with higher version.
-                if (!ClientDB.db.objectStoreNames.contains(ClientDB.CUSTOM_STORE_NAME)) {
-                    ClientDB.DBVersion = +ClientDB.db.version + 1; //TODO: this is a terrible abuse of the version system. Terrible. Truly terrible.
-
-                    if (console && console.log) console.log("Upgrading database 'PVMapperData' to version " + ClientDB.DBVersion + ".");
-
-                    new Promise(function (resolve: ICallback, reject: ICallback) {
-                        ClientDB.initClientDB(true);
-                        var cycle = 0;
-                        var waitAsecond = function () {
-                            if (ClientDB.db == null) {
-                                ++cycle;
-                                setTimeout(waitAsecond, 1000);
-                            }
-                            else if (cycle == 10) {  //wait 10 seconds.
-                                reject(Error("Waiting for create database time out"));
-                            }
-                            else {
-                                resolve();
-                            }
-                        }
-                        waitAsecond();
-                    }).then(function onResolve() { },
-                    function onReject(Err) {
-                        if (console && console.error) console.error(Err);
-                    });
-                }
-
                 if (ClientDB.db == null) {
-                    console.log("There is no data store '" + ClientDB.CUSTOM_STORE_NAME + "' exists.");
+                    if (console && console.error) console.error("There is no data store '" + ClientDB.MODULES_STORE_NAME + "' exists.");
                     return;
                 }
-                var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.CUSTOM_STORE_NAME, 'readwrite');
-                var store = txn.objectStore(ClientDB.CUSTOM_STORE_NAME);
+
+                if (!ClientDB.db.objectStoreNames.contains(ClientDB.MODULES_STORE_NAME)) {
+                    if (console && console.error) console.error("There is no object store '" + ClientDB.MODULES_STORE_NAME + "'.");
+                }
+
+                var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.MODULES_STORE_NAME, 'readwrite');
+                var store = txn.objectStore(ClientDB.MODULES_STORE_NAME);
                 if (store) {
                     store.clear().onsuccess = function (event) {
                         tools.forEach(function (tool) {
@@ -406,93 +362,6 @@ module pvMapper {
         }
     }
 
-    //===========================================
-    export class SiteData {
-        id: string;
-        isActive: Boolean;
-        name: string;
-        description: string;
-        polygon: OpenLayers.Polygon;
-    }
-    // Class
-    //export class dataManager {
-    //    // Constructor
-    //    constructor() { }
-
-
-
-    //    public postScore(score: pvMapper.Score, rank: number, siteId: string, toolId: string) {
-    //        $.post("/api/SiteScore", { score: score, rank: rank, siteId: siteId, toolId: toolId },
-    //            function (data: any) {
-    //                // refresh scoreboard.
-    //                //Ext.getCmp('scoreboard-grid-id')).store.load();
-    //                //Ext.getCmp('scoreboard-grid-id').getView().refresh();
-    //                var grid: Ext.grid.IPanel = Ext.getCmp('scoreboard-grid-id');
-    //                grid.store.load();
-    //                grid.getView().refresh();
-    //            });
-    //    }
-
-    //    public getSite(siteId: string) {
-    //        return $.get("/api/ProjectSite/" + siteId);
-    //    }
-
-    //    public postSite(aName: string, aDesc: string, aPolygon: OpenLayers.Polygon) {
-    //        return $.post("/api/ProjectSite", {
-    //            name: aName,
-    //            description: aDesc,
-    //            isActive: true,
-    //            polygonGeometry: aPolygon
-    //        });
-    //    }
-
-    //    public updateSite(siteId: string, aName: string, aDesc: string, aPoly) {
-    //        //Only send the stuff that was passed into this function.
-    //        var data: SiteData = new SiteData();
-    //        data.id = siteId;
-    //        data.isActive = true;
-    //        if (aName) data.name = aName;
-    //        if (aDesc) data.description = aDesc;
-    //        if (aPoly) data.polygon = aPoly;
-
-    //        return $.ajax("/api/ProjectSite", {
-    //            data: data,
-    //            type: "PUT",
-    //            //done: function () {
-    //            //    pvMapper.displayMessage("The site changes were saved","Info");
-    //            //  },
-    //            //  fail: function () {
-    //            //    pvMapper.displayMessage("Unable to save the changes to the site. There was an error communicating with the database.","Warning");
-    //            //  }
-    //        });
-    //        //pvMapper.displayMessage("The site has been updated.","Info");
-    //    }
-
-    //    //Deletes a site from the datastore
-    //    public deleteSite(siteId: string) {
-    //        return $.ajax("/api/ProjectSite/" + siteId, {
-    //            data: {
-    //                Id: siteId,
-    //                type: "DELETE",
-    //                //done: function () {
-    //                //  pvMapper.displayMessage("The site was deleted from the database.", "Warning");
-    //                //},
-    //                //fail: function () {
-    //                //  pvMapper.displayMessage("Unable to delete the site. There was an error communicating with the database.", "warning");
-    //                //}
-    //            }
-    //        });
-    //    }
-
-    //    //Deletes all sites from the datastore
-    //    public deleteAllSites() {
-    //        return $.ajax("/api/ProjectSite/", {
-    //            data: {
-    //                type: "DELETE",
-    //            }
-    //        });
-    //    }
-
-    //}
+    ClientDB.initClientDB(); // connect to browser database
 }
 

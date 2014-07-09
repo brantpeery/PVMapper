@@ -104,7 +104,9 @@ module pvMapper {
             };
 
             this.deactivate = () => {
-                if (console && console.assert) console.assert(this.isActive);
+                if (!this.isActive) {
+                    if (console && console.warn) console.warn("Warning: attempting to deactivate an already inactive tool ID='" + this.id + "'");
+                }
 
                 if (typeof (options.deactivate) === "function")
                     options.deactivate.apply(this, arguments); // 'this' will refer to the ScoreLine during calls to options.deactivate().
@@ -342,7 +344,7 @@ module pvMapper {
         private putConfiguration = (): void => {
             if (ClientDB.db && !this.isGettingConfiguration) {
                 try {
-                    var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.CONFIG_STORE_NAME, "readwrite");
+                    var txn: IDBTransaction = ClientDB.db.transaction(ClientDB.SCORE_LINE_CONFIG_STORE_NAME, "readwrite");
 
                     txn.oncomplete = (evt): any => {
                         //if (console && console.log) console.log("Transaction completed: '" + this.title + "' has been saved to the database.")
@@ -358,7 +360,7 @@ module pvMapper {
                         pvMapper.displayMessage("Failed to save tool configuration to the local browser.", "error");
                     }
 
-                    var store = txn.objectStore(ClientDB.CONFIG_STORE_NAME);
+                    var store = txn.objectStore(ClientDB.SCORE_LINE_CONFIG_STORE_NAME);
 
                     var dbScore = this.toJSON();
 
@@ -399,8 +401,8 @@ module pvMapper {
         private getConfiguration = (): void => {
             if (ClientDB.db) {
                 this.isGettingConfiguration = true;
-                var txn = ClientDB.db.transaction(ClientDB.CONFIG_STORE_NAME, "readonly");
-                var store = txn.objectStore(ClientDB.CONFIG_STORE_NAME);
+                var txn = ClientDB.db.transaction(ClientDB.SCORE_LINE_CONFIG_STORE_NAME, "readonly");
+                var store = txn.objectStore(ClientDB.SCORE_LINE_CONFIG_STORE_NAME);
                 var key = this.id;
                 var request = store.get(key);
                 request.onsuccess = (evt): any => {

@@ -157,11 +157,10 @@ module pvMapper {
             if (console && console.assert) console.assert(pvMapper.isReady);
 
             if (this.isActive) {
-                if (console && console.warn) console.warn("Warning: attempted to activate an already active tool ID='" + this.id + "'");
-                return; // nothing to do here...
+                if (console && console.warn) console.warn("Warning: attempting to activate an already active module ID='" + this.id + "'");
             }
 
-            if (this.options && typeof (this.options.activate) === "function")
+            if (!this.isActive && this.options && typeof (this.options.activate) === "function")
                 this.options.activate();
 
             //Load the info for this module into the data model
@@ -186,11 +185,8 @@ module pvMapper {
         }
 
         public deactivate = () => {
-            if (console && console.assert) console.assert(this.isActive);
-
             if (!this.isActive) {
-                if (console && console.warn) console.warn("Warning: attempted to deactivate an already inactive tool ID='" + this.id + "'");
-                return; // nothing to do here...
+                if (console && console.warn) console.warn("Warning: attempting to deactivate an already inactive module ID='" + this.id + "'");
             }
 
             //Load the info for this module into the data model

@@ -71,9 +71,6 @@ var app = Ext.application({
 
         if (console) console.log('launching application');
 
-        //connect to local indexedDB database.
-        pvMapper.ClientDB.initClientDB();
-
         // set the theme for OpenLayers
         OpenLayers.ImgPath = "/Content/OpenLayers/default/img/";
 

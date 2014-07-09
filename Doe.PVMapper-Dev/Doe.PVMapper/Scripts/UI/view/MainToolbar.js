@@ -102,8 +102,8 @@ pvMapper.onReady(function () {
 
         var afile = evt.target.files[0];
 
-        if (afile.type === "application/vnd.google-earth.kmz" || hasExtension(afile.name, ".kmz") ||
-            afile.type === "application/vnd.google-earth.kml+xml" || hasExtension(afile.name, ".kml")) 
+        if (afile.type !== "application/vnd.google-earth.kmz" && !hasExtension(afile.name, ".kmz") &&
+            afile.type !== "application/vnd.google-earth.kml+xml" && !hasExtension(afile.name, ".kml")) 
         {
             Ext.MessageBox.alert("Unable to open file", "The file '" + afile.name + "' does not appear to be in a valid KML format.");
             return;
@@ -735,30 +735,6 @@ pvMapper.onReady(function () {
     //#endregion Custom info from KML
     //----------------------------------------------------------------------------------------
 
-    //load all saved uploaded KML modules.  This function is to be invoke by the scoreboard when everything is loaded.
-    //the "pvMapper.isLocalModuleLoaded" prevent a session from loading one too many times.
-    var isModulesLoading = false;
-    pvMapper.loadLocalModules = function () {
-        if (!pvMapper.isLocalModulesLoaded && !isModulesLoading) {
-            isModulesLoading = true;
-            pvMapper.ClientDB.getAllCustomKMLName(function (moduleFiles) {
-                if ((moduleFiles) && (moduleFiles.length > 0)) {
-                    moduleFiles.forEach(function (fileName, idx) {
-                        pvMapper.ClientDB.loadCustomKML(fileName, function (moduleObj) {
-                            if (moduleObj) {
-                                if (INLModules[moduleObj.customClass]) {
-                                    var moduleHandle = new INLModules[moduleObj.customClass](moduleObj.customData, moduleObj.customName, fileName);
-                                    pvMapper.moduleManager.addCustomModule(moduleHandle);
-                                }
-                                //TODO: move this into the module manager...
-                            }
-                        });
-                    });
-                }
-                pvMapper.isLocalModulesLoaded = true;
-            });
-        }
-    }
     //#endregion Save/load modules
     //----------------------------------------------------------------------------------------
 
