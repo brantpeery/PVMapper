@@ -95,7 +95,7 @@ module pvMapper {
                     pvMapper.displayMessage("Failed to activate module '" + mod.title + "'", "error");
                     if (console && console.error) console.error(ex);
 
-                    this._deactivateModule(mod);
+                    this.deactivateModule(mod);
                 }
                 this.saveTools();
             });
@@ -104,11 +104,14 @@ module pvMapper {
         // there is nothing special about this above or beyond calling module.deactivate(), except that it had some sensible error handling thrown in, and it saves module configs to the browser
         public deactivateModule = (mod: IModule) => {
             var registeredModule = this._registeredModulesByID[mod.id];
-            if (console && console.assert) console.assert(!!registeredModule, "Warning: attempting to deactivate a module (ID='" + mod.id + "') which isn't registered.");
+            var customModule = this._customModulesByID[mod.id];
+            if (console && console.assert) console.assert(!!registeredModule || !!customModule, "Warning: attempting to deactivate a module (ID='" + mod.id + "') which isn't registered.");
 
             if (registeredModule) {
                 this._deactivateModule(registeredModule);
                 return registeredModule;
+            } else if (customModule) {
+                this.removeCustomModule(customModule);
             } else if (typeof mod.deactivate === "function") {
                 this._deactivateModule(mod); // <-- custom modules aren't registered, but they can be deactivated. Handle them here as well.
             }
@@ -171,10 +174,9 @@ module pvMapper {
         }
 
         public fromJSON = (modules: IModuleInfoJSON[]) => {
-            if (modules) this.loadToolsFromConfig(modules);
+            if (modules) this.loadModulesFromConfig(modules);
         }
 
-        private toolStoreName: string = 'ToolModules';
         private saveTools_timeoutHandle = null;
         public saveTools() {
             if (typeof this.saveTools_timeoutHandle === "number") {
@@ -186,23 +188,23 @@ module pvMapper {
             this.saveTools_timeoutHandle = window.setTimeout(() => {
                 this.saveTools_timeoutHandle = null;
                 var tools = this.toJSON();
-                ClientDB.saveToolModules(this.toolStoreName, tools);
+                ClientDB.saveToolModules(tools);
             }, 7000);
         }
 
         //Instantiate the registered tool modules whose isActive is true.  isActive is check against user's configuration first.  
         //It also load the module from server if it has not been loaded.
-        public loadTools = () => {
+        public loadModulesFromBrowserConfig = () => {
             //The openStore function returns a <Promise> object which will call our onOpened or error delegate 
             //functions when it finishes processing database inquery.  The "bindTo" will force the onSuccess to be 
             //execute in the DataManager domain, just so the 'this' always refer to our class here.
-            ClientDB.loadToolModules(this.toolStoreName).then(
+            ClientDB.loadToolModules().then(
                 (arrObj: IModuleInfoJSON[]) => {
-                    this.loadToolsFromConfig(arrObj);
+                    this.loadModulesFromConfig(arrObj);
                 },
                 (err) => {
                     console.warn("Opening database store failed, cause: " + err.message);
-                    this.loadToolsFromConfig([]);
+                    this.loadModulesFromConfig([]);
                     //this.loadModuleScripts();
                 }
             );
@@ -217,7 +219,7 @@ module pvMapper {
 
         //Synchronize the register of user's preference modules.  If no user preferences saved,
         //load all modules available on the server through a pvClient.getIncludeModules function.
-        private loadToolsFromConfig = (savedModuleConfig: IModuleInfoJSON[]) => {
+        private loadModulesFromConfig = (savedModuleConfig: IModuleInfoJSON[]) => {
             try {
                 // fetch the list of modules available on the server
                 var serverModuleUrls = pvClient.getIncludeModules();
