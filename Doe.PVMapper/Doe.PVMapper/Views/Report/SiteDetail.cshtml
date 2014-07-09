@@ -198,11 +198,11 @@
             //panel.doComponentLayout();
 
             //Update the maps
-            maps.map(function (value, idx) {
+            maps.forEach(function (value, idx) {
                 showMap(value.div, value.data);
             });
 
-            graphs.map(function (value, idx) {
+            graphs.forEach(function (value, idx) {
                 loadGraph(value.div, value.options, value.scoreValue);
             });
         };

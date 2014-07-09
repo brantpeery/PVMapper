@@ -89,7 +89,7 @@
             html: '<p>The Report is Rendering...</p>',
             listeners: {
                 afterlayout: function () {
-                    maps.map(function (value, idx) {
+                    maps.forEach(function (value, idx) {
                         showMap(value.div, value.data);
                     });
                 }

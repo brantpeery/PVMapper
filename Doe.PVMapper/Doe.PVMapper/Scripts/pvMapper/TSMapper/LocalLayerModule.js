@@ -2,13 +2,20 @@
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Tools.ts" />
-/// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 var INLModules;
 (function (INLModules) {
-    var LocalLayerModule = (function () {
-        function LocalLayerModule() {
+    var LocalLayerModule = (function (_super) {
+        __extends(LocalLayerModule, _super);
+        function LocalLayerModule(kmlRawString, toolName, kmlFileName) {
             var _this = this;
+            _super.call(this);
             //private starRatingHelper: pvMapper.IStarRatingHelper = new pvMapper.StarRatingHelper({
             //    defaultStarRating: 2,
             //    noCategoryRating: 4,
@@ -16,154 +23,131 @@ var INLModules;
             //});
             //private localUrl = "";
             this.localLayer = null;
-            this.localFormat = null;
+            //private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
             //============================================================
-            // blob is the file attribute and file handle.
-            this.moduleClass = /(\w+)\(/.exec((this).constructor.toString())[1];
-            this.moduleName = null;
-            this.title = "Custom Distance Tool";
-            this.queuedScores = [];
-            var myModule = new pvMapper.Module({
-                id: "LocalLayerModule",
-                author: "Leng Vang, INL",
-                version: "0.1.ts",
+            //public moduleClass: string = /(\w+)\(/.exec((<any>this).constructor.toString())[1];
+            this.sourceDataID = null;
+            this.moduleClass = "LocalLayerModule";
+            this.category = "Custom";
+            this.author = "Leng Vang, INL";
+            this.version = "0.1.ts";
+            this.readTextFile = function (kmlString, kmlName, kmlFile) {
+                var kml_projection = new OpenLayers.Projection("EPSG:4326");
+                var map_projection = new OpenLayers.Projection("EPSG:3857");
+
+                var localFormat = new OpenLayers.Format.KML({
+                    extractStyles: true,
+                    extractAttributes: true,
+                    internalProjection: map_projection,
+                    externalProjection: kml_projection
+                });
+
+                _this.localLayer = _this.localLayer || new OpenLayers.Layer.Vector(kmlName || "KML File", {
+                    strategies: OpenLayers.Strategy.Fixed(),
+                    style: {
+                        fillColor: "darkred", strokeColor: "red", strokeWidth: 5,
+                        strokeOpacity: 0.5, pointRadius: 5
+                    }
+                });
+
+                _this.localLayer.setVisibility(false);
+                _this.localLayer.sourceModule = _this;
+
+                var feature = localFormat.read(kmlString);
+                _this.localLayer.addFeatures(feature);
+
+                var isOk = pvMapper.map.addLayer(_this.localLayer);
+            };
+            //============================================================
+            this.updateScore = function (score) {
+                var closestFeature = null;
+                var minDistance = Number.MAX_VALUE;
+
+                if (_this.localLayer.features) {
+                    for (var i = 0; i < _this.localLayer.features.length; i++) {
+                        if (_this.localLayer.features[i].geometry !== null) {
+                            var distance = score.site.geometry.distanceTo(_this.localLayer.features[i].geometry);
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                closestFeature = _this.localLayer.features[i];
+                            }
+                        }
+                    }
+                }
+                if (closestFeature !== null) {
+                    var distanceInFt = minDistance * 3.28084;
+                    var distanceInMi = minDistance * 0.000621371;
+                    var distanceString = distanceInMi > 10.0 ? distanceInMi.toFixed(1) + " mi" : distanceInMi > 0.5 ? distanceInMi.toFixed(2) + " mi" : distanceInMi.toFixed(2) + " mi (" + distanceInFt.toFixed(0) + " ft)";
+
+                    var toNearestString = " to nearest feature";
+
+                    var messageString = distanceInFt > 1 ? distanceString + toNearestString + "." : "0 mi" + toNearestString + " (feature is on site).";
+
+                    score.popupMessage = messageString;
+                    score.updateValue(distanceInMi);
+                } else {
+                    score.popupMessage = "No features loaded.";
+                    score.updateValue(Number.NaN);
+                }
+            };
+
+            this.sourceDataID = kmlFileName;
+            this.id = "KmlProximityModule." + this.sourceDataID; // multiple instances of this module will exist... one for each kml file loaded... sigh.
+
+            this.title = toolName + " Module"; // this can change, and uniqueness won't be enforced.
+            this.description = "Calculates the distance to the nearest feature loaded from '" + kmlFileName + "'.";
+
+            this.readTextFile(kmlRawString, toolName, kmlFileName);
+
+            this.init({
                 activate: function () {
-                    _this.addMap();
+                    if (!_this.localLayer)
+                        throw new Error("Error: KML file has been deleted, or was not properly initialized.");
                 },
                 deactivate: function () {
-                    _this.removeMap();
+                    //TODO: this isn't undoable, which violates the assumptions we have about pvMapper Modules.
+                    pvMapper.ClientDB.deleteCustomKML(_this.sourceDataID, function (isSuccessful) {
+                        if (_this.localLayer) {
+                            _this.localLayer.destroy();
+                            _this.localLayer = null;
+                        }
+                    });
                 },
-                destroy: null,
-                init: null,
-                setModuleName: function (name) {
-                    _this.moduleName = name;
-                },
-                getModuleName: function () {
-                    return _this.moduleName;
-                },
-                scoringTools: [
-                    {
-                        activate: null,
-                        deactivate: null,
-                        destroy: null,
-                        init: null,
-                        title: "Custom Distance Tool",
-                        category: "Custom",
-                        description: "Calculates the distance to the nearest feature loaded from a KML file.",
-                        longDescription: '<p>Calculates the distance to the nearest feature loaded from a KML file.</p>',
-                        //onScoreAdded: (e, score: pvMapper.Score) => {
-                        //},
+                //setModuleName: (name: string) => {
+                //    this.moduleName = name;
+                //},
+                //getModuleName: () => {
+                //    return this.moduleName;
+                //},
+                scoringTools: [{
+                        activate: function () {
+                            if (!_this.localLayer)
+                                throw new Error("Error: KML file has been deleted, or was not properly initialized.");
+                            pvMapper.map.addLayer(_this.localLayer);
+                        },
+                        deactivate: function () {
+                            if (!_this.localLayer)
+                                throw new Error("Error: KML file has been deleted, or was not properly initialized.");
+                            pvMapper.map.removeLayer(_this.localLayer, false);
+                        },
+                        id: "KmlProximityTool." + this.sourceDataID,
+                        title: toolName,
+                        category: this.category,
+                        description: this.description,
+                        longDescription: null,
                         onSiteChange: function (e, score) {
                             _this.updateScore(score);
                         },
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 10000, 0, "mi", "Distance to nearest feature", "Score", "Prefer sites closer to the nearest feature.")
-                        },
-                        setModuleName: function (name) {
-                            _this.moduleName = name;
-                        },
-                        getModuleName: function () {
-                            return _this.moduleName;
-                        },
-                        getTitle: function () {
-                            return _this.title;
-                        },
-                        setTitle: function (newTitle) {
-                            _this.title = newTitle;
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 1000, 0, "mi", "Distance to nearest feature", "Score", "Prefer sites closer to the nearest feature in '" + kmlFileName + "'.")
                         },
                         weight: 10
-                    }
-                ],
-                infoTools: null
+                    }]
             });
         }
-        //private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
-        LocalLayerModule.prototype.removeLocalLayer = function () {
-            this.localLayer.destroy();
-        };
-
-        LocalLayerModule.prototype.readTextFile = function (kmlString, kmlName, kmlFile) {
-            this.moduleName = kmlFile;
-            this.title = kmlName;
-            var kml_projection = new OpenLayers.Projection("EPSG:4326");
-            var map_projection = new OpenLayers.Projection("EPSG:3857");
-
-            this.localFormat = this.localFormat || new OpenLayers.Format.KML({
-                extractStyles: true,
-                extractAttributes: true,
-                internalProjection: map_projection,
-                externalProjection: kml_projection
-            });
-
-            this.localLayer = this.localLayer || new OpenLayers.Layer.Vector(kmlName || "KML File", {
-                strategies: OpenLayers.Strategy.Fixed(),
-                style: {
-                    fillColor: "darkred",
-                    strokeColor: "red",
-                    strokeWidth: 5,
-                    strokeOpacity: 0.5,
-                    pointRadius: 5
-                }
-            });
-
-            this.localLayer.setVisibility(false);
-            var feature = this.localFormat.read(kmlString);
-            this.localLayer.addFeatures(feature);
-            var isOk = pvMapper.map.addLayer(this.localLayer);
-
-            var queuedScore = null;
-            while (queuedScore = this.queuedScores.pop()) {
-                this.updateScore(queuedScore);
-            }
-        };
-
-        //============================================================
-        LocalLayerModule.prototype.addMap = function () {
-        };
-
-        LocalLayerModule.prototype.removeMap = function () {
-            pvMapper.map.removeLayer(this.localLayer, false);
-        };
-
-        LocalLayerModule.prototype.updateScore = function (score) {
-            if (this.localLayer == null) {
-                if (this.queuedScores.indexOf(score) < 0)
-                    this.queuedScores.push(score);
-                return;
-            }
-
-            var closestFeature = null;
-            var minDistance = Number.MAX_VALUE;
-
-            if (this.localLayer.features) {
-                for (var i = 0; i < this.localLayer.features.length; i++) {
-                    if (this.localLayer.features[i].geometry !== null) {
-                        var distance = score.site.geometry.distanceTo(this.localLayer.features[i].geometry);
-                        if (distance < minDistance) {
-                            minDistance = distance;
-                            closestFeature = this.localLayer.features[i];
-                        }
-                    }
-                }
-            }
-            if (closestFeature !== null) {
-                var distanceInFt = minDistance * 3.28084;
-                var distanceInMi = minDistance * 0.000621371;
-                var distanceString = distanceInMi > 10.0 ? distanceInMi.toFixed(1) + " mi" : distanceInMi > 0.5 ? distanceInMi.toFixed(2) + " mi" : distanceInMi.toFixed(2) + " mi (" + distanceInFt.toFixed(0) + " ft)";
-
-                var toNearestString = " to nearest feature";
-
-                var messageString = distanceInFt > 1 ? distanceString + toNearestString + "." : "0 mi" + toNearestString + " (feature is on site).";
-
-                score.popupMessage = messageString;
-                score.updateValue(distanceInMi);
-            } else {
-                score.popupMessage = "No features loaded.";
-                score.updateValue(Number.NaN);
-            }
-        };
         return LocalLayerModule;
-    })();
+    })(pvMapper.Module);
     INLModules.LocalLayerModule = LocalLayerModule;
 })(INLModules || (INLModules = {}));
+//# sourceMappingURL=LocalLayerModule.js.map

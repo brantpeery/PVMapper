@@ -26,19 +26,29 @@ declare module OpenLayers {
 
 
     interface Util {
-        getParameterString(any): string;
+        getParameterString(params: any): string;
     }
+
+    var Util: Util;
 
     interface SiteFeature extends FVector {
         attributes: Attributes;
         site: any;
     }
 
+    export var SiteFeature: {
+        new (attr?: Attributes): SiteFeature;
+        prototype: SiteFeature;
+    }
+
     interface Collection extends Geometry {
         components: Geometry[];
         componentTypes: string[];
+
+        constructor(components: Geometry[]);
+
         destroy();
-        clone(): Collection;
+        //clone(): Geometry;
         getComponentsString(): string;
         calculateBounds();
         addComponents(components: Geometry[]);
@@ -48,12 +58,12 @@ declare module OpenLayers {
         getLength(): number;
         getArea(): number;
         getGeodesicArea(projection: Projection): number;
-        getCentroid(weighted?: Boolean): Point;
+        getCentroid(): Point;
         getGeodesicLength(projection: Projection): number;
         move(x: number, y: number);
         rotate(angle: number, origin: Point);
         resize(scale: number, origin: Point, ratio: number): Geometry;
-        distanceTo(geometry: Geometry): number;
+        //distanceTo(geometry: Geometry): number;
         distanceTo(geometry: Geometry, options?: Boolean): number;
         equals(geometry: Geometry): Boolean;
         transform(source: Projection, dest: Projection): Geometry;
@@ -61,9 +71,15 @@ declare module OpenLayers {
         getVertices(nodes: Boolean): Geometry[];
     }
 
-    interface Polygon extends Geometry, Collection {
+    interface Polygon extends Collection, Geometry {
         compontTypes: string[];
         getArea(): number;
+
+        //clone(): {clone(): Collection; clone(): Geometry}
+
+        constructor(components?: Geometry[]);
+        constructor(components: LinearRing);
+
         getGeodesicArea(projection: Projection): number;
         containsPoint(point: Point): Boolean;
         //containsPoint(point: Point): number;   //this break in Typescript 0.9.1 ==> "Overloads cannot differ only by return type".
@@ -179,7 +195,7 @@ declare module OpenLayers {
         containsLonLat(ll: LonLat, inclusive?: Boolean): Boolean;
         containsLonLat(ll: LonLat, worldBounds?: Bounds): Boolean;
         containsPixel(px: Pixel, inclusive: Boolean): Boolean;
-        contains(x: number, y: number, inclusive: Boolean): Boolean;
+        contains(x: number, y: number, inclusive?: Boolean): Boolean;
         intersectsBounds(bounds: Bounds, inclusive?: Boolean): Boolean;
         intersectsBounds(bounds: Bounds, worldBounds?: Bounds): Boolean;
         containsBounds(bounds: Bounds, partial: Boolean, inclusive: Boolean): Boolean;
@@ -238,7 +254,7 @@ declare module OpenLayers {
         extendBounds(newBounds: Bounds);
         getBounds(): Bounds;
         calculateBounds();
-        distanceTo(geometry: Geometry): number;
+        //distanceTo(geometry: Geometry): number;
         distanceTo(geometry: Geometry, options?: any): number;
         getVertices(nodes: Boolean): Geometry[];
         atPoint(lonlat: LonLat, toleranceLon: number, toleranceLat: number): Boolean;
@@ -252,6 +268,54 @@ declare module OpenLayers {
         segmentsIntersect(seg1: Segment, seg2: Segment, point: Boolean): Boolean;
         segmentsIntersect(seg1: Segment, seg2: Segment, tolerance: number): Point;
         distanceToSegment(point: Point, segment: Segment): Point;
+    }
+
+    var Geometry: {
+        new (): Geometry;
+        (): Geometry;
+        protytype: Geometry;
+        Collection: {
+            new (components: Geometry[]): Collection;
+            (components: Geometry[]): Collection;
+            prototype: Collection;
+        }
+        Curve: {
+            new (point: Point): Curve;
+        }
+        Point: {
+            new (x: number, y: number): Point;
+            prototype: Point;
+        }
+        LinearRing: {
+            new (points: Point[]): LinearRing;
+            (points: Point[]): LinearRing;
+            prototype: LinearRing;
+        }
+        LineString: {
+            new (points: Point[]): LineString;
+            (points: Point[]): LineString;
+            prototype: LineString;
+        }
+        MultiLineString: {
+            new (components: LineString[]): MultiLineString;
+            (components: LineString[]): MultiLineString;
+            prototype: MultiLineString;
+        }
+        MultiPoint: {
+            new (components: Point[]): MultiPoint;
+            (components: Point[]): MultiPoint;
+            prototype: MultiPoint;
+        }
+        MultiPolygon: {
+            new (components: Polygon[]): MultiPolygon;
+            (components: Polygon[]): MultiPolygon;
+            prototype: MultiPolygon;
+        }
+        Polygon: {
+            new (components: LinearRing[]): Polygon;
+            (components: LinearRing[]): Polygon;
+            prototype: Polygon;
+        }
     }
 
     interface Projection {
@@ -1118,7 +1182,7 @@ declare module OpenLayers {
         getZooom(): number;
         pan(dx: number, dy: number, options: any);
         panTo(lonlat: LonLat);
-        setCenter(lonlat: LonLat, zoom: number);//, dragging?: Boolean, forceZoomChange?: Boolean);
+        setCenter(lonlat: LonLat, zoom: number, dragging?: Boolean, forceZoomChange?: Boolean);
         moveByPx(dx: number, dy: number);
         adjustZoom(zoom: number): number;
         getMinZoom(): number;
@@ -1210,7 +1274,7 @@ declare module OpenLayers {
         prototype: Events;
     }
 
-  interface Layer {
+    interface Layer {
         //properties
         id: string;
         name: string;
@@ -1361,11 +1425,11 @@ declare module OpenLayers {
     }
 
 
-  interface HTTPRequestLayer extends Layer {
+    interface HTTPRequest extends Layer {
         //TODO: flush out the rest.
     }
 
-    interface GridLayer extends HTTPRequestLayer {
+    interface Grid extends HTTPRequest {
         narrowToGridLayer(gridLayer: JSObject);
         setBuffer(buffer: number);
         setNumLoadingTile(numLoadingTiles: number);
@@ -1378,7 +1442,7 @@ declare module OpenLayers {
 
     }
 
-    interface ArcGIS93Rest extends GridLayer {
+    interface ArcGIS93Rest extends Grid {
         DEFAULT_PARAMS: Object;
         isBaseLayer: Boolean;
         narrowToArcGIS93Rest(arcgis93Rest: JSObject);
@@ -1394,10 +1458,10 @@ declare module OpenLayers {
         epsgOverride: string;
     }
 
-    interface Grid {
-        getGridBounds(); // deprecated.
-        getTilesBounds();
-    }
+    //interface Grid extends GridLayer {
+    //    getGridBounds(); // deprecated.
+    //    getTilesBounds();
+    //}
 
     interface XYZ extends Grid {
         isBaseLayer: boolean;
@@ -1444,27 +1508,26 @@ declare module OpenLayers {
             prototype: Vector;
         };
         WMS: {
-            new (name: string, url: string, params: any, options?: any): any;
+            new (name: string, url: string, params: any, options?: any): WMS;
             prototype: WMS;
         }
         ArcGIS93Rest: {
-            new (name: string, url: string[], params: any): any;
-            new (name: string, url: string, options: any, params?: any): any;
+            new (name: string, url: string[], params: any): ArcGIS93Rest;
+            new (name: string, url: string, options: any, params?: any): ArcGIS93Rest;
             prototype: ArcGIS93Rest;
         }
         XYZ: {
-            new (name: string, url: string, options: any): any;
+            new (name: string, url: string, options: any): XYZ;
             prototype: XYZ;
         }
         //ArcGIS93Rest(name: string, url: string[], params: any):any;
         //ArcGIS93Rest(name: string, url: string, options: any, params?: any):any;
         //ArcGIS93Rest(name: string, url: string[], params: WMSParams, layerParams: WMSOptions ): any;
         //ArcGIS93Rest(name: string, url: string, params: WMSParams, options: ArcGIS93RestOptions): any;
-        GridLayer(gridLayer: JSObject): any;
-        GridLayer(name: string, url: string, params: WMSParams);
-        GridLayer(name: string, url: string, params: WMSParams, options: GridLayerOptions);
         Grid: {
-            (): Grid;
+            new (): Grid;
+            new (name: string, url: string, params: WMSParams): Grid;
+            new (name: string, url: string, params: WMSParams, options: GridLayerOptions): Grid;
             prototype: Grid;
         }
         OSM: {
@@ -1474,26 +1537,83 @@ declare module OpenLayers {
         }
     }
 
-  interface Filter {
+    interface Filter {
         destroy();
         evaluate(context: any): Boolean;
         clone(): Filter;
         toString(): string;
     }
 
+    interface Comparison extends Filter {
+        type: string;
+        property: string;
+        value: number;
+        lowerBoundary: number;
+        upperBoundary: number;
+
+        value2regex(wildCard: string, singleChar: string, escapeChar: string): string;
+    }
+
     var Filter: {
         new (options?: any): Filter;
         (options?: any): Filter;
         prototype: Filter;
+
+        Comparison: {
+            new (options?: any): Comparison;
+
+            EQUAL_TO: string;
+            NOT_EQUAL_TO: string;
+            LESS_THAN: string;
+            GREATER_THAN: string;
+            LESS_THAN_OR_EQUAL_TO: string;
+            GREATER_THAN_OR_EQUAL_TO: string;
+            BETWEEN: string;
+            LIKE: string;
+        }
     }
 
-  interface StyleMap {
-        styles: any;
+    interface StyleMap {
+        styles: {
+            [intent: string]: Style;
+            default: Style;
+            select: Style;
+            temporary: Style;
+        };
         extendDefault: Boolean;
 
         destroy();
         createSymobolizer(feature: Feature, intent: string): any;
         addUniqueValueRules(renderIntent: string, property: string, symbolizers: any, content: any);
+    }
+
+    var StyleMap: {
+        new (): StyleMap;
+        new (style: any): StyleMap;
+        new (style: any, options: any): StyleMap;
+    }
+
+    interface Rule {
+        id: string;
+        name: string;
+        title: string;
+        description: string;
+        context: any;
+        filter: Filter;
+        elseFilter: boolean;
+        symbolizer: any;
+        symbolizers: number;
+        minScaleDenominator: any;
+        maxScaleDenominator: any;
+
+        destroy();
+        evaluate(feature: Feature): boolean;
+        getContext(feature: Feature): any;
+        clone(): Rule;
+    }
+
+    var Rule: {
+        new (options?: any): Rule;
     }
 
     interface Strategy {
@@ -1592,43 +1712,140 @@ declare module OpenLayers {
         write(obj: any, pretty: boolean): string;
     }
 
-    interface KML {
+    interface ParseGeometry {
+        point(node: DOMElement): Point;
+        linestring(node: DOMElement): LineString;
+        polygon(node: DOMElement): Polygon;
+        multigeometry(node: DOMElement): Collection;
+    }
+
+    interface BuildGeometry {
+        point(geometry: DOMElement): DOMElement;
+        multipoint(geometry: Point): DOMElement;
+        linestring(geometry: LineString): DOMElement;
+        multilinestring(geometry: Point): DOMElement;
+        linearring(geometry: LinearRing): DOMElement;
+        polygon(geometry: Polygon): DOMElement;
+        multipolygon(geometry: Point): DOMElement;
+        collection(geometry: Collection): DOMElement;
+        buildCoordinatesNode(geometry: Geometry): DOMElement;
+        buildCoordinates(point: Point): string;
+        buildExtendedData(attributes: any): DOMElement;
+    }
+
+
+    interface KML extends XML {
+        namespaces: any;
         kmlns: string;
         placemarksDesc: string;
         foldersName: string;
         foldersDesc: string;
         extractAttributes: boolean;
         kvpAttributes: boolean;
+        extractStyles: boolean;
         extractTracks: boolean;
         trackAttributes: any[];
+        internalns: string;
+        features: FVector[];
+        styles: any[];
+        styleBaseUrl: string;
+        feteched: any;
         maxDepth: number;
+        readers: any;
 
         read(data: string): FVector[];
+        parseData(data: string, options: any): FVector[];
+        parseLinks(nodes: DOMElement[], options: any);
+        fetchLink(href: string);
+        parseStyles(nodes: DOMElement[], options: any);
+        parseKmlColor(kmlcolor: string): any;
+        parseStyle(node: DOMElement);
+        parseStyleMaps(nodes: DOMElement[], options: any);
+        parseFeatures(nodes: DOMElement[], options: any);
+        parseFeature(node: DOMElement): FVector;
+        getStyle(styleUrl: string, options: any): any;
+        parseAttributres(node: DOMElement): any;
+        parseExtendedData(node: DOMElement): any;
+        parseProperty(xmlNode: DOMElement, namespace: string, tagName: string): string;
         write(features: FVector[]): string;
+        write(node: DOMElement): string; //extends override
+        createFolderXML(): DOMElement;
+        createPlacemarkXML(feature: FVector): DOMElement;
+        buildGeometryNode(geometry: Geometry): DOMElement;
+        buildCoordinatesNode(geometry: Geometry): DOMElement;
+        buildCoordinates(point: Point): string;
+        buildExtentedData(attributes: any): DOMElement;
+
+        parseGeometry: ParseGeometry;
+        buildGeometry: BuildGeometry;
     }
 
 
-    interface GPX {
+    interface GPX extends XML {
         defaultDesc: string;
         extractWaypoints: boolean;
         extractTracks: boolean;
         extractRoutes: boolean;
         extractAttributes: boolean;
+        namespaces: any;  //Mapping of namespaces aliases to namespaces URIs.
+        schemaLocation: string;
         creator: string;
 
+        read(data: string): any;
         read(doc: Element): FVector[];
-        write(features: FVector[], options?: any);
+        extractSegment(segment: DOMElement, segmentType: string): LineString;
+        parseAttributes(node: DOMElement): any;
+        write(object: any): string;
+        write(features: FVector[], meata: any);
+        buildMetadataNode(metadata: any): DOMElement;
+        buildFeatureNode(feature: FVector): DOMElement;
+        buildTrkSegNode(geometry: Geometry): DOMElement;
+        buildTrkPtNode(point: Point): DOMElement;
+        buildWptNode(geometry: Point): DOMElement;
+        appendAttributesNode(node: DOMElement, feature: FVector);
     }
-    interface JSON {
+
+    interface JSONSerialize {
+        object(obj: any): string;
+        array(arr: any[]): string;
+        string(str: string): string;
+        number(num: number): string;
+        boolean(boo: boolean): string;
+        object(date: Date): string;
+
+    }
+
+
+    interface JSON extends Format {
         indent: string;
         space: string;
         newline: string;
+        level: number;
+        pretty: boolean;
+        nativeJSON: boolean;
+
+        read(data: string): any;  //Override from Format.
         read(json: string, filter: ICallback): any;
+        write(object: any): string;  //override from Format
         write(value: string, pretty: boolean): string;
+        writeIndent(): string;
+        writeNewLine(): string;
+
+        serialize: JSONSerialize;
     }
 
-    interface XML {
+    interface XML extends Format {
+        namespaces: any;
+        namespaceAlias: any;
+        defaultPrefix: string;
+        readers: any;
+        writers: any;
+        xmldom: any; //  the actual type is XMLDom -- not defined any where in OpenLayers.
+        document: XMLDocument;
+
+
         destroy();
+        setNameSpace(alias: string, uri: string);
         write(node: DOMElement): string;
         createElementNS(uri: string, name: string): Element;
         createDocumentFragment(): Element;
@@ -1641,8 +1858,16 @@ declare module OpenLayers {
         contentType(node: DOMElement): number;
         hasAttributeNS(node: Element, uri: string, name: string): boolean;
         setAttributeNS(node: Element, uri: string, name: string, value: string);
-        getChildEl(node: DOMElement, name: string, uri: string): DOMElement;
+        createElementNSPlus(name: string, options?: any): Element;
+        setAttributes(node: Element, obj: any);
+        readNode(node: DOMElement, obj: any): any;
+        readChildNodes(node: DOMElement, obj: any): any;
+        writeNode(name: string, obj: any, parent: DOMElement): DOMElement;
+        getChildEl(node: DOMElement, name?: string, uri?: string): DOMElement;
+        getNextEl(node: DOMElement, name?: string, uri?: string): DOMElement;
+        getThisOrNextEl(node: DOMElement, name?: string, uri?: string)
         lookupNamespaceURI(node: DOMElement, prefix: string): string;
+        getXMLDoc(): XMLDocument;
     }
 
     var Format: {
@@ -1738,7 +1963,7 @@ declare module OpenLayers {
         filterToParams(filter: Filter): any;
         read(options?: any): Response;
         create(features: FVector[], options?: any): Response;
-        create(features: FVector, options?: any): Response;
+        //create(features: FVector, options?: any): Response;
         update(feature: FVector, options?: any): Response;
         delete(feature: FVector, options?: any): Response;
         commit(features: FVector[], options?: any): Response;
@@ -1876,6 +2101,11 @@ declare module OpenLayers {
         onFeatureInsert: (feature: FVector) => any;
         preFeatureInsert: (feature: FVector) => any;
         getDataExtent(): Bounds;
+
+
+        //Custom properties.
+        isReferenceLayer: boolean;
+        //sourceModule: pvMapper.Module;
     }
 
     var Vector: {
@@ -2026,49 +2256,64 @@ declare module OpenLayers {
     }
 
     interface Style {
-        fill: Boolean;
-        fillColor: string;
-        fillOpacity: number;
-        stroke: Boolean;
-        strokeColor: string;
-        strokeOpacity: number;
-        strokeWidth: number;
-        strokeLinecap: string;
-        strokeDashstyle: string;
-        graphic: Boolean;
-        pointRadius: number;
-        pointerEvents: string;
-        cursor: string;
-        externalGraphic: string;
-        graphicWidth: number;
-        graphicHeight: number;
-        graphicOpacity: number;
-        graphicXOffset: number;
-        graphicYOffset: number;
-        rotation: number;
-        graphicZIndex: number;
-        graphicTitle: string;
-        backgroundGraphic: string;
-        backgroundGraphicZIndex: number;
-        backgroundXOffset: number;
-        backgroundYOffset: number;
-        backgroundHeight: number;
-        backgroundWidth: number;
-        label: string;
-        labelAlign: string;
-        labelXOffset: number;
-        labelYOffset: number;
-        labelSelect: Boolean;
-        labelOutlineColor: string;
-        labelOutlineWidth: number;
-        fontColor: string;
-        fontOpacity: number;
-        fontFamily: string;
-        fontSize: string;
-        fontStyle: string;
-        fontWeight: string;
-        display: string;
+        name: string;
+        layerName: string;
+        isDefault: boolean;
+        context: any;
 
+        //fill: Boolean;
+        //fillColor: string;
+        //fillOpacity: number;
+        //stroke: Boolean;
+        //strokeColor: string;
+        //strokeOpacity: number;
+        //strokeWidth: number;
+        //strokeLinecap: string;
+        //strokeDashstyle: string;
+        //graphic: Boolean;
+        //pointRadius: number;
+        //pointerEvents: string;
+        //cursor: string;
+        //externalGraphic: string;
+        //graphicWidth: number;
+        //graphicHeight: number;
+        //graphicOpacity: number;
+        //graphicXOffset: number;
+        //graphicYOffset: number;
+        //rotation: number;
+        //graphicZIndex: number;
+        //graphicTitle: string;
+        //backgroundGraphic: string;
+        //backgroundGraphicZIndex: number;
+        //backgroundXOffset: number;
+        //backgroundYOffset: number;
+        //backgroundHeight: number;
+        //backgroundWidth: number;
+        //label: string;
+        //labelAlign: string;
+        //labelXOffset: number;
+        //labelYOffset: number;
+        //labelSelect: Boolean;
+        //labelOutlineColor: string;
+        //labelOutlineWidth: number;
+        //fontColor: string;
+        //fontOpacity: number;
+        //fontFamily: string;
+        //fontSize: string;
+        //fontStyle: string;
+        //fontWeight: string;
+        //display: string;
+
+        destroy();
+        addRules(rules: Rule[]);
+        setDefaultStyle(style: any);
+        clone(): Style;
+    }
+
+    var Style: {
+        new (): Style;
+        new (style: any): Style;
+        new (style: any, options: any): Style;
     }
 
     //NOTE: FVector is for all features related object.  There are a 'Vector' class which is use for layer only.
@@ -2109,8 +2354,8 @@ declare module OpenLayers {
         prototype: Feature;
 
         Vector: {
-            new (geometry: Geometry, attributes: any, style: any): FVector;
-            (geometry: Geometry, attributes: any, style: any): FVector;
+            new (geometry: Geometry, attributes?: any, style?: any): FVector;
+            (geometry: Geometry, attributes?: any, style?: any): FVector;
             prototype: FVector;
         };
     }

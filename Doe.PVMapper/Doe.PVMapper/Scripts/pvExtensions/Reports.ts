@@ -1,27 +1,36 @@
 ﻿/// <reference path="../pvMapper/TSMapper/Data/ScoreboardProcessor.ts" />
 /// <reference path="../pvMapper/TSMapper/pvMapper.ts" />
 /// <reference path="../pvMapper/TSMapper/Tools.ts" />
-/// <reference path="../pvMapper/TSMapper/Options.d.ts" />
 /// <reference path="../pvMapper/TSMapper/Module.ts" />
 
 
 module pvMapper {
     export module Tools {
-        export class Reports {
+        export class Reports extends pvMapper.Module {
             constructor() {
                 //Create a module to add to the system
-                var myModule = new Module(<IModuleOptions>{
+                super({
                     id: "inl.reports",
                     author: "Brant Peery, INL",
                     version: "0.1 ts",
+                    url: null, // this module isn't loaded dynamically.
 
-                    activate: () => { },
-                    deactivate: () => { },
-                    destroy: null,
-                    init: null,
+                    title: "Default Reports",
+                    description: "Provide summary and detail report generation feature",
+                    category: "Reports",
+
+                    activate: null,
+                    deactivate: null,
+
                     infoTools: [<pvMapper.IInfoToolOptions>{
+                        id: "DefaultReportsTool",
+                        title: "Default Reports",
+                        description: "Provide summary and detail report generation feature",
+                        longDescription: "<p>Provide summary and detail report generation feature</p>",
+                        category: "Reports",
+
                         activate: () => {
-                            pvMapper.reportsToolbarMenu.add([{
+                            this.addedComponents = pvMapper.reportsToolbarMenu.add([{
                                 text: 'Summary Report',
                                 iconCls: 'x-barcharts-menu-icon',
                                 handler: function () {
@@ -53,15 +62,21 @@ module pvMapper {
                                 }
                             }]);
                         },
-                        init: () => { },
-                        destroy: () => { },
-                        deactivate: () => { }
+                        deactivate: () => {
+                            if (this.addedComponents) {
+                                var component;
+                                while (component = this.addedComponents.pop())
+                                    pvMapper.reportsToolbarMenu.remove(component);
+                            }
+                        }
                     }]
                 });
             }
+
+            private addedComponents: any;
         }
         //Instanciate the tool
         var toolInstance = new Reports();
+        pvMapper.onReady(toolInstance.activate);
     }
-
 }

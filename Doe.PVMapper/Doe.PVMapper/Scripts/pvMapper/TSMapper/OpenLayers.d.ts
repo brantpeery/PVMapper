@@ -48,7 +48,7 @@ declare module OpenLayers {
         constructor(components: Geometry[]);
 
         destroy();
-        clone(): Collection;
+        //clone(): Geometry;
         getComponentsString(): string;
         calculateBounds();
         addComponents(components: Geometry[]);
@@ -71,13 +71,15 @@ declare module OpenLayers {
         getVertices(nodes: Boolean): Geometry[];
     }
 
-    interface Polygon extends Geometry, Collection {
+    interface Polygon extends Collection, Geometry {
         compontTypes: string[];
         getArea(): number;
 
+        //clone(): {clone(): Collection; clone(): Geometry}
+
         constructor(components?: Geometry[]);
         constructor(components: LinearRing);
-
+        
         getGeodesicArea(projection: Projection): number;
         containsPoint(point: Point): Boolean;
         //containsPoint(point: Point): number;   //this break in Typescript 0.9.1 ==> "Overloads cannot differ only by return type".
@@ -2103,6 +2105,7 @@ declare module OpenLayers {
 
         //Custom properties.
         isReferenceLayer: boolean;
+        sourceModule: pvMapper.Module;
     }
 
     var Vector: {

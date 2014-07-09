@@ -17,88 +17,109 @@ var pvMapper;
         * @param {PVMapper.Site}  site The site that this score will track
         * @return {PVMapper.Score} New Score object
         */
-        function Score(site) {
+        function Score(site, scoreLine) {
             var _this = this;
-            // fancy events for tracking changes
-            this.valueChangeEvent = new pvMapper.Event();
-            //public invalidateEvent: pvMapper.Event = new pvMapper.Event();
-            this.siteChangeEvent = new pvMapper.Event();
-            this.self = this;
+            this.deactivate = function () {
+                try  {
+                    _this.site.changeEvent.removeHandler(_this.siteChangeHandler);
+                } catch (e) {
+                    if (console && console.warn)
+                        console.warn("Failed to remove site change handler while destroying score object: " + e.toString());
+                }
 
-            //this.parent; //Assign the parent so that we can use the scoring functions
+                //this.site = null;
+                //this.scoreLine = null;
+                _this.valueChangeEvent = null;
+                _this.siteChangeEvent = null;
+                //this.siteChangeHandler = null;
+            };
+            this.isValueOld = false;
+            /**
+            * Updates the value and fires the value cahnged event. The ScoreLine this Score object belongs to subscribes to this event.
+            * This event fires so that things like the score board can update themselves when scores change.
+            *
+            * @param {number} the new value
+            * @return {number} the new value
+            */
+            this.updateValue = function (value) {
+                if (console && console.warn && !_this.isValueOld)
+                    console.warn("Warning: Received an unexpected score update (the score tool ID='" + _this.scoreLine.id + "' may be running slow)");
+                _this.isValueOld = false; // a reasonable assumption
+
+                //Change the context, add this score to the event and pass the event on
+                var oldvalue = _this.value;
+                _this.value = value;
+
+                //fire the value updated event
+                if (_this.valueChangeEvent) {
+                    _this.valueChangeEvent.fire(_this, { score: _this, oldValue: oldvalue, newValue: value });
+                } else {
+                    if (console && console.warn)
+                        console.warn("Warning: attempted to update a deactivated score (tool='" + (_this.scoreLine && _this.scoreLine.id) + "', site='" + (_this.site && _this.site.id) + "')");
+                }
+
+                return _this.value;
+            };
+            //public setError(description: string) {
+            //    this.popupMessage = description;
+            //    this.value = Number.NaN;
+            //    this.utility = Number.NaN;
+            //}
+            this.toString = function () {
+                if (_this.popupMessage) {
+                    return _this.popupMessage;
+                } else if (typeof _this.value !== "undefined" && _this.value !== null && !isNaN(_this.value)) {
+                    return _this.value.toString();
+                } else {
+                    return "No value";
+                }
+            };
+            this.toJSON = function () {
+                return {
+                    popupMessage: _this.popupMessage,
+                    value: _this.value,
+                    utility: _this.utility,
+                    site: { id: _this.site.id },
+                    scoreLine: { id: _this.scoreLine.id }
+                };
+            };
+            this.fromJSON = function (o) {
+                if (console && console.assert)
+                    console.assert(_this.site && o.site && _this.site.id === o.site.id, "Warning: site ID did not match when loading score from JSON");
+                if (console && console.assert)
+                    console.assert(_this.scoreLine && o.scoreLine && _this.scoreLine.id === o.scoreLine.id, "Warning: scoreLine ID did not match when loading score from JSON");
+
+                _this.popupMessage = o.popupMessage;
+                _this.value = o.value;
+                _this.utility = o.utility;
+                //The site should have been created.
+                //this.site.fromJSON(o.site);
+            };
             this.value = Number.NaN;
             this.utility = Number.NaN;
 
             //A reference to the site this score represents
             this.site = site;
+            this.scoreLine = scoreLine;
 
             //The long message formated in HTML that explains the value or score
             this.popupMessage = null;
 
+            this.valueChangeEvent = new pvMapper.Event();
+            this.siteChangeEvent = new pvMapper.Event();
+
             //Grab onto the change event for the site
-            this.site.changeEvent.addHandler(function (e) {
+            this.siteChangeHandler = function (e) {
                 e.data = _this;
 
                 //if (console) console.log('A score for site ' + this.site.name + ' has detected a site change pvMapper.Event.fire its own event now.');
                 _this.siteChangeEvent.fire(_this, [e, _this]);
-            });
-        }
-        //Sets the utility value for the score. Fires the utilityChanged event
-        Score.prototype.setUtility = function (value) {
-            this.utility = value;
-            //TODO: fire some kind of utilityChangedEvent, or somehting?
-        };
-
-        /**
-        * Updates the value and fires the value cahnged event. The ScoreLine this Score object belongs to subscribes to this event.
-        * This event fires so that things like the score board can update themselves when scores change.
-        *
-        * @param {number} the new value
-        * @return {number} the new value
-        */
-        Score.prototype.updateValue = function (value) {
-            //Change the context, add this score to the event and pass the event on
-            var oldvalue = this.value;
-            this.value = value;
-
-            //TODO: pvMapper.displayMessage(this.value,"Info");
-            //fire the value updated event
-            this.valueChangeEvent.fire(this.self, { score: this.self, oldValue: oldvalue, newValue: value });
-            return this.value;
-        };
-
-        //public setError(description: string) {
-        //    this.popupMessage = description;
-        //    this.value = Number.NaN;
-        //    this.utility = Number.NaN;
-        //}
-        Score.prototype.toString = function () {
-            if (this.popupMessage && this.popupMessage.trim().length > 0) {
-                return this.popupMessage;
-            } else if (typeof this.value !== "undefined" && this.value !== null && !isNaN(this.value)) {
-                return this.value.toString();
-            } else {
-                return "No value";
-            }
-        };
-
-        Score.prototype.toJSON = function () {
-            return {
-                popupMessage: this.popupMessage,
-                value: this.value,
-                utility: this.utility,
-                site: this.site
             };
-        };
 
-        Score.prototype.fromJSON = function (o) {
-            this.popupMessage = o.popupMessage;
-            this.value = o.value;
-            this.utility = o.utility;
-            //The site should have been created.
-            //this.site.fromJSON(o.site);
-        };
+            this.site.changeEvent.addHandler(this.siteChangeHandler);
+        }
         return Score;
     })();
     pvMapper.Score = Score;
 })(pvMapper || (pvMapper = {}));
+//# sourceMappingURL=Score.js.map

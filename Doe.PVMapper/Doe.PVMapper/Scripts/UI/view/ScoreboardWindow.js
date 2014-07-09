@@ -45,24 +45,21 @@ var toolModel = Ext.define('Tools', {
         type: 'string'
     }, {
         name: 'id',
-        type: 'int'
+        type: 'string'
     }, {
         name: 'weight',
-        type: 'number'
+        type: 'number',
+        //convert: null
     }, {
         name: 'utility',
         mapping: 'scoreUtility',
-        type: 'object'
-    }, {
-        name: 'utilityFnName',
-        convert: function (value, record) {
-            var fnName = record.get('utility').functionName;
-            return fnName;
-        }
+        type: 'object',
+        //convert: null
     }, {
         name: 'sites',
         mapping: 'scores',
-        type: 'object'
+        type: 'auto', // an array...
+        //convert: null
     }],
 
 
@@ -88,9 +85,12 @@ var toolsStore = Ext.create('Ext.data.Store', {
 
 var siteColumns = []; //Empty array for use below as a reference to what will be in the array eventually
 
+
 var scoreboardColumns = [{
-    text: 'Tool Name',
     minWidth: 150,
+
+    text: 'Tool Name',    // Add the new "Add new Tool" href link
+
     //maxWidth: 100,
     flex: 1, //Will be resized
     //shrinkWrap: 1,
@@ -103,18 +103,22 @@ var scoreboardColumns = [{
         }
         return value;
     },
+
+    editor: {
+        xtype: 'textfield',
+        allowBlank: false,
+        allowDecimals: false,
+        allowExponential: false,
+        allowOnlyWhitespace: false
+    },
     //tooltip: '{description}',
     //editor: 'textfield', <-- don't edit this field - that would be silly
     summaryType: function (records) {
         if (records.length > 0) {
-            return records[0].get('category') +
-//If we ever need pie view again, uncomment this line and comment the next line.
-//              " (average): <input type='image' src='/Images/Pie Chart.png' width='16' height='16' alt='Pie Chart' title='Show weight pie chart' onClick='scoreboardGrid.viewPie(\"" + records[0].get('category') + "\",0);' />";
-              " (average): ";
-
-        }
-        else
+            return records[0].get('category') + " (average): ";
+        } else {
             return ' ';
+        }
     },
 }, {
     header: 'Weight',
@@ -141,11 +145,8 @@ var scoreboardColumns = [{
     sortable: false,
     hideable: false,
     renderer: function (value, metadata, record) {
-        //metadata.style = 'cursor: pointer;' // <-- this looks silly...
-        var fn = record.get('utilityFnName');
+        var fn = record.get('utility').functionName;
         if (fn) { this.items[0].icon = pvMapper.UtilityFunctions[fn].iconURL; }
-
-        //this.items[1].disabled = !( $.isFunction(record.raw.getStarRatables) );
     },
     items: [{
         icon: 'http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/gear_icon.jpg',
@@ -159,111 +160,112 @@ var scoreboardColumns = [{
         },
         handler: function (view, rowIndex, colIndex, item, e, record) {
             var uf = record.get('utility');
-            var utilityFn = pvMapper.UtilityFunctions[uf.functionName];
+            if (uf) {
+                var utilityFn = pvMapper.UtilityFunctions[uf.functionName];
 
-            dynamicPanel = Ext.create('Ext.panel.Panel', {
-                items: [{
-                    xtype: 'text',
-                    text: 'configure me',
-                    shrinkWrap: 3,
-                    sortable: true,
-                    hideable: false,
-                    layout: {
-                        type: 'vbox',
-                        align: 'center'
-                    }
-                }]
-            });
-
-            var windows = Ext.create('MainApp.view.UtilityFunctionEdit', {
-                items: dynamicPanel,
-                icon: utilityFn.iconURL,
-                minimizable: false,
-                collapsible: false,
-                title: "Utiltiy Function Editor - " + record.data.category + "\\" + record.data.title,
-                plugins: [{
-                    ptype: "headericons",
-                    index: 2,
-                    headerButtons: [
-                        {
-                            xtype: 'button',
-                            iconCls: 'x-ux-grid-printer',
-                            width: 24,
-                            height: 15,
-                            //scope: this,
-                            handler: function () {
-                                //var win = Ext.WindowManager.getActive();
-                                //if (win) {
-                                //  win.toggleMaximize();
-                                //}
-                                var style = ''; var link = '';
-                                var printContent = document.getElementById(dynamicPanel.id + "-body"); //TODO: change to get the ID, rather than use 'magic' ID
-                                var printWindow = window.open('', '', ''); // 'left=10, width=800, height=520');
-
-                                var html = printContent.outerHTML; //TODO: must change to innerHTML ???
-                                $("link").each(function () {
-                                    link += $(this)[0].outerHTML;
-                                });
-                                $("style").each(function () {
-                                    style += $(this)[0].outerHTML;
-                                });
-
-                                // var script = '<script> window.onmouseover = function(){window.close();}</script>';
-                                printWindow.document.write('<!DOCTYPE html><html lang="en"><head><title>PV Mapper: ' + windows.title + '</title>' + link + style + ' </head><body>' + html + '</body>');
-                                $('div', printWindow.document).each(function () {
-                                    if (($(this).css('overflow') == 'hidden') || ($(this).css('overflow') == 'auto')) {
-                                        $(this).css('overflow', 'visible');
-
-                                    }
-                                });
-                                printWindow.document.close();
-                                printWindow.print();
-                            }
+                dynamicPanel = Ext.create('Ext.panel.Panel', {
+                    items: [{
+                        xtype: 'text',
+                        text: 'configure me',
+                        shrinkWrap: 3,
+                        sortable: true,
+                        hideable: false,
+                        layout: {
+                            type: 'vbox',
+                            align: 'center'
                         }
-                    ]
-                }],
-                buttons: [{
-                    xtype: 'button',
-                    text: 'OK',
-                    handler: function () {
-                        //send the object (reference) to the function so it can change it
+                    }]
+                });
 
-                        //Call the setupwindow function with the context of the function it is setting up
-                        if (utilityFn.windowOk !== undefined)
-                            utilityFn.windowOk.apply(utilityFn, [dynamicPanel, uf]); //.functionArgs]);
-                        //Note: I really don't get this... it seems overly complicated.
+                var windows = Ext.create('MainApp.view.UtilityFunctionEdit', {
+                    items: dynamicPanel,
+                    icon: utilityFn.iconURL,
+                    minimizable: false,
+                    collapsible: false,
+                    title: "Utiltiy Function Editor - " + record.data.category + "\\" + record.data.title,
+                    plugins: [{
+                        ptype: "headericons",
+                        index: 2,
+                        headerButtons: [
+                            {
+                                xtype: 'button',
+                                iconCls: 'x-ux-grid-printer',
+                                width: 24,
+                                height: 15,
+                                //scope: this,
+                                handler: function () {
+                                    //var win = Ext.WindowManager.getActive();
+                                    //if (win) {
+                                    //  win.toggleMaximize();
+                                    //}
+                                    var style = ''; var link = '';
+                                    var printContent = document.getElementById(dynamicPanel.id + "-body"); //TODO: change to get the ID, rather than use 'magic' ID
+                                    var printWindow = window.open('', '_blank');
 
-                        //record.store.update();  //Is there a reason for this
-                        record.raw.updateScores();
-                        record.raw.saveConfiguration();  //save scoreline configuration to local database.
-                        windows.close();
-                    }
-                }, {
-                    xtype: 'button',
-                    text: 'Cancel',
-                    handler: function () {
-                        windows.close();
-                    }
-                }],
-                listeners: {
-                  beforerender: function (win, op) {
-                    var w = win.width;
-                    if (typeof(w) == 'undefined' || (w < 400))  {
-                      win.setWidth(400);
-                      win.center();
-                    }
-                     utilityFn.windowSetup.apply(utilityFn, [dynamicPanel, uf]); // uf.functionArgs, utilityFn.fn, utilityFn.xBounds]);
-                    //TODO: can't we just pass uf here, in place of all this other crap?
-                  },
-                    resize: function (win, width, height, opts) {
-                      if (dynamicPanel.onBodyResize != undefined)
-                        width = this.getContentTarget().getWidth();
-                        height = this.getContentTarget().getHeight();
-                        dynamicPanel.onBodyResize(width, height, opts);
-                    }
-                }
+                                    var html = printContent.outerHTML; //TODO: must change to innerHTML ???
+                                    $("link").each(function () {
+                                        link += $(this)[0].outerHTML;
+                                    });
+                                    $("style").each(function () {
+                                        style += $(this)[0].outerHTML;
+                                    });
 
-            }).show();
+                                    // var script = '<script> window.onmouseover = function(){window.close();}</script>';
+                                    printWindow.document.write('<!DOCTYPE html><html lang="en"><head><title>PV Mapper: ' + windows.title + '</title>' + link + style + ' </head><body>' + html + '</body>');
+                                    $('div', printWindow.document).each(function () {
+                                        if (($(this).css('overflow') == 'hidden') || ($(this).css('overflow') == 'auto')) {
+                                            $(this).css('overflow', 'visible');
+
+                                        }
+                                    });
+                                    printWindow.document.close();
+                                    //printWindow.print();     //this doesn't support across all browsers, so just show it, user can print manually.
+                                }
+                            }
+                        ]
+                    }],
+                    buttons: [{
+                        xtype: 'button',
+                        text: 'OK',
+                        handler: function () {
+                            //send the object (reference) to the function so it can change it
+
+                            //Call the setupwindow function with the context of the function it is setting up
+                            if (utilityFn.windowOk !== undefined)
+                                utilityFn.windowOk.apply(utilityFn, [dynamicPanel, uf]); //.functionArgs]);
+                            //Note: I really don't get this... it seems overly complicated.
+
+                            //record.store.update();  //Is there a reason for this
+                            record.raw.applyUtilityFunctionToAllScores();
+                            record.raw.saveConfiguration();  //save scoreline configuration to local database.
+                            windows.close();
+                        }
+                    }, {
+                        xtype: 'button',
+                        text: 'Cancel',
+                        handler: function () {
+                            windows.close();
+                        }
+                    }],
+                    listeners: {
+                        beforerender: function (win, op) {
+                            var w = win.width;
+                            if (typeof (w) == 'undefined' || (w < 400)) {
+                                win.setWidth(400);
+                                win.center();
+                            }
+                            utilityFn.windowSetup.apply(utilityFn, [dynamicPanel, uf]); // uf.functionArgs, utilityFn.fn, utilityFn.xBounds]);
+                            //TODO: can't we just pass uf here, in place of all this other crap?
+                        },
+                        resize: function (win, width, height, opts) {
+                            if (dynamicPanel.onBodyResize != undefined)
+                                width = this.getContentTarget().getWidth();
+                            height = this.getContentTarget().getHeight();
+                            dynamicPanel.onBodyResize(width, height, opts);
+                        }
+                    }
+                }).show();
+            }
         }
     }, {
         icon: 'http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/star_icon.jpg',
@@ -315,39 +317,64 @@ var scoreboardColumns = [{
     columns: siteColumns
 }];
 
+// gets the score object from the given array of scores which matches the given site (using idx as a hint to its position in the array)
+function getScoreForSite(scores, site, idx, suppressWarnings) {
+    var score = (scores.length > idx) && scores[idx]; // <-- attempt to shortcut the full ID search
+    if (!score || (score.site && score.site.id !== site.id)) {
+        // try to find this score the hard way... (may be time consuming for our supported edge case of using many sites)
+        var filteredScores = scores.filter(function (s) { return s.site.id === site.id; });
+
+        score = filteredScores.length && filteredScores[0];
+
+        // perform some logging etc.
+        if (console && console.warn && !suppressWarnings) console.warn("Warning: score for site ID='" + site.id + (score ?
+            "' missing from score line." : "' misaligned in score line ID='" + (score.scoreLine && score.scoreLine.id) + "'"));
+
+        if (console && console.assert) console.assert(filteredScores.length <= 1,
+            "Warning: score line holds duplicate scores for site ID='" + site.id + "'");
+    }
+    return score;
+}
+
 //this is for the grid.column header context menu.
 function showHeaderCTMenu(xy, site) {
-    var siteName = ((site === undefined) || (site === null)) ? "this site" : "site: " + site.name;
+    if (console && console.assert) console.assert(!!site, "Warning: couldn't find site for header context menu.");
     var headerCtContext = Ext.create("Ext.menu.Menu", {
-        items: [Ext.create("Ext.menu.Item",{
-            text: "Zoom to " + siteName,
+        items: [Ext.create("Ext.menu.Item", {
+            text: "Zoom to " + site.name,
             iconCls: "x-zoomin-menu-icon",
             handler: function () {
                 pvMapper.map.zoomToExtent(site.geometry.bounds, false);
             }
-        }), Ext.create("Ext.menu.Item",{
+        }), Ext.create("Ext.menu.Item", {
             text: "Zoom to project",
             iconCls: "x-zoomout-menu-icon",
             handler: function () {
                 pvMapper.map.zoomToExtent(pvMapper.siteLayer.getDataExtent(), false);
             }
         }),
-        Ext.create("Ext.menu.Separator",{
+        Ext.create("Ext.menu.Separator", {
         }),
-        Ext.create("Ext.menu.Item",{
-            text: "Delete " + siteName,
+        Ext.create("Ext.menu.Item", {
+            text: "Delete " + site.name,
             iconCls: "x-delete-menu-icon",
             handler: function () {
-                Ext.MessageBox.confirm("Delete " + siteName, "Deleting a site is permenant, are you sure?", function (btn) {
+                Ext.MessageBox.confirm('Confirm', "Are you sure you want to delete site '" + site.name + "'?", function (btn) {
                     if (btn === "yes") {
-                        pvMapper.deleteSite(site.id);
-                        pvMapper.siteManager.removeSite(site);
-                        var feature = pvMapper.siteLayer.features.find(
-                           function (a) {
-                               if (a.attributes.name === site.name) return true;
-                               else return false;
-                           });
-                        pvMapper.siteLayer.removeFeatures([feature], { silent: true });
+                        // unselect all features first (at present, this causes a PUT to the database if a feature was selected)
+                        // if this isn't done, there will be artifacts left on the map after deleting the selected site(s).
+                        // Note that this also removes any sketch features from the feature layer (ie, siteLayer.features.length may decrease !)
+                        pvMapper.unselectAllSites();
+
+                        pvMapper.deleteSite(site.id)
+                            .done(function () {
+                                pvMapper.siteManager.removeSite(site);
+                                pvMapper.siteLayer.removeFeatures([site.feature], { silent: true });
+                                site.feature.destroy();
+                            })
+                            .fail(function () {
+                                if (console && console.log) console.log('failed to delete site "' + site.name + '" with id "' + site.id + '"');
+                            });
                     }
                 });
             }
@@ -358,14 +385,15 @@ function showHeaderCTMenu(xy, site) {
     headerCtContext.showAt(xy);
 }
 //Use this store to maintain the panel list of sites
-toolsStore.on({
-    load: function () {
+//toolsStore.on({
+//    load: function (theStore, records, successful, eOpts) {
+pvMapper.generateMainScoreboardColumns = function () {
         siteColumns.length = 0; //Empty the array
-        var rec0 = this.first();
-        rec0.get('sites').forEach(function (scoreLine, idx) {
+        pvMapper.siteManager.getSites().forEach(function (site, idx) {
             var siteColumn = {
-                id: scoreLine.site.name,
-                text: scoreLine.site.name,
+                id: site.id,
+                text: site.name,
+                raw: site,
                 sealed: true,
                 //flex: 1, //Will stretch with the size of the window
                 //width: 100,
@@ -380,32 +408,51 @@ toolsStore.on({
                     //flex: 1, //Will stretch with the size of the window
                     //minWidth: 50,
                     width: 120,
-                    renderer: function (value, metaData) {
-                        if (value.length <= idx) return '<i>Calculating...</i>'; //Avoid the index out of range error
+                    renderer: function (scores, metaData) {
+                        // fetch the score object for this site (and in this score line), using idx as a hint to its position in the scores array
+                        var score = getScoreForSite(scores, site, idx, true);
 
-                        //if (typeof value[idx].utility !== "undefined" && !isNaN(value[idx].utility)) {
-                        //    metaData.style = "background-color:" + getColor(value[idx].utility);
+                        // check if the score object represents an error, and style accordingly
+                        if (!score || typeof score.utility !== "number" || !isFinite(score.utility) || score.isValueOld) {
+                            metaData.style = "font-style: italic;"; // italics represent messages without a value (ie, error messages, etc)
+                        }
+
+                        // if we haven't found the score object, return this default value
+                        if (!score) return 'No value';
+
+                        //if (typeof scores[idx].utility !== "undefined" && !isNaN(scores[idx].utility)) {
+                        //    metaData.style = "background-color:" + getColor(scores[idx].utility);
                         //}
 
-                        if (value[idx].popupMessage && value[idx].popupMessage.trim().length > 0) {
-                            metaData.tdAttr = 'data-qtip="' + value[idx].popupMessage + '"';
+                        // handle the popup message, if there is one
+                        if (score.popupMessage && score.popupMessage.length > 0) {
+                            metaData.tdAttr = 'data-qtip="' + score.popupMessage + '"';
                         }
 
-                        //TODO: hack hack hack... it's a hack
-                        if (value[idx].toString !== Object.prototype.toString) {
-                            if (typeof value[idx].value !== "undefined" && !isNaN(value[idx].value)) {
-                                return value[idx].toString();
-                            } else {
-                                // italicise on error
-                                return '<i>' + value[idx].toString() + '</i>';
-                            }
+                        if (score.toString !== Object.prototype.toString) {
+                            // trust the toString method of the score object to handle this
+                            return score.toString();
                         } else {
-                            //TODO: hack hack hack... remove this (if we migrate to a dual scoreboard doodle)
-                            if (value[idx].popupMessage)
-                                return value[idx].popupMessage;
-                            return "";
+                            // fall back on doing this manually (this will happen for total tools, since they don't use regular Score objects)
+                            if (score.popupMessage)
+                                return score.popupMessage;
+                            if (typeof score.value !== "undefined" && score.value !== null && !isNaN(score.value))
+                                return score.value.toString();
+                            if (typeof score.utility === "number" && isFinite(score.utility))
+                                return ""; // we have a utility score... we must've meant to leave this area blank.
+                            return "No value";
                         }
                     },
+
+                    editor: {
+                        xtype: 'textfield',
+                        allowBlank: false,
+                        allowDecimals: false,
+                        allowExponential: false,
+                        allowOnlyWhitespace: false
+                    },
+
+
                     draggable: false,
 
                     summaryType: function (records) {
@@ -422,17 +469,33 @@ toolsStore.on({
                     //flex: 1, //Will stretch with the size of the window
                     //maxWidth: 500,
                     width: 40,
-                    renderer: function (value, metaData) {
-                        if (value.length <= idx) return '...'; //Avoid the index out of range error
-                        if (typeof value[idx].utility !== "number" || isNaN(value[idx].utility)) return '...';
+                    renderer: function (scores, metaData) {
+                        // fetch the score object for this site (and in this score line), using idx as a hint to its position in the scores array
+                        var score = getScoreForSite(scores, site, idx);
 
-                        var val = (value[idx] && value[idx].utility) ? value[idx].utility : 0;
-                        var c = pvMapper.getColorForScore(val);
-                        metaData.style = "text-align: center; border-radius: 5px; background-color:" + c;
+                        if (!score) return ""; // this may be possible in the instant after a new site is added (some score lines may not have updated yet)
 
-                        return value[idx].utility.toFixed(0);
+                        // handle a missing/invalid value
+                        if (typeof score.utility !== "number" || !isFinite(score.utility)) return '...';
+
+                        var c = pvMapper.getColorForScore(score.utility);
+                        metaData.style = "text-align: center; border-radius: 5px; background-color:" + c + ";";
+
+                        return score.utility.toFixed(0);
                     },
                     draggable: false,
+
+                    editor: {
+                        xtype: 'numberfield',
+                        maxValue: 100,
+                        minValue: 0,
+                        allowBlank: true,
+                        allowDecimals: false,
+                        allowExponential: false,
+                        allowOnlyWhitespace: false
+                    },
+
+                    
 
                     summaryType: function (records) {
                         var total = 0;
@@ -440,24 +503,31 @@ toolsStore.on({
 
                         records.forEach(function (record) {
                             var scoreLine = record.raw;
-                            if (scoreLine.scores[idx] && typeof scoreLine.scores[idx].utility === "number" && !isNaN(scoreLine.scores[idx].utility)) {
-                                var weight = (scoreLine.weight != undefined) ? scoreLine.weight : 1;
-                                val = scoreLine.scores[idx].utility * weight;
-                                total += val;
-                                count += weight;
+                            var scores = scoreLine.scores;
+
+                            if (typeof scoreLine.weight === "number" && isFinite(scoreLine.weight)) {
+                                // fetch the score object for this site (and in this score line), using idx as a hint to its position in the scores array
+                                var score = getScoreForSite(scores, site, idx);
+
+                                if (score && typeof score.utility === "number" && isFinite(score.utility)) {
+                                    total += score.utility * scoreLine.weight;
+                                    count += scoreLine.weight;
+                                }
+                            } else if (scoreLine.category !== "Totals") {
+                                if (console && console.warn) console.warn("Warning: invalid weight for score line ID='" + scoreLine.id + "', weight=" + scoreLine.weight);
                             }
                         });
 
-                        var average = total / count;
+                        var average = total / count; //TODO: may return NaN... is that ok?
 
                         return average;
                     },
                     summaryRenderer: function (value, summaryRowValues) {
-                        if (typeof value === "number" && !isNaN(value)) {
+                        if (typeof value === "number" && isFinite(value)) {
                             var c = pvMapper.getColorForScore(value);
                             return '<span style="border-radius: 3px; background-color:' + c + '">&nbsp' + value.toFixed(0) + '&nbsp</span>'
                         }
-                        else return '';
+                        return '';
                     },
 
                 }]
@@ -466,117 +536,184 @@ toolsStore.on({
         });
 
         //Now update the sites section of the grid
-        pvMapper.scoreboardGrid.reconfigure(this, scoreboardColumns);
+        pvMapper.scoreboardGrid.reconfigure(null, scoreboardColumns);
 
         //The columns has been configured, Els for each column is now available.  
         //We can attach conttext menu to the header.
-        var rec0 = this.first();
-        rec0.get('sites').forEach(function (scoreLine, idx) {
-            var col = Ext.getCmp(scoreLine.site.name);
-            if (col) {
-                var el = col.getEl();
-                if (el) {
-                    el.on({
-                        'contextmenu': function (e, col, opt) {
-                            e.stopEvent();
-                            showHeaderCTMenu(e.getXY(), scoreLine.site);
-                            return false;
-                        },
-                        scope: this
-                    });
+        //HACK: delay this for a tick... catch the scoreboard after it's been rendered. (yeah, this is hacky...)
+        window.setTimeout(function() {
+            pvMapper.siteManager.getSites().forEach(function (site, idx) {
+                var col = Ext.getCmp(site.id);
+                if (!col) {
+                    if (console && console.warn) console.warn("Warning: couldn't find the column this site belongs to.");
+                } else {
+                    var el = col.getEl();
+                    if (el) {
+                        el.on({
+                            'contextmenu': function (e, col, opt) {
+                                e.stopEvent();
+                                showHeaderCTMenu(e.getXY(), site);
+                                return false;
+                            },
+                            scope: this
+                        });
+                    }
                 }
-            }
-        });
-    }
+            });
+        }, 1);
+    //}
+};//);
 
-});
 // plugin for cell editing (Weight value)
 Ext.define('MainApp.view.ScoreWeightEditing', {
     extend: 'Ext.grid.plugin.CellEditing',
     clicksToEdit: 1,
     listeners: {
+
+        beforeedit: function (editor, e, eOpts) {
+
+             if (e.field == "weight")
+                 return typeof e.record.raw.weight === "number"; // don't allow weight editing on total tools or the like
+            
+             return e.record.raw.category === "All Custom Added Tools";
+        },
+
         edit: function (editor, e, eOpts) {
-            e.record.raw.setWeight(e.record.data['weight']);
+            if (e.field == "weight" && typeof (e.record.raw.setWeight) === "function" && e.record.raw.weight !== e.record.data['weight'])
+                e.record.raw.setWeight(e.record.data['weight']);
+
+            theScoreIdx = parseInt((e.colIdx - 3) / 2); //TODO: this isn't an ideal way to get the correct score object for this column.
+
+            if(e.record.raw.category == "All Custom Added Tools")
+            {
+                switch(e.column.text){
+                    case "Value" :
+                         e.record.raw.scores[theScoreIdx].popupMessage = e.value;
+                         break ;
+
+                    case "Score" :
+                         e.record.raw.scores[theScoreIdx].updateValue(parseInt(e.value));
+                }
+
+                if(e.field == "title")
+                    e.record.raw.title = e.value;
+               
+              //  e.record.raw.scores[0].updateValue(0);
+            }
         }
     }
 });
-
-
-
-function removeCustomModule(moduleName) {
-    var module = pvMapper.customModules.find(function (a) {
-        if (a.fileName === moduleName) return true;
-        else return false;
-    });
-    if (module) {
-        //remove the module from the local database
-        pvMapper.ClientDB.deleteCustomKML(module.fileName, function (isSuccessful) {
-            if (isSuccessful) {
-                //remove it from the custom module list.
-                var idx = pvMapper.customModules.indexOf(module);
-                pvMapper.customModules.splice(idx, 1);
-                //now remove the scoreline.
-                var scoreline = pvMapper.mainScoreboard.scoreLines.find(function (a) {
-                    if (a.getModuleName !== undefined) {
-                        if (a.getModuleName() === module.fileName) return true;
-                        else return false;
-                    }
-                    else return false;
-                });
-                if (scoreline) {
-                    idx = pvMapper.mainScoreboard.scoreLines.indexOf(scoreline);
-                    if (idx >= 0) pvMapper.mainScoreboard.scoreLines.splice(idx, 1);
-                    //finally then free the module.
-                    delete scoreline;
-                }
-                if (module.moduleObject.removeLocalLayer !== undefined)
-                    module.moduleObject.removeLocalLayer();  //remove the custom module layer from map.
-                delete module;
-                pvMapper.mainScoreboard.update();
-            }
-        });
-    }
-}
 
 //----------------The grid and window-----------------
 Ext.define('Ext.grid.ScoreboardGrid', {
     //xtype:'Scoreboard',
     extend: 'Ext.grid.Panel',
     store: toolsStore,
+    //dockedItems: [{                // Toolbar on the mainscoreboard, added by Rohan Raja (BYU)
+    //    xtype: 'toolbar',
+    //    dock: 'top',
+    //    items: [{
+    //        xtype: 'button',
+    //        iconCls: 'x-openproject-menu-icon',
+    //        text: 'Add Custom Tool',// <img style="width : 10px; height 10px;" src="http://www.iconsdb.com/icons/download/black/plus-2-256.png">',
+    //        handler: function(){
+    //            add_new_tool();
+    //        }
+    //    }, {
+    //        xtype: 'button',
+    //        iconCls: 'x-fileexport-menu-icon',
+    //        text: 'Export Scoreboard to CSV',// <img style="width : 10px; height 10px;" src="http://www.iconsdb.com/icons/download/black/plus-2-256.png">',
+    //        handler: function(){
+
+    //            pvMapper.scoreboardToolsToolbarMenu.items.items[6].handler()
+    //        }
+    //    }]
+    //}],
+
     //forceFit: true,
     //width: '100%',
     //height: 600,
     //title: "Tools List",
     columns: scoreboardColumns,
+    invalidateScrollerOnRefresh: false, // <-- We've been looking for this fancy magic for at least a year - wahoo!
     viewConfig: {
         stripeRows: true,
         listeners: {
 
             itemcontextmenu: function (view, rec, node, idx, e) {
-                if (rec.raw.getModuleName === undefined) {
-                    return true;
-                } else {
-                    e.stopEvent();
-                    var moduleName = rec.raw.getModuleName();
-                    var titleName = moduleName;
-                    if (rec.raw.getTitle !== undefined)
-                        titleName = rec.raw.getTitle();
-                    var cellContextMenu = Ext.create("Ext.menu.Menu", {
-                        items: [{
-                            text: "Remove Custom Module: '" + titleName+"'",
-                            iconCls: "x-delete-menu-icon",
-                            handler: function () {
-                                
-                                Ext.MessageBox.confirm("Removing '"+titleName+"("+moduleName+")'", "Are you sure you want to remove this module?", function (btn) {
-                                    if (btn === "yes") {
-                                        //this function is defined in MainToolbar file.
-                                        removeCustomModule(moduleName);
-                                    }
-                                });
-                            }
-                        }]
+                contextMenuItems = [];
 
+                // if this tool's scores can be refreshed, add an option to do so...
+                if (typeof rec.raw.onSiteChange === "function" && rec.raw.scores) {
+                    contextMenuItems.push({
+                        text: "Refresh scores for this tool",
+                        iconCls: "x-tag-restart-icon",
+                        tooltip: "Recomputes this tool's score for every site",
+                        handler: function () {
+                            rec.raw.scores.forEach(function (s) { rec.raw.onSiteChange(null, s); });
+                        }
                     });
+                }
+
+                // if this tool can be reset, add a menu option to reset it
+                if (typeof rec.raw.resetConfiguration === "function") {
+                    contextMenuItems.push({
+                        text: "Reset '" + rec.raw.title + "' configuration",
+                        iconCls: "x-cleaning-menu-icon",
+                        tooltip: "Reset this tool to the default configuration.",
+                        handler: function () {
+                            rec.raw.resetConfiguration();
+                        }
+                    });
+                }
+
+                // if this module is registered with the module manager, then include a menu option to turn it off (as the module manager can always turn it back on)
+                if (pvMapper.moduleManager.getRegisteredModuleByID(rec.raw.getModule().id)) {
+                    contextMenuItems.push({
+                        text: "Turn off '" + rec.raw.getModule().title + "' module",
+                        iconCls: "x-tag-check-icon",
+                        tooltip: "Disable this tool and its associated module, removing them from the scoreboard.",
+                        handler: function () {
+                            pvMapper.moduleManager.deactivateModule(rec.raw.getModule());
+                        }
+                    });
+                }
+                
+                // if this module is a custom module registered with the module manager, then include a menu option to remove it
+                //Note: this should be mutually exclusive with the previous if()
+                if (pvMapper.moduleManager.getCustomModuleByID(rec.raw.getModule().id)) {
+                    contextMenuItems.push({
+                        text: "Remove '" + rec.raw.getModule().title + "' module",
+                        iconCls: "x-delete-menu-icon",
+                        tooltip: "Delete this tool and its associated module, permanently removing them from the scoreboard.",
+                        handler: function () {
+                            Ext.MessageBox.confirm("Confirm remove module", "Are you sure you want to remove module '" + rec.raw.title +
+                                "', along with all of its layers and tools?", function (btn) {
+                                    if (btn === "yes") {
+                                        pvMapper.moduleManager.removeCustomModule(rec.raw.getModule());
+                                    }
+                                }
+                            );
+                        }
+                    });
+                }
+
+                // '-',
+                //{
+                //    text: 'Tool Module Selector',
+                //    iconCls: "x-tag-check-icon",
+                //    tooltip: "Turn tool modules on and off.",
+                //    //enabledToggle: false,
+                //    handler: function () {
+                //        var toolWin = Ext.create("MainApp.view.ToolConfigWindow", {
+                //        });
+                //        toolWin.show();
+                //    }
+                //}
+
+                if (contextMenuItems.length) {
+                    e.stopEvent(); //TODO: what is this for...?
+                    var cellContextMenu = Ext.create("Ext.menu.Menu", { items: contextMenuItems });
                     cellContextMenu.showAt(e.getXY());
                     return false;
                 }
@@ -627,7 +764,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
                 $totalsHeader.appendTo($totalsHeader.parent());
                 $totalsRow.appendTo($totalsHeader.parent());
             }
-        }
+        },
     },
 
     viewPie: function (cat, site) {
@@ -682,7 +819,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
                             //}
                             var style = ''; var link = '';
                             var printContent = document.getElementById(pieWin.body.id); //TODO: change to get the ID, rather than use 'magic' ID
-                            var printWindow = window.open('', '', ''); // 'left=10, width=800, height=520');
+                            var printWindow = window.open('','_blank');
 
                             var html = printContent.outerHTML; //TODO: must change to innerHTML ???
                             $("link").each(function () {
@@ -701,7 +838,7 @@ Ext.define('Ext.grid.ScoreboardGrid', {
                                 }
                             });
                             printWindow.document.close();
-                            printWindow.print();
+                            //printWindow.print();
                         }
                     }
                 ]
@@ -765,7 +902,7 @@ Ext.define('MainApp.view.ScoreboardWindow', {
                     //}
                     var style = ''; var link = '';
                     var printContent = document.getElementById("ScoreboardWindowID-body"); //TODO: change to get the ID, rather than use 'magic' ID
-                    var printWindow = window.open('', '', ''); // 'left=10, width=800, height=520');
+                    var printWindow = window.open('', '_blank'); // 'left=10, width=800, height=520');
 
                     var html = printContent.outerHTML; //TODO: must change to innerHTML ???
                     $("link").each(function () {
@@ -784,14 +921,14 @@ Ext.define('MainApp.view.ScoreboardWindow', {
                         }
                     });
                     printWindow.document.close();
-                    printWindow.print();
+                    //printWindow.print();
 
                 }
             }
         ]
     }],
     items: pvMapper.scoreboardGrid,
-    constrain:true
+    constrain: true
 
 });
 

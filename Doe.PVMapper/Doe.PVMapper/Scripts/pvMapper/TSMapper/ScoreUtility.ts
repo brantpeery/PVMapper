@@ -38,7 +38,7 @@ module pvMapper {
     //}
 
     export interface IScoreUtilityArgs {
-        stringify(): string;
+        toExcelString(): string;
     }
     export interface IScoreUtilityOptions {
         functionName: string;
@@ -50,7 +50,6 @@ module pvMapper {
         functionCallback: (x: number, args: any) => number;
         windowSetupCallback: IWindowSetupCallback;
         windowOkCallback: IWindowOkCallback;
-
     }
 
     export class MinMaxUtilityArgs implements IScoreUtilityArgs {
@@ -92,7 +91,7 @@ module pvMapper {
             x_axis: string;
             y_axis: string;
         }
-        public stringify() {
+        public toExcelString() {
             var str = "";
             //str += "name: " + this.metaInfo.name;
             str += ", min: " + this.minValue.toFixed(0);
@@ -150,7 +149,7 @@ module pvMapper {
             y_axis: string;
         }
 
-        public stringify() {
+        public toExcelString() {
             var str = "";
             //str += "name: " + this.metaInfo.name;
             str += "min: " + this.minValue.toFixed(0);
@@ -198,7 +197,7 @@ module pvMapper {
             x_axis: string;
             y_axis: string;
         }
-        public stringify() {
+        public toExcelString() {
             var str = "";;
             //str += "name: " + this.metaInfo.name;
             str += "points: ["
@@ -251,12 +250,12 @@ module pvMapper {
             return Math.max(0, Math.min(1, y)) * 100;
         }
 
-        public toJSON(): any {
+        public toJSON = (): any => {
             var o = {
                 functionName: this.functionName,
-                functionArgs: this.functionArgs,
-                iconURL: this.iconURL,
-                fCache: this.fCache
+                functionArgs: JSON.parse(JSON.stringify(this.functionArgs)), //HACK: remove that stupid toExcelString() function from our args object
+                //iconURL: this.iconURL,
+                //fCache: this.fCache
             }
           return o;
         }
@@ -278,17 +277,14 @@ module pvMapper {
 
             this.functionArgs = this.createArg(o.functionName);
             $.extend(this.functionArgs, o.functionArgs);
-            this.iconURL = o.iconURL;
-            this.fCache = o.fCache;
+            //this.iconURL = o.iconURL;
+            //this.fCache = o.fCache;
         }
 
-        public stringify() {
+        public toExcelString() {
             var str = "";
             str += this.functionName;
-            //Ok, here is a little hack to get functionArgs to recognize stringify.  I don't know why functionArgs is not a class object here.
-            var fn = this.createArg(this.functionName);
-            $.extend(fn, this.functionArgs);  //merge the data to fn.
-            str += "("+fn.stringify()+")";  
+            str += "(" + this.functionArgs.toExcelString() + ")";  
             return str;   
         }
         //public serialize() {

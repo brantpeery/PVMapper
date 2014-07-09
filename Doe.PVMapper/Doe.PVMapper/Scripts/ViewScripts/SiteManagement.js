@@ -28,24 +28,28 @@ pvMapper.onReady(function () {
         //group:"editToolbox"
         handler: function () {
             if (pvMapper.siteLayer.selectedFeatures.length == 1) {
-                Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete site ' +
-                    pvMapper.siteLayer.selectedFeatures[0].attributes.name + '?',
+                Ext.MessageBox.confirm('Confirm', "Are you sure you want to delete site '" +
+                    pvMapper.siteLayer.selectedFeatures[0].attributes.name + "'?",
                 function (result) {
                     if (result === 'yes') {
                         var feature = pvMapper.siteLayer.selectedFeatures[0];
-                        // unselect feature first (at present, this causes a PUT to the database)
-                        editAction.control.selectControl.unselect(feature);
+                        // unselect all features first (at present, this causes a PUT to the database if a feature was selected)
+                        // if this isn't done, there will be artifacts left on the map after deleting the selected site(s).
+                        // Note that this also removes any sketch features from the feature layer (ie, siteLayer.features.length may decrease !)
+                        pvMapper.unselectAllSites();
+
                         // try to delete feature
                         pvMapper.deleteSite(feature.fid)
                             .done(function () {
                                 // if we've deleted the feature from the database, let's delete it from BOTH local collections (?!?)
                                 //TODO: This should happen automagically - ie the local collection should be tied into the database
                                 //TODO: we should combine our siteManager with our OpenLayers feature collection - they both store sites, and that's absurd.
-                                pvMapper.siteManager.removeSiteById(feature.fid);
+                                pvMapper.siteManager.removeSite(feature.site);
+                                pvMapper.siteLayer.removeFeatures([feature], { silent: true });
                                 feature.destroy();
                             })
                             .fail(function () {
-                                if (console) console.log('failed to delete site');
+                                if (console && console.log) console.log('failed to delete site "' + feature.site.name + '" with id "' + feature.site.id + '"');
                             });
                         // all done
                     }
@@ -67,17 +71,17 @@ pvMapper.onReady(function () {
     var editAction = Ext.create('GeoExt.Action', {
         text: 'Edit Site',
         tooltip: "Edit the shape of a site",
-        control: sm.modifyFeatureControl(function (data) {
-            if (data.modified) {
-                sm.editSite(data.feature);
-            }
-        }),
+        control: sm.modifyFeatureControl(),
         map: pvMapper.map,
         enableToggle: false,
         toggleGroup: "editToolbox",
         group: "editToolbox"
     });
     editAction.control.activate();
+
+    pvMapper.unselectAllSites = function() {
+        editAction.control.selectControl.unselectAll();
+    };
 
     //var st2 = sm.selectFeatureTool(function (data) {
     //    sm.editSiteAttributes(data);
@@ -94,30 +98,6 @@ pvMapper.onReady(function () {
         //group: "editToolbox"
         handler: sm.editSiteAttributes
     });
-
-    //var action = Ext.create('GeoExt.Action', {
-    //    text: "Select Site",
-    //    control: new OpenLayers.Control.SelectFeature(
-    //     pvMapper.getSiteLayer(),
-    //     {
-    //         clickout: true, toggle: true,
-    //         multiple: false, hover: false,
-    //         toggleKey: "ctrlKey", // ctrl key removes from selection
-    //         multipleKey: "shiftKey", // shift key adds to selection
-    //         //box: true,
-    //         //eventListeners: {
-    //         //    featurehighlighted: function (event) {
-    //         //        pvMapper.map.zoomToExtent(pvMapper.getSelectedSite().geometry.getBounds());
-    //         //    }
-    //         //}
-    //     }),
-    //    map: pvMapper.map,
-    //  //  enableToggle: true,
-    //    toggleGroup: "mapNavGroup1",  // only one tool can be active in a group
-    //    allowDepress: false,
-    //    tooltip: "Select a site that tools can act upon."
-    //});
-    //pvMapper.mapToolbar.add(Ext.create('Ext.button.Button', action));
 
     pvMapper.siteLayer.events.register(
         'featureselected',
@@ -145,18 +125,53 @@ pvMapper.onReady(function () {
 
     pvMapper.sitesToolbarMenu.add([renameAction, delAction]);
 
-    // instead of commented code we tuck these in the edit menu.
-    //var editTools = [new Ext.Button(delAction), new Ext.Button(editAction), new Ext.Button(renameAction)];
-    //pvMapper.mapToolbar.add(editTools);
 
-    //pvMapper.mapToolbar.add({
-    //    text: "Site Tools",
-    //    menu: [
-    //        delAction, editAction, renameAction
-    //    ]
-    //});
 
-    //selectAction.execute();
+    var delAllAction = Ext.create('Ext.Action', {
+        text: 'Delete All Sites',
+        iconCls: 'x-delete-menu-icon',
+        tooltip: "Delete all sites from the current project",
+        handler: function ()
+        {
+            if (pvMapper.siteLayer.features.length > 0)
+            {
+                // unselect all features first (at present, this causes a PUT to the database if a feature was selected)
+                // if this isn't done, there will be artifacts left on the map after deleting the selected site(s).
+                // Note that this also removes any sketch features from the feature layer (ie, siteLayer.features.length may decrease !)
+                pvMapper.unselectAllSites();
+                //editAction.control.selectControl.unselectAll();
+
+                if (pvMapper.siteLayer.features.length > 0)
+                {
+                    Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete ' +
+                        pvMapper.siteLayer.features.length + (pvMapper.siteLayer.features.length === 1 ? ' site?' : ' sites?'),
+                        function (result)
+                        {
+                            if (result === 'yes')
+                            {
+                                // try to delete all features
+                                pvMapper.deleteAllSites()
+                                    .done(function ()
+                                    {
+                                        // if we've deleted the feature from the database, let's delete it from BOTH local collections (?!?)
+                                        //TODO: This should happen automagically - ie the local collection should be tied into the database
+                                        //TODO: we should combine our siteManager with our OpenLayers feature collection - they both store sites, and that's absurd.
+                                        pvMapper.siteManager.removeAllSites();
+                                        pvMapper.siteLayer.removeAllFeatures(); // Remove map features after deletion 
+                                    })
+                                    .fail(function (errObj)
+                                    {
+                                        if (console && console.error) console.error('failed to delete sites: ' + errObj);
+                                    });
+                                // all done
+                            }
+                        });
+                }
+            }
+        }
+    });
+    pvMapper.sitesToolbarMenu.add(delAllAction);
+
 });
 
 
@@ -166,40 +181,6 @@ pvMapper.onReady(function () {
 function siteManagementTool(map, layer) {
     var selectTool, currentMode, selectedFeature, selectedID, editTool;
     var self = this; //Allow the internal functions access to this functionality
-
-    //Delete
-    //this.deleteSite = function (feature) {
-    //    var ret = pvMapper.deleteSite(feature.fid);
-    //    feature.destroy();
-    //};
-
-    //this.deleteSite = function () {
-    //    if (pvMapper.siteLayer.selectedFeatures.length > 0) {
-    //        Ext.MessageBox.confirm('Confirm', (pvMapper.siteLayer.selectedFeatures.length == 1) ?
-    //            ('Are you sure you want to delete site ' + pvMapper.siteLayer.selectedFeatures[0].id + '?') :
-    //            ('Are you sure you want to delete these ' + pvMapper.siteLayer.selectedFeatures.length + ' sites?'),
-    //        function (result) {
-    //            if (result === 'yes') {
-    //                pvMapper.siteLayer.selectedFeatures.forEach(function (feature) {
-    //                    pvMapper.deleteSite(feature.fid);
-    //                });
-                    
-    //                pvMapper.siteLayer.destroyFeatures(pvMapper.siteLayer.selectedFeatures);
-
-    //                //pvMapper.siteLayer.selectedFeatures.length = 0; // does this clear the selection?
-    //                //pvMapper.siteLayer.redraw();
-    //            }
-    //        });
-    //    }
-    //}
-
-    //Edit poly
-    this.editSite = function (feature) {
-        //Save the modifications back to the database
-        //This is where a save to the database might happen
-        var WKT = feature.geometry.toString();
-        var ret = pvMapper.updateSite(feature.fid, feature.attributes.name, feature.attributes.desc, WKT);
-    };
 
     //Edit attributes
     this.editSiteAttributes = function () {
@@ -274,22 +255,15 @@ function siteManagementTool(map, layer) {
     };
 
 
-    //Add new
-
-    //Rightclick menu
-
-    ////Select feature
-    //this.selectFeatureTool = function (callback, options) {
-    //    //if (!selectTool) {
-    //    var defaults = { onSelect: callback };
-    //    var selectTool = new OpenLayers.Control.SelectFeature(layer, defaults);
-    //    map.addControl(selectTool);
-    //    //} else {
-    //    //    selectTool.onSelect = callback;
-    //    //}
-
-    //    return selectTool;
-    //};
+    var saveFeatureToServer_timeoutHandle = null;
+    var saveFeatureToServer = function (data) {
+        // Send updated site to server
+        //sm.editSite(data.feature);
+        var ret = pvMapper.updateSite(data.feature.fid,
+            data.feature.attributes.name,
+            data.feature.attributes.desc,
+            data.feature.geometry.toString());
+    }
 
     this.modifyFeatureControl = function (callback) {
         var mft = new OpenLayers.Control.ModifyFeature(layer, {
@@ -300,16 +274,42 @@ function siteManagementTool(map, layer) {
             toggleKey: "ctrlKey", // ctrl key removes from selection
             multipleKey: "shiftKey", // shift key adds to selection
             box: false
-            //eventListeners: {
-            //    beforefeaturemodified: function (event) {
-            //        alert(event.feature);
-            //    },
-            //    featurehighlighted: function (event) {
-            //        pvMapper.map.zoomToExtent(pvMapper.getSelectedSite().geometry.getBounds());
-            //    }
-            //}
         });
-        layer.events.on({ "afterfeaturemodified": callback });
+        layer.events.on({"featuremodified": function (data) {
+            if (!data.feature || !data.feature.site) {
+                if (console && console.warn) console.warn("Warning: featuremodified fired on non-site feature");
+                return; // nothing to do here...
+            }
+
+            // notify the site manager (which will update scores etc)
+            pvMapper.siteManager.featureChangedHandler(data);
+            featureModified_timeoutHandle = null;
+
+            // if we've been waiting to save old changes to the DB, don't bother - they're out of date.
+            if (typeof saveFeatureToServer_timeoutHandle === "number") {
+                window.clearTimeout(saveFeatureToServer_timeoutHandle);
+            }
+
+            // wait a few seconds before we bother saving/persisting these changes to the DB
+            saveFeatureToServer_timeoutHandle = window.setTimeout(function () { saveFeatureToServer(data); }, 4000);
+        }});
+        layer.events.on({ "afterfeaturemodified": function (data) {
+            if (!data.feature || !data.feature.site) {
+                if (console && console.warn) console.warn("Warning: afterfeaturemodified fired on non-site feature");
+                return; // nothing to do here...
+            }
+
+            // save these changes immediately.
+            if (typeof saveFeatureToServer_timeoutHandle === "number") {
+                if (console && console.assert) console.assert(data.modified, "Warning: saving unmodified site feature to the database...");
+                // if we've been waiting to save old changes to the DB, don't bother - they're out of date.
+                if (typeof saveFeatureToServer_timeoutHandle === "number") {
+                    window.clearTimeout(saveFeatureToServer_timeoutHandle);
+                    saveFeatureToServer_timeoutHandle = null;
+                }
+                saveFeatureToServer(data);
+            }
+        }});
         return mft;
     };
 }
