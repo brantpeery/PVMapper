@@ -53,10 +53,18 @@ var INLModules;
                 _this.localLayer.setVisibility(false);
                 _this.localLayer.sourceModule = _this;
 
-                var feature = localFormat.read(kmlString);
-                _this.localLayer.addFeatures(feature);
+                var features = localFormat.read(kmlString);
+                _this.localLayer.addFeatures(features);
 
-                var isOk = pvMapper.map.addLayer(_this.localLayer);
+                if (features.length <= 0) {
+                    pvMapper.displayMessage("the file '" + _this.sourceDataID + "' was not opened correctly.", "error");
+
+                    //Ext.MessageBox.alert("Warning", "The file '" + this.sourceDataID + "' was not opened correctly.");
+                    //throw new Error("The file '" + this.sourceDataID + "' was not opened correctly.");
+                    _this.localLayer = null;
+                } else {
+                    var isOk = pvMapper.map.addLayer(_this.localLayer);
+                }
             };
             //============================================================
             this.updateScore = function (score) {
@@ -102,7 +110,7 @@ var INLModules;
             this.init({
                 activate: function () {
                     if (!_this.localLayer)
-                        throw new Error("Error: KML file has been deleted, or was not properly initialized.");
+                        throw new Error("Error: KML file '" + _this.sourceDataID + "' has been deleted, or was not properly initialized.");
                 },
                 deactivate: function () {
                     //TODO: this isn't undoable, which violates the assumptions we have about pvMapper Modules.
@@ -122,13 +130,14 @@ var INLModules;
                 scoringTools: [{
                         activate: function () {
                             if (!_this.localLayer)
-                                throw new Error("Error: KML file has been deleted, or was not properly initialized.");
+                                throw new Error("Error: KML file '" + _this.sourceDataID + "' has been deleted, or was not properly initialized.");
                             pvMapper.map.addLayer(_this.localLayer);
                         },
                         deactivate: function () {
-                            if (!_this.localLayer)
-                                throw new Error("Error: KML file has been deleted, or was not properly initialized.");
-                            pvMapper.map.removeLayer(_this.localLayer, false);
+                            if (_this.localLayer)
+                                pvMapper.map.removeLayer(_this.localLayer, false);
+                            else if (console && console.warn)
+                                console.warn("Warning: KML file '" + _this.sourceDataID + "' has been deleted, or was not properly initialized.");
                         },
                         id: "KmlProximityTool." + this.sourceDataID,
                         title: toolName,

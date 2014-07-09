@@ -23,7 +23,7 @@ module INLModules {
             this.init(<pvMapper.IModuleOptions>{
                 activate: () => {
                     if (!this.localLayer)
-                        throw new Error("Error: KML file has been deleted, or was not properly initialized.");
+                        throw new Error("Error: KML file '" + this.sourceDataID + "' has been deleted, or was not properly initialized.");
                 },
                 deactivate: () => {
                     //TODO: this isn't undoable, which violates the assumptions we have about pvMapper Modules.
@@ -44,13 +44,14 @@ module INLModules {
                 scoringTools: [{
                     activate: () => {
                         if (!this.localLayer)
-                            throw new Error("Error: KML file has been deleted, or was not properly initialized.");
+                            throw new Error("Error: KML file '" + this.sourceDataID + "' has been deleted, or was not properly initialized.");
                         pvMapper.map.addLayer(this.localLayer);
                     },
                     deactivate: () => {
-                        if (!this.localLayer)
-                            throw new Error("Error: KML file has been deleted, or was not properly initialized.");
-                        pvMapper.map.removeLayer(this.localLayer, false);
+                        if (this.localLayer)
+                            pvMapper.map.removeLayer(this.localLayer, false);
+                        else
+                            if (console && console.warn) console.warn("Warning: KML file '" + this.sourceDataID + "' has been deleted, or was not properly initialized.");
                     },
 
                     id: "KmlProximityTool." + this.sourceDataID,
@@ -121,10 +122,17 @@ module INLModules {
             this.localLayer.setVisibility(false);
             this.localLayer.sourceModule = this;
 
-            var feature: OpenLayers.FVector[] = localFormat.read(kmlString);
-            this.localLayer.addFeatures(feature);
+            var features: OpenLayers.FVector[] = localFormat.read(kmlString);
+            this.localLayer.addFeatures(features);
 
-            var isOk = pvMapper.map.addLayer(this.localLayer);
+            if (features.length <= 0) {
+                pvMapper.displayMessage("the file '" + this.sourceDataID + "' was not opened correctly.", "error");
+                //Ext.MessageBox.alert("Warning", "The file '" + this.sourceDataID + "' was not opened correctly.");
+                //throw new Error("The file '" + this.sourceDataID + "' was not opened correctly.");
+                this.localLayer = null;
+            } else {
+                var isOk = pvMapper.map.addLayer(this.localLayer);
+            }
         }
 
         //============================================================

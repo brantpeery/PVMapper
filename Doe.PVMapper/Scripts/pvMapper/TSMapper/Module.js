@@ -43,11 +43,10 @@ var pvMapper;
 
                 if (_this.isActive) {
                     if (console && console.warn)
-                        console.warn("Warning: attempted to activate an already active tool ID='" + _this.id + "'");
-                    return;
+                        console.warn("Warning: attempting to activate an already active module ID='" + _this.id + "'");
                 }
 
-                if (_this.options && typeof (_this.options.activate) === "function")
+                if (!_this.isActive && _this.options && typeof (_this.options.activate) === "function")
                     _this.options.activate();
 
                 //Load the info for this module into the data model
@@ -71,13 +70,9 @@ var pvMapper;
                 _this.isActive = true;
             };
             this.deactivate = function () {
-                if (console && console.assert)
-                    console.assert(_this.isActive);
-
                 if (!_this.isActive) {
                     if (console && console.warn)
-                        console.warn("Warning: attempted to deactivate an already inactive tool ID='" + _this.id + "'");
-                    return;
+                        console.warn("Warning: attempting to deactivate an already inactive module ID='" + _this.id + "'");
                 }
 
                 //Load the info for this module into the data model

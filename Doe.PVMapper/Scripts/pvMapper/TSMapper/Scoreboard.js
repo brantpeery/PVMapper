@@ -40,15 +40,14 @@ var pvMapper;
                     _this.update();
             };
             this.removeLine = function (scoreline) {
-                _this.linesHaveChanged = true;
-
                 var idx = pvMapper.mainScoreboard.scoreLines.indexOf(scoreline);
                 if (idx >= 0) {
                     scoreline.scoreChangeEvent.removeHandler(_this.onScoreChanged);
                     pvMapper.mainScoreboard.scoreLines.splice(idx, 1);
-                }
 
-                _this.update();
+                    _this.linesHaveChanged = true;
+                    _this.update();
+                }
             };
             this.addTotalLine = function (line) {
                 _this.linesHaveChanged = true;
@@ -59,15 +58,14 @@ var pvMapper;
                     _this.update();
             };
             this.removeTotalLine = function (line) {
-                _this.linesHaveChanged = true;
-
                 var idx = _this.totalLines.indexOf(line);
                 if (idx >= 0) {
                     //scoreline.scoreChangeEvent.removeHandler(this.onScoreChanged);
                     _this.totalLines.splice(idx, 1);
-                }
 
-                _this.update();
+                    _this.linesHaveChanged = true;
+                    _this.update();
+                }
             };
             this.onScoreChanged = function (event) {
                 _this.update();

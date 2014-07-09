@@ -65,15 +65,14 @@ module pvMapper {
         }
 
         public removeLine = (scoreline: ScoreLine) => {
-            this.linesHaveChanged = true;
-
             var idx = pvMapper.mainScoreboard.scoreLines.indexOf(scoreline);
             if (idx >= 0) {
                 scoreline.scoreChangeEvent.removeHandler(this.onScoreChanged);
                 pvMapper.mainScoreboard.scoreLines.splice(idx, 1);
-            }
 
-            this.update();
+                this.linesHaveChanged = true;
+                this.update();
+            }
         }
 
         public addTotalLine = (line: TotalLine) => {
@@ -86,15 +85,14 @@ module pvMapper {
         }
 
         public removeTotalLine = (line: TotalLine) => {
-            this.linesHaveChanged = true;
-
             var idx = this.totalLines.indexOf(line);
             if (idx >= 0) {
                 //scoreline.scoreChangeEvent.removeHandler(this.onScoreChanged);
                 this.totalLines.splice(idx, 1);
-            }
 
-            this.update();
+                this.linesHaveChanged = true;
+                this.update();
+            }
         }
 
 
