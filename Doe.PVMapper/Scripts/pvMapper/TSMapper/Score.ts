@@ -3,16 +3,37 @@
 
 // Module
 module pvMapper {
-    export interface IScore{
+    export interface IScore {
         utility: number;
         popupMessage?: string;
     }
+
     export interface ISiteScore extends IScore {
         value: number;
         site: Site;
         valueChangeEvent: pvMapper.Event;
         siteChangeEvent: pvMapper.Event;
         updateValue: (value: number) => number;
+    }
+
+    export interface IScoreJSON extends IScore {
+        utility: number;
+        popupMessage?: string;
+        value?: number;
+        //site: ISiteJSON;
+        site: { id: string };
+        scoreLine: { id: string };
+    }
+
+    export interface IValueWeight extends IScoreJSON {
+        scoreLine: {
+            id: string;
+            title: string;
+            weight: number;
+            //category: string;
+            //description: string;
+            // etc...
+        };
     }
 
     /**
@@ -29,29 +50,50 @@ module pvMapper {
          * @param {PVMapper.Site}  site The site that this score will track
          * @return {PVMapper.Score} New Score object
          */
-        constructor(site: pvMapper.Site) {
-            this.self = this;
-            //this.parent; //Assign the parent so that we can use the scoring functions
+        constructor(site: pvMapper.Site, scoreLine: IToolLine) {
             this.value = Number.NaN;
             this.utility = Number.NaN;
             //A reference to the site this score represents
             this.site = site;
+            this.scoreLine = scoreLine;
 
             //The long message formated in HTML that explains the value or score
             this.popupMessage = null;
 
+            this.valueChangeEvent = new pvMapper.Event();
+            this.siteChangeEvent = new pvMapper.Event();
+
             //Grab onto the change event for the site
-            this.site.changeEvent.addHandler((e: any) => {
+            this.siteChangeHandler = (e: any) => {
                 e.data = this;
                 //if (console) console.log('A score for site ' + this.site.name + ' has detected a site change pvMapper.Event.fire its own event now.');
-                this.siteChangeEvent.fire(this, [e,this]);
-            });
+                this.siteChangeEvent.fire(this, [e, this]);
+            };
+
+            this.site.changeEvent.addHandler(this.siteChangeHandler);
+        }
+
+        private siteChangeHandler: (e: any) => void;
+
+        public deactivate = () => {
+            try {
+                this.site.changeEvent.removeHandler(this.siteChangeHandler);
+            } catch (e) {
+                if (console && console.warn) console.warn("Failed to remove site change handler while destroying score object: " + e.toString());
+            }
+
+            //this.site = null;
+            //this.scoreLine = null;
+
+            this.valueChangeEvent = null;
+            this.siteChangeEvent = null;
+
+            //this.siteChangeHandler = null;
         }
 
         /// <Summary>A reference the this object independent of scope</Summary>
-        public self;
         public site: pvMapper.Site;
-        //public parent: IScoreTool;
+        public scoreLine: IToolLine;
 
         /**
          * A textual description of the raw value as provided by the scoring tool
@@ -68,18 +110,12 @@ module pvMapper {
         // Number.NaN indicates an invalid / outdated / error-full value
         public utility: number;
 
+        public isValueOld = false;
+
         // fancy events for tracking changes
-        public valueChangeEvent: pvMapper.Event = new pvMapper.Event();
+        public valueChangeEvent: pvMapper.Event;
         //public invalidateEvent: pvMapper.Event = new pvMapper.Event();
-        public siteChangeEvent: pvMapper.Event = new pvMapper.Event();
-
-        //Sets the utility value for the score. Fires the utilityChanged event
-        public setUtility(value:number) {
-            
-            this.utility = value;
-
-            //TODO: fire some kind of utilityChangedEvent, or somehting?
-        }
+        public siteChangeEvent: pvMapper.Event;
 
         /**
          * Updates the value and fires the value cahnged event. The ScoreLine this Score object belongs to subscribes to this event.
@@ -88,15 +124,23 @@ module pvMapper {
          * @param {number} the new value
          * @return {number} the new value
          */
-        public updateValue(value: number) {
+        public updateValue = (value: number) => {
+            if (console && console.warn && !this.isValueOld) console.warn(
+                "Warning: Received an unexpected score update (the score tool ID='" + this.scoreLine.id + "' may be running slow)");
+            this.isValueOld = false; // a reasonable assumption
+
             //Change the context, add this score to the event and pass the event on
             var oldvalue = this.value;
             this.value = value;
-            
-            //TODO: pvMapper.displayMessage(this.value,"Info");
 
             //fire the value updated event
-            this.valueChangeEvent.fire(this.self, { score:this.self, oldValue: oldvalue, newValue: value });
+            if (this.valueChangeEvent) {
+                this.valueChangeEvent.fire(this, { score: this, oldValue: oldvalue, newValue: value });
+            } else {
+                if (console && console.warn) console.warn("Warning: attempted to update a deactivated score (tool='" +
+                    (this.scoreLine && this.scoreLine.id) + "', site='" + (this.site && this.site.id)  + "')");
+            }
+
             return this.value;
         }
 
@@ -106,8 +150,8 @@ module pvMapper {
         //    this.utility = Number.NaN;
         //}
 
-        public toString() {
-            if (this.popupMessage && this.popupMessage.trim().length > 0) {
+        public toString = () => {
+            if (this.popupMessage) {
                 return this.popupMessage;
             } else if (typeof this.value !== "undefined" && this.value !== null && !isNaN(this.value)) {
                 return this.value.toString();
@@ -116,16 +160,20 @@ module pvMapper {
             }
         }
 
-        public toJSON(): any {
+        public toJSON = (): IScoreJSON => {
             return {
                 popupMessage: this.popupMessage,
                 value: this.value,
                 utility: this.utility,
-                site:this.site //This will call the toJSON() in the site to simplify the site object
+                site: { id: this.site.id },
+                scoreLine: { id: this.scoreLine.id },
             }
         }
+        
+        public fromJSON = (o: IScoreJSON) => {
+            if (console && console.assert) console.assert(this.site && o.site && this.site.id === o.site.id, "Warning: site ID did not match when loading score from JSON");
+            if (console && console.assert) console.assert(this.scoreLine && o.scoreLine && this.scoreLine.id === o.scoreLine.id, "Warning: scoreLine ID did not match when loading score from JSON");
 
-        public fromJSON(o: any) {
             this.popupMessage = o.popupMessage;
             this.value = o.value;
             this.utility = o.utility;
@@ -133,6 +181,5 @@ module pvMapper {
             //this.site.fromJSON(o.site);   
         }
     }
-
 }
 

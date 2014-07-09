@@ -91,8 +91,8 @@ Ext.define("GridExporter", {
                     var fieldName = col.dataIndex;
                     if (col.xtype === 'actioncolumn') {
                         var util = entry["utility"];
-                        if (util.stringify !== undefined) {
-                            text = util.stringify();
+                        if (util.toExcelString !== undefined) {
+                            text = util.toExcelString();
                         }
                         else
                             text = '';

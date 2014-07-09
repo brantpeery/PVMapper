@@ -4,3 +4,4 @@
 /// <reference path="Site.ts" />
 /// <reference path="StarRatingHelper.ts" />
 /// <reference path="common.ts" />
+//# sourceMappingURL=Tools.js.map

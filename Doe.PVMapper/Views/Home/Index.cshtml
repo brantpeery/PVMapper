@@ -7,6 +7,7 @@
 
 @section scripts{
     <script type="text/javascript" src="~/Scripts/UI/extras/DynamicLoader.js"></script>
+    <script type="text/javascript" src="~/Scripts/UI/extras/promise.js"></script>
     <script type="text/javascript" src="~/Scripts/ViewScripts/pvMapper.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/Event.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/pvMapper.js"></script>
@@ -19,6 +20,8 @@
 
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/Common.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/DataManager.js"></script>
+    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/ModuleManager.js"></script>
+    
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/Module.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/Renderer.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/Score.js"></script>
@@ -32,8 +35,7 @@
     <script type="text/javascript" src="~/Scripts/UI/view/Window.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/Scoreboard.js"></script>
     <script type="text/javascript" src="~/Scripts/UI/view/PieView.js"></script>
-    <script type="text/javascript" src="/Scripts/UI/view/ScoreboardWindow.js"></script>
-
+    <script type="text/javascript" src="~/Scripts/UI/view/ScoreboardWindow.js"></script>
     @*<script type="text/javascript" src="~/Scripts/ViewScripts/IdentifySite.js"></script>*@
     <script type="text/javascript" src="~/Scripts/ViewScripts/SiteId.js"></script>
 
@@ -41,9 +43,10 @@
     <script type="text/javascript" src="~/Scripts/ViewScripts/LoadProjectSites.js"></script>
 
     <script type="text/javascript" src="~/Scripts/ViewScripts/Layers.js"></script>
+    <script type="text/javascript" src="~/Scripts/ViewScripts/metadata.js"></script>
 
-    <script type="text/javascript" src="~/Scripts/jsts/javascript.util.js"></script>
-    <script type="text/javascript" src="~/Scripts/jsts/jsts.js"></script>
+    @*<script type="text/javascript" src="~/Scripts/jsts/javascript.util.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsts/jsts.js"></script>*@
     
     <script type="text/javascript" src="~/Scripts/EsriGeoJSON.js"></script>
     <script type="text/javascript" src="~/Scripts/Esri-GeoJsonConverter.js"></script>
@@ -51,44 +54,43 @@
     <script type="text/javascript" src="~/Scripts/ViewScripts/SiteManagement.js"></script>
     <script type="text/javascript" src="~/Scripts/ViewScripts/AddNewSite.js"></script>
     <script type="text/javascript" src="~/Scripts/UI/view/ExportGridToExcel.js"></script>
-    <script type="text/javascript" src="~/Scripts/SaveLocalFile.js"></script>
+    <script type="text/javascript" src="~/Scripts/FileSaver.js"></script>
+    <script type="text/javascript" src="~/Scripts/Blob.js"></script>
     <script type="text/javascript" src="~/Scripts/UI/view/MainToolbar.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/StarRatingHelper.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
 
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/siteAreaModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/irradianceModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/LandUseModule.js"></script>
-    @*Removed per Randy's suggestion that the Protected Areas service is superior*@
-    @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/solarmapperModule.js"></script>*@
-    @*Removed SNL transmission line queries; replaced with OpenStreetMap transmission line queries*@
-    @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/snlModule.js"></script>*@
-    @* Removed - The ESRI world topo map apparently no longer supports slope, aspect, and elevation (and a brief search found no suitible replacement) *@
-    @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/DemModule.js"></script>*@
-    @* Removed Wilderness module as the Land Management module will fulfill the same role and others during the Beta release & demos *@
-    @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/WildernessModule.js"></script>*@
+    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/jstorage.js"></script>
+    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/Data/ScoreboardProcessor.js"></script>
+    <script type="text/javascript" src="~/Scripts/pvExtensions/Reports.js"></script>
+    <script type="text/javascript" src="~/Scripts/UI/view/toolConfigWindow.js"></script>
+    <script type="text/javascript" src="~/Scripts/ViewScripts/RelatedLinks.js"></script>
     <script type="text/javascript" src="~/Scripts/pvExtensions/TotalsModule.js"></script>
-    @* Removed near module: speed issues are too invaisive for inclusion in demo; will replace once requests run in under 1000 ms *@
-    @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/CombinedNearModule.js"></script>*@
-    @* Removed the nearest road module before I merge to release - it isn't presently working - will replace in dev branch afterward. *@
-    @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/NearRoadModule.js"></script>*@
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/SubStationModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/WetlandsSocialModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/AgricultureSocialModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/SolarPlantSocialModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/WildlifeSocialModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/SoilModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/OSMSocialModule.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvmapper/TSMapper/riverDistance.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvmapper/TSMapper/NewSlopeModule.js"></script>
+
+    @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/CustomModule.js"></script>*@  @* Add New Custom Tool, Added by Rohan Raja (BYU Intern) *@
+    @*<script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/ProgressBar.js"></script>*@  @* Add New Custom Tool, Added by Rohan Raja (BYU Intern) *@
 
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/LocalLayerModule.js"></script>
     <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/KMLInfoModule.js"></script>
     
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/jstorage.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvMapper/TSMapper/Data/ScoreboardProcessor.js"></script>
-    <script type="text/javascript" src="~/Scripts/pvExtensions/Reports.js"></script>
+    @*
+        =====================================================================================================
+        Files list from here on down are not pvMapper core API specific and may be load on demand if necessary
+        =====================================================================================================
+    *@
 
-    <script type="text/javascript" src="~/Scripts/ViewScripts/RelatedLinks.js"></script>
+    <script type="text/javascript">
+        pvIncludeAllScripts = false;
+        pvIncludeMinimal = false;
+    </script>
+    <script type="text/javascript" src="~/Scripts/pvClient.js"></script>
+
+    <script type="text/javascript">
+        //using DOM to convert HTML string (js code) into plain text.
+        var div = document.createElement('div');
+        div.innerHTML = "@ViewBag.toolModules";
+        eval("//# sourceURL=IndexInline.js\n " + div.textContent);
+    </script>
+    
 }
 

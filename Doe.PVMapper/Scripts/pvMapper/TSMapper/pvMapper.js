@@ -4,7 +4,7 @@
 /// <reference path="Event.ts" />
 var pvMapper;
 (function (pvMapper) {
-    pvMapper.readyEvent = new pvMapper.Event();
+    pvMapper.readyEvent = new pvMapper.Event;
 
     pvMapper.mapToolbar;
 
@@ -13,10 +13,14 @@ var pvMapper;
     pvMapper.reportsToolbarMenu;
     pvMapper.linksToolbarMenu;
 
-    pvMapper.infoTools = [];
+    //export var infoTools: IInfoTool[] = [];
+    pvMapper.isReady = false;
 
     function onReady(fn) {
-        pvMapper.readyEvent.addHandler(fn);
+        if (pvMapper.isReady)
+            fn();
+        else
+            pvMapper.readyEvent.addHandler(fn);
     }
     pvMapper.onReady = onReady;
 
@@ -24,8 +28,11 @@ var pvMapper;
     pvMapper.siteLayer;
     pvMapper.loadLocalModules = null;
     pvMapper.isLocalModulesLoaded = false;
-    pvMapper.customModules = new Array();
+
+    //export var customModules: ICustomModuleHandle[] = new Array<ICustomModuleHandle>();
     pvMapper.waitToLoad = null;
+
+    //export var clientScripts: string;
     function getColorForScore(score) {
         var min = Math.min;
         var max = Math.max;
@@ -71,16 +78,30 @@ var pvMapper;
     }
     pvMapper.getColorForScore = getColorForScore;
 
-    function addInfoTool(tool) {
-        pvMapper.infoTools.push(tool);
-        tool.init();
+    //export function addInfoTool(tool:IInfoTool) {
+    //    infoTools.push(tool);
+    //    tool.init();
+    //}
+    //readyEvent.addHandler(function () {
+    //    //Activate all the info tools
+    //    infoTools.map(function (tool, idx) {
+    //        tool.activate();
+    //    });
+    //})
+    function getIncludeModules() {
+        return null;
     }
-    pvMapper.addInfoTool = addInfoTool;
+    pvMapper.getIncludeModules = getIncludeModules;
 
-    pvMapper.readyEvent.addHandler(function () {
-        //Activate all the info tools
-        pvMapper.infoTools.map(function (tool, idx) {
-            tool.activate();
-        });
-    });
+    pvMapper.displayMessage;
+
+    pvMapper.getSite;
+    pvMapper.postSite;
+    pvMapper.updateSite;
+    pvMapper.deleteSite;
+    pvMapper.deleteAllSites;
 })(pvMapper || (pvMapper = {}));
+
+//allow jquery to cache all ajax get from server.
+$.ajaxSetup({ cache: true });
+//# sourceMappingURL=pvMapper.js.map

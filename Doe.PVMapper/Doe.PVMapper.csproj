@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -32,6 +33,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -232,19 +234,33 @@
       <DependentUpon>SiteDetailReport.scss</DependentUpon>
     </Content>
     <Content Include="Content\Reports\SummaryReport.css" />
+    <Content Include="Images\accept.png" />
+    <Content Include="Images\anllogo.png" />
     <Content Include="Images\barcharts.png" />
+    <Content Include="Images\check.png" />
     <Content Include="Images\cleaning.png" />
     <Content Include="Images\delete.png" />
+    <Content Include="Images\disk.png" />
+    <Content Include="Images\dsirelogo.png" />
     <Content Include="Images\edit.png" />
+    <Content Include="Images\eispclogo.png" />
+    <Content Include="Images\exclamation.gif" />
     <Content Include="Images\fileexport.png" />
+    <Content Include="Images\loading.gif" />
     <Content Include="Images\notes.png" />
+    <Content Include="Images\nrel.png" />
     <Content Include="Images\open.png" />
     <Content Include="Images\openCfg.png" />
     <Content Include="Images\openProject.png" />
     <Content Include="Images\printer.png" />
+    <Content Include="Images\restart.png" />
     <Content Include="Images\save.png" />
     <Content Include="Images\saveConfig.png" />
+    <Content Include="Images\saved.png" />
     <Content Include="Images\saveProject.png" />
+    <Content Include="Images\saving.gif" />
+    <Content Include="Images\search.png" />
+    <Content Include="Images\tag.png" />
     <Content Include="Images\zoom_in.png" />
     <Content Include="Images\zoom_out.png" />
     <Content Include="lpresources\assets\ajax-loader.gif" />
@@ -368,16 +384,21 @@
     <Content Include="lpresources\verify\3.png" />
     <Content Include="lpresources\verify\ajax_check.php" />
     <Content Include="Notes\reportMockup.svg" />
+    <Content Include="Scripts\Blob.js" />
+    <Content Include="Scripts\Ext\ux\statusbar\StatusBar.js" />
+    <Content Include="Scripts\FileSaver.js" />
+    <Content Include="Scripts\pvClient.js" />
     <Content Include="Scripts\Esri-GeoJsonConverter.js" />
     <Content Include="Scripts\EsriGeoJSON.js" />
-    <Content Include="Scripts\ExtJS.d.ts" />
+    <TypeScriptCompile Include="Scripts\ExtJS.d.ts" />
     <Content Include="Scripts\Heron\widgets\search\NominatimSearchCombo.js" />
-    <Content Include="Scripts\jquery.d.ts" />
+    <TypeScriptCompile Include="Scripts\jquery.d.ts" />
     <Content Include="Scripts\jsxgraphcore.js" />
     <Content Include="Scripts\JSZip\jszip-inflate.js" />
     <Content Include="Scripts\JSZip\jszip-load.js" />
     <Content Include="Scripts\JSZip\jszip.js" />
-    <Content Include="Scripts\lib.d.ts" />
+    <TypeScriptCompile Include="Scripts\lib.d.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ModuleManager.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\OpenLayers.d.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreLine.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\common.ts" />
@@ -385,16 +406,22 @@
     <Content Include="Scripts\pvExtensions\Reports.js">
       <DependentUpon>Reports.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvExtensions\Reports.ts" />
+    <TypeScriptCompile Include="Scripts\pvExtensions\Reports.ts" />
     <Content Include="Scripts\pvExtensions\TotalsModule.js">
       <DependentUpon>TotalsModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvExtensions\TotalsModule.ts" />
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\AgricultureSocialModule.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\AgricultureSocialModule.js">
+    <TypeScriptCompile Include="Scripts\pvExtensions\TotalsModule.ts" />
+    <TypeScriptCompile Include="Scripts\ToolModules\AgricultureSocialModule.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\CustomModule.js" />
+    <Content Include="Scripts\pvMapper\TSMapper\es6-promises.d.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\ModuleManager.js">
+      <DependentUpon>ModuleManager.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\ProgressBar.js" />
+    <Content Include="Scripts\ToolModules\AgricultureSocialModule.js">
       <DependentUpon>AgricultureSocialModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\CombinedNearModule.js" />
+    <Content Include="Scripts\ToolModules\CombinedNearModule.js" />
     <Content Include="Scripts\pvMapper\TSMapper\DataManager.js">
       <DependentUpon>DataManager.ts</DependentUpon>
     </Content>
@@ -402,81 +429,73 @@
     <Content Include="Scripts\pvMapper\TSMapper\Data\ScoreboardProcessor.js">
       <DependentUpon>ScoreboardProcessor.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\DemModule.js">
+    <Content Include="Scripts\ToolModules\DemModule.js">
       <DependentUpon>DemModule.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\IEventTypes.js">
       <DependentUpon>IEventTypes.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\IEventTypes.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\IEventTypes.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\common.js">
       <DependentUpon>common.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\DemModule.ts" />
+    <TypeScriptCompile Include="Scripts\ToolModules\DemModule.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\Event.js">
       <DependentUpon>Event.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Event.ts" />
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Options.d.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Event.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Module.ts" />
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\irradianceModule.ts" />
+    <TypeScriptCompile Include="Scripts\ToolModules\irradianceModule.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\InfoTools.js">
       <DependentUpon>InfoTools.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\InfoTools.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\irradianceModule.js">
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\InfoTools.ts" />
+    <Content Include="Scripts\ToolModules\irradianceModule.js">
       <DependentUpon>irradianceModule.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\LandUseModule.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\jstorage.d.ts" />
+    <TypeScriptCompile Include="Scripts\ToolModules\LandUseModule.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\jstorage.d.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\jstorage.js" />
-    <Content Include="Scripts\pvMapper\TSMapper\JXG.d.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\JXG.d.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\KMLInfoModule.js">
       <DependentUpon>KMLInfoModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\KMLInfoModule.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\LandUseModule.js">
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\KMLInfoModule.ts" />
+    <Content Include="Scripts\ToolModules\LandUseModule.js">
       <DependentUpon>LandUseModule.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\LocalLayerModule.js">
       <DependentUpon>LocalLayerModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\LocalLayerModule.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\LocalLayerModule.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\Module.js">
       <DependentUpon>Module.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\ModuleTemplate.js">
-      <DependentUpon>ModuleTemplate.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\ModuleTemplate.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\NearRoadModule.js" />
-    <Content Include="Scripts\pvMapper\TSMapper\NewSlopeModule.js" />
-    <Content Include="Scripts\pvMapper\TSMapper\Options.d.js">
-      <DependentUpon>Options.d.ts</DependentUpon>
-    </Content>
+    <Content Include="Scripts\ToolModules\NearRoadModule.js" />
+    <Content Include="Scripts\ToolModules\NewSlopeModule.js" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Scoreboard.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Renderer.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\OSMSocialModule.js" />
+    <Content Include="Scripts\ToolModules\OSMSocialModule.js" />
     <Content Include="Scripts\pvMapper\TSMapper\PVData.js">
       <DependentUpon>PVData.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\PVData.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\PVData.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\pvMapper.js">
       <DependentUpon>pvMapper.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\pvMapper.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\pvMapper.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\Renderer.js">
       <DependentUpon>Renderer.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Data\ScoreboardProcessor.ts" />
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\riverDistance.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\riverDistance.js">
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Data\ScoreboardProcessor.ts" />
+    <TypeScriptCompile Include="Scripts\ToolModules\riverDistance.ts" />
+    <Content Include="Scripts\ToolModules\riverDistance.js">
       <DependentUpon>riverDistance.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Scoreboard.js">
       <DependentUpon>Scoreboard.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\siteAreaModule.ts" />
+    <TypeScriptCompile Include="Scripts\ToolModules\siteAreaModule.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreUtility.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\ScoreLine.js">
       <DependentUpon>ScoreLine.ts</DependentUpon>
@@ -487,67 +506,66 @@
     <Content Include="Scripts\pvMapper\TSMapper\ScoreUtilityWindows.js">
       <DependentUpon>ScoreUtilityWindows.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\ScoreUtilityWindows.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\siteAreaModule.js">
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreUtilityWindows.ts" />
+    <Content Include="Scripts\ToolModules\siteAreaModule.js">
       <DependentUpon>siteAreaModule.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\SiteManager.js">
       <DependentUpon>SiteManager.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\SiteManager.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\SiteManager.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\Score.js">
       <DependentUpon>Score.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Score.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Score.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\Site.js">
       <DependentUpon>Site.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\Site.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Site.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Tools.ts" />
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\solarmapperModule.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\snlModule.js" />
-    <Content Include="Scripts\pvMapper\TSMapper\snlModule.ts" />
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\SoilModule.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\SoilModule.js">
+    <TypeScriptCompile Include="Scripts\ToolModules\solarmapperModule.ts" />
+    <Content Include="Scripts\ToolModules\snlModule.js" />
+    <TypeScriptCompile Include="Scripts\ToolModules\SoilModule.ts" />
+    <Content Include="Scripts\ToolModules\SoilModule.js">
       <DependentUpon>SoilModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\solarmapperModule.js">
+    <Content Include="Scripts\ToolModules\solarmapperModule.js">
       <DependentUpon>solarmapperModule.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\StarRatingHelper.ts" />
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\SolarPlantSocialModule.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\SolarPlantSocialModule.js">
+    <TypeScriptCompile Include="Scripts\ToolModules\SolarPlantSocialModule.ts" />
+    <Content Include="Scripts\ToolModules\SolarPlantSocialModule.js">
       <DependentUpon>SolarPlantSocialModule.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\StarRatingHelper.js">
       <DependentUpon>StarRatingHelper.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\SubStationModule.js" />
+    <Content Include="Scripts\ToolModules\SubStationModule.js" />
     <Content Include="Scripts\pvMapper\TSMapper\Tools.js">
       <DependentUpon>Tools.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\TotalLine.js">
       <DependentUpon>TotalLine.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\TotalLine.ts" />
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\TotalLine.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\UtilityFunctions.js">
       <DependentUpon>UtilityFunctions.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\UtilityFunctions.ts" />
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\WetlandsSocialModule.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\WetlandsSocialModule.js">
+    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\UtilityFunctions.ts" />
+    <TypeScriptCompile Include="Scripts\ToolModules\WetlandsSocialModule.ts" />
+    <Content Include="Scripts\ToolModules\WetlandsSocialModule.js">
       <DependentUpon>WetlandsSocialModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\WildernessModule.js">
+    <Content Include="Scripts\ToolModules\WildernessModule.js">
       <DependentUpon>WildernessModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\WildernessModule.ts" />
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\WildlifeSocialModule.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\WildlifeSocialModule.js">
+    <TypeScriptCompile Include="Scripts\ToolModules\WildernessModule.ts" />
+    <TypeScriptCompile Include="Scripts\ToolModules\WildlifeSocialModule.ts" />
+    <Content Include="Scripts\ToolModules\WildlifeSocialModule.js">
       <DependentUpon>WildlifeSocialModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\Utility.ts" />
-    <Content Include="Scripts\SaveLocalFile.js" />
+    <TypeScriptCompile Include="Scripts\pvMapper\Utility.ts" />
+    <Content Include="Scripts\UI\extras\promise.js" />
     <Content Include="Scripts\UI\model\Scoreboard.js" />
     <Content Include="Scripts\UI\model\Tool.js" />
     <Content Include="Scripts\UI\panel\MinMaxTargetPanel.js" />
@@ -558,7 +576,9 @@
     <Content Include="Scripts\UI\view\RatingTool.js" />
     <Content Include="Scripts\UI\view\RatingView.js" />
     <Content Include="Scripts\UI\view\ScoreboardWindow.js" />
+    <Content Include="Scripts\UI\view\toolConfigWindow.js" />
     <Content Include="Scripts\UI\view\UtilityFunctionEdit.js" />
+    <Content Include="Scripts\ViewScripts\metadata.js" />
     <Content Include="Scripts\ViewScripts\RelatedLinks.js" />
     <Content Include="Scripts\ViewScripts\SiteId.js" />
     <Content Include="Scripts\UnitTests\jasmine.js" />
@@ -568,7 +588,7 @@
     <Content Include="Scripts\UnitTests\pvMapper.SiteManager.js" />
     <Content Include="Scripts\UnitTests\string_extensions.js" />
     <Content Include="Scripts\ViewScripts\IdentifySite.js" />
-    <Content Include="Scripts\_frameworkobjects.d.ts" />
+    <TypeScriptCompile Include="Scripts\_frameworkobjects.d.ts" />
     <Compile Include="WebApi\MongoHelper.cs" />
     <Compile Include="WebApi\ProjectSiteController.cs" />
     <Compile Include="WebApi\PropertiesController.cs" />
@@ -1278,7 +1298,6 @@
     <Content Include="Scripts\pvMapper\Scoreboard.js" />
     <Content Include="Scripts\pvMapper\ScoreLine.js" />
     <Content Include="Scripts\pvMapper\Site.js" />
-    <Content Include="Scripts\pvMapper\test.html" />
     <Content Include="Scripts\pvMapper\Utility.js" />
     <Content Include="Scripts\Tools\debug_log.js" />
     <Content Include="Scripts\UI\view\Application.js" />
@@ -1385,7 +1404,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Scripts\theme\" />
-    <Folder Include="Scripts\UI\controller\" />
     <Folder Include="Scripts\UI\store\" />
     <Folder Include="Scripts\UI\view\weightFunctions\" />
   </ItemGroup>
@@ -1409,8 +1427,27 @@
     <Content Include="Scripts\DataTables-1.9.2\extras\AutoFill\media\js\AutoFill.min.js.gz" />
   </ItemGroup>
   <!--============ This to allow TypeScript code to be compile by tsc.======== -->
-  <Target Name="BeforeBuild">
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+  </PropertyGroup>
+  <!--<Target Name="BeforeBuild">
     <Exec Command="'$(PROGRAMFILES)\Microsoft SDKs\TypeScript\0.8.0.0\tsc' -c @(TypeScriptCompile -&gt;''%(fullpath)'', ' ')" IgnoreExitCode="false" />
+  </Target>-->
+  <Target Name="CleanTypeScriptGeneratedFiles" AfterTargets="AfterClean">
+    <ItemGroup>
+      <TypeScriptGenerated Include="%(TypeScriptCompile.RelativeDir)%(TypeScriptCompile.Filename).js" Condition="!$([System.String]::new('%(TypeScriptCompile.Filename)').EndsWith('.d'))" />
+      <TypeScriptGenerated Include="%(TypeScriptCompile.RelativeDir)%(TypeScriptCompile.Filename).js.map" Condition="!$([System.String]::new('%(TypeScriptCompile.Filename)').EndsWith('.d'))" />
+    </ItemGroup>
+    <Delete Files="@(TypeScriptGenerated)" />
   </Target>
   <!-- ===================================================================== -->
   <PropertyGroup>
@@ -1418,6 +1455,8 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!--<Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets')" />-->
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

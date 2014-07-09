@@ -4,41 +4,43 @@
 
 module pvMapper {
     export module Data {
-        interface ICleanScoreboardData {
-              
-        }
-
         export class ScoreboardProcessor {
-
 
             static getCleanObject(scoreboard: ScoreBoard) {
                 var j = JSON.stringify(scoreboard);
                 return JSON.parse(j);
             }
 
-            static getCleanObjectTransposed(scoreboard) {
-                var obj = this.getCleanObject(scoreboard);
+            static getCleanObjectTransposed(scoreboard: ScoreBoard) {
+                var obj = scoreboard.toJSON();
                 var newObj = {
-                    sites: []
+                    sites: obj.sites.map(site => {
+                        (<any>site).scores = obj.scoreLines.map(line => {
+                            var score = line.scores.filter(score => score.site.id === site.id)[0];
+                            score.scoreLine = line; // replace ID reference with full score line JSON object (for compatability with our reports)
+                            return score;
+                        });
+                        return site;
+                    })
                 };
-                obj.scoreLines.forEach(function (line, sidx) {
-                    line.scores.forEach(function (score, idx) {
-                        if (newObj.sites[idx] == undefined) {
-                            newObj.sites[idx] = score.site;
-                            newObj.sites[idx].scores = [];
-                        }
-                        newObj.sites[idx].scores[sidx] = score;
-                        newObj.sites[idx].scores[sidx].scoreLine = line;
-                        delete score.site;
-                    });
-                    delete line.scores;
-                });
+                //obj.scoreLines.forEach(function (line, sidx) {
+                //    line.scores.forEach(function (score, idx) {
+                //        if (newObj.sites[idx] == undefined) {
+                //            newObj.sites[idx] = score.site;
+                //            newObj.sites[idx].scores = [];
+                //        }
+                //        newObj.sites[idx].scores[sidx] = score;
+                //        newObj.sites[idx].scores[sidx].scoreLine = line;
+                //        delete score.site;
+                //    });
+                //    delete line.scores;
+                //});
                 return newObj;
             }
 
-            static getCleanObjectTransposedJSON(scoreboard:ScoreBoard): string {
-                return JSON.stringify(this.getCleanObjectTransposed(scoreboard));
-            }
+            //static getCleanObjectTransposedJSON(scoreboard:ScoreBoard): string {
+            //    return JSON.stringify(this.getCleanObjectTransposed(scoreboard));
+            //}
             
             static addSummaryAndDivergence(data: any) {
                 var total = 0;

@@ -4,7 +4,7 @@ pvMapper.onReady(function () {
 
     // EPSG:102113, EPSG:900913, and EPSG:3857 are all the same projection (just different flavors favored by different groups).
     // So, this is (a bit of) a hack to coax OpenLayers to request maps in the native projection of the server
-    //TODO: move this to wherever it should ultimately go.
+    // TODO: move this to wherever it should ultimately go.
     Ext.override(OpenLayers.Layer.WMS, {
         getFullRequestString: function (newParams, altUrl) {
             var projectionCode = this.map.getProjection();
@@ -47,14 +47,21 @@ pvMapper.onReady(function () {
     //US Counties WMS taken from ArcGIS server
 
     //addWMSLayer("US Counties", "https://geoserver.byu.edu/arcgis/services/Layers/counties/MapServer/WmsServer?", 0, true);
-    addWMSLayer("Cities", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "7", true);
-    addWMSLayer("Dams", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "6", true);
-    addWMSLayer("Roads", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "5", true);
-    addWMSLayer("Rivers", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "4", true);
-    addWMSLayer("Railroads", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "3", true);
-    addWMSLayer("Indian Reservations", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "2", true);
-    addWMSLayer("States", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "1", true);
-    addWMSLayer("Counties", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "0", true);
+   
+    var CitiesMetaData = Ext.htmlEncode("Title: World Cities <br>Originator: Environmental Systems Research Institute, Inc. (ESRI) <br>Edition: 2000 <br><br>Keywords:<br>Theme:point,cities,capitals,administrative unit and international codes,population,country names,port identification numbers.<br><br>Publication_Information:<br>Publication_Place: Redlands, California, USA<br>Publisher: Environmental Systems Research Institute, Inc. (ESRI)<br>Description:<br>Abstract:<br>World Cities represents the locations of major cities of the world.<br>Purpose:<br>World Cities provides a base map layer of the cities for the world. The cities include national capitals, provincial capitals, major population centers, and landmark cities.<br>Supplemental_Information: Largest scale when displaying the data: 1:15,000,000.<br>Use_Constraints:<br>The data are provided by multiple, third party data vendors under license to ESRI for inclusion on ESRI Data & Maps CD-ROMs for use with ESRI® software. Each data vendor has its own data licensing policies and may grant varying redistribution rights to end users. Please consult the redistribution rights below for this data set provided on ESRI Data & Maps CD-ROMs. As used herein, \"Geodata\" shall mean any digital data set consisting of geographic data coordinates and associated attributes.The redistribution rights for this data set: Redistribution rights are granted by the data vendor for hard-copy renditions or static, electronic map images (e.g. .gif, .jpeg, etc.) that are plotted, printed, or publicly displayed with proper metadata and source/copyright attribution to the respective data vendor(s). Geodata is redistributable with a Value-Added Software Application developed by ESRI Business Partners on a royalty-free basis with proper metadata and source/copyright attribution to the respective data vendor(s). Geodata is redistributable without a Value-Added Software Application (i.e., adding the sample data to an existing, [non]commercial data set for redistribution) with proper metadata and source/copyright attribution to the respective data vendor(s).<br>For further Metadata : http://webgis.wr.usgs.gov/globalgis/metadata_qr/metadata/ESRI_cities.htm ");
+    var DamsMetaData = Ext.htmlEncode("Title: VMAP_1V10 - Vector Map Level 0 (Digital Chart of the World)<br>Originator: National Imagery and Mapping Agency<br>Edition: 3<br><br>Keywords:<br>Theme:Vector Map,VMap,DCW,digital global basemap,GIS database,Global digital database,CD-ROM,rivers,roads,railroads,international boundaries,airports,elevations,contours,coastlines,populated places vegetation<br><br>Publication_Information:<br>Publication_Place: Fairfax, VA<br>Publisher: National Imagery and Mapping Agency<br>Description:<br>Abstract:<br>The Vector Map (VMap) Level 0 database represents the third edition of the Digital Chart of the World. The second edition was a limited release item published 1995 09. The product is dual named to show its lineage to the original DCW, published in 1992, while positioning the revised product within a broader emerging-family of VMap products.VMap Level 0 is a comprehensive 1:1,000,000 scale vector basemap of the world. It consists of cartographic,attribute, and textual data stored on compact disc read only memory (CD-ROM). The primary source for the database is the National Imagery and Mapping Agency's (NIMA)Operational Navigation Chart (ONC) series. This is the largest scale unclassified map series in existence that provides consistent, continuous global coverage of essential basemap features. The database contains more than 1,900 megabytes of vector data and is organized into 10 thematic layers. The data includes major road and rail networks, major hydrologic drainage systems, major utility networks (cross-country pipelines and communication lines),all major airports, elevation contours (1000 foot(ft), with 500ft and 250ft supplemental contours), coastlines, international boundaries and populated places. The database can be accessed directly from the four optical CD-ROMs thatstore the database or can be transferred to a magnetic media.<br>Purpose:<br>The VMap Level 0 is a general purpose global database designed to support Geographic Information Systems applications.<br>Use_Constraints:<br>Cite National Imagery and Mapping Agency<br>For Further details : http://webgis.wr.usgs.gov/globalgis/metadata_qr/metadata/springs_wells_dams.htm");
+    var RoadsmetaData = Ext.htmlEncode("Title: VMAP_1V10 - Vector Map Level 0 (Digital Chart of the World)<br>Originator: National Imagery and Mapping Agency<br>Edition: 3<br><br>Keywords:<br>Theme:Vector Map,VMap,DCW,digital global basemap,GIS database,Global digital database,CD-ROM,rivers,roads,railroads,international boundaries,airports,elevations,contours,coastlines,populated places vegetation<br><br>Publication_Information:<br>Publication_Place: Fairfax, VA<br>Publisher: National Imagery and Mapping Agency<br>Description:<br>Abstract:<br>The Vector Map (VMap) Level 0 database represents the third edition of the Digital Chart of the World. The second edition was a limited release item published 1995 09. The product is dual named to show its lineage to the original DCW, published in 1992, while positioning the revised product within a broader emerging-family of VMap products.VMap Level 0 is a comprehensive 1:1,000,000 scale vector basemap of the world. It consists of cartographic,attribute, and textual data stored on compact disc read only memory (CD-ROM). The primary source for the database is the National Imagery and Mapping Agency's (NIMA)Operational Navigation Chart (ONC) series. This is the largest scale unclassified map series in existence that provides consistent, continuous global coverage of essential basemap features. The database contains more than 1,900 megabytes of vector data and is organized into 10 thematic layers. The data includes major road and rail networks, major hydrologic drainage systems, major utility networks (cross-country pipelines and communication lines),all major airports, elevation contours (1000 foot(ft), with 500ft and 250ft supplemental contours), coastlines, international boundaries and populated places. The database can be accessed directly from the four optical CD-ROMs thatstore the database or can be transferred to a magnetic media.<br>Purpose:<br>The VMap Level 0 is a general purpose global database designed to support Geographic Information Systems applications.<br>Use_Constraints:<br>Cite National Imagery and Mapping Agency<br>For Further details : http://webgis.wr.usgs.gov/globalgis/metadata_qr/metadata/roads.htm");
+    var RiversmetaData = Ext.htmlEncode("Title: VMAP_1V10 - Vector Map Level 0 (Digital Chart of the World)<br>Originator: National Imagery and Mapping Agency<br>Edition: 3<br><br>Keywords:<br>Theme:Vector Map,VMap,DCW,digital global basemap,GIS database,Global digital database,CD-ROM,rivers,roads,railroads,international boundaries,airports,elevations,contours,coastlines,populated places vegetation<br><br>Publication_Information:<br>Publication_Place: Fairfax, VA<br>Publisher: National Imagery and Mapping Agency<br>Description:<br>Abstract:<br>The Vector Map (VMap) Level 0 database represents the third edition of the Digital Chart of the World. The second edition was a limited release item published 1995 09. The product is dual named to show its lineage to the original DCW, published in 1992, while positioning the revised product within a broader emerging-family of VMap products.VMap Level 0 is a comprehensive 1:1,000,000 scale vector basemap of the world. It consists of cartographic,attribute, and textual data stored on compact disc read only memory (CD-ROM). The primary source for the database is the National Imagery and Mapping Agency's (NIMA)Operational Navigation Chart (ONC) series. This is the largest scale unclassified map series in existence that provides consistent, continuous global coverage of essential basemap features. The database contains more than 1,900 megabytes of vector data and is organized into 10 thematic layers. The data includes major road and rail networks, major hydrologic drainage systems, major utility networks (cross-country pipelines and communication lines),all major airports, elevation contours (1000 foot(ft), with 500ft and 250ft supplemental contours), coastlines, international boundaries and populated places. The database can be accessed directly from the four optical CD-ROMs thatstore the database or can be transferred to a magnetic media.<br>Purpose:<br>The VMap Level 0 is a general purpose global database designed to support Geographic Information Systems applications.<br>Use_Constraints:<br>Cite National Imagery and Mapping Agency<br>For Further details : http://webgis.wr.usgs.gov/globalgis/metadata_qr/metadata/perennial.htm");
+    var RailroadsmetaData = Ext.htmlEncode("Title: VMAP_1V10 - Vector Map Level 0 (Digital Chart of the World)<br>Originator: National Imagery and Mapping Agency<br>Edition: 3<br><br>Keywords:<br>Theme:Vector Map,VMap,DCW,digital global basemap,GIS database,Global digital database,CD-ROM,rivers,roads,railroads,international boundaries,airports,elevations,contours,coastlines,populated places vegetation<br><br>Publication_Information:<br>Publication_Place: Fairfax, VA<br>Publisher: National Imagery and Mapping Agency<br>Description:<br>Abstract:<br>The Vector Map (VMap) Level 0 database represents the third edition of the Digital Chart of the World. The second edition was a limited release item published 1995 09. The product is dual named to show its lineage to the original DCW, published in 1992, while positioning the revised product within a broader emerging-family of VMap products.VMap Level 0 is a comprehensive 1:1,000,000 scale vector basemap of the world. It consists of cartographic,attribute, and textual data stored on compact disc read only memory (CD-ROM). The primary source for the database is the National Imagery and Mapping Agency's (NIMA)Operational Navigation Chart (ONC) series. This is the largest scale unclassified map series in existence that provides consistent, continuous global coverage of essential basemap features. The database contains more than 1,900 megabytes of vector data and is organized into 10 thematic layers. The data includes major road and rail networks, major hydrologic drainage systems, major utility networks (cross-country pipelines and communication lines),all major airports, elevation contours (1000 foot(ft), with 500ft and 250ft supplemental contours), coastlines, international boundaries and populated places. The database can be accessed directly from the four optical CD-ROMs thatstore the database or can be transferred to a magnetic media.<br>Purpose:<br>The VMap Level 0 is a general purpose global database designed to support Geographic Information Systems applications.<br>Use_Constraints:<br>Cite National Imagery and Mapping Agency<br>For Further details : http://webgis.wr.usgs.gov/globalgis/metadata_qr/metadata/railroads.htm");
+   
+    addWMSLayer("Cities", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "7", true, CitiesMetaData);
+    addWMSLayer("Dams", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "6", true, DamsMetaData);
+    addWMSLayer("Roads", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "5", true, RoadsmetaData);
+    addWMSLayer("Rivers", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "4", true, RiversmetaData);
+    addWMSLayer("Railroads", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "3", true, RailroadsmetaData);
+    addWMSLayer("Indian Reservations", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "2", true, "Mdata for Indian Reservations not found");
+    addWMSLayer("States", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "1", true, "Mdata for States not found");
+    addWMSLayer("Counties", "https://geoserver.byu.edu/arcgis/services/Layers/ref_layer/MapServer/WmsServer?", "0", true, "Mdata for Countries not found");
     
     //addBYUServerLayer("US Counties", "https://geoserver.byu.edu/arcgis/rest/services/Layers/counties/MapServer", 0);
     //addBYUServerLayer("Dams", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 0);
@@ -66,7 +73,7 @@ pvMapper.onReady(function () {
     //addBYUServerLayer("Indian Reservations", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 6);
     //addBYUServerLayer("States", "https://geoserver.byu.edu/arcgis/rest/services/Layers/ref_layer/MapServer", 7);
 
-    addArcLayer("Solar Energy Zones", "http://solarmapper.anl.gov/ArcGIS/rest/services/SEZ_Map_Service_SDE/MapServer", "1,2");
+    addArcLayer("Solar Energy Zones", "http://solarmapper.anl.gov/ArcGIS/rest/services/SEZ_Map_Service_SDE/MapServer", "1,2", "MetaData for Solar Energy Zones Not Found");
 
 
 
@@ -74,7 +81,7 @@ pvMapper.onReady(function () {
     //addWMSLayer("EPA Contaminated Lands", "http://mapsdb.nrel.gov/geoserver/geothermal_prospector/wms?", "geothermal_prospector:Brownfields", true);
 
     var wms = new OpenLayers.Layer.WMS(
-        "EPA Brownfield Sites",
+        "<img class=\"on_c_img\" mdata= ' MetaData for EPA Brownfield Sites Not Found' src='http://www.iconsdb.com/icons/preview/tropical-blue/info-xxl.png'  style='width:20px; height:20px'> " + "EPA Brownfield Sites",
         "http://mapsdb.nrel.gov/geoserver/geothermal_prospector/wms?",
         {
             layers: "geothermal_prospector:Brownfields",
@@ -133,7 +140,7 @@ pvMapper.onReady(function () {
 
     //Note: this map is pretty ugly...
     var esriWorldTerrain = new OpenLayers.Layer.XYZ("Shaded Relief",
-        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/${z}/${y}/${x}",
+        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/${z}/${y}/${x}?blankTile=true",
             { transitionEffect: "resize", buffer: 1, sphericalMercator: true });
     pvMapper.map.addLayer(esriWorldTerrain);
     /*
@@ -152,14 +159,29 @@ pvMapper.onReady(function () {
     */
 
     var esriImagery = new OpenLayers.Layer.XYZ("World Imagery", 
-        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}",
+        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}?blankTile=true",
             { transitionEffect: "resize", buffer: 1, numZoomLevels: 20, sphericalMercator: true });
     pvMapper.map.addLayer(esriImagery);
 
     var esriStreet = new OpenLayers.Layer.XYZ("ESRI Street Map",
-        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}",
+        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}?blankTile=true",
             { transitionEffect: "resize", buffer: 1, sphericalMercator: true });
     pvMapper.map.addLayer(esriStreet);
+
+
+    var usgsTopoCache = new OpenLayers.Layer.XYZ("USGS Topo", 
+        "http://basemap.nationalmap.gov/ArcGIS/rest/services/USGSTopo/MapServer/tile/${z}/${y}/${x}?blankTile=true",
+            { transitionEffect: "resize", buffer: 1, sphericalMercator: true });
+    //usgsTopoCache.zoomOffset = 3; //Note: this seems to hoark the spherical mercator setting...
+    pvMapper.map.addLayer(usgsTopoCache);
+
+
+    // Add the power line and substation data layer
+    //http://t0.beta.itoworld.com/4/317c99f331113b90c57c41ccdb137030/${z}/${x}/${y}.png
+    osmPowerInfrastructure = new OpenLayers.Layer.XYZ("Power Infrastructure",
+        "http://t0.beta.itoworld.com/4/317c99f331113b90c57c41ccdb137030/${z}/${x}/${y}.png",
+            { transitionEffect: null, buffer: 1, sphericalMercator: true, isBaseLayer: false, visibility: false });
+    pvMapper.map.addLayer(osmPowerInfrastructure);
 
 
     //Set up the layer for the site polys
@@ -248,11 +270,14 @@ pvMapper.onReady(function () {
     //    });
     //map.addControl(selectSiteControl);
 
+    //Custom calls to attach event listeners to info icon. 
 
-    function addArcLayer(name, url, layerNumber) {
+
+
+    function addArcLayer(name, url, layerNumber,mdata) {
 
         var layer = new OpenLayers.Layer.ArcGIS93Rest(
-            name,
+            "<img class=\"on_c_img\" mdata='"+mdata+"' src='http://www.iconsdb.com/icons/preview/tropical-blue/info-xxl.png' style='width:20px; height:20px'> " + name,
             url + "/export",
             {
                 f: "image",
@@ -280,8 +305,8 @@ pvMapper.onReady(function () {
         layer: string - the name of the layer in the server
         reference: boolean - is it a reference layer? true/false
     */
-    function addWMSLayer(name, url, layer, reference) {
-        var wms = new OpenLayers.Layer.WMS(name,
+    function addWMSLayer(name, url, layer, reference,mdata) {
+        var wms = new OpenLayers.Layer.WMS("<img class= \"on_c_img\" mdata='"+mdata+ "' src='http://www.iconsdb.com/icons/preview/tropical-blue/info-xxl.png'  style='width:20px; height:20px'> " + name,
             url,
             {
                 layers: layer,

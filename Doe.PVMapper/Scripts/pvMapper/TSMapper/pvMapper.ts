@@ -15,18 +15,22 @@ module pvMapper {
     export var reportsToolbarMenu: Ext.menu.IMenu; // The Reports sub-menu in the toolbar
     export var linksToolbarMenu: Ext.menu.IMenu; // The links sub-menu in the toolbar
 
-    export var infoTools: IInfoTool[] = [];
+    //export var infoTools: IInfoTool[] = [];
 
-    export function onReady(fn:ICallback) {
-        readyEvent.addHandler(fn);
+    export var isReady: boolean = false;
+
+    export function onReady(fn: ICallback) {
+        if (isReady) fn();
+        else readyEvent.addHandler(fn);
     }
 
     export var map: OpenLayers.IMap;
     export var siteLayer: any;
     export var loadLocalModules: any = null;
     export var isLocalModulesLoaded: boolean = false;
-    export var customModules: CustomModuleData[] = new Array<CustomModuleData>();
+    //export var customModules: ICustomModuleHandle[] = new Array<ICustomModuleHandle>();
     export var waitToLoad: any = null;
+    //export var clientScripts: string;
     export function getColorForScore(score: number): string {
         var min = Math.min;
         var max = Math.max;
@@ -71,17 +75,28 @@ module pvMapper {
         return 'rgb(' + r + ',' + g + ',' + b + ')';
     }
 
-    export function addInfoTool(tool:IInfoTool) {
-        infoTools.push(tool);
-        tool.init();
-    }
+    //export function addInfoTool(tool:IInfoTool) {
+    //    infoTools.push(tool);
+    //    tool.init();
+    //}
 
-    readyEvent.addHandler(function () {
-        //Activate all the info tools
-        infoTools.map(function (tool, idx) {
-            tool.activate();
-        });
-    })
+    //readyEvent.addHandler(function () {
+    //    //Activate all the info tools
+    //    infoTools.map(function (tool, idx) {
+    //        tool.activate();
+    //    });
+    //})
 
+    export function getIncludeModules() { return null; }
 
+    export var displayMessage: (msg: string, type: string) => void;
+
+    export var getSite: (siteId: string) => JQueryXHR;
+    export var postSite: (name: string, description: string, polygonGeometry: string) => JQueryXHR;
+    export var updateSite: (siteId: string, name: string, description: string, polygonGeometry: string) => JQueryXHR;
+    export var deleteSite: (siteId: string) => JQueryXHR;
+    export var deleteAllSites: () => JQueryXHR;
 }
+
+//allow jquery to cache all ajax get from server.
+$.ajaxSetup({ cache: true });

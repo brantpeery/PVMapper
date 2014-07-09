@@ -5,10 +5,6 @@ Contributors: Brant Peery, Matthew Klien
 */
 
 
-///TODO: Find a way to limit the use of the tool to when the user is zoomed in to something like 10 miles across
-///TODO: Switch user to map tab
-///TODO: Show help
-
 var tools = [];
 
 pvMapper.onReady(function () {
@@ -104,29 +100,17 @@ function addSite(map, layer) {
 
     //activateDrawSite();
     
-
-    function handleSave(b, e) {
-        var msg;
-
-        alert(feature.geometry.toString());
-    }
-
-    function createLayer() { }
     this.activateDrawSite= function() {
         self.mapControl.activate();
         self.mapControl.events.register("featureadded", this.mapControl, onFeatureAdded);
-        pvMapper.displayMessage("Start creating your site by clicking on the map to draw the perimeter of your new site", "help");
-
+        //pvMapper.displayMessage("Start creating your site by clicking on the map to draw the perimeter of your new site", "help");
     }
-    function saveSiteInfo() { }
+
     this.deactivateDrawSite = function () {
         self.mapControl.events.unregister("featureadded", this.mapControl, onFeatureAdded);
         self.mapControl.deactivate();
         self.button.toggle(false);
     }
-    function nameSiteFeature() { }
-
-    function createAddSiteDialog() { }
   
     function onFeatureAdded(data) {
         var control = this;
@@ -187,10 +171,10 @@ function addSite(map, layer) {
                             var newSite = new pvMapper.Site(feature);
                             pvMapper.siteManager.addSite(newSite);
 
-                            if (console) console.log('Added ' + newSite.name + ' to the site manager');
+                            if (console) console.log('Added ' + (newSite.name || 'new site') + ' to the site manager');
                         })
                         .fail(function () {
-                            if (console) console.log('failed to post site');
+                            pvMapper.displayMessage('Failed to send new site to the server.', 'error');
                             feature.destroy();
                         });
 
@@ -210,12 +194,11 @@ function addSite(map, layer) {
 
         wiz.show();
     }
-
 };
+
 addSite.prototype = {
     createEditTool: function () {
         control
         return control;
     }
-
 }
