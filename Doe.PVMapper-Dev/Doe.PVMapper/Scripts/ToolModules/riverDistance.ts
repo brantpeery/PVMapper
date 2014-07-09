@@ -116,8 +116,8 @@ module BYUModules {
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
                         functionArgs:                                             
-                        new pvMapper.ThreePointUtilityArgs(0, 1, (thisModule.configProperties.maxSearchDistanceInMi - 1), 0.3, thisModule.configProperties.maxSearchDistanceInMi, 0,
-                            "mi", "Distance to nearest river", "Score", "Prefer sites near a river.")
+                        new pvMapper.ThreePointUtilityArgs(0, 1, 5, 0.9, 15, 0.4,
+                            "mi", "Distance to nearest river", "Prefer sites near a river. Strongly prefer sites within five miles of a river. The minimum possible score is 40, reflecting an assumption that having no nearby river may not be prohibitive.")
                     },
                     weight: 10,
                 }],

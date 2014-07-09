@@ -57,7 +57,7 @@ var INLModules;
             this.sourceDataID = kmlFileName;
             this.id = "KmlInfoModule." + this.sourceDataID; // multiple instances of this module will exist... one for each kml file loaded... sigh.
 
-            this.title = toolName + " Module"; // this can change, and uniqueness won't be enforced.
+            this.title = toolName; // this can change, and uniqueness won't be enforced.
             this.description = "Adds '" + kmlFileName + "' to the map layer list.";
 
             this.readTextFile(kmlRawString, toolName, kmlFileName);
@@ -100,7 +100,7 @@ var INLModules;
                         longDescription: null,
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 1000, 0, "mi", "Distance to nearest feature", "Score", "Prefer sites closer to the nearest feature in '" + kmlFileName + "'.")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 1000, 0, "mi", "Distance to nearest feature", "Prefer sites closer to the nearest feature in '" + kmlFileName + "'.")
                         },
                         weight: 10
                     }]

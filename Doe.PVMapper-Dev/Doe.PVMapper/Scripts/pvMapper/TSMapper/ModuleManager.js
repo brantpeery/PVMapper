@@ -128,8 +128,7 @@ var pvMapper;
                     delete _this._customModulesByID[oldModule.id];
                 }
 
-                if (oldModule.isActive)
-                    _this._deactivateModule(oldModule);
+                _this._deactivateModule(oldModule);
             };
             this.getAvailableModuleByID = function (id) {
                 return _this._availableModulesByID[id];
