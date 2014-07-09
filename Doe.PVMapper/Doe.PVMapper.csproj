@@ -399,7 +399,7 @@
     <Content Include="Scripts\JSZip\jszip.js" />
     <TypeScriptCompile Include="Scripts\lib.d.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ModuleManager.ts" />
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\OpenLayers.d.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\OpenLayers.d.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\ScoreLine.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\common.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\DataManager.ts" />
@@ -421,16 +421,12 @@
     <Content Include="Scripts\ToolModules\AgricultureSocialModule.js">
       <DependentUpon>AgricultureSocialModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\ToolModules\CombinedNearModule.js" />
     <Content Include="Scripts\pvMapper\TSMapper\DataManager.js">
       <DependentUpon>DataManager.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\Data\DataProccessor.js" />
     <Content Include="Scripts\pvMapper\TSMapper\Data\ScoreboardProcessor.js">
       <DependentUpon>ScoreboardProcessor.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\ToolModules\DemModule.js">
-      <DependentUpon>DemModule.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\pvMapper\TSMapper\IEventTypes.js">
       <DependentUpon>IEventTypes.ts</DependentUpon>
@@ -439,7 +435,6 @@
     <Content Include="Scripts\pvMapper\TSMapper\common.js">
       <DependentUpon>common.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="Scripts\ToolModules\DemModule.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\Event.js">
       <DependentUpon>Event.ts</DependentUpon>
     </Content>
@@ -454,9 +449,9 @@
       <DependentUpon>irradianceModule.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\ToolModules\LandUseModule.ts" />
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\jstorage.d.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\jstorage.d.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\jstorage.js" />
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\JXG.d.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\JXG.d.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\KMLInfoModule.js">
       <DependentUpon>KMLInfoModule.ts</DependentUpon>
     </Content>
@@ -471,10 +466,8 @@
     <Content Include="Scripts\pvMapper\TSMapper\Module.js">
       <DependentUpon>Module.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\ToolModules\NearRoadModule.js" />
     <Content Include="Scripts\ToolModules\NewSlopeModule.js" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Scoreboard.ts" />
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Renderer.ts" />
     <Content Include="Scripts\ToolModules\OSMSocialModule.js" />
     <Content Include="Scripts\pvMapper\TSMapper\PVData.js">
       <DependentUpon>PVData.ts</DependentUpon>
@@ -484,9 +477,6 @@
       <DependentUpon>pvMapper.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\pvMapper.ts" />
-    <Content Include="Scripts\pvMapper\TSMapper\Renderer.js">
-      <DependentUpon>Renderer.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Data\ScoreboardProcessor.ts" />
     <TypeScriptCompile Include="Scripts\ToolModules\riverDistance.ts" />
     <Content Include="Scripts\ToolModules\riverDistance.js">
@@ -523,14 +513,9 @@
     </Content>
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Site.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Tools.ts" />
-    <TypeScriptCompile Include="Scripts\ToolModules\solarmapperModule.ts" />
-    <Content Include="Scripts\ToolModules\snlModule.js" />
     <TypeScriptCompile Include="Scripts\ToolModules\SoilModule.ts" />
     <Content Include="Scripts\ToolModules\SoilModule.js">
       <DependentUpon>SoilModule.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\ToolModules\solarmapperModule.js">
-      <DependentUpon>solarmapperModule.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\StarRatingHelper.ts" />
     <TypeScriptCompile Include="Scripts\ToolModules\SolarPlantSocialModule.ts" />
@@ -556,29 +541,19 @@
     <Content Include="Scripts\ToolModules\WetlandsSocialModule.js">
       <DependentUpon>WetlandsSocialModule.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\ToolModules\WildernessModule.js">
-      <DependentUpon>WildernessModule.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="Scripts\ToolModules\WildernessModule.ts" />
     <TypeScriptCompile Include="Scripts\ToolModules\WildlifeSocialModule.ts" />
     <Content Include="Scripts\ToolModules\WildlifeSocialModule.js">
       <DependentUpon>WildlifeSocialModule.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\pvMapper\Utility.ts" />
     <Content Include="Scripts\UI\extras\promise.js" />
-    <Content Include="Scripts\UI\model\Scoreboard.js" />
-    <Content Include="Scripts\UI\model\Tool.js" />
-    <Content Include="Scripts\UI\panel\MinMaxTargetPanel.js" />
-    <Content Include="Scripts\UI\panel\PropertyGrid.js" />
     <Content Include="Scripts\UI\view\ExportGridToExcel.js" />
-    <Content Include="Scripts\UI\view\FunctionWindow.js" />
     <Content Include="Scripts\UI\view\PieView.js" />
     <Content Include="Scripts\UI\view\RatingTool.js" />
     <Content Include="Scripts\UI\view\RatingView.js" />
     <Content Include="Scripts\UI\view\ScoreboardWindow.js" />
     <Content Include="Scripts\UI\view\toolConfigWindow.js" />
     <Content Include="Scripts\UI\view\UtilityFunctionEdit.js" />
-    <Content Include="Scripts\ViewScripts\metadata.js" />
     <Content Include="Scripts\ViewScripts\RelatedLinks.js" />
     <Content Include="Scripts\ViewScripts\SiteId.js" />
     <Content Include="Scripts\UnitTests\jasmine.js" />
@@ -587,7 +562,6 @@
     <Content Include="Scripts\UnitTests\PVMapper.Site.js" />
     <Content Include="Scripts\UnitTests\pvMapper.SiteManager.js" />
     <Content Include="Scripts\UnitTests\string_extensions.js" />
-    <Content Include="Scripts\ViewScripts\IdentifySite.js" />
     <TypeScriptCompile Include="Scripts\_frameworkobjects.d.ts" />
     <Compile Include="WebApi\MongoHelper.cs" />
     <Compile Include="WebApi\ProjectSiteController.cs" />
@@ -607,77 +581,6 @@
     <Compile Include="WebApi\ToolsController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\DataTables-1.9.2\docs\media\css\doc.css" />
-    <Content Include="Content\DataTables-1.9.2\docs\media\css\shCore.css" />
-    <Content Include="Content\DataTables-1.9.2\docs\media\css\shThemeDataTables.css" />
-    <Content Include="Content\DataTables-1.9.2\docs\media\images\arrow.jpg" />
-    <Content Include="Content\DataTables-1.9.2\docs\media\images\extended.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\AutoFill\media\css\AutoFill.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\AutoFill\media\docs\media\css\doc.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\AutoFill\media\docs\media\css\shCore.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\AutoFill\media\docs\media\css\shThemeDataTables.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\AutoFill\media\docs\media\images\arrow.jpg" />
-    <Content Include="Content\DataTables-1.9.2\extras\AutoFill\media\docs\media\images\extended.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\AutoFill\media\images\filler.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\ColReorder\media\css\ColReorder.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\ColReorder\media\docs\media\css\doc.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\ColReorder\media\docs\media\css\shCore.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\ColReorder\media\docs\media\css\shThemeDataTables.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\ColReorder\media\docs\media\images\arrow.jpg" />
-    <Content Include="Content\DataTables-1.9.2\extras\ColReorder\media\docs\media\images\extended.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\ColReorder\media\images\insert.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\ColVis\media\css\ColVis.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\ColVis\media\css\ColVisAlt.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\ColVis\media\docs\media\css\doc.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\ColVis\media\docs\media\css\shCore.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\ColVis\media\docs\media\css\shThemeDataTables.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\ColVis\media\docs\media\images\arrow.jpg" />
-    <Content Include="Content\DataTables-1.9.2\extras\ColVis\media\docs\media\images\extended.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\ColVis\media\images\button.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\FixedColumns\docs\media\css\doc.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\FixedColumns\docs\media\css\shCore.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\FixedColumns\docs\media\css\shThemeDataTables.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\FixedColumns\docs\media\images\arrow.jpg" />
-    <Content Include="Content\DataTables-1.9.2\extras\FixedColumns\docs\media\images\extended.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\Scroller\media\css\dataTables.scroller.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\Scroller\media\docs\media\css\doc.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\Scroller\media\docs\media\css\shCore.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\Scroller\media\docs\media\css\shThemeDataTables.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\Scroller\media\docs\media\images\arrow.jpg" />
-    <Content Include="Content\DataTables-1.9.2\extras\Scroller\media\docs\media\images\extended.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\Scroller\media\images\loading-background.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\css\TableTools.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\css\TableTools_JUI.css" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\background.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\collection.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\collection_hover.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\copy.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\copy_hover.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\csv.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\csv_hover.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\pdf.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\pdf_hover.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\print.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\print_hover.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\xls.png" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\xls_hover.png" />
-    <Content Include="Content\DataTables-1.9.2\media\css\demo_page.css" />
-    <Content Include="Content\DataTables-1.9.2\media\css\demo_table.css" />
-    <Content Include="Content\DataTables-1.9.2\media\css\demo_table_jui.css" />
-    <Content Include="Content\DataTables-1.9.2\media\css\jquery.dataTables.css" />
-    <Content Include="Content\DataTables-1.9.2\media\css\jquery.dataTables_themeroller.css" />
-    <Content Include="Content\DataTables-1.9.2\media\images\back_disabled.png" />
-    <Content Include="Content\DataTables-1.9.2\media\images\back_enabled.png" />
-    <Content Include="Content\DataTables-1.9.2\media\images\back_enabled_hover.png" />
-    <Content Include="Content\DataTables-1.9.2\media\images\favicon.ico" />
-    <Content Include="Content\DataTables-1.9.2\media\images\forward_disabled.png" />
-    <Content Include="Content\DataTables-1.9.2\media\images\forward_enabled.png" />
-    <Content Include="Content\DataTables-1.9.2\media\images\forward_enabled_hover.png" />
-    <Content Include="Content\DataTables-1.9.2\media\images\sort_asc.png" />
-    <Content Include="Content\DataTables-1.9.2\media\images\sort_asc_disabled.png" />
-    <Content Include="Content\DataTables-1.9.2\media\images\sort_both.png" />
-    <Content Include="Content\DataTables-1.9.2\media\images\sort_desc.png" />
-    <Content Include="Content\DataTables-1.9.2\media\images\sort_desc_disabled.png" />
     <Content Include="Content\extjs\resources\css\my-ext-theme.css" />
     <Content Include="Content\extjs\resources\images\default\boundlist\trigger-arrow.png" />
     <Content Include="Content\extjs\resources\images\default\box\corners-blue.gif" />
@@ -1090,60 +993,6 @@
     <Content Include="Notes\SiteManager object.jpg" />
     <Content Include="Notes\TextFile1.txt" />
     <Content Include="Scripts\OpenLayers.js" />
-    <Content Include="Scripts\DataTables-1.9.2\docs\media\js\doc.js" />
-    <Content Include="Scripts\DataTables-1.9.2\docs\media\js\jquery.js" />
-    <Content Include="Scripts\DataTables-1.9.2\docs\media\js\shBrushJScript.js" />
-    <Content Include="Scripts\DataTables-1.9.2\docs\media\js\shCore.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\AutoFill\media\docs\media\js\doc.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\AutoFill\media\docs\media\js\jquery.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\AutoFill\media\docs\media\js\shBrushJScript.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\AutoFill\media\docs\media\js\shCore.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\AutoFill\media\js\AutoFill.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\AutoFill\media\js\AutoFill.min.js">
-      <DependentUpon>AutoFill.js</DependentUpon>
-    </Content>
-    <Content Include="Scripts\DataTables-1.9.2\extras\ColReorder\media\docs\media\js\doc.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\ColReorder\media\docs\media\js\jquery.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\ColReorder\media\docs\media\js\shBrushJScript.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\ColReorder\media\docs\media\js\shCore.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\ColReorder\media\js\ColReorder.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\ColReorder\media\js\ColReorder.min.js">
-      <DependentUpon>ColReorder.js</DependentUpon>
-    </Content>
-    <Content Include="Scripts\DataTables-1.9.2\extras\ColVis\media\docs\media\js\doc.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\ColVis\media\docs\media\js\jquery.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\ColVis\media\docs\media\js\shBrushJScript.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\ColVis\media\docs\media\js\shCore.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\ColVis\media\js\ColVis.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\ColVis\media\js\ColVis.min.js">
-      <DependentUpon>ColVis.js</DependentUpon>
-    </Content>
-    <Content Include="Scripts\DataTables-1.9.2\extras\FixedColumns\docs\media\js\doc.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\FixedColumns\docs\media\js\jquery.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\FixedColumns\docs\media\js\shBrushJScript.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\FixedColumns\docs\media\js\shCore.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\FixedColumns\media\js\FixedColumns.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\FixedColumns\media\js\FixedColumns.min.js">
-      <DependentUpon>FixedColumns.js</DependentUpon>
-    </Content>
-    <Content Include="Scripts\DataTables-1.9.2\extras\Scroller\media\docs\media\js\doc.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\Scroller\media\docs\media\js\jquery.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\Scroller\media\docs\media\js\shBrushJScript.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\Scroller\media\docs\media\js\shCore.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\Scroller\media\js\dataTables.scroller.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\Scroller\media\js\dataTables.scroller.min.js">
-      <DependentUpon>dataTables.scroller.js</DependentUpon>
-    </Content>
-    <Content Include="Scripts\DataTables-1.9.2\extras\TableTools\media\js\TableTools.js" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\TableTools\media\js\TableTools.min.js">
-      <DependentUpon>TableTools.js</DependentUpon>
-    </Content>
-    <Content Include="Scripts\DataTables-1.9.2\extras\TableTools\media\js\ZeroClipboard.js" />
-    <Content Include="Scripts\DataTables-1.9.2\media\js\jquery.dataTables.js" />
-    <Content Include="Scripts\DataTables-1.9.2\media\js\jquery.dataTables.min.js">
-      <DependentUpon>jquery.dataTables.js</DependentUpon>
-    </Content>
-    <Content Include="Scripts\DataTables-1.9.2\media\js\jquery.js" />
     <Content Include="Notes\pvMapper Object.mm" />
     <Content Include="Scripts\ext-all.js" />
     <Content Include="Scripts\ext-dev.js" />
@@ -1231,100 +1080,21 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\jQueryExtentions\getScriptOverride.js" />
-    <Content Include="Scripts\jQueryExtentions\images\ajax-loader.gif" />
-    <Content Include="Scripts\jQueryExtentions\images\file.gif" />
-    <Content Include="Scripts\jQueryExtentions\images\folder-closed.gif" />
-    <Content Include="Scripts\jQueryExtentions\images\folder.gif" />
-    <Content Include="Scripts\jQueryExtentions\images\minus.gif" />
-    <Content Include="Scripts\jQueryExtentions\images\plus.gif" />
-    <Content Include="Scripts\jQueryExtentions\images\treeview-black-line.gif" />
-    <Content Include="Scripts\jQueryExtentions\images\treeview-black.gif" />
-    <Content Include="Scripts\jQueryExtentions\images\treeview-default-line.gif" />
-    <Content Include="Scripts\jQueryExtentions\images\treeview-default.gif" />
-    <Content Include="Scripts\jQueryExtentions\images\treeview-famfamfam-line.gif" />
-    <Content Include="Scripts\jQueryExtentions\images\treeview-famfamfam.gif" />
-    <Content Include="Scripts\jQueryExtentions\images\treeview-gray-line.gif" />
-    <Content Include="Scripts\jQueryExtentions\images\treeview-gray.gif" />
-    <Content Include="Scripts\jQueryExtentions\images\treeview-red-line.gif" />
-    <Content Include="Scripts\jQueryExtentions\images\treeview-red.gif" />
-    <Content Include="Scripts\jQueryExtentions\jquery.jgrowl_minimized.js" />
-    <Content Include="Scripts\jQueryExtentions\jquery.jstree.js" />
-    <Content Include="Scripts\jQueryExtentions\jquery.treeview.async.js" />
-    <Content Include="Scripts\jQueryExtentions\jquery.treeview.css" />
-    <Content Include="Scripts\jQueryExtentions\jquery.treeview.js" />
-    <Content Include="Scripts\jQueryExtentions\minimize_dialog.js" />
-    <Content Include="Scripts\jQueryExtentions\popout_tab.js" />
-    <Content Include="Scripts\jQueryExtentions\themes\apple\bg.jpg" />
-    <Content Include="Scripts\jQueryExtentions\themes\apple\d.png" />
-    <Content Include="Scripts\jQueryExtentions\themes\apple\dot_for_ie.gif" />
-    <Content Include="Scripts\jQueryExtentions\themes\apple\style.css" />
-    <Content Include="Scripts\jQueryExtentions\themes\apple\throbber.gif" />
-    <Content Include="Scripts\jQueryExtentions\themes\classic\d.gif" />
-    <Content Include="Scripts\jQueryExtentions\themes\classic\d.png" />
-    <Content Include="Scripts\jQueryExtentions\themes\classic\dot_for_ie.gif" />
-    <Content Include="Scripts\jQueryExtentions\themes\classic\style.css" />
-    <Content Include="Scripts\jQueryExtentions\themes\classic\throbber.gif" />
-    <Content Include="Scripts\jQueryExtentions\themes\default-rtl\d.gif" />
-    <Content Include="Scripts\jQueryExtentions\themes\default-rtl\d.png" />
-    <Content Include="Scripts\jQueryExtentions\themes\default-rtl\dots.gif" />
-    <Content Include="Scripts\jQueryExtentions\themes\default-rtl\style.css" />
-    <Content Include="Scripts\jQueryExtentions\themes\default-rtl\throbber.gif" />
-    <Content Include="Scripts\jQueryExtentions\themes\default\d.gif" />
-    <Content Include="Scripts\jQueryExtentions\themes\default\d.png" />
-    <Content Include="Scripts\jQueryExtentions\themes\default\style.css" />
-    <Content Include="Scripts\jQueryExtentions\themes\default\throbber.gif" />
-    <Content Include="Scripts\jsts\javascript.util.js" />
-    <Content Include="Scripts\jsts\jsts.js" />
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
-    <Content Include="Scripts\pvExtensions\scoreBoard\loader.js" />
-    <Content Include="Scripts\pvExtensions\scoreBoard\Utility.css" />
-    <Content Include="Scripts\pvExtensions\scoreBoard\UtilityFunctions.html" />
-    <Content Include="Scripts\pvExtensions\scoreBoard\UtilityFunctions.js" />
-    <Content Include="Scripts\pvExtensions\scoreBoard\UtilityWeights.html" />
-    <Content Include="Scripts\pvExtensions\scoreBoard\UtilityWeights.js" />
-    <Content Include="Scripts\pvMapper\Common.js" />
-    <Content Include="Scripts\pvMapper\DataManager.js" />
-    <Content Include="Scripts\pvMapper\Module.js" />
-    <Content Include="Scripts\pvExtensions\moduleTest.js" />
-    <Content Include="Scripts\pvExtensions\PanelAreaTool.js" />
-    <Content Include="Scripts\pvExtensions\siteAreaModule.js" />
-    <Content Include="Scripts\pvMapper\Event.js" />
-    <Content Include="Scripts\pvMapper\pvMapper.js" />
-    <Content Include="Scripts\pvMapper\Renderer.js" />
-    <Content Include="Scripts\pvMapper\Score.js" />
-    <Content Include="Scripts\pvMapper\Scoreboard.js" />
-    <Content Include="Scripts\pvMapper\ScoreLine.js" />
-    <Content Include="Scripts\pvMapper\Site.js" />
     <Content Include="Scripts\pvMapper\Utility.js" />
-    <Content Include="Scripts\Tools\debug_log.js" />
     <Content Include="Scripts\UI\view\Application.js" />
     <Content Include="Scripts\UI\extras\DynamicLoader.js" />
-    <Content Include="Scripts\UI\view\Header.js" />
     <Content Include="Scripts\UI\view\MainToolbar.js" />
-    <Content Include="Scripts\UI\view\Modules\NavigateView.js" />
-    <Content Include="Scripts\UI\view\Taskbar.js" />
-    <Content Include="Scripts\UI\view\UserLogin.js" />
     <Content Include="Scripts\UI\view\Viewport.js" />
     <Content Include="Scripts\UI\view\Window.js" />
     <Content Include="Scripts\ViewScripts\AddNewSite.js" />
     <Content Include="Scripts\extExtensions\FitToParent.js" />
-    <Content Include="Scripts\ViewScripts\IndexView.js" />
-    <Content Include="Scripts\ViewScripts\NavigateMenu.js" />
-    <Content Include="Scripts\ViewScripts\PieView.js" />
     <Content Include="Scripts\ViewScripts\SiteManagement.js" />
     <Content Include="Scripts\ViewScripts\Layers.js" />
-    <Content Include="Scripts\ViewScripts\Loader.js" />
     <Content Include="Scripts\ViewScripts\LoadProjectSites.js" />
-    <Content Include="Scripts\ViewScripts\MeasureDistance.js" />
     <Content Include="Scripts\ViewScripts\pvMapper.js" />
-    <Content Include="Scripts\pvExtensions\SiteAreaTool.js" />
-    <Content Include="Scripts\ViewScripts\Scoreboard.js" />
-    <Content Include="Scripts\ViewScripts\SiteDetail.js" />
-    <Content Include="Scripts\ViewScripts\testscripts.js" />
-    <Content Include="Scripts\ViewScripts\ZoomAction.js" />
     <None Include="TestPages\SummaryReport.scss" />
     <Content Include="TestPages\SummaryReportTemplate.html" />
     <Content Include="TestPages\SummaryReport.css" />
@@ -1360,7 +1130,6 @@
     </Content>
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Scripts\AjaxLogin.js" />
     <Content Include="Images\accent.png" />
     <Content Include="Images\aspNetHome.png" />
     <Content Include="Images\bullet.png" />
@@ -1403,9 +1172,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Scripts\theme\" />
-    <Folder Include="Scripts\UI\store\" />
-    <Folder Include="Scripts\UI\view\weightFunctions\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -1413,18 +1179,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\DataTables-1.9.2\media\images\Sorting icons.psd" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\psd\printer.psd" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\psd\file_types.psd" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\psd\copy document.psd" />
-    <Content Include="Content\DataTables-1.9.2\extras\TableTools\media\images\psd\collection.psd" />
     <Content Include="Views\Extensions\Index.cshtml" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\TableTools\media\js\TableTools.min.js.gz" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\Scroller\media\js\dataTables.scroller.min.js.gz" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\FixedColumns\media\js\FixedColumns.min.js.gz" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\ColVis\media\js\ColVis.min.js.gz" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\ColReorder\media\js\ColReorder.min.js.gz" />
-    <Content Include="Scripts\DataTables-1.9.2\extras\AutoFill\media\js\AutoFill.min.js.gz" />
   </ItemGroup>
   <!--============ This to allow TypeScript code to be compile by tsc.======== -->
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
