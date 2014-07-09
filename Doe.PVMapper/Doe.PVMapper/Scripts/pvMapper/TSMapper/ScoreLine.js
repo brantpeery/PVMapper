@@ -178,7 +178,7 @@ var pvMapper;
             this.putConfiguration = function () {
                 if (pvMapper.ClientDB.db && !_this.isGettingConfiguration) {
                     try  {
-                        var txn = pvMapper.ClientDB.db.transaction(pvMapper.ClientDB.CONFIG_STORE_NAME, "readwrite");
+                        var txn = pvMapper.ClientDB.db.transaction(pvMapper.ClientDB.SCORE_LINE_CONFIG_STORE_NAME, "readwrite");
 
                         txn.oncomplete = function (evt) {
                             //if (console && console.log) console.log("Transaction completed: '" + this.title + "' has been saved to the database.")
@@ -196,7 +196,7 @@ var pvMapper;
                             pvMapper.displayMessage("Failed to save tool configuration to the local browser.", "error");
                         };
 
-                        var store = txn.objectStore(pvMapper.ClientDB.CONFIG_STORE_NAME);
+                        var store = txn.objectStore(pvMapper.ClientDB.SCORE_LINE_CONFIG_STORE_NAME);
 
                         var dbScore = _this.toJSON();
 
@@ -238,8 +238,8 @@ var pvMapper;
             this.getConfiguration = function () {
                 if (pvMapper.ClientDB.db) {
                     _this.isGettingConfiguration = true;
-                    var txn = pvMapper.ClientDB.db.transaction(pvMapper.ClientDB.CONFIG_STORE_NAME, "readonly");
-                    var store = txn.objectStore(pvMapper.ClientDB.CONFIG_STORE_NAME);
+                    var txn = pvMapper.ClientDB.db.transaction(pvMapper.ClientDB.SCORE_LINE_CONFIG_STORE_NAME, "readonly");
+                    var store = txn.objectStore(pvMapper.ClientDB.SCORE_LINE_CONFIG_STORE_NAME);
                     var key = _this.id;
                     var request = store.get(key);
                     request.onsuccess = function (evt) {
@@ -363,8 +363,10 @@ var pvMapper;
             };
 
             this.deactivate = function () {
-                if (console && console.assert)
-                    console.assert(_this.isActive);
+                if (!_this.isActive) {
+                    if (console && console.warn)
+                        console.warn("Warning: attempting to deactivate an already inactive tool ID='" + _this.id + "'");
+                }
 
                 if (typeof (options.deactivate) === "function")
                     options.deactivate.apply(_this, arguments); // 'this' will refer to the ScoreLine during calls to options.deactivate().

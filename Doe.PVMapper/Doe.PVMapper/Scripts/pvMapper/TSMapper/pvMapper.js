@@ -26,8 +26,6 @@ var pvMapper;
 
     pvMapper.map;
     pvMapper.siteLayer;
-    pvMapper.loadLocalModules = null;
-    pvMapper.isLocalModulesLoaded = false;
 
     //export var customModules: ICustomModuleHandle[] = new Array<ICustomModuleHandle>();
     pvMapper.waitToLoad = null;

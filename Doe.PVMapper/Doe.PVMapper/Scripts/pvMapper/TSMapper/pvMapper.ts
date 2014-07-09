@@ -26,8 +26,6 @@ module pvMapper {
 
     export var map: OpenLayers.IMap;
     export var siteLayer: any;
-    export var loadLocalModules: any = null;
-    export var isLocalModulesLoaded: boolean = false;
     //export var customModules: ICustomModuleHandle[] = new Array<ICustomModuleHandle>();
     export var waitToLoad: any = null;
     //export var clientScripts: string;

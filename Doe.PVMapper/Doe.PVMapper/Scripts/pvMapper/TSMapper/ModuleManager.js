@@ -76,7 +76,7 @@ var pvMapper;
                         if (console && console.error)
                             console.error(ex);
 
-                        _this._deactivateModule(mod);
+                        _this.deactivateModule(mod);
                     }
                     _this.saveTools();
                 });
@@ -84,12 +84,15 @@ var pvMapper;
             // there is nothing special about this above or beyond calling module.deactivate(), except that it had some sensible error handling thrown in, and it saves module configs to the browser
             this.deactivateModule = function (mod) {
                 var registeredModule = _this._registeredModulesByID[mod.id];
+                var customModule = _this._customModulesByID[mod.id];
                 if (console && console.assert)
-                    console.assert(!!registeredModule, "Warning: attempting to deactivate a module (ID='" + mod.id + "') which isn't registered.");
+                    console.assert(!!registeredModule || !!customModule, "Warning: attempting to deactivate a module (ID='" + mod.id + "') which isn't registered.");
 
                 if (registeredModule) {
                     _this._deactivateModule(registeredModule);
                     return registeredModule;
+                } else if (customModule) {
+                    _this.removeCustomModule(customModule);
                 } else if (typeof mod.deactivate === "function") {
                     _this._deactivateModule(mod); // <-- custom modules aren't registered, but they can be deactivated. Handle them here as well.
                 }
@@ -151,21 +154,20 @@ var pvMapper;
             };
             this.fromJSON = function (modules) {
                 if (modules)
-                    _this.loadToolsFromConfig(modules);
+                    _this.loadModulesFromConfig(modules);
             };
-            this.toolStoreName = 'ToolModules';
             this.saveTools_timeoutHandle = null;
             //Instantiate the registered tool modules whose isActive is true.  isActive is check against user's configuration first.
             //It also load the module from server if it has not been loaded.
-            this.loadTools = function () {
+            this.loadModulesFromBrowserConfig = function () {
                 //The openStore function returns a <Promise> object which will call our onOpened or error delegate
                 //functions when it finishes processing database inquery.  The "bindTo" will force the onSuccess to be
                 //execute in the DataManager domain, just so the 'this' always refer to our class here.
-                pvMapper.ClientDB.loadToolModules(_this.toolStoreName).then(function (arrObj) {
-                    _this.loadToolsFromConfig(arrObj);
+                pvMapper.ClientDB.loadToolModules().then(function (arrObj) {
+                    _this.loadModulesFromConfig(arrObj);
                 }, function (err) {
                     console.warn("Opening database store failed, cause: " + err.message);
-                    _this.loadToolsFromConfig([]);
+                    _this.loadModulesFromConfig([]);
                     //this.loadModuleScripts();
                 });
             };
@@ -177,7 +179,7 @@ var pvMapper;
             // ***************************************************************
             //Synchronize the register of user's preference modules.  If no user preferences saved,
             //load all modules available on the server through a pvClient.getIncludeModules function.
-            this.loadToolsFromConfig = function (savedModuleConfig) {
+            this.loadModulesFromConfig = function (savedModuleConfig) {
                 try  {
                     // fetch the list of modules available on the server
                     var serverModuleUrls = pvClient.getIncludeModules();
@@ -277,7 +279,7 @@ var pvMapper;
             this.saveTools_timeoutHandle = window.setTimeout(function () {
                 _this.saveTools_timeoutHandle = null;
                 var tools = _this.toJSON();
-                pvMapper.ClientDB.saveToolModules(_this.toolStoreName, tools);
+                pvMapper.ClientDB.saveToolModules(tools);
             }, 7000);
         };
 
