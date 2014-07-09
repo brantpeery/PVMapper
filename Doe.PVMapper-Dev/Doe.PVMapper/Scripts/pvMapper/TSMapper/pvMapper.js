@@ -13,8 +13,7 @@ var pvMapper;
     pvMapper.reportsToolbarMenu;
     pvMapper.linksToolbarMenu;
 
-    pvMapper.infoTools = [];
-
+    //export var infoTools: IInfoTool[] = [];
     pvMapper.isReady = false;
 
     function onReady(fn) {
@@ -29,7 +28,8 @@ var pvMapper;
     pvMapper.siteLayer;
     pvMapper.loadLocalModules = null;
     pvMapper.isLocalModulesLoaded = false;
-    pvMapper.customModules = new Array();
+
+    //export var customModules: ICustomModuleHandle[] = new Array<ICustomModuleHandle>();
     pvMapper.waitToLoad = null;
 
     //export var clientScripts: string;
@@ -78,23 +78,28 @@ var pvMapper;
     }
     pvMapper.getColorForScore = getColorForScore;
 
-    function addInfoTool(tool) {
-        pvMapper.infoTools.push(tool);
-        tool.init();
-    }
-    pvMapper.addInfoTool = addInfoTool;
-
-    pvMapper.readyEvent.addHandler(function () {
-        //Activate all the info tools
-        pvMapper.infoTools.map(function (tool, idx) {
-            tool.activate();
-        });
-    });
-
+    //export function addInfoTool(tool:IInfoTool) {
+    //    infoTools.push(tool);
+    //    tool.init();
+    //}
+    //readyEvent.addHandler(function () {
+    //    //Activate all the info tools
+    //    infoTools.map(function (tool, idx) {
+    //        tool.activate();
+    //    });
+    //})
     function getIncludeModules() {
         return null;
     }
     pvMapper.getIncludeModules = getIncludeModules;
+
+    pvMapper.displayMessage;
+
+    pvMapper.getSite;
+    pvMapper.postSite;
+    pvMapper.updateSite;
+    pvMapper.deleteSite;
+    pvMapper.deleteAllSites;
 })(pvMapper || (pvMapper = {}));
 
 //allow jquery to cache all ajax get from server.

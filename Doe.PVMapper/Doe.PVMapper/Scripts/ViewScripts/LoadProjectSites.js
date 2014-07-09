@@ -21,7 +21,7 @@
                         sitesLayer.addFeatures([poly], {});
 
                         s = new pvMapper.Site(poly);
-                        pvMapper.siteManager.loadSite(s);
+                        pvMapper.siteManager.addSite(s);
                    
 
                         if (console) console.log('Added ' + s.name + ' to the site manager');

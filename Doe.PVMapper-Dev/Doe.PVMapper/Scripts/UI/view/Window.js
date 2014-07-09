@@ -36,9 +36,9 @@ Ext.define('MainApp.view.Window', {
     this.viewState = Ext.view.ViewState.NORMAL;
   },
   listeners: {
-    beforerender: function (win, op) {
-      var taskBar = Ext.getCmp('maintaskbar');
-    },
+    //beforerender: function (win, op) {
+    //  var taskBar = Ext.getCmp('maintaskbar');
+    //},
     boxready: function (win, width, height, eOpts) { //Note: this event fires only once (for each new window)
       var taskBar = Ext.getCmp('maintaskbar');
       // check to see if the window exists.  Show if it is, otherwise add new button.
@@ -63,9 +63,8 @@ Ext.define('MainApp.view.Window', {
     beforeclose: function(win, eOpts) {
       var taskBar = Ext.getCmp('maintaskbar');
       if (taskBar) {
-        if (!(this.closeAction == 'hide')) {
+        if (!(this.closeAction == 'hide'))
           taskBar.removeButton(win);
-        }
         else 
           this.viewState = Ext.view.ViewState.MINIMIZED;
       }

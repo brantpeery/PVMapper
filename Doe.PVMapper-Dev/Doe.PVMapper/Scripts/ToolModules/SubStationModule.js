@@ -3,7 +3,7 @@
 var BYUModules;
 (function (BYUModules) {
     var configProperties = {
-        maxSearchDistanceInMi: 15
+        maxSearchDistanceInMi: 25
     }
 
     var lineConfigProperties = {
@@ -15,6 +15,7 @@ var BYUModules;
 
     var myToolLine;
 
+    var propsGrid;
     var propsWindow;
 
     Ext.onReady(function () {
@@ -37,7 +38,7 @@ var BYUModules;
             selectOnFocus: true
         };
 
-        var propsGrid = new Ext.grid.PropertyGrid({
+        propsGrid = new Ext.grid.PropertyGrid({
             nameText: 'Properties Grid',
             minWidth: 300,
             source: lineConfigProperties,
@@ -72,10 +73,14 @@ var BYUModules;
             ],
             listeners: {
                 beforehide: function () {
-                    //Note: this no longer works on substations, since I changed how updateScore works... might fix it sometime.
+                    // refresh scores as necessary to accomodate this configuraiton change.
                     myToolLine.scores.forEach(function (score) {
+                        score.isValueOld = true;
                         updateScore(score, '"power"="line"', 'transmission line');
                     });
+
+                    // save configuration changes to the browser
+                    myToolLine.saveConfiguration();
                 }
             },
             buttons: [
@@ -91,131 +96,119 @@ var BYUModules;
         });
     });
 
-    var NearestSubStationModule = (function () {
-        function NearestSubStationModule() {
-            var _this = this;
-            var myModule = new pvMapper.Module({
+    var NearestSubStationModule = new pvMapper.Module({
+        id: "NearestSubStationModule",
+        author: "Rohit Khattar, BYU",
+        version: "0.1",
+        url: selfUrl,
 
-                id: "NearestSubStationModule",
-                author: "Rohit Khattar, BYU",
-                version: "0.1",
-                iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/home_icon.jpg",
+        title: "Nearest Substation",
+        category: "Power Infrastructure",
+        description: "Distance from a site boundary to the center of the nearest known substation, using data from OpenStreetMap",
 
-                activate: function () {
-                    // nothing to do here... map added in layers.js
-                },
-                deactivate: function() {
-                    // nothing to do here... map added in layers.js
-                },
-        
-                destroy: null,
-                init: null,
-                scoringTools: [
-                    {
-                        //Note: this no longer works on substations, since I changed how updateScore works... might fix it sometime.
-                        //showConfigWindow: function () {
-                        //    myToolLine = this;
-                        //    propsWindow.show();
-                        //},
-                        title: NearestSubStationModule.title, //"Nearest Substation",
-                        category: NearestSubStationModule.category, //"Power Infrastructure",
-                        description: NearestSubStationModule.description, //"Distance from a site boundary to the center of the nearest known substation, using data from OpenStreetMap",
-                        longDescription: NearestSubStationModule.longDescription, //'<p>This tool reports the distance from a site to the nearest known substation. The substation is identified using OpenStreetMap. All map features using the "power" key with values of "station" and "sub_station" are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:power).</p>',
-                        onScoreAdded: function (event, score) {
-                        },
-                        onSiteChange: function (e, score) {
-                            //Note: some substations are classified as 'sub_station' and some are classified as 'station'
-                            //see http://wiki.openstreetmap.org/wiki/Key:power
-                            _this.updateScore(score, '"power"~"sub_station|station"', 'substation');
-                        },
-                        // having any nearby line is much better than having no nearby line, so let's reflect that.
-                        scoreUtilityOptions: {
-                            functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInMi - 1), 0.5, configProperties.maxSearchDistanceInMi, 0.25, "mi",
-                                "Distance to nearest substation", "Score", "Prefer sites near a substation.")
-                        },
-                        weight: 10
-                    }],
-                infoTools: null
-            });
-            this.getModuleObj = function () { return myModule; }
-        }
+        activate: null, // nothing to do here... map added in layers.js
+        deactivate: null, // nothing to do here... map added in layers.js
 
-        NearestSubStationModule.title = "Nearest Substation";
-        NearestSubStationModule.category = "Power Infrastructure";
-        NearestSubStationModule.description = "Distance from a site boundary to the center of the nearest known substation, using data from OpenStreetMap";
-        NearestSubStationModule.longDescription = '<p>This tool reports the distance from a site to the nearest known substation. The substation is identified using OpenStreetMap. All map features using the "power" key with values of "station" and "sub_station" are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:power).</p>';
+        scoringTools: [{
+            //Note: this no longer works on substations, since I changed how updateScore works... might fix it sometime.
+            //showConfigWindow: function () {
+            //    myToolLine = this;
+            //    propsWindow.show();
+            //},
+            id: "NearestSubStationTool",
+            title: "Nearest Substation",
+            category: "Power Infrastructure",
+            description: "Distance from a site boundary to the center of the nearest known substation, using data from OpenStreetMap",
+            longDescription: '<p>This tool reports the distance from a site to the nearest known substation. The substation is identified using OpenStreetMap. All map features using the "power" key with values of "station" and "sub_station" are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:power).</p>',
+            //onScoreAdded: function (event, score) {
+            //},
+            onSiteChange: function (e, score) {
+                //Note: some substations are classified as 'sub_station' and some are classified as 'station'
+                //see http://wiki.openstreetmap.org/wiki/Key:power
+                updateScore(score, '"power"~"sub_station|station"', 'substation');
+            },
+            // having any nearby line is much better than having no nearby line, so let's reflect that.
+            scoreUtilityOptions: {
+                functionName: "linear3pt",
+                functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInMi - 1), 0.5, configProperties.maxSearchDistanceInMi, 0.25, "mi",
+                    "Distance to nearest substation", "Score", "Prefer sites near a substation.")
+            },
+            weight: 10
+        }],
+    });
 
-        NearestSubStationModule.prototype.updateScore = function (score, wayQueryKey, objectType) {
-            updateScore(score, wayQueryKey, objectType);
-        }
+    //BYUModules.NearestSubStationModule = NearestSubStationModule;
 
-        return NearestSubStationModule;
-    })();
+    var NearestTransmissionLineModule = new pvMapper.Module({
+        id: "NearestTransmissionLineModule",
+        author: "Rohit Khattar, BYU",
+        version: "0.1",
+        url: selfUrl,
 
-    BYUModules.NearestSubStationModule = NearestSubStationModule;
+        title: "Nearest Transmission Line",
+        category: "Power Infrastructure",
+        description: "Distance from a site boundary to the nearest known transmission line, using data from OpenStreetMap",
 
-    var NearestTransmissionLineModule = (function () {
-        function NearestTransmissionLineModule() {
-            var _this = this;
-            var myModule = new pvMapper.Module({
+        activate: null, // nothing to do here... map added in layers.js
+        deactivate: null, // nothing to do here... map added in layers.js
 
-                id: "NearestTransmissionLineModule",
-                author: "Rohit Khattar, BYU",
-                version: "0.1",
-                iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/home_icon.jpg",
+        scoringTools: [{
+            showConfigWindow: function () {
+                myToolLine = this;
+                propsWindow.show();
+            },
 
-                activate: function () {
-                    // nothing to do here... map added in layers.js
-                },
-                deactivate: function () {
-                    // nothing to do here... map added in layers.js
-                },
+            id: "NearestTransmissionLineTool",
+            title: "Nearest Transmission Line",
+            category: "Power Infrastructure",
+            description: "Distance from a site boundary to the nearest known transmission line, using data from OpenStreetMap",
+            longDescription: '<p>This tool reports the distance from a site to the nearest known transmission line. The line is identified using OpenStreetMap. All map features using the "power" key with a value of "line" are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:power).</p>',
+            //onScoreAdded: function (event, score) {
+            //},
+            onSiteChange: function (e, score) {
+                updateScore(score, '"power"="line"', 'transmission line');
+            },
 
-                destroy: null,
-                init: null,
-                scoringTools: [
-                    {
-                        showConfigWindow: function () {
-                            myToolLine = this;
-                            propsWindow.show();
-                        },
-                        title: NearestTransmissionLineModule.title, //"Nearest Transmission Line",
-                        category: NearestTransmissionLineModule.category, // "Power Infrastructure",
-                        description: NearestTransmissionLineModule.description, // "Distance from a site boundary to the nearest known transmission line, using data from OpenStreetMap",
-                        longDescription: NearestTransmissionLineModule.longDescription,// '<p>This tool reports the distance from a site to the nearest known transmission line. The line is identified using OpenStreetMap. All map features using the "power" key with a value of "line" are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:power).</p>',
-                        onScoreAdded: function (event, score) {
-                        },
-                        onSiteChange: function (e, score) {
-                            _this.updateScore(score, '"power"="line"', 'transmission line');
-                        },
-                        // having any nearby line is much better than having no nearby line, so let's reflect that.
-                        scoreUtilityOptions: {
-                            functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInKM - 1), 0.3, configProperties.maxSearchDistanceInKM, 0, "km",
-                              "Existing Power Infrastructure", "Preference", "Preference of a proposed site in proxity to existing power transmissions.")
-                        },
-                        weight: 10
-                    }
-                ],
-                infoTools: null
-            });
-            this.getModuleObj = function () { return myModule; }
-        }
+            getConfig: function () {
+                return lineConfigProperties;
+            },
+            setConfig: function (config) {
+                var changed = false;
+                if (config.minimumVoltage >= 0 && lineConfigProperties.minimumVoltage != config.minimumVoltage) {
+                    lineConfigProperties.minimumVoltage = config.minimumVoltage;
+                    changed = true;
+                }
+                if (config.maximumVoltage >= 0 && lineConfigProperties.maximumVoltage != config.maximumVoltage) {
+                    lineConfigProperties.maximumVoltage = config.maximumVoltage;
+                    changed = true;
+                }
+                if (lineConfigProperties.onlyKnownVoltages != config.onlyKnownVoltages) {
+                    lineConfigProperties.onlyKnownVoltages = !!config.onlyKnownVoltages;
+                    changed = true;
+                }
 
-        NearestTransmissionLineModule.title = "Nearest Transmission Line";
-        NearestTransmissionLineModule.category = "Power Infrastructure";
-        NearestTransmissionLineModule.description = "Distance from a site boundary to the nearest known transmission line, using data from OpenStreetMap";
-        NearestTransmissionLineModule.longDescription = '<p>This tool reports the distance from a site to the nearest known transmission line. The line is identified using OpenStreetMap. All map features using the "power" key with a value of "line" are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:power).</p>';
+                if (changed) {
+                    propsGrid.setSource(lineConfigProperties);
 
-        NearestTransmissionLineModule.prototype.updateScore = function (score, wayQueryKey, objectType) {
-            updateScore(score, wayQueryKey, objectType);
-        }
+                    // refresh scores as necessary to accomodate this configuraiton change.
+                    this.scores.forEach(function (score) {
+                        score.isValueOld = true;
+                        updateScore(score, '"power"="line"', 'transmission line');
+                    });
+                }
+            },
 
-        return NearestTransmissionLineModule;
-    })();
+            // having any nearby line is much better than having no nearby line, so let's reflect that.
+            scoreUtilityOptions: {
+                functionName: "linear3pt",
+                functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInMi - 1), 0.3, configProperties.maxSearchDistanceInMi, 0, "km",
+                    "Existing Power Infrastructure", "Preference", "Preference of a proposed site in proxity to existing power transmissions.")
+            },
+            weight: 10
+        }],
+    });
 
-    BYUModules.NearestTransmissionLineModule = NearestTransmissionLineModule;
+    //BYUModules.NearestTransmissionLineModule = NearestTransmissionLineModule;
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
@@ -336,18 +329,10 @@ var BYUModules;
                 }
             }
         });
-
-
     }
 
-})(BYUModules || (BYUModules = {}));
+    pvMapper.moduleManager.registerModule(NearestSubStationModule, true);
+    pvMapper.moduleManager.registerModule(NearestTransmissionLineModule, true);
 
-//var modinstance = new BYUModules.NearestSubStationModule();
-//var modinstance = new BYUModules.NearestTransmissionLineModule();
-if (typeof (selfUrl) == 'undefined')
-    var selfUrl = $('script[src$="SubStationModule.js"]').attr('src');
-if (typeof (isActive) == 'undefined')
-    var isActive = true;
-pvMapper.moduleManager.registerModule(BYUModules.NearestSubStationModule.category, BYUModules.NearestSubStationModule.title, BYUModules.NearestSubStationModule, isActive, selfUrl);
-pvMapper.moduleManager.registerModule(BYUModules.NearestTransmissionLineModule.category, BYUModules.NearestTransmissionLineModule.title, BYUModules.NearestTransmissionLineModule, isActive, selfUrl);
+})(BYUModules || (BYUModules = {}));
 

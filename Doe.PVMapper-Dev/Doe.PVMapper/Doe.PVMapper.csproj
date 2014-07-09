@@ -234,6 +234,7 @@
       <DependentUpon>SiteDetailReport.scss</DependentUpon>
     </Content>
     <Content Include="Content\Reports\SummaryReport.css" />
+    <Content Include="Images\accept.png" />
     <Content Include="Images\anllogo.png" />
     <Content Include="Images\barcharts.png" />
     <Content Include="Images\check.png" />
@@ -243,7 +244,9 @@
     <Content Include="Images\dsirelogo.png" />
     <Content Include="Images\edit.png" />
     <Content Include="Images\eispclogo.png" />
+    <Content Include="Images\exclamation.gif" />
     <Content Include="Images\fileexport.png" />
+    <Content Include="Images\loading.gif" />
     <Content Include="Images\notes.png" />
     <Content Include="Images\nrel.png" />
     <Content Include="Images\open.png" />
@@ -253,7 +256,9 @@
     <Content Include="Images\restart.png" />
     <Content Include="Images\save.png" />
     <Content Include="Images\saveConfig.png" />
+    <Content Include="Images\saved.png" />
     <Content Include="Images\saveProject.png" />
+    <Content Include="Images\saving.gif" />
     <Content Include="Images\search.png" />
     <Content Include="Images\tag.png" />
     <Content Include="Images\zoom_in.png" />
@@ -379,6 +384,9 @@
     <Content Include="lpresources\verify\3.png" />
     <Content Include="lpresources\verify\ajax_check.php" />
     <Content Include="Notes\reportMockup.svg" />
+    <Content Include="Scripts\Blob.js" />
+    <Content Include="Scripts\Ext\ux\statusbar\StatusBar.js" />
+    <Content Include="Scripts\FileSaver.js" />
     <Content Include="Scripts\pvClient.js" />
     <Content Include="Scripts\Esri-GeoJsonConverter.js" />
     <Content Include="Scripts\EsriGeoJSON.js" />
@@ -404,10 +412,12 @@
     </Content>
     <TypeScriptCompile Include="Scripts\pvExtensions\TotalsModule.ts" />
     <TypeScriptCompile Include="Scripts\ToolModules\AgricultureSocialModule.ts" />
+    <Content Include="Scripts\pvMapper\TSMapper\CustomModule.js" />
     <Content Include="Scripts\pvMapper\TSMapper\es6-promises.d.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\ModuleManager.js">
       <DependentUpon>ModuleManager.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\pvMapper\TSMapper\ProgressBar.js" />
     <Content Include="Scripts\ToolModules\AgricultureSocialModule.js">
       <DependentUpon>AgricultureSocialModule.ts</DependentUpon>
     </Content>
@@ -434,7 +444,6 @@
       <DependentUpon>Event.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Event.ts" />
-    <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Options.d.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Module.ts" />
     <TypeScriptCompile Include="Scripts\ToolModules\irradianceModule.ts" />
     <Content Include="Scripts\pvMapper\TSMapper\InfoTools.js">
@@ -464,9 +473,6 @@
     </Content>
     <Content Include="Scripts\ToolModules\NearRoadModule.js" />
     <Content Include="Scripts\ToolModules\NewSlopeModule.js" />
-    <Content Include="Scripts\pvMapper\TSMapper\Options.d.js">
-      <DependentUpon>Options.d.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Scoreboard.ts" />
     <TypeScriptCompile Include="Scripts\pvMapper\TSMapper\Renderer.ts" />
     <Content Include="Scripts\ToolModules\OSMSocialModule.js" />
@@ -559,7 +565,6 @@
       <DependentUpon>WildlifeSocialModule.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\pvMapper\Utility.ts" />
-    <Content Include="Scripts\SaveLocalFile.js" />
     <Content Include="Scripts\UI\extras\promise.js" />
     <Content Include="Scripts\UI\model\Scoreboard.js" />
     <Content Include="Scripts\UI\model\Tool.js" />
@@ -1293,7 +1298,6 @@
     <Content Include="Scripts\pvMapper\Scoreboard.js" />
     <Content Include="Scripts\pvMapper\ScoreLine.js" />
     <Content Include="Scripts\pvMapper\Site.js" />
-    <Content Include="Scripts\pvMapper\test.html" />
     <Content Include="Scripts\pvMapper\Utility.js" />
     <Content Include="Scripts\Tools\debug_log.js" />
     <Content Include="Scripts\UI\view\Application.js" />

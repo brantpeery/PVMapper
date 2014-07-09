@@ -3,12 +3,19 @@
 /// <reference path="../pvmapper/tsmapper/site.ts" />
 /// <reference path="../pvmapper/tsmapper/score.ts" />
 /// <reference path="../pvmapper/tsmapper/tools.ts" />
-/// <reference path="../pvmapper/tsmapper/options.d.ts" />
 /// <reference path="../pvmapper/tsmapper/module.ts" />
 /// <reference path="../pvmapper/tsmapper/scoreutility.ts" />
- /// <reference path="../pvmapper/tsmapper/modulemanager.ts" />
+/// <reference path="../pvmapper/tsmapper/modulemanager.ts" />
 
 module INLModules {
+    declare var selfUrl: string; // this should be included dynamically in ModuleManager when it loads this file.
+    //TODO: why didn't we use require.js (or similar)? Why roll our own dynamic js loader?
+
+    interface IConfig {
+        maxSearchDistanceInMI: number;
+        usePlantsUnderConstruction: boolean;
+        usePlantsInDevelopment: boolean;
+    }
 
     var surveyResults = [
         { mi: 0, percentOk: 33.71040724 },
@@ -61,99 +68,117 @@ module INLModules {
         { mi: 2000, percentOk: 99.77375566 },
         { mi: 5000, percentOk: 100 }];
 
-
-    var configProperties = {
-        //maxSearchDistanceInKM: 30,
-        maxSearchDistanceInMI: 20,
-        usePlantsUnderConstruction: true,
-        usePlantsInDevelopment: true
-    };
-
-    var myToolLine: pvMapper.IToolLine;
-
-    var propsWindow;
-
-    Ext.onReady(function () {
-        var propsGrid: Ext.grid.property.IGrid = Ext.create('Ext.grid.property.Grid', {
-            nameText: 'Properties Grid',
-            minWidth: 300,
-            //autoHeight: true,
-            source: configProperties,
-            customRenderers: {
-                maxSearchDistanceInMI: function (v) { return v + " mi"; },
-            },
-            propertyNames: {
-                maxSearchDistanceInMI: "search distance",
-                usePlantsUnderConstruction: "use unfinished PV",
-                usePlantsInDevelopment: "use planned PV",
-            },
-        });
-
-        // display a cute little properties window describing our doodle here.
-        //Note: this works only as well as our windowing scheme, which is to say poorly
-
-        //var propsWindow = Ext.create('MainApp.view.Window', {
-        propsWindow = Ext.create('Ext.window.Window', {
-            title: "Configure Solar Plant Proximity Tool",
-            closeAction: "hide",
-            layout: "fit",
-            items: [
-                propsGrid
-            ],
-            listeners: {
-                beforehide: function () {
-                    myToolLine.scores.forEach(updateScore);
-                },
-            },
-            buttons: [{
-                xtype: 'button',
-                text: 'OK',
-                handler: function () {
-                    propsWindow.hide();
-                }
-            }],
-            constrain: true
-        });
-    
-    });
-
-    export class SolarPlantSocialModule implements pvMapper.IModuleHandle {
+    export class SolarPlantSocialModule extends pvMapper.Module {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
-                id: "SolarPlantSocialModule",
-                author: "Scott Brown, INL",
-                version: "0.1.ts",
-                iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/home_icon.jpg",
+            super();
 
-                activate: () => {
-                    addAllMaps();
-                },
-                deactivate: () => {
-                    removeAllMaps();
-                },
-                destroy: null,
-                init: null,
+            this.configProperties = {
+                maxSearchDistanceInMI: 20,
+                usePlantsUnderConstruction: true,
+                usePlantsInDevelopment: true
+            };
+
+            var thisModule = this; //HACK: we want to capture the 'this' parameter passed to the tool - it will be our ToolLine object.
+            this.init(<pvMapper.IModuleOptions>{
+                activate: null,
+                deactivate: null,
 
                 scoringTools: [<pvMapper.IScoreToolOptions>{
-                    activate: null,
-                    deactivate: null,
-                    destroy: null,
-                    init: null,
+                    activate: function () { // keep 'this' parameter from tool line object
+                        var thisScoreLine: pvMapper.ScoreLine = this;
 
-                    showConfigWindow: function () {
-                        myToolLine = this; // fetch tool line, which was passed as 'this' parameter
-                        propsWindow.show();
+                        if (!thisModule.propsWindow) {
+                            thisModule.propsGrid = Ext.create('Ext.grid.property.Grid', {
+                                nameText: 'Properties Grid',
+                                minWidth: 300,
+                                //autoHeight: true,
+                                source: thisModule.configProperties,
+                                customRenderers: {
+                                    maxSearchDistanceInMI: function (v) { return v + " mi"; },
+                                },
+                                propertyNames: {
+                                    maxSearchDistanceInMI: "search distance",
+                                    usePlantsUnderConstruction: "use unfinished PV",
+                                    usePlantsInDevelopment: "use planned PV",
+                                },
+                            });
+
+                            // display a cute little properties window describing our doodle here.
+                            //Note: this works only as well as our windowing scheme, which is to say poorly
+
+                            //var propsWindow = Ext.create('MainApp.view.Window', {
+                            thisModule.propsWindow = Ext.create('Ext.window.Window', {
+                                title: "Configure Solar Plant Proximity Tool",
+                                closeAction: "hide",
+                                layout: "fit",
+                                items: [
+                                    thisModule.propsGrid
+                                ],
+                                listeners: {
+                                    beforehide: function () {
+                                        // refresh scores as necessary to accomodate this configuraiton change.
+                                        thisScoreLine.scores.forEach(s => { s.isValueOld = true; thisModule.updateScore(s); });
+
+                                        // save configuration changes to the browser
+                                        thisScoreLine.saveConfiguration();
+                                    },
+                                },
+                                buttons: [{
+                                    xtype: 'button',
+                                    text: 'OK',
+                                    handler: function () {
+                                        thisModule.propsWindow.hide();
+                                    }
+                                }],
+                                constrain: true
+                            });
+                        }
+
+                        thisModule.requestError = null; // forget any errors recorded during prior tool activations.
+                        thisModule.addAllMaps();
+                    },
+                    deactivate: function () {
+                        thisModule.scoresWaitingOnRequest = null; // scores can no longer wait on the request, because the tool has been deactivated.
+                        thisModule.removeAllMaps();
                     },
 
-                    title: SolarPlantSocialModule.title, //"Existing Solar Proximity",
-                    category: SolarPlantSocialModule.category, //"Social Acceptance",
-                    description: SolarPlantSocialModule.description, //"Percentage of survey respondents who reported this distance from existing solar plants as acceptable",
-                    longDescription: SolarPlantSocialModule.longDescription, //'<p>This tool calculates the distance from a site to the nearest existing solar plant, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 441 respondents from six counties in Southern California answered Question 21 which asked "How much buffer distance is acceptable between a large solar facility and an existing large solar facility?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest existing solar installation is identified using map data from SEIA. See their Research & Resources page for more information (www.seia.org/research-resources).</p>',
+                    showConfigWindow: function () {
+                        thisModule.propsWindow.show();
+                    },
+
+
+                    id: "SolarPlantSocialTool",
+                    title: "Existing Solar Proximity",
+                    category: "Social Acceptance",
+                    description: "Percentage of survey respondents who reported this distance from existing solar plants as acceptable",
+                    longDescription: '<p>This tool calculates the distance from a site to the nearest existing solar plant, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 441 respondents from six counties in Southern California answered Question 21 which asked "How much buffer distance is acceptable between a large solar facility and an existing large solar facility?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest existing solar installation is identified using map data from SEIA. See their Research & Resources page for more information (www.seia.org/research-resources).</p>',
                     //onScoreAdded: function (e, score: pvMapper.Score) {
                     //    scores.push(score);
                     //},
                     onSiteChange: function (e, score: pvMapper.Score) {
-                        updateScore(score);
+                        thisModule.updateScore(score);
+                    },
+
+                    getConfig: function () {
+                        return thisModule.configProperties;
+                    },
+                    setConfig: function (config: IConfig) {
+                        if (config && config.maxSearchDistanceInMI >= 0 && (
+                            thisModule.configProperties.maxSearchDistanceInMI != config.maxSearchDistanceInMI ||
+                            thisModule.configProperties.usePlantsInDevelopment != config.usePlantsInDevelopment ||
+                            thisModule.configProperties.usePlantsUnderConstruction != config.usePlantsUnderConstruction)) {
+
+                            thisModule.configProperties.maxSearchDistanceInMI = config.maxSearchDistanceInMI;
+                            thisModule.configProperties.usePlantsInDevelopment = !!config.usePlantsInDevelopment;
+                            thisModule.configProperties.usePlantsUnderConstruction = !!config.usePlantsUnderConstruction;
+
+                            if (thisModule.propsGrid) // this won't be true if the tool isn't active.
+                                thisModule.propsGrid.setSource(thisModule.configProperties); // set property grid to match
+
+                            // refresh scores as necessary to accomodate this configuraiton change.
+                            var thisScoreLine: pvMapper.ScoreLine = this;
+                            thisScoreLine.scores.forEach(s => { s.isValueOld = true; thisModule.updateScore(s); });
+                        }
                     },
 
                     // having any nearby line is much better than having no nearby line, so let's reflect that.
@@ -162,320 +187,344 @@ module INLModules {
                         functionArgs:
                         new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor","Percent Favor","Score","Preference to the social aceptable in relative distance to existing solar plants.")
                     },
-                    weight: 10
+                    weight: 5
                 }],
-
-                infoTools: null
             });
-            this.getModuleObj = function () { return myModule; }
         }
-        getModuleObj: () => pvMapper.Module;
-        public static title: string = "Existing Solar Proximity";
-        public static category: string = "Social Acceptance";
-        public static description: string = "Percentage of survey respondents who reported this distance from existing solar plants as acceptable";
-        public static longDescription: string = '<p>This tool calculates the distance from a site to the nearest existing solar plant, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 441 respondents from six counties in Southern California answered Question 21 which asked "How much buffer distance is acceptable between a large solar facility and an existing large solar facility?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest existing solar installation is identified using map data from SEIA. See their Research & Resources page for more information (www.seia.org/research-resources).</p>';
 
-    }
+        public id = "SolarPlantSocialModule";
+        public author = "Scott Brown, INL";
+        public version = "0.1.ts";
+        public url = selfUrl;
+
+        public title: string = "Existing Solar Proximity";
+        public category: string = "Social Acceptance";
+        public description: string = "Percentage of survey respondents who reported this distance from existing solar plants as acceptable";
 
 
-    //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
+        private configProperties: IConfig;
+        private propsWindow: any;
+        private propsGrid: Ext.grid.property.IGrid;
 
-    var seiaDataUrl = "https://seia.maps.arcgis.com/sharing/rest/content/items/e442f5fc7402493b8a695862b6a2290b/data";
+        private seiaDataUrl = "https://seia.maps.arcgis.com/sharing/rest/content/items/e442f5fc7402493b8a695862b6a2290b/data";
 
-    //declare var Ext: any;
+        //declare var Ext: any;
 
-    var requestError = null;
-    var scoresWaitingOnRequest = [];
+        private requestError = null;
+        private scoresWaitingOnRequest;
 
-    var layerOperating: OpenLayers.Vector = null;
-    var layerConstruction: OpenLayers.Vector = null;
-    var layerDevelopment: OpenLayers.Vector = null;
+        private layerOperating: OpenLayers.Vector = null;
+        private layerConstruction: OpenLayers.Vector = null;
+        private layerDevelopment: OpenLayers.Vector = null;
 
-    function createDefaultStyle(fillColor: string): OpenLayers.StyleMap {
+        private static createDefaultStyle(fillColor: string): OpenLayers.StyleMap {
 
-        /*
-            Capacity: 2
-            City/County: "Kona"
-            Date Announced: 2008
-            Developer: "Sopogy"
-            Electricity Purchaser: "HELCO"
-            Land Type: "Private"
-            LocAccurac: 1
-            Online Date: "2009"
-            PV/CSP: "CSP"
-            Project Name: "Holaniku at Keahole Point"
-            State: "HI"
-            Status: "Operating"
-            Technology: "Other"
-            X: -156.055
-            Y: 19.7279
-        */
+            /*
+                Capacity: 2
+                City/County: "Kona"
+                Date Announced: 2008
+                Developer: "Sopogy"
+                Electricity Purchaser: "HELCO"
+                Land Type: "Private"
+                LocAccurac: 1
+                Online Date: "2009"
+                PV/CSP: "CSP"
+                Project Name: "Holaniku at Keahole Point"
+                State: "HI"
+                Status: "Operating"
+                Technology: "Other"
+                X: -156.055
+                Y: 19.7279
+            */
 
-        var style = new OpenLayers.Style(
-            {
-                fontSize: "12px",
-                label: "${getLabel}", // "${Developer}", // "${Project Name}",
-                labelOutlineColor: fillColor,
-                labelOutlineWidth: 2,
+            var style = new OpenLayers.Style(
+                {
+                    fontSize: "12px",
+                    label: "${getLabel}", // "${Developer}", // "${Project Name}",
+                    labelOutlineColor: fillColor,
+                    labelOutlineWidth: 2,
 
-                pointRadius: "${getSize}", //"${Capacity}",
-                fillOpacity: 0.25,
-                strokeOpacity: 0.875,
+                    pointRadius: "${getSize}", //"${Capacity}",
+                    fillOpacity: 0.25,
+                    strokeOpacity: 0.875,
 
-                fillColor: fillColor, // using context.getColor(feature)
-                strokeColor: fillColor,
-            },
-            {
-                context: {
-                    getLabel: function (feature) {
-                        try {
-                            return feature.attributes["Project Name"] ? feature.attributes["Project Name"] :
-                                feature.attributes["Developer"] ? feature.attributes["Developer"] :
-                                feature.attributes["Electricity Purchaser"] ? feature.attributes["Electricity Purchaser"] :
-                                "";
-                        } catch (e) {
-                            return ""; // duh?
-                        }
-                    },
-                    getSize: function (feature) {
-                        try {
-                            return 2 + (4 * Math.log(feature.attributes["Capacity"]));
-                        } catch (e) {
-                            return 10; // duh?
-                        }
-                    },
-                }
-            });
-
-        var styleMap = new OpenLayers.StyleMap(style);
-        return styleMap;
-    }
-
-    function addAllMaps() {
-        var jsonpProtocol = new OpenLayers.Protocol.Script(<any>{
-            url: seiaDataUrl,
-            params: {
-                f: 'json'
-            },
-            format: new OpenLayers.Format.JSON(),
-            parseFeatures: function (data) {
-                return null;
-            },
-            callback: (response: OpenLayers.Response) => {
-                if (response.success()) {
-                    requestError = null;
-                    var properties = { opacity: 0.3, visibility: false };
-                    layerOperating = new OpenLayers.Layer.Vector("PV/CSP In Operation", properties);
-                    layerConstruction = new OpenLayers.Layer.Vector("PV/CSP Under Construction", properties);
-                    layerDevelopment = new OpenLayers.Layer.Vector("PV/CSP In Development", properties);
-
-                    layerOperating.styleMap = createDefaultStyle("lightgreen");
-                    layerConstruction.styleMap = createDefaultStyle("lightblue");
-                    layerDevelopment.styleMap = createDefaultStyle("orange");
-
-                    //new OpenLayers.Format.EsriGeoJSON()
-                    //this.format.read(data)
-
-                    var oLayers = response.data['operationalLayers'];
-                    for (var i = 0; i < oLayers.length; i++) {
-                        var destination: OpenLayers.Vector = null;
-                        if (oLayers[i].title.indexOf("perat") >= 0) {
-                            destination = layerOperating;
-                        } else if (oLayers[i].title.indexOf("onstruct") >= 0) {
-                            destination = layerConstruction;
-                        } else if (oLayers[i].title.indexOf("evelop") >= 0) {
-                            destination = layerDevelopment;
-                        }
-
-                        if (destination) {
-                            var olFeatures = [];
-                            var fLayers = oLayers[i]['featureCollection']['layers'];
-                            for (var j = 0; j < fLayers.length; j++) {
-                                var esriFeatures = fLayers[j]['featureSet']['features'];
-                                for (var k = 0; k < esriFeatures.length; k++) {
-                                    var geometry = new OpenLayers.Geometry.Point(esriFeatures[k].geometry.x, esriFeatures[k].geometry.y);
-                                    var olFeature = new OpenLayers.Feature.Vector(geometry, esriFeatures[k].attributes/*, style*/);
-                                    olFeatures.push(olFeature);
-                                }
+                    fillColor: fillColor, // using context.getColor(feature)
+                    strokeColor: fillColor,
+                },
+                {
+                    context: {
+                        getLabel: function (feature) {
+                            try {
+                                return feature.attributes["Project Name"] ? feature.attributes["Project Name"] :
+                                    feature.attributes["Developer"] ? feature.attributes["Developer"] :
+                                    feature.attributes["Electricity Purchaser"] ? feature.attributes["Electricity Purchaser"] :
+                                    "";
+                            } catch (e) {
+                                return ""; // duh?
                             }
-                            destination.addFeatures(olFeatures);
+                        },
+                        getSize: function (feature) {
+                            try {
+                                return 2 + (4 * Math.log(feature.attributes["Capacity"]));
+                            } catch (e) {
+                                return 10; // duh?
+                            }
+                        },
+                    }
+                });
+
+            var styleMap = new OpenLayers.StyleMap(style);
+            return styleMap;
+        }
+
+        private requestAllMaps = () => {
+            // don't send another request until the last one is finished.
+            if (this.scoresWaitingOnRequest) {
+                return;
+            }
+
+            this.scoresWaitingOnRequest = []; // scores can now wait on the request, because the request is being sent.
+            var jsonpProtocol = new OpenLayers.Protocol.Script(<any>{
+                url: this.seiaDataUrl,
+                params: {
+                    f: 'json'
+                },
+                format: new OpenLayers.Format.JSON(),
+                parseFeatures: function (data) {
+                    return null;
+                },
+                callback: (response: OpenLayers.Response) => {
+                    if (response.success()) {
+                        this.requestError = null;
+                        var properties = { opacity: 0.3, visibility: false };
+                        this.layerOperating = new OpenLayers.Layer.Vector("PV/CSP In Operation", properties);
+                        this.layerConstruction = new OpenLayers.Layer.Vector("PV/CSP Under Construction", properties);
+                        this.layerDevelopment = new OpenLayers.Layer.Vector("PV/CSP In Development", properties);
+
+                        this.layerOperating.styleMap = SolarPlantSocialModule.createDefaultStyle("lightgreen");
+                        this.layerConstruction.styleMap = SolarPlantSocialModule.createDefaultStyle("lightblue");
+                        this.layerDevelopment.styleMap = SolarPlantSocialModule.createDefaultStyle("orange");
+
+                        //new OpenLayers.Format.EsriGeoJSON()
+                        //this.format.read(data)
+
+                        var oLayers = response.data['operationalLayers'];
+                        for (var i = 0; i < oLayers.length; i++) {
+                            var destination: OpenLayers.Vector = null;
+                            if (oLayers[i].title.indexOf("perat") >= 0) {
+                                destination = this.layerOperating;
+                            } else if (oLayers[i].title.indexOf("onstruct") >= 0) {
+                                destination = this.layerConstruction;
+                            } else if (oLayers[i].title.indexOf("evelop") >= 0) {
+                                destination = this.layerDevelopment;
+                            }
+
+                            if (destination) {
+                                var olFeatures = [];
+                                var fLayers = oLayers[i]['featureCollection']['layers'];
+                                for (var j = 0; j < fLayers.length; j++) {
+                                    var esriFeatures = fLayers[j]['featureSet']['features'];
+                                    for (var k = 0; k < esriFeatures.length; k++) {
+                                        var geometry = new OpenLayers.Geometry.Point(esriFeatures[k].geometry.x, esriFeatures[k].geometry.y);
+                                        var olFeature = new OpenLayers.Feature.Vector(geometry, esriFeatures[k].attributes/*, style*/);
+                                        olFeatures.push(olFeature);
+                                    }
+                                }
+                                destination.addFeatures(olFeatures);
+                            }
+                        }
+
+                        //nearestFeatureCache[score.site.id] = response.features;
+
+                        if (this.isActive && this.scoresWaitingOnRequest) { // we must test this - the tool may have been deactivated before we received our response.
+                            if (this.layerDevelopment.features.length) { pvMapper.map.addLayer(this.layerDevelopment); }
+                            if (this.layerConstruction.features.length) { pvMapper.map.addLayer(this.layerConstruction); }
+                            if (this.layerOperating.features.length) { pvMapper.map.addLayer(this.layerOperating); }
+
+                            while (this.scoresWaitingOnRequest.length) {
+                                this.updateScoreFromLayers(this.scoresWaitingOnRequest.pop());
+                            }
+                        }
+                        this.scoresWaitingOnRequest = null; // scores can no longer wait on the request, because the request is finished.
+                    } else {
+                        if (this.isActive && this.scoresWaitingOnRequest) { // we must test this - the tool may have been deactivated before we received our response.
+                            this.requestError = response.error;
+                            while (this.scoresWaitingOnRequest.length) {
+                                var score = this.scoresWaitingOnRequest.pop();
+                                score.popupMessage = "Request error " + this.requestError.toString();
+                                score.updateValue(Number.NaN);
+                            }
+                        }
+                        this.scoresWaitingOnRequest = null; // scores can no longer wait on the request, because the request is finished.
+                    }
+                },
+            });
+
+            var response: OpenLayers.Response = jsonpProtocol.read(); // execute request for features...
+        }
+
+        private addAllMaps = () => {
+            if (!this.layerOperating && !this.layerConstruction && !this.layerDevelopment) {
+                this.requestAllMaps();
+
+            } else {
+                if (this.layerOperating && this.layerOperating.features.length) {
+                    pvMapper.map.addLayer(this.layerOperating);
+                }
+
+                if (this.layerConstruction && this.layerConstruction.features.length) {
+                    pvMapper.map.addLayer(this.layerConstruction);
+                }
+
+                if (this.layerDevelopment && this.layerDevelopment.features.length) {
+                    pvMapper.map.addLayer(this.layerDevelopment);
+                }
+            }
+        }
+
+        private removeAllMaps = () => {
+            if (this.layerOperating && this.layerOperating.features.length) {
+                pvMapper.map.removeLayer(this.layerOperating, false);
+            }
+
+            if (this.layerConstruction && this.layerConstruction.features.length) {
+                pvMapper.map.removeLayer(this.layerConstruction, false);
+            }
+
+            if (this.layerDevelopment && this.layerDevelopment.features.length) {
+                pvMapper.map.removeLayer(this.layerDevelopment, false);
+            }
+        }
+
+        private updateScore = (score: pvMapper.Score) => {
+            if (this.layerOperating && this.layerOperating.features.length) {
+                // if we have our layer data populated, let's update our score with it.
+                this.updateScoreFromLayers(score);
+            } else if (this.requestError) {
+                score.popupMessage = "Request error " + this.requestError.toString();
+                score.updateValue(Number.NaN);
+            } else if (this.scoresWaitingOnRequest.indexOf(score) < 0) {
+                // if we're still waiting on that data, let's enqueue this score to be updated afterward.
+                this.scoresWaitingOnRequest.push(score);
+            }
+        }
+
+        private updateScoreFromLayers = (score: pvMapper.Score) => {
+            var maxSearchDistanceInKM = this.configProperties.maxSearchDistanceInMI * 1.60934;
+            var maxSearchDistanceInMeters = maxSearchDistanceInKM * 1000;
+
+            var searchBounds: OpenLayers.Bounds = new OpenLayers.Bounds(
+                score.site.geometry.bounds.left - maxSearchDistanceInMeters - 1000,
+                score.site.geometry.bounds.bottom - maxSearchDistanceInMeters - 1000,
+                score.site.geometry.bounds.right + maxSearchDistanceInMeters + 1000,
+                score.site.geometry.bounds.top + maxSearchDistanceInMeters + 1000);
+
+            var closestFeature: OpenLayers.FVector = null;
+            var minDistance: number = maxSearchDistanceInMeters;
+
+            var searchForClosestFeature = function (features) {
+                for (var i = 0; i < features.length; i++) {
+                    // filter out far away geometries quickly using boundary overlap
+                    //if (searchBounds.intersects(features[i].bounds))
+                    if (searchBounds.contains(features[i].geometry.x, features[i].geometry.y)) {
+                        var distance: number = score.site.geometry.distanceTo(features[i].geometry);
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            closestFeature = features[i];
                         }
                     }
-
-                    //nearestFeatureCache[score.site.id] = response.features;
-
-                    if (layerDevelopment.features.length) { pvMapper.map.addLayer(layerDevelopment); }
-                    if (layerConstruction.features.length) { pvMapper.map.addLayer(layerConstruction); }
-                    if (layerOperating.features.length) { pvMapper.map.addLayer(layerOperating); }
-
-                    while (scoresWaitingOnRequest.length) {
-                        updateScoreFromLayers(scoresWaitingOnRequest.pop());
-                    }
-                } else {
-                    requestError = response.error;
-                    while (scoresWaitingOnRequest.length) {
-                        var score = scoresWaitingOnRequest.pop();
-                        score.popupMessage = "Request error " + requestError.toString();
-                        score.updateValue(Number.NaN);
-                    }
-                }
-            },
-        });
-
-        var response: OpenLayers.Response = jsonpProtocol.read();
-    }
-
-    function removeAllMaps() {
-        if (layerOperating) {
-            pvMapper.map.removeLayer(layerOperating, false);
-            layerOperating = null;
-        }
-
-        if (layerConstruction) {
-            pvMapper.map.removeLayer(layerConstruction, false);
-            layerConstruction = null;
-        }
-
-        if (layerDevelopment) {
-            pvMapper.map.removeLayer(layerDevelopment, false);
-            layerDevelopment = null;
-        }
-
-        requestError = null;
-    }
-
-    function updateScore(score: pvMapper.Score) {
-        if (layerOperating && layerOperating.features.length) {
-            // if we have our layer data populated, let's update our score with it.
-            updateScoreFromLayers(score);
-        } else if (requestError) {
-            score.popupMessage = "Request error " + requestError.toString();
-            score.updateValue(Number.NaN);
-        } else if (scoresWaitingOnRequest.indexOf(score) < 0) {
-            // if we're still waiting on that data, let's enqueue this score to be updated afterward.
-            scoresWaitingOnRequest.push(score);
-        }
-    }
-
-    function updateScoreFromLayers(score: pvMapper.Score) {
-        var maxSearchDistanceInKM = configProperties.maxSearchDistanceInMI * 1.60934;
-        var maxSearchDistanceInMeters = maxSearchDistanceInKM * 1000;
-
-        var searchBounds: OpenLayers.Bounds = new OpenLayers.Bounds(
-            score.site.geometry.bounds.left - maxSearchDistanceInMeters - 1000,
-            score.site.geometry.bounds.bottom - maxSearchDistanceInMeters - 1000,
-            score.site.geometry.bounds.right + maxSearchDistanceInMeters + 1000,
-            score.site.geometry.bounds.top + maxSearchDistanceInMeters + 1000);
-
-        var closestFeature: OpenLayers.FVector = null;
-        var minDistance: number = maxSearchDistanceInMeters;
-
-        var searchForClosestFeature = function (features) {
-            for (var i = 0; i < features.length; i++) {
-                // filter out far away geometries quickly using boundary overlap
-                //if (searchBounds.intersects(features[i].bounds))
-                if (searchBounds.contains(features[i].geometry.x, features[i].geometry.y)) {
-                    var distance: number = score.site.geometry.distanceTo(features[i].geometry);
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        closestFeature = features[i];
-                    }
                 }
             }
-        }
 
-        searchForClosestFeature(layerOperating.features);
-        if (configProperties.usePlantsUnderConstruction) {
-            searchForClosestFeature(layerConstruction.features);
-        }
-        if (configProperties.usePlantsInDevelopment) {
-            searchForClosestFeature(layerDevelopment.features);
-        }
+            searchForClosestFeature(this.layerOperating.features);
+            if (this.configProperties.usePlantsUnderConstruction) {
+                searchForClosestFeature(this.layerConstruction.features);
+            }
+            if (this.configProperties.usePlantsInDevelopment) {
+                searchForClosestFeature(this.layerDevelopment.features);
+            }
         
-        if (closestFeature !== null) {
-            var minDistanceInMi = minDistance * 0.000621371;
+            if (closestFeature !== null) {
+                var minDistanceInMi = minDistance * 0.000621371;
 
-            var percentOk = 0;
-            var distanceOk = 5000;
-            for (var i = surveyResults.length - 1; i--; i >= 0) {
-                if (minDistanceInMi >= surveyResults[i].mi) {
-                    percentOk = surveyResults[i].percentOk;
-                    distanceOk = surveyResults[i].mi;
-                    break;
+                var percentOk = 0;
+                var distanceOk = 5000;
+                for (var i = surveyResults.length - 1; i--; i >= 0) {
+                    if (minDistanceInMi >= surveyResults[i].mi) {
+                        percentOk = surveyResults[i].percentOk;
+                        distanceOk = surveyResults[i].mi;
+                        break;
+                    }
                 }
-            }
 
-            var distanceOkStr: string =
-                (distanceOk < 1) ? distanceOk.toFixed(2) :
-                (distanceOk < 10) ? distanceOk.toFixed(1) :
-                distanceOk.toFixed(0);
+                var distanceOkStr: string =
+                    (distanceOk < 1) ? distanceOk.toFixed(2) :
+                    (distanceOk < 10) ? distanceOk.toFixed(1) :
+                    distanceOk.toFixed(0);
 
-            var minDistanceStr: string =
-                (minDistanceInMi < 1) ? minDistanceInMi.toFixed(2) :
-                (minDistanceInMi < 10) ? minDistanceInMi.toFixed(1) :
-                minDistanceInMi.toFixed(0);
+                var minDistanceStr: string =
+                    (minDistanceInMi < 1) ? minDistanceInMi.toFixed(2) :
+                    (minDistanceInMi < 10) ? minDistanceInMi.toFixed(1) :
+                    minDistanceInMi.toFixed(0);
 
-            //var nearestPlantStr: string =
-            //    " (The nearest plant is ";
-            //if (closestFeature.attributes["Project Name"])
-            //    nearestPlantStr += closestFeature.attributes["Project Name"] + ", ";
-            //if (closestFeature.attributes["Capacity"])
-            //    nearestPlantStr += "a " + closestFeature.attributes["Capacity"] + " MW plant ";
-            //if (closestFeature.attributes["Developer"])
-            //    nearestPlantStr += "by " + closestFeature.attributes["Developer"] + ", ";
-            //else if (closestFeature.attributes.Owner)
-            //    nearestPlantStr += "for " + closestFeature.attributes.Owner + ", ";
-            //nearestPlantStr += minDistanceStr + " mi away.)";
+                //var nearestPlantStr: string =
+                //    " (The nearest plant is ";
+                //if (closestFeature.attributes["Project Name"])
+                //    nearestPlantStr += closestFeature.attributes["Project Name"] + ", ";
+                //if (closestFeature.attributes["Capacity"])
+                //    nearestPlantStr += "a " + closestFeature.attributes["Capacity"] + " MW plant ";
+                //if (closestFeature.attributes["Developer"])
+                //    nearestPlantStr += "by " + closestFeature.attributes["Developer"] + ", ";
+                //else if (closestFeature.attributes.Owner)
+                //    nearestPlantStr += "for " + closestFeature.attributes.Owner + ", ";
+                //nearestPlantStr += minDistanceStr + " mi away.)";
 
-            //"Developer", "Project Name", "Electricity Purchaser", "Capacity", "Status"
+                //"Developer", "Project Name", "Electricity Purchaser", "Capacity", "Status"
 
-            var nearestPlantStr: string = closestFeature.attributes["Project Name"] ?
-                " (The nearest plant, " + closestFeature.attributes["Project Name"] + ", is " + minDistanceStr + " mi away" :
-                " (The nearest plant is " + minDistanceStr + " mi away";
+                var nearestPlantStr: string = closestFeature.attributes["Project Name"] ?
+                    " (The nearest plant, " + closestFeature.attributes["Project Name"] + ", is " + minDistanceStr + " mi away" :
+                    " (The nearest plant is " + minDistanceStr + " mi away";
 
-            score.popupMessage =
-                percentOk.toFixed(1) + "% of respondents reported they would accept a site built " +
-                distanceOkStr + " mi or more from an existing solar plant." + nearestPlantStr;
+                score.popupMessage =
+                    percentOk.toFixed(1) + "% of respondents reported they would accept a site built " +
+                    distanceOkStr + " mi or more from an existing solar plant." + nearestPlantStr;
 
-            score.updateValue(percentOk);
-        } else {
-            // no existing solar plants found nearby
-            // use the % acceptance for our current max search distance
-            var percentOk = 0;
-            var distanceOk = 5000;
-            var minDistanceInMi = configProperties.maxSearchDistanceInMI;
+                score.updateValue(percentOk);
+            } else {
+                // no existing solar plants found nearby
+                // use the % acceptance for our current max search distance
+                var percentOk = 0;
+                var distanceOk = 5000;
+                var minDistanceInMi = this.configProperties.maxSearchDistanceInMI;
 
-            for (var i = surveyResults.length - 1; i--; i >= 0) {
-                if (minDistanceInMi >= surveyResults[i].mi) {
-                    percentOk = surveyResults[i].percentOk;
-                    distanceOk = surveyResults[i].mi;
-                    break;
+                for (var i = surveyResults.length - 1; i--; i >= 0) {
+                    if (minDistanceInMi >= surveyResults[i].mi) {
+                        percentOk = surveyResults[i].percentOk;
+                        distanceOk = surveyResults[i].mi;
+                        break;
+                    }
                 }
+
+                var distanceOkStr: string =
+                    (distanceOk < 1) ? distanceOk.toFixed(2) :
+                    (distanceOk < 10) ? distanceOk.toFixed(1) :
+                    distanceOk.toFixed(0);
+
+                var minDistanceStr: string =
+                    (minDistanceInMi < 1) ? minDistanceInMi.toFixed(2) :
+                    (minDistanceInMi < 10) ? minDistanceInMi.toFixed(1) :
+                    minDistanceInMi.toFixed(0);
+
+                score.popupMessage =
+                    percentOk.toFixed(1) + "% of respondents reported they would accept a site built " +
+                    distanceOkStr + " mi or more from an existing solar plant. (There was no existing solar plant found within the " +
+                    this.configProperties.maxSearchDistanceInMI + " mi search distance.)";
+
+                score.updateValue(percentOk);
             }
-
-            var distanceOkStr: string =
-                (distanceOk < 1) ? distanceOk.toFixed(2) :
-                (distanceOk < 10) ? distanceOk.toFixed(1) :
-                distanceOk.toFixed(0);
-
-            var minDistanceStr: string =
-                (minDistanceInMi < 1) ? minDistanceInMi.toFixed(2) :
-                (minDistanceInMi < 10) ? minDistanceInMi.toFixed(1) :
-                minDistanceInMi.toFixed(0);
-
-            score.popupMessage =
-                percentOk.toFixed(1) + "% of respondents reported they would accept a site built " +
-                distanceOkStr + " mi or more from an existing solar plant. (There was no existing solar plant found within the " +
-                configProperties.maxSearchDistanceInMI + " mi search distance.)";
-
-            score.updateValue(percentOk);
         }
-
     }
-    //var modinstance = new INLModules.SolarPlantSocialModule();
+
+    pvMapper.moduleManager.registerModule(new INLModules.SolarPlantSocialModule(), true);
 }
 
-if (console && console.assert) console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
-var selfUrl = selfUrl || $('script[src$="SolarPlantSocialModule.js"]').attr('src');
-
-pvMapper.moduleManager.registerModule(INLModules.SolarPlantSocialModule.category, INLModules.SolarPlantSocialModule.title, INLModules.SolarPlantSocialModule, true, selfUrl);

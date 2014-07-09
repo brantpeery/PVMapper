@@ -1,117 +1,193 @@
 ﻿/// <reference path="es6-promises.d.ts" />
 
-interface pvClient {
-
-}
-var pvClient: {
+declare var pvClient: {
     getIncludeModules: () => Array<string>;
-    prototype: pvClient;
-    moduleChanged: boolean;
 }
 
 module pvMapper {
 
-    export class ModuleInfo {
-        constructor(private _category: string, private _moduleName: string, private _ctor: IModuleFactory, private _isActive: boolean, private _moduleUrl: string = "", private _description:string = "") { }
-        get category(): string { return this._category; } set category(acat: string) { this._category = acat; }
-        get moduleName(): string { return this._moduleName; } set moduleName(aname: string) { this._moduleName = aname; }
-        get ctor(): IModuleFactory { return this._ctor; } set ctor(actor: IModuleFactory) { this._ctor = actor; }
-        get isActive(): boolean { return this._isActive; } set isActive(isOn: boolean) { this._isActive = isOn; }
-        get moduleUrl(): string { return this._moduleUrl; } set moduleUrl(aUrl: string) { this._moduleUrl = aUrl; }
-        get description(): string { return this._description; } set description(desc: string) { this._description = desc; }
+    class ModuleInfoJSON implements IModuleInfoJSON {
+        constructor(modInfo: IModuleInfoJSON) {
+            this.id = modInfo.id;
+            this.author = modInfo.author;
+            this.version = modInfo.version;
+            this.url = modInfo.url;
+
+            this.title = modInfo.title;
+            this.category = modInfo.category;
+            this.description = modInfo.description;
+            this.longDescription = null; // modInfo.longDescription; // <-- don't store this; it's just wasted space.
+
+            this.isActive = modInfo.isActive;
+        }
+
+        id: string;
+        author: string;
+        version: string;
+        url: string;
+
+        title: string;
+        category: string;
+        description: string;
+        longDescription: string;
+
+        isActive: boolean;
     }
 
     export class ModuleManager {
         constructor() { }
-        private _modules: Array<pvMapper.ModuleInfo> = new Array<pvMapper.ModuleInfo>();
+        private _availableModulesByID: { [id: string]: IModuleInfoJSON } = {};
+        private _registeredModulesByID: { [id: string]: IModule } = {};
 
-        public getModule(name: string): pvMapper.ModuleInfo {
-            var ma = this._modules.filter(function (a: pvMapper.ModuleInfo) {
-                return (a.moduleName === name); //TODO: this is NOT a unique key !
-            });
-            console.assert(ma.length < 2, "Module name collision detected!");
-            return ma.length ? ma[0] : null;
-        }
-
-        public getRegisteredModulesByURL(url: string): pvMapper.ModuleInfo[] {
-            return this._modules.filter(function (a: pvMapper.ModuleInfo) {
-                return (a.moduleUrl === url);
-            });
-            //console.assert(ma.length < 2, "Module url collision detected!"); // this is expected - several modules can share a single URL
-            //return ma.length ? ma[0] : null; //TODO: this is NOT a unique key !
-        }
-
-        //public getCtor(moduleName: string): any {
-        //    var m = this.getModule(moduleName);
-        //    if (m) {
-        //        return m.ctor;
-        //    }
-        //    else return null;
-        //}
+        private _customModulesByID: { [id: string]: IModule } = {};
 
         //This function should only be call by the tool module.  Calling from anywhere else, the caller must make sure
         //that the supporting code script (configProperties) is loaded.  
-        public registerModule(category: string, name: string, ctor: IModuleFactory, isActivated: boolean, url: string = '') {
-            if (typeof (ctor.description) == 'undefined')
-                ctor.description = "";
-            isActivated = isActivated || false;
-            var m = this.getModule(name);
-            if (m == null) {
-                this._modules.push(new ModuleInfo(category, name, ctor, isActivated, url, ctor.description));
-                if (ctor && isActivated) {
-                    var tm = new ctor();
-                    //Note: init() and activate() are called by the default constructor in Module.ts
-                    //var mObj = tm.getModuleObj();
-                    //if (typeof (mObj.activate) === 'function')
-                    //    mObj.activate();
-                }
-            }
-            else {
-                if (!m.ctor && m.isActive && ctor) {
-                    //create the tool if it has created before.
-                    m.ctor = ctor;
-                    var tm = new ctor();
-                    //Note: init() and activate() are called by the default constructor in Module.ts
-                    //var mObj = tm.getModuleObj();
-                    //if (typeof (mObj.activate) === 'function')
-                    //    mObj.activate();
-                }
-                if (m.moduleUrl != url && url !== null)
-                    m.moduleUrl = url;
+        public registerModule = (newModule: IModule, isActiveByDefault: boolean) => {
+            console.assert(!!(newModule.id && newModule.title && newModule.url && newModule.activate && newModule.deactivate),
+                "Warning: attempting to register an incomplete module '" + (newModule.id || newModule.title || newModule.url) +
+                "' (id, title, and url are required on all modules).");
+
+            console.assert(!this._registeredModulesByID[newModule.id], "Warning: attempting to register module '" +
+                newModule.id + "', when a module with the same ID has already been registered.");
+
+            var modInfo = this._availableModulesByID[newModule.id];
+            var shouldBeActive = modInfo ? modInfo.isActive : isActiveByDefault;
+
+            this._availableModulesByID[newModule.id] = newModule;
+            this._registeredModulesByID[newModule.id] = newModule;
+
+            if (shouldBeActive !== newModule.isActive) {
+                if (shouldBeActive)
+                    this._activateModule(newModule);
+                else
+                    this._deactivateModule(newModule); // this will likely never occurr
             }
         }
 
-        //public deleteModule(aName: string) {
-        //    var m = this.getModule(aName);
-        //    if (m) {
-        //        var idx = this._modules.indexOf(m);
-        //        if (idx >= 0) this._modules.splice(idx, 1);
-        //        delete m;
-        //    }
-        //}
+        // there is nothing special about this above or beyond calling module.activate(), except that it had some sensible error handling thrown in, and it saves module configs to the browser
+        public activateModule = (mod: IModuleInfoJSON) => {
+            var availableModule = this._availableModulesByID[mod.id];
+            var registeredModule = this._registeredModulesByID[mod.id];
+            if (console && console.assert) console.assert(!!availableModule, "Warning: attempting to activate a module which isn't available.");
 
-        get modules(): Array<pvMapper.ModuleInfo> {
-            return this._modules;
+            if (registeredModule) {
+                this._activateModule(registeredModule);
+                return registeredModule;
+            } else if (availableModule) {
+                availableModule.isActive = true; // set as active, so that after our script is fetched and registered, it will also be activated.
+
+                this.getScript(availableModule.url).then(() => {
+                    mod.isActive = this._registeredModulesByID[mod.id] && this._registeredModulesByID[mod.id].isActive; // update active state (in case of errors)
+                }, () => {
+                    mod.isActive = this._registeredModulesByID[mod.id] && this._registeredModulesByID[mod.id].isActive; // update active state (in case of errors)
+                });
+            }
+            return null;
+        };
+
+        // there is nothing special about this above or beyond calling module.activate(), except that it had some sensible error handling thrown in, and it saves module configs to the browser
+        private _activateModule = (mod: IModule) => {
+            pvMapper.onReady(() => {
+                try {
+                    mod.activate();
+                } catch (ex) {
+                    pvMapper.displayMessage("Failed to activate module '" + mod.title + "'", "error");
+                    if (console && console.error) console.error(ex);
+
+                    this._deactivateModule(mod);
+                }
+                this.saveTools();
+            });
+        };
+
+        // there is nothing special about this above or beyond calling module.deactivate(), except that it had some sensible error handling thrown in, and it saves module configs to the browser
+        public deactivateModule = (mod: IModule) => {
+            var registeredModule = this._registeredModulesByID[mod.id];
+            if (console && console.assert) console.assert(!!registeredModule, "Warning: attempting to deactivate a module (ID='" + mod.id + "') which isn't registered.");
+
+            if (registeredModule) {
+                this._deactivateModule(registeredModule);
+                return registeredModule;
+            } else if (typeof mod.deactivate === "function") {
+                this._deactivateModule(mod); // <-- custom modules aren't registered, but they can be deactivated. Handle them here as well.
+            }
+            return null;
+        };
+
+        // there is nothing special about this above or beyond calling module.deactivate(), except that it had some sensible error handling thrown in, and it saves module configs to the browser
+        private _deactivateModule = (mod: IModule) => {
+            try {
+                mod.deactivate();
+                if (console && console.log) console.log("Deactivated module '" + mod.title + "'");
+            } catch (ex) {
+                if (console && console.error) console.error("Failed to deactivate module '" + mod.title + "': " + ex);
+            }
+            this.saveTools();
+        };
+
+        public addCustomModule = (newModule: IModule) => {
+            if (typeof (this._customModulesByID[newModule.id]) === "object") {
+                throw new Error("Error: Attempted to register a duplicate custom module: " + newModule.id);
+            }
+
+            this._customModulesByID[newModule.id] = newModule;
+
+            if (!newModule.isActive)
+                this._activateModule(newModule);
         }
 
-        //public activateModules() {
+        public removeCustomModule = (oldModule: IModule) => {
+            if (this._customModulesByID[oldModule.id] !== oldModule) {
+                if (console && console.error) console.error("Warning: Attempting to deactivate a custom module that was never activated '" + oldModule.id + "'");
+            } else {
+                delete this._customModulesByID[oldModule.id];
+            }
 
-        //    this.modules.forEach(function (tool) {
-        //        if (tool.isActive && tool.ctor != undefined) {
-        //            new tool.ctor();
-        //        }
-        //    });
-        //    pvMapper.mainScoreboard.update();
-        //    pvMapper.mainScoreboard.updateTotals();
-        //}
+            if (oldModule.isActive)
+                this._deactivateModule(oldModule);
+        }
+
+        public getAvailableModuleByID = (id: string): IModuleInfoJSON=> {
+            return this._availableModulesByID[id];
+        }
+
+        public getRegisteredModuleByID = (id: string): IModule=> {
+            return this._registeredModulesByID[id];
+        }
+
+        public getCustomModuleByID = (id: string): IModule=> {
+            return this._customModulesByID[id];
+        }
+
+        public getAvailableModules = (): IModuleInfoJSON[] => {
+            return Object.keys(this._availableModulesByID).map(k => this._availableModulesByID[k]);
+        }
+
+        public toJSON = (): IModuleInfoJSON[] => {
+            return Object.keys(this._availableModulesByID).map(k => new ModuleInfoJSON(this._availableModulesByID[k]));
+            /*.concat(Object.keys(this._customModulesByID).map(k => new ModuleInfoJSON(this._customModulesByID[k])))*/
+            //TODO: at present, we have to way to save or load custom tools to/from files, projects, etc. They are stored only in the browser.
+        }
+
+        public fromJSON = (modules: IModuleInfoJSON[]) => {
+            if (modules) this.loadToolsFromConfig(modules);
+        }
 
         private toolStoreName: string = 'ToolModules';
+        private saveTools_timeoutHandle = null;
         public saveTools() {
-            var tools = this._modules.map((m: ModuleInfo) => { return { key: m.moduleName, value: m }; });
+            if (typeof this.saveTools_timeoutHandle === "number") {
+                // it's been less than 7 second since the last module (de)activation / save request, so cancel our next save (it will happen too soon)
+                window.clearTimeout(this.saveTools_timeoutHandle);
+            }
 
-            if (tools.length <= 0) return;
-
-            ClientDB.saveToolModules(this.toolStoreName, tools);
+            // wait until we haven't seen any module (de)activations for 7 seconds before saving the current module state to the browser
+            this.saveTools_timeoutHandle = window.setTimeout(() => {
+                this.saveTools_timeoutHandle = null;
+                var tools = this.toJSON();
+                ClientDB.saveToolModules(this.toolStoreName, tools);
+            }, 7000);
         }
 
         //Instantiate the registered tool modules whose isActive is true.  isActive is check against user's configuration first.  
@@ -121,7 +197,7 @@ module pvMapper {
             //functions when it finishes processing database inquery.  The "bindTo" will force the onSuccess to be 
             //execute in the DataManager domain, just so the 'this' always refer to our class here.
             ClientDB.loadToolModules(this.toolStoreName).then(
-                (arrObj: Array<{ key: any; value: any; }>) => {
+                (arrObj: IModuleInfoJSON[]) => {
                     this.loadToolsFromConfig(arrObj);
                 },
                 (err) => {
@@ -132,50 +208,82 @@ module pvMapper {
             );
         }
 
+        // ***************************************************************
+        //TODO: Why, oh why, didn't we just use require.js !?!?!
+        //      It is supported by TypeScript as external modules.
+        //      It is supported and used by ExtJS, which we're using.
+        //      There is no reason to roll our own dynamic JS loader...!
+        // ***************************************************************
+
         //Synchronize the register of user's preference modules.  If no user preferences saved,
-        //load all modules using a pre-select included list through a pvClient.getIncludeModules function.
-        public loadToolsFromConfig = (moduleConfigs: { key: any; value: { _isActive: boolean; _moduleUrl: string; _moduleName: string; _category: string}; }[]) => {
+        //load all modules available on the server through a pvClient.getIncludeModules function.
+        private loadToolsFromConfig = (savedModuleConfig: IModuleInfoJSON[]) => {
             try {
-                // update the active state of any modules already registered, based on the loaded configuration
-                //Note: this replicates past behavior that was here, but I believe that this._modules will always be empty at this point!
-                this._modules.forEach((m) => {
-                    var config = moduleConfigs.filter((c) => c.value._moduleName === m.moduleName && c.value._moduleUrl === m.moduleUrl);
-                    console.assert(config.length <= 1, "Warning: module name and url collision detected!");
-                    if (config.length)
-                        m.isActive = config[0].value._isActive;
+                // fetch the list of modules available on the server
+                var serverModuleUrls = pvClient.getIncludeModules();
+
+                // ignore saved configs for modules not available on the server (and discard them)
+                var moduleConfig = savedModuleConfig.filter((x) => serverModuleUrls.indexOf(x.url) >= 0);
+
+                // update configs for any registered (already available) modules, and add unregistered modules to the list of available modules
+                moduleConfig.forEach((config) => {
+                    var rm = this._registeredModulesByID[config.id];
+                    if (rm) {
+                        // (de)activate modules as necessary, as dictated by the stored module config.
+                        if (config.isActive !== rm.isActive) {
+                            if (config.isActive)
+                                this._activateModule(rm);
+                            else
+                                this._deactivateModule(rm);
+                        }
+                    } else {
+                        // add to available modules (or replace the older available module config, if we have one)
+                        this._availableModulesByID[config.id] = config;
+                    }
                 });
 
-                // fetch the modules available on the server
-                var availableModules = pvClient.getIncludeModules();
+                var availableModules = Object.keys(this._availableModulesByID).map(k => this._availableModulesByID[k]);
 
                 // of the modules available on the server, we want to load any new modules we haven't seen before (i.e. we don't have a saved configuration for them),
-                // and any old modules where the configuration we do have shows that the tool is active, and where it isn't currently loaded in the module manager.
-                var moduleUrlsToLoad = availableModules.filter((a) => 
-                    moduleConfigs.filter((m) => a == m.value._moduleUrl).length <= 0 || // <-- this must be a new module, so load it.
-                        moduleConfigs.filter((m) => a == m.value._moduleUrl && m.value._isActive &&  // <-- this is a configured & unregistered module,
-                            this.getRegisteredModulesByURL(m.value._moduleUrl).length <= 0).length > 0);   // so load it too.
+                // and any old modules where the configuration we do have shows that the tool is active, and where we don't currently have a constructor/factory method registered for it.
+                var moduleUrlsToLoad = serverModuleUrls.filter((url) => {
+                    var urlMods = availableModules.filter(m => m.url === url);
 
+                    return urlMods.length <= 0 || // <-- this must be a new url/file, so load it.
+                        urlMods.filter((m) => !this._registeredModulesByID[m.id] && m.isActive).length > 0; // <-- this is an unregistered but active module, so load it.
+                }); 
+                
                 // load the modules (logging errors, if any)
-                var modulesLoading = moduleUrlsToLoad.map((u) => this.getScript(u)
-                    .catch((e) => { if (console && console.error) console.error(e); }));
-            }
-            catch (ex) {
-                if (console && console.warn) console.warn("Reading user module preferences failed, cause: " + ex.message);
-                if (console && console.error) console.error(ex);
+                moduleUrlsToLoad.forEach(this.getScript);
+            } catch (ex) {
+                if (console && console.error) console.error("Reading user module preferences failed: " + ex.message);
+                if (console && console.debug) console.debug(ex);
             }
         }
 
-        public getScript(url: string, cbFn?: ICallback) {
+
+        // this is a hack... prefetch all script files before we load a project file, since we don't know which modules might be used, and ideally we'd like the project to load up quickly.
+        public prefetchAllModuleScripts = () => {
+            var serverModuleUrls = pvClient.getIncludeModules();
+            serverModuleUrls.forEach(this.getScript);
+        };
+
+
+        private scriptsFetchedThisSession: { [url: string]: boolean } = {};
+
+        public getScript = (url: string) => {
+            if (this.scriptsFetchedThisSession[url])
+                return; // nothing to do here.
+            
             return new Promise((resolve, reject) => {
                 try {
                     var req = new XMLHttpRequest();
                     req.open("GET", url);
                     req.onload = (e) => {
                         if (req.status != 404) {
+                            this.scriptsFetchedThisSession[url] = true;
                             this.evaluateScript(url, req.responseText);
-                            if (cbFn)
-                                cbFn.apply(this);
-                            console.log("Tool module '" + url + "' loaded successful.");
+                            console.log("Tool module '" + url + "' loaded successfully.");
                             resolve(null);
                         }
                         else {
@@ -191,7 +299,7 @@ module pvMapper {
                 catch (ex) {
                     reject(Error("Getting module '" + url + "' from server failed, cause: " + ex.message));
                 }
-            });
+            }).catch((e) => { if (console && console.error) console.error(e); });
         }
 
         public evaluateScript(url: string, script: string) {
@@ -202,55 +310,6 @@ module pvMapper {
             script = prescript + script;
             eval(script);
         }
-
-        //public isLoadOnly: boolean = false;
-        //public loadModuleScripts() {
-        //    var moduleScripts = pvClient.getIncludeModules();
-        //    if (moduleScripts && moduleScripts.length > 0) {
-        //        var loadedCnt = 0;
-        //        var totalCnt = moduleScripts.length;
-        //        var errCnt = 0;
-        //        var wasLoaded = 0;
-
-        //        new Promise((resolve: ICallback, reject: ICallback) => {
-        //            try {
-        //                moduleScripts.forEach((url) => {
-        //                    var m = this.getModuleByURL(url);
-        //                    if (m == null) //only if not already loaded.  Assumption is that if a module is registered, the code should have been loaded.
-        //                        this.getScript(url).then(function onResolve() { ++loadedCnt; }, function onError(err) { ++errCnt; });
-        //                    else
-        //                        ++wasLoaded;
-        //                });
-
-        //                var cycle = 0;  //wait 10 seconds max.
-        //                var waitaSecond = function () {
-        //                    if ((loadedCnt + errCnt + wasLoaded >= totalCnt) || (cycle >= 10)) {
-        //                        resolve();
-        //                    }
-        //                    else {
-        //                        ++cycle;
-        //                        setTimeout(waitaSecond, 1000);
-        //                    }
-        //                }
-        //                waitaSecond();
-        //            }
-        //            catch (ex) {
-        //                reject(Error(ex.message));
-        //            }
-
-        //        }).then(
-        //            () => {
-        //                if (pvClient.moduleChanged) {
-        //                    pvClient.moduleChanged = false;
-        //                    this.saveTools();
-        //                }
-        //            },
-        //            (Err) => {
-        //                console.warn("loadModuleScripts: Loading all scripts failed, cause: " + Err.message);
-        //            });
-
-        //    }
-        //}
     }
     export var moduleManager = new ModuleManager();
 }

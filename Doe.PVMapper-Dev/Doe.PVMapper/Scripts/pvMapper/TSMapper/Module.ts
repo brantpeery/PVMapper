@@ -1,7 +1,6 @@
 /// <reference path="Scoreboard.ts" />
 /// <reference path="ScoreLine.ts" />
 /// <reference path="Tools.ts" />
-/// <reference path="Options.d.ts" />
 /// <reference path="OpenLayers.d.ts" />
 /// <reference path="../../jquery.d.ts" />
 
@@ -9,116 +8,214 @@
 // Module
 module pvMapper {
 
-    //Note: I have no idea why we've built modules this way... it seems crazy to me... but, interfaces to document the crazy might help.
-    export interface IModuleFactory {
-        new (): IModuleHandle
+    ////Note: I have no idea why we've built modules this way... it seems crazy to me... but, I'll add interfaces to document the crazy might help.
+    //export interface IModuleFactory {
+    //    new (): IModuleHandle
+
+    //    //TODO: move these values here - from their current location within IModuleOptions.
+    //    //id: string;
+    //    //author: string;
+    //    //version: string;
+
+    //    // add these to make it easier for the ModuleManager stuff.
+    //    title: string;
+    //    category: string;
+    //    description: string;
+    //    longDescription: string;
+    //}
+
+    ////Note: I have no idea why we've built modules this way... it seems crazy to me... but, I'll add interfaces to document the crazy.
+    //export interface IModuleHandle {
+    //    getModuleObj: () => Module;
+    //    getFactory: () => IModuleFactory;
+    //}
+
+    ////Note: I have no idea why we've built modules this way... it seems crazy to me... but, I'll add interfaces to document the crazy might help.
+    //export interface ICustomModuleHandle extends IModuleHandle {
+    //    fileName: string;
+    //}
+
+    //export interface IModuleOptions {
+    //    scoringTools?: IScoreToolOptions[];
+    //    infoTools?: Array<ITool>;
+    //    totalTools?: Array<ITotalTool>;
+    //    //Intents: IIntent[];
+
+    //    //init: ICallback;
+    //    //destroy: ICallback;
+    //    activate: ICallback;
+    //    deactivate: ICallback;
+
+    //    id: string;
+    //    author: string;
+    //    version: string;
+
+    //    //these are to support custom module naming.
+    //    //getModuleName?: () => string;
+    //    //setModuleName?: (name: string) => void;
+    //    //removeLocalLayer?: any;
+    //}
+
+    export interface IModuleOptions {
+        scoringTools?: IScoreToolOptions[];
+        infoTools?: Array<ITool>;
+        totalTools?: Array<ITotalTool>;
+        //Intents: IIntent[];
+
+        //init: ICallback;
+        //destroy: ICallback;
+        activate?: ICallback;
+        deactivate?: ICallback;
+
+        //these are to support custom module naming.
+        //getModuleName?: () => string;
+        //setModuleName?: (name: string) => void;
+        //removeLocalLayer?: any;
+    }
+
+    export interface IModuleInfoJSON {
+        id: string;
+        author: string;
+        version: string;
+        url: string;
 
         // add these to make it easier for the ModuleManager stuff.
         title: string;
         category: string;
         description: string;
-        longDescription: string;
+        longDescription?: string;
+
+        isActive?: boolean;
     }
 
-    //Note: I have no idea why we've built modules this way... it seems crazy to me... but, interfaces to document the crazy might help.
-    export interface IModuleHandle {
-        getModuleObj: () => Module; // IModuleOptions;
+    export interface IModule extends IModuleInfoJSON {
+        activate();
+        deactivate();
+
+        //toJSON(): IModuleInfo;
+        //fromJSON(IModuleInfo);
     }
 
     // Class
-    export class Module implements IModuleOptions {
-        constructor(options: IModuleOptions) {
-            this.id = options.id;
-            this.version = options.version;
-            this.author = options.author;
+    export class Module implements IModule {
+        constructor(moduleInfo?: IModuleInfoJSON) { // optional constructor... this attempts to support our older calling style.
+            if (moduleInfo) {
+                if (moduleInfo.id) this.id = moduleInfo.id;
+                if (moduleInfo.author) this.author = moduleInfo.author;
+                if (moduleInfo.version) this.version = moduleInfo.version;
+                if (moduleInfo.url) this.url = moduleInfo.url;
 
-            this.init = options.init;
-            this.destroy = options.destroy;
-            this.activate = options.activate;
-            this.deactivate = options.deactivate;
+                if (moduleInfo.title) this.title = moduleInfo.title;
+                if (moduleInfo.category) this.category = moduleInfo.category;
+                if (moduleInfo.description) this.description = moduleInfo.description;
+                if (moduleInfo.longDescription) this.longDescription = moduleInfo.longDescription;
+                //else if (moduleInfo.description) this.longDescription = "<p>" + moduleInfo.description + "</p>"; // backup plan for absent long descriptions...
 
-            this.scoringTools = options.scoringTools;
-            this.infoTools = options.infoTools;
-            this.totalTools = options.totalTools;
-
-            //Load the info for this module into the data model
-            //Load the scoring tools into the api
-            if (this.scoringTools) {
-                this.scoringTools.map((tool, idx, toolarr) => {
-                    if (console) console.log("Loading scoring tool " + tool.title + " into the API");
-
-                    //Create the scoreline
-                    var scoreline: pvMapper.ScoreLine = new pvMapper.ScoreLine(tool);
-
-                    //A delegate function to return a reference to this module which associating with the scoreline, calling from scoreLine module.
-                    scoreline.getModule = (d = this, f= () => this) => f.apply(d, arguments);
-                    this.getScoreLine = function () { return scoreline; };
-
-                    //Add the scoreline to the scoreboard/data model
-                    pvMapper.mainScoreboard.addLine(scoreline);
-                });
+                var modOptions = <IModuleOptions>moduleInfo;
+                if (modOptions.activate || modOptions.deactivate || modOptions.infoTools || modOptions.scoringTools || modOptions.totalTools)
+                    this.init(modOptions);
             }
+        }
+        public init = (options: IModuleOptions) => {
+            if (console && console.assert) console.assert(options && !this.options, "Warning: attempting to initialize an already initialized module");
+            this.options = options;
 
-            //Load in the TotalLine tools into the api
-            if (this.totalTools) {
-                this.totalTools.forEach((tool, idx, tools) => {
-                    if (console) console.log("Loading total tool " + tool.title + " into the API");
+            // make sure our required attributes have been defined by the inheriting class...
+            if (console && console.assert) console.assert(!!(this.id && this.author && this.version && this.url &&
+                this.title && this.category && this.description /*&& this.longDescription*/, // <-- long descrition isn't strictly required
+                "Warning: initializing module '" + (this.id || this.title) + "' without a required property.")); 
 
-                    //Create the tool
-                    var toolLine = new TotalLine(tool);
-                    pvMapper.mainScoreboard.addTotalLine(toolLine);
-                });
-            }
+            this.scoreTools = (this.scoreTools || [])
+                .concat((options.scoringTools || []).map(t => new ScoreLine(t, this)));
 
-            //Load up the info tools into the api
-            if (this.infoTools) {
-                this.infoTools.map((tool, idx, toolbar) => {
-                    if (console) console.log("Loading info tool " + tool.title + " into the API");
+            this.totalTools = (this.totalTools || [])
+                .concat((options.totalTools || []).map(t => new TotalLine(t, this)));
 
-                    pvMapper.addInfoTool(new InfoTool(tool));
-                    //TODO: Tie to the data model when ready 
-
-                });
-            }
-
-            //TODO: temp - call Init and Activate on the module, because all modules will be inited and activated by default
-            if (typeof (this.init) === "function") {
-                pvMapper.onReady(this.init);
-            }
-            if (typeof (this.activate) === "function") {
-                pvMapper.onReady(this.activate);
-            }
-
-
-            if ($.isFunction(options.getModuleName)) {
-                this.getModuleName = () => { return options.getModuleName.apply(this, arguments); }
-            }
-
-            if ($.isFunction(options.setModuleName)) {
-                this.setModuleName = (name: string) => { options.setModuleName.apply(this, arguments); }
-            }
+            this.infoTools = (this.infoTools || [])
+                .concat((options.infoTools || []).map(t => new InfoTool(t, this)));
         }
 
         public id: string;
         public author: string;
         public version: string;
+        public url: string;
 
-        public scoringTools: IScoreToolOptions[];
-        public infoTools: ITool[];
-        public totalTools: ITotalTool[];
+        public title: string;
+        public category: string;
+        public description: string;
+        public longDescription: string;
 
+        public isActive: boolean = false;
 
-        public init: ICallback;
-        public destroy: ICallback;
-        public activate: ICallback;
-        public deactivate: ICallback;
+        private options: IModuleOptions;
 
-        getModuleName: () => string;
-        setModuleName: (name: string) => void;
-        getScoreLine: () => pvMapper.ScoreLine;
+        public scoreTools: ScoreLine[] = [];
+        public infoTools: InfoTool[] = [];
+        public totalTools: TotalLine[] = [];
 
+        public activate = () => {
+            if (console && console.assert) console.assert(pvMapper.isReady);
 
+            if (this.isActive) {
+                if (console && console.warn) console.warn("Warning: attempted to activate an already active tool ID='" + this.id + "'");
+                return; // nothing to do here...
+            }
+
+            if (this.options && typeof (this.options.activate) === "function")
+                this.options.activate();
+
+            //Load the info for this module into the data model
+            //Load the scoring tools into the api
+            this.scoreTools.forEach((tool) => {
+                if (!tool.isActive)
+                    tool.activate();
+            });
+
+            //Load in the TotalLine tools into the api
+            this.totalTools.forEach((tool) => {
+                pvMapper.mainScoreboard.addTotalLine(tool);
+            });
+
+            //Load up the info tools into the api
+            this.infoTools.forEach((tool) => {
+                if (typeof (tool.activate) === "function")
+                    tool.activate();
+            });
+
+            this.isActive = true;
+        }
+
+        public deactivate = () => {
+            if (console && console.assert) console.assert(this.isActive);
+
+            if (!this.isActive) {
+                if (console && console.warn) console.warn("Warning: attempted to deactivate an already inactive tool ID='" + this.id + "'");
+                return; // nothing to do here...
+            }
+
+            //Load the info for this module into the data model
+            //Load the scoring tools into the api
+            this.scoreTools.forEach((tool) => {
+                if (tool.isActive)
+                    tool.deactivate();
+            });
+
+            //Load in the TotalLine tools into the api
+            this.totalTools.forEach((tool) => {
+                pvMapper.mainScoreboard.removeTotalLine(tool);
+            });
+
+            //Load up the info tools into the api
+            this.infoTools.forEach((tool) => {
+                if (typeof (tool.deactivate) === "function")
+                    tool.deactivate();
+            });
+
+            if (this.options && typeof (this.options.deactivate) === "function")
+                this.options.deactivate();
+
+            this.isActive = false;
+        }
     }
-
 }
 

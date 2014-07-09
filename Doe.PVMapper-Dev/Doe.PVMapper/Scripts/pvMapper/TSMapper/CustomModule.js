@@ -129,20 +129,20 @@ function add_new_tool()
                             score.popupMessage = (document.getElementById('new_val-inputEl').value);
                             score.updateValue(parseInt(document.getElementById('new_score-inputEl').value));
                         },
-                        getStarRatables: function (mode) {
-                            if ((mode !== undefined) && (mode === "default")) {
-                                return _this.starRatingHelper.defaultStarRatings;
-                            } else {
-                                return _this.starRatingHelper.starRatings;
-                            }
-                        },
-                        setStarRatables: function (rateTable) {
-                            $.extend(_this.starRatingHelper.starRatings, rateTable);
-                        },
-                        scoreUtilityOptions: {
-                            functionName: "linear",
-                            functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Under Development", "Preference", "Preference for vegetation cover and land uses.")
-                        },
+                        //getStarRatables: function (mode) {
+                        //    if ((mode !== undefined) && (mode === "default")) {
+                        //        return _this.starRatingHelper.defaultStarRatings;
+                        //    } else {
+                        //        return _this.starRatingHelper.starRatings;
+                        //    }
+                        //},
+                        //setStarRatables: function (rateTable) {
+                        //    $.extend(_this.starRatingHelper.starRatings, rateTable);
+                        //},
+                        //scoreUtilityOptions: {
+                        //    functionName: "linear",
+                        //    functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Under Development", "Preference", "Preference for vegetation cover and land uses.")
+                        //},
                         weight: 10
                     });
 

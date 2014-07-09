@@ -3,47 +3,44 @@
 /// <reference path="../pvmapper/tsmapper/site.ts" />
 /// <reference path="../pvmapper/tsmapper/score.ts" />
 /// <reference path="../pvmapper/tsmapper/tools.ts" />
-/// <reference path="../pvmapper/tsmapper/options.d.ts" />
 /// <reference path="../pvmapper/tsmapper/module.ts" />
 /// <reference path="../pvmapper/tsmapper/jstorage.d.ts" />
 /// <reference path="../pvmapper/tsmapper/scoreutility.ts" />
 /// <reference path="../jquery.d.ts" />
 /// <reference path="../pvmapper/tsmapper/modulemanager.ts" />
 
-interface geoJsonConverter { }
-declare var geoJsonConverter: {
-    new (): any;
-    prototype: geoJsonConverter;
-}
- 
 module INLModules {
+    declare var selfUrl: string; // this should be included dynamically in ModuleManager when it loads this file.
+    //TODO: why didn't we use require.js (or similar)? Why roll our own dynamic js loader?
 
-    export class ProtectedAreasModule implements pvMapper.IModuleHandle {
+    interface geoJsonConverter { }
+    declare var geoJsonConverter: {
+        new (): any;
+        prototype: geoJsonConverter;
+    }
+ 
+    export class ProtectedAreasModule extends pvMapper.Module {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
-                id: "ProtectedAreasModule",
-                author: "Leng Vang, INL",
-                version: "0.1.ts",
+            super();
 
-                activate: () => {
-                    this.addMap();
-                },
-                deactivate: () => {
-                    this.removeMap();
-                },
-                destroy: null,
-                init: null,
+            var thisModule = this;
+            this.init(<pvMapper.IModuleOptions>{
+                activate: null,
+                deactivate: null,
 
                 scoringTools: [{
-                    activate: null,
-                    deactivate: null,
-                    destroy: null,
-                    init: null,
+                    activate: () => {
+                        this.addMap();
+                    },
+                    deactivate: () => {
+                        this.removeMap();
+                    },
 
-                    title: ProtectedAreasModule.title, //"Protected Areas",
-                    category: ProtectedAreasModule.category, //"Land Use",
-                    description: ProtectedAreasModule.description, //"Overlapping protected areas, found in the PADUS map hosted by gapanalysisprogram.com, using GAP status codes as the default star rating",
-                    longDescription: ProtectedAreasModule.longDescription, //'<p>This star rating tool finds all protected areas that intersect a proposed site. These ares are defined in PADUS: the national inventory of U.S. terrestrial and marine areas managed through legal or other effective means for the preservation of biological diversity or for other natural, recreational and cultural uses. This dataset includes all federal and most state conservation lands, and many areas at regional and local scales, including some private conservation efforts. For more information, see the USGS Gap Analysis Program (gapanalysis.usgs.gov/padus/data).</p><p>For each area, PADUS includes a GAP Status Code: a conservation measure of management intent for the long-term protection of biodiversity. These status codes range from 1, for areas where natural disturbance events (e.g. fires or floods) go uninterrupted or are mimicked through management, to 2, for areas which may receive uses or management practices that degrade the quality of existing natural communities, to 3, for areas subject to extractive uses of either a localized intense type, or a broad, low-intensity type (such as logging or motorsports). Refer to the PADUS metadata for more details (gapanalysis.usgs.gov/padus/data/metadata/).</p><p>This tool depends on a user-defined star rating for each protected area intersecting a site, on a scale of 0-5 stars. The default rating for a given protected area is equal to its GAP Status Code, so an area with status code 2 would have a two-star rating by default. The default rating for not intersecting any protected areas is four stars. These ratings can then be adjusted by the user.</p><p>When a site overlaps a protected area, its score is based on the star rating of that area (so overlapping a one-star area may give a score of 20, and overlapping a five-star area might give a score of 100). If a site overlaps more than one protected area, the lowest star rating is used to calculate its score (so a site overlapping both a one-star and a five-star area might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>',
+                    id: "ProtectedAreasTool",
+                    title: "Land Administration",
+                    category: "Land Use",
+                    description: "Land administration and conservation, found in the PADUS map hosted by gapanalysisprogram.com, using GAP status codes as the default star rating",
+                    longDescription: '<p>This star rating tool finds all protected areas that intersect a proposed site. These ares are defined in PADUS: the national inventory of U.S. terrestrial and marine areas managed through legal or other effective means for the preservation of biological diversity or for other natural, recreational and cultural uses. This dataset includes all federal and most state conservation lands, and many areas at regional and local scales, including some private conservation efforts. For more information, see the USGS Gap Analysis Program (gapanalysis.usgs.gov/padus/data).</p><p>For each area, PADUS includes a GAP Status Code: a conservation measure of management intent for the long-term protection of biodiversity. These status codes range from 1, for areas where natural disturbance events (e.g. fires or floods) go uninterrupted or are mimicked through management, to 2, for areas which may receive uses or management practices that degrade the quality of existing natural communities, to 3, for areas subject to extractive uses of either a localized intense type, or a broad, low-intensity type (such as logging or motorsports). Refer to the PADUS metadata for more details (gapanalysis.usgs.gov/padus/data/metadata/).</p><p>This tool depends on a user-defined star rating for each protected area intersecting a site, on a scale of 0-5 stars. The default rating for a given protected area is equal to its GAP Status Code, so an area with status code 2 would have a two-star rating by default. The default rating for not intersecting any protected areas is four stars. These ratings can then be adjusted by the user.</p><p>When a site overlaps a protected area, its score is based on the star rating of that area (so overlapping a one-star area may give a score of 20, and overlapping a five-star area might give a score of 100). If a site overlaps more than one protected area, the lowest star rating is used to calculate its score (so a site overlapping both a one-star and a five-star area might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>',
                     //onScoreAdded: (e, score: pvMapper.Score) => {
                     //},
                     onSiteChange: (e, score: pvMapper.Score) => {
@@ -53,9 +50,13 @@ module INLModules {
                     getStarRatables: () => {
                         return this.starRatingHelper.starRatings;
                     },
-                    setStarRatables: (rateTable: pvMapper.IStarRatings) => {
+                    setStarRatables: function (rateTable: pvMapper.IStarRatings) {
                         //$.extend(this.starRatingHelper.starRatings, rateTable);
-                        this.starRatingHelper.resetStarRatings(rateTable);
+                        thisModule.starRatingHelper.resetStarRatings(rateTable);
+
+                        // update any scores which aren'r already out for update (those will pick up the new star ratings when they return)
+                        var thisScoreLine: pvMapper.ScoreLine = this;
+                        thisScoreLine.scores.forEach(s => { if (!s.isValueOld) { s.isValueOld = true; thisModule.updateScore(s); } });
                     },
 
                     scoreUtilityOptions: {
@@ -64,16 +65,17 @@ module INLModules {
                     },
                     weight: 10,
                 }],
-
-                infoTools: null
             });
-            this.getModuleObj = function () { return myModule; }
         }
-        getModuleObj: () => pvMapper.Module;
-        public static title: string = "Protected Areas";
-        public static category: string = "Land Use";
-        public static description: string = "Overlapping protected areas, found in the PADUS map hosted by gapanalysisprogram.com, using GAP status codes as the default star rating";
-        public static longDescription: string = '<p>This star rating tool finds all protected areas that intersect a proposed site. These ares are defined in PADUS: the national inventory of U.S. terrestrial and marine areas managed through legal or other effective means for the preservation of biological diversity or for other natural, recreational and cultural uses. This dataset includes all federal and most state conservation lands, and many areas at regional and local scales, including some private conservation efforts. For more information, see the USGS Gap Analysis Program (gapanalysis.usgs.gov/padus/data).</p><p>For each area, PADUS includes a GAP Status Code: a conservation measure of management intent for the long-term protection of biodiversity. These status codes range from 1, for areas where natural disturbance events (e.g. fires or floods) go uninterrupted or are mimicked through management, to 2, for areas which may receive uses or management practices that degrade the quality of existing natural communities, to 3, for areas subject to extractive uses of either a localized intense type, or a broad, low-intensity type (such as logging or motorsports). Refer to the PADUS metadata for more details (gapanalysis.usgs.gov/padus/data/metadata/).</p><p>This tool depends on a user-defined star rating for each protected area intersecting a site, on a scale of 0-5 stars. The default rating for a given protected area is equal to its GAP Status Code, so an area with status code 2 would have a two-star rating by default. The default rating for not intersecting any protected areas is four stars. These ratings can then be adjusted by the user.</p><p>When a site overlaps a protected area, its score is based on the star rating of that area (so overlapping a one-star area may give a score of 20, and overlapping a five-star area might give a score of 100). If a site overlaps more than one protected area, the lowest star rating is used to calculate its score (so a site overlapping both a one-star and a five-star area might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>';
+
+        public id = "ProtectedAreasModule";
+        public author = "Leng Vang, INL";
+        public version = "0.1.ts";
+        public url = selfUrl; //TODO: why didn't we use require.js (or similar)? Why roll our own dynamic js loader?
+
+        public title: string = "Protected Areas";
+        public category: string = "Land Use";
+        public description: string = "Overlapping protected areas, found in the PADUS map hosted by gapanalysisprogram.com, using GAP status codes as the default star rating";
 
         private starRatingHelper: pvMapper.IStarRatingHelper = new pvMapper.StarRatingHelper({
             defaultStarRating: 4,
@@ -90,33 +92,35 @@ module INLModules {
         private federalLandsLayer;
         private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
 
-        private addMap() {
-            this.federalLandsLayer = new OpenLayers.Layer.WMS(
-                "Protected Areas",
-                this.federalLandsWmsUrl,
-                {
-                    maxExtent: this.landBounds,
-                    layers: "0",
-                    layer_type: "polygon",
-                    transparent: "true",
-                    format: "image/gif",
-                    exceptions: "application/vnd.ogc.se_inimage",
-                    maxResolution: 156543.0339,
-                    srs: "EPSG:102113",
-                },
-                { isBaseLayer: false }
-                );
-            this.federalLandsLayer.epsgOverride = "EPSG:102113";
-            this.federalLandsLayer.setOpacity(0.3);
-            this.federalLandsLayer.setVisibility(false);
+        private addMap = () => {
+            if (!this.federalLandsLayer) {
+                this.federalLandsLayer = new OpenLayers.Layer.WMS(
+                    "Land Administration",
+                    this.federalLandsWmsUrl,
+                    {
+                        maxExtent: this.landBounds,
+                        layers: "0",
+                        layer_type: "polygon",
+                        transparent: "true",
+                        format: "image/gif",
+                        exceptions: "application/vnd.ogc.se_inimage",
+                        maxResolution: 156543.0339,
+                        srs: "EPSG:102113",
+                    },
+                    { isBaseLayer: false }
+                    );
+                this.federalLandsLayer.epsgOverride = "EPSG:102113";
+                this.federalLandsLayer.setOpacity(0.3);
+                this.federalLandsLayer.setVisibility(false);
+            }
             pvMapper.map.addLayer(this.federalLandsLayer);
         }
 
-        private removeMap() {
+        private removeMap = () => {
             pvMapper.map.removeLayer(this.federalLandsLayer, false);
         }
 
-        private updateScore(score: pvMapper.Score) {
+        private updateScore = (score: pvMapper.Score) => {
             var params = {
                 mapExtent: score.site.geometry.bounds.toBBOX(6, false),
                 geometryType: "esriGeometryEnvelope",
@@ -205,32 +209,28 @@ module INLModules {
 
     //============================================================
 
-    export class LandCoverModule implements pvMapper.IModuleHandle {
+    export class LandCoverModule extends pvMapper.Module {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
-                id: "LandCoverModule",
-                author: "Leng Vang, INL",
-                version: "0.1.ts",
+            super();
 
-                activate: () => {
-                    this.addMap();
-                },
-                deactivate: () => {
-                    this.removeMap();
-                },
-                destroy: null,
-                init: null,
+            var thisModule = this;
+            this.init(<pvMapper.IModuleOptions>{
+                activate: null,
+                deactivate: null,
 
                 scoringTools: [{
-                    activate: null,
-                    deactivate: null,
-                    destroy: null,
-                    init: null,
+                    activate: () => {
+                        this.addMap();
+                    },
+                    deactivate: () => {
+                        this.removeMap();
+                    },
 
-                    title: LandCoverModule.title, //"Land Cover",
-                    category: LandCoverModule.category, //"Land Use",
-                    description: LandCoverModule.description, //"The type of land cover found in the center of a site, using GAP land cover data hosted by gapanalysisprogram.com",
-                    longDescription: LandCoverModule.longDescription, //'<p>This star rating tool finds the type of land cover present at the center of a proposed site. The GAP Land Cover dataset provides detailed vegetation and land use patterns for the continental United States, incorporating an ecological classification system to represent natural and semi-natural land cover. Note that the land cover at the center point of a site may not be representative of the overall land cover at that site. Note also that this dataset was created for regional biodiversity assessment, and not for use at scales larger than 1:100,000. Due to these limitations, results from this tool should be considered preliminary. For more information, see the USGS Gap Analysis Program (gapanalysis.usgs.gov/gaplandcover/data).</p><p>This tool depends on a user-defined star rating for the land cover classification found at each site, on a scale of 0-5 stars. The default rating for all land classes is three stars. These ratings should be adjusted by the user. The score for a site is based on the star rating of its land cover class (so overlapping a one-star class may give a score of 20, and overlapping a five-star class might give a score of 100). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>',
+                    id: "LandCoverTool",
+                    title: "Land Cover",
+                    category: "Land Use",
+                    description: "The type of land cover found in the center of a site, using GAP land cover data hosted by gapanalysisprogram.com",
+                    longDescription: '<p>This star rating tool finds the type of land cover present at the center of a proposed site. The GAP Land Cover dataset provides detailed vegetation and land use patterns for the continental United States, incorporating an ecological classification system to represent natural and semi-natural land cover. Note that the land cover at the center point of a site may not be representative of the overall land cover at that site. Note also that this dataset was created for regional biodiversity assessment, and not for use at scales larger than 1:100,000. Due to these limitations, results from this tool should be considered preliminary. For more information, see the USGS Gap Analysis Program (gapanalysis.usgs.gov/gaplandcover/data).</p><p>This tool depends on a user-defined star rating for the land cover classification found at each site, on a scale of 0-5 stars. The default rating for all land classes is three stars. These ratings should be adjusted by the user. The score for a site is based on the star rating of its land cover class (so overlapping a one-star class may give a score of 20, and overlapping a five-star class might give a score of 100). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>',
                     //onScoreAdded: (e, score: pvMapper.Score) => {
                     //},
                     onSiteChange: (e, score: pvMapper.Score) => {
@@ -240,26 +240,33 @@ module INLModules {
                     getStarRatables: () => {
                         return this.ratables;
                     },
-                    setStarRatables: (rateTable: pvMapper.IStarRatings) => {
+                    setStarRatables: function (rateTable: pvMapper.IStarRatings) {
                         //$.extend(this.starRatingHelper.starRatings, rateTable);
-                        this.ratables = rateTable;
+                        thisModule.ratables = rateTable;
+
+                        // update any scores which aren'r already out for update (those will pick up the new star ratings when they return)
+                        var thisScoreLine: pvMapper.ScoreLine = this;
+                        thisScoreLine.scores.forEach(s => { if (!s.isValueOld) { s.isValueOld = true; thisModule.updateScore(s); } });
                     },
                     scoreUtilityOptions: {
                         functionName: "linear",
                         functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Under Development","Preference","Preference for vegetation cover and land uses.")
                     },
-                    weight: 10
-                }],
+                    weight: 10,
 
-                infoTools: null
+                }],
             });
-            this.getModuleObj = function () { return myModule; }
         }
-        getModuleObj: () => pvMapper.Module;
-        public static title: string = "Land Conservation";
-        public static category: string = "Land Use";
-        public static description: string = "The type of land cover found in the center of a site, using GAP land cover data hosted by gapanalysisprogram.com";
-        public static longDescription: string = '<p>This star rating tool finds the type of land cover present at the center of a proposed site. The GAP Land Cover dataset provides detailed vegetation and land use patterns for the continental United States, incorporating an ecological classification system to represent natural and semi-natural land cover. Note that the land cover at the center point of a site may not be representative of the overall land cover at that site. Note also that this dataset was created for regional biodiversity assessment, and not for use at scales larger than 1:100,000. Due to these limitations, results from this tool should be considered preliminary. For more information, see the USGS Gap Analysis Program (gapanalysis.usgs.gov/gaplandcover/data).</p><p>This tool depends on a user-defined star rating for the land cover classification found at each site, on a scale of 0-5 stars. The default rating for all land classes is three stars. These ratings should be adjusted by the user. The score for a site is based on the star rating of its land cover class (so overlapping a one-star class may give a score of 20, and overlapping a five-star class might give a score of 100). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>';
+
+        public id = "LandCoverModule";
+        public author = "Leng Vang, INL";
+        public version = "0.1.ts";
+        public url = selfUrl; //TODO: why didn't we use require.js (or similar)? Why roll our own dynamic js loader?
+
+        public title: string = "Land Cover";
+        public category: string = "Land Use";
+        public description: string = "The type of land cover found in the center of a site, using GAP land cover data hosted by gapanalysisprogram.com";
+        public longDescription: string = '<p>This star rating tool finds the type of land cover present at the center of a proposed site. The GAP Land Cover dataset provides detailed vegetation and land use patterns for the continental United States, incorporating an ecological classification system to represent natural and semi-natural land cover. Note that the land cover at the center point of a site may not be representative of the overall land cover at that site. Note also that this dataset was created for regional biodiversity assessment, and not for use at scales larger than 1:100,000. Due to these limitations, results from this tool should be considered preliminary. For more information, see the USGS Gap Analysis Program (gapanalysis.usgs.gov/gaplandcover/data).</p><p>This tool depends on a user-defined star rating for the land cover classification found at each site, on a scale of 0-5 stars. The default rating for all land classes is three stars. These ratings should be adjusted by the user. The score for a site is based on the star rating of its land cover class (so overlapping a one-star class may give a score of 20, and overlapping a five-star class might give a score of 100). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>';
 
         private ratables: pvMapper.IStarRatings = {};
         
@@ -273,29 +280,31 @@ module INLModules {
         private landCoverLayer;
         private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
 
-        private addMap() {
-            this.landCoverLayer = new OpenLayers.Layer.ArcGIS93Rest(
-                "Land Cover",
-                this.landCoverRestUrl + "export",
-                {
-                    layers: "show:0,1,2",
-                    format: "gif",
-                    srs: "3857", //"102100",
-                    transparent: "true",
-                }//,{ isBaseLayer: false }
-                );
-            this.landCoverLayer.setOpacity(0.3);
-            this.landCoverLayer.epsgOverride = "3857"; //"EPSG:102100";
-            this.landCoverLayer.setVisibility(false);
+        private addMap = () => {
+            if (!this.landCoverLayer) {
+                this.landCoverLayer = new OpenLayers.Layer.ArcGIS93Rest(
+                    "Land Cover",
+                    this.landCoverRestUrl + "export",
+                    {
+                        layers: "show:0,1,2",
+                        format: "gif",
+                        srs: "3857", //"102100",
+                        transparent: "true",
+                    }//,{ isBaseLayer: false }
+                    );
+                this.landCoverLayer.setOpacity(0.3);
+                this.landCoverLayer.epsgOverride = "3857"; //"EPSG:102100";
+                this.landCoverLayer.setVisibility(false);
+            }
 
             pvMapper.map.addLayer(this.landCoverLayer);
         }
 
-        private removeMap() {
+        private removeMap = () => {
             pvMapper.map.removeLayer(this.landCoverLayer, false);
         }
 
-        private updateScore(score: pvMapper.Score) {
+        private updateScore = (score: pvMapper.Score) => {
             var params = {
                 mapExtent: score.site.geometry.bounds.toBBOX(6, false),
                 geometryType: "esriGeometryEnvelope",
@@ -367,32 +376,24 @@ module INLModules {
 
     //============================================================
 
-    export class LandCoverModuleV2 implements pvMapper.IModuleHandle {
+    export class LandCoverModuleV2 extends pvMapper.Module {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
-                id: "LandCoverModuleV2",
-                author: "Rohit Khattar BYU",
-                version: "0.2.ts",
+            super();
 
-                activate: () => {
-                    // no map layer exposed for land cover on geoserver.byu.edu
-                },
-                deactivate: () => {
-                    // no map layer exposed for land cover on geoserver.byu.edu
-                },
-                destroy: null,
-                init: null,
+            var thisModule = this;
+            this.init(<pvMapper.IModuleOptions>{
+                activate: null,
+                deactivate: null,
 
                 scoringTools: [{
-                    activate: null,
-                    deactivate: null,
-                    destroy: null,
-                    init: null,
+                    activate: null, // no map layer exposed for land cover on geoserver.byu.edu
+                    deactivate: null, // no map layer exposed for land cover on geoserver.byu.edu
 
-                    title: LandCoverModuleV2.title, //"Land Cover 2",
-                    category: LandCoverModuleV2.category, //"Land Use",
-                    description: LandCoverModuleV2.description, //"The types of Land cover found in the selected area. Using data hosted on Geoserver.byu.edu",
-                    longDescription: LandCoverModuleV2.longDescription, //"<p>The types of Land cover found in the selected area. Using data hosted on geoserver.byu.edu</p>", //TODO: this...!
+                    id: "LandCoverToolV2",
+                    title: "Land Cover",
+                    category: "Land Use",
+                    description: "The types of Land cover found in the selected area. Using data hosted on Geoserver.byu.edu",
+                    longDescription: "<p>The types of Land cover found in the selected area. Using data hosted on geoserver.byu.edu</p>", //TODO: this...!
                     //onScoreAdded: (e, score: pvMapper.Score) => {
                     //},
                     onSiteChange: (e, score: pvMapper.Score) => {
@@ -402,26 +403,33 @@ module INLModules {
                     getStarRatables: () => {
                         return this.starRatingHelper.starRatings;
                     },
-                    setStarRatables: (rateTable: pvMapper.IStarRatings) => {
+                    setStarRatables: function (rateTable: pvMapper.IStarRatings) {
                         //$.extend(this.starRatingHelper.starRatings, rateTable);
-                        this.starRatingHelper.resetStarRatings(rateTable);
+                        thisModule.starRatingHelper.resetStarRatings(rateTable);
+
+                        // update any scores which aren'r already out for update (those will pick up the new star ratings when they return)
+                        var thisScoreLine: pvMapper.ScoreLine = this;
+                        thisScoreLine.scores.forEach(s => { if (!s.isValueOld) { s.isValueOld = true; thisModule.updateScore(s); } });
                     },
                     scoreUtilityOptions: {
                         functionName: "linear",
                         functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars","Land Use","Preference","Preference for the type of land cover present in propose site.")
                     },
-                    weight: 10
-                }],
+                    weight: 10,
 
-                infoTools: null
+                }],
             });
-            this.getModuleObj = function () { return myModule; }
         }
-        getModuleObj: () => pvMapper.Module;
-        public static title: string = "Land Cover 2";
-        public static category: string = "Land Use";
-        public static description: string = "The types of Land cover found in the selected area. Using data hosted on Geoserver.byu.edu";
-        public static longDescription: string = "<p>The types of Land cover found in the selected area. Using data hosted on geoserver.byu.edu</p>";
+
+        public id = "LandCoverModuleV2";
+        public author = "Rohit Khattar BYU";
+        public version = "0.2.ts";
+        public url = selfUrl; //TODO: why didn't we use require.js (or similar)? Why roll our own dynamic js loader?
+
+        public title: string = "Land Cover 2";
+        public category: string = "Land Use";
+        public description: string = "The types of Land cover found in the selected area. Using data hosted on Geoserver.byu.edu";
+        public longDescription: string = "<p>The types of Land cover found in the selected area. Using data hosted on geoserver.byu.edu</p>";
 
         //private landCoverRestUrl = "http://dingo.gapanalysisprogram.com/ArcGIS/rest/services/NAT_LC/1_NVC_class_landuse/MapServer/";
 
@@ -468,6 +476,7 @@ module INLModules {
             if (isNaN(score.value) && $.jStorage.get(key)) {
                 score.popupMessage = "<i>" + $.jStorage.get(key + "msg") + "</i>";
                 score.updateValue(<number>($.jStorage.get(key)));
+                score.isValueOld = true; // we've only loaded an old value.
             }
 
             var toGeoJson = new OpenLayers.Format.GeoJSON();
@@ -481,7 +490,6 @@ module INLModules {
                 "features": [
                     { "geometry": recObj }
                 ],
-
             };
 
             var request = OpenLayers.Request.POST({
@@ -507,7 +515,6 @@ module INLModules {
                         var mainObj = this;
                         var jobId = parsedResponse.jobId;
                         var resultSearcher = setInterval(() => {
-                            console.log("Job Still Processing");
                             //Send out another request
                             var resultRequestRepeat = OpenLayers.Request.GET({
                                 url: "https://geoserver.byu.edu/arcgis/rest/services/land_cover/GPServer/land_cover/" + "jobs/" + jobId + "/results/Extract_nlcd1_TableSelect?f=json",
@@ -526,15 +533,14 @@ module INLModules {
 
                                                 var length = parsedResponse.value.features.length,
                                                     element = null;
-                                                console.log(length);
+                                                //console.log(length);
 
                                                 var landCovers = [];
                                                 var ele = null;
                                                 for (var i = 0; i < length; i++) {
                                                     ele = parsedResponse.value.features[i].attributes;
                                                     var percentRound = Math.round(ele.Percent);
-                                                    if (percentRound > 1)
-                                                    {
+                                                    if (percentRound > 1) {
                                                         landCovers.push({ cover: ele.LandCover, percent: percentRound });
 
                                                     }
@@ -596,7 +602,8 @@ module INLModules {
                                                 score.popupMessage = "No landcover found";
                                                 score.updateValue(Number.NaN);
                                             }
-
+                                        } else {
+                                            console.log("Land Use tool job '" + jobId + "' still processing...");
                                         }
                                     } else {
                                         clearInterval(resultSearcher);
@@ -616,21 +623,9 @@ module INLModules {
         }
     }
 
-    //NOTE: removed prior to demo - the speed issue is too critical.
-    //TODO: re-add this once the request takes under 1000 ms
-    //var landCoverInstanceV2 = new INLModules.LandCoverModuleV2();
-
     //============================================================
 
+    pvMapper.moduleManager.registerModule(new ProtectedAreasModule(), true);
+    pvMapper.moduleManager.registerModule(new LandCoverModule(), false);
+    pvMapper.moduleManager.registerModule(new LandCoverModuleV2(), true);
 }
-//var protectedAreasInstance = new INLModules.ProtectedAreasModule();
-//var landCoverInstance = new INLModules.LandCoverModule();
-
-
-if (console && console.assert) console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
-var selfUrl = selfUrl || $('script[src$="LandUseModule.js"]').attr('src');
-
-pvMapper.moduleManager.registerModule(INLModules.ProtectedAreasModule.category, INLModules.ProtectedAreasModule.title, INLModules.ProtectedAreasModule, true ,selfUrl);
-pvMapper.moduleManager.registerModule(INLModules.LandCoverModule.category, INLModules.LandCoverModule.title, INLModules.LandCoverModule, true ,selfUrl);
-pvMapper.moduleManager.registerModule(INLModules.LandCoverModuleV2.category, INLModules.LandCoverModuleV2.title, INLModules.LandCoverModuleV2, true, selfUrl);
-

@@ -2,39 +2,38 @@
 /// <reference path="../pvMapper/TSMapper/Site.ts" />
 /// <reference path="../pvMapper/TSMapper/Score.ts" />
 /// <reference path="../pvMapper/TSMapper/Tools.ts" />
-/// <reference path="../pvMapper/TSMapper/Options.d.ts" />
 /// <reference path="../pvMapper/TSMapper/Module.ts" />
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 var pvMapper;
 (function (pvMapper) {
     (function (Tools) {
-        var TotalScore = (function () {
+        var TotalScore = (function (_super) {
+            __extends(TotalScore, _super);
             function TotalScore() {
-                var myModule = new pvMapper.Module({
-                    activate: function () {
-                    },
-                    init: function () {
-                    },
-                    destroy: function () {
-                    },
-                    deactivate: function () {
-                    },
+                _super.call(this, {
+                    activate: null,
+                    deactivate: null,
+                    id: "TotalToolModule",
                     author: "Brant Peery, INL",
                     version: "0.1",
-                    id: "TOTALS_TOOLS",
+                    url: null,
+                    title: "Score Total Tools",
+                    description: "Tools to given default total lines in the scoreboard.",
+                    category: "Totals",
                     totalTools: [
                         {
+                            id: "WeightedAverageTotalTool",
                             title: "Weighted Average Score",
                             description: "The weighted arithmetic mean of all scores for a site",
                             longDescription: "The weighted arithmetic mean of all scores for a site",
                             category: "Totals",
-                            activate: function () {
-                            },
-                            init: function () {
-                            },
-                            destroy: function () {
-                            },
-                            deactivate: function () {
-                            },
+                            activate: null,
+                            deactivate: null,
                             //addedToScoreboard: () => { },
                             //removedFromScoreboard: () => { },
                             CalculateScore: function (values, site) {
@@ -42,8 +41,8 @@ var pvMapper;
                                 var count = 0;
 
                                 values.forEach(function (v) {
-                                    total += v.utility * v.tool.weight;
-                                    count += v.tool.weight;
+                                    total += v.utility * v.scoreLine.weight;
+                                    count += v.scoreLine.weight;
                                 });
 
                                 var average = total / count;
@@ -69,18 +68,13 @@ var pvMapper;
                                 return { utility: average, popupMessage: "Average" };
                             }
                         }, {
+                            id: "LowestScoreTotalTool",
                             title: "Lowest Score",
                             description: "The lowest score for a site, and the name of the tool which generated that score",
                             longDescription: "The lowest score for a site, and the name of the tool which generated that score",
                             category: "Totals",
-                            activate: function () {
-                            },
-                            init: function () {
-                            },
-                            destroy: function () {
-                            },
-                            deactivate: function () {
-                            },
+                            activate: null,
+                            deactivate: null,
                             //addedToScoreboard: () => { },
                             //removedFromScoreboard: () => { },
                             CalculateScore: function (values, site) {
@@ -88,10 +82,10 @@ var pvMapper;
                                 var title;
                                 values.forEach(function (v) {
                                     // skip 0-weight scores tools...
-                                    if (v.tool.weight) {
+                                    if (v.scoreLine.weight) {
                                         if (typeof v.utility !== 'undefined' && v.utility < min) {
                                             min = v.utility;
-                                            title = v.tool.title;
+                                            title = v.scoreLine.title;
                                         }
                                     }
                                 });
@@ -108,11 +102,12 @@ var pvMapper;
                 });
             }
             return TotalScore;
-        })();
+        })(pvMapper.Module);
         Tools.TotalScore = TotalScore;
     })(pvMapper.Tools || (pvMapper.Tools = {}));
     var Tools = pvMapper.Tools;
 
     var TotalAverageScoreInstance = new pvMapper.Tools.TotalScore();
+    pvMapper.onReady(TotalAverageScoreInstance.activate);
 })(pvMapper || (pvMapper = {}));
 //# sourceMappingURL=TotalsModule.js.map

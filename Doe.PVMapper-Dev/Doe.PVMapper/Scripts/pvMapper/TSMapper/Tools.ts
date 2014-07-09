@@ -6,7 +6,15 @@
 /// <reference path="common.ts" />
 
 module pvMapper {
-    export interface ITool {
+    export interface IToolJSON {
+        id: string;
+        title: string;
+    }
+
+    export interface ITool extends IToolJSON {
+        // the unique ID of the tool; for saving, loading, etc.
+        id: string;
+
         /**
          The title of the tool that will be used in the scoreboard
          Make it short
@@ -34,31 +42,19 @@ module pvMapper {
         //Buttons:UIButton[];
         //SiteAttributes:SiteAttribute[];
 
-        init?: ICallback;
-        destroy?: ICallback;
+        //init?: ICallback;
+        //destroy?: ICallback;
         activate?: ICallback;
         deactivate?: ICallback;
-
-        
     }
 
     export interface IToolLine extends ITool {
-        scores: ISiteScore[];
-
-        ////TODO: implementation option B
-        ////Note: implemented once by the API
-        ////ensureStarRatable: (name: string, defaultRating: number = 3) => void; // done by getStarRating...?
-        //getStarRating: (name: string) => number;
-        //onStarRatingChange: (scores: Score[]) => void; //...?
+        scores: IScore[];
     }
 
 
     export interface IInfoToolOptions extends ITool {
-        getModuleName?: () => string;
-        setModuleName?: (name: string) => void;
 
-        getTitle?: () => string;
-        setTitle?: (newTitle: string) => void;
     }
 
     export interface IScoreToolOptions extends ITool {
@@ -74,30 +70,17 @@ module pvMapper {
         getStarRatables?: () => IStarRatings;
         setStarRatables?: (ratables: IStarRatings) => void;
 
-        getModuleName?: () => string;
-        setModuleName?: (name: string) => void;
-
-        getTitle?: () => string;                     
-        setTitle?: (newTitle: string) => void;
-        //getStarRating: (name: string) => number;
-
         // optional method, implemented on configurable tools, which will show a configuration menu
         showConfigWindow?: () => void;
 
-        //TODO: add utility function configuration options here...
+        // these handle loading and saving the config object
+        getConfig?: () => any;
+        setConfig?: (options: any) => void;
+
         scoreUtilityOptions?: IScoreUtilityOptions;
         weight?: number;
-    }
 
-    export interface IValueWeight {
-        utility: number;
-        tool: {
-            weight: number;
-            title: string;
-            //category: string;
-            //description: string;
-            // etc...
-        };
+        //getModule: () => pvMapper.IModuleHandle;
     }
 
     /**
@@ -116,49 +99,6 @@ module pvMapper {
     }
 
     export interface IInfoTool extends ITool {
-        getModuleName?: () => string;
-        setModuleName?: (name: string) => void;
-
-        getTitle?: () => string;
-        setTitle?: (newTitle: string) => void;
-    }
-
-    export interface IToolAction {
 
     }
 }
-
-
-/**
-An example of how to create a tool using the ITool interface
-
-    var mytool: IScoreTool = {
-        title: "ThisTool",
-        description: "My super sweet score thingy",
-        init: null,
-        destroy: null,
-        activate: null,
-        deactivate: null,
-        updateScoreCallback: (score: pvMapper.Score) => {
-            score.updateValue(1);
-        },
-        onSiteChange: null,
-        onScoreAdded: function (context: any, event: EventArg, score: pvMapper.Score) => void {}
-    };
-
-An example of loading the tool after creating it
-
-    var myothertool: IScoreTool;
-    myothertool.title = "Other Tool";
-    myothertool.updateScoreCallback = (score: pvMapper.Score) => {
-        score.updateValue(1);
-    }
-    myothertool.description = "Some cool tool that does stuff";
-    //Finish fleshing out all members of the interface...
-
-*/
-
-
-
-
-

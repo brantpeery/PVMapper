@@ -89,7 +89,7 @@ pvMapper.onReady(function () {
     KMLMode.CurrentMode = KMLMode.KMLNONE;
     var fileDialogBox = document.createElement('input');
     fileDialogBox.type = 'file';
-    fileDialogBox.style = 'display:none';
+    fileDialogBox.style = 'display:none;height:0;';
     fileDialogBox.accept = "application/vnd.google-earth.kml+xml,application/vnd.google-earth.kmz"; //only support in chrome and IE.  FF doesn't work.
     fileDialogBox.addEventListener('change', handleCustomKML, false);  // disable the distance KML event.
 
@@ -102,37 +102,52 @@ pvMapper.onReady(function () {
 
         var afile = evt.target.files[0];
 
-        //we probably don't want to load hug file.  Limit is about 2MB.
-        if (afile.size > 2000000) {
-            Ext.MessageBox.confirm("File too big", "The file [" + afile.name + " with size: " + afile.size.toString() + "] is larger then 2000000 bytes (2 MB), do you want to continue loading?",
-                function (btn) {
-                    if (btn === 'yes') {
-                        switch (KMLMode.CurrentMode) {
-                            case KMLMode.KMLSITE:
-                                continueHandlingSiteKML(afile);
-                                break;
-                            case KMLMode.KMLDISTANCE:
-                                continueHandlingDistanceKML(afile);
-                                break;
-                            case KMLMode.KMLINFO:
-                                continueHandlingInfoKML(afile);
-                                break;
-                        }
-                    }
-                });
-        } else {
-            switch (KMLMode.CurrentMode) {
-                case KMLMode.KMLSITE:
-                    continueHandlingSiteKML(afile);
-                    break;
-                case KMLMode.KMLDISTANCE:
-                    continueHandlingDistanceKML(afile);
-                    break;
-                case KMLMode.KMLINFO:
-                    continueHandlingInfoKML(afile);
-                    break;
-            }
+        if (afile.type === "application/vnd.google-earth.kmz" || hasExtension(afile.name, ".kmz") ||
+            afile.type === "application/vnd.google-earth.kml+xml" || hasExtension(afile.name, ".kml")) 
+        {
+            Ext.MessageBox.alert("Unable to open file", "The file '" + afile.name + "' does not appear to be in a valid KML format.");
+            return;
         }
+
+        pvMapper.ClientDB.getAllCustomKMLName(function (customKmlNames) { 
+            var i = 1;
+            afile.uniqueName = afile.name;
+            while (customKmlNames.indexOf(afile.uniqueName) >= 0) { // fix file name - ensure that it does not duplicate any other stored kml file names.
+                afile.uniqueName = afile.name + " (" + i + ")";
+            }
+
+            //we probably don't want to load hug file.  Limit is about 2MB.
+            if (afile.size > 2000000) {
+                Ext.MessageBox.confirm("File too big", "The file '" + afile.name + "' (with size: " + afile.size.toString() + ") is larger then 2000000 bytes (2 MB), do you want to continue loading?",
+                    function (btn) {
+                        if (btn === 'yes') {
+                            switch (KMLMode.CurrentMode) {
+                                case KMLMode.KMLSITE:
+                                    continueHandlingSiteKML(afile);
+                                    break;
+                                case KMLMode.KMLDISTANCE:
+                                    continueHandlingDistanceKML(afile);
+                                    break;
+                                case KMLMode.KMLINFO:
+                                    continueHandlingInfoKML(afile);
+                                    break;
+                            }
+                        }
+                    });
+            } else {
+                switch (KMLMode.CurrentMode) {
+                    case KMLMode.KMLSITE:
+                        continueHandlingSiteKML(afile);
+                        break;
+                    case KMLMode.KMLDISTANCE:
+                        continueHandlingDistanceKML(afile);
+                        break;
+                    case KMLMode.KMLINFO:
+                        continueHandlingInfoKML(afile);
+                        break;
+                }
+            }
+        });
         fileDialogBox.value = "";
     }
     //#endregion OpenFileDialog
@@ -140,16 +155,14 @@ pvMapper.onReady(function () {
     //#region  KML Site Import
     function continueHandlingSiteKML(afile) {
 
-        if (afile.type === "application/vnd.google-earth.kmz") {
+        if (afile.type === "application/vnd.google-earth.kmz" || hasExtension(afile.name, ".kmz")) {
             var reader = new FileReader();
-            reader.onload = function (evt) { uncompressZip(evt.target.result, function (kmlResult) { importLocalSiteFromString(kmlResult, afile.name); }); }
+            reader.onload = function (evt) { uncompressZip(evt.target.result, function (kmlResult) { importSitesFromKMLString(kmlResult, afile.name); }); }
             reader.readAsArrayBuffer(afile);
-        } else if (afile.type === "application/vnd.google-earth.kml+xml") {
+        } else { // otherwise, the file is kml
             var reader = new FileReader();
-            reader.onload = function (evt) { importLocalSiteFromString(evt.target.result, afile.name); }
+            reader.onload = function (evt) { importSitesFromKMLString(evt.target.result, afile.name); }
             reader.readAsText(afile);
-        } else {
-            Ext.MessageBox.alert("Unknown File Type", "The file [" + afile.name + "] is not a KML format.");
         }
     }
 
@@ -169,7 +182,7 @@ pvMapper.onReady(function () {
         }
     }
 
-    function importLocalSiteFromString(kmlString, kmlName) {
+    function importSitesFromKMLString(kmlString, kmlName) {
         var kml_projection = new OpenLayers.Projection("EPSG:4326");
         var map_projection = new OpenLayers.Projection("EPSG:3857");
 
@@ -205,31 +218,29 @@ pvMapper.onReady(function () {
                         }
                     }
                 });
-        } else if (polyFeatures.length <= 0) {
-            Ext.MessageBox.alert("No Sites Found", "Failed to extract any KML polygons from the file provided.");
-        } else {
+        } else if (polyFeatures.length > 0) {
             for (var i = 0; i < polyFeatures.length; i++) {
                 AddSite(polyFeatures[i]);
             }
+        } else {
+            Ext.MessageBox.alert("No Sites Found", "Failed to extract any KML polygons from the file provided.");
         }
     };
 
     ///kmlFeature : pvMapper.SiteFeature.
     function AddSite(kmlFeature) {
-            
-        var name = kmlFeature.attributes.name ? kmlFeature.attributes.name : "KML site";
-        var desc = kmlFeature.attributes.description ? kmlFeature.attributes.description : "";
+        kmlFeature.attributes = kmlFeature.attributes || {}; // just in case...?
 
-        kmlFeature.attributes.name = name;
-        kmlFeature.attributes.description = desc;
+        kmlFeature.attributes.name = kmlFeature.attributes.name || "KML site";
+        kmlFeature.attributes.description = kmlFeature.attributes.description || "";
 
         WKT = kmlFeature.geometry.toString();
 
         //adding the site to the server database.
-        pvMapper.postSite(name, desc, WKT)
+        pvMapper.postSite(kmlFeature.attributes.name, kmlFeature.attributes.description, WKT)
             .done(function (site) {
                 kmlFeature.fid = site.siteId;
-                kmlFeature.style = null;
+                kmlFeature.style = pvMapper.siteLayer.style;
 
                 pvMapper.siteLayer.addFeatures([kmlFeature]);
 
@@ -250,36 +261,12 @@ pvMapper.onReady(function () {
         iconCls: 'x-open-menu-icon',
         tooltip: "Import site polygons from a KML file",
         handler: function () {
-             if(pvMapper.siteLayer.features.length > 3)
-            {
-                Ext.Msg.alert('Warning', 'Too many sites!');
-                return 0;
-            }
             fileDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
             KMLMode.CurrentMode = KMLMode.KMLSITE;
             fileDialogBox.click();
         }
     });
 
-    var allSitesDeleteAction = Ext.create('Ext.Action', {
-        text: 'Delete all sites',
-        iconCls: 'x-open-menu-icon',
-        tooltip: "Import site polygons from a KML file",
-        handler: function () {
-           tempSites = pvMapper.siteManager.getSites();
-
-        while (tempSites.length>0)
-        {
-        tempSites.forEach(function(siteTemp){pvMapper.siteManager.removeSiteById(siteTemp.id); pvMapper.deleteSite(siteTemp.id);}); 
-        tempSites = pvMapper.siteManager.getSites();
-        }
-      
-         pvMapper.siteLayer.removeAllFeatures() ;
-
-        }
-    });
-
-   //  pvMapper.sitesToolbarMenu.add(allSitesDeleteAction);
 
     pvMapper.sitesToolbarMenu.add('-');
     pvMapper.sitesToolbarMenu.add(siteImportAction);
@@ -287,7 +274,7 @@ pvMapper.onReady(function () {
     //#endregion KML Site import
     //----------------------------------------------------------------------------------------
     //#region export site to KML
-    function ExportToXML() {
+    function ExportToKML() {
         var kml_projection = new OpenLayers.Projection("EPSG:4326");
         var map_projection = new OpenLayers.Projection("EPSG:3857");
 
@@ -299,12 +286,12 @@ pvMapper.onReady(function () {
         });
 
         var sitesKml = kmlFormat.write(pvMapper.siteLayer.features);
-        SaveAsFile(sitesKml);
+        SaveKmlAsFile(sitesKml);
     }
 
     var previousFilenameForSavingSites = 'PVMapper Sites'
-    function SaveAsFile(content) {
 
+    function SaveKmlAsFile(content) {
         // add a button on the tool bar to launch a file picker to load local KML file.
         //first, create an input with type='file' and add it to the body of the page.
         Ext.MessageBox.prompt('Save file as', 'Please enter a filename for the export sites.',
@@ -321,9 +308,7 @@ pvMapper.onReady(function () {
                         return;
                     }
 
-                    var blob = CustomBlob(content, null);
-                    blob.data = content;
-                    blob.type = 'data:application/vnd.google-earth.kml+xml';
+                    var blob = new Blob([content], { type: 'application/vnd.google-earth.kml+xml' });
                     saveAs(blob, filename);
                 }
             }, this, false, previousFilenameForSavingSites);
@@ -338,16 +323,16 @@ pvMapper.onReady(function () {
         iconCls: 'x-save-menu-icon',
         tooltip: "Export site polygons and scores to a KML file",
         handler: function () {
-            ExportToXML();
+            ExportToKML();
         }
     });
     pvMapper.sitesToolbarMenu.add(kmlExportBtn);
     //#endregion export site to KML
     //----------------------------------------------------------------------------------------
-    //#region Save scoreboard
+    //#region Save project
     var previousFilenameForSavingProject = 'PVMapper Project'
-    function saveScoreboardAs() {
 
+    function saveProjectAs() {
         // add a button on the tool bar to launch a file picker to load local KML file.
         //first, create an input with type='file' and add it to the body of the page.
         Ext.MessageBox.prompt('Save file as', 'Please enter a filename for the export sites (.pvProj).',
@@ -364,51 +349,41 @@ pvMapper.onReady(function () {
                         return;
                     }
 
-                    var content = JSON.stringify(pvMapper.mainScoreboard);
-                    var blob = CustomBlob(content, null);
-                    blob.data = content;
-                    blob.type = 'data:application/json';
+                    var content = JSON.stringify(pvMapper.mainScoreboard, null, '\t');
+                    var blob = new Blob([content], { type: 'application/json' });
                     saveAs(blob, filename);
                 }
             }, this, false, previousFilenameForSavingProject);
-
     }
 
-    var loadScoreboardBtn = Ext.create('Ext.Action', {
+    var saveProjectBtn = Ext.create('Ext.Action', {
         text: 'Save Project',
         iconCls: 'x-saveproject-menu-icon',
         tooltip: "Save the Scoreboard project to local file.",
         handler: function () {
-            saveScoreboardAs();
+            saveProjectAs();
         }
     });
-    pvMapper.scoreboardToolsToolbarMenu.add(0, loadScoreboardBtn);
+    pvMapper.scoreboardToolsToolbarMenu.add(0, saveProjectBtn);
     //#endregion Save scoreboard
     //----------------------------------------------------------------------------------------
-    //#region Load scoreboard
+    //#region Load project
     var fDialogBox = document.createElement('input');
     fDialogBox.type = 'file';
-    fDialogBox.style = 'display:none';
+    fDialogBox.style = 'display:none;height:0;';
     fDialogBox.accept = ".pvProj"; //only support in chrome and IE.  FF doesn't work.
-    fDialogBox.addEventListener('change', handleLoadScoreboard, false);
+    fDialogBox.addEventListener('change', handleLoadProject, false);
     document.body.appendChild(fDialogBox);
-    function handleLoadScoreboard(evt) {
+
+    function handleLoadProject(evt) {
         if (!evt.target.files || !evt.target.files[0])
             return;
 
         var afile = evt.target.files[0];
-        var afilename = afile.name;
-
-
-        //check to make sure that the file has '.kml' extension.
-        var dotindex = afilename.lastIndexOf('.');
-        dotindex = dotindex == -1 ? afilename.length : dotindex;
-        var name = afilename.substr(0, dotindex, dotindex);
-        var extension = afilename.replace(name, "");
-
-        if (extension === ".pvProj") {
+        
+        if (hasExtension(afile.name, ".pvProj")) {
             var reader = new FileReader();
-            reader.onload = function (evt) { importScoreboardFromJSON(evt.target.result); }
+            reader.onload = function (evt) { importProjectFromJSON(evt.target.result); }
             reader.readAsText(afile);
         } else {
             Ext.MessageBox.alert("Unrecognize File Type", "The file [" + afile.name + "] is not a PVMapper project.");
@@ -416,12 +391,73 @@ pvMapper.onReady(function () {
         fDialogBox.value = "";  //reset so we can open the same file again.
     }
 
-    function AddScoreboardSite(aFeature) {
-        WKT = aFeature.geometry.toString();
+    // this is a rough hack which attempts to handle module loading for old project files which didn't include module data.
+    function setupModulesForLegacyProject(scoreLines) {
+        var scoreModuleTitles = scoreLines.map(function (sl) { return sl.title; });
 
+        var fakeModuleConfig = pvMapper.moduleManager.toJSON().filter(function (mod) { return scoreModuleTitles.indexOf(mod.title) >= 0 });
+
+        fakeModuleConfig.forEach(function (mod) { mod.isActive = true; });
+
+        return fakeModuleConfig;
+    }
+
+    function importProjectFromJSON(scoreboardJSON) {
+        var jsonObj = JSON.parse(scoreboardJSON);
+
+        if (jsonObj.scoreLines && jsonObj.scoreLines.length) {
+            // handle older project format, where module configurations weren't stored with the project (use a default module config)
+            jsonObj.modules = jsonObj.modules || setupModulesForLegacyProject(jsonObj.scoreLines);
+
+            // handle older project format, where sites were stored (duplicatively) in each score line, as children of its score objects.
+            jsonObj.sites = jsonObj.sites ||
+                (jsonObj.scoreLines[0].scores && jsonObj.scoreLines[0].scores.length && // <-- lines must have scores
+                jsonObj.scoreLines[0].scores[0].site && // <-- scores must have sites
+                jsonObj.scoreLines[0].scores[0].site.geometry && // <-- sites must have geometries
+                jsonObj.scoreLines[0].scores.map(function (s) { return s.site; })); // <-- fetch all of the sites (from the first score line)
+
+            if (jsonObj.sites && jsonObj.sites.length) {
+                // first remove all of our current sites
+                pvMapper.deleteAllSites()
+                    .done(function () {
+                        // the server delete succeeded; remove sites locally
+                        pvMapper.siteManager.removeAllSites();
+                        pvMapper.siteLayer.removeAllFeatures(/*{ silent: true }*/);
+
+                        // load modules, tools, scores, etc.
+                        pvMapper.mainScoreboard.fromJSON(jsonObj);
+
+                        // add new sites to the server; a new feature will be added locally as each Post completes.
+                        var postSitePromises = jsonObj.sites.map(PostNewSiteToServer);
+
+                        // after all sites have posted successfully, zoom to the project extent
+                        $.when.apply($, postSitePromises).done(function () { 
+                            pvMapper.map.zoomToExtent(pvMapper.siteLayer.getDataExtent());
+                        });
+                    });
+            } else {
+                // there are no new sites being imported, so we can keep our current sites (right...?).
+                // load modules, tools, scores, etc.
+                pvMapper.mainScoreboard.fromJSON(jsonObj);
+            }
+        } else {
+            Ext.MessageBox.alert("Unrecognize data structure", "The file [" + afile.name + "] doesn't seems to be a PVMapper project file.");
+        }
+    }
+
+    function PostNewSiteToServer(siteInfo) {
         //adding the site to the server database.
-        pvMapper.postSite(aFeature.attributes.name, aFeature.attributes.description, WKT)
+        return pvMapper.postSite(siteInfo.name, siteInfo.description, siteInfo.geometry.toString())
             .done(function (site) {
+                aFeature = new OpenLayers.Feature.Vector(
+                     OpenLayers.Geometry.fromWKT(site.polygonGeometry),
+                     {
+                         name: site.name,
+                         description: site.description
+                     },
+                     pvMapper.siteLayer.style
+                );
+
                 aFeature.fid = site.siteId;
 
                 pvMapper.siteLayer.addFeatures([aFeature]);
@@ -429,130 +465,7 @@ pvMapper.onReady(function () {
                 //push the new site into the pvMapper system
                 var newSite = new pvMapper.Site(aFeature);
                 pvMapper.siteManager.addSite(newSite);
-
-                if (console) console.log('Added ' + newSite.name + ' from Scoreboard Project to the site manager');
-            })
-            .fail(function () {
-                if (console) console.log('failed to post Scoreboard site');
-                aFeature.destroy();
             });
-    }
-
-    function importScoreboardFromJSON(scoreboardJSON) {
-        var jsonObj = JSON.parse(scoreboardJSON);
-
-        if ((jsonObj.scoreLines !== undefined) && (jsonObj.scoreLines.length > 0)) {
-            //first remove all sites from sitelayer and from the database.
-
-            var site, feature;
-            var features = [];
-
-            //change to use Promise pattern to better handle on syncing the delete and add project sites.
-            //NOTE: Chrome 32+ supports Promise directly, all other browsers use an included promise.js library.
-            var promise = new Promise(function removeSites(resolve, reject) {
-                try {
-                    //collecting all currently in memory features
-                    while (site = pvMapper.siteManager.sites.pop()) {
-                        pvMapper.deleteSite(site.id);
-                        pvMapper.siteManager.removeSite(site);
-                        var featureArray = pvMapper.siteLayer.features.filter(
-                            function (a) {
-                                return (a.attributes.name === site.name); //TODO: this is NOT a unique key !
-                            });
-                        console.assert(featureArray.length < 2, "Encountered a collision in tool names!");
-                        var feature = featureArray.length ? featureArray[0] : null;
-                        //This was what cause of the issue when loading project and report messed up.  The "find" function return "undefined" when no match found.  
-                        //It test to be != null which always true and add all existing site information backin. 
-                        if (feature)
-                            features.push(feature);
-                    }
-
-                    //remove all site features found
-                    pvMapper.siteLayer.removeFeatures(features, { silent: true });
-                    pvMapper.siteManager.sites = [];  // reset, it seems re-using the existing sites array resulting in some error where GC is not collect fast enough.
-
-                }
-                catch (ex) {
-                    reject(Error("Attempt delete sites failed, cause: " + ex.message));
-                }
-
-                resolve();
-            }).then(
-              function onDoneRemoveSites() {
-                  //the scoreboard JSON object is in the following format, we need to search throught to find all features (polygons)
-                  //root
-                  //   |=scoreLines
-                  //           |= Scores
-                  //                  |= Scores
-                  //                        |= Site
-                  //                             |= geometry (features)
-                  var allSites = [];
-                  jsonObj.scoreLines.forEach(function (scline, scid) {
-                      scline.scores.forEach(function (score, sid) {
-                          var asiteArray = allSites.filter(
-                              function (a)
-                              {
-                                  return (a.name === score.site.name); //TODO: this is NOT a unique key !
-                              });
-                          console.assert(asiteArray.length < 2, "Encountered a collision in site names!");
-                          var asite = asiteArray.length ? asiteArray[0] : null;
-
-                          console.assert(asite, "Wait... what is this function supposed to do? Because whatever that is, it's doing a bad job...")
-
-                          if (!asite)
-                              allSites.push(score.site);
-                      });
-                  });
-
-                  //now add the project sites into siteLayer.
-                  //var count = 0;
-                  allSites.forEach(function (site, idx) {
-                      feature = new OpenLayers.Feature.Vector(
-                           OpenLayers.Geometry.fromWKT(site.geometry),
-                           {
-                               name: site.name,
-                               description: site.description
-                           },
-                           pvMapper.siteLayer.style
-                      );
-                      AddScoreboardSite(feature);
-                  });
-              },
-              function onerror(err) {
-                  Ext.MessageBox.alert(err.message);
-              }
-            ).then(
-            function onDoneAddSites() {
-                //all scorelines (modules) should've been created.
-                //update score in each scoreLine, if matched.
-                jsonObj.scoreLines.forEach(function (line, idx) {
-                    var scLineArray = pvMapper.mainScoreboard.scoreLines.filter(
-                        function (a)
-                        {
-                            return (a.category === line.category) && (a.title === line.title); //TODO: this is NOT a unique key !
-                        });
-                    console.assert(scLineArray.length < 2, "Encountered a collision in score lines!");
-                    var scLine = scLineArray.length ? scLineArray[0] : null;
-
-                    if (typeof scLine === "object" && scLine) {
-                        scLine.suspendEvent = true;
-                        scLine.fromJSON(line);
-                        scLine.suspendEvent = false;
-                    }
-                });
-
-            },
-            function onErrorDelete(err) {
-                Ext.MessageBox.alert(err.message);
-            }).then(function finished() {
-                var bound = pvMapper.siteLayer.getDataExtent();
-                pvMapper.map.zoomToExtent(bound, false);
-            });
-
-        }
-        else {
-            Ext.MessageBox.alert("Unrecognize data structure", "The file [" + afile.name + "] doesn't seems to be a PVMapper project file.");
-        }
     }
 
 
@@ -561,6 +474,7 @@ pvMapper.onReady(function () {
         iconCls: 'x-openproject-menu-icon',
         tooltip: "Load a saved scoreboard project and use it as a default.",
         handler: function () {
+            pvMapper.moduleManager.prefetchAllModuleScripts(); //HACK: since we don't know which modules this project will need, prefetch them all (to help the project load faster)
             fDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
             fDialogBox.click();
         }
@@ -571,6 +485,7 @@ pvMapper.onReady(function () {
     //----------------------------------------------------------------------------------------
     //#region SaveScoreboardConfig
     var previousFilenameForSavingConfig = 'PVMapper Config';
+
     function saveScoreboardConfig() {
         Ext.MessageBox.prompt('Save file as', 'Please enter a configuraton filename (.pvCfg).',
             function (btn, filename) {
@@ -586,25 +501,9 @@ pvMapper.onReady(function () {
                         return;
                     }
 
-                    var config = { configLines: [] };
-                    var aUtility, aStarRatables, aWeight, aTitle, aCat = null;
-
-                    pvMapper.mainScoreboard.scoreLines.forEach(
-                        function (scrline, idx, scoreLines) {
-                            aUtility = scrline.scoreUtility;
-                            aWeight = scrline.weight;
-                            aTitle = scrline.title;
-                            aCat = scrline.category;
-                            aStarRatables = null;
-                            if (typeof (scrline.getStarRatables) === "function") {
-                                aStarRatables = scrline.getStarRatables();
-                            }
-                            config.configLines.push({ title: aTitle, category: aCat, utility: aUtility, starRatables: aStarRatables, weight: aWeight });
-                        });
-                    var content = JSON.stringify(config);
-                    var blob = CustomBlob(content, null);
-                    blob.data = content;
-                    blob.type = 'data:application/json';
+                    var config = { scoreLines: pvMapper.mainScoreboard.scoreLines }; //TODO: this includes Score objects... do we want to exclude those?
+                    var content = JSON.stringify(config, null, '\t');
+                    var blob = new Blob([content], { type: 'application/json' });
                     saveAs(blob, filename);
                 }
             }, this, false, previousFilenameForSavingConfig);
@@ -627,7 +526,7 @@ pvMapper.onReady(function () {
     //#region LoadScoreboardConfig
     var configDialogBox = document.createElement('input');
     configDialogBox.type = 'file';
-    configDialogBox.style = 'display:none';
+    configDialogBox.style = 'display:none;height:0;';
     configDialogBox.accept = ".pvCfg"; //only support in chrome and IE.  FF doesn't work.
     configDialogBox.addEventListener('change', handleLoadScoreboardConfig, false);
     document.body.appendChild(configDialogBox);
@@ -637,15 +536,9 @@ pvMapper.onReady(function () {
             return;
 
         var afile = evt.target.files[0];
-        var afilename = afile.name;
-        //check to make sure that the file has '.pvCfg' extension.
-        var dotindex = afilename.lastIndexOf('.');
-        dotindex = dotindex == -1 ? afilename.length : dotindex;
-        var name = afilename.substr(0, dotindex, dotindex);
-        var extension = afilename.replace(name, "");
 
         //since this feature is not support in FF, we need to check to make sure the file is correct extension.
-        if (extension === ".pvCfg") {
+        if (hasExtension(afile.name, ".pvCfg")) {
             var reader = new FileReader();
             reader.onload = function (evt) { loadScoreboardConfig(evt.target.result); }
             reader.readAsText(afile);
@@ -655,32 +548,11 @@ pvMapper.onReady(function () {
         configDialogBox.value = "";
 
     }
+
     function loadScoreboardConfig(configJSON) {
         var obj = JSON.parse(configJSON);
 
-        if ((obj.configLines !== undefined) && (obj.configLines.length > 0)) {
-            //first remove all sites from sitelayer and from the database
-            var scLine;
-            obj.configLines.forEach(
-                function (cfgLine, idx, configLines) {
-                    var scLineArray = pvMapper.mainScoreboard.scoreLines.filter(
-                        function (a)
-                        {
-                            return (a.category === cfgLine.category) && (a.title === cfgLine.title); //TODO: this is NOT a unique key !
-                        });
-                    console.assert(scLineArray.length < 2, "Encountered a collision in score lines!");
-                    var scLine = scLineArray.length ? scLineArray[0] : null;
-
-                    if (scLine)
-                    {
-                        scLine.updateConfiguration(cfgLine.utility, cfgLine.starRatables, cfgLine.weight);
-                    }
-                });
-        }
-        else {
-            Ext.MessageBox.alert("Unrecognize structure", "The file [" + afile.name + "] doesn't seems to be a PVMapper configuration file.");
-        }
-
+        pvMapper.mainScoreboard.fromJSON(obj);
     }
 
     //----------------------------------------------------------------------------------------
@@ -689,6 +561,7 @@ pvMapper.onReady(function () {
         iconCls: "x-openconfig-menu-icon",
         tooltip: "Load a Scoreboard Utility configuration from a local file.",
         handler: function () {
+            pvMapper.moduleManager.prefetchAllModuleScripts(); //HACK: since we don't know which modules this project will need, prefetch them all (to help the project load faster)
             configDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
             configDialogBox.click();
         }
@@ -700,12 +573,9 @@ pvMapper.onReady(function () {
     function resetScoreboardConfig() {
         pvMapper.mainScoreboard.scoreLines.forEach(
             function (scrLine, idx, scoreLines) {
-                scrLine.scoreUtility = scrLine.defaultScoreUtility;
-                if (typeof scrLine.setStarRatables === "function")
-                    scrLine.setStarRatables({});
-                scrLine.setWeight(10); //TODO: not all score lines have a default weight of 10.
-                //TODO: some score lines have their own config menues, which should also be reset.
+                scrLine.resetConfiguration();
             });
+        pvMapper.mainScoreboard.update();
     }
 
     var resetScoreboardBtn = Ext.create('Ext.Action', {
@@ -713,7 +583,12 @@ pvMapper.onReady(function () {
         iconCls: "x-cleaning-menu-icon",
         tooltip: "Reset the scoreboard to the default configuration",
         handler: function () {
-            resetScoreboardConfig();
+            Ext.MessageBox.confirm("Confirm reset", "This will remove any configuration changes you've made to the scoreboard; continue?",
+                function (btn) {
+                    if (btn === 'yes') {
+                        resetScoreboardConfig();
+                    }
+                });
         }
     });
     pvMapper.scoreboardToolsToolbarMenu.add(5, resetScoreboardBtn);
@@ -739,9 +614,7 @@ pvMapper.onReady(function () {
                     var exporter = Ext.create("GridExporter");
 
                     var content = exporter.getCSV(pvMapper.scoreboardGrid);
-                    var blob = CustomBlob(content, null);
-                    blob.data = content;
-                    blob.type = 'data:application/csv';
+                    var blob = new Blob([content], { type: 'text/csv' }); // application/vnd.ms-excel
                     saveAs(blob, filename);
                 }
             }, this, false, previousFilenameForSavingCSV
@@ -762,61 +635,40 @@ pvMapper.onReady(function () {
     //----------------------------------------------------------------------------------------
     //#region Add distance score from KML
     function continueHandlingDistanceKML(afile) {
-        var amoduleArray = pvMapper.customModules.filter(
-            function (a)
-            {
-                return (a.fileName === afile.name); //TODO: this is NOT a unique key ! Also, this isn't a reasonable limitation or filter - users may have folder names to deliniate their files
-            });
-        console.assert(amoduleArray.length < 2, "Encountered a collision in file names!");
-        var amodule = amoduleArray.length ? amoduleArray[0] : null;
+        Ext.MessageBox.prompt("Module Naming", "Please type in the module name", function (btn, kmlModuleName) {
+            if (btn == 'ok') {
+                if (kmlModuleName.length == 0)
+                    kmlModuleName = afile.name;
 
-        console.assert(amodule, "Wait... why is this function looking for a matching file? Because maybe it shouldn't...?");
+                //var kmlModuleName = afile.name;
 
-        if (!amodule) {
-            //Note: elsewhere we treat the file name as a unique key which is bound to the tool name, SO we cannot in fact allow the user to change the tool name here.
-            //TODO: fix this... sometime.
-
-            //Ext.MessageBox.prompt("Module Naming", "Please type in the module name", function (btn, kmlModuleName) {
-                //if (btn == 'ok') {
-                    //if (kmlModuleName.length == 0)
-                        //kmlModuleName = afile.name;
-
-            var kmlModuleName = afile.name;
-
-            //It seems HTML5 file API pull the file type from the MIME type association with an application.
-            //problem here is that if the client machine never had Google Earth installed, the file.type is blank.
-            //If it is the case, we can only realize on the file extension.
-            if (afile.type === "application/vnd.google-earth.kmz" || hasExtension(afile.name, ".kmz")) {
-                var localLayer = new INLModules.LocalLayerModule();
-                var reader = new FileReader();
-                reader.onload = function (evt) {
-                    uncompressZip(evt.target.result,
-                        function (kmlResult) {
-                            localLayer.readTextFile(kmlResult, kmlModuleName, afile.name);
-                            pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: localLayer }));
-                            saveToLocalDB(kmlModuleName, localLayer.moduleClass, afile.name, kmlResult); //TODO: we shouldn't use just the file name as the primary key here...
-                        });
+                //It seems HTML5 file API pull the file type from the MIME type association with an application.
+                //problem here is that if the client machine never had Google Earth installed, the file.type is blank.
+                //If it is the case, we can only realize on the file extension.
+                if (afile.type === "application/vnd.google-earth.kmz" || hasExtension(afile.name, ".kmz")) {
+                    var reader = new FileReader();
+                    reader.onload = function (evt) {
+                        uncompressZip(evt.target.result,
+                            function (kmlResult) {
+                                var newModule = new INLModules.LocalLayerModule(kmlResult, kmlModuleName, afile.uniqueName);
+                                //pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: localLayer }));
+                                pvMapper.moduleManager.addCustomModule(newModule);
+                                pvMapper.ClientDB.saveCustomKML(kmlModuleName, newModule.moduleClass, afile.uniqueName, kmlResult); //TODO: we shouldn't use just the file name as the primary key here...
+                            });
+                    }
+                    reader.readAsArrayBuffer(afile);
+                } else { // by default, assume the file is kml
+                    var reader = new FileReader();
+                    reader.onload = function (evt) {
+                        var newModule = new INLModules.LocalLayerModule(evt.target.result, kmlModuleName, afile.uniqueName);
+                        //pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: localLayer }));
+                        pvMapper.moduleManager.addCustomModule(newModule);
+                        pvMapper.ClientDB.saveCustomKML(kmlModuleName, newModule.moduleClass, afile.uniqueName, evt.target.result); //TODO: we shouldn't use just the file name as the primary key here...
+                    }
+                    reader.readAsText(afile);
                 }
-                reader.readAsArrayBuffer(afile);
-            } else if (afile.type === "application/vnd.google-earth.kml+xml" || hasExtension(afile.name, ".kml")) {
-                var localLayer = new INLModules.LocalLayerModule();
-                var reader = new FileReader();
-                reader.onload = function (evt) {
-                    localLayer.readTextFile(evt.target.result, kmlModuleName, afile.name);
-                    pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: localLayer }));
-                    saveToLocalDB(kmlModuleName, localLayer.moduleClass, afile.name, evt.target.result); //TODO: we shouldn't use just the file name as the primary key here...
-                }
-                reader.readAsText(afile);
-            } else {
-                Ext.MessageBox.alert("Unknown File Type", "The file [" + afile.name + "] is not a KML format.");
             }
-
-                //}
-            //}, this, false, afile.name);
-        }
-        else {
-            Ext.MessageBox.alert("Duplicate file", "The file [" + afile.name + "] was aleady loaded.");
-        }
+        }, this, false, afile.uniqueName);
     }
 
     //create the actual button and put on the tool bar.
@@ -837,52 +689,35 @@ pvMapper.onReady(function () {
     //----------------------------------------------------------------------------------------
     //#region Custom Info From KML
     function continueHandlingInfoKML(afile) {
-        var moduleArray = pvMapper.customModules.filter(
-            function (a)
-            {
-                return (a.fileName === afile.name); //TODO: this is NOT a unique key ! Also, this isn't a reasonable limitation or filter - users may have folder names to deliniate their files
-            });
-        console.assert(moduleArray.length < 2, "Encountered a collision in module names!");
-        var module = moduleArray.length ? moduleArray[0] : null;
+        Ext.MessageBox.prompt("Module Naming", "Please type in the module name", function (btn, kmlModuleName) {
+            if (btn == 'ok') {
+                if (kmlModuleName.length == 0)
+                    kmlModuleName = afile.name;
 
-        console.assert(module, "Wait... why is this function looking for a matching module? Because maybe it shouldn't...?");
-
-        if (!module) {
-            Ext.MessageBox.prompt("Module Naming", "Please type in the module name", function (btn, kmlModuleName) {
-                if (btn == 'ok') {
-                    if (kmlModuleName.length == 0)
-                        kmlModuleName = afile.name;
-
-                    if (afile.type === "application/vnd.google-earth.kmz" || hasExtension(afile.name, ".kmz")) {
-                        var infoLayer = new INLModules.KMLInfoModule();
-                        var reader = new FileReader();
-                        reader.onload = function (evt) {
-                            uncompressZip(evt.target.result,
-                                function (kmlResult) {
-                                    infoLayer.readTextFile(kmlResult, kmlModuleName, afile.name);
-                                    pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: infoLayer }));
-                                    saveToLocalDB(kmlModuleName, infoLayer.moduleClass, afile.name, kmlResult); //TODO: we shouldn't use just the file name as the primary key here...
-                                });
-                        }
-                        reader.readAsArrayBuffer(afile);
-                    } else if (afile.type === "application/vnd.google-earth.kml+xml" || hasExtension(afile.name, ".kml")) {
-                        var infoLayer = new INLModules.KMLInfoModule();
-                        var reader = new FileReader();
-                        reader.onload = function (evt) {
-                            infoLayer.readTextFile(evt.target.result, kmlModuleName, afile.name);
-                            pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: infoLayer }));
-                            saveToLocalDB(kmlModuleName, infoLayer.moduleClass, afile.name, evt.target.result); //TODO: we shouldn't use just the file name as the primary key here...
-                        }
-                        reader.readAsText(afile);
-                    } else {
-                        Ext.MessageBox.alert("Unknown File Type", "The file [" + afile.name + "] is not a KML format.");
+                if (afile.type === "application/vnd.google-earth.kmz" || hasExtension(afile.name, ".kmz")) {
+                    var reader = new FileReader();
+                    reader.onload = function (evt) {
+                        uncompressZip(evt.target.result,
+                            function (kmlResult) {
+                                var newModule = new INLModules.KMLInfoModule(kmlResult, kmlModuleName, afile.uniqueName);
+                                //pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: infoLayer }));
+                                pvMapper.moduleManager.addCustomModule(newModule);
+                                pvMapper.ClientDB.saveCustomKML(kmlModuleName, newModule.moduleClass, afile.uniqueName, kmlResult); //TODO: we shouldn't use just the file name as the primary key here...
+                            });
                     }
+                    reader.readAsArrayBuffer(afile);
+                } else { // by default, assume the file is kml
+                    var reader = new FileReader();
+                    reader.onload = function (evt) {
+                        var newModule = new INLModules.KMLInfoModule(evt.target.result, kmlModuleName, afile.uniqueName);
+                        //pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: afile.name, moduleObject: infoLayer }));
+                        pvMapper.moduleManager.addCustomModule(newModule);
+                        pvMapper.ClientDB.saveCustomKML(kmlModuleName, newModule.moduleClass, afile.uniqueName, evt.target.result); //TODO: we shouldn't use just the file name as the primary key here...
+                    }
+                    reader.readAsText(afile);
                 }
-            }, this, false, afile.name);
-        }
-        else {
-            Ext.MessageBox.alert("Duplicate file", "The file [" + afile.name + "] was aleady loaded.");
-        }
+            }
+        }, this, false, afile.uniqueName);
     }
 
     var customInfoTool = Ext.create('Ext.Action', {
@@ -899,15 +734,6 @@ pvMapper.onReady(function () {
     pvMapper.scoreboardToolsToolbarMenu.add(9, customInfoTool);
     //#endregion Custom info from KML
     //----------------------------------------------------------------------------------------
-    //#region Save and Load Modules to local IndexedDB
-    //Save the uploaded KML data to the client side database.
-    //aname: string - the module name
-    //aclass: string - the module class name.
-    //akey: string - a unitue module key (a file name).
-    //value: object - a string or object represent the actual module data.
-    function saveToLocalDB(aname, aclass, akey, value) {
-        pvMapper.ClientDB.saveCustomKML(aname, aclass, akey, value);
-    }
 
     //load all saved uploaded KML modules.  This function is to be invoke by the scoreboard when everything is loaded.
     //the "pvMapper.isLocalModuleLoaded" prevent a session from loading one too many times.
@@ -920,16 +746,11 @@ pvMapper.onReady(function () {
                     moduleFiles.forEach(function (fileName, idx) {
                         pvMapper.ClientDB.loadCustomKML(fileName, function (moduleObj) {
                             if (moduleObj) {
-                                var alayer = null;
-                                if (moduleObj.customClass === "LocalLayerModule")
-                                    alayer = new INLModules.LocalLayerModule();
-                                else if (moduleObj.customClass === "KMLInfoModule")
-                                    alayer = new INLModules.KMLInfoModule();
-
-                                if (alayer) {
-                                    alayer.readTextFile(moduleObj.customData, moduleObj.customName, fileName);
-                                    pvMapper.customModules.push(new pvMapper.CustomModuleData({ fileName: fileName, moduleObject: alayer }));
+                                if (INLModules[moduleObj.customClass]) {
+                                    var moduleHandle = new INLModules[moduleObj.customClass](moduleObj.customData, moduleObj.customName, fileName);
+                                    pvMapper.moduleManager.addCustomModule(moduleHandle);
                                 }
+                                //TODO: move this into the module manager...
                             }
                         });
                     });
@@ -949,23 +770,7 @@ pvMapper.onReady(function () {
         //enabledToggle: false,
         handler: function () {
             var toolWin = Ext.create("MainApp.view.ToolConfigWindow", {
-                buttons: [{
-                    xtype: 'button',
-                    text: 'Save',
-                    tooltip:'Save the preferences to local database then close this window.',
-                    handler: function () {
-                        toolWin.closeMode = this.text;
-                        toolWin.close();
-                    }
-                }, {
-                    xtype: 'button',
-                    text: "Close",
-                    tooltip: 'Close without saving preference.  Current preferences are maintained in this session.',
-                    handler: function () {
-                        toolWin.closeMode = this.text;
-                        toolWin.close();
-                    }
-                }]
+                height: Math.min(540, (Ext.getBody().getViewSize().height - 160)), // limit initial height to window height
             });
             toolWin.show();
         }

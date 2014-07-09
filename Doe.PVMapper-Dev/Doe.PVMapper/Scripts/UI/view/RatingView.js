@@ -3,7 +3,7 @@
 Ext.define('MainApp.view.RatingView', {
   extend: 'MainApp.view.Window',
   title: 'Rating',
-  layout: "fit",
+  //layout: "fit",
   //modal: true,
   closeAction: 'destroy',
   constrainHeader: true,
@@ -12,25 +12,11 @@ Ext.define('MainApp.view.RatingView', {
   modal: true,
   buttons: [{
     xtype: 'button',
-    text: 'OK',
+    text: 'Close',
     handler: function () {
-      this.up('window').fireEvent('onOk');
-    }
-  },
-  {
-    xtype: 'button',
-    text: 'Cancel',
-    handler: function () {
-      this.up('window').fireEvent('onCancel');
+      this.up('window').close();
     }
   }],
-  initComponent: function () {
-    this.addEvents({
-      "onCancel": true,
-      "onOk": true
-    });
-    this.callParent(arguments);
-  }
 });
 
 pvMapper.showRatingWindow = function (ratables, onAccepted, title) {
@@ -45,14 +31,10 @@ pvMapper.showRatingWindow = function (ratables, onAccepted, title) {
           store: store
         })
     ],
-    height: Math.min(500, (Ext.getBody().getViewSize().height - 160)), // limit initial height to window height
+    height: Math.min(540, (Ext.getBody().getViewSize().height - 160)), // limit initial height to window height
     listeners: {
-      onCancel: function () {
-        window.close();
-      },
-      onOK: function (){
+      close: function (){
         onAccepted();
-        window.close();
       }
     }
   });
@@ -60,26 +42,3 @@ pvMapper.showRatingWindow = function (ratables, onAccepted, title) {
   window.show();
 };
 
-
-var ratingPanel = function () {
-  return Ext.create('MainApp.view.RatingTool', {
-    store: ratingStore(),
-  });
-  //return Ext.create('MainApp.view.Window', {
-  //    title: "Category Ratings",
-  //    layout: "fit",
-  //    //modal: true,
-  //    closeAction: 'destroy',
-  //    constrain: true,
-
-  //    items: [
-  //        Ext.create('MainApp.view.RatingTool', {
-  //            store: ratingStore(),
-  //        })
-  //    ],
-  //    listeners: {
-  //        beforeclose: onClose
-  //    },
-
-  //});
-};

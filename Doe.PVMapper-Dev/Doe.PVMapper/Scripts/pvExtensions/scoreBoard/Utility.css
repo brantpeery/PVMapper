@@ -1,4 +1,4 @@
-﻿/*Utility Section*/
+﻿/*/ *Utility Section* /
 div.utilityFunctions {
      position: absolute;
      right: 10px;
@@ -20,7 +20,7 @@ div.utilityFunctions {
 .utilityFunctions .jxgbox 
 {
     margin-top: 10px;
-    /*THIS DOES NOT WORK. THE JGX FRAMEWORK NEEDS THE VALUES INLINE*/
+    / *THIS DOES NOT WORK. THE JGX FRAMEWORK NEEDS THE VALUES INLINE* /
     height: 300px;
     width: 300px;
 }
@@ -31,7 +31,7 @@ div.utilityFunctions {
 }
 
 
-/*Weighting sections*/
+/ *Weighting sections* /
 ul.toolHierarchy {
     margin:10px;
 }
@@ -102,4 +102,4 @@ ul.toolHierarchy {
 
 .toolHierarchy .menuItem {
   color: blue;
-}
+}*/

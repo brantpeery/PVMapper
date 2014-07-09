@@ -1,6 +1,6 @@
 /// <reference path="es6-promises.d.ts" />
-/// <reference path="Options.d.ts" />
 /// <reference path="common.ts" />
+/// <reference path="pvMapper.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="../../ExtJS.d.ts" />
 // Module
@@ -21,19 +21,9 @@ var pvMapper;
 
     
 
-    pvMapper.ICustomModuleData;
-
-    var CustomModuleData = (function () {
-        function CustomModuleData(options) {
-            this.fileName = options.fileName;
-            this.moduleObject = options.moduleObject;
-        }
-        return CustomModuleData;
-    })();
-    pvMapper.CustomModuleData = CustomModuleData;
-
     var ClientDB = (function () {
         function ClientDB() {
+            this.isScoreLoaded = false;
         }
         ClientDB.initClientDB = function (forced) {
             if (typeof forced === "undefined") { forced = false; }
@@ -136,11 +126,14 @@ var pvMapper;
                 }
 
                 //load configuration
-                if ((ClientDB.db != null) && (!pvMapper.mainScoreboard.isScoreLoaded)) {
+                if (console && console.assert)
+                    console.assert(!this.isScoreLoaded, "If this never happens, then I should delete isScoreLoaded - it server no purpose."); //TODO: delete isScoreLoaded !
+
+                if ((ClientDB.db != null) && (!this.isScoreLoaded)) {
                     pvMapper.mainScoreboard.scoreLines.forEach(function (sc) {
                         sc.loadConfiguration();
                     });
-                    pvMapper.mainScoreboard.isScoreLoaded = true;
+                    this.isScoreLoaded = true;
                 }
             });
         };
@@ -156,12 +149,18 @@ var pvMapper;
                 request.onsuccess = function (evt) {
                     var data = new CustomModule(moduleName, moduleClass, kmlStream);
                     if (request.result != undefined) {
+                        if (console && console.warn)
+                            console.warn("Warning: overwriting KML file already saved in browser: " + filename);
                         store.put(data, filename);
-                    } else
+                    } else {
                         store.add(data, filename); // if new, add
+                    }
+                    pvMapper.displayMessage(filename + " stored in local browser.", "success");
                 };
             } catch (e) {
-                console.log("save custom KML failed, cause: " + e.message);
+                pvMapper.displayMessage("Couldn't store " + filename + " in local browser.", "error");
+                if (console && console.error)
+                    console.error(e);
             }
         };
 
@@ -189,26 +188,32 @@ var pvMapper;
                 return;
             var txn = ClientDB.db.transaction(ClientDB.PROJECT_STORE_NAME, "readwrite");
             txn.oncomplete = function (evt) {
-                console.log("Transaction completed deleting module: " + key + " has been deleted from the database.");
+                if (console && console.log)
+                    console.log("Transaction completed deleting module: " + key + " has been deleted from the database.");
             };
             txn.onerror = function (evt) {
-                console.log("Transaction delete module: " + key + " failed, cause: " + txn.error);
+                pvMapper.displayMessage("Failed to remove " + key + " module.", "error");
+                if (console && console.error)
+                    console.error("Transaction delete module: " + key + " failed, cause: " + txn.error);
             };
 
             txn.onabort = function (evt) {
-                console.log("Transaction aborted module: " + key + " failed, cause: " + txn.error);
+                if (console && console.warn)
+                    console.warn("Transaction aborted module: " + key + " failed, cause: " + txn.error);
             };
 
             var store = txn.objectStore(ClientDB.PROJECT_STORE_NAME);
             var request = store.delete(key);
             request.onsuccess = function (evt) {
-                console.log("Custom KML module: " + key + " has been deleted from the database.");
+                pvMapper.displayMessage("Deleted " + key + " from the local browser.", "success");
                 if ((fn) && (typeof (fn) === "function")) {
                     fn(true);
                 }
             };
             request.onerror = function (evt) {
-                console.log("Attempt to delete module: " + key + " failed, cause: " + request.error);
+                pvMapper.displayMessage("Failed to delete " + key + " from the local browser.", "error");
+                if (console && console.error)
+                    console.error("Attempt to delete module: " + key + " failed, cause: " + request.error);
                 if ((fn) && (typeof (fn) === "function")) {
                     fn(false);
                 }
@@ -234,7 +239,8 @@ var pvMapper;
                     }
                 };
             } catch (ex) {
-                console.log("getAllCustomerKMLName failed, cause: " + ex.message);
+                if (console && console.error)
+                    console.error("getAllCustomerKMLName failed, cause: " + ex.message);
             }
             return kmlNames;
         };
@@ -260,14 +266,17 @@ var pvMapper;
 
                     var txn = ClientDB.db.transaction(ClientDB.CUSTOM_STORE_NAME, 'readonly');
                     txn.oncomplete = function (evt) {
-                        console.log("Transaction for '" + ClientDB.CUSTOM_STORE_NAME + "' completed.");
+                        if (console && console.log)
+                            console.log("Transaction for '" + ClientDB.CUSTOM_STORE_NAME + "' completed.");
                     };
                     txn.onerror = function (evt) {
-                        console.log("Transaction for '" + ClientDB.CUSTOM_STORE_NAME + "' failed, cause: " + txn.error);
+                        if (console && console.error)
+                            console.error("Transaction for '" + ClientDB.CUSTOM_STORE_NAME + "' failed, cause: " + txn.error);
                     };
 
                     txn.onabort = function (evt) {
-                        console.log("Transaction for '" + ClientDB.CUSTOM_STORE_NAME + "' aborted, cause: " + txn.error);
+                        if (console && console.warn)
+                            console.warn("Transaction for '" + ClientDB.CUSTOM_STORE_NAME + "' aborted, cause: " + txn.error);
                     };
 
                     var store = txn.objectStore(ClientDB.CUSTOM_STORE_NAME);
@@ -279,14 +288,15 @@ var pvMapper;
                             var rec = evt.target.result;
                             if (rec) {
                                 var jsonObj = JSON.parse(rec.value);
-                                results.push({ key: rec.key, value: jsonObj });
+                                results.push(jsonObj);
                                 rec.continue();
                             } else {
                                 resolve(results);
                             }
                         };
                         cursor.onerror = function (evt) {
-                            console.log("Open a cursor on '" + store + "' failed, cause: " + evt.message);
+                            if (console && console.error)
+                                console.error("Open a cursor on '" + store + "' failed, cause: " + evt.message);
                         };
                     }
                 } catch (e) {
@@ -334,7 +344,8 @@ var pvMapper;
                         waitAsecond();
                     }).then(function onResolve() {
                     }, function onReject(Err) {
-                        console.log(Err.message);
+                        if (console && console.error)
+                            console.error(Err);
                     });
                 }
 
@@ -347,25 +358,28 @@ var pvMapper;
                 if (store) {
                     store.clear().onsuccess = function (event) {
                         tools.forEach(function (tool) {
-                            var request = store.get(tool.key);
+                            var request = store.get(tool.id);
                             request.onsuccess = function (evt) {
                                 //tool.value.ctorStr = tool.value.ctor.toString();
-                                var jsonStr = JSON.stringify(tool.value);
+                                var jsonStr = JSON.stringify(tool);
                                 if (request.result != undefined) {
-                                    store.put(jsonStr, tool.key);
-                                    console.log("Tool module: '" + tool.key + "' updated successful.");
+                                    store.put(jsonStr, tool.id);
+                                    console.log("Tool module '" + tool.id + "' browser config resaved.");
                                 } else {
-                                    store.add(jsonStr, tool.key); // if new, add
-                                    console.log("Tool module: '" + tool.key + "' added successfule.");
+                                    store.add(jsonStr, tool.id); // if new, add
+                                    console.log("Tool module '" + tool.id + "' browser config saved.");
                                 }
                             };
                             request.onerror = function (evt) {
-                                console.log("Attempt to save tool key = '" + tool.key + "' failed, cause: " + evt.message);
+                                if (console && console.error)
+                                    console.error("Attempt to save tool key = '" + tool.id + "' failed, cause: " + evt.message);
                             };
                         });
+                        pvMapper.displayMessage("Saved tool configuration to the local browser.", "success");
                     };
                 }
             } catch (ex) {
+                pvMapper.displayMessage("Failed to save tool configuration to the local browser.", "error");
                 console.log("Save tool Modules failed, cause: " + ex.message);
             }
         };
@@ -394,75 +408,5 @@ var pvMapper;
         return SiteData;
     })();
     pvMapper.SiteData = SiteData;
-
-    // Class
-    var dataManager = (function () {
-        // Constructor
-        function dataManager() {
-        }
-        dataManager.prototype.postScore = function (score, rank, siteId, toolId) {
-            $.post("/api/SiteScore", { score: score, rank: rank, siteId: siteId, toolId: toolId }, function (data) {
-                // refresh scoreboard.
-                //Ext.getCmp('scoreboard-grid-id')).store.load();
-                //Ext.getCmp('scoreboard-grid-id').getView().refresh();
-                var grid = Ext.getCmp('scoreboard-grid-id');
-                grid.store.load();
-                grid.getView().refresh();
-            });
-        };
-
-        dataManager.prototype.getSite = function (siteId) {
-            return $.get("/api/ProjectSite/" + siteId);
-        };
-
-        dataManager.prototype.postSite = function (aName, aDesc, aPolygon) {
-            return $.post("/api/ProjectSite", {
-                name: aName,
-                description: aDesc,
-                isActive: true,
-                polygonGeometry: aPolygon
-            });
-        };
-
-        dataManager.prototype.updateSite = function (siteId, aName, aDesc, aPoly) {
-            //Only send the stuff that was passed into this function.
-            var data = new SiteData();
-            data.id = siteId;
-            data.isActive = true;
-            if (aName)
-                data.name = aName;
-            if (aDesc)
-                data.description = aDesc;
-            if (aPoly)
-                data.polygon = aPoly;
-
-            return $.ajax("/api/ProjectSite", {
-                data: data,
-                type: "PUT"
-            });
-            //pvMapper.displayMessage("The site has been updated.","Info");
-        };
-
-        //Deletes a site from the datastore
-        dataManager.prototype.deleteSite = function (siteId) {
-            return $.ajax("/api/ProjectSite/" + siteId, {
-                data: {
-                    Id: siteId,
-                    type: "DELETE"
-                }
-            });
-        };
-
-        //Deletes all sites from the datastore
-        dataManager.prototype.deleteAllSites = function () {
-            return $.ajax("/api/ProjectSite/", {
-                data: {
-                    type: "DELETE"
-                }
-            });
-        };
-        return dataManager;
-    })();
-    pvMapper.dataManager = dataManager;
 })(pvMapper || (pvMapper = {}));
 //# sourceMappingURL=DataManager.js.map

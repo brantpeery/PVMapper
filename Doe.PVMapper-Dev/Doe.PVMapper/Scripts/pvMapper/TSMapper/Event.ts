@@ -27,25 +27,26 @@ module pvMapper {
  */
   export class Event {
     public eventHandlers: EventCallback[];
+
     /// Creates the publish point. 
     /// allowDuplicateHandler if set to true will allow the same function to subscribe more than once.
     constructor(public allowDuplicateHandler: boolean = false) {
+      if (console && console.assert) console.assert(!allowDuplicateHandler, "Allowing duplicate event handlers? Why would this ever be a good idea?");
       this.eventHandlers = new Array();
     }
-    ///
-    public addHandler(callBack : EventCallback) {
+
+    public addHandler = (callBack: EventCallback) => {
         if (this.allowDuplicateHandler || this.eventHandlers.indexOf(callBack) === -1) {
             this.eventHandlers.push(callBack);
         }
     }
 
-    public removeHandler(handler:EventCallback) {
-      var idx: number;
-      while (this.eventHandlers) {
-        idx = this.eventHandlers.indexOf(handler)
-        if (idx == -1) { break; }
-        this.eventHandlers.splice(idx, 1);
-      }
+    public removeHandler = (handler:EventCallback) => {
+        var idx = this.eventHandlers.indexOf(handler);
+        while (idx >= 0) {
+            this.eventHandlers.splice(idx, 1);
+            idx = this.eventHandlers.indexOf(handler);
+        }
     }
 
     public fire(context, eventArgs: any) {
@@ -55,15 +56,15 @@ module pvMapper {
       }
       self.eventHandlers.map(function (func, idx) {
           if (typeof (func) != 'undefined') {
-              //try {
+              try {
                   func.apply(context, eventArgs);
-              //} catch (e) {
-              //    if (console) {
-              //        console.log("Error caught while in an event: " + e.message + " : file: " + e.fileName + " line: " + e.lineNumber);
-              //        console.log(context);
-              //        console.error(e);
-              //    }
-              //}
+              } catch (e) {
+                  if (console && console.error && console.debug) {
+                      console.error("Error caught while in an event: " + e.message + " : file: " + e.fileName + " line: " + e.lineNumber);
+                      console.debug(context);
+                      console.debug(e);
+                  }
+              }
           }
       });
     }

@@ -2,7 +2,6 @@
 ///// <reference path="../pvmapper/tsmapper/site.ts" />
 ///// <reference path="../pvmapper/tsmapper/score.ts" />
 ///// <reference path="../pvmapper/tsmapper/tools.ts" />
-///// <reference path="../pvmapper/tsmapper/options.d.ts" />
 ///// <reference path="../pvmapper/tsmapper/module.ts" />
 ///// <reference path="../pvmapper/tsmapper/scoreutility.ts" />
 ///// <reference path="../pvmapper/tsmapper/modulemanager.ts" />

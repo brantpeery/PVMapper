@@ -12,29 +12,38 @@ var pvMapper;
             };
 
             ScoreboardProcessor.getCleanObjectTransposed = function (scoreboard) {
-                var obj = this.getCleanObject(scoreboard);
+                var obj = scoreboard.toJSON();
                 var newObj = {
-                    sites: []
+                    sites: obj.sites.map(function (site) {
+                        site.scores = obj.scoreLines.map(function (line) {
+                            var score = line.scores.filter(function (score) {
+                                return score.site.id === site.id;
+                            })[0];
+                            score.scoreLine = line; // replace ID reference with full score line JSON object (for compatability with our reports)
+                            return score;
+                        });
+                        return site;
+                    })
                 };
-                obj.scoreLines.forEach(function (line, sidx) {
-                    line.scores.forEach(function (score, idx) {
-                        if (newObj.sites[idx] == undefined) {
-                            newObj.sites[idx] = score.site;
-                            newObj.sites[idx].scores = [];
-                        }
-                        newObj.sites[idx].scores[sidx] = score;
-                        newObj.sites[idx].scores[sidx].scoreLine = line;
-                        delete score.site;
-                    });
-                    delete line.scores;
-                });
+
+                //obj.scoreLines.forEach(function (line, sidx) {
+                //    line.scores.forEach(function (score, idx) {
+                //        if (newObj.sites[idx] == undefined) {
+                //            newObj.sites[idx] = score.site;
+                //            newObj.sites[idx].scores = [];
+                //        }
+                //        newObj.sites[idx].scores[sidx] = score;
+                //        newObj.sites[idx].scores[sidx].scoreLine = line;
+                //        delete score.site;
+                //    });
+                //    delete line.scores;
+                //});
                 return newObj;
             };
 
-            ScoreboardProcessor.getCleanObjectTransposedJSON = function (scoreboard) {
-                return JSON.stringify(this.getCleanObjectTransposed(scoreboard));
-            };
-
+            //static getCleanObjectTransposedJSON(scoreboard:ScoreBoard): string {
+            //    return JSON.stringify(this.getCleanObjectTransposed(scoreboard));
+            //}
             ScoreboardProcessor.addSummaryAndDivergence = function (data) {
                 var total = 0;
                 var mean;
