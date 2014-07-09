@@ -1,28 +1,9 @@
 ﻿
-//just in case browser do not support array indexOf function, 
-//search for object in array by delegate function
-if ( !Array.prototype.indexOfObject ) {
-  Array.prototype.indexOfObject = function (fn/*, from*/) {
-    var len = this.length;
-    if (!fn || typeof (fn) !== 'function') return -2;  //no function passed in.
-
-    var from = Number(arguments[1]) || 0;  //second optional parameter is expected to be the start index, default to 0.
-    from = ( from < 0 ) ? 0 : (from>len) ? len : from;
-
-    for ( ; from < len; from++ ) {
-      if (fn(this[from])) return from;
-    }
-    return -1;
-  };
-}
-
-var pb2 = Ext.create('Ext.ProgressBar', {
-            width: 200
-        });
-
-
 Ext.define( 'MainApp.view.Viewport', {
     extend: 'Ext.container.Viewport',
+    requires: [
+        'Ext.ux.statusbar.StatusBar', // <-- apparently this isn't included in ext-all.js
+    ],
     layout: 'fit',
     items: [{
         xtype: 'panel',
@@ -65,17 +46,19 @@ Ext.define( 'MainApp.view.Viewport', {
             },
             {
               collapsible: false,
-              xtype: 'toolbar',
+              xtype:  'statusbar', //'toolbar',
               id: 'maintaskbar',
+              statusAlign: 'right',
               region: 'south',
               margins: '0',
               padding: '0',
-              items: [pb2],
+              items: [ ],
               addButton: function (winObj) {
                 //if the button exists, do nothing.
                 //if ( this.items.items.indexOfObject( function ( val ) { return val.text === winObj.title; } ) >= 0 ) return; 
                 var abtn = Ext.create( 'Ext.button.Button', {
                   text: winObj.title,
+                  taskbar_winObj: winObj,
                   associate: winObj,
                   listeners:{ 
                     click: function() {
@@ -101,21 +84,20 @@ Ext.define( 'MainApp.view.Viewport', {
                     }
                   }
                 } );
-                this.items.add( abtn );
+                this.items.insert( this.items.length - 2, abtn ); // -2 for status object and spacer object
                 this.doLayout();
               },
               removeButton: function ( winObj ) {
-                var idx = this.items.items.indexOfObject( function ( value ) { return ( value.text === winObj.title ); } );
-                if (idx >= 0) {
+                var matchingButtons = this.items.items.filter(function (value) { return (value.taskbar_winObj === winObj); });
+                if (matchingButtons && matchingButtons.length >= 0) {
                   //remove from the  DOM, not just remove the button.
-                  Ext.fly(this.items.get(idx).getEl()).remove();  
-                  this.items.removeAt(idx);
+                  this.remove(matchingButtons[0]);
                 }
               },
               updateButtonText: function (oldText, newText) {
-                var idx = this.items.items.indexOfObject(function (value) { return (value.text === oldText); });
-                if (idx >= 0) {
-                  this.items.items[idx].setText(newText);
+                var matchingButtons = this.items.items.filter(function (value) { return (value.taskbar_winObj === winObj); });
+                if (matchingButtons && matchingButtons.length >= 0) {
+                  matchingButtons[0].setText(newText);
                 }
               }
             },

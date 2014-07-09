@@ -32,7 +32,7 @@ var pvMapper;
                 y_axis: yLabel
             };
         }
-        MinMaxUtilityArgs.prototype.stringify = function () {
+        MinMaxUtilityArgs.prototype.toExcelString = function () {
             var str = "";
 
             //str += "name: " + this.metaInfo.name;
@@ -78,7 +78,7 @@ var pvMapper;
                 y_axis: yLabel
             };
         }
-        SinusoidalUtilityArgs.prototype.stringify = function () {
+        SinusoidalUtilityArgs.prototype.toExcelString = function () {
             var str = "";
 
             //str += "name: " + this.metaInfo.name;
@@ -120,7 +120,7 @@ var pvMapper;
                 y_axis: yLabel
             };
         }
-        ThreePointUtilityArgs.prototype.stringify = function () {
+        ThreePointUtilityArgs.prototype.toExcelString = function () {
             var str = "";
             ;
 
@@ -140,7 +140,15 @@ var pvMapper;
 
     var ScoreUtility = (function () {
         function ScoreUtility(options) {
+            var _this = this;
             this.fCache = {};
+            this.toJSON = function () {
+                var o = {
+                    functionName: _this.functionName,
+                    functionArgs: JSON.parse(JSON.stringify(_this.functionArgs))
+                };
+                return o;
+            };
             //Check for custom utility by checking to see if there is a function callback (not optimal but in the absence of interface comparison will do)
             if (options['functionCallback']) {
                 //Load up the ScoreUtility with the custom function + window callbacks
@@ -172,16 +180,6 @@ var pvMapper;
             return Math.max(0, Math.min(1, y)) * 100;
         };
 
-        ScoreUtility.prototype.toJSON = function () {
-            var o = {
-                functionName: this.functionName,
-                functionArgs: this.functionArgs,
-                iconURL: this.iconURL,
-                fCache: this.fCache
-            };
-            return o;
-        };
-
         ScoreUtility.prototype.createArg = function (fn) {
             switch (fn) {
                 case "linear":
@@ -198,18 +196,14 @@ var pvMapper;
 
             this.functionArgs = this.createArg(o.functionName);
             $.extend(this.functionArgs, o.functionArgs);
-            this.iconURL = o.iconURL;
-            this.fCache = o.fCache;
+            //this.iconURL = o.iconURL;
+            //this.fCache = o.fCache;
         };
 
-        ScoreUtility.prototype.stringify = function () {
+        ScoreUtility.prototype.toExcelString = function () {
             var str = "";
             str += this.functionName;
-
-            //Ok, here is a little hack to get functionArgs to recognize stringify.  I don't know why functionArgs is not a class object here.
-            var fn = this.createArg(this.functionName);
-            $.extend(fn, this.functionArgs); //merge the data to fn.
-            str += "(" + fn.stringify() + ")";
+            str += "(" + this.functionArgs.toExcelString() + ")";
             return str;
         };
         return ScoreUtility;

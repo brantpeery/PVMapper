@@ -2,39 +2,36 @@
 /// <reference path="../pvmapper/tsmapper/site.ts" />
 /// <reference path="../pvmapper/tsmapper/score.ts" />
 /// <reference path="../pvmapper/tsmapper/tools.ts" />
-/// <reference path="../pvmapper/tsmapper/options.d.ts" />
 /// <reference path="../pvmapper/tsmapper/module.ts" />
 /// <reference path="../pvmapper/tsmapper/scoreutility.ts" />
 /// <reference path="../pvmapper/tsmapper/modulemanager.ts" />
 
 module INLModules {
+    declare var selfUrl: string; // this should be included dynamically in ModuleManager when it loads this file.
+    //TODO: why didn't we use require.js (or similar)? Why roll our own dynamic js loader?
 
-    export class SoilModule implements pvMapper.IModuleHandle {
+    export class SoilModule extends pvMapper.Module {
         constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{
-                id: "SoilModule",
-                author: "Leng Vang, INL",
-                version: "0.1.ts",
+            super();
 
-                activate: () => {
-                    this.addMap();
-                },
-                deactivate: () => {
-                    this.removeMap();
-                },
-                destroy: null,
-                init: null,
+            var thisModule = this;
+            this.init(<pvMapper.IModuleOptions>{
+                activate: null,
+                deactivate: null,
 
                 scoringTools: [{
-                    activate: null,
-                    deactivate: null,
-                    destroy: null,
-                    init: null,
+                    activate: () => {
+                        this.addMap();
+                    },
+                    deactivate: () => {
+                        this.removeMap();
+                    },
 
-                    title: SoilModule.title, // "Soil",
-                    category: SoilModule.category, //"Geography",
-                    description: SoilModule.description, //"Overlapping soil types, using the Soil Survey Geographic (SSURGO) map hosted by arcgisonline.com",
-                    longDescription: SoilModule.longDescription, //'<p>This star rating tool finds the various types of soil present at a proposed site. These ares are defined in the Soil Survey Geographic (SSURGO) dataset from the National Cooperative Soil Survey. SSURGO digitizing duplicates the original soil survey maps. This level of mapping is designed for use by landowners, townships, and county natural resource planning and management. Note that the extent of SSURGO data is limited to soil survey areas; many counties and parts counties are not included. For more information, see the USDA Natural Resource Conservation Service (soils.usda.gov/survey/geography/ssurgo).</p><p>This tool depends on a user-defined star rating for each soil type found at a site, on a scale of 0-5 stars. The default rating for all soil types is three stars. These ratings should be adjusted by the user. Note that the user should be knowledgeable of soils data and their characteristics.</p><p>When a site has just one soil type, its score is based on the star rating of that soil (so overlapping a five-star soil type might give a score of 100, while overlapping a one-star soil may give a score of 20). If a site includes more than one soil type, the lowest star rating is used to calculate its score (so a site with both a one-star and a five-star soil might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>',
+                    id: "SoilTool",
+                    title: "Soil",
+                    category: "Geography",
+                    description: "Overlapping soil types, using the Soil Survey Geographic (SSURGO) map hosted by arcgisonline.com",
+                    longDescription: '<p>This star rating tool finds the various types of soil present at a proposed site. These ares are defined in the Soil Survey Geographic (SSURGO) dataset from the National Cooperative Soil Survey. SSURGO digitizing duplicates the original soil survey maps. This level of mapping is designed for use by landowners, townships, and county natural resource planning and management. Note that the extent of SSURGO data is limited to soil survey areas; many counties and parts counties are not included. For more information, see the USDA Natural Resource Conservation Service (soils.usda.gov/survey/geography/ssurgo).</p><p>This tool depends on a user-defined star rating for each soil type found at a site, on a scale of 0-5 stars. The default rating for all soil types is three stars. These ratings should be adjusted by the user. Note that the user should be knowledgeable of soils data and their characteristics.</p><p>When a site has just one soil type, its score is based on the star rating of that soil (so overlapping a five-star soil type might give a score of 100, while overlapping a one-star soil may give a score of 20). If a site includes more than one soil type, the lowest star rating is used to calculate its score (so a site with both a one-star and a five-star soil might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>',
                     //onScoreAdded: (e, score: pvMapper.Score) => {
                     //},
                     onSiteChange: (e, score: pvMapper.Score) => {
@@ -44,32 +41,36 @@ module INLModules {
                     getStarRatables: () => {
                         return this.starRatingHelper.starRatings;
                     },
-                    setStarRatables: (rateTable: pvMapper.IStarRatings) => {
+                    setStarRatables: function (rateTable: pvMapper.IStarRatings) {
                         //$.extend(this.starRatingHelper.starRatings, rateTable);
-                        this.starRatingHelper.resetStarRatings(rateTable);
+                        thisModule.starRatingHelper.resetStarRatings(rateTable);
+
+                        // update any scores which aren'r already out for update (those will pick up the new star ratings when they return)
+                        var thisScoreLine: pvMapper.ScoreLine = this;
+                        thisScoreLine.scores.forEach(s => { if (!s.isValueOld) { s.isValueOld = true; thisModule.updateScore(s); } });
                     },
                     scoreUtilityOptions: {
                         functionName: "linear",
                         functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Favor Soil", "Score", "They say sandy soil is not stable ground, is it?")
                     },
                     weight: 10,
-                }],
 
-                infoTools: null
+                }],
             });
-            this.getModuleObj = function () { return myModule; }
         }
-        getModuleObj: () => pvMapper.Module;
-        public static title: string = "Soil";
-        public static category: string = "Geography";
-        public static description: string = "Overlapping soil types, using the Soil Survey Geographic (SSURGO) map hosted by arcgisonline.com";
-        public static longDescription: string = '<p>This star rating tool finds the various types of soil present at a proposed site. These ares are defined in the Soil Survey Geographic (SSURGO) dataset from the National Cooperative Soil Survey. SSURGO digitizing duplicates the original soil survey maps. This level of mapping is designed for use by landowners, townships, and county natural resource planning and management. Note that the extent of SSURGO data is limited to soil survey areas; many counties and parts counties are not included. For more information, see the USDA Natural Resource Conservation Service (soils.usda.gov/survey/geography/ssurgo).</p><p>This tool depends on a user-defined star rating for each soil type found at a site, on a scale of 0-5 stars. The default rating for all soil types is three stars. These ratings should be adjusted by the user. Note that the user should be knowledgeable of soils data and their characteristics.</p><p>When a site has just one soil type, its score is based on the star rating of that soil (so overlapping a five-star soil type might give a score of 100, while overlapping a one-star soil may give a score of 20). If a site includes more than one soil type, the lowest star rating is used to calculate its score (so a site with both a one-star and a five-star soil might have a score of 20). Like every other score tool, these scores ultimately depend on the user-defined utility function.</p>';
+
+        public id = "SoilModule";
+        public author = "Leng Vang, INL";
+        public version = "0.1.ts";
+        public url = selfUrl; //TODO: why didn't we use require.js (or similar)? Why roll our own dynamic js loader?
+
+        public title: string = "Soil";
+        public category: string = "Geography";
+        public description: string = "Overlapping soil types, using the Soil Survey Geographic (SSURGO) map hosted by arcgisonline.com";
 
 
         private starRatingHelper: pvMapper.IStarRatingHelper = new pvMapper.StarRatingHelper({
             defaultStarRating: 3,
-            //noCategoryRating: 3,
-            //noCategoryLabel: "No data available"
         });
 
         private soilRestUrl = "http://server.arcgisonline.com/ArcGIS/rest/services/Specialty/Soil_Survey_Map/MapServer/"
@@ -78,33 +79,35 @@ module INLModules {
 
         private soilLayer;
 
-        private addMap() {
-            this.soilLayer = new OpenLayers.Layer.ArcGIS93Rest(
-                "Soil Type",
-                this.soilRestUrl + "export",
-                {
-                    layers: "show:0",
-                    format: "gif",
-                    srs: "3857", //"102100",
-                    transparent: "true",
-                }
-                );
-            this.soilLayer.setOpacity(0.3);
-            this.soilLayer.epsgOverride = "3857"; //"EPSG:102100";
-            this.soilLayer.setVisibility(false);
+        private addMap = () => {
+            if (!this.soilLayer) {
+                this.soilLayer = new OpenLayers.Layer.ArcGIS93Rest(
+                    "Soil Type",
+                    this.soilRestUrl + "export",
+                    {
+                        layers: "show:0",
+                        format: "gif",
+                        srs: "3857", //"102100",
+                        transparent: "true",
+                    }
+                    );
+                this.soilLayer.setOpacity(0.3);
+                this.soilLayer.epsgOverride = "3857"; //"EPSG:102100";
+                this.soilLayer.setVisibility(false);
+            }
 
             pvMapper.map.addLayer(this.soilLayer);
             //pvMapper.map.setLayerIndex(mapLayer, 0);
         }
 
-        private removeMap() {
+        private removeMap = () => {
             pvMapper.map.removeLayer(this.soilLayer, false);
         }
 
         // cache for features we've found from which we can find a nearest feature.
         private nearestFeatureCache: { [siteID: string]: Array<OpenLayers.FVector>; } = {};
 
-        private updateScore(score: pvMapper.Score) {
+        private updateScore = (score: pvMapper.Score) => {
             //Note: I've disabled caching nearby geometries - the geometries returned by this server have thousands of points, so it seemed easier to send new requests each time.
 
             //if (typeof this.nearestFeatureCache[score.site.id] !== 'undefined') {
@@ -116,7 +119,7 @@ module INLModules {
             //}
         }
 
-        private updateScoreFromWeb(score: pvMapper.Score) {
+        private updateScoreFromWeb = (score: pvMapper.Score) => {
             //var searchBounds = new OpenLayers.Bounds(
             //    score.site.geometry.bounds.left - 1000,
             //    score.site.geometry.bounds.bottom - 1000,
@@ -186,7 +189,7 @@ module INLModules {
         }
 
 
-        private updateScoreFromCache(score: pvMapper.Score) {
+        private updateScoreFromCache = (score: pvMapper.Score) => {
             var features: OpenLayers.FVector[] = this.nearestFeatureCache[score.site.id];
 
             var responseArray: string[] = [];
@@ -239,10 +242,5 @@ module INLModules {
 
     }
 
-    //var soilInstance = new INLModules.SoilModule();
+    pvMapper.moduleManager.registerModule(new INLModules.SoilModule(), true);
 }
-
-if (console && console.assert) console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
-var selfUrl = selfUrl || $('script[src$="SoilModule.js"]').attr('src');
-
-pvMapper.moduleManager.registerModule(INLModules.SoilModule.category, INLModules.SoilModule.title, INLModules.SoilModule, true, selfUrl);

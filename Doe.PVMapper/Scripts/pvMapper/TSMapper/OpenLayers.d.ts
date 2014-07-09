@@ -2105,6 +2105,7 @@ declare module OpenLayers {
 
         //Custom properties.
         isReferenceLayer: boolean;
+        sourceModule: pvMapper.Module;
     }
 
     var Vector: {

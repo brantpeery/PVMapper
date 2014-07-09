@@ -3,19 +3,20 @@
 var BYUModules;
 (function (BYUModules) {
    
-    var lineConfigProperties = {
+    var slopeConfigProperties = {
         percentT: 5
     };
 
     var myToolLine;
 
+    var propsGrid;
     var propsWindow;
 
     Ext.onReady(function () {
-        var propsGrid = new Ext.grid.PropertyGrid({
+        propsGrid = new Ext.grid.PropertyGrid({
             nameText: 'Properties Grid',
             minWidth: 300,
-            source: lineConfigProperties,
+            source: slopeConfigProperties,
             customRenderers: {
                 percentT: function (v) {
                     return v + " %";
@@ -34,9 +35,16 @@ var BYUModules;
             ],
             listeners: {
                 beforehide: function () {
+                    // update any scores which aren't already out for update (those will pick up the new slope percent threshold when they return)
                     myToolLine.scores.forEach(function (score) {
-                       reCalculate(score);
+                        if (!score.isValueOld) {
+                            score.isValueOld = true;
+                            reCalculate(score);
+                        }
                     });
+
+                    // save configuration changes to the browser
+                    myToolLine.saveConfiguration();
                 }
             },
             buttons: [
@@ -53,60 +61,66 @@ var BYUModules;
     });
 
 
-    var NewSlopeModule = (function () {
-        function NewSlopeModule() {
-            var _this = this;
-            this.landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
-            var myModule = new pvMapper.Module({
-                id: "SlopeCModule",
-                author: "Rohit Khattar",
-                version: "0.1",
-                destroy: null,
-                init: null,
-                scoringTools: [
-                    {
-                        showConfigWindow: function () {
-                            myToolLine = this;
-                            propsWindow.show();
-                        },
-                        activate: null,
-                        deactivate: null,
-                        destroy: null,
-                        init: null,
-                        title: NewSlopeModule.title, //"Slope",
-                        description: NewSlopeModule.description, //"Percentage of site slope which falls under the given threshold (Default : 5%)",
-                        category: NewSlopeModule.category, //"Geography",
-                        longDescription: NewSlopeModule.longDescription,
-                        onScoreAdded: function (event, score) {
-                        },
-                        onSiteChange: function (event, score) {
-                            _this.updateScore(score);
-                        },
-                        scoreUtilityOptions: {
-                            functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs( 0, 0, 50, 0.5, 100, 1.00, "%","Percent Slope","Score","Preference of percentage of slope on a proposed site.")
-                        },
-                        defaultWeight: 10
-                    }
-                ],
-                infoTools: null
-            });
-            this.getModuleObj = function () {
-                return myModule;
-            };
-        }
-        NewSlopeModule.title = "Slope";
-        NewSlopeModule.description = "Percentage of site slope which falls under the given threshold (Default : 5%)";
-        NewSlopeModule.category = "Geography";
-        NewSlopeModule.longDescription = '???';
+    var NewSlopeModule = new pvMapper.Module({
+        id: "SlopeCModule",
+        author: "Rohit Khattar",
+        version: "0.1",
+        url: selfUrl,
 
-        NewSlopeModule.prototype.updateScore = function (score) {
-            updateScore(score);
-        }
-      
-        return NewSlopeModule;
-    })();
-    BYUModules.NewSlopeModule = NewSlopeModule;
+        title: "Slope Threshold",
+        category: "Geography",
+        description: "Percentage of site slope which falls under the given threshold (Default : 5%)",
+
+        //activate: null,
+        //deactivate: null,
+
+        scoringTools: [
+            {
+                showConfigWindow: function () {
+                    myToolLine = this;
+                    propsWindow.show();
+                },
+                //activate: null,
+                //deactivate: null,
+
+                id: "SlopeCTool",
+                title: "Slope",
+                category: "Geography",
+                description: "Percentage of site slope which falls under the given threshold (Default : 5%)",
+                longDescription: "<p>Percentage of site slope which falls under the given threshold (Default : 5%)</p>",
+                //onScoreAdded: function (event, score) {
+                //},
+                onSiteChange: function (event, score) {
+                    updateScore(score);
+                },
+                getConfig: function () {
+                    return slopeConfigProperties;
+                },
+                setConfig: function (config) {
+                    if (config.percentT >= 0 && slopeConfigProperties.percentT !== config.percentT) {
+                        slopeConfigProperties.percentT = config.percentT;
+                        propsGrid.setSource(slopeConfigProperties);
+
+                        // update any scores which aren't already out for update (those will pick up the new slope percent threshold when they return)
+                        this.scores.forEach(function (score) {
+                            if (!score.isValueOld) {
+                                score.isValueOld = true;
+                                reCalculate(score);
+                            }
+                        });
+                    }
+                },
+                scoreUtilityOptions: {
+                    functionName: "linear3pt",
+                    functionArgs: new pvMapper.ThreePointUtilityArgs( 0, 0, 50, 0.5, 100, 1.00, "%","Percent Slope","Score","Preference of percentage of slope on a proposed site.")
+                },
+                defaultWeight: 10
+            }
+        ],
+    });
+    //BYUModules.NewSlopeModule = NewSlopeModule;
+
+    var landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
 
     function reCalculate (score) {
 
@@ -116,6 +130,7 @@ var BYUModules;
             if (score.popupMessage !== "Calculating..." || score.value !== Number.NaN) {
                 score.popupMessage = "Calculating...";
                 score.updateValue(Number.NaN);
+                score.isValueOld = true; // we're still trying to fetch that URL...
             }
         }
         else {
@@ -139,14 +154,14 @@ var BYUModules;
                 var totalNo = values.length;
                 var totalCount = 0;
                 for (var i = 0; i < totalNo; i++) {
-                    if (values[i] <= lineConfigProperties.percentT) {
+                    if (values[i] <= slopeConfigProperties.percentT) {
                         totalCount++;
                     }
                 }
 
                 var percent = (totalCount * 100.0) / totalNo;
 
-                var message = percent.toFixed(2) + "% of land has less than " + lineConfigProperties.percentT + "% slope";
+                var message = percent.toFixed(2) + "% of land has less than " + slopeConfigProperties.percentT + "% slope";
                 score.popupMessage = message;
                 score.updateValue(percent);
                 var key = "slopeModule" + score.site.id;
@@ -171,6 +186,7 @@ var BYUModules;
         if (isNaN(score.value) && $.jStorage.get(key)) {
             score.popupMessage = "<i>" + $.jStorage.get(key + "msg") + "</i>";
             score.updateValue($.jStorage.get(key));
+            score.isValueOld = true; // we've only loaded an old value.
         }
 
 
@@ -210,11 +226,8 @@ var BYUModules;
                     var finalResponse = {};
                     var jobId = parsedResponse.jobId;
                     var resultSearcher = setInterval(function () {
-                        console.log("Job Still Processing");
-                        console.log(jobId);
                         //Send out another request
                         var resultRequestRepeat = OpenLayers.Request.GET({
-                           
                             url: "https://geoserver.byu.edu/arcgis/rest/services/Sloep30m/GPServer/extractpoly/" + "jobs/" + jobId + "/results/slopeout_TXT?f=json",
                             proxy: "/Proxy/proxy.ashx?",
                             callback: function (response) {
@@ -235,11 +248,10 @@ var BYUModules;
                                         $.jStorage.deleteKey(key);
                                         $.jStorage.set(key, fileURL);
                                         var result = reCalculate(score);
-                                    }
-
-                                    else {
-                                        score.popupMessage = "Parse error " + parsedResponse.error;
-                                        score.updateValue(Number.NaN);
+                                    } else {
+                                        if (console && console.log) console.log("Slope tool job '" + jobId + "' still processing...");
+                                        //score.popupMessage = "Parse error " + parsedResponse.error;
+                                        //score.updateValue(Number.NaN);
                                     }
 
                                 } else {
@@ -258,10 +270,8 @@ var BYUModules;
             }
         });
     };
+
+    pvMapper.moduleManager.registerModule(NewSlopeModule, true);
+
 })(BYUModules || (BYUModules = {}));
 
-//var modInstance = new BYUModules.NewSlopeModule();
-if (console && console.assert) console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
-var selfUrl = selfUrl || $('script[src$="NewSlopeModule.js"]').attr('src');
-
-pvMapper.moduleManager.registerModule(BYUModules.NewSlopeModule.category, BYUModules.NewSlopeModule.title, BYUModules.NewSlopeModule, true, selfUrl);

@@ -6,7 +6,8 @@ Ext.Loader.setConfig({
         GeoExt: "/Scripts/GeoExt",
         MainApp: "/Scripts/UI",
         //Heron: { widgets: { search: "/Scripts" } }
-        Heron: "/Scripts/Heron"
+        Heron: "/Scripts/Heron",
+        'Ext.ux': "/Scripts/Ext/ux",
     }
 });
 
@@ -197,38 +198,27 @@ var app = Ext.application({
                 listeners: {
                     //this code is for context menu for allow delete of a Custom KML layer
                     itemcontextmenu: function (treeview, record, element, index, evt) {
-                        if ((record.data.layer instanceof OpenLayers.Layer.Vector) && record.data.layer.isReferenceLayer) {
-                            var moduleName = record.data.layer.name;
-                            var module = pvMapper.customModules.find(function (a) {  //a is instance of pvMapper.CustomModuleData.
-                                if ((a.moduleObject.title) && (a.moduleObject.title == moduleName)) return true;
-                                return false;
+                        if ((record.data.layer instanceof OpenLayers.Layer.Vector) && record.data.layer.sourceModule) {
+                            evt.stopEvent(); //TODO: what is this for...?
+                            var cellContextMenu = Ext.create("Ext.menu.Menu", {
+                                items: [{
+                                    text: "Remove '" + record.data.layer.sourceModule.title + "' module",
+                                    iconCls: "x-delete-menu-icon",
+                                    handler: function () {
+
+                                        Ext.MessageBox.confirm("Confirm remove module", "Are you sure you want to remove module '" + record.data.layer.sourceModule.title +
+                                            "', along with all of its layers and tools?", function (btn)
+                                        {
+                                            if (btn === "yes") {
+                                                pvMapper.moduleManager.removeCustomModule(record.data.layer.sourceModule);
+                                            }
+                                        });
+                                    }
+                                }]
+
                             });
-
-                            if (module) {
-                                evt.stopEvent();
-                                var titleName = moduleName;
-                                var cellContextMenu = Ext.create("Ext.menu.Menu", {
-                                    items: [{
-                                        text: "Remove: '" + titleName + "'",
-                                        iconCls: "x-delete-menu-icon",
-                                        handler: function () {
-
-                                            Ext.MessageBox.confirm("Removing '" + titleName +"'", "Are you sure you want to remove this module?", function (btn) {
-                                                if (btn === "yes") {
-                                                    var idx = pvMapper.customModules.indexOf(module);
-                                                    pvMapper.customModules.splice(idx, 1);
-
-                                                    if (module.moduleObject.removeLocalLayer)
-                                                      module.moduleObject.removeLocalLayer();
-                                                }
-                                            });
-                                        }
-                                    }]
-
-                                });
-                                cellContextMenu.showAt(evt.getXY());
-                                return false;
-                            }
+                            cellContextMenu.showAt(evt.getXY());
+                            return false;
                         }
                     }
                 }
@@ -301,7 +291,7 @@ var app = Ext.application({
     },
 });
 
-
-window.onbeforeunload = function () {
-    return "Consider saving your project before you go; otherwise, changes you've made to the scoreboard could be lost.";
-}
+//Note: this is now handled by regular and robust automatic saves (to the server and to the browser)
+//window.onbeforeunload = function () {
+//    return "Consider saving your project before you go; otherwise, changes you've made to the scoreboard could be lost.";
+//}

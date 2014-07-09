@@ -3,70 +3,72 @@
 /// <reference path="Site.ts" />
 /// <reference path="Score.ts" />
 /// <reference path="Tools.ts" />
-/// <reference path="Options.d.ts" />
 /// <reference path="Module.ts" />
 
 
 
 module INLModules {
+    export class LocalLayerModule extends pvMapper.Module {
+        constructor(kmlRawString: string, toolName: string, kmlFileName: string) {
+            super();
 
-    export class LocalLayerModule {
-        constructor() {
-            var myModule: pvMapper.Module = new pvMapper.Module(<pvMapper.IModuleOptions>{ 
-                id: "LocalLayerModule",
-                author: "Leng Vang, INL",
-                version: "0.1.ts",
+            this.sourceDataID = kmlFileName;
+            this.id = "KmlProximityModule." + this.sourceDataID; // multiple instances of this module will exist... one for each kml file loaded... sigh.
 
+            this.title = toolName + " Module"; // this can change, and uniqueness won't be enforced.
+            this.description = "Calculates the distance to the nearest feature loaded from '" + kmlFileName + "'.";
+
+            this.readTextFile(kmlRawString, toolName, kmlFileName);
+
+            this.init(<pvMapper.IModuleOptions>{
                 activate: () => {
-                    this.addMap();
+                    if (!this.localLayer)
+                        throw new Error("Error: KML file has been deleted, or was not properly initialized.");
                 },
                 deactivate: () => {
-                    this.removeMap();
+                    //TODO: this isn't undoable, which violates the assumptions we have about pvMapper Modules.
+                    pvMapper.ClientDB.deleteCustomKML(this.sourceDataID, (isSuccessful) => {
+                        if (this.localLayer) {
+                            this.localLayer.destroy();
+                            this.localLayer = null;
+                        }
+                    });
                 },
-                destroy: null,
-                init: null,
-                setModuleName: (name: string) => {
-                    this.moduleName = name;
-                },
-                getModuleName: () => {
-                    return this.moduleName;
-                },
-                scoringTools: [{
-                    activate: null,
-                    deactivate: null,
-                    destroy: null,
-                    init: null,
 
-                    title: "Custom Distance Tool",
-                    category: "Custom",
-                    description: "Calculates the distance to the nearest feature loaded from a KML file.",
-                    longDescription: '<p>Calculates the distance to the nearest feature loaded from a KML file.</p>', //TODO: this...?
-                    //onScoreAdded: (e, score: pvMapper.Score) => {
-                    //},
+                //setModuleName: (name: string) => {
+                //    this.moduleName = name;
+                //},
+                //getModuleName: () => {
+                //    return this.moduleName;
+                //},
+                scoringTools: [{
+                    activate: () => {
+                        if (!this.localLayer)
+                            throw new Error("Error: KML file has been deleted, or was not properly initialized.");
+                        pvMapper.map.addLayer(this.localLayer);
+                    },
+                    deactivate: () => {
+                        if (!this.localLayer)
+                            throw new Error("Error: KML file has been deleted, or was not properly initialized.");
+                        pvMapper.map.removeLayer(this.localLayer, false);
+                    },
+
+                    id: "KmlProximityTool." + this.sourceDataID,
+                    title: toolName,
+                    category: this.category,
+                    description: this.description,
+                    longDescription: null,
+
                     onSiteChange: (e, score: pvMapper.Score) => {
                         this.updateScore(score);
                     },
 
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 10000, 0, "mi","Distance to nearest feature", "Score", "Prefer sites closer to the nearest feature.")
-                    },
-                    setModuleName: (name: string) => {
-                        this.moduleName = name;
-                    },
-                    getModuleName: () => {
-                        return this.moduleName;
-                    },
-                    getTitle: () => {
-                        return this.title;
-                    },
-                    setTitle: (newTitle: string) => {
-                        this.title = newTitle;
+                        functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 1000, 0, "mi", "Distance to nearest feature", "Score", "Prefer sites closer to the nearest feature in '" + kmlFileName + "'.")
                     },
                     weight: 10,
                 }],                     
-
-                infoTools: null
             });
         }
 
@@ -79,31 +81,35 @@ module INLModules {
         //private localUrl = "";
 
         private localLayer: OpenLayers.Vector = null;
-        private localFormat: OpenLayers.KML = null;
         //private landBounds = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
 
-        public removeLocalLayer() {
-            this.localLayer.destroy(); //force to remove from map layer.
-        }
         //============================================================
-        // blob is the file attribute and file handle.
-        public moduleClass: string = /(\w+)\(/.exec((<any>this).constructor.toString())[1];
-        public moduleName: string = null;
-        public title: string = "Custom Distance Tool";
-        public readTextFile(kmlString, kmlName, kmlFile) {
-            this.moduleName = kmlFile;
-            this.title = kmlName;
+        //public moduleClass: string = /(\w+)\(/.exec((<any>this).constructor.toString())[1];
+
+        public sourceDataID: string = null;
+        public moduleClass = "LocalLayerModule"; //TODO: this is used to serialize and deserialize from browser storage, but it shouldn't be.
+
+        public title: string;
+        public category: string = "Custom";
+        public description: string;
+        public longDescription: string; //TODO: this...?
+
+        public author = "Leng Vang, INL";
+        public version = "0.1.ts";
+
+        private readTextFile = (kmlString, kmlName, kmlFile) => {
             var kml_projection = new OpenLayers.Projection("EPSG:4326");
             var map_projection = new OpenLayers.Projection("EPSG:3857");
 
-            this.localFormat = this.localFormat || new OpenLayers.Format.KML({
+            var localFormat = new OpenLayers.Format.KML({
                 extractStyles: true,               //user KML style
                 extractAttributes: true,           //user KML attributes
                 internalProjection: map_projection,
                 externalProjection: kml_projection,
             });
 
-            this.localLayer = this.localLayer || new OpenLayers.Layer.Vector(kmlName || "KML File",
+            this.localLayer = this.localLayer || new OpenLayers.Layer.Vector(
+                kmlName || "KML File",
                 {
                     strategies: OpenLayers.Strategy.Fixed(),
                     style: {
@@ -113,33 +119,17 @@ module INLModules {
                 });
 
             this.localLayer.setVisibility(false);
-            var feature: OpenLayers.FVector[] = this.localFormat.read(kmlString);
-            this.localLayer.addFeatures(feature);
-            var isOk = pvMapper.map.addLayer(this.localLayer);
+            this.localLayer.sourceModule = this;
 
-            var queuedScore = null;
-            while (queuedScore = this.queuedScores.pop()) {
-                this.updateScore(queuedScore);
-            }
+            var feature: OpenLayers.FVector[] = localFormat.read(kmlString);
+            this.localLayer.addFeatures(feature);
+
+            var isOk = pvMapper.map.addLayer(this.localLayer);
         }
 
         //============================================================
-        private addMap() {
-        }
 
-        private removeMap() {
-            pvMapper.map.removeLayer(this.localLayer, false);
-        }
-
-        private queuedScores: pvMapper.Score[] = [];
-
-        private updateScore(score: pvMapper.Score) {
-            if (this.localLayer == null) {
-                if (this.queuedScores.indexOf(score) < 0)
-                    this.queuedScores.push(score);
-                return; // the feature not yet loaded.
-            }
-
+        private updateScore = (score: pvMapper.Score) => {
             var closestFeature: OpenLayers.FVector = null;
             var minDistance: number = Number.MAX_VALUE;
 
@@ -173,6 +163,5 @@ module INLModules {
                 score.updateValue(Number.NaN);
             }
         }
-
     }
 }

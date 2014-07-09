@@ -2,36 +2,47 @@
 /// <reference path="../pvmapper/tsmapper/site.ts" />
 /// <reference path="../pvmapper/tsmapper/score.ts" />
 /// <reference path="../pvmapper/tsmapper/tools.ts" />
-/// <reference path="../pvmapper/tsmapper/options.d.ts" />
 /// <reference path="../pvmapper/tsmapper/module.ts" />
 /// <reference path="../pvmapper/tsmapper/modulemanager.ts" />
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 var INLModules;
 (function (INLModules) {
-    var DirectNormalIrradianceModule = (function () {
+    //TODO: why didn't we use require.js (or similar)? Why roll our own dynamic js loader?
+    var DirectNormalIrradianceModule = (function (_super) {
+        __extends(DirectNormalIrradianceModule, _super);
         function DirectNormalIrradianceModule() {
-            var myModule = new pvMapper.Module({
-                id: "DirectNormalIrradianceModule",
-                author: "Scott Brown, INL",
-                version: "0.1.ts",
-                activate: function () {
-                    // Direct-Normal Irradiation
-                    dniSuny = addMapsDbMap("swera:dni_suny_high_900913", "Direct-Normal Irradiance 10km");
-                    pvMapper.map.addLayer(dniSuny);
-                },
-                deactivate: function () {
-                    pvMapper.map.removeLayer(dniSuny, false);
-                },
-                destroy: null,
-                init: null,
+            var _this = this;
+            _super.call(this);
+            this.id = "DirectNormalIrradianceModule";
+            this.author = "Scott Brown, INL";
+            this.version = "0.1.ts";
+            this.url = selfUrl;
+            //Add these so ModuleManager can access the tool information for display in the Tool/Module Selector and make it easier to register onto the moduleManager.
+            this.title = "Direct-Normal Irradiance";
+            this.category = "Meteorology";
+            this.description = "The average annual DNI for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)";
+            this.init({
+                activate: null,
+                deactivate: null,
                 scoringTools: [{
-                        activate: null,
-                        deactivate: null,
-                        destroy: null,
-                        init: null,
-                        title: DirectNormalIrradianceModule.title,
-                        category: DirectNormalIrradianceModule.category,
-                        description: DirectNormalIrradianceModule.description,
-                        longDescription: DirectNormalIrradianceModule.longDescription,
+                        activate: function () {
+                            // Direct-Normal Irradiation
+                            _this.dniSuny = _this.dniSuny || addMapsDbMap("swera:dni_suny_high_900913", "Direct-Normal Irradiance 10km");
+                            pvMapper.map.addLayer(_this.dniSuny);
+                        },
+                        deactivate: function () {
+                            pvMapper.map.removeLayer(_this.dniSuny, false);
+                        },
+                        id: "DirectNormalIrradianceTool",
+                        title: "Direct-Normal Irradiance",
+                        category: "Meteorology",
+                        description: "The average annual DNI for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)",
+                        longDescription: '<p>This tool reports the daily total direct-normal irradiance at a site, averaged over a 12 year period and over a 0.1 degree square area. The insolation values represent the resource available to concentrating systems that track the sun throughout the day. The data are created using the SUNY Satellite Solar Radiation model (Perez, et.al., 2002). The data are averaged from hourly model output over 12 years (1998-2009). This model uses hourly radiance images from geostationary weather satellites, daily snow cover data, and monthly averages of atmospheric water vapor, trace gases, and the amount of aerosols in the atmosphere to calculate the hourly total insolation (sun and sky) falling on a horizontal surface. The direct beam radiation is then calculated using the atmospheric water vapor, trace gases, and aerosols, which are derived from a variety of sources. For further information, see DATA.gov (api.data.gov/docs/nrel/solar/solar-resource-v1) and NREL (www.nrel.gov/gis).</p>',
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {
@@ -42,46 +53,42 @@ var INLModules;
                             functionArgs: new pvMapper.MinMaxUtilityArgs(0, 8, "kWh/m2/day", "Irradiance", "Score", "Preference of available annual direct solar radiation.")
                         },
                         weight: 10
-                    }],
-                infoTools: null
+                    }]
             });
-            this.getModuleObj = function () {
-                return myModule;
-            };
         }
-        DirectNormalIrradianceModule.title = "Direct-Normal Irradiance";
-        DirectNormalIrradianceModule.category = "Meteorology";
-        DirectNormalIrradianceModule.description = "The average annual DNI for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)";
-        DirectNormalIrradianceModule.longDescription = '<p>This tool reports the daily total direct-normal irradiance at a site, averaged over a 12 year period and over a 0.1 degree square area. The insolation values represent the resource available to concentrating systems that track the sun throughout the day. The data are created using the SUNY Satellite Solar Radiation model (Perez, et.al., 2002). The data are averaged from hourly model output over 12 years (1998-2009). This model uses hourly radiance images from geostationary weather satellites, daily snow cover data, and monthly averages of atmospheric water vapor, trace gases, and the amount of aerosols in the atmosphere to calculate the hourly total insolation (sun and sky) falling on a horizontal surface. The direct beam radiation is then calculated using the atmospheric water vapor, trace gases, and aerosols, which are derived from a variety of sources. For further information, see DATA.gov (api.data.gov/docs/nrel/solar/solar-resource-v1) and NREL (www.nrel.gov/gis).</p>';
         return DirectNormalIrradianceModule;
-    })();
+    })(pvMapper.Module);
     INLModules.DirectNormalIrradianceModule = DirectNormalIrradianceModule;
 
-    var GlobalHorizontalIrradianceModule = (function () {
+    var GlobalHorizontalIrradianceModule = (function (_super) {
+        __extends(GlobalHorizontalIrradianceModule, _super);
         function GlobalHorizontalIrradianceModule() {
-            var myModule = new pvMapper.Module({
-                id: "GlobalHorizontalIrradianceModule",
-                author: "Scott Brown, INL",
-                version: "0.1.ts",
-                activate: function () {
-                    // Global-Horizontal Irradiation
-                    ghiSuny = addMapsDbMap("swera:ghi_suny_high_900913", "Global-Horizontal Irradiance 10km");
-                    pvMapper.map.addLayer(ghiSuny);
-                },
-                deactivate: function () {
-                    pvMapper.map.removeLayer(ghiSuny, false);
-                },
-                destroy: null,
-                init: null,
+            var _this = this;
+            _super.call(this);
+            this.id = "GlobalHorizontalIrradianceModule";
+            this.author = "Scott Brown, INL";
+            this.version = "0.1.ts";
+            this.url = selfUrl;
+            this.title = "Global-Horizontal Irradiance";
+            this.category = "Meteorology";
+            this.description = "The average annual flat plate GHI for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)";
+            this.init({
+                activate: null,
+                deactivate: null,
                 scoringTools: [{
-                        activate: null,
-                        deactivate: null,
-                        destroy: null,
-                        init: null,
-                        title: GlobalHorizontalIrradianceModule.title,
-                        category: GlobalHorizontalIrradianceModule.category,
-                        description: GlobalHorizontalIrradianceModule.description,
-                        longDescription: GlobalHorizontalIrradianceModule.longDescription,
+                        activate: function () {
+                            // Global-Horizontal Irradiation
+                            _this.ghiSuny = _this.ghiSuny || addMapsDbMap("swera:ghi_suny_high_900913", "Global-Horizontal Irradiance 10km");
+                            pvMapper.map.addLayer(_this.ghiSuny);
+                        },
+                        deactivate: function () {
+                            pvMapper.map.removeLayer(_this.ghiSuny, false);
+                        },
+                        id: "GlobalHorizontalIrradianceTool",
+                        title: "Global-Horizontal Irradiance",
+                        category: "Meteorology",
+                        description: "The average annual flat plate GHI for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)",
+                        longDescription: '<p>This tool reports the daily total flat plate global-horizontal irradiance at a site, averaged over a 12 year period and over a 0.1 degree square area. The insolation values represent the global horizontal resource - the geometric sum of direct normal and diffuse irradiance components, representing total energy available on a planar surface. The data are created using the SUNY Satellite Solar Radiation model (Perez, et.al., 2002). The data are averaged from hourly model output over 12 years (1998-2009). This model uses hourly radiance images from geostationary weather satellites, daily snow cover data, and monthly averages of atmospheric water vapor, trace gases, and the amount of aerosols in the atmosphere to calculate the hourly total insolation (sun and sky) falling on a horizontal surface. The direct beam radiation is then calculated using the atmospheric water vapor, trace gases, and aerosols, which are derived from a variety of sources. For further information, see DATA.gov (api.data.gov/docs/nrel/solar/solar-resource-v1) and NREL GIS (www.nrel.gov/gis).</p>',
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {
@@ -92,45 +99,41 @@ var INLModules;
                             functionArgs: new pvMapper.MinMaxUtilityArgs(0, 6, "kWh/m2/day", "Irradiance", "Score", "Preference of annual average of globally horizontal solar radiation.")
                         },
                         weight: 10
-                    }],
-                infoTools: null
+                    }]
             });
-            this.getModuleObj = function () {
-                return myModule;
-            };
         }
-        GlobalHorizontalIrradianceModule.title = "Global-Horizontal Irradiance";
-        GlobalHorizontalIrradianceModule.category = "Meteorology";
-        GlobalHorizontalIrradianceModule.description = "The average annual flat plate GHI for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)";
-        GlobalHorizontalIrradianceModule.longDescription = '<p>This tool reports the daily total flat plate global-horizontal irradiance at a site, averaged over a 12 year period and over a 0.1 degree square area. The insolation values represent the global horizontal resource - the geometric sum of direct normal and diffuse irradiance components, representing total energy available on a planar surface. The data are created using the SUNY Satellite Solar Radiation model (Perez, et.al., 2002). The data are averaged from hourly model output over 12 years (1998-2009). This model uses hourly radiance images from geostationary weather satellites, daily snow cover data, and monthly averages of atmospheric water vapor, trace gases, and the amount of aerosols in the atmosphere to calculate the hourly total insolation (sun and sky) falling on a horizontal surface. The direct beam radiation is then calculated using the atmospheric water vapor, trace gases, and aerosols, which are derived from a variety of sources. For further information, see DATA.gov (api.data.gov/docs/nrel/solar/solar-resource-v1) and NREL GIS (www.nrel.gov/gis).</p>';
         return GlobalHorizontalIrradianceModule;
-    })();
+    })(pvMapper.Module);
     INLModules.GlobalHorizontalIrradianceModule = GlobalHorizontalIrradianceModule;
 
-    var TiltedFlatPlateIrradianceModule = (function () {
+    var TiltedFlatPlateIrradianceModule = (function (_super) {
+        __extends(TiltedFlatPlateIrradianceModule, _super);
         function TiltedFlatPlateIrradianceModule() {
-            var myModule = new pvMapper.Module({
-                id: "TiltedFlatPlateIrradianceModule",
-                author: "Scott Brown, INL",
-                version: "0.1.ts",
-                activate: function () {
-                    tiltSuny = addMapsDbMap("swera:tilt_suny_high_900913", "Tilted flat-plate Irradiance");
-                    pvMapper.map.addLayer(tiltSuny);
-                },
-                deactivate: function () {
-                    pvMapper.map.removeLayer(tiltSuny, false);
-                },
-                destroy: null,
-                init: null,
+            var _this = this;
+            _super.call(this);
+            this.id = "TiltedFlatPlateIrradianceModule";
+            this.author = "Scott Brown, INL";
+            this.version = "0.1.ts";
+            this.url = selfUrl;
+            this.title = "Tilted flat-plate Irradiance";
+            this.category = "Meteorology";
+            this.description = "The average annual tilt irradiance for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)";
+            this.init({
+                activate: null,
+                deactivate: null,
                 scoringTools: [{
-                        activate: null,
-                        deactivate: null,
-                        destroy: null,
-                        init: null,
-                        title: TiltedFlatPlateIrradianceModule.title,
-                        category: TiltedFlatPlateIrradianceModule.category,
-                        description: TiltedFlatPlateIrradianceModule.description,
-                        longDescription: TiltedFlatPlateIrradianceModule.longDescription,
+                        activate: function () {
+                            _this.tiltSuny = _this.tiltSuny || addMapsDbMap("swera:tilt_suny_high_900913", "Tilted flat-plate Irradiance");
+                            pvMapper.map.addLayer(_this.tiltSuny);
+                        },
+                        deactivate: function () {
+                            pvMapper.map.removeLayer(_this.tiltSuny, false);
+                        },
+                        id: "TiltedFlatPlateIrradianceTool",
+                        title: "Tilted flat-plate Irradiance",
+                        category: "Meteorology",
+                        description: "The average annual tilt irradiance for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)",
+                        longDescription: '<p>This tool reports the daily total tilted flat plate irradiance at a site, averaged over a 12 year period and over a 0.1 degree square area. The insolation values represent the resource available to fixed flat plate system tilted towards the equator at an angle equal to the latitude. The data are created using the SUNY Satellite Solar Radiation model (Perez, et.al., 2002). The data are averaged from hourly model output over 12 years (1998-2009). This model uses hourly radiance images from geostationary weather satellites, daily snow cover data, and monthly averages of atmospheric water vapor, trace gases, and the amount of aerosols in the atmosphere to calculate the hourly total insolation (sun and sky) falling on a horizontal surface. The direct beam radiation is then calculated using the atmospheric water vapor, trace gases, and aerosols, which are derived from a variety of sources. For further information, see DATA.gov (api.data.gov/docs/nrel/solar/solar-resource-v1) and NREL GIS (www.nrel.gov/gis).</p>',
                         onScoreAdded: function (e, score) {
                         },
                         onSiteChange: function (e, score) {
@@ -141,19 +144,11 @@ var INLModules;
                             functionArgs: new pvMapper.MinMaxUtilityArgs(0, 6, "kWh/m2/day", "Irradiance", "Score", "Preference of annual tilted flat plate solar radiation.")
                         },
                         weight: 10
-                    }],
-                infoTools: null
+                    }]
             });
-            this.getModuleObj = function () {
-                return myModule;
-            };
         }
-        TiltedFlatPlateIrradianceModule.title = "Tilted flat-plate Irradiance";
-        TiltedFlatPlateIrradianceModule.category = "Meteorology";
-        TiltedFlatPlateIrradianceModule.description = "The average annual tilt irradiance for a site, using SUNY irradiance maps hosted by NREL (maps.nrel.gov)";
-        TiltedFlatPlateIrradianceModule.longDescription = '<p>This tool reports the daily total tilted flat plate irradiance at a site, averaged over a 12 year period and over a 0.1 degree square area. The insolation values represent the resource available to fixed flat plate system tilted towards the equator at an angle equal to the latitude. The data are created using the SUNY Satellite Solar Radiation model (Perez, et.al., 2002). The data are averaged from hourly model output over 12 years (1998-2009). This model uses hourly radiance images from geostationary weather satellites, daily snow cover data, and monthly averages of atmospheric water vapor, trace gases, and the amount of aerosols in the atmosphere to calculate the hourly total insolation (sun and sky) falling on a horizontal surface. The direct beam radiation is then calculated using the atmospheric water vapor, trace gases, and aerosols, which are derived from a variety of sources. For further information, see DATA.gov (api.data.gov/docs/nrel/solar/solar-resource-v1) and NREL GIS (www.nrel.gov/gis).</p>';
         return TiltedFlatPlateIrradianceModule;
-    })();
+    })(pvMapper.Module);
     INLModules.TiltedFlatPlateIrradianceModule = TiltedFlatPlateIrradianceModule;
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
@@ -163,10 +158,6 @@ var INLModules;
 
     //declare var Ext: any;
     // references to layer objects (used for later querying and removal)
-    var dniSuny;
-    var ghiSuny;
-    var tiltSuny;
-
     function addMapsDbMap(name, description) {
         var newLayer = new OpenLayers.Layer.WMS(description, MapsDbUrl, {
             //maxExtent: solarBounds,
@@ -252,7 +243,6 @@ var INLModules;
                         // success
                         score.popupMessage = result.toFixed(2) + " kWh/m2/day" + "\n(" + megaWatts.toFixed(3) + " MW)";
                         score.updateValue(result);
-                        //score.updateValue(megaWatts); //TODO: duh...? want give two scores...
                     } else {
                         // error
                         score.popupMessage = "No data for this site";
@@ -277,16 +267,9 @@ var INLModules;
             }
         };
     }
+
+    pvMapper.moduleManager.registerModule(new DirectNormalIrradianceModule(), true);
+    pvMapper.moduleManager.registerModule(new GlobalHorizontalIrradianceModule(), true);
+    pvMapper.moduleManager.registerModule(new TiltedFlatPlateIrradianceModule(), true);
 })(INLModules || (INLModules = {}));
-
-//var modinstance = new INLModules.DirectNormalIrradianceModule();
-//var modinstance = new INLModules.GlobalHorizontalIrradianceModule();
-//var modinstance = new INLModules.TiltedFlatPlateIrradianceModule();
-if (console && console.assert)
-    console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
-var selfUrl = selfUrl || $('script[src$="irradianceModule.js"]').attr('src');
-
-pvMapper.moduleManager.registerModule(INLModules.DirectNormalIrradianceModule.category, INLModules.DirectNormalIrradianceModule.title, INLModules.DirectNormalIrradianceModule, true, selfUrl);
-pvMapper.moduleManager.registerModule(INLModules.GlobalHorizontalIrradianceModule.category, INLModules.GlobalHorizontalIrradianceModule.title, INLModules.GlobalHorizontalIrradianceModule, true, selfUrl);
-pvMapper.moduleManager.registerModule(INLModules.TiltedFlatPlateIrradianceModule.category, INLModules.TiltedFlatPlateIrradianceModule.title, INLModules.TiltedFlatPlateIrradianceModule, true, selfUrl);
 //# sourceMappingURL=irradianceModule.js.map

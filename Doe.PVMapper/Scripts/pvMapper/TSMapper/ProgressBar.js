@@ -27,7 +27,9 @@ window.setTimeout(function () {
 
         //if(isNaN(val.scores[0].value) == false)
         try{
-
+            //TODO: this will only work once, as popup messages aren't cleared when sites are edited.
+            //      also, it will falsely report completed updates for score tools which load a cached value before getting the actual value.
+            //      also, it appears to only fetch the load progress for the first site (site 0), and I believe it will fail if there are no sites.
             if(val.scores[0].popupMessage != null )
             {   
                 count_false++ ;

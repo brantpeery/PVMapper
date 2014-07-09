@@ -2,12 +2,18 @@
 /// <reference path="../pvmapper/tsmapper/site.ts" />
 /// <reference path="../pvmapper/tsmapper/score.ts" />
 /// <reference path="../pvmapper/tsmapper/tools.ts" />
-/// <reference path="../pvmapper/tsmapper/options.d.ts" />
 /// <reference path="../pvmapper/tsmapper/module.ts" />
 /// <reference path="../pvmapper/tsmapper/scoreutility.ts" />
 /// <reference path="../pvmapper/tsmapper/modulemanager.ts" />
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 var INLModules;
 (function (INLModules) {
+    //TODO: why didn't we use require.js (or similar)? Why roll our own dynamic js loader?
     var surveyResults = [
         { mi: 0, percentOk: 11.51385928 },
         { mi: 0.000189394, percentOk: 11.72707889 },
@@ -60,36 +66,39 @@ var INLModules;
     // cache for the last distance found to a agriculture, used so that our search isn't criminally inefficient
     var lastDistanceCache = {};
 
-    var AgricultureSocialModule = (function () {
+    var AgricultureSocialModule = (function (_super) {
+        __extends(AgricultureSocialModule, _super);
         function AgricultureSocialModule() {
-            var myModule = new pvMapper.Module({
-                id: "AgricultureSocialModule",
-                author: "Scott Brown, INL",
-                version: "0.1.ts",
-                iconURL: "http://www.iconshock.com/img_jpg/MODERN/general/jpg/16/home_icon.jpg",
-                activate: function () {
-                    addAllMaps();
-                },
-                deactivate: function () {
-                    removeAllMaps();
-                },
-                destroy: null,
-                init: null,
+            _super.call(this);
+            this.id = "AgricultureSocialModule";
+            this.author = "Scott Brown, INL";
+            this.version = "0.1.ts";
+            this.url = selfUrl;
+            // add these to make it easier for the ModuleManager stuff.
+            this.title = "Agriculture Proximity";
+            this.category = "Social Acceptance";
+            this.description = "Percentage of survey respondents who reported this distance from agriculture as acceptable";
+            this.init({
+                activate: null,
+                deactivate: null,
                 scoringTools: [{
-                        activate: null,
-                        deactivate: null,
-                        destroy: null,
-                        init: null,
+                        activate: function () {
+                            // the source map looks terrible, so we won't bother adding it to the layer list
+                        },
+                        deactivate: function () {
+                            // nothing to remove.
+                        },
                         //Note: removed prior to demo on request - mentioning acres confuses the point - they had nothing to do with
                         //      the survey, and have nothing to do with the score.
                         //showConfigWindow: function () {
                         //    myToolLine = this; // fetch tool line, which was passed as 'this' parameter
                         //    propsWindow.show();
                         //},
-                        title: AgricultureSocialModule.title,
-                        category: AgricultureSocialModule.category,
-                        description: AgricultureSocialModule.description,
-                        longDescription: AgricultureSocialModule.longDescription,
+                        id: "AgricultureSocialTool",
+                        title: "Agriculture Proximity",
+                        category: "Social Acceptance",
+                        description: "Percentage of survey respondents who reported this distance from agriculture as acceptable",
+                        longDescription: '<p>This tool calculates the distance from a site to the nearest agriculture area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 468 respondents from six counties in Southern California answered Question 15, which asked "How much buffer distance is acceptable between a large solar facility and existing agricultural land?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest agricultural area is identified from a map of agriculture polygons derived from original land classification by USDA\'s CropScape dataset (nassgeodata.gmu.edu). These raster data were generalized and then digitized into a vector format, which was then simplified using geoprocessing tools in ArcGIS Desktop. The resulting geometries are gross approximations useful only for coarse distance estimates.</p>',
                         //onScoreAdded: function (e, score: pvMapper.Score) {
                         //    scores.push(score);
                         //},
@@ -111,20 +120,13 @@ var INLModules;
                             functionName: "linear3pt",
                             functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Proximity Favor", "Score", "Preference of agriculture development near by.")
                         },
-                        weight: 10
+                        weight: 5
                     }],
                 infoTools: null
             });
-            this.getModuleObj = function () {
-                return myModule;
-            };
         }
-        AgricultureSocialModule.title = "Agriculture Proximity";
-        AgricultureSocialModule.category = "Social Acceptance";
-        AgricultureSocialModule.description = "Percentage of survey respondents who reported this distance from agriculture as acceptable";
-        AgricultureSocialModule.longDescription = '<p>This tool calculates the distance from a site to the nearest agriculture area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 468 respondents from six counties in Southern California answered Question 15, which asked "How much buffer distance is acceptable between a large solar facility and existing agricultural land?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest agricultural area is identified from a map of agriculture polygons derived from original land classification by USDA\'s CropScape dataset (nassgeodata.gmu.edu). These raster data were generalized and then digitized into a vector format, which was then simplified using geoprocessing tools in ArcGIS Desktop. The resulting geometries are gross approximations useful only for coarse distance estimates.</p>';
         return AgricultureSocialModule;
-    })();
+    })(pvMapper.Module);
     INLModules.AgricultureSocialModule = AgricultureSocialModule;
 
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
@@ -134,52 +136,50 @@ var INLModules;
 
     var mapLayer;
 
-    function addAllMaps() {
-        // add as ESRI REST layer
-        ////TODO: test map - hide this
-        //mapLayer = new OpenLayers.Layer.ArcGIS93Rest(
-        //    "Agriculture TEST",
-        //    esriExportUrl,
-        //    {
-        //        layers: "show:0", //"show:2",
-        //        format: "gif",
-        //        srs: "3857", //"102100",
-        //        transparent: "true",
-        //    }//,{ isBaseLayer: false }
-        //    );
-        //mapLayer.setOpacity(0.3);
-        //mapLayer.epsgOverride = "3857"; //"EPSG:102100";
-        //mapLayer.setVisibility(false);
-        //pvMapper.map.addLayer(mapLayer);
-        // add as WMS layer
-        ////TODO: this server doesn't offer EPSG:3857. Should find a different server?
-        //mapLayer = new OpenLayers.Layer.WMS(
-        //    "Agriculture",
-        //    wmsServerUrl,
-        //    {
-        //        layers: "cdl_2012",
-        //        transparent: "true",
-        //        format: "image/png",
-        //        exceptions: "application/vnd.ogc.se_inimage", //TODO: DEBUG = remove before deploy...
-        //        //maxResolution: 156543.0339,
-        //        //srs: "EPSG:3857",
-        //        srs: "EPSG:4326",
-        //    },
-        //    { isBaseLayer: false }
-        //    );
-        //mapLayer.setOpacity(0.3);
-        //mapLayer.setVisibility(false);
-        //mapLayer.epsgOverride = "EPSG:4326"; //"EPSG:3857";
-        //pvMapper.map.addLayer(mapLayer);
-    }
-
-    function removeAllMaps() {
-        if (mapLayer !== null) {
-            pvMapper.map.removeLayer(mapLayer, false);
-            mapLayer = null;
-        }
-    }
-
+    //function addAllMaps() {
+    // add as ESRI REST layer
+    ////TODO: test map - hide this
+    //mapLayer = new OpenLayers.Layer.ArcGIS93Rest(
+    //    "Agriculture TEST",
+    //    esriExportUrl,
+    //    {
+    //        layers: "show:0", //"show:2",
+    //        format: "gif",
+    //        srs: "3857", //"102100",
+    //        transparent: "true",
+    //    }//,{ isBaseLayer: false }
+    //    );
+    //mapLayer.setOpacity(0.3);
+    //mapLayer.epsgOverride = "3857"; //"EPSG:102100";
+    //mapLayer.setVisibility(false);
+    //pvMapper.map.addLayer(mapLayer);
+    // add as WMS layer
+    ////TODO: this server doesn't offer EPSG:3857. Should find a different server?
+    //mapLayer = new OpenLayers.Layer.WMS(
+    //    "Agriculture",
+    //    wmsServerUrl,
+    //    {
+    //        layers: "cdl_2012",
+    //        transparent: "true",
+    //        format: "image/png",
+    //        exceptions: "application/vnd.ogc.se_inimage", //TODO: DEBUG = remove before deploy...
+    //        //maxResolution: 156543.0339,
+    //        //srs: "EPSG:3857",
+    //        srs: "EPSG:4326",
+    //    },
+    //    { isBaseLayer: false }
+    //    );
+    //mapLayer.setOpacity(0.3);
+    //mapLayer.setVisibility(false);
+    //mapLayer.epsgOverride = "EPSG:4326"; //"EPSG:3857";
+    //pvMapper.map.addLayer(mapLayer);
+    //}
+    //function removeAllMaps() {
+    //    if (mapLayer !== null) {
+    //        pvMapper.map.removeLayer(mapLayer, false);
+    //        mapLayer = null;
+    //    }
+    //}
     function updateScore(score, searchDistanceInMi) {
         var searchDistanceInMeters = searchDistanceInMi * 1609.34;
 
@@ -275,10 +275,8 @@ var INLModules;
         });
         //var response: OpenLayers.Response = jsonpProtocol.read();
     }
-})(INLModules || (INLModules = {}));
-if (console && console.assert)
-    console.assert(typeof (selfUrl) === 'string', "Warning: selfUrl wasn't set!");
-var selfUrl = selfUrl || $('script[src$="AgricultureSocialModule.js"]').attr('src');
 
-pvMapper.moduleManager.registerModule(INLModules.AgricultureSocialModule.category, INLModules.AgricultureSocialModule.title, INLModules.AgricultureSocialModule, true, selfUrl);
+    //var modinstance = new AgricultureSocialModule();
+    pvMapper.moduleManager.registerModule(new INLModules.AgricultureSocialModule(), true);
+})(INLModules || (INLModules = {}));
 //# sourceMappingURL=AgricultureSocialModule.js.map
