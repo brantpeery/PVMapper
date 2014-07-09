@@ -9,27 +9,26 @@ var pvMapper;
     
 
     var MinMaxUtilityArgs = (function () {
-        function MinMaxUtilityArgs(minValue, maxValue, unit, xLabel, yLabel, memo, minTip, maxTip) {
+        function MinMaxUtilityArgs(minValue, maxValue, unit, xLabel, memo, minTip, maxTip) {
             if (typeof minValue === "undefined") { minValue = 0; }
-            if (typeof maxValue === "undefined") { maxValue = 100; }
+            if (typeof maxValue === "undefined") { maxValue = 0; }
             if (typeof unit === "undefined") { unit = ""; }
-            if (typeof xLabel === "undefined") { xLabel = "X-axis"; }
-            if (typeof yLabel === "undefined") { yLabel = "Score"; }
+            if (typeof xLabel === "undefined") { xLabel = "value"; }
             if (typeof memo === "undefined") { memo = ""; }
-            if (typeof minTip === "undefined") { minTip = "The minimum value."; }
-            if (typeof maxTip === "undefined") { maxTip = "The maximum value."; }
+            if (typeof minTip === "undefined") { minTip = null; }
+            if (typeof maxTip === "undefined") { maxTip = null; }
             this.minValue = minValue;
             this.maxValue = maxValue;
             //            this.tips = { minValue: minTip, maxValue: maxTip };
             this.metaInfo = {
                 name: "MinMaxUtilityArgs",
                 unitSymbol: unit,
-                minValueTip: minTip,
-                maxValueTip: maxTip,
                 vline: 0,
-                comment: memo,
                 x_axis: xLabel,
-                y_axis: yLabel
+                y_axis: "Score",
+                comment: memo,
+                minValueTip: minTip || ("The minimum " + xLabel),
+                maxValueTip: maxTip || ("The maximum " + xLabel)
             };
         }
         MinMaxUtilityArgs.prototype.toExcelString = function () {
@@ -96,16 +95,15 @@ var pvMapper;
     pvMapper.SinusoidalUtilityArgs = SinusoidalUtilityArgs;
 
     var ThreePointUtilityArgs = (function () {
-        function ThreePointUtilityArgs(p0x, p0y, p1x, p1y, p2x, p2y, unit, xLabel, yLabel, memo) {
+        function ThreePointUtilityArgs(p0x, p0y, p1x, p1y, p2x, p2y, unit, xLabel, memo) {
             if (typeof p0x === "undefined") { p0x = 0; }
-            if (typeof p0y === "undefined") { p0y = 0.5; }
-            if (typeof p1x === "undefined") { p1x = 180; }
-            if (typeof p1y === "undefined") { p1y = 1; }
-            if (typeof p2x === "undefined") { p2x = 360; }
-            if (typeof p2y === "undefined") { p2y = 0.5; }
+            if (typeof p0y === "undefined") { p0y = 0; }
+            if (typeof p1x === "undefined") { p1x = 0; }
+            if (typeof p1y === "undefined") { p1y = 0; }
+            if (typeof p2x === "undefined") { p2x = 0; }
+            if (typeof p2y === "undefined") { p2y = 0; }
             if (typeof unit === "undefined") { unit = ""; }
-            if (typeof xLabel === "undefined") { xLabel = "X-axis"; }
-            if (typeof yLabel === "undefined") { yLabel = "Y-axis"; }
+            if (typeof xLabel === "undefined") { xLabel = "value"; }
             if (typeof memo === "undefined") { memo = ""; }
             this.points = ["p0", "p1", "p2"];
             this.p0 = { x: p0x, y: p0y };
@@ -116,8 +114,8 @@ var pvMapper;
                 unitSymbol: unit,
                 vline: 0,
                 comment: memo,
-                x_axis: xLabel,
-                y_axis: yLabel
+                x_axis: xLabel || unit,
+                y_axis: "Score"
             };
         }
         ThreePointUtilityArgs.prototype.toExcelString = function () {
