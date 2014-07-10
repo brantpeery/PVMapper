@@ -116,7 +116,6 @@ function addSite(map, layer) {
         var control = this;
         feature = data.feature;
 
-        var kml = new OpenLayers.Format.KML();
         pvMapper.newFeature = feature;
 
         //Continue to collect the needed form data

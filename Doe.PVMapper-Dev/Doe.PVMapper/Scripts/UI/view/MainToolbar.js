@@ -113,7 +113,7 @@ pvMapper.onReady(function () {
             var i = 1;
             afile.uniqueName = afile.name;
             while (customKmlNames.indexOf(afile.uniqueName) >= 0) { // fix file name - ensure that it does not duplicate any other stored kml file names.
-                afile.uniqueName = afile.name + " (" + i + ")";
+                afile.uniqueName = afile.name + " (" + (i++) + ")";
             }
 
             //we probably don't want to load hug file.  Limit is about 2MB.
@@ -191,7 +191,8 @@ pvMapper.onReady(function () {
             extractStyles: true,
             extractAttributes: true,
             internalProjection: map_projection,
-            externalProjection: kml_projection
+            externalProjection: kml_projection,
+            foldersName: "PV Mapper"
         });
 
         var features = kmlFormat.read(kmlString);
@@ -282,7 +283,8 @@ pvMapper.onReady(function () {
             extractStyles: false,
             extractAttributes: true,
             internalProjection: map_projection,
-            externalProjection: kml_projection
+            externalProjection: kml_projection,
+            foldersName: "PV Mapper"
         });
 
         var sitesKml = kmlFormat.write(pvMapper.siteLayer.features);
@@ -312,10 +314,6 @@ pvMapper.onReady(function () {
                     saveAs(blob, filename);
                 }
             }, this, false, previousFilenameForSavingSites);
-
-        //This code below works too, but always save with a file name of "Download.kml".
-        //uriContent = 'data:application/vnd.google-earth.kml+xml;headers=Content-Disposition:attachment;filename="sites.kml",' + encodeURIComponent(content);
-        //newWindow = window.open(uriContent, 'sites.kml');
     }
 
     var kmlExportBtn = Ext.create('Ext.Action', {

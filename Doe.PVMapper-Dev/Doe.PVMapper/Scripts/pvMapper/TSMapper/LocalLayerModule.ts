@@ -105,18 +105,14 @@ module INLModules {
             var localFormat = new OpenLayers.Format.KML({
                 extractStyles: true,               //user KML style
                 extractAttributes: true,           //user KML attributes
+                kvpAttributes: true,
                 internalProjection: map_projection,
                 externalProjection: kml_projection,
             });
 
-            this.localLayer = this.localLayer || new OpenLayers.Layer.Vector(
-                kmlName || "KML File",
-                {
+            this.localLayer = new OpenLayers.Layer.Vector(
+                kmlName || "KML File", {
                     strategies: OpenLayers.Strategy.Fixed(),
-                    style: {
-                        fillColor: "darkred", strokeColor: "red", strokeWidth: 5,
-                        strokeOpacity: 0.5, pointRadius: 5
-                    }
                 });
 
             this.localLayer.setVisibility(false);
@@ -125,9 +121,17 @@ module INLModules {
             var features: OpenLayers.FVector[] = localFormat.read(kmlString);
             this.localLayer.addFeatures(features);
 
+            features.forEach((feature) => {
+                var style: any = feature.style;
+                if (style.strokeWidth == 0)
+                    style.strokeWidth = 1; // ESRI likes to export lines with 0 width. Bad ESRI.
+                if (style.externalGraphic && style.externalGraphic.indexOf("//") < 0)
+                    delete feature.style; // a local icon, probably stored in the kmz. we don't have it. nothing to be done, I'm afraid...
+            });
+
             if (features.length <= 0) {
-                pvMapper.displayMessage("the file '" + this.sourceDataID + "' was not opened correctly.", "error");
-                //Ext.MessageBox.alert("Warning", "The file '" + this.sourceDataID + "' was not opened correctly.");
+                //pvMapper.displayMessage("the file '" + this.sourceDataID + "' was not opened correctly.", "error");
+                Ext.MessageBox.alert("Error", "The file '" + this.sourceDataID + "' was not opened correctly.");
                 //throw new Error("The file '" + this.sourceDataID + "' was not opened correctly.");
                 this.localLayer = null;
             } else {
