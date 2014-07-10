@@ -55,24 +55,23 @@ module pvMapper {
     export class MinMaxUtilityArgs implements IScoreUtilityArgs {
 
         constructor(public minValue: number = 0,
-            public maxValue: number = 100,
+            public maxValue: number = 0,
             unit: string = "",
-            xLabel: string = "X-axis",
-            yLabel: string = "Score",
+            xLabel: string = "value",
             memo: string = "",
-            minTip: string = "The minimum value.",
-            maxTip: string = "The maximum value."
+            minTip: string = null,
+            maxTip: string = null
             ) {
 //            this.tips = { minValue: minTip, maxValue: maxTip };
                 this.metaInfo = {
                     name: "MinMaxUtilityArgs",
                     unitSymbol: unit,
-                    minValueTip: minTip,
-                    maxValueTip: maxTip,
                     vline: 0,
-                    comment: memo,
                     x_axis: xLabel,
-                    y_axis: yLabel
+                    y_axis: "Score",
+                    comment: memo,
+                    minValueTip: minTip || ("The minimum " + xLabel),
+                    maxValueTip: maxTip || ("The maximum " + xLabel)
                 };
 
         }
@@ -164,12 +163,11 @@ module pvMapper {
     }
 
     export class ThreePointUtilityArgs implements IScoreUtilityArgs {
-        constructor(p0x: number = 0, p0y: number = 0.5,
-            p1x: number = 180, p1y: number = 1,
-            p2x: number = 360, p2y: number = 0.5,
+        constructor(p0x: number = 0, p0y: number = 0,
+            p1x: number = 0, p1y: number = 0,
+            p2x: number = 0, p2y: number = 0,
             unit: string = "",
-            xLabel: string = "X-axis",
-            yLabel: string = "Y-axis",
+            xLabel: string = "value",
             memo: string = ""
             ) {
             this.p0 = { x: p0x, y: p0y };
@@ -180,8 +178,8 @@ module pvMapper {
                 unitSymbol: unit,
                 vline: 0,
                 comment: memo,
-                x_axis: xLabel,
-                y_axis: yLabel
+                x_axis: xLabel || unit,
+                y_axis: "Score"
             };
         }
         public p0: { x: number; y: number; };

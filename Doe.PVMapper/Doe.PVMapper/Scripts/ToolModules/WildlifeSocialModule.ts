@@ -184,8 +184,8 @@ module INLModules {
                     // having any nearby line is much better than having no nearby line, so let's reflect that.
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        functionArgs:
-                        new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor","Percent Habitat Favor","Score","Preference of proximity to wildlife habitat restrictions.")
+                        functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "% of respondants in favor", 
+                            "Prefer sites with greater social acceptance of historical landmark proximity. Expect diminishing returns from increasing acceptance. The minimum possible score is 40, reflecting an assumption that low social acceptance may not be prohibitive.")
                     },
                     weight: 5
                 }],

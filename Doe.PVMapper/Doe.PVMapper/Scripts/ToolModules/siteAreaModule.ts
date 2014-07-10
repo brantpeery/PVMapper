@@ -47,9 +47,9 @@ module INLModules {
                     scoreUtilityOptions: {
                         functionName: "linear",
                         functionArgs: new pvMapper.MinMaxUtilityArgs(0, 0, "mi2", // <-- This isn't an error - don't "fix" it.
-                            "Total Area","Score","Preference of the total area available for a proposed site.",
-                            "Minimum gross area to be considered.",
-                            "Maximum gross area to be considered.")
+                            "Total Area", "No preference for either smaller or larger sites.",
+                            "The minimum gross area to be considered.",
+                            "The maximum gross area to be considered.")
                     },
                     weight: 0, //TODO: find a meaningful score & utility for this
                 }],

@@ -61,7 +61,7 @@ module INLModules {
 
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Stars Rating","Score","Preference of proposed site away from protected area." )
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Star Rating", "Prefer sites with less administration and conservation oversight" )
                     },
                     weight: 10,
                 }],
@@ -250,7 +250,7 @@ module INLModules {
                     },
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Under Development","Preference","Preference for vegetation cover and land uses.")
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Star Rating", "Prefer sites with higher-rated land cover.")
                     },
                     weight: 10,
 
@@ -413,7 +413,7 @@ module INLModules {
                     },
                     scoreUtilityOptions: {
                         functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars","Land Use","Preference","Preference for the type of land cover present in propose site.")
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 5, "stars", "Star Rating", "Prefer sites with higher-rated land cover.")
                     },
                     weight: 10,
 

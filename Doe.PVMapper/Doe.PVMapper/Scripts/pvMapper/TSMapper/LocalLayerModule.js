@@ -38,16 +38,13 @@ var INLModules;
                 var localFormat = new OpenLayers.Format.KML({
                     extractStyles: true,
                     extractAttributes: true,
+                    kvpAttributes: true,
                     internalProjection: map_projection,
                     externalProjection: kml_projection
                 });
 
-                _this.localLayer = _this.localLayer || new OpenLayers.Layer.Vector(kmlName || "KML File", {
-                    strategies: OpenLayers.Strategy.Fixed(),
-                    style: {
-                        fillColor: "darkred", strokeColor: "red", strokeWidth: 5,
-                        strokeOpacity: 0.5, pointRadius: 5
-                    }
+                _this.localLayer = new OpenLayers.Layer.Vector(kmlName || "KML File", {
+                    strategies: OpenLayers.Strategy.Fixed()
                 });
 
                 _this.localLayer.setVisibility(false);
@@ -56,10 +53,18 @@ var INLModules;
                 var features = localFormat.read(kmlString);
                 _this.localLayer.addFeatures(features);
 
-                if (features.length <= 0) {
-                    pvMapper.displayMessage("the file '" + _this.sourceDataID + "' was not opened correctly.", "error");
+                features.forEach(function (feature) {
+                    var style = feature.style;
+                    if (style.strokeWidth == 0)
+                        style.strokeWidth = 1; // ESRI likes to export lines with 0 width. Bad ESRI.
+                    if (style.externalGraphic && style.externalGraphic.indexOf("//") < 0)
+                        delete feature.style; // a local icon, probably stored in the kmz. we don't have it. nothing to be done, I'm afraid...
+                });
 
-                    //Ext.MessageBox.alert("Warning", "The file '" + this.sourceDataID + "' was not opened correctly.");
+                if (features.length <= 0) {
+                    //pvMapper.displayMessage("the file '" + this.sourceDataID + "' was not opened correctly.", "error");
+                    Ext.MessageBox.alert("Error", "The file '" + _this.sourceDataID + "' was not opened correctly.");
+
                     //throw new Error("The file '" + this.sourceDataID + "' was not opened correctly.");
                     _this.localLayer = null;
                 } else {
@@ -102,7 +107,7 @@ var INLModules;
             this.sourceDataID = kmlFileName;
             this.id = "KmlProximityModule." + this.sourceDataID; // multiple instances of this module will exist... one for each kml file loaded... sigh.
 
-            this.title = toolName + " Module"; // this can change, and uniqueness won't be enforced.
+            this.title = toolName; // this can change, and uniqueness won't be enforced.
             this.description = "Calculates the distance to the nearest feature loaded from '" + kmlFileName + "'.";
 
             this.readTextFile(kmlRawString, toolName, kmlFileName);
@@ -149,7 +154,7 @@ var INLModules;
                         },
                         scoreUtilityOptions: {
                             functionName: "linear3pt",
-                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 1000, 0, "mi", "Distance to nearest feature", "Score", "Prefer sites closer to the nearest feature in '" + kmlFileName + "'.")
+                            functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 1000, 0, "mi", "Distance to nearest feature", "Prefer sites closer to the nearest feature in '" + kmlFileName + "'.")
                         },
                         weight: 10
                     }]

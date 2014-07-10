@@ -147,8 +147,7 @@ module pvMapper {
                 delete this._customModulesByID[oldModule.id];
             }
 
-            if (oldModule.isActive)
-                this._deactivateModule(oldModule);
+            this._deactivateModule(oldModule);
         }
 
         public getAvailableModuleByID = (id: string): IModuleInfoJSON=> {

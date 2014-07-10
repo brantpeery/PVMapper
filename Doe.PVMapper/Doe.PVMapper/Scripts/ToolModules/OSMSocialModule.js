@@ -216,7 +216,8 @@
                 },
                 scoreUtilityOptions: {
                     functionName: "linear3pt",
-                    functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Percent Favor", "Score", "Preference for percentage of respondents regard to historical landmarks.")
+                    functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Percent Favor",
+                            "Prefer sites with greater social acceptance of historical landmark proximity. Expect diminishing returns from increasing acceptance. The minimum possible score is 40, reflecting an assumption that low social acceptance may not be prohibitive.")
                 },
                 weight: 5
             }
@@ -257,7 +258,8 @@
                 },
                 scoreUtilityOptions: {
                     functionName: "linear3pt",
-                    functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "Percent Favor", "Score", "We don't want our favorite picnic spot blocks by panels.")
+                    functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0.4, 30, 0.8, 100, 1, "% in favor", "% of respondants in favor",
+                            "Prefer sites with greater social acceptance of recreational area proximity. Expect diminishing returns from increasing acceptance. The minimum possible score is 40, reflecting an assumption that low social acceptance may not be prohibitive.")
                 },
                 weight: 5
             }
