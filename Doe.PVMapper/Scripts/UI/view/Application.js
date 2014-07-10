@@ -138,7 +138,7 @@ var app = Ext.application({
                                     !record.raw.isReferenceLayer;
                             }
                         }
-          }]
+                  }]
                 }, {
                     text: "Reference",
                     expanded: true,
@@ -171,22 +171,22 @@ var app = Ext.application({
         var layerPanel = new GeoExt.tree.Panel({
             title: "Layers",
             dockedItems: [{                // Toolbar on the mainscoreboard, added by Rohan Raja (BYU)
-    xtype: 'toolbar',
-    dock: 'top',
-    items: [
-    {
-        xtype: 'button',
-        iconCls: 'x-open-menu-icon', 
-        text: 'Add Info Layer From KML',// <img style="width : 10px; height 10px;" src="http://www.iconsdb.com/icons/download/black/plus-2-256.png">',
-        handler: function(){
+                xtype: 'toolbar',
+                dock: 'top',
+                items: [
+                {
+                    xtype: 'button',
+                    iconCls: 'x-open-menu-icon', 
+                    text: 'Add Info Layer From KML',// <img style="width : 10px; height 10px;" src="http://www.iconsdb.com/icons/download/black/plus-2-256.png">',
+                    handler: function(){
 
               
-            fileDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
-            KMLMode.CurrentMode = KMLMode.KMLINFO;
-            fileDialogBox.click();
-        }
-    }]
-}],
+                        fileDialogBox.value = ''; // this allows us to select the same file twice in a row (and still fires the value changed event)
+                        KMLMode.CurrentMode = KMLMode.KMLINFO;
+                        fileDialogBox.click();
+                    }
+                }]
+            }],
             viewConfig: {
                 plugins: [{
                     ptype: 'treeviewdragdrop',
@@ -195,25 +195,36 @@ var app = Ext.application({
                 listeners: {
                     //this code is for context menu for allow delete of a Custom KML layer
                     itemcontextmenu: function (treeview, record, element, index, evt) {
-                        if ((record.data.layer instanceof OpenLayers.Layer.Vector) && record.data.layer.sourceModule) {
-                            evt.stopEvent(); //TODO: what is this for...?
-                            var cellContextMenu = Ext.create("Ext.menu.Menu", {
-                                items: [{
+                        contextMenuItems = [];
+                        
+                        if ((record.data.layer instanceof OpenLayers.Layer.Vector)) {
+                            contextMenuItems.push({
+                                text: "Zoom to layer",
+                                iconCls: "x-zoomin-menu-icon",
+                                handler: function () {
+                                    pvMapper.map.zoomToExtent(record.data.layer.getDataExtent());
+                                }
+                            });
+
+                            if (record.data.layer.sourceModule) {
+                                contextMenuItems.push({
                                     text: "Remove '" + record.data.layer.sourceModule.title + "' module",
                                     iconCls: "x-delete-menu-icon",
                                     handler: function () {
-
                                         Ext.MessageBox.confirm("Confirm remove module", "Are you sure you want to remove module '" + record.data.layer.sourceModule.title +
-                                            "', along with all of its layers and tools?", function (btn)
-                                        {
-                                            if (btn === "yes") {
-                                                pvMapper.moduleManager.removeCustomModule(record.data.layer.sourceModule);
-                                            }
-                                        });
+                                            "', along with all of its layers and tools?", function (btn) {
+                                                if (btn === "yes") {
+                                                    pvMapper.moduleManager.removeCustomModule(record.data.layer.sourceModule);
+                                                }
+                                            });
                                     }
-                                }]
+                                });
+                            }
+                        }
 
-                            });
+                        if (contextMenuItems.length) {
+                            evt.stopEvent(); //TODO: what is this for...?
+                            var cellContextMenu = Ext.create("Ext.menu.Menu", { items: contextMenuItems });
                             cellContextMenu.showAt(evt.getXY());
                             return false;
                         }

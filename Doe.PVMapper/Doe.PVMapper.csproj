@@ -417,7 +417,6 @@
     <Content Include="Scripts\pvMapper\TSMapper\ModuleManager.js">
       <DependentUpon>ModuleManager.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\pvMapper\TSMapper\ProgressBar.js" />
     <Content Include="Scripts\ToolModules\AgricultureSocialModule.js">
       <DependentUpon>AgricultureSocialModule.ts</DependentUpon>
     </Content>

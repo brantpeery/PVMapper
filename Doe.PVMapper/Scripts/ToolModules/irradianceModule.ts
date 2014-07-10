@@ -38,8 +38,8 @@ module INLModules {
                     },
 
                     scoreUtilityOptions: {
-                        functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 8, "kWh/m2/day", "Irradiance", "Score", "Preference of available annual direct solar radiation.")
+                        functionName: "linear3pt",
+                        functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0, 4, 0.5, 8, 1.0, "kWh/m2/day", "Irradiance (DNI)", "Prefer sites with more available solar resource.")
                     },
                     weight: 10,
                 }],
@@ -90,8 +90,8 @@ module INLModules {
                     },
 
                     scoreUtilityOptions: {
-                        functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 6, "kWh/m2/day", "Irradiance", "Score", "Preference of annual average of globally horizontal solar radiation.")
+                        functionName: "linear3pt",
+                        functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0, 3, 0.5, 6, 1.0, "kWh/m2/day", "Irradiance (GHI)", "Prefer sites with more available solar resource.")
                     },
                     weight: 10,
                 }],
@@ -138,8 +138,8 @@ module INLModules {
                     },
 
                     scoreUtilityOptions: {
-                        functionName: "linear",
-                        functionArgs: new pvMapper.MinMaxUtilityArgs(0, 6, "kWh/m2/day", "Irradiance", "Score", "Preference of annual tilted flat plate solar radiation.")
+                        functionName: "linear3pt",
+                        functionArgs: new pvMapper.ThreePointUtilityArgs(0, 0, 3, 0.5, 6, 1.0, "kWh/m2/day", "Irradiance (tilt)", "Prefer sites with more available solar resource.")
                     },
                     weight: 10,
                 }],

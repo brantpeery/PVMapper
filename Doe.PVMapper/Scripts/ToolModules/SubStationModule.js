@@ -130,8 +130,8 @@ var BYUModules;
             // having any nearby line is much better than having no nearby line, so let's reflect that.
             scoreUtilityOptions: {
                 functionName: "linear3pt",
-                functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInMi - 1), 0.5, configProperties.maxSearchDistanceInMi, 0.25, "mi",
-                    "Distance to nearest substation", "Score", "Prefer sites near a substation.")
+                functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 10, 0.9, configProperties.maxSearchDistanceInMi, 0.4,
+                    "mi", "Distance to nearest substation", "Prefer sites near a substation. Strongly prefer sites within ten miles of a substation. The minimum possible score is 40, reflecting an assumption that having no nearby substation may not be prohibitive.")
             },
             weight: 10
         }],
@@ -201,8 +201,8 @@ var BYUModules;
             // having any nearby line is much better than having no nearby line, so let's reflect that.
             scoreUtilityOptions: {
                 functionName: "linear3pt",
-                functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInMi - 1), 0.3, configProperties.maxSearchDistanceInMi, 0, "km",
-                    "Existing Power Infrastructure", "Preference", "Preference of a proposed site in proxity to existing power transmissions.")
+                functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, (configProperties.maxSearchDistanceInMi - 1), 0.4, configProperties.maxSearchDistanceInMi, 0,
+                    "mi", "Distance to nearest transmission line", "Prefer sites near suitable transmission lines. Don't consider sites over 24 miles from a transmission line.")
             },
             weight: 10
         }],

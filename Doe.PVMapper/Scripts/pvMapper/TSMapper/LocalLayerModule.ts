@@ -15,7 +15,7 @@ module INLModules {
             this.sourceDataID = kmlFileName;
             this.id = "KmlProximityModule." + this.sourceDataID; // multiple instances of this module will exist... one for each kml file loaded... sigh.
 
-            this.title = toolName + " Module"; // this can change, and uniqueness won't be enforced.
+            this.title = toolName; // this can change, and uniqueness won't be enforced.
             this.description = "Calculates the distance to the nearest feature loaded from '" + kmlFileName + "'.";
 
             this.readTextFile(kmlRawString, toolName, kmlFileName);
@@ -66,7 +66,7 @@ module INLModules {
 
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 1000, 0, "mi", "Distance to nearest feature", "Score", "Prefer sites closer to the nearest feature in '" + kmlFileName + "'.")
+                        functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 1000, 0, "mi", "Distance to nearest feature", "Prefer sites closer to the nearest feature in '" + kmlFileName + "'.")
                     },
                     weight: 10,
                 }],                     
@@ -105,18 +105,14 @@ module INLModules {
             var localFormat = new OpenLayers.Format.KML({
                 extractStyles: true,               //user KML style
                 extractAttributes: true,           //user KML attributes
+                kvpAttributes: true,
                 internalProjection: map_projection,
                 externalProjection: kml_projection,
             });
 
-            this.localLayer = this.localLayer || new OpenLayers.Layer.Vector(
-                kmlName || "KML File",
-                {
+            this.localLayer = new OpenLayers.Layer.Vector(
+                kmlName || "KML File", {
                     strategies: OpenLayers.Strategy.Fixed(),
-                    style: {
-                        fillColor: "darkred", strokeColor: "red", strokeWidth: 5,
-                        strokeOpacity: 0.5, pointRadius: 5
-                    }
                 });
 
             this.localLayer.setVisibility(false);
@@ -125,9 +121,17 @@ module INLModules {
             var features: OpenLayers.FVector[] = localFormat.read(kmlString);
             this.localLayer.addFeatures(features);
 
+            features.forEach((feature) => {
+                var style: any = feature.style;
+                if (style.strokeWidth == 0)
+                    style.strokeWidth = 1; // ESRI likes to export lines with 0 width. Bad ESRI.
+                if (style.externalGraphic && style.externalGraphic.indexOf("//") < 0)
+                    delete feature.style; // a local icon, probably stored in the kmz. we don't have it. nothing to be done, I'm afraid...
+            });
+
             if (features.length <= 0) {
-                pvMapper.displayMessage("the file '" + this.sourceDataID + "' was not opened correctly.", "error");
-                //Ext.MessageBox.alert("Warning", "The file '" + this.sourceDataID + "' was not opened correctly.");
+                //pvMapper.displayMessage("the file '" + this.sourceDataID + "' was not opened correctly.", "error");
+                Ext.MessageBox.alert("Error", "The file '" + this.sourceDataID + "' was not opened correctly.");
                 //throw new Error("The file '" + this.sourceDataID + "' was not opened correctly.");
                 this.localLayer = null;
             } else {
