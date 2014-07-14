@@ -1,4 +1,4 @@
-/// <reference path="pvMapper.ts" />
+﻿/// <reference path="pvMapper.ts" />
 /// <reference path="../../jquery.d.ts" />
 /// <reference path="Event.ts" />
 /// <reference path="ScoreLine.ts" />
@@ -164,6 +164,11 @@ var pvMapper;
             this.connectedToSiteManager = false;
         }
         ScoreBoard.prototype.updateTotals = function () {
+            // compute the total weight of all score tools... this is used in the tooltip for the Weight column (which shows the percentage that tool contributes to the total weight)
+            this.scoreLines_weightTotal = this.scoreLines.reduce(function (total, line) {
+                return total += line.weight;
+            }, 0);
+
             var sl = this.scoreLines;
             this.totalLines.forEach(function (t, idx) {
                 t.UpdateScores(sl);
