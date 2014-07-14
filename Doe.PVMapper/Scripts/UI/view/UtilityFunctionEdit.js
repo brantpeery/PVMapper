@@ -1,6 +1,6 @@
 ﻿Ext.define('MainApp.view.UtilityFunctionEdit', {
     extend: "MainApp.view.Window",
-    title: 'Utiltiy Function Editor',
+    title: 'Tool Scoring Editor',
     modal:true,
     layout: 'auto',
     //width: 400,
