@@ -182,7 +182,7 @@ var scoreboardColumns = [{
                     icon: utilityFn.iconURL,
                     minimizable: false,
                     collapsible: false,
-                    title: "Utiltiy Function Editor - " + record.data.category + "\\" + record.data.title,
+                    title: "Tool Scoring Editor - " + record.data.title + " tool",
                     plugins: [{
                         ptype: "headericons",
                         index: 2,
