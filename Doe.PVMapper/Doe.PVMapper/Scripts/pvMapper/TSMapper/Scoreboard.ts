@@ -95,8 +95,12 @@ module pvMapper {
             }
         }
 
+        public scoreLines_weightTotal: number;
 
         public updateTotals() {
+            // compute the total weight of all score tools... this is used in the tooltip for the Weight column (which shows the percentage that tool contributes to the total weight)
+            this.scoreLines_weightTotal = this.scoreLines.reduce((total: number, line: ScoreLine) => total += line.weight, 0);
+
             var sl = this.scoreLines; //A copy for scope in the forEach
             this.totalLines.forEach(function (t, idx) {
                 t.UpdateScores(sl);
