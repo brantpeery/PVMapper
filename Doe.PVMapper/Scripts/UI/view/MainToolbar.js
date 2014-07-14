@@ -55,6 +55,7 @@ pvMapper.onReady(function () {
     //----------------------------------------------------------------------------------------
     //#region Measure distance tool
     var control = new OpenLayers.Control.Measure(OpenLayers.Handler.Path, {
+        displaySystem: "english",
         eventListeners: {
             measure: function (evt) {
                 Ext.MessageBox.alert('Measure Distance', "The measurement was " + evt.measure.toFixed(2) + " " + evt.units);
