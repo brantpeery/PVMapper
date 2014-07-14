@@ -129,6 +129,17 @@ var scoreboardColumns = [{
     sortable: true,
     hideable: false,
     dataIndex: 'weight',
+    renderer: function (value, metadata, record) {
+        if (record.raw && typeof (record.raw.weight) === "undefined") {
+            return ''; // if the source object's weight is undefined, show a blank here (instead of the autoconverted 0)
+        }
+        if (record.data.weight && pvMapper.mainScoreboard.scoreLines_weightTotal) {
+            var ratio = record.data.weight / pvMapper.mainScoreboard.scoreLines_weightTotal * 100;
+            var popup = ratio.toFixed(1) + "% of total weight";
+            metadata.tdAttr = 'data-qtip="' + popup + '"';
+        }
+        return value;
+    },
     editor: {
         xtype: 'numberfield',
         maxValue: 100,
@@ -569,37 +580,34 @@ Ext.define('MainApp.view.ScoreWeightEditing', {
     extend: 'Ext.grid.plugin.CellEditing',
     clicksToEdit: 1,
     listeners: {
-
         beforeedit: function (editor, e, eOpts) {
-
              if (e.field == "weight")
                  return typeof e.record.raw.weight === "number"; // don't allow weight editing on total tools or the like
             
              return e.record.raw.category === "All Custom Added Tools";
         },
-
         edit: function (editor, e, eOpts) {
             if (e.field == "weight" && typeof (e.record.raw.setWeight) === "function" && e.record.raw.weight !== e.record.data['weight'])
                 e.record.raw.setWeight(e.record.data['weight']);
 
-            theScoreIdx = parseInt((e.colIdx - 3) / 2); //TODO: this isn't an ideal way to get the correct score object for this column.
+            //if(e.record.raw.category == "All Custom Added Tools")
+            //{
+            //    theScoreIdx = parseInt((e.colIdx - 3) / 2); //TODO: this isn't an ideal way to get the correct score object for this column.
 
-            if(e.record.raw.category == "All Custom Added Tools")
-            {
-                switch(e.column.text){
-                    case "Value" :
-                         e.record.raw.scores[theScoreIdx].popupMessage = e.value;
-                         break ;
+            //    switch(e.column.text){
+            //        case "Value" :
+            //             e.record.raw.scores[theScoreIdx].popupMessage = e.value;
+            //             break ;
 
-                    case "Score" :
-                         e.record.raw.scores[theScoreIdx].updateValue(parseInt(e.value));
-                }
+            //        case "Score" :
+            //             e.record.raw.scores[theScoreIdx].updateValue(parseInt(e.value));
+            //    }
 
-                if(e.field == "title")
-                    e.record.raw.title = e.value;
+            //    if(e.field == "title")
+            //        e.record.raw.title = e.value;
                
-              //  e.record.raw.scores[0].updateValue(0);
-            }
+            //  //  e.record.raw.scores[0].updateValue(0);
+            //}
         }
     }
 });
