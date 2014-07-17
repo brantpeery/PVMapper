@@ -306,7 +306,8 @@ pvMapper.onReady(function () {
         reference: boolean - is it a reference layer? true/false
     */
     function addWMSLayer(name, url, layer, reference,mdata) {
-        var wms = new OpenLayers.Layer.WMS("<img class= \"on_c_img\" mdata='"+mdata+ "' src='http://www.iconsdb.com/icons/preview/tropical-blue/info-xxl.png'  style='width:20px; height:20px'> " + name,
+        var wms = new OpenLayers.Layer.WMS(//"<img class= \"on_c_img\" mdata='"+mdata+ "' src='http://www.iconsdb.com/icons/preview/tropical-blue/info-xxl.png'  style='width:20px; height:20px'> " + name,
+            name,
             url,
             {
                 layers: layer,
