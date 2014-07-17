@@ -81,7 +81,8 @@ pvMapper.onReady(function () {
     //addWMSLayer("EPA Contaminated Lands", "http://mapsdb.nrel.gov/geoserver/geothermal_prospector/wms?", "geothermal_prospector:Brownfields", true);
 
     var wms = new OpenLayers.Layer.WMS(
-        "<img class=\"on_c_img\" mdata= ' MetaData for EPA Brownfield Sites Not Found' src='http://www.iconsdb.com/icons/preview/tropical-blue/info-xxl.png'  style='width:20px; height:20px'> " + "EPA Brownfield Sites",
+        //"<img class=\"on_c_img\" mdata= ' MetaData for EPA Brownfield Sites Not Found' src='http://www.iconsdb.com/icons/preview/tropical-blue/info-xxl.png'  style='width:20px; height:20px'> " + "EPA Brownfield Sites",
+        "EPA Brownfield Sites",
         "http://mapsdb.nrel.gov/geoserver/geothermal_prospector/wms?",
         {
             layers: "geothermal_prospector:Brownfields",
@@ -277,7 +278,8 @@ pvMapper.onReady(function () {
     function addArcLayer(name, url, layerNumber,mdata) {
 
         var layer = new OpenLayers.Layer.ArcGIS93Rest(
-            "<img class=\"on_c_img\" mdata='"+mdata+"' src='http://www.iconsdb.com/icons/preview/tropical-blue/info-xxl.png' style='width:20px; height:20px'> " + name,
+            //"<img class=\"on_c_img\" mdata='" + mdata + "' src='http://www.iconsdb.com/icons/preview/tropical-blue/info-xxl.png' style='width:20px; height:20px'> " + name,
+            name,
             url + "/export",
             {
                 f: "image",
