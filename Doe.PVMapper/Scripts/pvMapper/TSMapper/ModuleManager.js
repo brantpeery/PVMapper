@@ -78,7 +78,7 @@ var pvMapper;
 
                         _this.deactivateModule(mod);
                     }
-                    _this.saveTools();
+                    _this.saveModulesToBrowserConfig();
                 });
             };
             // there is nothing special about this above or beyond calling module.deactivate(), except that it had some sensible error handling thrown in, and it saves module configs to the browser
@@ -108,7 +108,7 @@ var pvMapper;
                     if (console && console.error)
                         console.error("Failed to deactivate module '" + mod.title + "': " + ex);
                 }
-                _this.saveTools();
+                _this.saveModulesToBrowserConfig();
             };
             this.addCustomModule = function (newModule) {
                 if (typeof (_this._customModulesByID[newModule.id]) === "object") {
@@ -155,7 +155,7 @@ var pvMapper;
                 if (modules)
                     _this.loadModulesFromConfig(modules);
             };
-            this.saveTools_timeoutHandle = null;
+            this.saveModulesToBrowserConfig_timeoutHandle = null;
             //Instantiate the registered tool modules whose isActive is true.  isActive is check against user's configuration first.
             //It also load the module from server if it has not been loaded.
             this.loadModulesFromBrowserConfig = function () {
@@ -267,19 +267,19 @@ var pvMapper;
                 });
             };
         }
-        ModuleManager.prototype.saveTools = function () {
+        ModuleManager.prototype.saveModulesToBrowserConfig = function () {
             var _this = this;
-            if (typeof this.saveTools_timeoutHandle === "number") {
+            if (typeof this.saveModulesToBrowserConfig_timeoutHandle === "number") {
                 // it's been less than 7 second since the last module (de)activation / save request, so cancel our next save (it will happen too soon)
-                window.clearTimeout(this.saveTools_timeoutHandle);
+                window.clearTimeout(this.saveModulesToBrowserConfig_timeoutHandle);
             }
 
-            // wait until we haven't seen any module (de)activations for 7 seconds before saving the current module state to the browser
-            this.saveTools_timeoutHandle = window.setTimeout(function () {
-                _this.saveTools_timeoutHandle = null;
+            // wait until we haven't seen any module (de)activations for 5 seconds before saving the current module state to the browser
+            this.saveModulesToBrowserConfig_timeoutHandle = window.setTimeout(function () {
+                _this.saveModulesToBrowserConfig_timeoutHandle = null;
                 var tools = _this.toJSON();
                 pvMapper.ClientDB.saveToolModules(tools);
-            }, 7000);
+            }, 5000);
         };
 
         ModuleManager.prototype.evaluateScript = function (url, script) {

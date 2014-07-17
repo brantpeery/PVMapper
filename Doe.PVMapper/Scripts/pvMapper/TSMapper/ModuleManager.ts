@@ -97,7 +97,7 @@ module pvMapper {
 
                     this.deactivateModule(mod);
                 }
-                this.saveTools();
+                this.saveModulesToBrowserConfig();
             });
         };
 
@@ -126,7 +126,7 @@ module pvMapper {
             } catch (ex) {
                 if (console && console.error) console.error("Failed to deactivate module '" + mod.title + "': " + ex);
             }
-            this.saveTools();
+            this.saveModulesToBrowserConfig();
         };
 
         public addCustomModule = (newModule: IModule) => {
@@ -176,19 +176,19 @@ module pvMapper {
             if (modules) this.loadModulesFromConfig(modules);
         }
 
-        private saveTools_timeoutHandle = null;
-        public saveTools() {
-            if (typeof this.saveTools_timeoutHandle === "number") {
+        private saveModulesToBrowserConfig_timeoutHandle = null;
+        public saveModulesToBrowserConfig() {
+            if (typeof this.saveModulesToBrowserConfig_timeoutHandle === "number") {
                 // it's been less than 7 second since the last module (de)activation / save request, so cancel our next save (it will happen too soon)
-                window.clearTimeout(this.saveTools_timeoutHandle);
+                window.clearTimeout(this.saveModulesToBrowserConfig_timeoutHandle);
             }
 
-            // wait until we haven't seen any module (de)activations for 7 seconds before saving the current module state to the browser
-            this.saveTools_timeoutHandle = window.setTimeout(() => {
-                this.saveTools_timeoutHandle = null;
+            // wait until we haven't seen any module (de)activations for 5 seconds before saving the current module state to the browser
+            this.saveModulesToBrowserConfig_timeoutHandle = window.setTimeout(() => {
+                this.saveModulesToBrowserConfig_timeoutHandle = null;
                 var tools = this.toJSON();
                 ClientDB.saveToolModules(tools);
-            }, 7000);
+            }, 5000);
         }
 
         //Instantiate the registered tool modules whose isActive is true.  isActive is check against user's configuration first.  
