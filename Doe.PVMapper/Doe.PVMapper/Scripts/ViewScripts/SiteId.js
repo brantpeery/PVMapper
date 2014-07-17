@@ -4,7 +4,9 @@ pvMapper.onReady(function () {
     // Just set the global proxy host for all OpenLayers calls, and be done with it.
     OpenLayers.ProxyHost = "/Proxy/proxy.ashx?";
 
-    var control = new OpenLayers.Control.WMSGetFeatureInfo({
+    var vectorLayersAndFeaturesUnderMouse = []; //type: { name: string, features: feature[] }[]
+
+    var wmsInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
         //infoFormat: "application/vnd.ogc.gml", // <-- this format works reliably with GeoServer instances
         //infoFormat: "application/vnd.esri.wms_featureinfo_xml", // <-- this format works reliably with ArcGIS Server instances, 
         //                  ...but OpenLayers fails to parse it (see https://github.com/openlayers/openlayers/issues/885)
@@ -12,148 +14,165 @@ pvMapper.onReady(function () {
         // These formats didn't work reliably with ArcGIS Server: // "text/xml", // "application/vnd.ogc.wms_xml", // "application/json", // "application/vnd.ogc.gml",
         //...
         queryVisible: true, // <-- setting this to true will only call Identify on visible layers. Defaults to false.
-        //drillDown: true, // <-- setting this will call identify on all (visible?) layers, rather than just the first (visible?) layer
-        //Note: it looks like drillDown won't work unless we put our table parsing logic (below) inside of a new class inheriting from OpenLayers.Format
-        //      this is because the object returned to us after the drill down only contains the raw text from the last identify operation to finish.
-        //      if we pass in our own OpenLayers.Format class to the WMSGetFeatureInfo Control, it will get each of the raw text values in turn.
-        //      ... (and it probably should inherit from OpenLayers.Format.XML, or even OpenLayers.Format.WMSGetFeatureInfo, for enhanced awesomeness)
-        //...
-        //output: 'object', // <-- this didn't help at all... but it might help, a little, if we implement our own OpenLayers.Format object
-        //...
-        maxFeatures: 1, //HACK: using 1 here, to hopefully side-step several remaining issues: missing layer names, no drillDown, and incorrect field names
-        eventListeners: {
-            getfeatureinfo: function (e) {
-                console.log("Identify WMS GetFeatureInfo Function");
-                var items = [];
-                //Ext.each(e.features, function (feature) {
-                //    items.push({
-                //        xtype: "propertygrid",
-                //        title: feature.fid,
-                //        source: feature.attributes
-                //    });
-                //});
+        drillDown: true, // <-- setting this will call identify on all (visible?) layers, rather than just the first (visible?) layer
+        format: { 
+            read: function (data) {
+                // parse html format features returned by Identify...
+                var features = [];
 
-                ////////////////////////////////////////////////
-                // Begin shabby code block:
                 // this block assumes that there is an HTML table somewhere in the provided e.text, and tries to parse it.
-                var $headers = $(e.text).find("th");
-                var myRows = [];
-                var headersText = [];
+                $(data).filter("table").each(function () {
+                    var table = this;
+                    
+                    // first row needs to be headers 
+                    var headers = [];
+                    for (var i = 0; i < table.rows[0].cells.length; i++) {
+                        headers[i] = table.rows[0].cells[i].innerHTML.toLowerCase().replace(/ /gi,''); 
+                    } 
 
-                var $rows = $(e.text).find("tr").each(function (index) {
-                    $cells = $(this).find("td");
-                    myRows[index] = {};
-
-                    $cells.each(function (cellIndex) {
-                        // Set the header text
-                        if (headersText[cellIndex] === undefined) {
-                            headersText[cellIndex] = $($headers[cellIndex]).text();
+                    // go through cells 
+                    for (var i = 1; i < table.rows.length; i++) { 
+                        var tableRow = table.rows[i]; 
+                        var rowData = {}; 
+                        for (var j = 0; j < tableRow.cells.length; j++) {
+                            if (tableRow.cells[j].innerHTML)
+                                rowData[ headers[j] ] = tableRow.cells[j].innerHTML; 
                         }
-                        // Update the row object with the header/cell combo
-                        var text = $(this).text();
-                        if (text !== "") {
-                            myRows[index][headersText[cellIndex]] = text;
-                        }
-                    });
-                });
-
-                // hack hack... show parsed html table results
-                Ext.each(myRows, function (myRow) {
-                    // the first row seems to return empty, so skip it here.
-                    //Note: it returns empty because it's the header row: a <tr> element whose children are <th> elements, not <td> elements)
-                    if (!jQuery.isEmptyObject(myRow)) {
-                        // format a cute title... kinda (ought to add differentiation between layers here)
-                        var title = "Feature";
-                        if (myRow['NAME']) {
-                            title += " (" + myRow['NAME'] + ")";
-                        } else if (myRow['fid']) {
-                            title += " (" + myRow['fid'] + ")";
-                        } else if (myRow['OBJECTID']) {
-                            title += " (" + myRow['OBJECTID'] + ")";
-                        }
-
-                        items.push({
-                            xtype: "propertygrid",
-                            title: title,
-                            source: myRow
-                        });
+                        features.push({ attributes: rowData });
                     }
                 });
-
                 
-                /* For Testing Purposes * /
-                // hack hack... show any returned html 'natively'
-                if (e.text.indexOf('html') >= 0) {
-                    items.push({
-                        xtype: "panel",
-                        title: "Rendered HTML table",
-                        html: e.text
-                    });
-                }
+                return features;
+            }
+        },
+        output: 'object', // <-- this gives us 'url' members for each sub-collection of features returned, so that we have a hope of guessing which layer they came from
 
-                // hack hack... show raw value returned (helpful for debugging)
-                items.push({
-                    xtype: "propertygrid",
-                    title: "Raw value returned",
-                    source: { url: e.object.url, features: e.features.length, text: e.text, textLength: e.text.length }
-                });//*/
+        //maxFeatures: 1, //HACK: using 1 here, to hopefully side-step several remaining issues: missing layer names, no drillDown, and incorrect field names
+        eventListeners: {
+            beforegetfeatureinfo: function (e) {
+                // find vector features near the point clicked...
+                vectorLayersAndFeaturesUnderMouse = [];
 
-                // End shabby code block.
-                ////////////////////////////////////////////////
-                
-                //Hacky hack hack...
-                var layerNameGuess = "";
-                for (var i = pvMapper.map.layers.length - 1; i >= 0; i--) {
-                    var layer = pvMapper.map.layers[i];
-                    if (!layer.isBaseLayer && layer.getVisibility() && layer != pvMapper.siteLayer) {
-                        layerNameGuess = layer.name;
-                        break;
-                    }
-                }
-                //End hacky hack.
-                
-                if (items.length <= 0) {
-                    if (layerNameGuess.length >= 0) {
-                        Ext.MessageBox.alert('Identify', 'No features found on topmost visible layer (' + layerNameGuess + ').');
-                    } else {
-                        Ext.MessageBox.alert('Identify', 'No visible layer to identify.');
-                    }
+                var pixelBuffer = 16;
+
+                var minXY = this.map.getLonLatFromPixel({ x: e.xy.x - pixelBuffer, y: e.xy.y - pixelBuffer });
+                var maxXY = this.map.getLonLatFromPixel({ x: e.xy.x + pixelBuffer, y: e.xy.y + pixelBuffer });
+
+                var bounds = new OpenLayers.Bounds( minXY.lon, minXY.lat, maxXY.lon, maxXY.lat );
+                var testGeom = bounds.toGeometry();
+
+                vectorLayersAndFeaturesUnderMouse = pvMapper.map.layers.filter(function (layer) {
+                    // include every visible vector layer (except our site layer)...
+                    return (layer instanceof OpenLayers.Layer.Vector && layer.getVisibility() && layer !== pvMapper.siteLayer);
+                }).map(function (layer) {
+                    return {
+                        name: layer.name,
+                        features: layer.features.filter(function (feature) {
+                            // ...and every visible feature from that layer which intersects our mouse click (note that this array can be empty)
+                            return (feature.geometry && feature.getVisibility() && testGeom.intersects(feature.geometry));
+                        })
+                    };
+                }); //.reduce(function (x, y) { return x.concat(y); }); // <-- reduce/concat feature arrays into a single feature array
+            },
+            nogetfeatureinfo: function (e) {
+                // e.features is empty (as we found no visible & identifyable WMS layers), so only show the vector features (if any)
+                var featuresUnderMouse = vectorLayersAndFeaturesUnderMouse.filter(
+                    function (featureCollections) { return featureCollections.features.length > 0; });
+
+                if (featuresUnderMouse.length > 0) {
+                    showIdentifyWindow(featuresUnderMouse);
+                } else if (vectorLayersAndFeaturesUnderMouse.length > 0) {
+                    pvMapper.displayMessage('No features found.', "success");
                 } else {
-                    //Hack: if we can't reliably get multiple header sets, instead lets only show the first feature. A cop-out, for sure.
-                    items = [items[0]]; //TODO: remove this when/if we get this header parsing business working again.
-
-                    var wiz = new Ext.create('Ext.window.Window', {
-                        layout: 'accordion',
-                        modal: true,
-                        //collapsible: false, // <-- this didn't seem to do much
-                        id: "iden",
-                        title: layerNameGuess ? layerNameGuess : "Identify",
-                        bodyPadding: '5 5 0',
-                        width: 350,
-                        height: 450,
-                        items: items,
-                        buttons: [{
-                            text: 'Close',
-                            handler: function (b, e) {
-                                //control.deactivate(); // <-- this disables the control, but it doesn't disable our button - a little confusing
-                                //b.pressed = false;
-                                wiz.destroy();
-                            }
-                        }]
-
-                    });
-
-                    wiz.show();
+                    // we didn't find any WMS layers or Vector layers to run identify on; let's tell the user that they should turn on more layers.
+                    Ext.MessageBox.alert("Error", "The current visible layers don't support Identify; please try again with another layer from the list.");
+                    //pvMapper.displayMessage("Identify unavailable on current visible layers.", "warning");
                 }
 
-                //Note: this is a total hack. But without it, the control will only ever send requests to the first layer it sent a request to.
-                control.url = null; //TODO: hack hack hack hack...!
+                //Note: this is a total hack. But without it, the wmsInfoControl will only ever send requests to the first layer it sent a request to.
+                wmsInfoControl.url = null; //TODO: hack hack hack hack...!
+            },
+            getfeatureinfo: function (e) {
+                // e.features stores the features returned by our WMS service(s); append them to our vector features, to show both
+                var featuresUnderMouse = vectorLayersAndFeaturesUnderMouse.concat(e.features).filter(
+                    function (featureCollections) { return featureCollections.features.length > 0; });
+
+                if (featuresUnderMouse.length > 0) {
+                    showIdentifyWindow(featuresUnderMouse);
+                } else {
+                    pvMapper.displayMessage('No features found near mouse click.', "warning");
+                }
+
+                //Note: this is a total hack. But without it, the wmsInfoControl will only ever send requests to the first layer it sent a request to.
+                wmsInfoControl.url = null; //TODO: hack hack hack hack...!
             }
         }
     });
 
-    pvMapper.map.addControl(control);
+    pvMapper.map.addControl(wmsInfoControl);
 
+
+    var showIdentifyWindow = function (featureCollections) {
+        var items = [];
+        featureCollections.forEach(function (featureCollection) {
+            if (featureCollection.features && featureCollection.features.length) {
+                var layerNameGuess = featureCollection.name;
+
+                // if we don't have the actual layer name, then we'll try to guess it based on the url
+                if (!layerNameGuess && featureCollection.url) {
+                    var layerNameCandidates = pvMapper.map.layers.filter(function (layer) {
+                        return layer.getVisibility() && featureCollection.url === (OpenLayers.Util.isArray(layer.url) ? layer.url[0] : layer.url);
+                    });
+                    layerNameGuess = layerNameCandidates && layerNameCandidates.length === 1 ? layerNameCandidates[0].name : null;
+                }
+
+                featureCollection.features.forEach(function (feature) {
+                    // format a cute title... kinda (ought to add differentiation between layers here)
+                    var myRow = feature.attributes;
+                    var title = "Unknown feature";
+
+                    // add an id to the title, if we have one
+                    var idFields = ['NAME', 'Name', 'name', 'pname', 'Project Name', 'primarylocalname', 'dam_name', 'FID', 'fid', 'OBJECTID', 'objectid'];
+                    for (var i = 0; i < idFields.length; i++) {
+                        if (myRow[idFields[i]]) {
+                            title = myRow[idFields[i]].toString().substring(0, 25); // trim the title to a max length...
+
+                            if (!isNaN(+title)) // if the title is numeric (probably an OID or something), let's include the field as a courtesy
+                                title = idFields[i] + ": " + title;
+                            break;
+                        }
+                    }
+
+                    if (layerNameGuess)
+                        title += " (" + layerNameGuess + ")";
+
+                    items.push({
+                        xtype: "propertygrid",
+                        title: title,
+                        source: myRow
+                    });
+                });
+            }
+        });
+
+        var identifyWindow = new Ext.create('Ext.window.Window', {
+            layout: 'accordion',
+            modal: true,
+            title: "Identify Results",
+            //bodyPadding: '5 5 0',
+            width: 350,
+            height: 450,
+            items: items,
+            buttons: [{
+                text: 'Close',
+                handler: function (b, e) {
+                    identifyWindow.destroy();
+                }
+            }]
+        });
+
+        identifyWindow.show();
+    };
 
     var IdentifyTool = new Ext.Button({
         text: "Identify",
@@ -161,9 +180,9 @@ pvMapper.onReady(function () {
         toggleGroup: "editToolbox",
         toggleHandler: function (buttonObj, eventObj) {
             if (buttonObj.pressed) {
-                control.activate();
+                wmsInfoControl.activate();
             } else {
-                control.deactivate();
+                wmsInfoControl.deactivate();
             }
         }
     });
