@@ -311,7 +311,7 @@ module pvMapper {
         //Save user preferences of tool modules to local database.  
         //storeName - the "table" name
         //tools - array of object [key,value] pair.
-        public static saveToolModules(tools: IModuleInfoJSON[]) {
+        public static saveToolModules(modules: IModuleInfoJSON[]) {
 
             if (ClientDB.db == null) {
                 console.log("Database is not available or not ready.");
@@ -332,31 +332,31 @@ module pvMapper {
                 var store = txn.objectStore(ClientDB.MODULES_STORE_NAME);
                 if (store) {
                     store.clear().onsuccess = function (event) {
-                        tools.forEach(function (tool) {
-                            var request = store.get(tool.id);
+                        modules.forEach(function (moduleInfo) {
+                            var request = store.get(moduleInfo.id);
                             request.onsuccess = function (evt): any {
 
                                 //tool.value.ctorStr = tool.value.ctor.toString();
-                                var jsonStr = JSON.stringify(tool);
+                                var jsonStr = JSON.stringify(moduleInfo);
                                 if (request.result != undefined) { // if already exists, update
-                                    store.put(jsonStr, tool.id);
-                                    console.log("Tool module '" + tool.id + "' browser config resaved.");
+                                    store.put(jsonStr, moduleInfo.id);
+                                    console.log("Tool module '" + moduleInfo.id + "' browser config resaved.");
                                 }
                                 else {
-                                    store.add(jsonStr, tool.id); // if new, add
-                                    console.log("Tool module '" + tool.id + "' browser config saved.");
+                                    store.add(jsonStr, moduleInfo.id); // if new, add
+                                    console.log("Tool module '" + moduleInfo.id + "' browser config saved.");
                                 }
                             }
                             request.onerror = function (evt): any {
-                                if (console && console.error) console.error("Attempt to save tool key = '" + tool.id + "' failed, cause: " + evt.message);
+                                if (console && console.error) console.error("Attempt to save module key = '" + moduleInfo.id + "' failed, cause: " + evt.message);
                             }
                         });
-                        pvMapper.displayMessage("Saved tool configuration to the local browser.", "success");
+                        pvMapper.displayMessage("Saved module configuration to the browser.", "success");
                     }
                 }
             }
             catch (ex) {
-                pvMapper.displayMessage("Failed to save tool configuration to the local browser.", "error");
+                pvMapper.displayMessage("Failed to save module configuration to the local browser.", "error");
                 console.log("Save tool Modules failed, cause: " + ex.message);
             }
         }
