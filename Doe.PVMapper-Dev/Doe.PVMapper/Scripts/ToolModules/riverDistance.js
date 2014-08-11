@@ -71,11 +71,13 @@ var BYUModules;
                     },
                     format: new OpenLayers.Format.EsriGeoJSON(),
                     parseFeatures: function (data) {
-                        return this.format.read(data);
+                        if (!data.error) {
+                            return this.format.read(data);
+                        }
                     },
                     callback: function (response) {
                         //alert("Nearby features: " + response.features.length);
-                        if (response.success()) {
+                        if (response.success() && !(response.data && response.data.error)) {
                             var closestFeature = null;
                             var minDistance = maxSearchDistanceInMeters;
 
@@ -103,8 +105,11 @@ var BYUModules;
                                 score.popupMessage = "No rivers found within " + _this.configProperties.maxSearchDistanceInMi + " mi search distance.";
                                 score.updateValue(_this.configProperties.maxSearchDistanceInMi);
                             }
+                        } else if (response.data && response.data.error) {
+                            score.popupMessage = "Error " + ((response.data.error.code && response.data.error.message) ? (response.data.error.code + ": " + response.data.error.message) : response.data.error.toString());
+                            score.updateValue(Number.NaN);
                         } else {
-                            score.popupMessage = "Request error " + response.error.toString();
+                            score.popupMessage = "Unknown error";
                             score.updateValue(Number.NaN);
                         }
                     }
