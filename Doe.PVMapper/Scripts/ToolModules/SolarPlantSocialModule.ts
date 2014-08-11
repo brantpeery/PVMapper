@@ -294,7 +294,7 @@ module INLModules {
                     return null;
                 },
                 callback: (response: OpenLayers.Response) => {
-                    if (response.success()) {
+                    if (response.success() && !(response.data && response.data.error)) {
                         this.requestError = null;
                         var properties = { opacity: 0.3, visibility: false };
                         this.layerOperating = new OpenLayers.Layer.Vector("PV/CSP In Operation", properties);
@@ -348,10 +348,11 @@ module INLModules {
                         this.scoresWaitingOnRequest = null; // scores can no longer wait on the request, because the request is finished.
                     } else {
                         if (this.isActive && this.scoresWaitingOnRequest) { // we must test this - the tool may have been deactivated before we received our response.
-                            this.requestError = response.error;
+                            this.requestError = response.error || (response.data && response.data.error);
                             while (this.scoresWaitingOnRequest.length) {
                                 var score = this.scoresWaitingOnRequest.pop();
-                                score.popupMessage = "Request error " + this.requestError.toString();
+                                score.popupMessage = "Error " + ((this.requestError.code && this.requestError.message) ?
+                                    (this.requestError.code + ": " + this.requestError.message) : this.requestError.toString());
                                 score.updateValue(Number.NaN);
                             }
                         }

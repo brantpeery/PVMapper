@@ -1905,14 +1905,17 @@ declare module OpenLayers {
     }
 
   interface Response {
-        code: number;
+        code?: number;
         requestType: string;
         last: Boolean;
-        features: FVector[];
+        features?: FVector[];
         data: any;
         reqFeatures: FVector[];
         priv: any;
-        error: any;
+        error: { code?: number; message?: string; };
+        status?: number;
+        statusText?: string;
+        responseText?: string;
 
         success(): Boolean;
     }
