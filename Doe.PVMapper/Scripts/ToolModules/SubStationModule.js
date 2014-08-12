@@ -235,7 +235,7 @@ var BYUModules;
                 data: 'way[' + wayQueryKey + '](' + bbox + ');(._;>;);out;'
             },
             callback: function (response) {
-                if (response.status == 200) {
+                if (response.status === 200) {
                     response.features = OpenLayers.Format.OSM.prototype.read(response.responseText);
 
                     //Conversion of response

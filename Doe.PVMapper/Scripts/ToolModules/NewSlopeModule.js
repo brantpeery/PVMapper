@@ -179,6 +179,8 @@ var BYUModules;
         });
     }
 
+    var requestFailureCount = {};
+
     function updateScore (score) {
 
         var NearRoadRestUrl = "https://geoserver.byu.edu/arcgis/rest/services/Sloep30m/GPServer/extractpoly";
@@ -221,49 +223,61 @@ var BYUModules;
                     esriJsonParser.extractAttributes = true;
                     var parsedResponse = esriJsonParser.read(response.responseText);
 
-                    //console.log("Slope Module Respone: " + JSON.stringify(parsedResponse));
+                    if (!parsedResponse.error && parsedResponse.jobId) {
+                        //console.log("Slope Module Respone: " + JSON.stringify(parsedResponse));
 
-                    //Ohkay Great! Now we have the job Submitted. Lets get the Job ID and then Submit a request for the results. 
-                    var finalResponse = {};
-                    var jobId = parsedResponse.jobId;
-                    var resultSearcher = setInterval(function () {
-                        //Send out another request
-                        var resultRequestRepeat = OpenLayers.Request.GET({
-                            url: "https://geoserver.byu.edu/arcgis/rest/services/Sloep30m/GPServer/extractpoly/" + "jobs/" + jobId + "/results/slopeout_TXT?f=json",
-                            proxy: "/Proxy/proxy.ashx?",
-                            callback: function (response) {
+                        //Ohkay Great! Now we have the job Submitted. Lets get the Job ID and then Submit a request for the results. 
+                        var finalResponse = {};
+                        var jobId = parsedResponse.jobId;
+                        requestFailureCount[jobId] = 0;
+                        var resultSearcher = setInterval(function () {
+                            //Send out another request
+                            var resultRequestRepeat = OpenLayers.Request.GET({
+                                url: "https://geoserver.byu.edu/arcgis/rest/services/Sloep30m/GPServer/extractpoly/" + "jobs/" + jobId + "/results/slopeout_TXT?f=json",
+                                proxy: "/Proxy/proxy.ashx?",
+                                callback: function (response) {
 
-                                if (response.status == 200) {
-                                    var esriJsonParser = new OpenLayers.Format.JSON();
-                                    esriJsonParser.extractAttributes = true;
-                                    var parsedResponse = esriJsonParser.read(response.responseText);
+                                    if (response.status == 200) {
+                                        var esriJsonParser = new OpenLayers.Format.JSON();
+                                        esriJsonParser.extractAttributes = true;
+                                        var parsedResponse = esriJsonParser.read(response.responseText);
 
-                                    if (!parsedResponse.error) {
-                                        //Got Result. Downloading file and processing it. 
-                                        
-                                        clearInterval(resultSearcher);
-                                        finalResponse = parsedResponse;
-                                        var fileURL = finalResponse.value.url;
-                                        var key = "slopeURL" + score.site.id;
-                                        //Save to local cache
-                                        $.jStorage.deleteKey(key);
-                                        $.jStorage.set(key, fileURL);
-                                        var result = reCalculate(score);
+                                        if (!parsedResponse.error) {
+                                            //Got Result. Downloading file and processing it. 
+
+                                            clearInterval(resultSearcher);
+                                            finalResponse = parsedResponse;
+                                            var fileURL = finalResponse.value.url;
+                                            var key = "slopeURL" + score.site.id;
+                                            //Save to local cache
+                                            $.jStorage.deleteKey(key);
+                                            $.jStorage.set(key, fileURL);
+                                            var result = reCalculate(score);
+                                        } else {
+                                            // request error might be perminant... need to handle that!
+                                            requestFailureCount[jobId] += 1;
+
+                                            if (requestFailureCount[jobId] < 30) { // 30 failures * 4000ms wait = 120 second timeout
+                                                console.log("Slope tool job '" + jobId + "' still processing...");
+                                            } else {
+                                                clearInterval(resultSearcher);
+                                                score.popupMessage = "Error " + parsedResponse.error.code + ": " + parsedResponse.error.message;
+                                                score.updateValue(Number.NaN);
+                                            }
+                                        }
+
                                     } else {
-                                        if (console && console.log) console.log("Slope tool job '" + jobId + "' still processing...");
-                                        //score.popupMessage = "Parse error " + parsedResponse.error;
-                                        //score.updateValue(Number.NaN);
+                                        clearInterval(resultSearcher);
+                                        score.popupMessage = "Error " + response.status + " " + response.statusText;
+                                        score.updateValue(Number.NaN);
                                     }
-
-                                } else {
-                                    clearInterval(resultSearcher);
-                                    score.popupMessage = "Error " + response.status + " " + response.statusText;
-                                    score.updateValue(Number.NaN);
                                 }
-                            }
-                        });
-                    }, 4000);
-
+                            });
+                        }, 4000);
+                    } else {
+                        score.popupMessage = "Error" + (parsedResponse.error ? " " + parsedResponse.error.code + ": " + parsedResponse.error.message : ": Server didn't send a job ID");
+                        score.updateValue(Number.NaN);
+                    }
                 } else {
                     score.popupMessage = "Error " + response.status + " " + response.statusText;
                     score.updateValue(Number.NaN);

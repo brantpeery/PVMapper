@@ -241,7 +241,7 @@ module INLModules {
     }
 
     function queryResponseHandler(score: pvMapper.Score): ICallback {
-        return (response?) => {
+        return (response?: OpenLayers.Response) => {
             try {
                 if (response.status === 200) {
 
