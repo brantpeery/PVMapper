@@ -79,6 +79,7 @@ var toolsStore = Ext.create('Ext.data.Store', {
     autoLoad: true,
     model: 'Tools',
     data: pvMapper.mainScoreboard.getTableData(),
+    sorters: [{ property: 'title', direction: 'ASC' }], // default sort
     groupField: 'category',
     groupDir: 'ASC'
 });

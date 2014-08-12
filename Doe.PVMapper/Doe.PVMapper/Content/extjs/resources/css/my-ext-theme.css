@@ -5588,9 +5588,9 @@ table.x-datepicker-inner .x-datepicker-disabled a {
 }
 
 /* line 123, ../../../../../../../../../../../../temp/extjs-4.1.1/resources/themes/stylesheets/ext4/default/widgets/_grid.scss */
-.x-column-header-over,
+.x-column-header-over/*,
 .x-column-header-sort-ASC,
-.x-column-header-sort-DESC {
+.x-column-header-sort-DESC*/ {
   border-left-color: #ebab00;
   border-right-color: #ebab00;
   background-image: none;
