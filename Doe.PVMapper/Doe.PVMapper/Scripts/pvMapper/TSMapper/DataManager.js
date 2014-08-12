@@ -1,4 +1,4 @@
-﻿/// <reference path="es6-promises.d.ts" />
+/// <reference path="es6-promises.d.ts" />
 /// <reference path="common.ts" />
 /// <reference path="pvMapper.ts" />
 /// <reference path="Score.ts" />

@@ -101,7 +101,7 @@ var INLModules;
                         return null;
                     },
                     callback: function (response) {
-                        if (response.success()) {
+                        if (response.success() && !(response.data && response.data.error)) {
                             _this.requestError = null;
                             var properties = { opacity: 0.3, visibility: false };
                             _this.layerOperating = new OpenLayers.Layer.Vector("PV/CSP In Operation", properties);
@@ -159,10 +159,10 @@ var INLModules;
                             _this.scoresWaitingOnRequest = null; // scores can no longer wait on the request, because the request is finished.
                         } else {
                             if (_this.isActive && _this.scoresWaitingOnRequest) {
-                                _this.requestError = response.error;
+                                _this.requestError = response.error || (response.data && response.data.error);
                                 while (_this.scoresWaitingOnRequest.length) {
                                     var score = _this.scoresWaitingOnRequest.pop();
-                                    score.popupMessage = "Request error " + _this.requestError.toString();
+                                    score.popupMessage = "Error " + ((_this.requestError.code && _this.requestError.message) ? (_this.requestError.code + ": " + _this.requestError.message) : _this.requestError.toString());
                                     score.updateValue(Number.NaN);
                                 }
                             }

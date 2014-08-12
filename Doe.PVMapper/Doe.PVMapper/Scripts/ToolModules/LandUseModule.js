@@ -408,6 +408,8 @@ var INLModules;
                     ]
                 };
 
+                var requestFailureCount = {};
+
                 var request = OpenLayers.Request.POST({
                     //Changing this to leverage the new service from arcgis servers
                     url: "https://geoserver.byu.edu/arcgis/rest/services/land_cover/GPServer/land_cover/submitJob",
@@ -423,102 +425,117 @@ var INLModules;
                             esriJsonParser.extractAttributes = true;
                             var parsedResponse = esriJsonParser.read(response.responseText);
 
-                            //console.log("LandCoverModule Response: " + JSON.stringify(parsedResponse));
-                            //Ohkay Great! Now we have the job Submitted. Lets get the Job ID and then Submit a request for the results.
-                            var finalResponse = {};
-                            var mainObj = _this;
-                            var jobId = parsedResponse.jobId;
-                            var resultSearcher = setInterval(function () {
-                                //Send out another request
-                                var resultRequestRepeat = OpenLayers.Request.GET({
-                                    url: "https://geoserver.byu.edu/arcgis/rest/services/land_cover/GPServer/land_cover/" + "jobs/" + jobId + "/results/Extract_nlcd1_TableSelect?f=json",
-                                    proxy: "/Proxy/proxy.ashx?",
-                                    callback: function (response) {
-                                        if (response.status == 200) {
-                                            var esriJsonParser = new OpenLayers.Format.JSON();
-                                            esriJsonParser.extractAttributes = true;
-                                            var parsedResponse = esriJsonParser.read(response.responseText);
-                                            if (!parsedResponse.error) {
-                                                //Finally got Result. Lets Send it to the console for now and break from this stupid loop!
-                                                //  console.log(parsedResponse);
-                                                clearInterval(resultSearcher);
+                            if (!parsedResponse.error && parsedResponse.jobId) {
+                                //console.log("LandCoverModule Response: " + JSON.stringify(parsedResponse));
+                                //Ohkay Great! Now we have the job Submitted. Lets get the Job ID and then Submit a request for the results.
+                                var finalResponse = {};
+                                var mainObj = _this;
+                                var jobId = parsedResponse.jobId;
+                                requestFailureCount[jobId] = 0;
+                                var resultSearcher = setInterval(function () {
+                                    //Send out another request
+                                    var resultRequestRepeat = OpenLayers.Request.GET({
+                                        url: "https://geoserver.byu.edu/arcgis/rest/services/land_cover/GPServer/land_cover/" + "jobs/" + jobId + "/results/Extract_nlcd1_TableSelect?f=json",
+                                        proxy: "/Proxy/proxy.ashx?",
+                                        callback: function (response) {
+                                            if (response.status == 200) {
+                                                var esriJsonParser = new OpenLayers.Format.JSON();
+                                                esriJsonParser.extractAttributes = true;
+                                                var parsedResponse = esriJsonParser.read(response.responseText);
+                                                if (!parsedResponse.error) {
+                                                    //Finally got Result. Lets Send it to the console for now and break from this stupid loop!
+                                                    //  console.log(parsedResponse);
+                                                    clearInterval(resultSearcher);
 
-                                                if (parsedResponse && parsedResponse.value.features[0].attributes.Value) {
-                                                    var length = parsedResponse.value.features.length, element = null;
+                                                    if (parsedResponse && parsedResponse.value.features[0].attributes.Value) {
+                                                        var length = parsedResponse.value.features.length, element = null;
 
-                                                    //console.log(length);
-                                                    var landCovers = [];
-                                                    var ele = null;
-                                                    for (var i = 0; i < length; i++) {
-                                                        ele = parsedResponse.value.features[i].attributes;
-                                                        var percentRound = Math.round(ele.Percent);
-                                                        if (percentRound > 1) {
-                                                            landCovers.push({ cover: ele.LandCover, percent: percentRound });
-                                                        }
-                                                    }
-
-                                                    function SortByPercent(x, y) {
-                                                        return x.percent - y.percent;
-                                                    }
-
-                                                    landCovers.sort(SortByPercent);
-                                                    landCovers.reverse();
-
-                                                    //console.log(landCovers);
-                                                    //Show a different row for each Type observed
-                                                    //Maybe later to show different lines. Presently going with the Star Rating Approach
-                                                    //var responseArray: string[] = [];
-                                                    var overallScore = 0;
-                                                    var totalPercent = 0;
-                                                    var combinedText = '';
-
-                                                    for (var i = 0; i < landCovers.length; i++) {
-                                                        if (typeof _this.starRatingHelper.starRatings[landCovers[i].cover] === "undefined") {
-                                                            _this.starRatingHelper.starRatings[landCovers[i].cover] = _this.starRatingHelper.options.defaultStarRating;
+                                                        //console.log(length);
+                                                        var landCovers = [];
+                                                        var ele = null;
+                                                        for (var i = 0; i < length; i++) {
+                                                            ele = parsedResponse.value.features[i].attributes;
+                                                            var percentRound = Math.round(ele.Percent);
+                                                            if (percentRound > 1) {
+                                                                landCovers.push({ cover: ele.LandCover, percent: percentRound });
+                                                            }
                                                         }
 
-                                                        // overall score is the average star rating weighted by the percentage of individual land covers
-                                                        var starRating = _this.starRatingHelper.starRatings[landCovers[i].cover];
+                                                        function SortByPercent(x, y) {
+                                                            return x.percent - y.percent;
+                                                        }
 
-                                                        totalPercent += landCovers[i].percent;
-                                                        overallScore += landCovers[i].percent * starRating;
+                                                        landCovers.sort(SortByPercent);
+                                                        landCovers.reverse();
 
-                                                        var newText = landCovers[i].percent + "% " + landCovers[i].cover + " [" + starRating + ((starRating === 1) ? " star]" : " stars]");
+                                                        //console.log(landCovers);
+                                                        //Show a different row for each Type observed
+                                                        //Maybe later to show different lines. Presently going with the Star Rating Approach
+                                                        //var responseArray: string[] = [];
+                                                        var overallScore = 0;
+                                                        var totalPercent = 0;
+                                                        var combinedText = '';
 
-                                                        combinedText += (combinedText.length ? ', ' : '') + newText;
+                                                        for (var i = 0; i < landCovers.length; i++) {
+                                                            if (typeof _this.starRatingHelper.starRatings[landCovers[i].cover] === "undefined") {
+                                                                _this.starRatingHelper.starRatings[landCovers[i].cover] = _this.starRatingHelper.options.defaultStarRating;
+                                                            }
+
+                                                            // overall score is the average star rating weighted by the percentage of individual land covers
+                                                            var starRating = _this.starRatingHelper.starRatings[landCovers[i].cover];
+
+                                                            totalPercent += landCovers[i].percent;
+                                                            overallScore += landCovers[i].percent * starRating;
+
+                                                            var newText = landCovers[i].percent + "% " + landCovers[i].cover + " [" + starRating + ((starRating === 1) ? " star]" : " stars]");
+
+                                                            combinedText += (combinedText.length ? ', ' : '') + newText;
+                                                        }
+
+                                                        overallScore = overallScore / totalPercent;
+
+                                                        // use the combined rating string, and its lowest rating value
+                                                        //console.log(this);
+                                                        //var combinedText = _this.starRatingHelper1.sortRatableArray(responseArray);
+                                                        score.popupMessage = combinedText;
+
+                                                        //var scoreVal = _this.starRatingHelper1.starRatings[responseArray[0]];
+                                                        score.updateValue(overallScore);
+
+                                                        //Save to local cache
+                                                        $.jStorage.deleteKey(key);
+                                                        $.jStorage.deleteKey(key + "msg");
+                                                        $.jStorage.set(key, overallScore);
+                                                        $.jStorage.set(key + "msg", combinedText);
+                                                    } else {
+                                                        // use the no category label, and its current star rating
+                                                        score.popupMessage = "No landcover found";
+                                                        score.updateValue(Number.NaN);
                                                     }
-
-                                                    overallScore = overallScore / totalPercent;
-
-                                                    // use the combined rating string, and its lowest rating value
-                                                    //console.log(this);
-                                                    //var combinedText = _this.starRatingHelper1.sortRatableArray(responseArray);
-                                                    score.popupMessage = combinedText;
-
-                                                    //var scoreVal = _this.starRatingHelper1.starRatings[responseArray[0]];
-                                                    score.updateValue(overallScore);
-
-                                                    //Save to local cache
-                                                    $.jStorage.deleteKey(key);
-                                                    $.jStorage.deleteKey(key + "msg");
-                                                    $.jStorage.set(key, overallScore);
-                                                    $.jStorage.set(key + "msg", combinedText);
                                                 } else {
-                                                    // use the no category label, and its current star rating
-                                                    score.popupMessage = "No landcover found";
-                                                    score.updateValue(Number.NaN);
+                                                    // request error might be perminant... need to handle that!
+                                                    requestFailureCount[jobId] += 1;
+
+                                                    if (requestFailureCount[jobId] < 12) {
+                                                        console.log("Land Use tool job '" + jobId + "' still processing...");
+                                                    } else {
+                                                        clearInterval(resultSearcher);
+                                                        score.popupMessage = "Error " + parsedResponse.error.code + ": " + parsedResponse.error.message;
+                                                        score.updateValue(Number.NaN);
+                                                    }
                                                 }
                                             } else {
-                                                console.log("Land Use tool job '" + jobId + "' still processing...");
+                                                clearInterval(resultSearcher);
+                                                score.popupMessage = "Error " + response.status + " " + response.statusText;
+                                                score.updateValue(Number.NaN);
                                             }
-                                        } else {
-                                            clearInterval(resultSearcher);
-                                            score.popupMessage = "Error " + response.status + " " + response.statusText;
-                                            score.updateValue(Number.NaN);
                                         }
-                                    }
-                                });
-                            }, 10000);
+                                    });
+                                }, 10000);
+                            } else {
+                                score.popupMessage = "Error" + (parsedResponse.error ? " " + parsedResponse.error.code + ": " + parsedResponse.error.message : ": Server didn't send a job ID");
+                                score.updateValue(Number.NaN);
+                            }
                         } else {
                             score.popupMessage = "Error " + response.status + " " + response.statusText;
                             score.updateValue(Number.NaN);

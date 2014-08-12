@@ -144,15 +144,18 @@ var INLModules;
                         return this.format.read(data);
                     },
                     callback: function (response) {
-                        if (response.success()) {
+                        if (response.success() && !(response.data && response.data.error) && !response.error) {
                             // cache the returned features, then update the score through the cache
                             _this.nearestFeatureCache[score.site.id] = response.features || [];
                             _this.updateScoreFromCache(score);
-                        } else if (response.data.error) {
-                            score.popupMessage = "Server error " + response.data.error.toString();
+                        } else if (response.data && response.data.error) {
+                            score.popupMessage = "Server error " + ((response.data.error.code && response.data.error.message) ? (response.data.error.code + " " + response.data.error.message) : response.data.error.toString());
+                            score.updateValue(Number.NaN);
+                        } else if (response.error) {
+                            score.popupMessage = "Request error " + ((response.error.code && response.error.message) ? (response.data.error.code + " " + response.error.message) : response.error.toString());
                             score.updateValue(Number.NaN);
                         } else {
-                            score.popupMessage = "Request error " + response.error.toString();
+                            score.popupMessage = "Unknown error";
                             score.updateValue(Number.NaN);
                         }
                     }

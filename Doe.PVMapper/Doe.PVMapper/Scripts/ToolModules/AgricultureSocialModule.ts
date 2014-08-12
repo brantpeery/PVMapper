@@ -218,7 +218,7 @@ module INLModules {
             //parseFeatures: function (data) {
             //    return this.format.read(data);
             //},
-            callback: (response: any) => {
+            callback: (response: OpenLayers.Response) => {
                 //alert("Nearby features: " + response.features.length);
                 if (response.status === 200) {
                     var closestFeature = null;
