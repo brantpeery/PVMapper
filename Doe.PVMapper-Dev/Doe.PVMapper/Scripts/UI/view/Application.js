@@ -107,8 +107,33 @@ var app = Ext.application({
             theme: "/Content/OpenLayers/default/style.css",
         });
 
+        var layerTreeStore_sortNodeTimeouts = {};
         var layerTreeStore = Ext.create('Ext.data.TreeStore', {
             model: 'GeoExt.data.LayerTreeModel',
+            //sorters: [{ property: 'text', direction: 'ASC' }], // <-- this doesn't sort leaf nodes
+            //folderSort: true, // <-- this doesn't help
+            listeners: {
+                //sort: function (self, childNodes, eOpts) {
+                //    console.debug("Sorted!");
+                //},
+                insert: function (self, node, refNode, eOpts) {
+                    //console.debug("Inserted " + node.data.text);
+
+                    // after inserting layer(s), sort the children of each affected parent layer container
+                    if (node.parentNode && node.parentNode.parentNode && // don't sort the root container's children (ie don't sort the layer containers)
+                        node.data && node.parentNode.data && node.parentNode.data.text && // don't sort unsortable nodes (if any...?)
+                        !layerTreeStore_sortNodeTimeouts[node.parentNode.data.text]) { // don't sort a layer container's children more than once in a row
+
+                        layerTreeStore_sortNodeTimeouts[node.parentNode.data.text] = window.setTimeout(function () {
+                            layerTreeStore_sortNodeTimeouts[node.parentNode.data.text] = null;
+                            node.parentNode.sort(function (o1, o2) {
+                                //console.debug(o1.data.text + " vs " + o2.data.text);
+                                return (o1.data.text === o2.data.text) ? 0 : (o1.data.text < o2.data.text) ? -1 : 1;
+                            });
+                        }, 1); // we have to delay this... calling sort from within insert otherwise will throw an exception someplace in ExtJS.
+                    }
+                }
+            },
             root: {
                 children: [{
                     text: "Base Maps",
@@ -188,10 +213,10 @@ var app = Ext.application({
                 }]
             }],
             viewConfig: {
-                plugins: [{
-                    ptype: 'treeviewdragdrop',
-                    appendOnly: false
-                }],
+                //plugins: [{
+                //    ptype: 'treeviewdragdrop',
+                //    appendOnly: false
+                //}],
                 listeners: {
                     //this code is for context menu for allow delete of a Custom KML layer
                     itemcontextmenu: function (treeview, record, element, index, evt) {
@@ -254,7 +279,7 @@ var app = Ext.application({
         var mapPanel = Ext.create('GeoExt.panel.Map', {
             id: 'mapPanel',
             title: null,
-      header: false,
+            header: false,
             map: map,
             extent: usBounds, // <-- this doesn't actually change the visible extent of our map at all
             stateful: true,
