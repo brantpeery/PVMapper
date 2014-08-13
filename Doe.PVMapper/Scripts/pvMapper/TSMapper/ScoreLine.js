@@ -391,9 +391,10 @@ var pvMapper;
             this.weight = (typeof options.weight === "number") ? options.weight : 10;
 
             // handy means of reusing code paths to reset the socreline configuration
-            var defaultConfiguration = JSON.parse(JSON.stringify(this.toJSON()));
+            //Note: we keep this as a JSON string (rather than a JSON object) as a convenient means of deep-cloning the object.
+            var defaultConfiguration = JSON.stringify(this.toJSON());
             this.resetConfiguration = function () {
-                _this.fromJSON(defaultConfiguration);
+                _this.fromJSON(JSON.parse(defaultConfiguration));
             };
 
             // and finally, load our browser-cached configuration (if any)

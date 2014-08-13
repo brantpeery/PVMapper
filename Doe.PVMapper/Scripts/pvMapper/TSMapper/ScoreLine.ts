@@ -131,9 +131,10 @@ module pvMapper {
             this.weight = (typeof options.weight === "number") ? options.weight : 10;
 
             // handy means of reusing code paths to reset the socreline configuration
-            var defaultConfiguration: IScoreLineJSON = JSON.parse(JSON.stringify(this.toJSON())); // <-- kinda hacky...
+            //Note: we keep this as a JSON string (rather than a JSON object) as a convenient means of deep-cloning the object.
+            var defaultConfiguration: string = JSON.stringify(this.toJSON()); // <-- kinda hacky...
             this.resetConfiguration = () => {
-                this.fromJSON(defaultConfiguration);
+                this.fromJSON(JSON.parse(defaultConfiguration));
             }
 
             // and finally, load our browser-cached configuration (if any)
