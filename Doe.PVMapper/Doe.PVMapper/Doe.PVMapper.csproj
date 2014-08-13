@@ -544,7 +544,6 @@
     <Content Include="Scripts\ToolModules\WildlifeSocialModule.js">
       <DependentUpon>WildlifeSocialModule.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="Scripts\pvMapper\Utility.ts" />
     <Content Include="Scripts\UI\extras\promise.js" />
     <Content Include="Scripts\UI\view\ExportGridToExcel.js" />
     <Content Include="Scripts\UI\view\PieView.js" />
@@ -1082,7 +1081,6 @@
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
-    <Content Include="Scripts\pvMapper\Utility.js" />
     <Content Include="Scripts\UI\view\Application.js" />
     <Content Include="Scripts\UI\extras\DynamicLoader.js" />
     <Content Include="Scripts\UI\view\MainToolbar.js" />
