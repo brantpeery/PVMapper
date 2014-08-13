@@ -177,7 +177,6 @@
 /// <reference path="pvmapper/scoreboard.js" />
 /// <reference path="pvmapper/scoreline.js" />
 /// <reference path="pvmapper/site.js" />
-/// <reference path="pvmapper/utility.js" />
 /// <reference path="ui/extras/promise.js" />
 /// <reference path="../lpresources/js/jquery.cmsmsresponsiveslider.min.js" />
 /// <reference path="../lpresources/js/jquery.flickrfeed.min.js" />

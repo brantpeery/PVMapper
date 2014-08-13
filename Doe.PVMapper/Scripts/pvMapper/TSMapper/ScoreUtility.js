@@ -147,21 +147,6 @@ var pvMapper;
                 };
                 return o;
             };
-            //Check for custom utility by checking to see if there is a function callback (not optimal but in the absence of interface comparison will do)
-            if (options['functionCallback']) {
-                //Load up the ScoreUtility with the custom function + window callbacks
-                var copt = options;
-
-                //Create a new utility function named after the custom functionName
-                pvMapper.UtilityFunctions[copt.functionName] = {
-                    fn: copt.functionCallback,
-                    //Attach handlers for setting up and tearing down the utility function setup window
-                    windowSetup: copt.windowSetupCallback,
-                    windowOk: copt.windowOkCallback,
-                    iconURL: copt.iconURL
-                };
-            }
-
             //Attach the named function and window
             this.functionName = options.functionName;
             this.functionArgs = this.createArg(options.functionName);

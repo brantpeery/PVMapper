@@ -46,12 +46,6 @@ module pvMapper {
         iconURL?: string;
     }
 
-    export interface ICustomScoreUtilityOptions extends IScoreUtilityOptions {
-        functionCallback: (x: number, args: any) => number;
-        windowSetupCallback: IWindowSetupCallback;
-        windowOkCallback: IWindowOkCallback;
-    }
-
     export class MinMaxUtilityArgs implements IScoreUtilityArgs {
 
         constructor(public minValue: number = 0,
@@ -211,20 +205,6 @@ module pvMapper {
 
     export class ScoreUtility {                            
         constructor(options: IScoreUtilityOptions) {
-            //Check for custom utility by checking to see if there is a function callback (not optimal but in the absence of interface comparison will do)
-            if (options['functionCallback']) {
-                //Load up the ScoreUtility with the custom function + window callbacks
-                var copt: ICustomScoreUtilityOptions = <ICustomScoreUtilityOptions> options; //This is a dumb way of making the IDE stop complaining that the type is not right
-                //Create a new utility function named after the custom functionName
-                UtilityFunctions[copt.functionName] = {
-                    fn: copt.functionCallback,
-                    //Attach handlers for setting up and tearing down the utility function setup window
-                    windowSetup: copt.windowSetupCallback,
-                    windowOk: copt.windowOkCallback,
-                    iconURL: copt.iconURL
-                }
-            }
-
             //Attach the named function and window
             this.functionName = options.functionName;
             this.functionArgs = this.createArg(options.functionName);
