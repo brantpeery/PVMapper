@@ -322,7 +322,7 @@ module INLModules {
 
             if (features) {
                 for (var i = 0; i < features.length; i++) {
-                    var distance: number = score.site.geometry.distanceTo(features[i].geometry);
+                    var distance: number = score.site.geometry.distanceTo(features[i].geometry, { edge: false });
                     if (distance < minDistance) {
                         minDistance = distance;
                         closestFeature = features[i];

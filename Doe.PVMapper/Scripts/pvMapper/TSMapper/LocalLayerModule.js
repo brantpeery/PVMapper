@@ -79,7 +79,7 @@ var INLModules;
                 if (_this.localLayer.features) {
                     for (var i = 0; i < _this.localLayer.features.length; i++) {
                         if (_this.localLayer.features[i].geometry !== null) {
-                            var distance = score.site.geometry.distanceTo(_this.localLayer.features[i].geometry);
+                            var distance = score.site.geometry.distanceTo(_this.localLayer.features[i].geometry, { edge: false });
                             if (distance < minDistance) {
                                 minDistance = distance;
                                 closestFeature = _this.localLayer.features[i];
