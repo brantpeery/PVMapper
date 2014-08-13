@@ -148,7 +148,7 @@ module INLModules {
             if (this.localLayer.features) {
                 for (var i = 0; i < this.localLayer.features.length; i++) {
                     if (this.localLayer.features[i].geometry !== null) {  //don't check non-polygon features.
-                        var distance: number = score.site.geometry.distanceTo(this.localLayer.features[i].geometry);
+                        var distance: number = score.site.geometry.distanceTo(this.localLayer.features[i].geometry, { edge: false });
                         if (distance < minDistance) {
                             minDistance = distance;
                             closestFeature = this.localLayer.features[i];
