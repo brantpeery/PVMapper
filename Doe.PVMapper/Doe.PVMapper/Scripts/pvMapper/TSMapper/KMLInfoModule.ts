@@ -16,7 +16,7 @@ module INLModules {
             this.id = "KmlInfoModule." + this.sourceDataID; // multiple instances of this module will exist... one for each kml file loaded... sigh.
 
             this.title = toolName; // this can change, and uniqueness won't be enforced.
-            this.description = "Adds '" + kmlFileName + "' to the map layer list.";
+            this.description = "Adds '" + this.title + "' to the map layer list.";
 
             this.readTextFile(kmlRawString, toolName, kmlFileName);
 
