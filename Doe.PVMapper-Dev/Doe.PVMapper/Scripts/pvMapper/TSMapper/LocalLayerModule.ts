@@ -16,7 +16,7 @@ module INLModules {
             this.id = "KmlProximityModule." + this.sourceDataID; // multiple instances of this module will exist... one for each kml file loaded... sigh.
 
             this.title = toolName; // this can change, and uniqueness won't be enforced.
-            this.description = "Calculates the distance to the nearest feature loaded from '" + kmlFileName + "'.";
+            this.description = "Calculates the distance to the nearest feature loaded from '" + this.title + "'.";
 
             this.readTextFile(kmlRawString, toolName, kmlFileName);
 
@@ -66,7 +66,7 @@ module INLModules {
 
                     scoreUtilityOptions: {
                         functionName: "linear3pt",
-                        functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 1000, 0, "mi", "Distance to nearest feature", "Prefer sites closer to the nearest feature in '" + kmlFileName + "'.")
+                        functionArgs: new pvMapper.MinMaxUtilityArgs(100, 0, "mi", "Distance to nearest feature", "Prefer sites closer to the nearest feature in '" + this.title + "'.")
                     },
                     weight: 10,
                 }],                     
@@ -163,10 +163,10 @@ module INLModules {
                     distanceInMi > 0.5 ? distanceInMi.toFixed(2) + " mi" :
                     distanceInMi.toFixed(2) + " mi (" + distanceInFt.toFixed(0) + " ft)";
 
-                var toNearestString = " to nearest feature";
+                var toNearestString = " to the nearest '" + this.title + "' feature";
 
                 var messageString = distanceInFt > 1 ? distanceString + toNearestString + "." :
-                    "0 mi" + toNearestString + " (feature is on site).";
+                    "0 mi" + toNearestString + " (a '" + this.title + "' feature is on site).";
 
                 score.popupMessage = messageString;
                 score.updateValue(distanceInMi);
