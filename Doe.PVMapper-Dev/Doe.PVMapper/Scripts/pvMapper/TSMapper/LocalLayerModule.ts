@@ -65,7 +65,7 @@ module INLModules {
                     },
 
                     scoreUtilityOptions: {
-                        functionName: "linear3pt",
+                        functionName: "linear",
                         functionArgs: new pvMapper.MinMaxUtilityArgs(100, 0, "mi", "Distance to nearest feature", "Prefer sites closer to the nearest feature in '" + this.title + "'.")
                     },
                     weight: 10,
