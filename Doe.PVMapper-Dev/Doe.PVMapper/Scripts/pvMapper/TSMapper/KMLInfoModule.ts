@@ -58,12 +58,6 @@ module INLModules {
                     category: this.category,
                     description: this.description,
                     longDescription: null,
-
-                    scoreUtilityOptions: {
-                        functionName: "linear3pt",
-                        functionArgs: new pvMapper.ThreePointUtilityArgs(0, 1, 100, 0.3, 1000, 0, "mi", "Distance to nearest feature", "Prefer sites closer to the nearest feature in '" + kmlFileName + "'.")
-                    },
-                    weight: 10,
                 }],                     
             });
         }
