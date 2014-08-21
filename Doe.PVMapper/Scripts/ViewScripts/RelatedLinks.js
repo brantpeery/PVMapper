@@ -40,5 +40,12 @@ pvMapper.onReady(function () {
         handler: function () {
             window.open('http://www.dsireusa.org/');
         }
+    }, {
+        text: 'EPA RE-Powering',
+        iconCls: 'x-epa-menu-icon',
+        tooltip: 'EPA resources for siting renewable energy on potentially contaminated lands, landfills, and mine sites',
+        handler: function () {
+            window.open('http://www.epa.gov/renewableenergyland/');
+        }
     }]);
 });
