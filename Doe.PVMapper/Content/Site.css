@@ -219,6 +219,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4fcff', end
    -o-background-size: contain;
        background-size:contain;
 }
+.x-epa-menu-icon {
+  background-image: url(http://www.epa.gov/favicon.ico);
+  -moz-background-size:contain;
+   -o-background-size: contain;
+       background-size:contain;
+}
 .x-tag-menu-icon {
   background-image: url(../Images/tag.png);
   -moz-background-size:contain;
