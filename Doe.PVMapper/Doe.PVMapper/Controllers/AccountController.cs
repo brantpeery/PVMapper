@@ -85,7 +85,7 @@ namespace Doe.PVMapper.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "App");
                     }
                 }
                 else
@@ -105,7 +105,8 @@ namespace Doe.PVMapper.Controllers
         {
             FormsAuthentication.SignOut();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "App");
+            //return Redirect("/"); //Note: <-- this hoarks up the logoff routine... the browser back button can leave users in some sort of half-logged-in state
         }
 
         //
@@ -175,7 +176,7 @@ namespace Doe.PVMapper.Controllers
                     }
 
                     FormsAuthentication.SetAuthCookie(model.UserName, createPersistentCookie: false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "App");
                 }
                 else
                 {

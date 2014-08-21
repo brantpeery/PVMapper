@@ -11,10 +11,10 @@ namespace Doe.PVMapper.Controllers
         //
         // GET: /Report/
 
-        public ActionResult Index()
-        {
-            return View();
-        }
+        //public ActionResult Index()
+        //{
+        //    return View();
+        //}
 
         public ActionResult Summary()
         {
