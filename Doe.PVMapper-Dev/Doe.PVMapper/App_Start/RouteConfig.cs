@@ -19,15 +19,18 @@ namespace Doe.PVMapper
                 defaults: new { id = RouteParameter.Optional }
             );
 
+            // redirect old /Home url to the new homepage (in case anyone is using old/outdated links or bookmarks)
             routes.MapRoute(
-                "App",
-                "App/{action}/{id}",
-                new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                "Home",
+                "Home/{action}/{id}",
+                new { controller = "Redirect", action = "Index", id = UrlParameter.Optional }
             );
+
+            // redirect root url; all other urls are handled by their associated controllers.
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "SiteDetail", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Redirect", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

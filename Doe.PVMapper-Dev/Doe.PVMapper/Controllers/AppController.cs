@@ -10,11 +10,8 @@ using MongoRepository;
 
 namespace Doe.PVMapper.Controllers
 {
-    public class HomeController : Controller
-       
+    public class AppController : Controller
     {
-
-        private Object IOLock = new Object();
         private string getModules() {
             var modules = "";
 
@@ -36,32 +33,33 @@ namespace Doe.PVMapper.Controllers
         {
             ViewBag.Message = "PV Mapper - Find a sweet spot for your solar array.";
             ViewBag.toolModules = getModules();
-            var model = _repository.All(m => m.Url != null);
-            return View(model);
+            //var model = _repository.All(m => m.Url != null);
+            //return View(model);
+            return View(); 
         }
 
-        public ActionResult tsindex()
-        {
-            ViewBag.Message = "PV Mapper - Test of the TS js files.";
+        //public ActionResult tsindex()
+        //{
+        //    ViewBag.Message = "PV Mapper - Test of the TS js files.";
 
-            var model = _repository.All(m => m.Url != null);
-            return View();
-        }
+        //    var model = _repository.All(m => m.Url != null);
+        //    return View();
+        //}
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Locate places favorable to the installation of solar panels.";
+        //public ActionResult About()
+        //{
+        //    ViewBag.Message = "Locate places favorable to the installation of solar panels.";
 
-            return View();
-        }
+        //    return View();
+        //}
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your quintessential contact page.";
+        //public ActionResult Contact()
+        //{
+        //    ViewBag.Message = "Your quintessential contact page.";
 
-            return View();
-        }
+        //    return View();
+        //}
 
-        private static readonly IRepository<WebExtension> _repository = MongoHelper.GetRepository<WebExtension>();
+        //private static readonly IRepository<WebExtension> _repository = MongoHelper.GetRepository<WebExtension>();
     }
 }
