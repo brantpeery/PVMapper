@@ -224,79 +224,86 @@ module INLModules {
                     var closestFeature = null;
                     var minDistance: number = searchDistanceInMeters;
 
-                    var features = OpenLayers.Format.EsriGeoJSON.prototype.read(response.responseText);
-                    //console.log("Near-ish features: " + (features ? features.length : 0));
+                    var responseObj = OpenLayers.Format.JSON.prototype.read(response.responseText);
+                    if (!responseObj.error) {
 
-                    if (features) {
-                        for (var i = 0; i < features.length; i++) {
-                            var distance: number = score.site.geometry.distanceTo(features[i].geometry, { edge: false });
-                            if (distance < minDistance) {
-                                minDistance = distance;
-                                closestFeature = features[i];
+                        var features = OpenLayers.Format.EsriGeoJSON.prototype.read(responseObj);
+                        //console.log("Near-ish features: " + (features ? features.length : 0));
+
+                        if (features) {
+                            for (var i = 0; i < features.length; i++) {
+                                var distance: number = score.site.geometry.distanceTo(features[i].geometry, { edge: false });
+                                if (distance < minDistance) {
+                                    minDistance = distance;
+                                    closestFeature = features[i];
+                                }
                             }
                         }
-                    }
-                    if (closestFeature !== null) {
-                        var minDistanceInMi = minDistance * 0.000621371;
-                        lastDistanceCache[score.site.id] = minDistanceInMi;
+                        if (closestFeature !== null) {
+                            var minDistanceInMi = minDistance * 0.000621371;
+                            lastDistanceCache[score.site.id] = minDistanceInMi;
 
-                        var percentOk = 0;
-                        var distanceOk = 5000;
-                        for (var i = surveyResults.length - 1; i--; i >= 0) {
-                            if (minDistanceInMi >= surveyResults[i].mi) {
-                                percentOk = surveyResults[i].percentOk;
-                                distanceOk = surveyResults[i].mi;
-                                break;
+                            var percentOk = 0;
+                            var distanceOk = 5000;
+                            for (var i = surveyResults.length - 1; i--; i >= 0) {
+                                if (minDistanceInMi >= surveyResults[i].mi) {
+                                    percentOk = surveyResults[i].percentOk;
+                                    distanceOk = surveyResults[i].mi;
+                                    break;
+                                }
                             }
-                        }
 
-                        var distanceOkStr: string =
-                            (distanceOk < 1) ? distanceOk.toFixed(2) :
-                            (distanceOk < 10) ? distanceOk.toFixed(1) :
-                            distanceOk.toFixed(0);
+                            var distanceOkStr: string =
+                                (distanceOk < 1) ? distanceOk.toFixed(2) :
+                                (distanceOk < 10) ? distanceOk.toFixed(1) :
+                                distanceOk.toFixed(0);
 
-                        var minDistanceStr: string =
-                            (minDistanceInMi < 1) ? minDistanceInMi.toFixed(2) :
-                            (minDistanceInMi < 10) ? minDistanceInMi.toFixed(1) :
-                            minDistanceInMi.toFixed(0);
+                            var minDistanceStr: string =
+                                (minDistanceInMi < 1) ? minDistanceInMi.toFixed(2) :
+                                (minDistanceInMi < 10) ? minDistanceInMi.toFixed(1) :
+                                minDistanceInMi.toFixed(0);
 
-                        //score.popupMessage = minDistanceStr + " mi to " +
-                        //    parseFloat(closestFeature.attributes['ACRES']).toFixed(1) + " acres of " +
-                        //    closestFeature.attributes['WETLAND_TYPE'] + "; " +
-                        //    percentOk.toFixed(1) + "% of respondents reported they would accept " +
-                        //    distanceOkStr + " mi or more.";
+                            //score.popupMessage = minDistanceStr + " mi to " +
+                            //    parseFloat(closestFeature.attributes['ACRES']).toFixed(1) + " acres of " +
+                            //    closestFeature.attributes['WETLAND_TYPE'] + "; " +
+                            //    percentOk.toFixed(1) + "% of respondents reported they would accept " +
+                            //    distanceOkStr + " mi or more.";
 
-                        //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept " +
-                        //    distanceOkStr + " mi or more; " + score.site.name + " is " +
-                        //    minDistanceStr + " mi from " +
-                        //    parseFloat(closestFeature.attributes['ACRES']).toFixed(1) + " acres of " +
-                        //    closestFeature.attributes['WETLAND_TYPE'];
+                            //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept " +
+                            //    distanceOkStr + " mi or more; " + score.site.name + " is " +
+                            //    minDistanceStr + " mi from " +
+                            //    parseFloat(closestFeature.attributes['ACRES']).toFixed(1) + " acres of " +
+                            //    closestFeature.attributes['WETLAND_TYPE'];
 
-                        //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site " +
-                        //    minDistanceStr + " mi from a " +
-                        //    closestFeature.attributes['WETLAND_TYPE'] + "agriculture";
+                            //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site " +
+                            //    minDistanceStr + " mi from a " +
+                            //    closestFeature.attributes['WETLAND_TYPE'] + "agriculture";
 
-                        //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept this proximity. (site " +
-                        //    score.site.name + " is " + minDistanceStr + " mi from a " +
-                        //    closestFeature.attributes['WETLAND_TYPE'] + ")";
+                            //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept this proximity. (site " +
+                            //    score.site.name + " is " + minDistanceStr + " mi from a " +
+                            //    closestFeature.attributes['WETLAND_TYPE'] + ")";
 
-                        score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site built " +
+                            score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site built " +
                             distanceOkStr + " mi or more from agriculture. (The nearest agriculture is " +
                             minDistanceStr + " mi away.)";
 
-                        score.updateValue(percentOk);
-                    } else if (searchDistanceInMi < 5000) {
-                        // call recursively to find the nearest agriculture...
-                        updateScore(score, searchDistanceInMi * 10);
-                    } else {
-                        // no agriculture found in max search distance, so 100% of respondants are Ok with this.
+                            score.updateValue(percentOk);
+                        } else if (searchDistanceInMi < 5000) {
+                            // call recursively to find the nearest agriculture...
+                            updateScore(score, searchDistanceInMi * 10);
+                        } else {
+                            // no agriculture found in max search distance, so 100% of respondants are Ok with this.
 
-                        //score.popupMessage = "over 5000 mi to any agriculture; 100% of respondents reported they would accept this distance.";
-                        //score.popupMessage = "100% of respondents reported they would accept this proximity. (site " +
-                        //    score.site.name + " is over 5000 mi from any agriculture)";
-                        score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from agriculture." +
-                        " (There was no agriculture found within 5000 mi.)";
-                        score.updateValue(100);
+                            //score.popupMessage = "over 5000 mi to any agriculture; 100% of respondents reported they would accept this distance.";
+                            //score.popupMessage = "100% of respondents reported they would accept this proximity. (site " +
+                            //    score.site.name + " is over 5000 mi from any agriculture)";
+                            score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from agriculture." +
+                            " (There was no agriculture found within 5000 mi.)";
+                            score.updateValue(100);
+                        }
+                    } else {
+                        score.popupMessage = responseObj.error.message + " (" + responseObj.error.code + ")";
+                        score.updateValue(Number.NaN);
                     }
                 } else {
                     score.popupMessage = "Error " + response.status + " " + response.statusText;
