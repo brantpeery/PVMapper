@@ -80,7 +80,7 @@ var INLModules;
             this.description = "Percentage of survey respondents who reported this distance from wetlands as acceptable";
             // cache for the last distance found to a wetland, used so that our search isn't criminally inefficient
             this.lastDistanceCache = {};
-            this.wmsServerUrl = "http://107.20.228.18/ArcGIS/services/FWS_Wetlands_WMS/mapserver/wmsserver?";
+            this.wmsServerUrl = "http://107.20.228.18/ArcGIS/services/Wetlands/mapserver/wmsserver?";
             this.esriExportUrl = "http://107.20.228.18/ArcGIS/rest/services/Wetlands/MapServer/export";
             this.esriQueryUrl = "http://107.20.228.18/ArcGIS/rest/services/Wetlands/MapServer/0/query";
             this.addAllMaps = function () {
@@ -103,7 +103,7 @@ var INLModules;
                 // add as WMS layer
                 if (!_this.mapLayer) {
                     _this.mapLayer = new OpenLayers.Layer.WMS("Wetlands", _this.wmsServerUrl, {
-                        layers: "17",
+                        layers: "1",
                         transparent: "true",
                         format: "image/png",
                         exceptions: "application/vnd.ogc.se_inimage",
