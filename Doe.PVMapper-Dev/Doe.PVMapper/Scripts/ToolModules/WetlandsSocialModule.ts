@@ -213,7 +213,7 @@ module INLModules {
         private lastDistanceCache: { [siteId: string]: number } = {};
 
 
-        private wmsServerUrl = "http://107.20.228.18/ArcGIS/services/FWS_Wetlands_WMS/mapserver/wmsserver?";
+        private wmsServerUrl = "http://107.20.228.18/ArcGIS/services/Wetlands/mapserver/wmsserver?";
         private esriExportUrl = "http://107.20.228.18/ArcGIS/rest/services/Wetlands/MapServer/export";
         private esriQueryUrl = "http://107.20.228.18/ArcGIS/rest/services/Wetlands/MapServer/0/query";
 
@@ -244,7 +244,7 @@ module INLModules {
                     "Wetlands", //"Solar GHI 10km by SUNY", //"Solar Radiation",
                     this.wmsServerUrl,
                     {
-                        layers: "17",
+                        layers: "1",
                         transparent: "true",
                         format: "image/png",
                         exceptions: "application/vnd.ogc.se_inimage", //TODO: DEBUG = remove before deploy...
