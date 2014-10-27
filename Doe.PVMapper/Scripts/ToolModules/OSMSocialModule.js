@@ -193,8 +193,8 @@
 
         title: "Historic Proximity",
         category: "Social Acceptance",
-        description: "Percentage of survey respondents who reported this distance from cultural or historic landmarks as acceptable",
-        longDescription: '<p>This tool calculates the distance from a site to the nearest historic area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 477 respondents from six counties in Southern California answered Question 16 which asked "How much buffer distance is acceptable between a large solar facility and an area of cultural or historical importance?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "historic" key are considered. The accuracy of OSM data is limited by its contributors, and classification of historic or cultural sites may be highly subjective. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Historic).</p>',
+        description: "Percentage of people who would report this distance from cultural or historic landmarks as acceptable, according to our survey",
+        longDescription: '<p>This tool calculates the distance from a site to the nearest historic area, and then reports the estimated percentage of residents who would say that distance was acceptable, with a 95% confidence interval.</p><p>The survey used in this tool was administered by the PVMapper project in 2013 and 2014. From the 2013 survey, 477 respondents from six counties in Southern California answered Question 16 which asked "How much buffer distance is acceptable between a large solar facility and an area of cultural or historical importance?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "historic" key are considered. The accuracy of OSM data is limited by its contributors, and classification of historic or cultural sites may be highly subjective. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Historic).</p>',
 
         activate: null,
         deactivate: null,
@@ -212,7 +212,7 @@
             //    //},
             //    title: "Residential Proximity",
             //    category: "Social Acceptance",
-            //    description: "Percentage of survey respondents who reported this distance from residential areas as acceptable",
+            //    description: "Percentage of people who would report this distance from residential areas as acceptable, according to our survey",
             //    longDescription: '',
             //    //onScoreAdded: function (e, score: pvMapper.Score) {
             //    //    scores.push(score);
@@ -236,8 +236,8 @@
                 id: "OpenStreetMapSocialHistoricTool",
                 title: "Historic Proximity",
                 category: "Social Acceptance",
-                description: "Percentage of survey respondents who reported this distance from cultural or historic landmarks as acceptable",
-                longDescription: '<p>This tool calculates the distance from a site to the nearest historic area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 477 respondents from six counties in Southern California answered Question 16 which asked "How much buffer distance is acceptable between a large solar facility and an area of cultural or historical importance?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "historic" key are considered. The accuracy of OSM data is limited by its contributors, and classification of historic or cultural sites may be highly subjective. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Historic).</p>',
+                description: "Percentage of people who would report this distance from cultural or historic landmarks as acceptable, according to our survey",
+                longDescription: '<p>This tool calculates the distance from a site to the nearest historic area, and then reports the estimated percentage of residents who would say that distance was acceptable, with a 95% confidence interval.</p><p>The survey used in this tool was administered by the PVMapper project in 2013 and 2014. From the 2013 survey, 477 respondents from six counties in Southern California answered Question 16 which asked "How much buffer distance is acceptable between a large solar facility and an area of cultural or historical importance?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "historic" key are considered. The accuracy of OSM data is limited by its contributors, and classification of historic or cultural sites may be highly subjective. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Historic).</p>',
                 //onScoreAdded: function (e, score: pvMapper.Score) {
                 //    scores.push(score);
                 //},
@@ -263,7 +263,7 @@
 
         title: "Recreational Proximity",
         category: "Social Acceptance",
-        description: "Percentage of survey respondents who reported this distance from recreational areas as acceptable",
+        description: "Percentage of people who would report this distance from recreational areas as acceptable, according to our survey",
 
         activate: null,
         deactivate: null,
@@ -278,8 +278,8 @@
                 id: "OpenStreetMapSocialRecreationalTool",
                 title: "Recreational Proximity",
                 category: "Social Acceptance",
-                description: "Percentage of survey respondents who reported this distance from recreational areas as acceptable",
-                longDescription: '<p>This tool calculates the distance from a site to the nearest recreational area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 488 respondents from six counties in Southern California answered Question 19 which asked "How much buffer distance is acceptable between a large solar facility and recreation areas such as hunting, fishing, or hiking locations?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "leisure" key are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:leisure).</p>',
+                description: "Percentage of people who would report this distance from recreational areas as acceptable, according to our survey",
+                longDescription: '<p>This tool calculates the distance from a site to the nearest recreational area, and then reports the estimated percentage of residents who would say that distance was acceptable, with a 95% confidence interval.</p><p>The survey used in this tool was administered by the PVMapper project in 2013 and 2014. From the 2013 survey, 488 respondents from six counties in Southern California answered Question 19 which asked "How much buffer distance is acceptable between a large solar facility and recreation areas such as hunting, fishing, or hiking locations?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "leisure" key are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:leisure).</p>',
                 //onScoreAdded: function (e, score: pvMapper.Score) {
                 //    scores.push(score);
                 //},
@@ -420,9 +420,9 @@
                 }
             }
 
-            score.popupMessage = surveyResult.average + "% &plusmn; " + surveyResult.plusOrMinus + "% of US residents would accept a site built " +
+            score.popupMessage = surveyResult.average + "% &plusmn; " + surveyResult.plusOrMinus + "% of people would accept a site built " +
                 previousDistance + " mi - " + surveyResult.mi + " mi away from a " + objectTypeDescription +
-                ". The nearest " + objectTypeDescription + " is " +
+                " (95% confidence interval). The nearest " + objectTypeDescription + " is " +
                 (closestFeature.attributes.name ? closestFeature.attributes.name + ", " : "") +
                 minDistanceInMi.toFixed(2) + " mi away.";
 
