@@ -51,101 +51,131 @@
         //    { mi: 500, percentOk: 99.79716024 },
         //    { mi: 5000, percentOk: 100 }
         //],
+
+        //historic: [
+        //    { mi: 0, percentOk: 4.60251046 },
+        //    { mi: 0.018939394, percentOk: 5.648535565 },
+        //    { mi: 0.028409091, percentOk: 6.276150628 },
+        //    { mi: 0.056818182, percentOk: 6.485355649 },
+        //    { mi: 0.075757576, percentOk: 6.694560669 },
+        //    { mi: 0.09469697, percentOk: 7.322175732 },
+        //    { mi: 0.170454546, percentOk: 7.740585774 },
+        //    { mi: 0.189393939, percentOk: 8.786610879 },
+        //    { mi: 0.227272727, percentOk: 8.9958159 },
+        //    { mi: 0.25, percentOk: 10.46025105 },
+        //    { mi: 0.284090909, percentOk: 10.66945607 },
+        //    { mi: 0.473484849, percentOk: 10.87866109 },
+        //    { mi: 0.5, percentOk: 12.34309623 },
+        //    { mi: 0.568181818, percentOk: 12.76150628 },
+        //    { mi: 1, percentOk: 26.15062762 },
+        //    { mi: 1.4, percentOk: 26.35983264 },
+        //    { mi: 1.5, percentOk: 26.56903766 },
+        //    { mi: 2, percentOk: 34.93723849 },
+        //    { mi: 3, percentOk: 40.79497908 },
+        //    { mi: 4, percentOk: 42.88702929 },
+        //    { mi: 5, percentOk: 57.53138075 },
+        //    { mi: 6, percentOk: 58.15899582 },
+        //    { mi: 7, percentOk: 58.36820084 },
+        //    { mi: 8, percentOk: 60.041841 },
+        //    { mi: 9, percentOk: 60.25104603 },
+        //    { mi: 10, percentOk: 73.64016736 },
+        //    { mi: 14.2, percentOk: 73.84937238 },
+        //    { mi: 15, percentOk: 77.40585774 },
+        //    { mi: 20, percentOk: 83.26359833 },
+        //    { mi: 25, percentOk: 85.14644351 },
+        //    { mi: 30, percentOk: 88.07531381 },
+        //    { mi: 35, percentOk: 88.49372385 },
+        //    { mi: 40, percentOk: 88.91213389 },
+        //    { mi: 45, percentOk: 89.12133891 },
+        //    { mi: 50, percentOk: 94.76987448 },
+        //    { mi: 60, percentOk: 95.18828452 },
+        //    { mi: 70, percentOk: 95.39748954 },
+        //    { mi: 75, percentOk: 95.81589958 },
+        //    { mi: 80, percentOk: 96.0251046 },
+        //    { mi: 100, percentOk: 98.11715481 },
+        //    { mi: 120, percentOk: 98.32635983 },
+        //    { mi: 200, percentOk: 98.74476987 },
+        //    { mi: 250, percentOk: 98.9539749 },
+        //    { mi: 300, percentOk: 99.16317992 },
+        //    { mi: 500, percentOk: 99.37238494 },
+        //    { mi: 1000, percentOk: 99.79079498 },
+        //    { mi: 5000, percentOk: 100 }
+        //],
+
         historic: [
-            { mi: 0, percentOk: 4.60251046 },
-            { mi: 0.018939394, percentOk: 5.648535565 },
-            { mi: 0.028409091, percentOk: 6.276150628 },
-            { mi: 0.056818182, percentOk: 6.485355649 },
-            { mi: 0.075757576, percentOk: 6.694560669 },
-            { mi: 0.09469697, percentOk: 7.322175732 },
-            { mi: 0.170454546, percentOk: 7.740585774 },
-            { mi: 0.189393939, percentOk: 8.786610879 },
-            { mi: 0.227272727, percentOk: 8.9958159 },
-            { mi: 0.25, percentOk: 10.46025105 },
-            { mi: 0.284090909, percentOk: 10.66945607 },
-            { mi: 0.473484849, percentOk: 10.87866109 },
-            { mi: 0.5, percentOk: 12.34309623 },
-            { mi: 0.568181818, percentOk: 12.76150628 },
-            { mi: 1, percentOk: 26.15062762 },
-            { mi: 1.4, percentOk: 26.35983264 },
-            { mi: 1.5, percentOk: 26.56903766 },
-            { mi: 2, percentOk: 34.93723849 },
-            { mi: 3, percentOk: 40.79497908 },
-            { mi: 4, percentOk: 42.88702929 },
-            { mi: 5, percentOk: 57.53138075 },
-            { mi: 6, percentOk: 58.15899582 },
-            { mi: 7, percentOk: 58.36820084 },
-            { mi: 8, percentOk: 60.041841 },
-            { mi: 9, percentOk: 60.25104603 },
-            { mi: 10, percentOk: 73.64016736 },
-            { mi: 14.2, percentOk: 73.84937238 },
-            { mi: 15, percentOk: 77.40585774 },
-            { mi: 20, percentOk: 83.26359833 },
-            { mi: 25, percentOk: 85.14644351 },
-            { mi: 30, percentOk: 88.07531381 },
-            { mi: 35, percentOk: 88.49372385 },
-            { mi: 40, percentOk: 88.91213389 },
-            { mi: 45, percentOk: 89.12133891 },
-            { mi: 50, percentOk: 94.76987448 },
-            { mi: 60, percentOk: 95.18828452 },
-            { mi: 70, percentOk: 95.39748954 },
-            { mi: 75, percentOk: 95.81589958 },
-            { mi: 80, percentOk: 96.0251046 },
-            { mi: 100, percentOk: 98.11715481 },
-            { mi: 120, percentOk: 98.32635983 },
-            { mi: 200, percentOk: 98.74476987 },
-            { mi: 250, percentOk: 98.9539749 },
-            { mi: 300, percentOk: 99.16317992 },
-            { mi: 500, percentOk: 99.37238494 },
-            { mi: 1000, percentOk: 99.79079498 },
-            { mi: 5000, percentOk: 100 }
+            { mi: 0.25, low:  8.30, high: 14.60, average: 11.45, plusOrMinus: 3.15 },
+            { mi: 0.50, low:  9.00, high: 15.30, average: 12.15, plusOrMinus: 3.15 },
+            { mi: 1.00, low: 10.30, high: 16.80, average: 13.55, plusOrMinus: 3.25 },
+            { mi: 1.50, low: 24.00, high: 32.80, average: 28.40, plusOrMinus: 4.40 },
+            { mi: 2.00, low: 24.30, high: 33.10, average: 28.70, plusOrMinus: 4.40 },
+            { mi: 2.50, low: 31.60, high: 40.80, average: 36.20, plusOrMinus: 4.60 },
+            { mi: 3.00, low: 31.70, high: 41.00, average: 36.35, plusOrMinus: 4.65 },
+            { mi: 3.50, low: 37.00, high: 46.40, average: 41.70, plusOrMinus: 4.70 },
+            { mi: 4.00, low: 37.00, high: 46.40, average: 41.70, plusOrMinus: 4.70 },
+            { mi: 4.50, low: 38.60, high: 48.00, average: 43.30, plusOrMinus: 4.70 },
+            { mi: 5.00, low: 38.60, high: 48.00, average: 43.30, plusOrMinus: 4.70 }
         ],
+
+        //recreational: [
+        //    { mi: 0, percentOk: 4.90797546 },
+        //    { mi: 0.003787879, percentOk: 5.112474438 },
+        //    { mi: 0.005681818, percentOk: 5.316973415 },
+        //    { mi: 0.018939394, percentOk: 6.134969325 },
+        //    { mi: 0.028409091, percentOk: 6.339468303 },
+        //    { mi: 0.056818182, percentOk: 6.54396728 },
+        //    { mi: 0.09469697, percentOk: 7.157464213 },
+        //    { mi: 0.113636364, percentOk: 7.566462168 },
+        //    { mi: 0.170454546, percentOk: 7.770961145 },
+        //    { mi: 0.189393939, percentOk: 8.588957055 },
+        //    { mi: 0.25, percentOk: 9.81595092 },
+        //    { mi: 0.473484849, percentOk: 10.0204499 },
+        //    { mi: 0.5, percentOk: 12.26993865 },
+        //    { mi: 0.568181818, percentOk: 12.67893661 },
+        //    { mi: 1, percentOk: 22.29038855 },
+        //    { mi: 1.5, percentOk: 22.49488753 },
+        //    { mi: 2, percentOk: 30.26584867 },
+        //    { mi: 3, percentOk: 34.15132924 },
+        //    { mi: 4, percentOk: 35.78732106 },
+        //    { mi: 5, percentOk: 53.37423313 },
+        //    { mi: 6, percentOk: 54.39672802 },
+        //    { mi: 7, percentOk: 54.80572597 },
+        //    { mi: 8, percentOk: 56.64621677 },
+        //    { mi: 9.5, percentOk: 56.85071575 },
+        //    { mi: 10, percentOk: 68.71165644 },
+        //    { mi: 12.42742384, percentOk: 68.91615542 },
+        //    { mi: 15, percentOk: 72.18813906 },
+        //    { mi: 20, percentOk: 78.52760736 },
+        //    { mi: 25, percentOk: 81.39059305 },
+        //    { mi: 30, percentOk: 85.68507157 },
+        //    { mi: 35, percentOk: 85.88957055 },
+        //    { mi: 40, percentOk: 87.32106339 },
+        //    { mi: 45, percentOk: 87.93456033 },
+        //    { mi: 50, percentOk: 93.04703476 },
+        //    { mi: 59, percentOk: 93.25153374 },
+        //    { mi: 60, percentOk: 93.6605317 },
+        //    { mi: 70, percentOk: 94.06952965 },
+        //    { mi: 75, percentOk: 94.47852761 },
+        //    { mi: 80, percentOk: 94.68302658 },
+        //    { mi: 100, percentOk: 98.1595092 },
+        //    { mi: 120, percentOk: 98.36400818 },
+        //    { mi: 200, percentOk: 98.97750511 },
+        //    { mi: 500, percentOk: 99.18200409 },
+        //    { mi: 1000, percentOk: 99.79550102 },
+        //    { mi: 5000, percentOk: 100 }
+        //]
+
         recreational: [
-            { mi: 0, percentOk: 4.90797546 },
-            { mi: 0.003787879, percentOk: 5.112474438 },
-            { mi: 0.005681818, percentOk: 5.316973415 },
-            { mi: 0.018939394, percentOk: 6.134969325 },
-            { mi: 0.028409091, percentOk: 6.339468303 },
-            { mi: 0.056818182, percentOk: 6.54396728 },
-            { mi: 0.09469697, percentOk: 7.157464213 },
-            { mi: 0.113636364, percentOk: 7.566462168 },
-            { mi: 0.170454546, percentOk: 7.770961145 },
-            { mi: 0.189393939, percentOk: 8.588957055 },
-            { mi: 0.25, percentOk: 9.81595092 },
-            { mi: 0.473484849, percentOk: 10.0204499 },
-            { mi: 0.5, percentOk: 12.26993865 },
-            { mi: 0.568181818, percentOk: 12.67893661 },
-            { mi: 1, percentOk: 22.29038855 },
-            { mi: 1.5, percentOk: 22.49488753 },
-            { mi: 2, percentOk: 30.26584867 },
-            { mi: 3, percentOk: 34.15132924 },
-            { mi: 4, percentOk: 35.78732106 },
-            { mi: 5, percentOk: 53.37423313 },
-            { mi: 6, percentOk: 54.39672802 },
-            { mi: 7, percentOk: 54.80572597 },
-            { mi: 8, percentOk: 56.64621677 },
-            { mi: 9.5, percentOk: 56.85071575 },
-            { mi: 10, percentOk: 68.71165644 },
-            { mi: 12.42742384, percentOk: 68.91615542 },
-            { mi: 15, percentOk: 72.18813906 },
-            { mi: 20, percentOk: 78.52760736 },
-            { mi: 25, percentOk: 81.39059305 },
-            { mi: 30, percentOk: 85.68507157 },
-            { mi: 35, percentOk: 85.88957055 },
-            { mi: 40, percentOk: 87.32106339 },
-            { mi: 45, percentOk: 87.93456033 },
-            { mi: 50, percentOk: 93.04703476 },
-            { mi: 59, percentOk: 93.25153374 },
-            { mi: 60, percentOk: 93.6605317 },
-            { mi: 70, percentOk: 94.06952965 },
-            { mi: 75, percentOk: 94.47852761 },
-            { mi: 80, percentOk: 94.68302658 },
-            { mi: 100, percentOk: 98.1595092 },
-            { mi: 120, percentOk: 98.36400818 },
-            { mi: 200, percentOk: 98.97750511 },
-            { mi: 500, percentOk: 99.18200409 },
-            { mi: 1000, percentOk: 99.79550102 },
-            { mi: 5000, percentOk: 100 }
+            { mi: 0.25, low: 14.00, high: 24.50, average: 19.25, plusOrMinus: 5.25 },
+            { mi: 0.50, low: 15.70, high: 27.20, average: 21.45, plusOrMinus: 5.75 },
+            { mi: 1.00, low: 16.80, high: 28.40, average: 22.60, plusOrMinus: 5.80 },
+            { mi: 1.50, low: 30.90, high: 44.40, average: 37.65, plusOrMinus: 6.75 },
+            { mi: 2.00, low: 30.90, high: 44.50, average: 37.70, plusOrMinus: 6.80 },
+            { mi: 2.50, low: 41.90, high: 55.90, average: 48.90, plusOrMinus: 7.00 },
+            { mi: 3.00, low: 42.10, high: 56.10, average: 49.10, plusOrMinus: 7.00 },
+            { mi: 3.50, low: 47.20, high: 61.20, average: 54.20, plusOrMinus: 7.00 },
+            { mi: 4.00, low: 47.20, high: 61.20, average: 54.20, plusOrMinus: 7.00 },
+            { mi: 4.50, low: 49.40, high: 63.30, average: 56.35, plusOrMinus: 6.95 },
+            { mi: 5.00, low: 49.40, high: 63.30, average: 56.35, plusOrMinus: 6.95 }
         ]
     };
 
@@ -163,8 +193,8 @@
 
         title: "Historic Proximity",
         category: "Social Acceptance",
-        description: "Percentage of survey respondents who reported this distance from cultural or historic landmarks as acceptable",
-        longDescription: '<p>This tool calculates the distance from a site to the nearest historic area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 477 respondents from six counties in Southern California answered Question 16 which asked "How much buffer distance is acceptable between a large solar facility and an area of cultural or historical importance?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "historic" key are considered. The accuracy of OSM data is limited by its contributors, and classification of historic or cultural sites may be highly subjective. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Historic).</p>',
+        description: "Percentage of people who would report this distance from cultural or historic landmarks as acceptable, according to our survey",
+        longDescription: '<p>This tool calculates the distance from a site to the nearest historic area, and then reports the estimated percentage of residents who would say that distance was acceptable, with a 95% confidence interval.</p><p>The survey used in this tool was administered by the PVMapper project in 2013 and 2014. From the 2013 survey, 477 respondents from six counties in Southern California answered Question 16 which asked "How much buffer distance is acceptable between a large solar facility and an area of cultural or historical importance?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "historic" key are considered. The accuracy of OSM data is limited by its contributors, and classification of historic or cultural sites may be highly subjective. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Historic).</p>',
 
         activate: null,
         deactivate: null,
@@ -182,7 +212,7 @@
             //    //},
             //    title: "Residential Proximity",
             //    category: "Social Acceptance",
-            //    description: "Percentage of survey respondents who reported this distance from residential areas as acceptable",
+            //    description: "Percentage of people who would report this distance from residential areas as acceptable, according to our survey",
             //    longDescription: '',
             //    //onScoreAdded: function (e, score: pvMapper.Score) {
             //    //    scores.push(score);
@@ -206,13 +236,13 @@
                 id: "OpenStreetMapSocialHistoricTool",
                 title: "Historic Proximity",
                 category: "Social Acceptance",
-                description: "Percentage of survey respondents who reported this distance from cultural or historic landmarks as acceptable",
-                longDescription: '<p>This tool calculates the distance from a site to the nearest historic area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 477 respondents from six counties in Southern California answered Question 16 which asked "How much buffer distance is acceptable between a large solar facility and an area of cultural or historical importance?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "historic" key are considered. The accuracy of OSM data is limited by its contributors, and classification of historic or cultural sites may be highly subjective. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Historic).</p>',
+                description: "Percentage of people who would report this distance from cultural or historic landmarks as acceptable, according to our survey",
+                longDescription: '<p>This tool calculates the distance from a site to the nearest historic area, and then reports the estimated percentage of residents who would say that distance was acceptable, with a 95% confidence interval.</p><p>The survey used in this tool was administered by the PVMapper project in 2013 and 2014. From the 2013 survey, 477 respondents from six counties in Southern California answered Question 16 which asked "How much buffer distance is acceptable between a large solar facility and an area of cultural or historical importance?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "historic" key are considered. The accuracy of OSM data is limited by its contributors, and classification of historic or cultural sites may be highly subjective. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Historic).</p>',
                 //onScoreAdded: function (e, score: pvMapper.Score) {
                 //    scores.push(score);
                 //},
                 onSiteChange: function (e, score) {
-                    updateScore(score, '"historic"', 'historic', 'a historic landmark');
+                    updateScore(score, '"historic"', 'historic', 'historic landmark');
                 },
                 scoreUtilityOptions: {
                     functionName: "linear3pt",
@@ -233,7 +263,7 @@
 
         title: "Recreational Proximity",
         category: "Social Acceptance",
-        description: "Percentage of survey respondents who reported this distance from recreational areas as acceptable",
+        description: "Percentage of people who would report this distance from recreational areas as acceptable, according to our survey",
 
         activate: null,
         deactivate: null,
@@ -248,13 +278,13 @@
                 id: "OpenStreetMapSocialRecreationalTool",
                 title: "Recreational Proximity",
                 category: "Social Acceptance",
-                description: "Percentage of survey respondents who reported this distance from recreational areas as acceptable",
-                longDescription: '<p>This tool calculates the distance from a site to the nearest recreational area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 488 respondents from six counties in Southern California answered Question 19 which asked "How much buffer distance is acceptable between a large solar facility and recreation areas such as hunting, fishing, or hiking locations?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "leisure" key are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:leisure).</p>',
+                description: "Percentage of people who would report this distance from recreational areas as acceptable, according to our survey",
+                longDescription: '<p>This tool calculates the distance from a site to the nearest recreational area, and then reports the estimated percentage of residents who would say that distance was acceptable, with a 95% confidence interval.</p><p>The survey used in this tool was administered by the PVMapper project in 2013 and 2014. From the 2013 survey, 488 respondents from six counties in Southern California answered Question 19 which asked "How much buffer distance is acceptable between a large solar facility and recreation areas such as hunting, fishing, or hiking locations?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest historic area is identified using OpenStreetMap. All map features using the "leisure" key are considered. The accuracy of OSM data is limited by its contributors. See the OSM Wiki for more information (wiki.openstreetmap.org/wiki/Key:leisure).</p>',
                 //onScoreAdded: function (e, score: pvMapper.Score) {
                 //    scores.push(score);
                 //},
                 onSiteChange: function (e, score) {
-                    updateScore(score, '"leisure"', 'recreational', 'a recreational area');
+                    updateScore(score, '"leisure"', 'recreational', 'recreational area');
                 },
                 scoreUtilityOptions: {
                     functionName: "linear3pt",
@@ -278,7 +308,7 @@
         nearestFeatureCache[objectType] = nearestFeatureCache[objectType] || {};
 
         if (typeof nearestFeatureCache[objectType][score.site.id] === 'undefined') {
-            updateScoreFromOSM(score, 10, wayQueryKey, objectType, objectTypeDescription);
+            updateScoreFromOSM(score, 5, wayQueryKey, objectType, objectTypeDescription);
         } else {
             updateScoreFromCache(score, objectType, objectTypeDescription)
         }
@@ -343,14 +373,8 @@
                         }
                     }
 
-                    // if we've reached here, there were no features in range
-                    if (searchDistanceInMi <= 10 /* < 5000*/) { //TODO: //HACK: quick change to only search 10 miles and 50 miles... fix this later on...!
-                        // didn't find the features we're looking for - run the query again with a larger search area.
-                        updateScoreFromOSM(score, searchDistanceInMi * 5, wayQueryKey, objectType, objectTypeDescription);
-                    } else {
-                        nearestFeatureCache[objectType][score.site.id] = [];
-                        updateScoreWithFeature(score, null, searchDistanceInMeters, objectType, objectTypeDescription);
-                    }
+                    nearestFeatureCache[objectType][score.site.id] = [];
+                    updateScoreWithFeature(score, null, searchDistanceInMeters, objectType, objectTypeDescription);
                 } else {
                     score.popupMessage = "Error " + response.status + " " + response.statusText;
                     score.updateValue(Number.NaN);
@@ -377,7 +401,7 @@
 
             updateScoreWithFeature(score, closestFeature, minDistance, objectType, objectTypeDescription);
         } else {
-            updateScoreWithFeature(score, null, 5000 * 1609.34, objectType, objectTypeDescription);
+            updateScoreWithFeature(score, null, minDistance, objectType, objectTypeDescription);
         }
     }
 
@@ -386,54 +410,26 @@
             var minDistanceInMi = distanceInMeters * 0.000621371;
             //lastDistanceCache[score.site.id] = minDistanceInMi;
 
-            var percentOk = 0;
-            var distanceOk = 5000;
-            for (var i = surveyResults[objectType].length - 1; i--; i >= 0) {
-                if (minDistanceInMi >= surveyResults[objectType][i].mi) {
-                    percentOk = surveyResults[objectType][i].percentOk;
-                    distanceOk = surveyResults[objectType][i].mi;
+            var previousDistance = surveyResults[objectType][surveyResults[objectType].length - 2].mi;
+            var surveyResult = surveyResults[objectType][surveyResults[objectType].length - 1];
+            for (var i = 0; i < surveyResults[objectType].length - 1; i++) {
+                if (minDistanceInMi < surveyResults[objectType][i].mi) {
+                    surveyResult = surveyResults[objectType][i];
+                    previousDistance = i <= 0 ? 0 : surveyResults[objectType][i - 1].mi;
                     break;
                 }
             }
 
-            var distanceOkStr = (distanceOk < 1) ? distanceOk.toFixed(2) : (distanceOk < 10) ? distanceOk.toFixed(1) : distanceOk.toFixed(0);
+            score.popupMessage = surveyResult.average + "% &plusmn; " + surveyResult.plusOrMinus + "% of people would accept a site built " +
+                previousDistance + " mi - " + surveyResult.mi + " mi away from a " + objectTypeDescription +
+                " (95% confidence interval). The nearest " + objectTypeDescription + " is " +
+                (closestFeature.attributes.name ? closestFeature.attributes.name + ", " : "") +
+                minDistanceInMi.toFixed(2) + " mi away.";
 
-            var minDistanceStr = (minDistanceInMi < 1) ? minDistanceInMi.toFixed(2) : (minDistanceInMi < 10) ? minDistanceInMi.toFixed(1) : minDistanceInMi.toFixed(0);
-
-            //score.popupMessage = minDistanceStr + " mi to " +
-            //    parseFloat(closestFeature.attributes['ACRES']).toFixed(1) + " acres of " +
-            //    closestFeature.attributes['WETLAND_TYPE'] + "; " +
-            //    percentOk.toFixed(1) + "% of respondents reported they would accept " +
-            //    distanceOkStr + " mi or more.";
-            //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept " +
-            //    distanceOkStr + " mi or more; " + score.site.name + " is " +
-            //    minDistanceStr + " mi from " +
-            //    parseFloat(closestFeature.attributes['ACRES']).toFixed(1) + " acres of " +
-            //    closestFeature.attributes['WETLAND_TYPE'];
-            //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site " +
-            //    minDistanceStr + " mi from a " +
-            //    closestFeature.attributes['WETLAND_TYPE'] + "agriculture";
-            //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept this proximity. (site " +
-            //    score.site.name + " is " + minDistanceStr + " mi from a " +
-            //    closestFeature.attributes['WETLAND_TYPE'] + ")";
-            score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site built " +
-                distanceOkStr + " mi or more from " + objectTypeDescription +
-                ". (There is " + objectTypeDescription + " " + minDistanceStr + " mi away" + 
-                (closestFeature.attributes.name ? (" named " + closestFeature.attributes.name + ".)") : ".)");
-
-            score.updateValue(percentOk);
+            score.updateValue(surveyResult.average);
         } else {
-            // no agriculture found in max search distance, so 100% of respondants are Ok with this.
-            //score.popupMessage = "over 5000 mi to any agriculture; 100% of respondents reported they would accept this distance.";
-            //score.popupMessage = "100% of respondents reported they would accept this proximity. (site " +
-            //    score.site.name + " is over 5000 mi from any agriculture)";
-
-            //score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from " + objectTypeDescription +
-            //    ". (Didn't find " + objectTypeDescription + " within 5000 mi.)";
-
-            score.popupMessage = "Didn't find " + objectTypeDescription + " within 50 mi.";
-
-            score.updateValue(Number.NaN);
+            score.popupMessage = "There was no " + objectTypeDescription + " found within 5 mi of this site.";
+            score.updateValue(100); //surveyResults[surveyResults.length - 1].average); //TODO: what is the appropriate value to use here? 100%? the largest % we have in the table? Number.NaN ?!?
         }
         this.getModuleObj = function () { return myModule; }
     }

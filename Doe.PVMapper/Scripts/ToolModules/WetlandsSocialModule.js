@@ -15,54 +15,67 @@ var INLModules;
 (function (INLModules) {
     
 
+    //var surveyResults = [
+    //    { mi: 0, percentOk: 4.166666667 },
+    //    { mi: 0.003787879, percentOk: 4.375 },
+    //    { mi: 0.018939394, percentOk: 5 },
+    //    { mi: 0.028409091, percentOk: 5.208333333 },
+    //    { mi: 0.037878788, percentOk: 5.416666667 },
+    //    { mi: 0.05, percentOk: 5.625 },
+    //    { mi: 0.056818182, percentOk: 6.041666667 },
+    //    { mi: 0.075757576, percentOk: 6.25 },
+    //    { mi: 0.09469697, percentOk: 6.666666667 },
+    //    { mi: 0.170454546, percentOk: 6.875 },
+    //    { mi: 0.189393939, percentOk: 7.708333333 },
+    //    { mi: 0.227272727, percentOk: 7.916666667 },
+    //    { mi: 0.25, percentOk: 9.166666667 },
+    //    { mi: 0.5, percentOk: 10.83333333 },
+    //    { mi: 0.568181818, percentOk: 11.25 },
+    //    { mi: 1, percentOk: 22.91666667 },
+    //    { mi: 2, percentOk: 31.04166667 },
+    //    { mi: 3, percentOk: 36.25 },
+    //    { mi: 4, percentOk: 37.70833333 },
+    //    { mi: 4.349598346, percentOk: 37.91666667 },
+    //    { mi: 5, percentOk: 52.08333333 },
+    //    { mi: 6, percentOk: 52.70833333 },
+    //    { mi: 7, percentOk: 53.125 },
+    //    { mi: 8, percentOk: 55.625 },
+    //    { mi: 9.5, percentOk: 55.83333333 },
+    //    { mi: 10, percentOk: 68.33333333 },
+    //    { mi: 12, percentOk: 68.54166667 },
+    //    { mi: 15, percentOk: 71.45833333 },
+    //    { mi: 20, percentOk: 77.91666667 },
+    //    { mi: 21, percentOk: 78.125 },
+    //    { mi: 25, percentOk: 82.08333333 },
+    //    { mi: 30, percentOk: 85 },
+    //    { mi: 35, percentOk: 85.41666667 },
+    //    { mi: 40, percentOk: 86.875 },
+    //    { mi: 45, percentOk: 87.29166667 },
+    //    { mi: 50, percentOk: 92.5 },
+    //    { mi: 60, percentOk: 92.70833333 },
+    //    { mi: 70, percentOk: 92.91666667 },
+    //    { mi: 75, percentOk: 93.33333333 },
+    //    { mi: 90, percentOk: 93.54166667 },
+    //    { mi: 100, percentOk: 97.70833333 },
+    //    { mi: 120, percentOk: 97.91666667 },
+    //    { mi: 150, percentOk: 98.33333333 },
+    //    { mi: 200, percentOk: 98.75 },
+    //    { mi: 500, percentOk: 99.16666667 },
+    //    { mi: 1000, percentOk: 99.79166667 },
+    //    { mi: 5000, percentOk: 100 }];
     var surveyResults = [
-        { mi: 0, percentOk: 4.166666667 },
-        { mi: 0.003787879, percentOk: 4.375 },
-        { mi: 0.018939394, percentOk: 5 },
-        { mi: 0.028409091, percentOk: 5.208333333 },
-        { mi: 0.037878788, percentOk: 5.416666667 },
-        { mi: 0.05, percentOk: 5.625 },
-        { mi: 0.056818182, percentOk: 6.041666667 },
-        { mi: 0.075757576, percentOk: 6.25 },
-        { mi: 0.09469697, percentOk: 6.666666667 },
-        { mi: 0.170454546, percentOk: 6.875 },
-        { mi: 0.189393939, percentOk: 7.708333333 },
-        { mi: 0.227272727, percentOk: 7.916666667 },
-        { mi: 0.25, percentOk: 9.166666667 },
-        { mi: 0.5, percentOk: 10.83333333 },
-        { mi: 0.568181818, percentOk: 11.25 },
-        { mi: 1, percentOk: 22.91666667 },
-        { mi: 2, percentOk: 31.04166667 },
-        { mi: 3, percentOk: 36.25 },
-        { mi: 4, percentOk: 37.70833333 },
-        { mi: 4.349598346, percentOk: 37.91666667 },
-        { mi: 5, percentOk: 52.08333333 },
-        { mi: 6, percentOk: 52.70833333 },
-        { mi: 7, percentOk: 53.125 },
-        { mi: 8, percentOk: 55.625 },
-        { mi: 9.5, percentOk: 55.83333333 },
-        { mi: 10, percentOk: 68.33333333 },
-        { mi: 12, percentOk: 68.54166667 },
-        { mi: 15, percentOk: 71.45833333 },
-        { mi: 20, percentOk: 77.91666667 },
-        { mi: 21, percentOk: 78.125 },
-        { mi: 25, percentOk: 82.08333333 },
-        { mi: 30, percentOk: 85 },
-        { mi: 35, percentOk: 85.41666667 },
-        { mi: 40, percentOk: 86.875 },
-        { mi: 45, percentOk: 87.29166667 },
-        { mi: 50, percentOk: 92.5 },
-        { mi: 60, percentOk: 92.70833333 },
-        { mi: 70, percentOk: 92.91666667 },
-        { mi: 75, percentOk: 93.33333333 },
-        { mi: 90, percentOk: 93.54166667 },
-        { mi: 100, percentOk: 97.70833333 },
-        { mi: 120, percentOk: 97.91666667 },
-        { mi: 150, percentOk: 98.33333333 },
-        { mi: 200, percentOk: 98.75 },
-        { mi: 500, percentOk: 99.16666667 },
-        { mi: 1000, percentOk: 99.79166667 },
-        { mi: 5000, percentOk: 100 }];
+        { mi: 0.25, low: 8.00, high: 13.70, average: 10.85, plusOrMinus: 2.85 },
+        { mi: 0.50, low: 8.80, high: 14.70, average: 11.75, plusOrMinus: 2.95 },
+        { mi: 1.00, low: 9.80, high: 15.80, average: 12.80, plusOrMinus: 3.00 },
+        { mi: 1.50, low: 18.00, high: 25.60, average: 21.80, plusOrMinus: 3.80 },
+        { mi: 2.00, low: 18.10, high: 25.80, average: 21.95, plusOrMinus: 3.85 },
+        { mi: 2.50, low: 24.90, high: 33.30, average: 29.10, plusOrMinus: 4.20 },
+        { mi: 3.00, low: 25.60, high: 34.10, average: 29.85, plusOrMinus: 4.25 },
+        { mi: 3.50, low: 31.80, high: 40.90, average: 36.35, plusOrMinus: 4.55 },
+        { mi: 4.00, low: 31.80, high: 40.90, average: 36.35, plusOrMinus: 4.55 },
+        { mi: 4.50, low: 33.30, high: 42.50, average: 37.90, plusOrMinus: 4.60 },
+        { mi: 5.00, low: 33.30, high: 42.50, average: 37.90, plusOrMinus: 4.60 }
+    ];
 
     //var initialSearchDistanceInMi = 5;
     //var maxSearchDistanceInMi = 5000;
@@ -77,7 +90,7 @@ var INLModules;
             this.url = selfUrl;
             this.title = "Wetland Proximity";
             this.category = "Social Acceptance";
-            this.description = "Percentage of survey respondents who reported this distance from wetlands as acceptable";
+            this.description = "Percentage of people who would report this distance from wetlands as acceptable, according to our survey";
             // cache for the last distance found to a wetland, used so that our search isn't criminally inefficient
             this.lastDistanceCache = {};
             this.wmsServerUrl = "http://107.20.228.18/ArcGIS/services/Wetlands/mapserver/wmsserver?";
@@ -149,67 +162,43 @@ var INLModules;
                             var closestFeature = null;
                             var minDistance = searchDistanceInMeters;
 
-                            var features = OpenLayers.Format.EsriGeoJSON.prototype.read(response.responseText);
+                            var responseObj = OpenLayers.Format.JSON.prototype.read(response.responseText);
+                            if (!responseObj.error) {
+                                var features = OpenLayers.Format.EsriGeoJSON.prototype.read(responseObj);
 
-                            //console.log("Near-ish features: " + (features ? features.length : 0));
-                            if (features) {
-                                for (var i = 0; i < features.length; i++) {
-                                    var distance = score.site.geometry.distanceTo(features[i].geometry, { edge: false });
-                                    if (distance < minDistance) {
-                                        minDistance = distance;
-                                        closestFeature = features[i];
+                                //console.log("Near-ish features: " + (features ? features.length : 0));
+                                if (features) {
+                                    for (var i = 0; i < features.length; i++) {
+                                        var distance = score.site.geometry.distanceTo(features[i].geometry, { edge: false });
+                                        if (distance < minDistance) {
+                                            minDistance = distance;
+                                            closestFeature = features[i];
+                                        }
                                     }
                                 }
-                            }
-                            if (closestFeature !== null) {
-                                var minDistanceInMi = minDistance * 0.000621371;
-                                _this.lastDistanceCache[score.site.id] = minDistanceInMi;
+                                if (closestFeature !== null) {
+                                    var minDistanceInMi = minDistance * 0.000621371;
+                                    _this.lastDistanceCache[score.site.id] = minDistanceInMi;
 
-                                var percentOk = 0;
-                                var distanceOk = 5000;
-                                for (var i = surveyResults.length - 1; i--; i >= 0) {
-                                    if (minDistanceInMi >= surveyResults[i].mi) {
-                                        percentOk = surveyResults[i].percentOk;
-                                        distanceOk = surveyResults[i].mi;
-                                        break;
+                                    var previousDistance = surveyResults[surveyResults.length - 2].mi;
+                                    var surveyResult = surveyResults[surveyResults.length - 1];
+                                    for (var i = 0; i < surveyResults.length - 1; i++) {
+                                        if (minDistanceInMi < surveyResults[i].mi) {
+                                            surveyResult = surveyResults[i];
+                                            previousDistance = i <= 0 ? 0 : surveyResults[i - 1].mi;
+                                            break;
+                                        }
                                     }
+
+                                    score.popupMessage = surveyResult.average + "% &plusmn; " + surveyResult.plusOrMinus + "% of people would accept a site built " + previousDistance + " mi - " + surveyResult.mi + " mi away from wetlands (95% confidence interval). The nearest wetland is a " + parseFloat(closestFeature.attributes['ACRES']).toFixed(1) + " acre " + closestFeature.attributes['WETLAND_TYPE'] + " " + minDistanceInMi.toFixed(2) + " mi away.";
+
+                                    score.updateValue(surveyResult.average);
+                                } else {
+                                    score.popupMessage = "There was no wetland found within 5 mi of this site.";
+                                    score.updateValue(100); //surveyResults[surveyResults.length - 1].average); //TODO: what is the appropriate value to use here? 100%? the largest % we have in the table? Number.NaN ?!?
                                 }
-
-                                var distanceOkStr = (distanceOk < 1) ? distanceOk.toFixed(2) : (distanceOk < 10) ? distanceOk.toFixed(1) : distanceOk.toFixed(0);
-
-                                var minDistanceStr = (minDistanceInMi < 1) ? minDistanceInMi.toFixed(2) : (minDistanceInMi < 10) ? minDistanceInMi.toFixed(1) : minDistanceInMi.toFixed(0);
-
-                                //score.popupMessage = minDistanceStr + " mi to " +
-                                //    parseFloat(closestFeature.attributes['ACRES']).toFixed(1) + " acres of " +
-                                //    closestFeature.attributes['WETLAND_TYPE'] + "; " +
-                                //    percentOk.toFixed(1) + "% of respondents reported they would accept " +
-                                //    distanceOkStr + " mi or more.";
-                                //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept " +
-                                //    distanceOkStr + " mi or more; " + score.site.name + " is " +
-                                //    minDistanceStr + " mi from " +
-                                //    parseFloat(closestFeature.attributes['ACRES']).toFixed(1) + " acres of " +
-                                //    closestFeature.attributes['WETLAND_TYPE'];
-                                //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site " +
-                                //    minDistanceStr + " mi from a " +
-                                //    closestFeature.attributes['WETLAND_TYPE'] + "wetland";
-                                //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept this proximity. (site " +
-                                //    score.site.name + " is " + minDistanceStr + " mi from a " +
-                                //    closestFeature.attributes['WETLAND_TYPE'] + ")";
-                                score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site built " + distanceOkStr + " mi or more from a wetland. (The nearest wetland is a " + closestFeature.attributes['WETLAND_TYPE'] + " " + minDistanceStr + " mi away.)";
-
-                                score.updateValue(percentOk);
-                            } else if (searchDistanceInMi <= 5) {
-                                // call recursively to find the nearest wetland...
-                                _this.updateScore(score, searchDistanceInMi * 10);
                             } else {
-                                // no wetland found in max search distance, so 100% of respondants are Ok with this.
-                                //score.popupMessage = "over 5000 mi to any wetland; 100% of respondents reported they would accept this distance.";
-                                //score.popupMessage = "100% of respondents reported they would accept this proximity. (site " +
-                                //    score.site.name + " is over 5000 mi from any wetland)";
-                                //score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from a wetland." +
-                                //    " (There was no wetland found within 5000 mi.)";
-                                //score.updateValue(100);
-                                score.popupMessage = "There was no wetland found within 50 mi.";
+                                score.popupMessage = responseObj.error.message + " (" + responseObj.error.code + ")";
                                 score.updateValue(Number.NaN);
                             }
                         } else {
@@ -237,8 +226,13 @@ var INLModules;
                                 thisModule.propsGrid = Ext.create('Ext.grid.property.Grid', {
                                     minWidth: 300,
                                     source: thisModule.configProperties,
+                                    customRenderers: {
+                                        mininumAcres: function (v) {
+                                            return v + " acres";
+                                        }
+                                    },
                                     propertyNames: {
-                                        mininumAcres: "minimum acres"
+                                        mininumAcres: "Wetlands at least"
                                     }
                                 });
 
@@ -256,8 +250,8 @@ var INLModules;
                                             // refresh scores as necessary to accomodate this configuraiton change.
                                             thisScoreLine.scores.forEach(function (s) {
                                                 s.isValueOld = true;
-                                                thisModule.updateScore(s, 0.5);
-                                            });
+                                                thisModule.updateScore(s, 5);
+                                            }); // 5 mi search distance
 
                                             // save configuration changes to the browser
                                             thisScoreLine.saveConfiguration();
@@ -279,33 +273,16 @@ var INLModules;
                         deactivate: function () {
                             thisModule.removeAllMaps();
                         },
-                        //Note: removed prior to demo on request - mentioning acres confuses the point - they had nothing to do with
-                        //      the survey, and have nothing to do with the score.
-                        //showConfigWindow: function () {
-                        //    myToolLine = this; // fetch tool line, which was passed as 'this' parameter
-                        //    propsWindow.show();
-                        //},
+                        showConfigWindow: function () {
+                            thisModule.propsWindow.show();
+                        },
                         id: "WetlandsSocialTool",
                         title: "Wetland Proximity",
                         category: "Social Acceptance",
-                        description: "Percentage of survey respondents who reported this distance from wetlands as acceptable",
-                        longDescription: '<p>This tool calculates the distance from a site to the nearest wetland, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 479 respondents from six counties in Southern California answered Question 20 which asked "How much buffer distance is acceptable between a large solar facility and a wetland?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest wetland is identified using the National Wetlands Inventory by the US Fish and Wildlife Service. Note that this dataset includes wetlands which may have no conservation value, such as irrigation canals and small drainage basins. See the FWS website for more information (www.fws.gov/wetlands).</p>',
-                        //onScoreAdded: function (e, score: pvMapper.Score) {
-                        //    scores.push(score);
-                        //},
+                        description: "Percentage of people who would report this distance from wetlands as acceptable, according to our survey",
+                        longDescription: '<p>This tool calculates the distance from a site to the nearest wetland, and then reports the estimated percentage of residents who would say that distance was acceptable, with a 95% confidence interval.</p><p>The survey used in this tool was administered by the PVMapper project in 2013 and 2014. From the 2013 survey, 479 respondents from six counties in Southern California answered Question 20 which asked "How much buffer distance is acceptable between a large solar facility and a wetland?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest wetland is identified using the National Wetlands Inventory by the US Fish and Wildlife Service. Note that this dataset includes wetlands which may have no conservation value, such as irrigation canals and small drainage basins. See the FWS website for more information (www.fws.gov/wetlands).</p>',
                         onSiteChange: function (e, score) {
-                            //if (lastDistanceCache[score.site.id] > 500) {
-                            //    updateScore(score, 5000);
-                            //} else if (lastDistanceCache[score.site.id] > 50) {
-                            //    updateScore(score, 500);
-                            //} else
-                            if (thisModule.lastDistanceCache[score.site.id] > 5) {
-                                thisModule.updateScore(score, 50);
-                            } else if (thisModule.lastDistanceCache[score.site.id] > 0.5) {
-                                thisModule.updateScore(score, 5);
-                            } else {
-                                thisModule.updateScore(score, 0.5);
-                            }
+                            thisModule.updateScore(score, 5); // 5 mi search distance
                         },
                         getConfig: function () {
                             return thisModule.configProperties;
@@ -321,8 +298,8 @@ var INLModules;
                                 var thisScoreLine = this;
                                 thisScoreLine.scores.forEach(function (s) {
                                     s.isValueOld = true;
-                                    thisModule.updateScore(s, 0.5);
-                                });
+                                    thisModule.updateScore(s, 5);
+                                }); // 5 mi search distance
                             }
                         },
                         // having any nearby line is much better than having no nearby line, so let's reflect that.

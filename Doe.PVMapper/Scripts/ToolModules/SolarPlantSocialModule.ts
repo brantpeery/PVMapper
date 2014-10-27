@@ -12,68 +12,84 @@ module INLModules {
     //TODO: why didn't we use require.js (or similar)? Why roll our own dynamic js loader?
 
     interface IConfig {
-        maxSearchDistanceInMI: number;
+        //maxSearchDistanceInMI: number;
         usePlantsUnderConstruction: boolean;
         usePlantsInDevelopment: boolean;
     }
 
+    //var surveyResults = [
+    //    { mi: 0, percentOk: 33.71040724 },
+    //    { mi: 0.000189394, percentOk: 34.61538462 },
+    //    { mi: 0.000378788, percentOk: 34.84162896 },
+    //    { mi: 0.00094697, percentOk: 35.0678733 },
+    //    { mi: 0.001893939, percentOk: 35.97285068 },
+    //    { mi: 0.003787879, percentOk: 36.42533937 },
+    //    { mi: 0.005681818, percentOk: 37.1040724 },
+    //    { mi: 0.007007576, percentOk: 37.33031674 },
+    //    { mi: 0.009469697, percentOk: 38.00904977 },
+    //    { mi: 0.018939394, percentOk: 39.59276018 },
+    //    { mi: 0.028409091, percentOk: 40.04524887 },
+    //    { mi: 0.037878788, percentOk: 40.27149321 },
+    //    { mi: 0.05, percentOk: 40.49773756 },
+    //    { mi: 0.056818182, percentOk: 41.40271493 },
+    //    { mi: 0.113636364, percentOk: 41.62895928 },
+    //    { mi: 0.189393939, percentOk: 42.08144796 },
+    //    { mi: 0.25, percentOk: 43.66515837 },
+    //    { mi: 0.5, percentOk: 46.15384615 },
+    //    { mi: 0.946969697, percentOk: 46.3800905 },
+    //    { mi: 1, percentOk: 55.20361991 },
+    //    { mi: 2, percentOk: 57.91855204 },
+    //    { mi: 2.5, percentOk: 58.14479638 },
+    //    { mi: 3, percentOk: 58.82352941 },
+    //    { mi: 5, percentOk: 64.9321267 },
+    //    { mi: 6, percentOk: 65.38461538 },
+    //    { mi: 7, percentOk: 65.61085973 },
+    //    { mi: 7.456454307, percentOk: 65.83710407 },
+    //    { mi: 8, percentOk: 69.00452489 },
+    //    { mi: 10, percentOk: 74.88687783 },
+    //    { mi: 15, percentOk: 77.37556561 },
+    //    { mi: 20, percentOk: 83.25791855 },
+    //    { mi: 25, percentOk: 85.0678733 },
+    //    { mi: 30, percentOk: 86.87782805 },
+    //    { mi: 40, percentOk: 87.55656109 },
+    //    { mi: 50, percentOk: 92.760181 },
+    //    { mi: 60, percentOk: 93.21266968 },
+    //    { mi: 70, percentOk: 93.43891403 },
+    //    { mi: 90, percentOk: 93.66515837 },
+    //    { mi: 100, percentOk: 96.83257919 },
+    //    { mi: 120, percentOk: 97.05882353 },
+    //    { mi: 140, percentOk: 97.28506787 },
+    //    { mi: 150, percentOk: 97.51131222 },
+    //    { mi: 200, percentOk: 98.41628959 },
+    //    { mi: 250, percentOk: 98.64253394 },
+    //    { mi: 300, percentOk: 98.86877828 },
+    //    { mi: 500, percentOk: 99.32126697 },
+    //    { mi: 1000, percentOk: 99.54751131 },
+    //    { mi: 2000, percentOk: 99.77375566 },
+    //    { mi: 5000, percentOk: 100 }];
+
+
     var surveyResults = [
-        { mi: 0, percentOk: 33.71040724 },
-        { mi: 0.000189394, percentOk: 34.61538462 },
-        { mi: 0.000378788, percentOk: 34.84162896 },
-        { mi: 0.00094697, percentOk: 35.0678733 },
-        { mi: 0.001893939, percentOk: 35.97285068 },
-        { mi: 0.003787879, percentOk: 36.42533937 },
-        { mi: 0.005681818, percentOk: 37.1040724 },
-        { mi: 0.007007576, percentOk: 37.33031674 },
-        { mi: 0.009469697, percentOk: 38.00904977 },
-        { mi: 0.018939394, percentOk: 39.59276018 },
-        { mi: 0.028409091, percentOk: 40.04524887 },
-        { mi: 0.037878788, percentOk: 40.27149321 },
-        { mi: 0.05, percentOk: 40.49773756 },
-        { mi: 0.056818182, percentOk: 41.40271493 },
-        { mi: 0.113636364, percentOk: 41.62895928 },
-        { mi: 0.189393939, percentOk: 42.08144796 },
-        { mi: 0.25, percentOk: 43.66515837 },
-        { mi: 0.5, percentOk: 46.15384615 },
-        { mi: 0.946969697, percentOk: 46.3800905 },
-        { mi: 1, percentOk: 55.20361991 },
-        { mi: 2, percentOk: 57.91855204 },
-        { mi: 2.5, percentOk: 58.14479638 },
-        { mi: 3, percentOk: 58.82352941 },
-        { mi: 5, percentOk: 64.9321267 },
-        { mi: 6, percentOk: 65.38461538 },
-        { mi: 7, percentOk: 65.61085973 },
-        { mi: 7.456454307, percentOk: 65.83710407 },
-        { mi: 8, percentOk: 69.00452489 },
-        { mi: 10, percentOk: 74.88687783 },
-        { mi: 15, percentOk: 77.37556561 },
-        { mi: 20, percentOk: 83.25791855 },
-        { mi: 25, percentOk: 85.0678733 },
-        { mi: 30, percentOk: 86.87782805 },
-        { mi: 40, percentOk: 87.55656109 },
-        { mi: 50, percentOk: 92.760181 },
-        { mi: 60, percentOk: 93.21266968 },
-        { mi: 70, percentOk: 93.43891403 },
-        { mi: 90, percentOk: 93.66515837 },
-        { mi: 100, percentOk: 96.83257919 },
-        { mi: 120, percentOk: 97.05882353 },
-        { mi: 140, percentOk: 97.28506787 },
-        { mi: 150, percentOk: 97.51131222 },
-        { mi: 200, percentOk: 98.41628959 },
-        { mi: 250, percentOk: 98.64253394 },
-        { mi: 300, percentOk: 98.86877828 },
-        { mi: 500, percentOk: 99.32126697 },
-        { mi: 1000, percentOk: 99.54751131 },
-        { mi: 2000, percentOk: 99.77375566 },
-        { mi: 5000, percentOk: 100 }];
+        { mi: 0.25, low: 53.60, high: 63.60, average: 58.60, plusOrMinus: 5.00 },
+        { mi: 0.50, low: 54.90, high: 64.80, average: 59.85, plusOrMinus: 4.95 },
+        { mi: 1.00, low: 56.00, high: 65.90, average: 60.95, plusOrMinus: 4.95 },
+        { mi: 1.50, low: 65.40, high: 74.70, average: 70.05, plusOrMinus: 4.65 },
+        { mi: 2.00, low: 65.40, high: 74.70, average: 70.05, plusOrMinus: 4.65 },
+        { mi: 2.50, low: 67.70, high: 76.80, average: 72.25, plusOrMinus: 4.55 },
+        { mi: 3.00, low: 67.80, high: 76.90, average: 72.35, plusOrMinus: 4.55 },
+        { mi: 3.50, low: 68.80, high: 77.80, average: 73.30, plusOrMinus: 4.50 },
+        { mi: 4.00, low: 68.80, high: 77.80, average: 73.30, plusOrMinus: 4.50 },
+        { mi: 4.50, low: 68.80, high: 77.80, average: 73.30, plusOrMinus: 4.50 },
+        { mi: 5.00, low: 68.80, high: 77.80, average: 73.30, plusOrMinus: 4.50 }
+    ];
+
 
     export class SolarPlantSocialModule extends pvMapper.Module {
         constructor() {
             super();
 
             this.configProperties = {
-                maxSearchDistanceInMI: 20,
+                //maxSearchDistanceInMI: 20,
                 usePlantsUnderConstruction: true,
                 usePlantsInDevelopment: true
             };
@@ -93,11 +109,11 @@ module INLModules {
                                 minWidth: 300,
                                 //autoHeight: true,
                                 source: thisModule.configProperties,
-                                customRenderers: {
-                                    maxSearchDistanceInMI: function (v) { return v + " mi"; },
-                                },
+                                //customRenderers: {
+                                //    maxSearchDistanceInMI: function (v) { return v + " mi"; },
+                                //},
                                 propertyNames: {
-                                    maxSearchDistanceInMI: "search distance",
+                                    //maxSearchDistanceInMI: "search distance",
                                     usePlantsUnderConstruction: "use unfinished PV",
                                     usePlantsInDevelopment: "use planned PV",
                                 },
@@ -150,8 +166,8 @@ module INLModules {
                     id: "SolarPlantSocialTool",
                     title: "Existing Solar Proximity",
                     category: "Social Acceptance",
-                    description: "Percentage of survey respondents who reported this distance from existing solar plants as acceptable",
-                    longDescription: '<p>This tool calculates the distance from a site to the nearest existing solar plant, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 441 respondents from six counties in Southern California answered Question 21 which asked "How much buffer distance is acceptable between a large solar facility and an existing large solar facility?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest existing solar installation is identified using map data from SEIA. See their Research & Resources page for more information (www.seia.org/research-resources).</p>',
+                    description: "Percentage of people who would report this distance from existing solar plants as acceptable, according to our survey",
+                    longDescription: '<p>This tool calculates the distance from a site to the nearest existing solar plant, and then reports the estimated percentage of residents who would say that distance was acceptable, with a 95% confidence interval.</p><p>The survey used in this tool was administered by the PVMapper project in 2013 and 2014. From the 2013 survey, 441 respondents from six counties in Southern California answered Question 21 which asked "How much buffer distance is acceptable between a large solar facility and an existing large solar facility?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest existing solar installation is identified using map data from SEIA. See their Research & Resources page for more information (www.seia.org/research-resources).</p>',
                     //onScoreAdded: function (e, score: pvMapper.Score) {
                     //    scores.push(score);
                     //},
@@ -163,12 +179,12 @@ module INLModules {
                         return thisModule.configProperties;
                     },
                     setConfig: function (config: IConfig) {
-                        if (config && config.maxSearchDistanceInMI >= 0 && (
-                            thisModule.configProperties.maxSearchDistanceInMI != config.maxSearchDistanceInMI ||
+                        if (config && /*config.maxSearchDistanceInMI >= 0 &&*/ (
+                            //thisModule.configProperties.maxSearchDistanceInMI != config.maxSearchDistanceInMI ||
                             thisModule.configProperties.usePlantsInDevelopment != config.usePlantsInDevelopment ||
                             thisModule.configProperties.usePlantsUnderConstruction != config.usePlantsUnderConstruction)) {
 
-                            thisModule.configProperties.maxSearchDistanceInMI = config.maxSearchDistanceInMI;
+                            //thisModule.configProperties.maxSearchDistanceInMI = config.maxSearchDistanceInMI;
                             thisModule.configProperties.usePlantsInDevelopment = !!config.usePlantsInDevelopment;
                             thisModule.configProperties.usePlantsUnderConstruction = !!config.usePlantsUnderConstruction;
 
@@ -199,7 +215,7 @@ module INLModules {
 
         public title: string = "Existing Solar Proximity";
         public category: string = "Social Acceptance";
-        public description: string = "Percentage of survey respondents who reported this distance from existing solar plants as acceptable";
+        public description: string = "Percentage of people who would report this distance from existing solar plants as acceptable, according to our survey";
 
 
         private configProperties: IConfig;
@@ -351,8 +367,9 @@ module INLModules {
                             this.requestError = response.error || (response.data && response.data.error);
                             while (this.scoresWaitingOnRequest.length) {
                                 var score = this.scoresWaitingOnRequest.pop();
-                                score.popupMessage = "Error " + ((this.requestError.code && this.requestError.message) ?
-                                    (this.requestError.code + ": " + this.requestError.message) : this.requestError.toString());
+                                score.popupMessage = (this.requestError.message ? this.requestError.message : "Error " +
+                                    (this.requestError.messageCode ? this.requestError.messageCode :
+                                    (this.requestError.code ? this.requestError.code : "")));
                                 score.updateValue(Number.NaN);
                             }
                         }
@@ -402,7 +419,9 @@ module INLModules {
                 // if we have our layer data populated, let's update our score with it.
                 this.updateScoreFromLayers(score);
             } else if (this.requestError) {
-                score.popupMessage = "Request error " + this.requestError.toString();
+                score.popupMessage = (this.requestError.message ? this.requestError.message : "Error " +
+                    (this.requestError.messageCode ? this.requestError.messageCode :
+                    (this.requestError.code ? this.requestError.code : "")));
                 score.updateValue(Number.NaN);
             } else if (this.scoresWaitingOnRequest.indexOf(score) < 0) {
                 // if we're still waiting on that data, let's enqueue this score to be updated afterward.
@@ -411,7 +430,7 @@ module INLModules {
         }
 
         private updateScoreFromLayers = (score: pvMapper.Score) => {
-            var maxSearchDistanceInKM = this.configProperties.maxSearchDistanceInMI * 1.60934;
+            var maxSearchDistanceInKM = /*this.configProperties.maxSearchDistanceInMI*/ 5 * 1.60934;
             var maxSearchDistanceInMeters = maxSearchDistanceInKM * 1000;
 
             var searchBounds: OpenLayers.Bounds = new OpenLayers.Bounds(
@@ -448,80 +467,27 @@ module INLModules {
             if (closestFeature !== null) {
                 var minDistanceInMi = minDistance * 0.000621371;
 
-                var percentOk = 0;
-                var distanceOk = 5000;
-                for (var i = surveyResults.length - 1; i--; i >= 0) {
-                    if (minDistanceInMi >= surveyResults[i].mi) {
-                        percentOk = surveyResults[i].percentOk;
-                        distanceOk = surveyResults[i].mi;
+                var previousDistance = surveyResults[surveyResults.length - 2].mi;
+                var surveyResult = surveyResults[surveyResults.length - 1];
+                for (var i = 0; i < surveyResults.length - 1; i++) {
+                    if (minDistanceInMi < surveyResults[i].mi) {
+                        surveyResult = surveyResults[i];
+                        previousDistance = i <= 0 ? 0 : surveyResults[i - 1].mi;
                         break;
                     }
                 }
-
-                var distanceOkStr: string =
-                    (distanceOk < 1) ? distanceOk.toFixed(2) :
-                    (distanceOk < 10) ? distanceOk.toFixed(1) :
-                    distanceOk.toFixed(0);
-
-                var minDistanceStr: string =
-                    (minDistanceInMi < 1) ? minDistanceInMi.toFixed(2) :
-                    (minDistanceInMi < 10) ? minDistanceInMi.toFixed(1) :
-                    minDistanceInMi.toFixed(0);
-
-                //var nearestPlantStr: string =
-                //    " (The nearest plant is ";
-                //if (closestFeature.attributes["Project Name"])
-                //    nearestPlantStr += closestFeature.attributes["Project Name"] + ", ";
-                //if (closestFeature.attributes["Capacity"])
-                //    nearestPlantStr += "a " + closestFeature.attributes["Capacity"] + " MW plant ";
-                //if (closestFeature.attributes["Developer"])
-                //    nearestPlantStr += "by " + closestFeature.attributes["Developer"] + ", ";
-                //else if (closestFeature.attributes.Owner)
-                //    nearestPlantStr += "for " + closestFeature.attributes.Owner + ", ";
-                //nearestPlantStr += minDistanceStr + " mi away.)";
-
-                //"Developer", "Project Name", "Electricity Purchaser", "Capacity", "Status"
 
                 var nearestPlantStr: string = closestFeature.attributes["Project Name"] ?
-                    " (The nearest plant, " + closestFeature.attributes["Project Name"] + ", is " + minDistanceStr + " mi away" :
-                    " (The nearest plant is " + minDistanceStr + " mi away";
+                    " The nearest plant, " + closestFeature.attributes["Project Name"] + ", is " + minDistanceInMi.toFixed(2) + " mi away." :
+                    " The nearest plant is " + minDistanceInMi.toFixed(2) + " mi away.";
 
-                score.popupMessage =
-                    percentOk.toFixed(1) + "% of respondents reported they would accept a site built " +
-                    distanceOkStr + " mi or more from an existing solar plant." + nearestPlantStr;
+                score.popupMessage = surveyResult.average + "% &plusmn; " + surveyResult.plusOrMinus + "% of people would accept a site built " +
+                previousDistance + " mi - " + surveyResult.mi + " mi away from an existing solar plant (95% confidence interval)." + nearestPlantStr;
 
-                score.updateValue(percentOk);
+                score.updateValue(surveyResult.average);
             } else {
-                // no existing solar plants found nearby
-                // use the % acceptance for our current max search distance
-                var percentOk = 0;
-                var distanceOk = 5000;
-                var minDistanceInMi = this.configProperties.maxSearchDistanceInMI;
-
-                for (var i = surveyResults.length - 1; i--; i >= 0) {
-                    if (minDistanceInMi >= surveyResults[i].mi) {
-                        percentOk = surveyResults[i].percentOk;
-                        distanceOk = surveyResults[i].mi;
-                        break;
-                    }
-                }
-
-                var distanceOkStr: string =
-                    (distanceOk < 1) ? distanceOk.toFixed(2) :
-                    (distanceOk < 10) ? distanceOk.toFixed(1) :
-                    distanceOk.toFixed(0);
-
-                var minDistanceStr: string =
-                    (minDistanceInMi < 1) ? minDistanceInMi.toFixed(2) :
-                    (minDistanceInMi < 10) ? minDistanceInMi.toFixed(1) :
-                    minDistanceInMi.toFixed(0);
-
-                score.popupMessage =
-                    percentOk.toFixed(1) + "% of respondents reported they would accept a site built " +
-                    distanceOkStr + " mi or more from an existing solar plant. (There was no existing solar plant found within the " +
-                    this.configProperties.maxSearchDistanceInMI + " mi search distance.)";
-
-                score.updateValue(percentOk);
+                score.popupMessage = "There was no existing solar plant found within 5 mi of this site.";
+                score.updateValue(100); //surveyResults[surveyResults.length - 1].average); //TODO: what is the appropriate value to use here? 100%? the largest % we have in the table? Number.NaN ?!?
             }
         }
     }
