@@ -11,59 +11,67 @@ module INLModules {
     declare var selfUrl: string; // this should be included dynamically in ModuleManager when it loads this file.
     //TODO: why didn't we use require.js (or similar)? Why roll our own dynamic js loader?
 
+    //var surveyResults = [
+    //    { mi: 0, percentOk: 11.51385928 },
+    //    { mi: 0.000189394, percentOk: 11.72707889 },
+    //    { mi: 0.000378788, percentOk: 11.94029851 },
+    //    { mi: 0.001136364, percentOk: 12.15351812 },
+    //    { mi: 0.001893939, percentOk: 12.57995736 },
+    //    { mi: 0.003787879, percentOk: 12.79317697 },
+    //    { mi: 0.005681818, percentOk: 13.43283582 },
+    //    { mi: 0.009469697, percentOk: 13.85927505 },
+    //    { mi: 0.018939394, percentOk: 15.99147122 },
+    //    { mi: 0.028409091, percentOk: 16.20469083 },
+    //    { mi: 0.037878788, percentOk: 16.63113006 },
+    //    { mi: 0.056818182, percentOk: 17.27078891 },
+    //    { mi: 0.09469697, percentOk: 18.12366738 },
+    //    { mi: 0.142045455, percentOk: 18.33688699 },
+    //    { mi: 0.170454546, percentOk: 18.55010661 },
+    //    { mi: 0.189393939, percentOk: 19.18976546 },
+    //    { mi: 0.227272727, percentOk: 19.61620469 },
+    //    { mi: 0.25, percentOk: 21.53518124 },
+    //    { mi: 0.284090909, percentOk: 21.74840085 },
+    //    { mi: 0.5, percentOk: 25.58635394 },
+    //    { mi: 0.568181818, percentOk: 25.79957356 },
+    //    { mi: 1, percentOk: 42.85714286 },
+    //    { mi: 2, percentOk: 47.76119403 },
+    //    { mi: 3, percentOk: 50.74626866 },
+    //    { mi: 4, percentOk: 50.95948827 },
+    //    { mi: 5, percentOk: 66.73773987 },
+    //    { mi: 6, percentOk: 67.1641791 },
+    //    { mi: 7, percentOk: 67.59061834 },
+    //    { mi: 8, percentOk: 70.14925373 },
+    //    { mi: 10, percentOk: 78.03837953 },
+    //    { mi: 12, percentOk: 78.25159915 },
+    //    { mi: 14, percentOk: 78.46481876 },
+    //    { mi: 14.2, percentOk: 78.67803838 },
+    //    { mi: 15, percentOk: 81.23667377 },
+    //    { mi: 20, percentOk: 86.35394456 },
+    //    { mi: 25, percentOk: 88.91257996 },
+    //    { mi: 30, percentOk: 92.53731343 },
+    //    { mi: 35, percentOk: 92.75053305 },
+    //    { mi: 40, percentOk: 93.81663113 },
+    //    { mi: 50, percentOk: 97.01492537 },
+    //    { mi: 100, percentOk: 99.14712154 },
+    //    { mi: 129, percentOk: 99.36034115 },
+    //    { mi: 200, percentOk: 99.78678038 },
+    //    { mi: 5000, percentOk: 100 },
+    //];
+
     var surveyResults = [
-        { mi: 0, percentOk: 11.51385928 },
-        { mi: 0.000189394, percentOk: 11.72707889 },
-        { mi: 0.000378788, percentOk: 11.94029851 },
-        { mi: 0.001136364, percentOk: 12.15351812 },
-        { mi: 0.001893939, percentOk: 12.57995736 },
-        { mi: 0.003787879, percentOk: 12.79317697 },
-        { mi: 0.005681818, percentOk: 13.43283582 },
-        { mi: 0.009469697, percentOk: 13.85927505 },
-        { mi: 0.018939394, percentOk: 15.99147122 },
-        { mi: 0.028409091, percentOk: 16.20469083 },
-        { mi: 0.037878788, percentOk: 16.63113006 },
-        { mi: 0.056818182, percentOk: 17.27078891 },
-        { mi: 0.09469697, percentOk: 18.12366738 },
-        { mi: 0.142045455, percentOk: 18.33688699 },
-        { mi: 0.170454546, percentOk: 18.55010661 },
-        { mi: 0.189393939, percentOk: 19.18976546 },
-        { mi: 0.227272727, percentOk: 19.61620469 },
-        { mi: 0.25, percentOk: 21.53518124 },
-        { mi: 0.284090909, percentOk: 21.74840085 },
-        { mi: 0.5, percentOk: 25.58635394 },
-        { mi: 0.568181818, percentOk: 25.79957356 },
-        { mi: 1, percentOk: 42.85714286 },
-        { mi: 2, percentOk: 47.76119403 },
-        { mi: 3, percentOk: 50.74626866 },
-        { mi: 4, percentOk: 50.95948827 },
-        { mi: 5, percentOk: 66.73773987 },
-        { mi: 6, percentOk: 67.1641791 },
-        { mi: 7, percentOk: 67.59061834 },
-        { mi: 8, percentOk: 70.14925373 },
-        { mi: 10, percentOk: 78.03837953 },
-        { mi: 12, percentOk: 78.25159915 },
-        { mi: 14, percentOk: 78.46481876 },
-        { mi: 14.2, percentOk: 78.67803838 },
-        { mi: 15, percentOk: 81.23667377 },
-        { mi: 20, percentOk: 86.35394456 },
-        { mi: 25, percentOk: 88.91257996 },
-        { mi: 30, percentOk: 92.53731343 },
-        { mi: 35, percentOk: 92.75053305 },
-        { mi: 40, percentOk: 93.81663113 },
-        { mi: 50, percentOk: 97.01492537 },
-        { mi: 100, percentOk: 99.14712154 },
-        { mi: 129, percentOk: 99.36034115 },
-        { mi: 200, percentOk: 99.78678038 },
-        { mi: 5000, percentOk: 100 },
+        { mi: 0.25, low: 16.20, high: 24.00, average: 20.10, plusOrMinus: 3.90 },
+        { mi: 0.50, low: 17.20, high: 25.20, average: 21.20, plusOrMinus: 4.00 },
+        { mi: 1.00, low: 20.20, high: 28.60, average: 24.40, plusOrMinus: 4.20 },
+        { mi: 1.50, low: 35.50, high: 44.90, average: 40.20, plusOrMinus: 4.70 },
+        { mi: 2.00, low: 35.60, high: 45.00, average: 40.30, plusOrMinus: 4.70 },
+        { mi: 2.50, low: 40.10, high: 49.70, average: 44.90, plusOrMinus: 4.80 },
+        { mi: 3.00, low: 41.00, high: 50.70, average: 45.85, plusOrMinus: 4.85 },
+        { mi: 3.50, low: 44.80, high: 54.60, average: 49.70, plusOrMinus: 4.90 },
+        { mi: 4.00, low: 44.80, high: 54.60, average: 49.70, plusOrMinus: 4.90 },
+        { mi: 4.50, low: 45.70, high: 55.50, average: 50.60, plusOrMinus: 4.90 },
+        { mi: 5.00, low: 45.70, high: 55.50, average: 50.60, plusOrMinus: 4.90 }
     ];
 
-
-    //var initialSearchDistanceInMi = 5;
-    //var maxSearchDistanceInMi = 5000;
-
-    // cache for the last distance found to a agriculture, used so that our search isn't criminally inefficient
-    var lastDistanceCache = {};
 
     export class AgricultureSocialModule extends pvMapper.Module {
         constructor() {
@@ -80,33 +88,16 @@ module INLModules {
                         // nothing to remove.
                     },
 
-                    //Note: removed prior to demo on request - mentioning acres confuses the point - they had nothing to do with
-                    //      the survey, and have nothing to do with the score.
-                    //showConfigWindow: function () {
-                    //    myToolLine = this; // fetch tool line, which was passed as 'this' parameter
-                    //    propsWindow.show();
-                    //},
-
                     id: "AgricultureSocialTool",
                     title: "Agriculture Proximity",
                     category: "Social Acceptance",
-                    description: "Percentage of survey respondents who reported this distance from agriculture as acceptable",
-                    longDescription: '<p>This tool calculates the distance from a site to the nearest agriculture area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 468 respondents from six counties in Southern California answered Question 15, which asked "How much buffer distance is acceptable between a large solar facility and existing agricultural land?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest agricultural area is identified from a map of agriculture polygons derived from original land classification by USDA\'s CropScape dataset (nassgeodata.gmu.edu). These raster data were generalized and then digitized into a vector format, which was then simplified using geoprocessing tools in ArcGIS Desktop. The resulting geometries are gross approximations useful only for coarse distance estimates.</p>',
+                    description: "Percentage of people who would report this distance from agriculture as acceptable, according to our survey",
+                    longDescription: '<p>This tool calculates the distance from a site to the nearest agriculture area, and then reports the estimated percentage of residents who would say that distance was acceptable, with a 95% confidence interval.</p><p>The survey used in this tool was administered by the PVMapper project in 2013 and 2014. From the 2013 survey, 468 respondents from six counties in Southern California answered Question 15, which asked "How much buffer distance is acceptable between a large solar facility and existing agricultural land?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest agricultural area is identified from a map of agriculture polygons derived from original land classification by USDA\'s CropScape dataset (nassgeodata.gmu.edu). These raster data were generalized and then digitized into a vector format, which was then simplified using geoprocessing tools in ArcGIS Desktop. The resulting geometries are gross approximations useful only for coarse distance estimates.</p>',
                     //onScoreAdded: function (e, score: pvMapper.Score) {
                     //    scores.push(score);
                     //},
                     onSiteChange: function (e, score: pvMapper.Score) {
-                        if (lastDistanceCache[score.site.id] > 500) {
-                            updateScore(score, 5000);
-                        } else if (lastDistanceCache[score.site.id] > 50) {
-                            updateScore(score, 500);
-                        } else if (lastDistanceCache[score.site.id] > 5) {
-                            updateScore(score, 50);
-                        } else if (lastDistanceCache[score.site.id] > 0.5) {
-                            updateScore(score, 5);
-                        } else {
-                            updateScore(score, 0.5);
-                        }
+                        updateScore(score, 5); // 5 mi search distance
                     },
 
                     // having any nearby line is much better than having no nearby line, so let's reflect that.
@@ -130,7 +121,7 @@ module INLModules {
         // add these to make it easier for the ModuleManager stuff.
         public title: string = "Agriculture Proximity";
         public category: string = "Social Acceptance";
-        public description: string = "Percentage of survey respondents who reported this distance from agriculture as acceptable";
+        public description: string = "Percentage of people who would report this distance from agriculture as acceptable, according to our survey";
 
     }
 
@@ -142,70 +133,15 @@ module INLModules {
 
     var mapLayer: OpenLayers.Layer;
 
-    //function addAllMaps() {
-        // add as ESRI REST layer
-
-        ////TODO: test map - hide this
-        //mapLayer = new OpenLayers.Layer.ArcGIS93Rest(
-        //    "Agriculture TEST",
-        //    esriExportUrl,
-        //    {
-        //        layers: "show:0", //"show:2",
-        //        format: "gif",
-        //        srs: "3857", //"102100",
-        //        transparent: "true",
-        //    }//,{ isBaseLayer: false }
-        //    );
-        //mapLayer.setOpacity(0.3);
-        //mapLayer.epsgOverride = "3857"; //"EPSG:102100";
-        //mapLayer.setVisibility(false);
-        
-        //pvMapper.map.addLayer(mapLayer);
-
-        // add as WMS layer
-        ////TODO: this server doesn't offer EPSG:3857. Should find a different server?
-        //mapLayer = new OpenLayers.Layer.WMS(
-        //    "Agriculture",
-        //    wmsServerUrl,
-        //    {
-        //        layers: "cdl_2012",
-        //        transparent: "true",
-        //        format: "image/png",
-        //        exceptions: "application/vnd.ogc.se_inimage", //TODO: DEBUG = remove before deploy...
-        //        //maxResolution: 156543.0339,
-        //        //srs: "EPSG:3857",
-        //        srs: "EPSG:4326",
-        //    },
-        //    { isBaseLayer: false }
-        //    );
-
-        //mapLayer.setOpacity(0.3);
-        //mapLayer.setVisibility(false);
-        //mapLayer.epsgOverride = "EPSG:4326"; //"EPSG:3857";
-
-        //pvMapper.map.addLayer(mapLayer);
-    //}
-
-    //function removeAllMaps() {
-    //    if (mapLayer !== null) {
-    //        pvMapper.map.removeLayer(mapLayer, false);
-    //        mapLayer = null;
-    //    }
-    //}
-
     function updateScore(score: pvMapper.ISiteScore, searchDistanceInMi) {
         var searchDistanceInMeters = searchDistanceInMi * 1609.34;
         //NOTE: can't use JSONP from an HTTP server when we are running HTTPS, so rely on a good old Proxy GET
-        //var jsonpProtocol = new OpenLayers.Protocol.Script(<any>{
         var request = OpenLayers.Request.GET({
             url: esriQueryUrl,
             params: {
                 f: "json",
-                //where: "ACRES >= " + configProperties.mininumAcres,
-                //TODO: should request specific out fields, instead of '*' here.
-                outFields: "*",
+                outFields: "",
                 geometryType: "esriGeometryEnvelope",
-                //TODO: scaling is problematic - should use a constant-size search window
                 geometry: new OpenLayers.Bounds(
                     score.site.geometry.bounds.left - searchDistanceInMeters - 1000,
                     score.site.geometry.bounds.bottom - searchDistanceInMeters - 1000,
@@ -219,84 +155,49 @@ module INLModules {
             //    return this.format.read(data);
             //},
             callback: (response: OpenLayers.Response) => {
-                //alert("Nearby features: " + response.features.length);
                 if (response.status === 200) {
                     var closestFeature = null;
                     var minDistance: number = searchDistanceInMeters;
 
-                    var features = OpenLayers.Format.EsriGeoJSON.prototype.read(response.responseText);
-                    //console.log("Near-ish features: " + (features ? features.length : 0));
+                    var responseObj = OpenLayers.Format.JSON.prototype.read(response.responseText);
+                    if (!responseObj.error) {
 
-                    if (features) {
-                        for (var i = 0; i < features.length; i++) {
-                            var distance: number = score.site.geometry.distanceTo(features[i].geometry, { edge: false });
-                            if (distance < minDistance) {
-                                minDistance = distance;
-                                closestFeature = features[i];
+                        var features = OpenLayers.Format.EsriGeoJSON.prototype.read(responseObj);
+
+                        if (features) {
+                            for (var i = 0; i < features.length; i++) {
+                                var distance: number = score.site.geometry.distanceTo(features[i].geometry, { edge: false });
+                                if (distance < minDistance) {
+                                    minDistance = distance;
+                                    closestFeature = features[i];
+                                }
                             }
                         }
-                    }
-                    if (closestFeature !== null) {
-                        var minDistanceInMi = minDistance * 0.000621371;
-                        lastDistanceCache[score.site.id] = minDistanceInMi;
+                        if (closestFeature !== null) {
+                            var minDistanceInMi = minDistance * 0.000621371;
 
-                        var percentOk = 0;
-                        var distanceOk = 5000;
-                        for (var i = surveyResults.length - 1; i--; i >= 0) {
-                            if (minDistanceInMi >= surveyResults[i].mi) {
-                                percentOk = surveyResults[i].percentOk;
-                                distanceOk = surveyResults[i].mi;
-                                break;
+                            var previousDistance = surveyResults[surveyResults.length - 2].mi;
+                            var surveyResult = surveyResults[surveyResults.length - 1];
+                            for (var i = 0; i < surveyResults.length - 1; i++) {
+                                if (minDistanceInMi < surveyResults[i].mi) {
+                                    surveyResult = surveyResults[i];
+                                    previousDistance = i <= 0 ? 0 : surveyResults[i-1].mi;
+                                    break;
+                                }
                             }
+
+                            score.popupMessage = surveyResult.average + "% &plusmn; " + surveyResult.plusOrMinus + "% of people would accept a site built " +
+                                previousDistance + " mi - " + surveyResult.mi + " mi away from agriculture (95% confidence interval). The nearest agirculture is " +
+                                minDistanceInMi.toFixed(2) + " mi away.";
+
+                            score.updateValue(surveyResult.average);
+                        } else {
+                            score.popupMessage = "There was no agriculture found within 5 mi of this site.";
+                            score.updateValue(100); //surveyResults[surveyResults.length - 1].average); //TODO: what is the appropriate value to use here? 100%? the largest % we have in the table? Number.NaN ?!?
                         }
-
-                        var distanceOkStr: string =
-                            (distanceOk < 1) ? distanceOk.toFixed(2) :
-                            (distanceOk < 10) ? distanceOk.toFixed(1) :
-                            distanceOk.toFixed(0);
-
-                        var minDistanceStr: string =
-                            (minDistanceInMi < 1) ? minDistanceInMi.toFixed(2) :
-                            (minDistanceInMi < 10) ? minDistanceInMi.toFixed(1) :
-                            minDistanceInMi.toFixed(0);
-
-                        //score.popupMessage = minDistanceStr + " mi to " +
-                        //    parseFloat(closestFeature.attributes['ACRES']).toFixed(1) + " acres of " +
-                        //    closestFeature.attributes['WETLAND_TYPE'] + "; " +
-                        //    percentOk.toFixed(1) + "% of respondents reported they would accept " +
-                        //    distanceOkStr + " mi or more.";
-
-                        //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept " +
-                        //    distanceOkStr + " mi or more; " + score.site.name + " is " +
-                        //    minDistanceStr + " mi from " +
-                        //    parseFloat(closestFeature.attributes['ACRES']).toFixed(1) + " acres of " +
-                        //    closestFeature.attributes['WETLAND_TYPE'];
-
-                        //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site " +
-                        //    minDistanceStr + " mi from a " +
-                        //    closestFeature.attributes['WETLAND_TYPE'] + "agriculture";
-
-                        //score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept this proximity. (site " +
-                        //    score.site.name + " is " + minDistanceStr + " mi from a " +
-                        //    closestFeature.attributes['WETLAND_TYPE'] + ")";
-
-                        score.popupMessage = percentOk.toFixed(1) + "% of respondents reported they would accept a site built " +
-                            distanceOkStr + " mi or more from agriculture. (The nearest agriculture is " +
-                            minDistanceStr + " mi away.)";
-
-                        score.updateValue(percentOk);
-                    } else if (searchDistanceInMi < 5000) {
-                        // call recursively to find the nearest agriculture...
-                        updateScore(score, searchDistanceInMi * 10);
                     } else {
-                        // no agriculture found in max search distance, so 100% of respondants are Ok with this.
-
-                        //score.popupMessage = "over 5000 mi to any agriculture; 100% of respondents reported they would accept this distance.";
-                        //score.popupMessage = "100% of respondents reported they would accept this proximity. (site " +
-                        //    score.site.name + " is over 5000 mi from any agriculture)";
-                        score.popupMessage = "100% of respondents reported they would accept a site built over 5000 mi from agriculture." +
-                        " (There was no agriculture found within 5000 mi.)";
-                        score.updateValue(100);
+                        score.popupMessage = responseObj.error.message + " (" + responseObj.error.code + ")";
+                        score.updateValue(Number.NaN);
                     }
                 } else {
                     score.popupMessage = "Error " + response.status + " " + response.statusText;
@@ -304,11 +205,7 @@ module INLModules {
                 }
             },
         });
-
-        //var response: OpenLayers.Response = jsonpProtocol.read();
     }
-
-    //var modinstance = new AgricultureSocialModule();
 
     pvMapper.moduleManager.registerModule(new INLModules.AgricultureSocialModule(), true);
 }
