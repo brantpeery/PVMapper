@@ -157,8 +157,8 @@ module INLModules {
                     id: "WetlandsSocialTool",
                     title: "Wetland Proximity",
                     category: "Social Acceptance",
-                    description: "Percentage of survey respondents who reported this distance from wetlands as acceptable",
-                    longDescription: '<p>This tool calculates the distance from a site to the nearest wetland, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 479 respondents from six counties in Southern California answered Question 20 which asked "How much buffer distance is acceptable between a large solar facility and a wetland?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest wetland is identified using the National Wetlands Inventory by the US Fish and Wildlife Service. Note that this dataset includes wetlands which may have no conservation value, such as irrigation canals and small drainage basins. See the FWS website for more information (www.fws.gov/wetlands).</p>',
+                    description: "Percentage of people who would report this distance from wetlands as acceptable, according to our survey",
+                    longDescription: '<p>This tool calculates the distance from a site to the nearest wetland, and then reports the estimated percentage of residents who would say that distance was acceptable, with a 95% confidence interval.</p><p>The survey used in this tool was administered by the PVMapper project in 2013 and 2014. From the 2013 survey, 479 respondents from six counties in Southern California answered Question 20 which asked "How much buffer distance is acceptable between a large solar facility and a wetland?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest wetland is identified using the National Wetlands Inventory by the US Fish and Wildlife Service. Note that this dataset includes wetlands which may have no conservation value, such as irrigation canals and small drainage basins. See the FWS website for more information (www.fws.gov/wetlands).</p>',
 
                     onSiteChange: function (e, score: pvMapper.Score) {
                         thisModule.updateScore(score, 5); // 5 mi search distance
@@ -198,7 +198,7 @@ module INLModules {
 
         public title: string = "Wetland Proximity";
         public category: string = "Social Acceptance";
-        public description: string = "Percentage of survey respondents who reported this distance from wetlands as acceptable";
+        public description: string = "Percentage of people who would report this distance from wetlands as acceptable, according to our survey";
 
 
         //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
@@ -327,8 +327,8 @@ module INLModules {
                                     }
                                 }
 
-                                score.popupMessage = surveyResult.average + "% &plusmn; " + surveyResult.plusOrMinus + "% of US residents would accept a site built " +
-                                    previousDistance + " mi - " + surveyResult.mi + " mi away from wetlands. The nearest wetland is a " +
+                                score.popupMessage = surveyResult.average + "% &plusmn; " + surveyResult.plusOrMinus + "% of people would accept a site built " +
+                                    previousDistance + " mi - " + surveyResult.mi + " mi away from wetlands (95% confidence interval). The nearest wetland is a " +
                                     parseFloat(closestFeature.attributes['ACRES']).toFixed(1) + " acre " +
                                     closestFeature.attributes['WETLAND_TYPE'] + " " + minDistanceInMi.toFixed(2) + " mi away.";
 

@@ -91,8 +91,8 @@ module INLModules {
                     id: "AgricultureSocialTool",
                     title: "Agriculture Proximity",
                     category: "Social Acceptance",
-                    description: "Percentage of survey respondents who reported this distance from agriculture as acceptable",
-                    longDescription: '<p>This tool calculates the distance from a site to the nearest agriculture area, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 468 respondents from six counties in Southern California answered Question 15, which asked "How much buffer distance is acceptable between a large solar facility and existing agricultural land?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest agricultural area is identified from a map of agriculture polygons derived from original land classification by USDA\'s CropScape dataset (nassgeodata.gmu.edu). These raster data were generalized and then digitized into a vector format, which was then simplified using geoprocessing tools in ArcGIS Desktop. The resulting geometries are gross approximations useful only for coarse distance estimates.</p>',
+                    description: "Percentage of people who would report this distance from agriculture as acceptable, according to our survey",
+                    longDescription: '<p>This tool calculates the distance from a site to the nearest agriculture area, and then reports the estimated percentage of residents who would say that distance was acceptable, with a 95% confidence interval.</p><p>The survey used in this tool was administered by the PVMapper project in 2013 and 2014. From the 2013 survey, 468 respondents from six counties in Southern California answered Question 15, which asked "How much buffer distance is acceptable between a large solar facility and existing agricultural land?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest agricultural area is identified from a map of agriculture polygons derived from original land classification by USDA\'s CropScape dataset (nassgeodata.gmu.edu). These raster data were generalized and then digitized into a vector format, which was then simplified using geoprocessing tools in ArcGIS Desktop. The resulting geometries are gross approximations useful only for coarse distance estimates.</p>',
                     //onScoreAdded: function (e, score: pvMapper.Score) {
                     //    scores.push(score);
                     //},
@@ -121,7 +121,7 @@ module INLModules {
         // add these to make it easier for the ModuleManager stuff.
         public title: string = "Agriculture Proximity";
         public category: string = "Social Acceptance";
-        public description: string = "Percentage of survey respondents who reported this distance from agriculture as acceptable";
+        public description: string = "Percentage of people who would report this distance from agriculture as acceptable, according to our survey";
 
     }
 
@@ -186,8 +186,8 @@ module INLModules {
                                 }
                             }
 
-                            score.popupMessage = surveyResult.average + "% &plusmn; " + surveyResult.plusOrMinus + "% of US residents would accept a site built " +
-                                previousDistance + " mi - " + surveyResult.mi + " mi away from agriculture. The nearest agirculture is " +
+                            score.popupMessage = surveyResult.average + "% &plusmn; " + surveyResult.plusOrMinus + "% of people would accept a site built " +
+                                previousDistance + " mi - " + surveyResult.mi + " mi away from agriculture (95% confidence interval). The nearest agirculture is " +
                                 minDistanceInMi.toFixed(2) + " mi away.";
 
                             score.updateValue(surveyResult.average);

@@ -90,7 +90,7 @@ var INLModules;
             this.url = selfUrl;
             this.title = "Existing Solar Proximity";
             this.category = "Social Acceptance";
-            this.description = "Percentage of survey respondents who reported this distance from existing solar plants as acceptable";
+            this.description = "Percentage of people who would report this distance from existing solar plants as acceptable, according to our survey";
             this.seiaDataUrl = "https://seia.maps.arcgis.com/sharing/rest/content/items/e442f5fc7402493b8a695862b6a2290b/data";
             //declare var Ext: any;
             this.requestError = null;
@@ -274,7 +274,7 @@ var INLModules;
 
                     var nearestPlantStr = closestFeature.attributes["Project Name"] ? " The nearest plant, " + closestFeature.attributes["Project Name"] + ", is " + minDistanceInMi.toFixed(2) + " mi away." : " The nearest plant is " + minDistanceInMi.toFixed(2) + " mi away.";
 
-                    score.popupMessage = surveyResult.average + "% &plusmn; " + surveyResult.plusOrMinus + "% of US residents would accept a site built " + previousDistance + " mi - " + surveyResult.mi + " mi away from an existing solar plant." + nearestPlantStr;
+                    score.popupMessage = surveyResult.average + "% &plusmn; " + surveyResult.plusOrMinus + "% of people would accept a site built " + previousDistance + " mi - " + surveyResult.mi + " mi away from an existing solar plant (95% confidence interval)." + nearestPlantStr;
 
                     score.updateValue(surveyResult.average);
                 } else {
@@ -359,8 +359,8 @@ var INLModules;
                         id: "SolarPlantSocialTool",
                         title: "Existing Solar Proximity",
                         category: "Social Acceptance",
-                        description: "Percentage of survey respondents who reported this distance from existing solar plants as acceptable",
-                        longDescription: '<p>This tool calculates the distance from a site to the nearest existing solar plant, and then reports the percentage of survey respondents who said that distance was acceptable.</p><p>The survey used in this tool was administered by the PVMapper project in 2013. From this survey, 441 respondents from six counties in Southern California answered Question 21 which asked "How much buffer distance is acceptable between a large solar facility and an existing large solar facility?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest existing solar installation is identified using map data from SEIA. See their Research & Resources page for more information (www.seia.org/research-resources).</p>',
+                        description: "Percentage of people who would report this distance from existing solar plants as acceptable, according to our survey",
+                        longDescription: '<p>This tool calculates the distance from a site to the nearest existing solar plant, and then reports the estimated percentage of residents who would say that distance was acceptable, with a 95% confidence interval.</p><p>The survey used in this tool was administered by the PVMapper project in 2013 and 2014. From the 2013 survey, 441 respondents from six counties in Southern California answered Question 21 which asked "How much buffer distance is acceptable between a large solar facility and an existing large solar facility?" For full details, see "PVMapper: Report on the Second Public Opinion Survey" (INL/EXT-13-30706).</p><p>The nearest existing solar installation is identified using map data from SEIA. See their Research & Resources page for more information (www.seia.org/research-resources).</p>',
                         //onScoreAdded: function (e, score: pvMapper.Score) {
                         //    scores.push(score);
                         //},
