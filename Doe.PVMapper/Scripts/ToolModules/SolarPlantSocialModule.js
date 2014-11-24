@@ -91,7 +91,8 @@ var INLModules;
             this.title = "Existing Solar Proximity";
             this.category = "Social Acceptance";
             this.description = "Percentage of people who would report this distance from existing solar plants as acceptable, according to our survey";
-            this.seiaDataUrl = "https://seia.maps.arcgis.com/sharing/rest/content/items/e442f5fc7402493b8a695862b6a2290b/data";
+            //private seiaDataUrl = "https://seia.maps.arcgis.com/sharing/rest/content/items/e442f5fc7402493b8a695862b6a2290b/data";
+            this.seiaDataUrl = "/Scripts/ToolModules/SolarPlantSocialModule.SEIA.projects.geo.json";
             //declare var Ext: any;
             this.requestError = null;
             this.layerOperating = null;
@@ -104,19 +105,24 @@ var INLModules;
                 }
 
                 _this.scoresWaitingOnRequest = []; // scores can now wait on the request, because the request is being sent.
-                var jsonpProtocol = new OpenLayers.Protocol.Script({
+
+                //var jsonpProtocol = new OpenLayers.Protocol.Script(<any>{
+                var jsonpProtocol = new OpenLayers.Protocol.HTTP({
                     url: _this.seiaDataUrl,
-                    params: {
-                        f: 'json'
-                    },
-                    format: new OpenLayers.Format.JSON(),
-                    parseFeatures: function (data) {
-                        return null;
-                    },
+                    //params: {
+                    //    f: 'json'
+                    //},
+                    format: new OpenLayers.Format.GeoJSON({
+                        internalProjection: new OpenLayers.Projection("EPSG:3857"),
+                        externalProjection: new OpenLayers.Projection("EPSG:4326")
+                    }),
+                    //parseFeatures: function (data) {
+                    //    return null;
+                    //},
                     callback: function (response) {
-                        if (response.success() && !(response.data && response.data.error)) {
+                        if (response.success() && !(response.data && response.data.error) && response.features && response.features.length) {
                             _this.requestError = null;
-                            var properties = { opacity: 0.3, visibility: false };
+                            var properties = { opacity: 0.3, visibility: false /*, projection: "EPSG:4326"*/  };
                             _this.layerOperating = new OpenLayers.Layer.Vector("PV/CSP In Operation", properties);
                             _this.layerConstruction = new OpenLayers.Layer.Vector("PV/CSP Under Construction", properties);
                             _this.layerDevelopment = new OpenLayers.Layer.Vector("PV/CSP In Development", properties);
@@ -127,32 +133,48 @@ var INLModules;
 
                             //new OpenLayers.Format.EsriGeoJSON()
                             //this.format.read(data)
-                            var oLayers = response.data['operationalLayers'];
-                            for (var i = 0; i < oLayers.length; i++) {
-                                var destination = null;
-                                if (oLayers[i].title.indexOf("perat") >= 0) {
-                                    destination = _this.layerOperating;
-                                } else if (oLayers[i].title.indexOf("onstruct") >= 0) {
-                                    destination = _this.layerConstruction;
-                                } else if (oLayers[i].title.indexOf("evelop") >= 0) {
-                                    destination = _this.layerDevelopment;
-                                }
+                            var featuresByStatus = [];
 
-                                if (destination) {
-                                    var olFeatures = [];
-                                    var fLayers = oLayers[i]['featureCollection']['layers'];
-                                    for (var j = 0; j < fLayers.length; j++) {
-                                        var esriFeatures = fLayers[j]['featureSet']['features'];
-                                        for (var k = 0; k < esriFeatures.length; k++) {
-                                            var geometry = new OpenLayers.Geometry.Point(esriFeatures[k].geometry.x, esriFeatures[k].geometry.y);
-                                            var olFeature = new OpenLayers.Feature.Vector(geometry, esriFeatures[k].attributes);
-                                            olFeatures.push(olFeature);
-                                        }
-                                    }
-                                    destination.addFeatures(olFeatures);
-                                }
+                            for (var i = 0; i < response.features.length; i++) {
+                                var feature = response.features[i];
+                                featuresByStatus[feature.attributes.Status] = featuresByStatus[feature.attributes.Status] || [];
+                                featuresByStatus[feature.attributes.Status].push(feature);
                             }
 
+                            _this.layerOperating.addFeatures(featuresByStatus["Operating"] || []);
+                            _this.layerConstruction.addFeatures(featuresByStatus["Under Construction"] || []);
+                            _this.layerDevelopment.addFeatures(featuresByStatus["Under Development"] || []);
+
+                            //var epsg4326 = new OpenLayers.Projection("EPSG:4326");
+                            //var mapProjection = new OpenLayers.Projection("EPSG:3857");
+                            ////var mapProjection = pvMapper.map.getProjectionObject();
+                            //(<any>this.layerOperating).transform(epsg4326, mapProjection);
+                            //(<any>this.layerConstruction).transform(epsg4326, mapProjection);
+                            //(<any>this.layerDevelopment).transform(epsg4326, mapProjection);
+                            //var oLayers = response.data['operationalLayers'];
+                            //for (var i = 0; i < oLayers.length; i++) {
+                            //    var destination: OpenLayers.Vector = null;
+                            //    if (oLayers[i].title.indexOf("perat") >= 0) {
+                            //        destination = this.layerOperating;
+                            //    } else if (oLayers[i].title.indexOf("onstruct") >= 0) {
+                            //        destination = this.layerConstruction;
+                            //    } else if (oLayers[i].title.indexOf("evelop") >= 0) {
+                            //        destination = this.layerDevelopment;
+                            //    }
+                            //    if (destination) {
+                            //        var olFeatures = [];
+                            //        var fLayers = oLayers[i]['featureCollection']['layers'];
+                            //        for (var j = 0; j < fLayers.length; j++) {
+                            //            var esriFeatures = fLayers[j]['featureSet']['features'];
+                            //            for (var k = 0; k < esriFeatures.length; k++) {
+                            //                var geometry = new OpenLayers.Geometry.Point(esriFeatures[k].geometry.x, esriFeatures[k].geometry.y);
+                            //                var olFeature = new OpenLayers.Feature.Vector(geometry, esriFeatures[k].attributes/*, style*/);
+                            //                olFeatures.push(olFeature);
+                            //            }
+                            //        }
+                            //        destination.addFeatures(olFeatures);
+                            //    }
+                            //}
                             //nearestFeatureCache[score.site.id] = response.features;
                             if (_this.isActive && _this.scoresWaitingOnRequest) {
                                 if (_this.layerDevelopment.features.length) {
@@ -172,7 +194,7 @@ var INLModules;
                             _this.scoresWaitingOnRequest = null; // scores can no longer wait on the request, because the request is finished.
                         } else {
                             if (_this.isActive && _this.scoresWaitingOnRequest) {
-                                _this.requestError = response.error || (response.data && response.data.error);
+                                _this.requestError = response.error || (response.data && response.data.error) || response;
                                 while (_this.scoresWaitingOnRequest.length) {
                                     var score = _this.scoresWaitingOnRequest.pop();
                                     score.popupMessage = (_this.requestError.message ? _this.requestError.message : "Error " + (_this.requestError.messageCode ? _this.requestError.messageCode : (_this.requestError.code ? _this.requestError.code : "")));
