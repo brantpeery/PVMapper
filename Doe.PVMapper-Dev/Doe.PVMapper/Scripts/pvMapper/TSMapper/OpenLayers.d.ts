@@ -1888,11 +1888,11 @@ declare module OpenLayers {
             prototype: GPX;
         }
         JSON: {
-            new (): any;
+            new (options?: any): any;
             prototype: JSON;
         }
         GeoJSON: {
-            new (): any;
+            new (options?: any): any;
             prototype: GeoJSON;
         }
         WMSGetFeatureInfo(): any;
