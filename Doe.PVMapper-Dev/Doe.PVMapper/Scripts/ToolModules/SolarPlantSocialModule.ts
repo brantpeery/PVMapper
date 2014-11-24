@@ -222,7 +222,8 @@ module INLModules {
         private propsWindow: any;
         private propsGrid: Ext.grid.property.IGrid;
 
-        private seiaDataUrl = "https://seia.maps.arcgis.com/sharing/rest/content/items/e442f5fc7402493b8a695862b6a2290b/data";
+        //private seiaDataUrl = "https://seia.maps.arcgis.com/sharing/rest/content/items/e442f5fc7402493b8a695862b6a2290b/data";
+        private seiaDataUrl = "/Scripts/ToolModules/SolarPlantSocialModule.SEIA.projects.geo.json";
 
         //declare var Ext: any;
 
@@ -300,19 +301,25 @@ module INLModules {
             }
 
             this.scoresWaitingOnRequest = []; // scores can now wait on the request, because the request is being sent.
-            var jsonpProtocol = new OpenLayers.Protocol.Script(<any>{
+            //var jsonpProtocol = new OpenLayers.Protocol.Script(<any>{
+            var jsonpProtocol = new OpenLayers.Protocol.HTTP(<any>{
                 url: this.seiaDataUrl,
-                params: {
-                    f: 'json'
-                },
-                format: new OpenLayers.Format.JSON(),
-                parseFeatures: function (data) {
-                    return null;
-                },
+                //params: {
+                //    f: 'json'
+                //},
+                format: new OpenLayers.Format.GeoJSON({
+                    internalProjection: new OpenLayers.Projection("EPSG:3857"),
+                    externalProjection: new OpenLayers.Projection("EPSG:4326"),
+                }),
+                //parseFeatures: function (data) {
+                //    return null;
+                //},
                 callback: (response: OpenLayers.Response) => {
-                    if (response.success() && !(response.data && response.data.error)) {
+                    if (response.success() && !(response.data && response.data.error) &&
+                        response.features && response.features.length) {
+
                         this.requestError = null;
-                        var properties = { opacity: 0.3, visibility: false };
+                        var properties = { opacity: 0.3, visibility: false/*, projection: "EPSG:4326"*/ };
                         this.layerOperating = new OpenLayers.Layer.Vector("PV/CSP In Operation", properties);
                         this.layerConstruction = new OpenLayers.Layer.Vector("PV/CSP Under Construction", properties);
                         this.layerDevelopment = new OpenLayers.Layer.Vector("PV/CSP In Development", properties);
@@ -324,31 +331,51 @@ module INLModules {
                         //new OpenLayers.Format.EsriGeoJSON()
                         //this.format.read(data)
 
-                        var oLayers = response.data['operationalLayers'];
-                        for (var i = 0; i < oLayers.length; i++) {
-                            var destination: OpenLayers.Vector = null;
-                            if (oLayers[i].title.indexOf("perat") >= 0) {
-                                destination = this.layerOperating;
-                            } else if (oLayers[i].title.indexOf("onstruct") >= 0) {
-                                destination = this.layerConstruction;
-                            } else if (oLayers[i].title.indexOf("evelop") >= 0) {
-                                destination = this.layerDevelopment;
-                            }
+                        var featuresByStatus = [];
 
-                            if (destination) {
-                                var olFeatures = [];
-                                var fLayers = oLayers[i]['featureCollection']['layers'];
-                                for (var j = 0; j < fLayers.length; j++) {
-                                    var esriFeatures = fLayers[j]['featureSet']['features'];
-                                    for (var k = 0; k < esriFeatures.length; k++) {
-                                        var geometry = new OpenLayers.Geometry.Point(esriFeatures[k].geometry.x, esriFeatures[k].geometry.y);
-                                        var olFeature = new OpenLayers.Feature.Vector(geometry, esriFeatures[k].attributes/*, style*/);
-                                        olFeatures.push(olFeature);
-                                    }
-                                }
-                                destination.addFeatures(olFeatures);
-                            }
+                        for (var i = 0; i < response.features.length; i++) {
+                            var feature = response.features[i];
+                            featuresByStatus[feature.attributes.Status] = featuresByStatus[feature.attributes.Status] || [];
+                            featuresByStatus[feature.attributes.Status].push(feature);
                         }
+
+                        this.layerOperating.addFeatures(featuresByStatus["Operating"] || []);
+                        this.layerConstruction.addFeatures(featuresByStatus["Under Construction"] || []);
+                        this.layerDevelopment.addFeatures(featuresByStatus["Under Development"] || []);
+
+                        //var epsg4326 = new OpenLayers.Projection("EPSG:4326");
+                        //var mapProjection = new OpenLayers.Projection("EPSG:3857");
+                        ////var mapProjection = pvMapper.map.getProjectionObject();
+
+                        //(<any>this.layerOperating).transform(epsg4326, mapProjection);
+                        //(<any>this.layerConstruction).transform(epsg4326, mapProjection);
+                        //(<any>this.layerDevelopment).transform(epsg4326, mapProjection);
+
+                        //var oLayers = response.data['operationalLayers'];
+                        //for (var i = 0; i < oLayers.length; i++) {
+                        //    var destination: OpenLayers.Vector = null;
+                        //    if (oLayers[i].title.indexOf("perat") >= 0) {
+                        //        destination = this.layerOperating;
+                        //    } else if (oLayers[i].title.indexOf("onstruct") >= 0) {
+                        //        destination = this.layerConstruction;
+                        //    } else if (oLayers[i].title.indexOf("evelop") >= 0) {
+                        //        destination = this.layerDevelopment;
+                        //    }
+
+                        //    if (destination) {
+                        //        var olFeatures = [];
+                        //        var fLayers = oLayers[i]['featureCollection']['layers'];
+                        //        for (var j = 0; j < fLayers.length; j++) {
+                        //            var esriFeatures = fLayers[j]['featureSet']['features'];
+                        //            for (var k = 0; k < esriFeatures.length; k++) {
+                        //                var geometry = new OpenLayers.Geometry.Point(esriFeatures[k].geometry.x, esriFeatures[k].geometry.y);
+                        //                var olFeature = new OpenLayers.Feature.Vector(geometry, esriFeatures[k].attributes/*, style*/);
+                        //                olFeatures.push(olFeature);
+                        //            }
+                        //        }
+                        //        destination.addFeatures(olFeatures);
+                        //    }
+                        //}
 
                         //nearestFeatureCache[score.site.id] = response.features;
 
@@ -364,7 +391,7 @@ module INLModules {
                         this.scoresWaitingOnRequest = null; // scores can no longer wait on the request, because the request is finished.
                     } else {
                         if (this.isActive && this.scoresWaitingOnRequest) { // we must test this - the tool may have been deactivated before we received our response.
-                            this.requestError = response.error || (response.data && response.data.error);
+                            this.requestError = response.error || (response.data && response.data.error) || response;
                             while (this.scoresWaitingOnRequest.length) {
                                 var score = this.scoresWaitingOnRequest.pop();
                                 score.popupMessage = (this.requestError.message ? this.requestError.message : "Error " +
