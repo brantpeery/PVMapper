@@ -958,6 +958,7 @@
     <Content Include="Scripts\ViewScripts\Layers.js" />
     <Content Include="Scripts\ViewScripts\LoadProjectSites.js" />
     <Content Include="Scripts\ViewScripts\pvMapper.js" />
+    <Content Include="Scripts\ToolModules\SolarPlantSocialModule.SEIA.projects.geo.json" />
     <None Include="TestPages\SummaryReport.scss" />
     <Content Include="TestPages\SummaryReportTemplate.html" />
     <Content Include="TestPages\SummaryReport.css" />
