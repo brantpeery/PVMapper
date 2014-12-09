@@ -128,8 +128,8 @@ module INLModules {
     //All private functions and variables go here. They will be accessible only to this module because of the AEAF (Auto-Executing Anonomous Function)
 
     var wmsServerUrl = "http://129.174.131.7/cgi/wms_cdlall.cgi?"; // SERVICE=WMS&
-    var esriExportUrl = "https://gis-ext.inl.gov/arcgis/rest/services/Ag_Lands/MapServer/export"; // "http://gis-ext.inl.gov/ArcGIS/rest/services/Ag_Lands/MapServer/export";
-    var esriQueryUrl = "https://gis-ext.inl.gov/arcgis/rest/services/Ag_Lands/MapServer/0/query"; // "http://gis-ext.inl.gov/ArcGIS/rest/services/Ag_Lands/MapServer/0/query";
+    var esriExportUrl = "https://gis.inl.gov/arcgis/rest/services/Ag_Lands/MapServer/export"; // "https://gis-ext.inl.gov/arcgis/rest/services/Ag_Lands/MapServer/export"; 
+    var esriQueryUrl = "https://gis.inl.gov/arcgis/rest/services/Ag_Lands/MapServer/0/query"; // "https://gis-ext.inl.gov/arcgis/rest/services/Ag_Lands/MapServer/0/query"; 
 
     var mapLayer: OpenLayers.Layer;
 
