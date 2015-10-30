@@ -14,7 +14,7 @@ namespace Doe.PVMapper.Models
     /// A site that represents a potential project location.
     /// </summary>
     [JsonObject(MemberSerialization.OptOut)]
-    public class ProjectSite : Entity
+    public class ProjectSite : Entity, IEntity
     {
         /// <summary>
         /// Gets or sets the site ID.

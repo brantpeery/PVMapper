@@ -16,7 +16,7 @@ namespace Doe.PVMapper.WebApi
 
         public IQueryable<ProjectSite> Get()
         {
-            return _db.All().Where(site => site.UserId == User.Identity.Name);
+            return _db.Where(site => site.UserId == User.Identity.Name);
         }
 
         public ProjectSite Get(string id)
