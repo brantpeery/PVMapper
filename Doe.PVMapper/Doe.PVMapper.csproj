@@ -75,8 +75,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="MongoMembership, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MongoMembership.0.1.0\lib\MongoMembership.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="MongoRepository.Net40, Version=1.6.9.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MongoRepository.1.6.9\lib\net40\MongoRepository.Net40.dll</HintPath>
